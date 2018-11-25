@@ -26,6 +26,7 @@ class NeteaseRepository {
         method: "POST",
         baseUrl: _BASE_URL,
         headers: _header,
+        responseType: ResponseType.JSON,
         contentType: ContentType.parse("application/x-www-form-urlencoded")));
 
     var path = (await getApplicationDocumentsDirectory()).path + "/.cookies/";
@@ -51,15 +52,22 @@ class NeteaseRepository {
         {"offset": offset, "uid": userId, "limit": limit, "csrf_token": ""});
   }
 
+  ///根据歌单id获取歌单详情，包括歌曲
+  Future<Map<String, dynamic>> playlistDetail(int id) {
+    return _doRequest("/weapi/v3/playlist/detail",
+        {"id": id, "n": 100000, "s": 8});
+  }
+
   //请求数据
   Future<Map<String, dynamic>> _doRequest(
       String path, Map<String, dynamic> data) async {
     debugPrint("netease request path = $path params = ${data.toString()}");
 
-    Response<Map<String, dynamic>> response =
-        await (await dio).post(path, data: await encrypt(data));
-
-    return response.data;
+    Response response = await (await dio).post(path, data: await encrypt(data));
+    if (response.data is Map) {
+      return response.data;
+    }
+    return json.decode(response.data);
   }
 }
 

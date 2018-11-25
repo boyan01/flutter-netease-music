@@ -2,9 +2,9 @@
 
 class Music{
 
-  int id;
+  int id = 0;
 
-  String title;
+  String title = "test";
 
   String url;
 

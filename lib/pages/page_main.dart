@@ -183,6 +183,13 @@ class _MainPlaylistState extends State<MainPlaylistPage> {
         width: 48,
       ),
       title: Text(playlist["name"]),
+      onTap: () {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) =>
+                    PagePlaylistDetail(playlist["id"], playlist: playlist)));
+      },
     );
   }
 

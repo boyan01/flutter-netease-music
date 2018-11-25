@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'pages/page_main.dart';
-import 'pages/page_login.dart';
+import 'part/part.dart';
 
 void main() => runApp(MyApp());
 
@@ -10,10 +9,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       initialRoute: "/",
-      routes: {
-        "/": (context) => MainPage(),
-        "/login": (context) => LoginPage()
-      },
+      routes: routes,
       title: 'Quiet',
       theme: ThemeData(
         // This is the theme of your application.
