@@ -14,17 +14,25 @@ NeteaseRepository neteaseRepository = NeteaseRepository._private();
 class NeteaseRepository {
   static const String _BASE_URL = "http://music.163.com";
 
-  NeteaseRepository._private() {
-    getTemporaryDirectory().then((d) {
-      _dio.cookieJar = PersistCookieJar(d.path);
-    });
-  }
+  NeteaseRepository._private();
 
-  Dio _dio = Dio(Options(
-      method: "POST",
-      baseUrl: _BASE_URL,
-      headers: _header,
-      contentType: ContentType.parse("application/x-www-form-urlencoded")));
+  Dio _dio;
+
+  Future<Dio> get dio async {
+    if (_dio != null) {
+      return _dio;
+    }
+    _dio = Dio(Options(
+        method: "POST",
+        baseUrl: _BASE_URL,
+        headers: _header,
+        contentType: ContentType.parse("application/x-www-form-urlencoded")));
+
+    var path = (await getApplicationDocumentsDirectory()).path + "/.cookies/";
+    _dio.cookieJar = PersistCookieJar(path);
+
+    return _dio;
+  }
 
   ///使用手机号码登录
   Future<Map> login(String phone, String password) async {
@@ -37,17 +45,19 @@ class NeteaseRepository {
 
   ///根据用户ID获取歌单
   ///PlayListDetail 中的 tracks 都是空数据
-  Future<Map> userPlaylist(int userId, [int offset = 0, int limit = 1000]) {
+  Future<Map<String, Object>> userPlaylist(int userId,
+      [int offset = 0, int limit = 1000]) {
     return _doRequest("/weapi/user/playlist",
         {"offset": offset, "uid": userId, "limit": limit, "csrf_token": ""});
   }
 
   //请求数据
-  Future<Map<String, dynamic>> _doRequest(String path, Map<String, dynamic> data) async {
+  Future<Map<String, dynamic>> _doRequest(
+      String path, Map<String, dynamic> data) async {
     debugPrint("netease request path = $path params = ${data.toString()}");
 
     Response<Map<String, dynamic>> response =
-        await _dio.post(path, data: await encrypt(data));
+        await (await dio).post(path, data: await encrypt(data));
 
     return response.data;
   }
@@ -95,5 +105,6 @@ const List<String> USER_AGENT_LIST = [
 
 String _randomUserAgent() {
   var r = Random();
-  return USER_AGENT_LIST[(r.nextDouble() * USER_AGENT_LIST.length).round()];
+  return USER_AGENT_LIST[
+      (r.nextDouble() * (USER_AGENT_LIST.length - 1)).round()];
 }

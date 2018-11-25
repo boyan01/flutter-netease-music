@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:quiet/part/part.dart';
+import 'package:quiet/repository/netease.dart';
 
 class MainPage extends StatefulWidget {
   @override
@@ -91,8 +92,10 @@ class MainPlaylistPage extends StatefulWidget {
 class _MainPlaylistState extends State<MainPlaylistPage> {
   ScrollController _controller;
 
-  List<Widget> _buildNavigationList(BuildContext context) {
-    var widgets = [
+  List playlists;
+
+  Widget _buildItem(BuildContext context, int index) {
+    var navigationList = [
       Column(
         children: <Widget>[
           ListTile(
@@ -131,8 +134,8 @@ class _MainPlaylistState extends State<MainPlaylistPage> {
       )
     ];
 
-    if (LoginState.of(context).user == null) {
-      widgets.insert(
+    if (!LoginState.of(context).isLogin) {
+      navigationList.insert(
           0,
           Column(
             children: <Widget>[
@@ -148,15 +151,39 @@ class _MainPlaylistState extends State<MainPlaylistPage> {
             ],
           ));
     }
-    return widgets;
-  }
-
-  Widget _buildItem(BuildContext context, int index) {
-    var navigationList = _buildNavigationList(context);
     if (index < navigationList.length) {
       return navigationList[index];
     }
+    if (playlists != null) {
+      var i = index - navigationList.length;
+      if (i >= 0 && i < playlists.length) {
+        return _buildPlaylistTile(playlists[i]);
+      } else {
+        return null;
+      }
+    } else if (LoginState.of(context).isLogin) {
+      neteaseRepository
+          .userPlaylist(LoginState.of(context).userId)
+          .then((result) {
+        if (result["code"] == 200) {
+          setState(() {
+            this.playlists = result["playlist"];
+          });
+        }
+      });
+    }
     return null;
+  }
+
+  Widget _buildPlaylistTile(Map<String, Object> playlist) {
+    return ListTile(
+      leading: SizedBox(
+        child: Image.network(playlist["coverImgUrl"]),
+        height: 48,
+        width: 48,
+      ),
+      title: Text(playlist["name"]),
+    );
   }
 
   @override
@@ -173,8 +200,7 @@ class _MainPlaylistState extends State<MainPlaylistPage> {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-        controller: _controller, itemBuilder: _buildItem, itemCount: 20);
+    return ListView.builder(controller: _controller, itemBuilder: _buildItem);
   }
 }
 
