@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:quiet/part/part.dart';
 
 class MainPage extends StatefulWidget {
   @override
@@ -37,10 +38,10 @@ class _MainPageState extends State<MainPage>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return LoginStateWidget(Scaffold(
       drawer: Drawer(
         child: ListView(
-          children: <Widget>[DrawerHeader(child: Placeholder())],
+          children: <Widget>[MyDrawerHeader()],
         ),
       ),
       appBar: AppBar(
@@ -69,7 +70,7 @@ class _MainPageState extends State<MainPage>
       ),
       body: PageView.builder(
           controller: _pageController, itemCount: 2, itemBuilder: _buildPages),
-    );
+    ));
   }
 
   Widget _buildPages(BuildContext context, int index) {
@@ -90,32 +91,70 @@ class MainPlaylistPage extends StatefulWidget {
 class _MainPlaylistState extends State<MainPlaylistPage> {
   ScrollController _controller;
 
-  var navigation = [
-    ListTile(
-      leading: Icon(Icons.music_note),
-      title: Text("本地音乐"),
-    ),
-    Divider(height: 1),
-    ListTile(
-      leading: Icon(Icons.schedule),
-      title: Text("最近播放"),
-    ),
-    Divider(height: 1),
-    ListTile(
-      leading: Icon(Icons.file_download),
-      title: Text("下载管理"),
-    ),
-    Divider(height: 1),
-    ListTile(
-      leading: Icon(Icons.library_music),
-      title: Text("我的收藏"),
-    ),
-    Divider(height: 1),
-  ];
+  List<Widget> _buildNavigationList(BuildContext context) {
+    var widgets = [
+      Column(
+        children: <Widget>[
+          ListTile(
+            leading: Icon(Icons.music_note),
+            title: Text("本地音乐"),
+          ),
+          Divider(height: 1),
+        ],
+      ),
+      Column(
+        children: <Widget>[
+          ListTile(
+            leading: Icon(Icons.schedule),
+            title: Text("最近播放"),
+          ),
+          Divider(height: 1)
+        ],
+      ),
+      Column(
+        children: <Widget>[
+          ListTile(
+            leading: Icon(Icons.file_download),
+            title: Text("下载管理"),
+          ),
+          Divider(height: 1),
+        ],
+      ),
+      Column(
+        children: <Widget>[
+          ListTile(
+            leading: Icon(Icons.library_music),
+            title: Text("我的收藏"),
+          ),
+          Divider(height: 1),
+        ],
+      )
+    ];
+
+    if (LoginState.of(context).user == null) {
+      widgets.insert(
+          0,
+          Column(
+            children: <Widget>[
+              ListTile(
+                title: Text("当前未登录，点击登录!"),
+                onTap: () {
+                  Navigator.pushNamed(context, "/login").then((_) {
+                    LoginState.refresh(context);
+                  });
+                },
+              ),
+              Divider(height: 1)
+            ],
+          ));
+    }
+    return widgets;
+  }
 
   Widget _buildItem(BuildContext context, int index) {
-    if (index < navigation.length) {
-      return navigation[index];
+    var navigationList = _buildNavigationList(context);
+    if (index < navigationList.length) {
+      return navigationList[index];
     }
     return null;
   }
@@ -135,9 +174,7 @@ class _MainPlaylistState extends State<MainPlaylistPage> {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-        controller: _controller,
-        itemBuilder: _buildItem,
-        itemCount: navigation.length);
+        controller: _controller, itemBuilder: _buildItem, itemCount: 20);
   }
 }
 
@@ -145,5 +182,56 @@ class MainCloudPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Placeholder();
+  }
+}
+
+class MyDrawerHeader extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Builder(builder: (context) {
+      var state = LoginState.of(context);
+      if (state.isLogin) {
+        Map<String, Object> profile = state.user["profile"];
+        return _createHeader(
+            context, Image.network(profile["avatarUrl"]), profile["nickname"]);
+      } else {
+        return _createHeader(
+            context,
+            Container(
+              color: Colors.grey,
+            ),
+            "未登录");
+      }
+    });
+  }
+
+  Widget _createHeader(BuildContext context, Widget avatar, String username) {
+    return DrawerHeader(
+        decoration: BoxDecoration(color: Theme.of(context).primaryColor),
+        child: Column(
+          children: <Widget>[
+            Spacer(),
+            Row(
+              children: <Widget>[
+                Padding(
+                  padding: EdgeInsets.all(8),
+                  child: SizedBox(
+                    height: 48,
+                    width: 48,
+                    child: ClipOval(
+                      child: avatar,
+                    ),
+                  ),
+                )
+              ],
+            ),
+            Padding(
+              padding: EdgeInsets.all(8),
+              child: Row(
+                children: [Text(username)],
+              ),
+            )
+          ],
+        ));
   }
 }
