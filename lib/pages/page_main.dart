@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:quiet/part/part.dart';
 import 'package:quiet/repository/netease.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class MainPage extends StatefulWidget {
   @override
@@ -178,7 +179,9 @@ class _MainPlaylistState extends State<MainPlaylistPage> {
   Widget _buildPlaylistTile(Map<String, Object> playlist) {
     return ListTile(
       leading: SizedBox(
-        child: Image.network(playlist["coverImgUrl"]),
+        child: CachedNetworkImage(
+          imageUrl: playlist["coverImgUrl"],
+        ),
         height: 48,
         width: 48,
       ),

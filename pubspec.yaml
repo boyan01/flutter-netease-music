@@ -20,6 +20,7 @@ dependencies:
   dio: ^1.0.9
   path_provider: ^0.4.1
   shared_preferences: ^0.4.3
+  cached_network_image: ^0.6.0-alpha.2
 
 dev_dependencies:
   flutter_test:

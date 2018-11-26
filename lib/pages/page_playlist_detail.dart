@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:quiet/part/part.dart';
 import 'package:quiet/repository/netease.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 ///歌单详情信息item高度
 const double _HEIGHT_HEADER = 300;
@@ -165,7 +166,8 @@ class _PlaylistDetailHeader extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
           image: DecorationImage(
-              image: NetworkImage(playlist["coverImgUrl"]), fit: BoxFit.cover)),
+              image: CachedNetworkImageProvider(playlist["coverImgUrl"]), fit: BoxFit.cover
+              )),
       child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
         child: Container(
@@ -184,7 +186,7 @@ class _PlaylistDetailHeader extends StatelessWidget {
                         aspectRatio: 1,
                         child: ClipRRect(
                           borderRadius: BorderRadius.all(Radius.circular(3)),
-                          child: Image.network(playlist["coverImgUrl"]),
+                          child: CachedNetworkImage(imageUrl: playlist["coverImgUrl"]),
                         ),
                       ),
                     ),
@@ -195,7 +197,10 @@ class _PlaylistDetailHeader extends StatelessWidget {
                           margin: EdgeInsets.only(top: 40),
                           child: Text(
                             playlist["name"],
-                            style: Theme.of(context).primaryTextTheme.title.copyWith(fontSize: 18),
+                            style: Theme.of(context)
+                                .primaryTextTheme
+                                .title
+                                .copyWith(fontSize: 18),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -209,7 +214,7 @@ class _PlaylistDetailHeader extends StatelessWidget {
                                 height: 24,
                                 width: 24,
                                 child: ClipOval(
-                                  child: Image.network(creator["avatarUrl"]),
+                                  child: CachedNetworkImage(imageUrl: creator["avatarUrl"]),
                                 ),
                               ),
                               Padding(padding: EdgeInsets.only(left: 4)),
