@@ -54,8 +54,8 @@ class NeteaseRepository {
 
   ///根据歌单id获取歌单详情，包括歌曲
   Future<Map<String, dynamic>> playlistDetail(int id) {
-    return _doRequest("/weapi/v3/playlist/detail",
-        {"id": id, "n": 100000, "s": 8});
+    return _doRequest(
+        "/weapi/v3/playlist/detail", {"id": id, "n": 100000, "s": 8});
   }
 
   //请求数据
