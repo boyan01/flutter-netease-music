@@ -40,39 +40,44 @@ class _MainPageState extends State<MainPage>
 
   @override
   Widget build(BuildContext context) {
-    return LoginStateWidget(Scaffold(
-      drawer: Drawer(
-        child: ListView(
-          children: <Widget>[MyDrawerHeader()],
-        ),
-      ),
-      appBar: AppBar(
-        title: Container(
-          height: kToolbarHeight,
-          width: 128,
-          child: TabBar(
-            controller: _tabController,
-            tabs: <Widget>[
-              Icon(
-                Icons.music_note,
-                color: Colors.white,
-              ),
-              Icon(Icons.cloud, color: Colors.white)
-            ],
+    return Quiet(
+      playingMusic: true,
+      child: LoginStateWidget(Scaffold(
+        drawer: Drawer(
+          child: ListView(
+            children: <Widget>[MyDrawerHeader()],
           ),
         ),
-        titleSpacing: 0,
-        centerTitle: true,
-        actions: <Widget>[
-          IconButton(
-            onPressed: () => {},
-            icon: Icon(Icons.search),
-          )
-        ],
-      ),
-      body: PageView.builder(
-          controller: _pageController, itemCount: 2, itemBuilder: _buildPages),
-    ));
+        appBar: AppBar(
+          title: Container(
+            height: kToolbarHeight,
+            width: 128,
+            child: TabBar(
+              controller: _tabController,
+              tabs: <Widget>[
+                Icon(
+                  Icons.music_note,
+                  color: Colors.white,
+                ),
+                Icon(Icons.cloud, color: Colors.white)
+              ],
+            ),
+          ),
+          titleSpacing: 0,
+          centerTitle: true,
+          actions: <Widget>[
+            IconButton(
+              onPressed: () => {},
+              icon: Icon(Icons.search),
+            )
+          ],
+        ),
+        body: BoxWithBottomPlayerController(PageView.builder(
+            controller: _pageController,
+            itemCount: 2,
+            itemBuilder: _buildPages)),
+      )),
+    );
   }
 
   Widget _buildPages(BuildContext context, int index) {
