@@ -104,11 +104,14 @@ class _PlayListDetailState extends State<PagePlaylistDetail> {
     return Scaffold(
       body: Stack(
         children: <Widget>[
-          BoxWithBottomPlayerController(
-            ListView.builder(
-              padding: EdgeInsets.only(),
-              itemBuilder: _buildList,
-              controller: scrollController,
+          Quiet(
+            playingMusic: true,
+            child: BoxWithBottomPlayerController(
+              ListView.builder(
+                padding: EdgeInsets.only(),
+                itemBuilder: _buildList,
+                controller: scrollController,
+              ),
             ),
           ),
           Column(

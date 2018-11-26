@@ -2,8 +2,8 @@ import 'dart:convert';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:quiet/model/model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 import 'player_service.dart';
 
 ///登录状态
@@ -92,59 +92,32 @@ class _LoginState extends State<LoginStateWidget> {
   }
 }
 
-class BoxWithBottomPlayerController extends StatefulWidget {
+class BoxWithBottomPlayerController extends StatelessWidget {
   BoxWithBottomPlayerController(this.child);
 
   final Widget child;
 
   @override
-  State<StatefulWidget> createState() => _BoxWithBottomPlayerControllerState();
-}
-
-class _BoxWithBottomPlayerControllerState
-    extends State<BoxWithBottomPlayerController> {
-  Music current;
-
-  void _onMusicChange(Music music) {
-    setState(() {
-      current = music;
-    });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    quiet.addMusicChangeListener(_onMusicChange);
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    quiet.removeMusicChangeListener(_onMusicChange);
-  }
-
-  @override
   Widget build(BuildContext context) {
-    if (current == null) {
-      return widget.child;
+    if (PlayingMusic.of(context).playing == null) {
+      return child;
     }
-    debugPrint("create bottom controller bar");
     return Column(
       children: <Widget>[
-        Expanded(child: widget.child),
-        BottomControllerBar(current),
+        Expanded(child: child),
+        BottomControllerBar(),
       ],
     );
   }
 }
 
 class BottomControllerBar extends StatelessWidget {
-  BottomControllerBar(this.music);
-
-  final Music music;
-
   @override
   Widget build(BuildContext context) {
+    var music = PlayingMusic.of(context).playing;
+    if (music == null) {
+      return null;
+    }
     return Card(
       margin: const EdgeInsets.all(0),
       shape: const RoundedRectangleBorder(
