@@ -52,12 +52,31 @@ class _PlayListDetailState extends State<PagePlaylistDetail> {
       if (result["code"] == 200) {
         setState(() {
           playlist = result["playlist"];
-          songTileProvider = SongTileProvider(playlist["tracks"]);
+          songTileProvider = SongTileProvider(_mapPlaylist(playlist["tracks"]));
         });
       } else {
         //TODO set error,add retry
       }
     });
+  }
+
+  static List<Music> _mapPlaylist(List<Object> tracks) {
+    var list = tracks.map((it) {
+      var o = it as Map<String, Object>;
+
+      var al = (o['al'] as Map<String, Object>);
+      var ar = ((o['ar']) as List).cast<Map<String, Object>>();
+      return Music(
+          id: o["id"],
+          title: o["name"],
+          url: "http://music.163.com/song/media/outer/url?id=${o["id"]}.mp3",
+          album: Album(
+              name: al["name"], id: al["id"], coverImageUrl: al["picUrl"]),
+          artist: ar.map((a) {
+            return Artist(id: a["id"], name: a["name"]);
+          }).toList());
+    });
+    return list.toList();
   }
 
   @override
@@ -85,10 +104,12 @@ class _PlayListDetailState extends State<PagePlaylistDetail> {
     return Scaffold(
       body: Stack(
         children: <Widget>[
-          ListView.builder(
-            padding: EdgeInsets.only(),
-            itemBuilder: _buildList,
-            controller: scrollController,
+          BoxWithBottomPlayerController(
+            ListView.builder(
+              padding: EdgeInsets.only(),
+              itemBuilder: _buildList,
+              controller: scrollController,
+            ),
           ),
           Column(
             children: <Widget>[
@@ -166,8 +187,8 @@ class _PlaylistDetailHeader extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
           image: DecorationImage(
-              image: CachedNetworkImageProvider(playlist["coverImgUrl"]), fit: BoxFit.cover
-              )),
+              image: CachedNetworkImageProvider(playlist["coverImgUrl"]),
+              fit: BoxFit.cover)),
       child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
         child: Container(
@@ -186,7 +207,8 @@ class _PlaylistDetailHeader extends StatelessWidget {
                         aspectRatio: 1,
                         child: ClipRRect(
                           borderRadius: BorderRadius.all(Radius.circular(3)),
-                          child: CachedNetworkImage(imageUrl: playlist["coverImgUrl"]),
+                          child: CachedNetworkImage(
+                              imageUrl: playlist["coverImgUrl"]),
                         ),
                       ),
                     ),
@@ -214,7 +236,8 @@ class _PlaylistDetailHeader extends StatelessWidget {
                                 height: 24,
                                 width: 24,
                                 child: ClipOval(
-                                  child: CachedNetworkImage(imageUrl: creator["avatarUrl"]),
+                                  child: CachedNetworkImage(
+                                      imageUrl: creator["avatarUrl"]),
                                 ),
                               ),
                               Padding(padding: EdgeInsets.only(left: 4)),

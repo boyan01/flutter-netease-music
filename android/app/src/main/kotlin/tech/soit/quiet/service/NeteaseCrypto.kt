@@ -1,4 +1,4 @@
-package tech.soit.quiet.utils
+package tech.soit.quiet.service
 
 import android.util.Base64
 import io.flutter.plugin.common.BinaryMessenger

@@ -1,7 +1,10 @@
 import 'dart:convert';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:quiet/model/model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'player_service.dart';
 
 ///登录状态
 ///在上层嵌套 LoginStateWidget 以监听用户登录状态
@@ -86,5 +89,101 @@ class _LoginState extends State<LoginStateWidget> {
   @override
   Widget build(BuildContext context) {
     return LoginState(user, widget.child);
+  }
+}
+
+class BoxWithBottomPlayerController extends StatefulWidget {
+  BoxWithBottomPlayerController(this.child);
+
+  final Widget child;
+
+  @override
+  State<StatefulWidget> createState() => _BoxWithBottomPlayerControllerState();
+}
+
+class _BoxWithBottomPlayerControllerState
+    extends State<BoxWithBottomPlayerController> {
+  Music current;
+
+  void _onMusicChange(Music music) {
+    setState(() {
+      current = music;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    quiet.addMusicChangeListener(_onMusicChange);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    quiet.removeMusicChangeListener(_onMusicChange);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (current == null) {
+      return widget.child;
+    }
+    debugPrint("create bottom controller bar");
+    return Column(
+      children: <Widget>[
+        Expanded(child: widget.child),
+        BottomControllerBar(current),
+      ],
+    );
+  }
+}
+
+class BottomControllerBar extends StatelessWidget {
+  BottomControllerBar(this.music);
+
+  final Music music;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 56,
+      child: Row(
+        children: <Widget>[
+          Container(
+            padding: const EdgeInsets.all(8),
+            child: ClipRRect(
+              borderRadius: BorderRadius.all(Radius.circular(3)),
+              child: CachedNetworkImage(
+                imageUrl: music.album.coverImageUrl,
+              ),
+            ),
+          ),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Spacer(),
+                Text(
+                  music.title,
+                  style: Theme.of(context).textTheme.body1,
+                ),
+                Padding(padding: const EdgeInsets.only(top: 2)),
+                Text(
+                  music.subTitle,
+                  style: Theme.of(context).textTheme.caption,
+                ),
+                Spacer(),
+              ],
+            ),
+          ),
+          IconButton(icon: Icon(Icons.play_arrow), onPressed: (){
+            quiet.play();
+          }),
+          IconButton(icon: Icon(Icons.skip_next), onPressed: (){
+            quiet.playNext();
+          }),
+        ],
+      ),
+    );
   }
 }
