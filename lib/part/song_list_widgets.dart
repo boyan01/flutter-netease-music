@@ -17,7 +17,7 @@ class SongTileProvider {
 
   void _play(int index) {
     var toPlay = musics[index];
-    debugPrint("play all $toPlay");
+    debugPrint("play : $toPlay");
     quiet.play(music: toPlay);
   }
 
@@ -89,9 +89,6 @@ class SongTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var artist = music.artist.map((a) => a.name).join('/');
-    var album = music.album.name;
-
     return Container(
       height: 56,
       child: InkWell(
@@ -124,14 +121,21 @@ class SongTile extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: <Widget>[
+                        Spacer(),
                         Text(
                           music.title,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                           style: Theme.of(context).textTheme.body1,
                         ),
+                        Padding(padding: EdgeInsets.only(top: 3)),
                         Text(
-                          "$album - $artist",
+                          music.subTitle,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                           style: Theme.of(context).textTheme.caption,
-                        )
+                        ),
+                        Spacer(),
                       ],
                     )),
                     PopupMenuButton(

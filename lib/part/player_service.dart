@@ -3,10 +3,10 @@ import 'package:meta/meta.dart';
 import 'package:quiet/model/model.dart';
 import 'package:video_player/video_player.dart';
 
-_MusicPlayer quiet = _MusicPlayer._private();
+MusicPlayer quiet = MusicPlayer._private();
 
-class _MusicPlayer extends ValueNotifier<PlayerStateValue> {
-  _MusicPlayer._private() : super(PlayerStateValue.uninitialized());
+class MusicPlayer extends ValueNotifier<PlayerStateValue> {
+  MusicPlayer._private() : super(PlayerStateValue.uninitialized());
 
   VideoPlayerController _controller;
 
@@ -42,6 +42,13 @@ class _MusicPlayer extends ValueNotifier<PlayerStateValue> {
 
   Future<void> pause() {
     return _controller.pause();
+  }
+
+  void quiet(){
+    _controller.removeListener(_controllerListener);
+    _controller.dispose();
+    _controller = null;
+    value = PlayerStateValue.uninitialized();
   }
 
   void playNext() {}

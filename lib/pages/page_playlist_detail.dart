@@ -1,9 +1,9 @@
 import 'dart:ui';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:quiet/part/part.dart';
 import 'package:quiet/repository/netease.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 
 ///歌单详情信息item高度
 const double _HEIGHT_HEADER = 300;
@@ -49,7 +49,6 @@ class _PlayListDetailState extends State<PagePlaylistDetail> {
 
     //加载歌单详情
     neteaseRepository.playlistDetail(widget.playlistId).then((result) {
-      debugPrint("playlist detail : $result");
       if (result["code"] == 200) {
         setState(() {
           playlist = result["playlist"];
@@ -62,6 +61,7 @@ class _PlayListDetailState extends State<PagePlaylistDetail> {
     });
   }
 
+  ///map playlist json tracks to Music list
   static List<Music> _mapPlaylist(List<Object> tracks) {
     var list = tracks.map((it) {
       var o = it as Map<String, Object>;
@@ -99,8 +99,19 @@ class _PlayListDetailState extends State<PagePlaylistDetail> {
     return (scrollHeight / areaHeight).clamp(0.0, 1.0);
   }
 
+  List<Widget> songList;
+
   @override
   Widget build(BuildContext context) {
+    if (songTileProvider != null &&
+        songList == null &&
+        songTileProvider.musics.length > 0) {
+      songList = [];
+      for (var i = 0; i < songTileProvider.musics.length + 2; i++) {
+        songList.add(_buildList(context, i));
+      }
+    }
+
     var appBarOpacity = _getAppbarOpacity();
 
     return Scaffold(
@@ -108,9 +119,9 @@ class _PlayListDetailState extends State<PagePlaylistDetail> {
         children: <Widget>[
           Quiet(
             child: BoxWithBottomPlayerController(
-              ListView.builder(
-                padding: EdgeInsets.only(),
-                itemBuilder: _buildList,
+              ListView(
+                padding: const EdgeInsets.all(0),
+                children: songList ?? [_buildList(context, 0)],
                 controller: scrollController,
               ),
             ),
@@ -164,7 +175,7 @@ class _HeaderAction extends StatelessWidget {
             icon,
             color: textTheme.body1.color,
           ),
-          Padding(
+          const Padding(
             padding: EdgeInsets.only(top: 2),
           ),
           Text(
