@@ -1,5 +1,8 @@
+@file:Suppress("SpellCheckingInspection")
+
 package tech.soit.quiet.service
 
+import android.annotation.SuppressLint
 import android.util.Base64
 import io.flutter.plugin.common.BinaryMessenger
 import io.flutter.plugin.common.MethodChannel
@@ -26,6 +29,9 @@ object NeteaseCrypto {
     private const val nonce = "0CoJUm6Qyw8W8jud"
     private const val publicKey = "010001"
 
+    private val iv = "0102030405060708".toByteArray()
+
+    private const val linuxapiKey = "rFgB&h#%2?^eDg:Q"
 
     fun init(messenger: BinaryMessenger) {
         MethodChannel(messenger, MainActivity.CHANNEL_NETEASE_CRYPTO).setMethodCallHandler { methodCall, result ->
@@ -35,7 +41,12 @@ object NeteaseCrypto {
                     if (json == null) {
                         result.error("error", "json param is null", null)
                     } else {
-                        result.success(encrypt(json))
+                        val type = methodCall.argument<String>("type")
+                        if (type == "linux") {
+                            result.success(encryptLinuxApi(json))
+                        } else {
+                            result.success(encrypt(json))
+                        }
                     }
                 }
                 else -> {
@@ -53,6 +64,10 @@ object NeteaseCrypto {
         //对第二次使用的随机串进行加密,以便在服务器端解析出具体的参数请求
         val encSecKey = rsaEncrypt(secKey)
         return mapOf("params" to encText, "encSecKey" to encSecKey)
+    }
+
+    private fun encryptLinuxApi(json: String): Map<String, String> {
+        return mapOf("eparams" to aesEncryptForLinux(json, linuxapiKey))
     }
 
 
@@ -73,12 +88,21 @@ object NeteaseCrypto {
      * @param secKey 加密的密码
      */
     private fun aesEncrypt(text: String, secKey: String): String {
-        val iv = "0102030405060708".toByteArray()
         val cipher = Cipher.getInstance("AES/CBC/PKCS5Padding")
         cipher.init(Cipher.ENCRYPT_MODE, SecretKeySpec(secKey.toByteArray(), "AES"), IvParameterSpec(iv))
         val results = cipher.doFinal(text.toByteArray())
         return android.util.Base64.encodeToString(results, Base64.DEFAULT)
     }
+
+    @SuppressLint("GetInstance")
+    private fun aesEncryptForLinux(text: String, secKey: String): String {
+        val cipher = Cipher.getInstance("AES/ECB/PKCS5Padding")
+        cipher.init(Cipher.ENCRYPT_MODE, SecretKeySpec(secKey.toByteArray(), "AES"))
+        val results = cipher.doFinal(text.toByteArray())
+        return results.toHex().toUpperCase()
+    }
+
+    fun ByteArray.toHex() = this.joinToString(separator = "") { it.toInt().and(0xff).toString(16).padStart(2, '0') }
 
     /**
      * 填充至 256 字符长度
