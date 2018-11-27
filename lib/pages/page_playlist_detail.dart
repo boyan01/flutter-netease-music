@@ -49,12 +49,14 @@ class _PlayListDetailState extends State<PagePlaylistDetail> {
 
     //加载歌单详情
     neteaseRepository.playlistDetail(widget.playlistId).then((result) {
+      debugPrint("playlist detail : $result");
       if (result["code"] == 200) {
         setState(() {
           playlist = result["playlist"];
           songTileProvider = SongTileProvider(_mapPlaylist(playlist["tracks"]));
         });
       } else {
+        debugPrint("load playlist detail ${widget.playlistId} error");
         //TODO set error,add retry
       }
     });
