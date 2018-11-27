@@ -105,7 +105,6 @@ class _PlayListDetailState extends State<PagePlaylistDetail> {
       body: Stack(
         children: <Widget>[
           Quiet(
-            playingMusic: true,
             child: BoxWithBottomPlayerController(
               ListView.builder(
                 padding: EdgeInsets.only(),

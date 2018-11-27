@@ -41,7 +41,6 @@ class _MainPageState extends State<MainPage>
   @override
   Widget build(BuildContext context) {
     return Quiet(
-      playingMusic: true,
       child: LoginStateWidget(Scaffold(
         drawer: Drawer(
           child: ListView(

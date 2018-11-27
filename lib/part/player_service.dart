@@ -1,94 +1,79 @@
-import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:meta/meta.dart';
 import 'package:quiet/model/model.dart';
+import 'package:video_player/video_player.dart';
 
-const MethodChannel _channel = const MethodChannel('tech.soit.quiet/player');
+_MusicPlayer quiet = _MusicPlayer._private();
 
-MusicPlayer quiet = MusicPlayer._private();
+class _MusicPlayer extends ValueNotifier<PlayerStateValue> {
+  _MusicPlayer._private() : super(PlayerStateValue.uninitialized());
 
-typedef MusicChangeCallback = void Function(Music);
-
-class MusicPlayer {
-  MusicPlayer._private();
-
-  ///current playing music list
-  List<Music> get playlist => _playlist;
-
-  List<Music> _playlist;
-
-  ///current playing music
-  Music get current => _current;
-  Music _current;
-
-  List<MusicChangeCallback> musicChangeCallbacks = [];
+  VideoPlayerController _controller;
 
   ///play music
   ///if param is null, play current music
   ///if param music is null , current is null , do nothing
-  Future<bool> play({Music music}) async {
-    music ??= current;
+  Future<void> play({Music music}) async {
+    music ??= value.current;
     if (music == null) {
-      return false;
+      //do nothing if source is not available
+      return;
     }
     assert(
         music.url != null && music.url.isNotEmpty, "music url can not be null");
-    var data = {
-      'title': music.title,
-      'subTitle': music.subTitle,
-      'imageUrl': music.album.coverImageUrl,
-      'playUrl': music.url
-    };
-
-    var success = await _channel.invokeMethod("play", data);
-    if (success) {
-      _current = music;
-      musicChangeCallbacks.forEach((f) => f(current));
-    }
-
-    return success;
+    _newController(music.url);
+    //refresh state
+    value = value.copyWith(current: music);
+    return await _controller.play();
   }
 
-  Future<bool> pause() async {
-    await _channel.invokeMethod("pause");
-    return true;
+  //create a new player controller
+  void _newController(String url) {
+    _controller?.removeListener(_controllerListener);
+    _controller?.dispose();
+
+    _controller = VideoPlayerController.network(url);
+    _controller.addListener(_controllerListener);
   }
 
-  void playNext() {
-    //TODO
+  void _controllerListener() {
+    value = value.copyWith(state: _controller.value);
   }
+
+  Future<void> pause() {
+    return _controller.pause();
+  }
+
+  void playNext() {}
 
   void playPrevious() {}
 
-  Future<bool> setVolume(double volume) async {
-    var success = await _channel.invokeMethod("volume", volume);
-    return success;
-  }
-
-  void addMusicChangeListener(MusicChangeCallback callback) {
-    musicChangeCallbacks.add(callback);
-    callback(current);
-  }
-
-  void removeMusicChangeListener(MusicChangeCallback callback) {
-    musicChangeCallbacks.remove(callback);
+  Future<void> setVolume(double volume) {
+    return _controller.setVolume(volume);
   }
 }
 
-enum PlayerState { playing, buffering, pause, idle }
+class PlayerStateValue {
+  PlayerStateValue(this.state, this.playlist, this.current);
+
+  PlayerStateValue.uninitialized()
+      : this(VideoPlayerValue.uninitialized(), [], null);
+
+  final VideoPlayerValue state;
+
+  final List<Music> playlist;
+
+  final Music current;
+
+  PlayerStateValue copyWith(
+      {VideoPlayerValue state, List<Music> playlist, Music current}) {
+    return PlayerStateValue(state ?? this.state, playlist ?? this.playlist,
+        current ?? this.current);
+  }
+}
 
 class Quiet extends StatefulWidget {
-  Quiet(
-      {@Required() this.child,
-      this.playerState = false,
-      this.playingMusic = false});
-
-  ///listen player state event
-  ///use [MusicPlayerState.of]
-  final bool playerState;
-
-  ///listen playing music change event
-  final bool playingMusic;
+  Quiet({@Required() this.child, Key key}) : super(key: key);
 
   final Widget child;
 
@@ -97,70 +82,49 @@ class Quiet extends StatefulWidget {
 }
 
 class _QuietState extends State<Quiet> {
-  PlayerState state;
+  PlayerStateValue value;
 
-  Music current;
-
-  void _onMusicChange(Music music) {
+  void _onPlayerChange() {
     setState(() {
-      current = music;
+      value = quiet.value;
     });
   }
 
   @override
   void initState() {
     super.initState();
-    quiet.addMusicChangeListener(_onMusicChange);
+    value = quiet.value;
+    quiet.addListener(_onPlayerChange);
   }
 
   @override
   void dispose() {
     super.dispose();
-    quiet.removeMusicChangeListener(_onMusicChange);
+    quiet.removeListener(_onPlayerChange);
   }
 
   @override
   Widget build(BuildContext context) {
-    var result = widget.child;
-
-    if (widget.playerState) {
-      result = MusicPlayerState(result, state);
-    }
-    if (widget.playingMusic) {
-      result = PlayingMusic(result, current);
-    }
-    return result;
+    return PlayerState(
+      child: widget.child,
+      value: value,
+    );
   }
 }
 
-class MusicPlayerState extends InheritedWidget {
-  ///get current Music player state
-  static MusicPlayerState of(BuildContext context) {
-    return context.inheritFromWidgetOfExactType(MusicPlayerState);
-  }
-
-  MusicPlayerState(Widget child, this.state) : super(child: child);
-
-  final PlayerState state;
-
-  @override
-  bool updateShouldNotify(MusicPlayerState oldWidget) {
-    return state == oldWidget.state;
-  }
-}
-
-class PlayingMusic extends InheritedWidget {
-  PlayingMusic(Widget child, this.playing) : super(child: child);
+class PlayerState extends InheritedWidget {
+  PlayerState({@required Widget child, @required this.value})
+      : super(child: child);
 
   ///get current playing music
-  final Music playing;
+  final PlayerStateValue value;
 
-  static PlayingMusic of(BuildContext context) {
-    return context.inheritFromWidgetOfExactType(PlayingMusic);
+  static PlayerState of(BuildContext context) {
+    return context.inheritFromWidgetOfExactType(PlayerState);
   }
 
   @override
-  bool updateShouldNotify(PlayingMusic oldWidget) {
-    return playing != oldWidget.playing;
+  bool updateShouldNotify(PlayerState oldWidget) {
+    return value != oldWidget.value;
   }
 }
