@@ -55,8 +55,8 @@ class NeteaseRepository {
 
   ///根据歌单id获取歌单详情，包括歌曲
   Future<Map<String, dynamic>> playlistDetail(int id) {
-    return _doRequest(
-        "https://music.163.com/weapi/v3/playlist/detail", {"id": "$id", "n": 100000, "s": 8},
+    return _doRequest("https://music.163.com/weapi/v3/playlist/detail",
+        {"id": "$id", "n": 100000, "s": 8},
         type: EncryptType.linux);
   }
 
@@ -81,7 +81,6 @@ class NeteaseRepository {
       var cookies = (await dio).cookieJar.loadForRequest(Uri.parse(_BASE_URL));
       var csrfToken =
           cookies.firstWhere((c) => c.name == "__csrf", orElse: () => null);
-      debugPrint("csrfToken : ${csrfToken?.value}");
       data["csrf_token"] = csrfToken?.value ?? "";
 
       data = await _encrypt(data, EncryptType.we);
@@ -105,11 +104,7 @@ Future<Map> Function(dynamic, EncryptType) _encrypt = (any, type) async {
   if (type == EncryptType.linux) {
     arguments["type"] = "linux";
   }
-
-  debugPrint("encrypt : $arguments");
   var result = await _crypto.invokeMethod("encrypt", arguments);
-
-  debugPrint("result : $result");
   return result;
 };
 

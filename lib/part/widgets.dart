@@ -31,7 +31,8 @@ class LoginState extends InheritedWidget {
 
   @override
   bool updateShouldNotify(LoginState oldWidget) {
-    return user != oldWidget.user;
+    var update = user != oldWidget.user;
+    return update;
   }
 
   ///当前是否已登录
@@ -99,9 +100,6 @@ class BoxWithBottomPlayerController extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (PlayerState.of(context).value.current == null) {
-      return child;
-    }
     return Column(
       children: <Widget>[
         Expanded(child: child),
@@ -117,7 +115,7 @@ class BottomControllerBar extends StatelessWidget {
     var state = PlayerState.of(context).value;
     var music = state.current;
     if (music == null) {
-      return null;
+      return Container();
     }
     return Card(
       margin: const EdgeInsets.all(0),
@@ -178,7 +176,7 @@ class BottomControllerBar extends StatelessWidget {
             IconButton(
                 icon: Icon(Icons.skip_next),
                 onPressed: () {
-                  quiet.playNext();
+                  quiet.quiet();
                 }),
           ],
         ),
