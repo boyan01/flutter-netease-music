@@ -99,7 +99,7 @@ class BoxWithBottomPlayerController extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (PlayingMusic.of(context).playing == null) {
+    if (PlayerState.of(context).value.current == null) {
       return child;
     }
     return Column(
@@ -114,7 +114,8 @@ class BoxWithBottomPlayerController extends StatelessWidget {
 class BottomControllerBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    var music = PlayingMusic.of(context).playing;
+    var state = PlayerState.of(context).value;
+    var music = state.current;
     if (music == null) {
       return null;
     }
@@ -155,11 +156,25 @@ class BottomControllerBar extends StatelessWidget {
                 ],
               ),
             ),
-            IconButton(
-                icon: Icon(Icons.play_arrow),
-                onPressed: () {
-                  quiet.play();
-                }),
+            Builder(builder: (context) {
+              if (state.state.isPlaying) {
+                return IconButton(
+                    icon: Icon(Icons.pause),
+                    onPressed: () {
+                      quiet.pause();
+                    });
+              } else if (state.state.isBuffering) {
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              } else {
+                return IconButton(
+                    icon: Icon(Icons.play_arrow),
+                    onPressed: () {
+                      quiet.play();
+                    });
+              }
+            }),
             IconButton(
                 icon: Icon(Icons.skip_next),
                 onPressed: () {
