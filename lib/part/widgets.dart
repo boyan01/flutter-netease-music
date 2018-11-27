@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:quiet/part/route.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'player_service.dart';
@@ -117,68 +118,75 @@ class BottomControllerBar extends StatelessWidget {
     if (music == null) {
       return Container();
     }
-    return Card(
-      margin: const EdgeInsets.all(0),
-      shape: const RoundedRectangleBorder(
-          borderRadius: const BorderRadius.only(
-              topLeft: const Radius.circular(4.0),
-              topRight: const Radius.circular(4.0))),
-      child: Container(
-        height: 56,
-        child: Row(
-          children: <Widget>[
-            Container(
-              padding: const EdgeInsets.all(8),
-              child: ClipRRect(
-                borderRadius: BorderRadius.all(Radius.circular(3)),
-                child: CachedNetworkImage(
-                  imageUrl: music.album.coverImageUrl,
+    return InkWell(
+      onTap: () {
+        if (music != null) {
+          Navigator.pushNamed(context, ROUTE_PAYING);
+        }
+      },
+      child: Card(
+        margin: const EdgeInsets.all(0),
+        shape: const RoundedRectangleBorder(
+            borderRadius: const BorderRadius.only(
+                topLeft: const Radius.circular(4.0),
+                topRight: const Radius.circular(4.0))),
+        child: Container(
+          height: 56,
+          child: Row(
+            children: <Widget>[
+              Container(
+                padding: const EdgeInsets.all(8),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.all(Radius.circular(3)),
+                  child: CachedNetworkImage(
+                    imageUrl: music.album.coverImageUrl,
+                  ),
                 ),
               ),
-            ),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Spacer(),
-                  Text(
-                    music.title,
-                    style: Theme.of(context).textTheme.body1,
-                  ),
-                  Padding(padding: const EdgeInsets.only(top: 2)),
-                  Text(
-                    music.subTitle,
-                    style: Theme.of(context).textTheme.caption,
-                  ),
-                  Spacer(),
-                ],
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Spacer(),
+                    Text(
+                      music.title,
+                      style: Theme.of(context).textTheme.body1,
+                    ),
+                    Padding(padding: const EdgeInsets.only(top: 2)),
+                    Text(
+                      music.subTitle,
+                      style: Theme.of(context).textTheme.caption,
+                    ),
+                    Spacer(),
+                  ],
+                ),
               ),
-            ),
-            Builder(builder: (context) {
-              if (state.state.isPlaying) {
-                return IconButton(
-                    icon: Icon(Icons.pause),
-                    onPressed: () {
-                      quiet.pause();
-                    });
-              } else if (state.state.isBuffering) {
-                return Center(
-                  child: CircularProgressIndicator(),
-                );
-              } else {
-                return IconButton(
-                    icon: Icon(Icons.play_arrow),
-                    onPressed: () {
-                      quiet.play();
-                    });
-              }
-            }),
-            IconButton(
-                icon: Icon(Icons.skip_next),
-                onPressed: () {
-                  quiet.quiet();
-                }),
-          ],
+              Builder(builder: (context) {
+                if (state.state.isPlaying) {
+                  return IconButton(
+                      icon: Icon(Icons.pause),
+                      onPressed: () {
+                        quiet.pause();
+                      });
+                } else if (state.state.isBuffering) {
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                } else {
+                  return IconButton(
+                      icon: Icon(Icons.play_arrow),
+                      onPressed: () {
+                        quiet.play();
+                      });
+                }
+              }),
+              IconButton(
+                  icon: Icon(Icons.skip_next),
+                  onPressed: () {
+                    quiet.quiet();
+                  }),
+            ],
+          ),
         ),
       ),
     );
