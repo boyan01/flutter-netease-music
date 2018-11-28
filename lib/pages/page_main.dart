@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:quiet/pages/page_main_cloud.dart';
 import 'package:quiet/part/part.dart';
 import 'package:quiet/repository/netease.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -54,10 +55,7 @@ class _MainPageState extends State<MainPage>
             child: TabBar(
               controller: _tabController,
               tabs: <Widget>[
-                Icon(
-                  Icons.music_note,
-                  color: Colors.white,
-                ),
+                Icon(Icons.music_note, color: Colors.white),
                 Icon(Icons.cloud, color: Colors.white)
               ],
             ),
@@ -71,21 +69,12 @@ class _MainPageState extends State<MainPage>
             )
           ],
         ),
-        body: BoxWithBottomPlayerController(PageView.builder(
-            controller: _pageController,
-            itemCount: 2,
-            itemBuilder: _buildPages)),
+        body: BoxWithBottomPlayerController(PageView(
+          controller: _pageController,
+          children: <Widget>[MainPlaylistPage(), MainCloudPage()],
+        )),
       )),
     );
-  }
-
-  Widget _buildPages(BuildContext context, int index) {
-    if (index == 0) {
-      return MainPlaylistPage();
-    } else if (index == 1) {
-      return MainCloudPage();
-    }
-    throw Error;
   }
 }
 
@@ -94,7 +83,8 @@ class MainPlaylistPage extends StatefulWidget {
   createState() => _MainPlaylistState();
 }
 
-class _MainPlaylistState extends State<MainPlaylistPage> {
+class _MainPlaylistState extends State<MainPlaylistPage>
+    with AutomaticKeepAliveClientMixin {
   ScrollController _controller;
 
   List playlists;
@@ -216,13 +206,10 @@ class _MainPlaylistState extends State<MainPlaylistPage> {
   Widget build(BuildContext context) {
     return ListView.builder(controller: _controller, itemBuilder: _buildItem);
   }
-}
 
-class MainCloudPage extends StatelessWidget {
   @override
-  Widget build(BuildContext context) {
-    return Placeholder();
-  }
+  bool get wantKeepAlive => true;
+
 }
 
 class MyDrawerHeader extends StatelessWidget {

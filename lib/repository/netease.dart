@@ -60,6 +60,18 @@ class NeteaseRepository {
         type: EncryptType.linux);
   }
 
+  ///推荐歌单
+  Future<Map<String, Object>> personalizedPlaylist(
+      {int limit = 30, int offset = 0}) {
+    return _doRequest("/weapi/personalized/playlist",
+        {"limit": limit, "offset": offset, "total": true, "n": 1000});
+  }
+
+  /// 推荐的新歌（10首）
+  Future<Map<String, Object>> personalizedNewSong() {
+    return _doRequest("/weapi/personalized/newsong", {"type": "recommend"});
+  }
+
   //请求数据
   Future<Map<String, dynamic>> _doRequest(String path, Map data,
       {EncryptType type = EncryptType.we, Options options}) async {
