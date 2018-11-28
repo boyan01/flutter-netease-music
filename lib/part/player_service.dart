@@ -14,9 +14,17 @@ class MusicPlayer extends ValueNotifier<PlayerStateValue> {
   ///if param is null, play current music
   ///if param music is null , current is null , do nothing
   Future<void> play({Music music}) async {
-    music ??= value.current;
     if (music == null) {
-      //do nothing if source is not available
+      if (_controller.value.initialized && !_controller.value.isPlaying) {
+        await _controller.play();
+      }
+      if (value.current != null) {
+        await play(music: value.current);
+      }
+      return;
+    }
+    if (value.current == music && _controller.value.initialized) {
+      await _controller.play();
       return;
     }
     assert(
@@ -45,7 +53,7 @@ class MusicPlayer extends ValueNotifier<PlayerStateValue> {
     return _controller.pause();
   }
 
-  void quiet(){
+  void quiet() {
     _controller.removeListener(_controllerListener);
     _controller.dispose();
     _controller = null;
@@ -135,4 +143,16 @@ class PlayerState extends InheritedWidget {
   bool updateShouldNotify(PlayerState oldWidget) {
     return value != oldWidget.value;
   }
+}
+
+///format milliseconds to time stamp like "06:23", which
+///means 6 minute 23 seconds
+String getTimeStamp(int milliseconds) {
+  int seconds = (milliseconds / 1000).truncate();
+  int minutes = (seconds / 60).truncate();
+
+  String minutesStr = (minutes % 60).toString().padLeft(2, '0');
+  String secondsStr = (seconds % 60).toString().padLeft(2, '0');
+
+  return "$minutesStr:$secondsStr";
 }
