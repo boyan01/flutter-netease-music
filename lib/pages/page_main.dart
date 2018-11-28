@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:quiet/pages/page_main_cloud.dart';
 import 'package:quiet/pages/page_main_playlist.dart';
 import 'package:quiet/part/part.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class MainPage extends StatefulWidget {
   @override
@@ -43,8 +44,33 @@ class _MainPageState extends State<MainPage>
     return Quiet(
       child: LoginStateWidget(Scaffold(
         drawer: Drawer(
-          child: ListView(
-            children: <Widget>[MyDrawerHeader()],
+          child: Column(
+            children: <Widget>[
+              MyDrawerHeader(),
+              MediaQuery.removePadding(
+                  context: context,
+                  removeTop: true,
+                  child: Expanded(
+                    child: ListView(
+                      children: <Widget>[
+                        ListTile(
+                          leading: Icon(Icons.settings,
+                              color: Theme.of(context).iconTheme.color),
+                          title: Text(
+                            "设置",
+                          ),
+                          onTap: () {
+                            //TODO to setting
+                          },
+                        ),
+                        Divider(
+                          height: 0.5,
+                          indent: 64,
+                        )
+                      ],
+                    ),
+                  ))
+            ],
           ),
         ),
         appBar: AppBar(
@@ -80,50 +106,25 @@ class _MainPageState extends State<MainPage>
 class MyDrawerHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Builder(builder: (context) {
-      var state = LoginState.of(context);
-      if (state.isLogin) {
-        Map<String, Object> profile = state.user["profile"];
-        return _createHeader(
-            context, Image.network(profile["avatarUrl"]), profile["nickname"]);
-      } else {
-        return _createHeader(
-            context,
-            Container(
-              color: Colors.grey,
-            ),
-            "未登录");
-      }
-    });
-  }
+    Widget name;
+    ImageProvider avatar;
+    if (LoginState.of(context).isLogin) {
+      Map profile = LoginState.of(context).user["profile"];
+      name = Text(profile["nickname"]);
+      avatar = CachedNetworkImageProvider(profile["avatarUrl"]);
+    } else {
+      name = const Text("未登录");
+    }
 
-  Widget _createHeader(BuildContext context, Widget avatar, String username) {
-    return DrawerHeader(
-        decoration: BoxDecoration(color: Theme.of(context).primaryColor),
-        child: Column(
-          children: <Widget>[
-            Spacer(),
-            Row(
-              children: <Widget>[
-                Padding(
-                  padding: EdgeInsets.all(8),
-                  child: SizedBox(
-                    height: 48,
-                    width: 48,
-                    child: ClipOval(
-                      child: avatar,
-                    ),
-                  ),
-                )
-              ],
-            ),
-            Padding(
-              padding: EdgeInsets.all(8),
-              child: Row(
-                children: [Text(username)],
-              ),
-            )
-          ],
-        ));
+    return UserAccountsDrawerHeader(
+      currentAccountPicture: CircleAvatar(
+        backgroundImage: avatar,
+      ),
+      accountName: name,
+      accountEmail: null,
+      onDetailsPressed: () {
+        debugPrint("onDetailsPressed");
+      },
+    );
   }
 }
