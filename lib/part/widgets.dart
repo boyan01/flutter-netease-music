@@ -139,6 +139,7 @@ class BottomControllerBar extends StatelessWidget {
                 child: ClipRRect(
                   borderRadius: BorderRadius.all(Radius.circular(3)),
                   child: CachedNetworkImage(
+                    fit: BoxFit.cover,
                     imageUrl: music.album.coverImageUrl,
                   ),
                 ),
@@ -183,7 +184,7 @@ class BottomControllerBar extends StatelessWidget {
               IconButton(
                   icon: Icon(Icons.skip_next),
                   onPressed: () {
-                    quiet.quiet();
+                    quiet.playNext();
                   }),
             ],
           ),
