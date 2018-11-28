@@ -33,6 +33,7 @@ class MusicPlayer extends ValueNotifier<PlayerStateValue> {
     _controller?.dispose();
 
     _controller = VideoPlayerController.network(url);
+    _controller.initialize();
     _controller.addListener(_controllerListener);
   }
 
