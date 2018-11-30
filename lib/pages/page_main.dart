@@ -3,6 +3,7 @@ import 'package:quiet/pages/page_main_cloud.dart';
 import 'package:quiet/pages/page_main_playlist.dart';
 import 'package:quiet/part/part.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:quiet/repository/netease.dart';
 
 class MainPage extends StatefulWidget {
   @override
@@ -108,23 +109,45 @@ class MyDrawerHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     Widget name;
     ImageProvider avatar;
+    List<Widget> otherAccountsPictures;
     if (LoginState.of(context).isLogin) {
       Map profile = LoginState.of(context).user["profile"];
       name = Text(profile["nickname"]);
       avatar = CachedNetworkImageProvider(profile["avatarUrl"]);
+      otherAccountsPictures = [
+        IconButton(
+          icon: Icon(
+            Icons.exit_to_app,
+            color: Theme.of(context).primaryIconTheme.color,
+          ),
+          tooltip: "退出登陆",
+          onPressed: () {
+            neteaseRepository.logout();
+          },
+        )
+      ];
     } else {
       name = const Text("未登录");
     }
 
+    void _onAvatarClick() {
+      if (!LoginState.of(context).isLogin) {
+        Navigator.of(context).pushNamed(ROUTE_LOGIN);
+      } else {
+        debugPrint("work in process...");
+      }
+    }
+
     return UserAccountsDrawerHeader(
-      currentAccountPicture: CircleAvatar(
-        backgroundImage: avatar,
+      currentAccountPicture: InkResponse(
+        onTap: _onAvatarClick,
+        child: CircleAvatar(
+          backgroundImage: avatar,
+        ),
       ),
       accountName: name,
       accountEmail: null,
-      onDetailsPressed: () {
-        debugPrint("onDetailsPressed");
-      },
+      otherAccountsPictures: otherAccountsPictures,
     );
   }
 }
