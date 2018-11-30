@@ -227,7 +227,6 @@ class _AlbumCover extends StatefulWidget {
 
 class _AlbumCoverState extends State<_AlbumCover>
     with TickerProviderStateMixin {
-
   //album cover rotation animation
   AnimationController controller;
 
@@ -248,7 +247,7 @@ class _AlbumCoverState extends State<_AlbumCover>
 
     needleController = AnimationController(
         vsync: this,
-        duration: Duration(milliseconds: 500),
+        duration: Duration(milliseconds: 700),
         animationBehavior: AnimationBehavior.normal);
     needleAnimation = Tween<double>(begin: -1 / 12, end: 0)
         .chain(CurveTween(curve: Curves.easeInOut))
@@ -304,6 +303,8 @@ class _AlbumCoverState extends State<_AlbumCover>
     needleController.dispose();
   }
 
+  static const double HEIGHT_SPACE_ALBUM_TOP = 100;
+
   @override
   Widget build(BuildContext context) {
     var music = PlayerState.of(context).value.current;
@@ -311,8 +312,8 @@ class _AlbumCoverState extends State<_AlbumCover>
     return Stack(
       children: <Widget>[
         Container(
-          padding: EdgeInsets.only(top: 100),
-          margin: EdgeInsets.symmetric(horizontal: 64),
+          padding: const EdgeInsets.only(top: HEIGHT_SPACE_ALBUM_TOP),
+          margin: const EdgeInsets.symmetric(horizontal: 64),
           child: Transform.rotate(
             angle: rotation,
             child: Material(
@@ -342,10 +343,14 @@ class _AlbumCoverState extends State<_AlbumCover>
               offset: Offset(40, -0),
               child: RotationTransition(
                 turns: needleAnimation,
-                alignment: const Alignment(-1, -1),
-                child: SizedBox(
-                    height: 160,
-                    child: Image.asset("assets/playing_page_needle.png")),
+                alignment:
+                    //44,37 是针尾的圆形的中心点像素坐标, 273,402是playing_page_needle.png的宽高
+                    //所以对此计算旋转中心点的偏移,以保重旋转动画的中心在针尾圆形的中点
+                    const Alignment(-1 + 44 * 2 / 273, -1 + 37 * 2 / 402),
+                child: Image.asset(
+                  "assets/playing_page_needle.png",
+                  height: HEIGHT_SPACE_ALBUM_TOP * 1.6,
+                ),
               ),
             ),
           ),
