@@ -71,7 +71,7 @@ class NeteaseRepository {
       user.value = result;
       return result;
     } else {
-      return null;
+      return result;
     }
   }
 
