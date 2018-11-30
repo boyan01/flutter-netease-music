@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:quiet/repository/netease.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:convert';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -94,11 +92,7 @@ class _LoginState extends State<LoginPage> {
                             context: context, builder: _buildLoginDialog);
                         var result = await neteaseRepository.login(
                             _phoneController.text, _passwordController.text);
-                        if (result["code"] == 200) {
-                          var preference =
-                              await SharedPreferences.getInstance();
-                          preference.setString(
-                              "login_user", json.encode(result));
+                        if (result != null) {
                           Navigator.popUntil(context, ModalRoute.withName("/"));
                         } else {
                           setState(() {

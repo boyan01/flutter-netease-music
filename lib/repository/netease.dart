@@ -8,13 +8,35 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 NeteaseRepository neteaseRepository = NeteaseRepository._private();
 
 class NeteaseRepository {
   static const String _BASE_URL = "http://music.163.com";
 
-  NeteaseRepository._private();
+  ///current login user
+  final ValueNotifier<Map> user = ValueNotifier(null);
+
+  NeteaseRepository._private() {
+    SharedPreferences.getInstance().then((preference) {
+      var userJson = preference.getString("login_user");
+      Map<String, Object> user;
+      if (userJson == null || userJson.isEmpty) {
+        user = null;
+      }
+      try {
+        user = json.decode(userJson);
+      } catch (e) {}
+      this.user.value = user;
+      this.user.addListener(() {
+        var userValue = this.user.value;
+        if (userValue != null) {
+          preference.setString("login_user", json.encode(userValue));
+        }
+      });
+    });
+  }
 
   Dio _dio;
 
@@ -41,8 +63,24 @@ class NeteaseRepository {
       "phone": phone,
       "password": md5.convert(utf8.encode(password)).toString()
     };
-    return _doRequest("/weapi/login/cellphone", request,
+    var result = await _doRequest("/weapi/login/cellphone", request,
         options: Options(headers: {"User-Agent": _chooseUserAgent(ua: "pc")}));
+
+    if (result["code"] == 200) {
+      //保存登陆的用户
+      user.value = result;
+      return result;
+    } else {
+      return null;
+    }
+  }
+
+  ///登出
+  Future<void> logout() async {
+    //删除cookie
+    ((await dio).cookieJar as PersistCookieJar).delete(Uri.parse(_BASE_URL));
+    //删除preference
+    user.value = null;
   }
 
   ///根据用户ID获取歌单
