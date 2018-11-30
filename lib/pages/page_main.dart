@@ -115,15 +115,18 @@ class MyDrawerHeader extends StatelessWidget {
       name = Text(profile["nickname"]);
       avatar = CachedNetworkImageProvider(profile["avatarUrl"]);
       otherAccountsPictures = [
-        IconButton(
-          icon: Icon(
-            Icons.exit_to_app,
-            color: Theme.of(context).primaryIconTheme.color,
+        Material(
+          color: Colors.transparent,
+          child: IconButton(
+            icon: Icon(
+              Icons.exit_to_app,
+              color: Theme.of(context).primaryIconTheme.color,
+            ),
+            tooltip: "退出登陆",
+            onPressed: () {
+              neteaseRepository.logout();
+            },
           ),
-          tooltip: "退出登陆",
-          onPressed: () {
-            neteaseRepository.logout();
-          },
         )
       ];
     } else {
