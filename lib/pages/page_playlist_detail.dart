@@ -218,12 +218,16 @@ class _PlaylistDetailHeader extends StatelessWidget {
                     Container(
                       padding: EdgeInsets.symmetric(vertical: 16),
                       margin: EdgeInsets.only(left: 32, right: 20),
-                      child: AspectRatio(
-                        aspectRatio: 1,
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.all(Radius.circular(3)),
-                          child: CachedNetworkImage(
-                              imageUrl: playlist["coverImgUrl"]),
+                      child: Hero(
+                        tag: playlist["coverImgUrl"],
+                        child: AspectRatio(
+                          aspectRatio: 1,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.all(Radius.circular(3)),
+                            child: CachedNetworkImage(
+                                fit: BoxFit.cover,
+                                imageUrl: playlist["coverImgUrl"]),
+                          ),
                         ),
                       ),
                     ),
