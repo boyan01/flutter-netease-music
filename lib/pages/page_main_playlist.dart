@@ -91,9 +91,7 @@ class _MainPlaylistState extends State<MainPlaylistPage>
           ListTile(
               title: Text("当前未登录，点击登录!"),
               onTap: () {
-                Navigator.pushNamed(context, "/login").then((_) {
-                  LoginState.refresh(context);
-                });
+                Navigator.pushNamed(context, "/login");
               }));
     }
 

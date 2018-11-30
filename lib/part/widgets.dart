@@ -1,9 +1,7 @@
-import 'dart:convert';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:quiet/part/route.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:quiet/repository/netease.dart';
 
 import 'player_service.dart';
 
@@ -13,13 +11,6 @@ class LoginState extends InheritedWidget {
   ///根据BuildContext获取 [LoginState]
   static LoginState of(BuildContext context) {
     return context.inheritFromWidgetOfExactType(LoginState);
-  }
-
-  ///刷新登录状态，检查是否登录状态已改变
-  static void refresh(BuildContext context) {
-    _LoginState _state =
-        context.ancestorStateOfType(const TypeMatcher<_LoginState>());
-    _state.checkIsLogin();
   }
 
   LoginState(this.user, this.child) : super(child: child);
@@ -63,29 +54,22 @@ class LoginStateWidget extends StatefulWidget {
 class _LoginState extends State<LoginStateWidget> {
   Map<String, Object> user;
 
-  void checkIsLogin() {
-    SharedPreferences.getInstance().then((preference) {
-      var jsonStr = preference.getString("login_user");
+  @override
+  void initState() {
+    super.initState();
+    neteaseRepository.user.addListener(_onUserChanged);
+  }
 
-      Map<String, Object> user;
-      if (jsonStr == null || jsonStr.isEmpty) {
-        user = null;
-      }
-      try {
-        user = json.decode(jsonStr);
-      } catch (e) {}
-      if (user != this.user) {
-        setState(() {
-          this.user = user;
-        });
-      }
+  void _onUserChanged() {
+    setState(() {
+      this.user = neteaseRepository.user.value;
     });
   }
 
   @override
-  void initState() {
-    super.initState();
-    checkIsLogin();
+  void dispose() {
+    super.dispose();
+    neteaseRepository.user.removeListener(_onUserChanged);
   }
 
   @override
