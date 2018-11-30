@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:quiet/part/route.dart';
 import 'package:quiet/repository/netease.dart';
 
@@ -118,13 +119,16 @@ class BottomControllerBar extends StatelessWidget {
           height: 56,
           child: Row(
             children: <Widget>[
-              Container(
-                padding: const EdgeInsets.all(8),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.all(Radius.circular(3)),
-                  child: CachedNetworkImage(
-                    fit: BoxFit.cover,
-                    imageUrl: music.album.coverImageUrl,
+              Hero(
+                tag: "album_cover",
+                child: Container(
+                  padding: const EdgeInsets.all(8),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.all(Radius.circular(3)),
+                    child: CachedNetworkImage(
+                      fit: BoxFit.cover,
+                      imageUrl: music.album.coverImageUrl,
+                    ),
                   ),
                 ),
               ),

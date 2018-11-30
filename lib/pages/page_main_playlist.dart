@@ -155,16 +155,19 @@ class _ItemPlaylist extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      leading: SizedBox(
-        child: ClipRRect(
-          borderRadius: BorderRadius.all(Radius.circular(4)),
-          child: CachedNetworkImage(
-            fit: BoxFit.cover,
-            imageUrl: playlist["coverImgUrl"],
+      leading: Hero(
+        tag: playlist["coverImgUrl"],
+        child: SizedBox(
+          child: ClipRRect(
+            borderRadius: BorderRadius.all(Radius.circular(4)),
+            child: CachedNetworkImage(
+              fit: BoxFit.cover,
+              imageUrl: playlist["coverImgUrl"],
+            ),
           ),
+          height: 48,
+          width: 48,
         ),
-        height: 48,
-        width: 48,
       ),
       title: Text(
         playlist["name"],

@@ -308,7 +308,6 @@ class _AlbumCoverState extends State<_AlbumCover>
   @override
   Widget build(BuildContext context) {
     var music = PlayerState.of(context).value.current;
-
     return Stack(
       children: <Widget>[
         Container(
@@ -323,14 +322,17 @@ class _AlbumCoverState extends State<_AlbumCover>
               clipBehavior: Clip.antiAlias,
               child: AspectRatio(
                 aspectRatio: 1,
-                child: Container(
-                  foregroundDecoration: BoxDecoration(
-                      image: DecorationImage(
-                          image: AssetImage("assets/playing_page_disc.png"))),
-                  padding: EdgeInsets.all(20),
-                  child: ClipOval(
-                    child:
-                        CachedNetworkImage(imageUrl: music.album.coverImageUrl),
+                child: Hero(
+                  tag: "album_cover",
+                  child: Container(
+                    foregroundDecoration: BoxDecoration(
+                        image: DecorationImage(
+                            image: AssetImage("assets/playing_page_disc.png"))),
+                    padding: EdgeInsets.all(20),
+                    child: ClipOval(
+                      child:
+                          CachedNetworkImage(imageUrl: music.album.coverImageUrl),
+                    ),
                   ),
                 ),
               ),
