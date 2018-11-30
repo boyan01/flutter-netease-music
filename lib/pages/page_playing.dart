@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'dart:ui';
 
 import 'package:cached_network_image/cached_network_image.dart';
@@ -18,7 +19,6 @@ class PlayingPage extends StatelessWidget {
               child: Column(
                 children: <Widget>[
                   _PlayingTitle(),
-                  Spacer(),
                   _AlbumCover(),
                   Spacer(),
                   _OperationBar(),
@@ -220,19 +220,137 @@ class _OperationBar extends StatelessWidget {
   }
 }
 
-class _AlbumCover extends StatelessWidget {
+class _AlbumCover extends StatefulWidget {
+  @override
+  State createState() => _AlbumCoverState();
+}
+
+class _AlbumCoverState extends State<_AlbumCover>
+    with TickerProviderStateMixin {
+
+  //album cover rotation animation
+  AnimationController controller;
+
+  //cover needle controller
+  AnimationController needleController;
+
+  //cover needle in and out animation
+  Animation<double> needleAnimation;
+
+  //album cover rotation
+  double rotation = 0;
+
+  bool isPlaying = false;
+
+  @override
+  void initState() {
+    super.initState();
+
+    needleController = AnimationController(
+        vsync: this,
+        duration: Duration(milliseconds: 500),
+        animationBehavior: AnimationBehavior.normal);
+    needleAnimation = Tween<double>(begin: -1 / 12, end: 0)
+        .chain(CurveTween(curve: Curves.easeInOut))
+        .animate(needleController);
+
+    controller = AnimationController(
+        vsync: this,
+        duration: Duration(seconds: 13),
+        animationBehavior: AnimationBehavior.normal)
+      ..addListener(() {
+        setState(() {
+          rotation = controller.value * 2 * pi;
+        });
+      })
+      ..addStatusListener((status) {
+        if (status == AnimationStatus.completed && controller.value == 1) {
+          controller.forward(from: 0);
+        }
+      });
+
+    quiet.addListener(_onMusicStateChanged);
+  }
+
+  void _onMusicStateChanged() {
+    var state = quiet.value.state;
+
+    var _isPlaying = state.isPlaying;
+
+    if (_isPlaying && !isPlaying) {
+      debugPrint("controller status : ${controller.status}");
+      controller.forward(from: (rotation) / (2 * pi));
+    } else if (!_isPlaying) {
+      controller.stop();
+    }
+
+    if (isPlaying != _isPlaying) {
+      if (_isPlaying) {
+        //由暂停改为播放状态
+        needleController.forward(from: controller.value);
+      } else {
+        needleController.reverse(from: controller.value);
+      }
+    }
+
+    isPlaying = _isPlaying;
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    quiet.removeListener(_onMusicStateChanged);
+    controller.dispose();
+    needleController.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     var music = PlayerState.of(context).value.current;
 
-    return Container(
-      margin: EdgeInsets.symmetric(horizontal: 64),
-      child: AspectRatio(
-        aspectRatio: 1,
-        child: ClipOval(
-          child: CachedNetworkImage(imageUrl: music.album.coverImageUrl),
+    return Stack(
+      children: <Widget>[
+        Container(
+          padding: EdgeInsets.only(top: 100),
+          margin: EdgeInsets.symmetric(horizontal: 64),
+          child: Transform.rotate(
+            angle: rotation,
+            child: Material(
+              elevation: 3,
+              color: Colors.transparent,
+              borderRadius: BorderRadius.circular(500),
+              clipBehavior: Clip.antiAlias,
+              child: AspectRatio(
+                aspectRatio: 1,
+                child: Container(
+                  foregroundDecoration: BoxDecoration(
+                      image: DecorationImage(
+                          image: AssetImage("assets/playing_page_disc.png"))),
+                  padding: EdgeInsets.all(20),
+                  child: ClipOval(
+                    child:
+                        CachedNetworkImage(imageUrl: music.album.coverImageUrl),
+                  ),
+                ),
+              ),
+            ),
+          ),
         ),
-      ),
+        Container(
+          child: Center(
+            child: Transform.translate(
+              offset: Offset(40, -0),
+              child: RotationTransition(
+                turns: needleAnimation,
+                alignment: const Alignment(-1, -1),
+                child: SizedBox(
+                    height: 160,
+                    child: Image.asset("assets/playing_page_needle.png")),
+              ),
+            ),
+          ),
+        )
+      ],
     );
   }
 }
