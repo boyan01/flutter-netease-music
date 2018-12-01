@@ -128,21 +128,57 @@ class _QuietState extends State<Quiet> {
   }
 }
 
-class PlayerState extends InheritedWidget {
+class PlayerState extends InheritedModel<PlayerStateAspect> {
   PlayerState({@required Widget child, @required this.value})
       : super(child: child);
 
   ///get current playing music
   final PlayerStateValue value;
 
-  static PlayerState of(BuildContext context) {
-    return context.inheritFromWidgetOfExactType(PlayerState);
+  static PlayerState of(BuildContext context, {PlayerStateAspect aspect}) {
+    return context.inheritFromWidgetOfExactType(PlayerState, aspect: aspect);
   }
 
   @override
   bool updateShouldNotify(PlayerState oldWidget) {
     return value != oldWidget.value;
   }
+
+  @override
+  bool updateShouldNotifyDependent(
+      PlayerState oldWidget, Set<PlayerStateAspect> dependencies) {
+    if (dependencies.contains(PlayerStateAspect.position) &&
+        (value.state.position != oldWidget.value.state.position)) {
+      return true;
+    }
+    if (dependencies.contains(PlayerStateAspect.play) &&
+        (value.state.isPlaying != oldWidget.value.state.isPlaying)) {
+      return true;
+    }
+    if (dependencies.contains(PlayerStateAspect.playlist) &&
+        (value.playlist != oldWidget.value.playlist)) {
+      return true;
+    }
+    if (dependencies.contains(PlayerStateAspect.music) &&
+        (value.current != oldWidget.value.current)) {
+      return true;
+    }
+    return false;
+  }
+}
+
+enum PlayerStateAspect {
+  ///the position of playing
+  position,
+
+  ///the playing state
+  play,
+
+  ///the current playing
+  music,
+
+  ///the current playing playlist
+  playlist
 }
 
 ///format milliseconds to time stamp like "06:23", which
