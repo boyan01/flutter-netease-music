@@ -49,11 +49,14 @@ class BottomControllerBar extends StatelessWidget {
                 tag: "album_cover",
                 child: Container(
                   padding: const EdgeInsets.all(8),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.all(Radius.circular(3)),
-                    child: CachedNetworkImage(
-                      fit: BoxFit.cover,
-                      imageUrl: music.album.coverImageUrl,
+                  child: AspectRatio(
+                    aspectRatio: 1,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.all(Radius.circular(3)),
+                      child: CachedNetworkImage(
+                        fit: BoxFit.cover,
+                        imageUrl: music.album.coverImageUrl,
+                      ),
                     ),
                   ),
                 ),
