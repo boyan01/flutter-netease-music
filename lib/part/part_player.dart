@@ -4,7 +4,6 @@ import 'package:quiet/part/route.dart';
 
 import 'player_service.dart';
 
-
 class BoxWithBottomPlayerController extends StatelessWidget {
   BoxWithBottomPlayerController(this.child);
 
@@ -73,6 +72,8 @@ class BottomControllerBar extends StatelessWidget {
                     Padding(padding: const EdgeInsets.only(top: 2)),
                     Text(
                       music.subTitle,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                       style: Theme.of(context).textTheme.caption,
                     ),
                     Spacer(),
