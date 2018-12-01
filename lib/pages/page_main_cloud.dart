@@ -38,7 +38,9 @@ class _NavigationLine extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
           _ItemNavigator(Icons.radio, "私人FM", () {}),
-          _ItemNavigator(Icons.today, "每日推荐", () {}),
+          _ItemNavigator(Icons.today, "每日推荐", () {
+            Navigator.pushNamed(context, ROUTE_DAILY);
+          }),
           _ItemNavigator(Icons.show_chart, "排行榜", () {
             Navigator.pushNamed(context, ROUTE_LEADERBOARD);
           }),
@@ -245,25 +247,7 @@ class _NewSongState extends State<_SectionNewSongs> {
 
   Music _mapJsonToMusic(Map json) {
     Map<String, Object> song = json["song"];
-
-    Map album = song["album"] as Map;
-
-    List<Artist> artists = (song["artists"] as List).cast<Map>().map((e) {
-      return Artist(
-        name: e["name"],
-        id: e["id"],
-      );
-    }).toList();
-
-    return Music(
-        id: song["id"],
-        title: song["name"],
-        url: "http://music.163.com/song/media/outer/url?id=${song["id"]}.mp3",
-        album: Album(
-            id: album["id"],
-            name: album["name"],
-            coverImageUrl: album["picUrl"]),
-        artist: artists);
+    return mapJsonToMusic(song);
   }
 
   @override
