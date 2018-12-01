@@ -1,12 +1,46 @@
+import 'dart:convert';
+
 import 'package:flutter/widgets.dart';
 import 'package:meta/meta.dart';
 import 'package:quiet/model/model.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:video_player/video_player.dart';
 
 MusicPlayer quiet = MusicPlayer._private();
 
 class MusicPlayer extends ValueNotifier<PlayerStateValue> {
-  MusicPlayer._private() : super(PlayerStateValue.uninitialized());
+  MusicPlayer._private() : super(PlayerStateValue.uninitialized()) {
+    () async {
+      var preference = await SharedPreferences.getInstance();
+      Music current;
+      List<Music> playlist;
+      try {
+        current =
+            Music.fromMap(json.decode(preference.get("quiet_player_playing")));
+        playlist =
+            (json.decode(preference.get("quiet_player_playlist")) as List)
+                .cast<Map>()
+                .map(Music.fromMap)
+                .toList();
+        debugPrint("current : $current");
+      } catch (e) {
+        debugPrint(e.toString());
+      }
+
+      addListener(() {
+        if (current != value.current) {
+          preference.setString("quiet_player_playing",
+              json.encode(value.current, toEncodable: (e) => e.toMap()));
+          current = value.current;
+        }
+        if (playlist != value.playlist) {
+          preference.setString("quiet_player_playlist",
+              json.encode(value.playlist, toEncodable: (e) => e.toMap()));
+        }
+      });
+      value = value.copyWith(current: current, playlist: playlist);
+    }();
+  }
 
   VideoPlayerController _controller;
 
@@ -86,6 +120,23 @@ class PlayerStateValue {
     return PlayerStateValue(state ?? this.state, playlist ?? this.playlist,
         current ?? this.current);
   }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is PlayerStateValue &&
+          runtimeType == other.runtimeType &&
+          state == other.state &&
+          playlist == other.playlist &&
+          current == other.current;
+
+  @override
+  int get hashCode => state.hashCode ^ playlist.hashCode ^ current.hashCode;
+
+  @override
+  String toString() {
+    return 'PlayerStateValue{state: $state, playlist: $playlist, current: $current}';
+  }
 }
 
 class Quiet extends StatefulWidget {
@@ -108,9 +159,9 @@ class _QuietState extends State<Quiet> {
 
   @override
   void initState() {
-    super.initState();
     value = quiet.value;
     quiet.addListener(_onPlayerChange);
+    super.initState();
   }
 
   @override
