@@ -27,10 +27,6 @@ class _PlayListDetailState extends State<PagePlaylistDetail> {
   ///列表滚动的高度
   double scrollHeight = 0;
 
-  double appBarHeight = kToolbarHeight;
-
-  bool isAppBarUpdated = false;
-
   ScrollController scrollController;
 
   SongTileProvider songTileProvider;
@@ -88,30 +84,13 @@ class _PlayListDetailState extends State<PagePlaylistDetail> {
   }
 
   double _getAppbarOpacity() {
-    if (!isAppBarUpdated) {
-      double statusHeight = MediaQuery.of(context, nullOk: true)?.padding?.top;
-      if (statusHeight != null) {
-        appBarHeight += statusHeight;
-        isAppBarUpdated = true;
-      }
-    }
+    double appBarHeight = MediaQuery.of(context).padding.top + kToolbarHeight;
     double areaHeight = (_HEIGHT_HEADER - appBarHeight);
     return (scrollHeight / areaHeight).clamp(0.0, 1.0);
   }
 
-  List<Widget> songList;
-
   @override
   Widget build(BuildContext context) {
-    if (songTileProvider != null &&
-        songList == null &&
-        songTileProvider.musics.length > 0) {
-      songList = [];
-      for (var i = 0; i < songTileProvider.musics.length + 2; i++) {
-        songList.add(_buildList(context, i));
-      }
-    }
-
     var appBarOpacity = _getAppbarOpacity();
 
     return Scaffold(
@@ -119,9 +98,9 @@ class _PlayListDetailState extends State<PagePlaylistDetail> {
         children: <Widget>[
           Quiet(
             child: BoxWithBottomPlayerController(
-              ListView(
+              ListView.builder(
                 padding: const EdgeInsets.all(0),
-                children: songList ?? [_buildList(context, 0)],
+                itemBuilder: _buildList,
                 controller: scrollController,
               ),
             ),
@@ -129,7 +108,7 @@ class _PlayListDetailState extends State<PagePlaylistDetail> {
           Column(
             children: <Widget>[
               AppBar(
-                elevation: 0,
+                elevation: appBarOpacity > 0.7 ? 2 : 0,
                 leading: IconButton(
                     icon: Icon(Icons.arrow_back),
                     onPressed: () => Navigator.pop(context)),
@@ -147,7 +126,7 @@ class _PlayListDetailState extends State<PagePlaylistDetail> {
 
   Widget _buildList(BuildContext context, int index) {
     if (index == 0) {
-      return _PlaylistDetailHeader(appBarHeight, playlist);
+      return _PlaylistDetailHeader(playlist);
     }
     return songTileProvider?.buildWidget(index - 1);
   }
@@ -166,7 +145,7 @@ class _HeaderAction extends StatelessWidget {
   Widget build(BuildContext context) {
     var textTheme = Theme.of(context).primaryTextTheme;
 
-    return InkWell(
+    return InkResponse(
       onTap: onTap,
       splashColor: textTheme.body1.color,
       child: Column(
@@ -189,9 +168,7 @@ class _HeaderAction extends StatelessWidget {
 }
 
 class _PlaylistDetailHeader extends StatelessWidget {
-  _PlaylistDetailHeader(this.paddingTop, this.playlist);
-
-  final double paddingTop;
+  _PlaylistDetailHeader(this.playlist);
 
   final Map<String, Object> playlist;
 
@@ -209,85 +186,93 @@ class _PlaylistDetailHeader extends StatelessWidget {
         child: Container(
           color: Colors.black.withOpacity(0.1),
           child: Padding(
-            padding: EdgeInsets.only(top: paddingTop),
-            child: Column(
-              children: <Widget>[
-                Expanded(
-                    child: Row(
-                  children: <Widget>[
-                    Container(
-                      padding: EdgeInsets.symmetric(vertical: 16),
-                      margin: EdgeInsets.only(left: 32, right: 20),
-                      child: Hero(
-                        tag: playlist["coverImgUrl"],
-                        child: AspectRatio(
-                          aspectRatio: 1,
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.all(Radius.circular(3)),
-                            child: CachedNetworkImage(
-                                fit: BoxFit.cover,
-                                imageUrl: playlist["coverImgUrl"]),
+            padding: EdgeInsets.only(
+                top: MediaQuery.of(context).padding.top + kToolbarHeight),
+            child: Material(
+              elevation: 0,
+              color: Colors.transparent,
+              child: Column(
+                children: <Widget>[
+                  Expanded(
+                      child: Row(
+                    children: <Widget>[
+                      Container(
+                        padding: EdgeInsets.symmetric(vertical: 16),
+                        margin: EdgeInsets.only(left: 32, right: 20),
+                        child: Hero(
+                          tag: playlist["coverImgUrl"],
+                          child: AspectRatio(
+                            aspectRatio: 1,
+                            child: ClipRRect(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(3)),
+                              child: CachedNetworkImage(
+                                  fit: BoxFit.cover,
+                                  imageUrl: playlist["coverImgUrl"]),
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Container(
-                          margin: EdgeInsets.only(top: 40),
-                          child: Text(
-                            playlist["name"],
-                            style: Theme.of(context)
-                                .primaryTextTheme
-                                .title
-                                .copyWith(fontSize: 18),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Container(
+                            margin: EdgeInsets.only(top: 40),
+                            child: Text(
+                              playlist["name"],
+                              style: Theme.of(context)
+                                  .primaryTextTheme
+                                  .title
+                                  .copyWith(fontSize: 18),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
                           ),
-                        ),
-                        Padding(padding: EdgeInsets.only(top: 20)),
-                        InkWell(
-                          onTap: () => {},
-                          child: Row(
-                            children: <Widget>[
-                              SizedBox(
-                                height: 24,
-                                width: 24,
-                                child: ClipOval(
-                                  child: CachedNetworkImage(
-                                      imageUrl: creator["avatarUrl"]),
+                          Padding(padding: EdgeInsets.only(top: 20)),
+                          InkWell(
+                            onTap: () => {},
+                            child: Row(
+                              children: <Widget>[
+                                SizedBox(
+                                  height: 24,
+                                  width: 24,
+                                  child: ClipOval(
+                                    child: CachedNetworkImage(
+                                        imageUrl: creator["avatarUrl"]),
+                                  ),
                                 ),
-                              ),
-                              Padding(padding: EdgeInsets.only(left: 4)),
-                              Text(
-                                creator["nickname"],
-                                style: Theme.of(context).primaryTextTheme.body1,
-                              ),
-                              Icon(
-                                Icons.chevron_right,
-                                color: Theme.of(context).primaryIconTheme.color,
-                              )
-                            ],
-                          ),
-                        )
-                      ],
-                    )
-                  ],
-                )),
-                Padding(
-                  padding: EdgeInsets.only(bottom: 8),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: <Widget>[
-                      _HeaderAction(Icons.comment, "评论", () => {}),
-                      _HeaderAction(Icons.share, "分享", () => {}),
-                      _HeaderAction(Icons.file_download, "下载", () => {}),
-                      _HeaderAction(Icons.check_box, "多选", () => {}),
+                                Padding(padding: EdgeInsets.only(left: 4)),
+                                Text(
+                                  creator["nickname"],
+                                  style:
+                                      Theme.of(context).primaryTextTheme.body1,
+                                ),
+                                Icon(
+                                  Icons.chevron_right,
+                                  color:
+                                      Theme.of(context).primaryIconTheme.color,
+                                )
+                              ],
+                            ),
+                          )
+                        ],
+                      )
                     ],
-                  ),
-                )
-              ],
+                  )),
+                  Padding(
+                    padding: EdgeInsets.only(bottom: 12),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: <Widget>[
+                        _HeaderAction(Icons.comment, "评论", () => {}),
+                        _HeaderAction(Icons.share, "分享", () => {}),
+                        _HeaderAction(Icons.file_download, "下载", () => {}),
+                        _HeaderAction(Icons.check_box, "多选", () => {}),
+                      ],
+                    ),
+                  )
+                ],
+              ),
             ),
           ),
           height: _HEIGHT_HEADER,
