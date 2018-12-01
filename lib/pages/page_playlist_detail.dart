@@ -59,21 +59,9 @@ class _PlayListDetailState extends State<PagePlaylistDetail> {
 
   ///map playlist json tracks to Music list
   static List<Music> _mapPlaylist(List<Object> tracks) {
-    var list = tracks.map((it) {
-      var o = it as Map<String, Object>;
-
-      var al = (o['al'] as Map<String, Object>);
-      var ar = ((o['ar']) as List).cast<Map<String, Object>>();
-      return Music(
-          id: o["id"],
-          title: o["name"],
-          url: "http://music.163.com/song/media/outer/url?id=${o["id"]}.mp3",
-          album: Album(
-              name: al["name"], id: al["id"], coverImageUrl: al["picUrl"]),
-          artist: ar.map((a) {
-            return Artist(id: a["id"], name: a["name"]);
-          }).toList());
-    });
+    var list = tracks
+        .cast<Map>()
+        .map((e) => mapJsonToMusic(e, artistKey: "ar", albumKey: "al"));
     return list.toList();
   }
 

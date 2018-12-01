@@ -22,6 +22,7 @@ dependencies:
   shared_preferences: ^0.4.3
   cached_network_image: ^0.6.0-alpha.2
   video_player: ^0.7.2
+  url_launcher: ^4.0.2
 
 dev_dependencies:
   flutter_test:
@@ -40,6 +41,7 @@ flutter:
   assets:
     - assets/playing_page_disc.png
     - assets/playing_page_needle.png
+    - assets/daily_list_background.webp
 
   # To add custom fonts to your application, add a fonts section here,
   # in this "flutter" section. Each entry in this list should have a

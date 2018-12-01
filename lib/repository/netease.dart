@@ -8,6 +8,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:quiet/part/part.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 NeteaseRepository neteaseRepository = NeteaseRepository._private();
@@ -112,7 +113,15 @@ class NeteaseRepository {
 
   /// 榜单摘要
   Future<Map<String, Object>> topListDetail() async {
-    return _doRequest("/weapi/toplist/detail", {});
+    return _doRequest("/weapi/toplist/detail", {
+      "offset": 0,
+      "total": true,
+      "limit": 20,
+    });
+  }
+
+  Future<Map<String, Object>> recommendSongs() async {
+    return _doRequest("/weapi/v1/discovery/recommend/songs", {});
   }
 
   //请求数据
@@ -202,4 +211,24 @@ String _chooseUserAgent({String ua}) {
     index = (r.nextDouble() * (_USER_AGENT_LIST.length - 1)).floor();
   }
   return _USER_AGENT_LIST[index];
+}
+
+Music mapJsonToMusic(Map song,
+    {String artistKey = "artists", String albumKey = "album"}) {
+  Map album = song[albumKey] as Map;
+
+  List<Artist> artists = (song[artistKey] as List).cast<Map>().map((e) {
+    return Artist(
+      name: e["name"],
+      id: e["id"],
+    );
+  }).toList();
+
+  return Music(
+      id: song["id"],
+      title: song["name"],
+      url: "http://music.163.com/song/media/outer/url?id=${song["id"]}.mp3",
+      album: Album(
+          id: album["id"], name: album["name"], coverImageUrl: album["picUrl"]),
+      artist: artists);
 }
