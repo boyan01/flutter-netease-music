@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:quiet/pages/page_playlist_detail.dart';
+import 'package:quiet/part/part.dart';
 import 'package:quiet/part/song_list_widgets.dart';
 import 'package:quiet/repository/netease.dart';
 
@@ -38,7 +39,9 @@ class _NavigationLine extends StatelessWidget {
         children: <Widget>[
           _ItemNavigator(Icons.radio, "私人FM", () {}),
           _ItemNavigator(Icons.today, "每日推荐", () {}),
-          _ItemNavigator(Icons.show_chart, "排行榜", () {}),
+          _ItemNavigator(Icons.show_chart, "排行榜", () {
+            Navigator.pushNamed(context, ROUTE_LEADERBOARD);
+          }),
         ],
       ),
     );

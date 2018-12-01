@@ -110,6 +110,11 @@ class NeteaseRepository {
     return _doRequest("/weapi/personalized/newsong", {"type": "recommend"});
   }
 
+  /// 榜单摘要
+  Future<Map<String, Object>> topListDetail() async {
+    return _doRequest("/weapi/toplist/detail", {});
+  }
+
   //请求数据
   Future<Map<String, dynamic>> _doRequest(String path, Map data,
       {EncryptType type = EncryptType.we, Options options}) async {
