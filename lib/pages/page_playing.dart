@@ -19,9 +19,10 @@ class PlayingPage extends StatelessWidget {
               child: Column(
                 children: <Widget>[
                   _PlayingTitle(),
-                  _AlbumCover(),
+                  _CenterSection(),
                   Spacer(),
                   _OperationBar(),
+                  Padding(padding: EdgeInsets.only(top: 10)),
                   _DurationProgressBar(),
                   _ControllerBar(),
                 ],
@@ -34,6 +35,8 @@ class PlayingPage extends StatelessWidget {
   }
 }
 
+///player controller
+/// pause,play,play next,play previous...
 class _ControllerBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -220,6 +223,35 @@ class _OperationBar extends StatelessWidget {
   }
 }
 
+class _CenterSection extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() => _CenterSectionState();
+}
+
+class _CenterSectionState extends State<_CenterSection> {
+
+  bool showLyric = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+        onTap: () {
+          setState(() {
+            showLyric = !showLyric;
+          });
+        },
+        child: AnimatedCrossFade(
+          crossFadeState:
+              showLyric ? CrossFadeState.showSecond : CrossFadeState.showFirst,
+          duration: Duration(milliseconds: 300),
+          firstChild: _AlbumCover(),
+          secondChild: LyricWidget(
+            lyricLineStyle: Theme.of(context).primaryTextTheme.body1,
+          ),
+        ));
+  }
+}
+
 class _AlbumCover extends StatefulWidget {
   @override
   State createState() => _AlbumCoverState();
@@ -330,8 +362,8 @@ class _AlbumCoverState extends State<_AlbumCover>
                             image: AssetImage("assets/playing_page_disc.png"))),
                     padding: EdgeInsets.all(20),
                     child: ClipOval(
-                      child:
-                          CachedNetworkImage(imageUrl: music.album.coverImageUrl),
+                      child: CachedNetworkImage(
+                          imageUrl: music.album.coverImageUrl),
                     ),
                   ),
                 ),
