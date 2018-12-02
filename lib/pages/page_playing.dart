@@ -229,7 +229,6 @@ class _CenterSection extends StatefulWidget {
 }
 
 class _CenterSectionState extends State<_CenterSection> {
-
   bool showLyric = false;
 
   @override
@@ -246,7 +245,10 @@ class _CenterSectionState extends State<_CenterSection> {
           duration: Duration(milliseconds: 300),
           firstChild: _AlbumCover(),
           secondChild: LyricWidget(
-            lyricLineStyle: Theme.of(context).primaryTextTheme.body1,
+            lyricLineStyle: Theme.of(context)
+                .primaryTextTheme
+                .body1
+                .copyWith(fontSize: 16, height: 1.5),
           ),
         ));
   }

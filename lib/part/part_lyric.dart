@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:ui' as ui;
 
 import 'package:async/async.dart';
 import 'package:flutter/material.dart';
@@ -17,7 +18,6 @@ class LyricWidget extends StatefulWidget {
 }
 
 class LyricState extends State<LyricWidget> {
-
   Lyric lyric;
 
   Music current;
@@ -32,7 +32,7 @@ class LyricState extends State<LyricWidget> {
     controller = ScrollController();
     quiet.addListener(_onPlayerChanged);
     _onPlayerChanged();
-    controller.addListener((){
+    controller.addListener(() {
       debugPrint("lyric offset : ${controller.offset}");
     });
   }
@@ -43,21 +43,20 @@ class LyricState extends State<LyricWidget> {
       if (current != null) {
         lyricLoadTask?.cancel();
         lyricLoadTask =
-        CancelableOperation.fromFuture(neteaseRepository.lyric(current.id))
-          ..value.then((content) {
-            setState(() {
-              lyric = Lyric.from(content);
-            });
-          });
+            CancelableOperation.fromFuture(neteaseRepository.lyric(current.id))
+              ..value.then((content) {
+                setState(() {
+                  lyric = Lyric.from(content);
+                });
+              });
       }
     }
 
-    if(lyric != null){
+    if (lyric != null) {
       int milliseconds = quiet.value.state.position.inMilliseconds;
       int line = lyric.findIndexByTimeStamp(milliseconds, 0);
       debugPrint("current $line : ${lyric[line]}");
     }
-
   }
 
   @override
@@ -69,33 +68,114 @@ class LyricState extends State<LyricWidget> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    List<Widget> lines = [];
+  Widget build(BuildContext _) {
+    Widget content;
     if (lyric != null) {
-      for (int i = 0; i < lyric.size; i++) {
-        lines.add(Text(
-          lyric[i].line,
-          textAlign: TextAlign.center,
-          style: widget.lyricLineStyle,
-        ));
-      }
+      content = RowLyric(
+        lyric,
+        lyricLineStyle: widget.lyricLineStyle,
+      );
     } else {
-      return Container(
-        child: Center(
-          child: Text("正在加载中..."),
-        ),
+      content = Center(
+        child: Text("正在加载中..."),
       );
     }
     return Container(
       child: AspectRatio(
         aspectRatio: 1,
-        child: ListView(
-          controller: controller,
-          padding: EdgeInsets.all(0),
-          children: lines,
-        ),
+        child: content,
       ),
     );
+  }
+}
+
+class RowLyric extends StatefulWidget {
+  RowLyric(this.lyric, {this.lyricLineStyle});
+
+  final Lyric lyric;
+
+  final TextStyle lyricLineStyle;
+
+  @override
+  State<StatefulWidget> createState() => _RowLyricState();
+}
+
+class _RowLyricState extends State<RowLyric> {
+  GlobalKey key = GlobalKey();
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((Duration timeStamp) {});
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    List<Widget> widgets = [];
+
+    var builder = ui.ParagraphBuilder(ui.ParagraphStyle());
+    builder.pushStyle(ui.TextStyle(
+        fontSize: widget.lyricLineStyle.fontSize,
+        height: widget.lyricLineStyle.height));
+    builder.addText("test");
+    var build = builder.build();
+    build.layout(ui.ParagraphConstraints(width: 100));
+    debugPrint("${build.height}");
+
+    for (int i = 0; i < widget.lyric.size; i++) {
+      Key key;
+      if (i == 0) {
+        key = this.key;
+      }
+      Widget line = Text(
+        widget.lyric[i].line,
+        textAlign: TextAlign.center,
+        style: widget.lyricLineStyle,
+        key: key,
+      );
+      widgets.add(line);
+    }
+    return CustomPaint(
+      painter: LyricPainter(widget.lyricLineStyle),
+    );
+  }
+}
+
+class LyricPainter extends CustomPainter {
+  TextPainter painter;
+  TextPainter painter2;
+
+  LyricPainter(TextStyle style) {
+    painter = TextPainter(text: TextSpan(style: style, text: "hello"));
+    painter.textDirection = TextDirection.ltr;
+    painter.layout();
+
+    painter2 = TextPainter(
+        text:
+            TextSpan(style: style.copyWith(color: Colors.red), text: "hello"));
+    painter2.textDirection = TextDirection.ltr;
+    painter2.layout();
+  }
+
+  @override
+  void paint(ui.Canvas canvas, ui.Size size) {
+    debugPrint("size : $size");
+    canvas.translate(0, size.height / 2);
+
+    painter.paint(canvas, Offset.zero);
+
+    canvas.save();
+    canvas.clipRect(Rect.fromLTWH(0, 0, painter2.width / 3, painter2.height));
+    painter2.paint(canvas, Offset.zero);
+
+    canvas.restore();
+
+    debugPrint("height : ${painter.height}");
+  }
+
+  @override
+  bool shouldRepaint(LyricPainter oldDelegate) {
+    return true;
   }
 }
 
