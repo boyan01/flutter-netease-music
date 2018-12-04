@@ -120,8 +120,18 @@ class NeteaseRepository {
     });
   }
 
+  ///推荐歌曲
   Future<Map<String, Object>> recommendSongs() async {
     return _doRequest("/weapi/v1/discovery/recommend/songs", {});
+  }
+
+  ///根据音乐id获取歌词
+  Future<String> lyric(int id) async {
+    var result = await _doRequest(
+        "https://music.163.com/weapi/song/lyric?os=osx&id=$id&lv=-1&kv=-1&tv=-1",
+        {});
+    Map lyc = result["lrc"];
+    return lyc["lyric"];
   }
 
   //请求数据
