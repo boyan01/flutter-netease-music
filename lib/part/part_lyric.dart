@@ -1,191 +1,295 @@
 import 'dart:convert';
 import 'dart:ui' as ui;
 
-import 'package:async/async.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:quiet/part/part.dart';
-import 'package:quiet/repository/netease.dart';
 
-import 'player_service.dart';
-
-class LyricWidget extends StatefulWidget {
-  LyricWidget({this.lyricLineStyle});
+class Lyric extends StatefulWidget {
+  Lyric(
+      {@required this.lyric,
+      this.lyricLineStyle,
+      this.position,
+      this.textAlign = TextAlign.center,
+      this.highlight = Colors.red,
+      this.size = Size.infinite});
 
   final TextStyle lyricLineStyle;
+
+  final LyricContent lyric;
+
+  final TextAlign textAlign;
+
+  final ValueNotifier<int> position;
+
+  final Color highlight;
+
+  final Size size;
 
   @override
   State<StatefulWidget> createState() => LyricState();
 }
 
-class LyricState extends State<LyricWidget> {
-  Lyric lyric;
+class LyricState extends State<Lyric> with TickerProviderStateMixin {
+  LyricPainter lyricPainter;
 
-  Music current;
+  AnimationController _flingController;
 
-  CancelableOperation lyricLoadTask;
-
-  ScrollController controller;
+  AnimationController _lineController;
 
   @override
   void initState() {
     super.initState();
-    controller = ScrollController();
-    quiet.addListener(_onPlayerChanged);
-    _onPlayerChanged();
-    controller.addListener(() {
-      debugPrint("lyric offset : ${controller.offset}");
-    });
+    lyricPainter = LyricPainter(widget.lyricLineStyle, widget.lyric,
+        textAlign: widget.textAlign, highlight: widget.highlight);
+    widget.position?.addListener(_onPositionChange);
   }
 
-  void _onPlayerChanged() {
-    if (current != quiet.value.current) {
-      current = quiet.value.current;
-      if (current != null) {
-        lyricLoadTask?.cancel();
-        lyricLoadTask =
-            CancelableOperation.fromFuture(neteaseRepository.lyric(current.id))
-              ..value.then((content) {
-                setState(() {
-                  lyric = Lyric.from(content);
-                });
-              });
-      }
-    }
+  void _onPositionChange() {
+    int milliseconds = widget.position.value;
 
-    if (lyric != null) {
-      int milliseconds = quiet.value.state.position.inMilliseconds;
-      int line = lyric.findIndexByTimeStamp(milliseconds, 0);
-      debugPrint("current $line : ${lyric[line]}");
+    int line = widget.lyric
+        .findLineByTimeStamp(milliseconds, lyricPainter.currentLine);
+
+//    debugPrint("is being dragging : $isDragging");
+
+    if (lyricPainter.currentLine != line && !isDragging) {
+      double offset = lyricPainter.computeScrollTo(line);
+//      debugPrint("find line : $line , isDragging = $isDragging");
+//      debugPrint("start _lineController : $offset");
+      _lineController?.dispose();
+      _lineController = AnimationController(
+        vsync: this,
+        duration: Duration(milliseconds: 300),
+      )..addStatusListener((status) {
+          if (status == AnimationStatus.completed) {
+            _lineController.dispose();
+            _lineController = null;
+          }
+        });
+      Animation<double> animation = Tween<double>(
+              begin: lyricPainter.offsetScroll,
+              end: lyricPainter.offsetScroll + offset)
+          .animate(_lineController);
+      animation.addListener(() {
+        lyricPainter.offsetScroll = animation.value;
+      });
+      _lineController.forward();
     }
+    lyricPainter.currentLine = line;
   }
+
+  bool isDragging = false;
 
   @override
   void dispose() {
     super.dispose();
-    quiet.removeListener(_onPlayerChanged);
-    lyricLoadTask?.cancel();
-    controller.dispose();
+    _flingController?.dispose();
+    _flingController = null;
+    widget.position?.removeListener(_onPositionChange);
   }
 
   @override
   Widget build(BuildContext _) {
-    Widget content;
-    if (lyric != null) {
-      content = RowLyric(
-        lyric,
-        lyricLineStyle: widget.lyricLineStyle,
-      );
-    } else {
-      content = Center(
-        child: Text("正在加载中..."),
-      );
-    }
     return Container(
-      child: AspectRatio(
-        aspectRatio: 1,
-        child: content,
+      constraints: BoxConstraints(minWidth: 300, minHeight: 120),
+      child: Listener(
+        behavior: HitTestBehavior.translucent,
+        onPointerDown: (_) {
+          isDragging = true;
+        },
+        onPointerUp: (_) {
+          isDragging = false;
+        },
+        onPointerCancel: (_) {
+          isDragging = false;
+        },
+        child: GestureDetector(
+          onVerticalDragStart: (details) {
+            _flingController?.dispose();
+            _flingController = null;
+          },
+          onVerticalDragUpdate: (details) {
+            lyricPainter.offsetScroll += details.primaryDelta;
+          },
+          onVerticalDragEnd: (details) {
+            isDragging = true;
+            _flingController = AnimationController.unbounded(
+                vsync: this, duration: const Duration(milliseconds: 300))
+              ..addListener(() {
+                double value = _flingController.value;
+
+                if (value < -lyricPainter.height || value >= 0) {
+                  _flingController.dispose();
+                  _flingController = null;
+                  isDragging = false;
+                  value = value.clamp(-lyricPainter.height, 0.0);
+                }
+                lyricPainter.offsetScroll = value;
+                lyricPainter.repaint();
+              })
+              ..addStatusListener((status) {
+                if (status == AnimationStatus.completed ||
+                    status == AnimationStatus.dismissed) {
+                  isDragging = false;
+                }
+              })
+              ..animateWith(ClampingScrollSimulation(
+                  position: lyricPainter.offsetScroll,
+                  velocity: details.primaryVelocity));
+          },
+          child: CustomPaint(
+            size: widget.size,
+            painter: lyricPainter,
+          ),
+        ),
       ),
     );
   }
 }
 
-class RowLyric extends StatefulWidget {
-  RowLyric(this.lyric, {this.lyricLineStyle});
+class LyricPainter extends ChangeNotifier implements CustomPainter {
+  LyricContent lyric;
+  List<TextPainter> lyricPainters;
 
-  final Lyric lyric;
+  double _offsetScroll = 0;
 
-  final TextStyle lyricLineStyle;
+  double get offsetScroll => _offsetScroll;
 
-  @override
-  State<StatefulWidget> createState() => _RowLyricState();
-}
-
-class _RowLyricState extends State<RowLyric> {
-  GlobalKey key = GlobalKey();
-
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((Duration timeStamp) {});
+  set offsetScroll(double value) {
+    _offsetScroll = value.clamp(-height, 0.0);
+    repaint();
   }
 
-  @override
-  Widget build(BuildContext context) {
-    List<Widget> widgets = [];
+  int currentLine = 0;
 
-    var builder = ui.ParagraphBuilder(ui.ParagraphStyle());
-    builder.pushStyle(ui.TextStyle(
-        fontSize: widget.lyricLineStyle.fontSize,
-        height: widget.lyricLineStyle.height));
-    builder.addText("test");
-    var build = builder.build();
-    build.layout(ui.ParagraphConstraints(width: 100));
-    debugPrint("${build.height}");
+  TextAlign textAlign;
 
-    for (int i = 0; i < widget.lyric.size; i++) {
-      Key key;
-      if (i == 0) {
-        key = this.key;
-      }
-      Widget line = Text(
-        widget.lyric[i].line,
-        textAlign: TextAlign.center,
-        style: widget.lyricLineStyle,
-        key: key,
-      );
-      widgets.add(line);
+  TextStyle styleHighlight;
+
+  ///param lyric must not be null
+  LyricPainter(TextStyle style, this.lyric,
+      {this.textAlign = TextAlign.center, Color highlight = Colors.red}) {
+    assert(lyric != null);
+    lyricPainters = [];
+    for (int i = 0; i < lyric.size; i++) {
+      var painter = TextPainter(
+          text: TextSpan(style: style, text: lyric[i].line),
+          textAlign: textAlign);
+      painter.textDirection = TextDirection.ltr;
+//      painter.layout();//layout first, to get the height
+      lyricPainters.add(painter);
     }
-    return CustomPaint(
-      painter: LyricPainter(widget.lyricLineStyle),
-    );
+    styleHighlight = style.copyWith(color: highlight);
   }
-}
 
-class LyricPainter extends CustomPainter {
-  TextPainter painter;
-  TextPainter painter2;
-
-  LyricPainter(TextStyle style) {
-    painter = TextPainter(text: TextSpan(style: style, text: "hello"));
-    painter.textDirection = TextDirection.ltr;
-    painter.layout();
-
-    painter2 = TextPainter(
-        text:
-            TextSpan(style: style.copyWith(color: Colors.red), text: "hello"));
-    painter2.textDirection = TextDirection.ltr;
-    painter2.layout();
+  void repaint() {
+    notifyListeners();
   }
+
+  double get height => _height;
+  double _height = 0;
+
+  Paint debugPaint = Paint();
 
   @override
   void paint(ui.Canvas canvas, ui.Size size) {
-    debugPrint("size : $size");
-    canvas.translate(0, size.height / 2);
+    _layoutPainterList(size);
+    canvas.clipRect(Rect.fromLTWH(0, 0, size.width, size.height));
+
+//    canvas.drawLine(Offset(0, size.height / 2),
+//        Offset(size.width, size.height / 2), debugPaint);
+
+    double dy = offsetScroll + size.height / 2 - lyricPainters[0].height / 2;
+
+    for (int line = 0; line < lyricPainters.length; line++) {
+      TextPainter painter = lyricPainters[line];
+
+      if (line == currentLine) {
+        painter = TextPainter(
+            text: TextSpan(text: painter.text.text, style: styleHighlight),
+            textAlign: textAlign);
+        painter.textDirection = TextDirection.ltr;
+        painter.layout(maxWidth: size.width);
+      }
+      drawLine(canvas, painter, dy, size);
+      dy += painter.height;
+    }
+  }
+
+  ///draw a lyric line
+  void drawLine(
+      ui.Canvas canvas, TextPainter painter, double dy, ui.Size size) {
+    if (dy > size.height || dy < 0 - painter.height) {
+      return;
+    }
+    canvas.save();
+
+    double dx = 0;
+    if (textAlign == TextAlign.center) {
+      dx = (size.width - painter.width) / 2;
+    }
+    canvas.translate(dx, dy);
 
     painter.paint(canvas, Offset.zero);
-
-    canvas.save();
-    canvas.clipRect(Rect.fromLTWH(0, 0, painter2.width / 3, painter2.height));
-    painter2.paint(canvas, Offset.zero);
-
     canvas.restore();
-
-    debugPrint("height : ${painter.height}");
   }
 
   @override
   bool shouldRepaint(LyricPainter oldDelegate) {
     return true;
   }
+
+  void _layoutPainterList(ui.Size size) {
+    _height = 0;
+    lyricPainters.forEach((p) {
+      p.layout(maxWidth: size.width);
+      _height += p.height;
+    });
+  }
+
+  //compute the offset current offset to destination line
+  double computeScrollTo(int destination) {
+    if (lyricPainters.length <= 0) {
+      return 0;
+    }
+
+    double height = -lyricPainters[0].height / 2;
+    for (int i = 0; i < lyricPainters.length; i++) {
+      if (i == destination) {
+        height += lyricPainters[i].height / 2;
+        break;
+      }
+      height += lyricPainters[i].height;
+    }
+    return -(height + offsetScroll);
+  }
+
+  @override
+  bool hitTest(ui.Offset position) => null;
+
+  @override
+  get semanticsBuilder => null;
+
+  @override
+  bool shouldRebuildSemantics(CustomPainter oldDelegate) =>
+      shouldRebuildSemantics(oldDelegate);
 }
 
-class Lyric {
+class LyricContent {
   ///splitter lyric content to line
   static const LineSplitter _SPLITTER = const LineSplitter();
 
-  Lyric.from(String text) {
+  LyricContent.from(String text) {
     List<String> lines = _SPLITTER.convert(text);
-    lines.forEach((l) => LyricEntry.inflate(l, this));
+    Map map = <int, String>{};
+    lines.forEach((l) => LyricEntry.inflate(l, map));
+
+    List<int> keys = map.keys.toList()..sort();
+    keys.forEach((key) {
+      _durations.add(key);
+      _lyricEntries.add(LyricEntry(map[key], getTimeStamp(key)));
+    });
   }
 
   List<int> _durations = [];
@@ -208,7 +312,7 @@ class Lyric {
   ///@param anchorLine the start line to search
   ///@return index to getLyricEntry
   ///
-  int findIndexByTimeStamp(final int timeStamp, final int anchorLine) {
+  int findLineByTimeStamp(final int timeStamp, final int anchorLine) {
     int position = anchorLine;
     if (position < 0 || position > size - 1) {
       position = 0;
@@ -266,7 +370,7 @@ class LyricEntry {
   }
 
   ///build from a .lrc file line .such as: [11:44.100] what makes your beautiful
-  static void inflate(String line, Lyric lyric) {
+  static void inflate(String line, Map<int, String> map) {
     //TODO lyric info
     if (line.startsWith("[ti:")) {
     } else if (line.startsWith("[ar:")) {
@@ -278,8 +382,7 @@ class LyricEntry {
       var content = line.split(pattern).last;
       stamps.forEach((stamp) {
         int timeStamp = _stamp2int(stamp.group(0));
-        lyric._durations.add(timeStamp);
-        lyric._lyricEntries.add(LyricEntry(content, getTimeStamp(timeStamp)));
+        map[timeStamp] = content;
       });
     }
   }
