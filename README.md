@@ -2,9 +2,9 @@
 
 a music player. working in progress！
 
+all API information comes from this project: [NeteaseCloudMusicApi](https://github.com/Binaryify/NeteaseCloudMusicApi) 
+
 **For personal reasons(have not iOS devices), the platformized code will only write the Android part**
-
-
 
 # Preview
 
