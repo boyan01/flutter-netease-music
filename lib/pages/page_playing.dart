@@ -323,14 +323,21 @@ class _CloudLyricState extends State<_CloudLyric> {
 
     if (state == 2) {
       //load success
-      return Container(
-        child: Lyric(
-          lyric: lyric,
-          lyricLineStyle: style.copyWith(color: style.color.withAlpha(189)),
-          highlight: style.color,
-          position: position,
-        ),
-      );
+      return LayoutBuilder(builder: (context, constraints) {
+        return Container(
+          child: Lyric(
+            lyric: lyric,
+            lyricLineStyle: style.copyWith(color: style.color.withAlpha(189)),
+            highlight: style.color,
+            position: position,
+            size: Size(
+                constraints.maxWidth,
+                constraints.maxHeight == double.infinity
+                    ? 0
+                    : constraints.maxHeight),
+          ),
+        );
+      });
     }
 
     Widget widget;
@@ -416,6 +423,7 @@ class _AlbumCoverState extends State<_AlbumCover>
 
     var _isPlaying = state.isPlaying;
 
+    //handle album cover animation
     if (_isPlaying && !isPlaying) {
       debugPrint("controller status : ${controller.status}");
       controller.forward(from: (rotation) / (2 * pi));
@@ -423,9 +431,9 @@ class _AlbumCoverState extends State<_AlbumCover>
       controller.stop();
     }
 
+    //handle needle rotation animation
     if (isPlaying != _isPlaying) {
       if (_isPlaying) {
-        //由暂停改为播放状态
         needleController.forward(from: controller.value);
       } else {
         needleController.reverse(from: controller.value);
@@ -481,20 +489,22 @@ class _AlbumCoverState extends State<_AlbumCover>
             ),
           ),
         ),
-        Container(
-          child: Align(
-            alignment: Alignment(0, -1),
-            child: Transform.translate(
-              offset: Offset(40, -0),
-              child: RotationTransition(
-                turns: needleAnimation,
-                alignment:
-                    //44,37 是针尾的圆形的中心点像素坐标, 273,402是playing_page_needle.png的宽高
-                    //所以对此计算旋转中心点的偏移,以保重旋转动画的中心在针尾圆形的中点
-                    const Alignment(-1 + 44 * 2 / 273, -1 + 37 * 2 / 402),
-                child: Image.asset(
-                  "assets/playing_page_needle.png",
-                  height: HEIGHT_SPACE_ALBUM_TOP * 1.6,
+        ClipRect(
+          child: Container(
+            child: Align(
+              alignment: Alignment(0, -1),
+              child: Transform.translate(
+                offset: Offset(40, -15),
+                child: RotationTransition(
+                  turns: needleAnimation,
+                  alignment:
+                      //44,37 是针尾的圆形的中心点像素坐标, 273,402是playing_page_needle.png的宽高
+                      //所以对此计算旋转中心点的偏移,以保重旋转动画的中心在针尾圆形的中点
+                      const Alignment(-1 + 44 * 2 / 273, -1 + 37 * 2 / 402),
+                  child: Image.asset(
+                    "assets/playing_page_needle.png",
+                    height: HEIGHT_SPACE_ALBUM_TOP * 1.8,
+                  ),
                 ),
               ),
             ),
