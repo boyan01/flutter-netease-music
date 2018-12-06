@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:quiet/part/part.dart';
 import 'package:quiet/repository/netease.dart';
+import 'package:palette_generator/palette_generator.dart';
 
 ///歌单详情信息item高度
 const double _HEIGHT_HEADER = 300;
@@ -35,6 +36,8 @@ class _PlayListDetailState extends State<PagePlaylistDetail> {
   ///2 - load failed
   int state = 0;
 
+  Color primaryColor;
+
   @override
   void initState() {
     super.initState();
@@ -52,12 +55,26 @@ class _PlayListDetailState extends State<PagePlaylistDetail> {
         setState(() {
           playlist = result["playlist"];
           state = 1;
+          loadPrimaryColor();
         });
       } else {
         setState(() {
           state = 2;
         });
       }
+    });
+    loadPrimaryColor();
+  }
+
+  void loadPrimaryColor() async {
+    if (playlist == null || this.primaryColor != null) {
+      return;
+    }
+    PaletteGenerator generator = await PaletteGenerator.fromImageProvider(
+        NeteaseImage(playlist["coverImgUrl"]));
+    var primaryColor = generator.mutedColor.color;
+    setState(() {
+      this.primaryColor = primaryColor;
     });
   }
 
@@ -96,17 +113,22 @@ class _PlayListDetailState extends State<PagePlaylistDetail> {
         );
       }
     }
-    return Scaffold(
-      body: Stack(
-        children: <Widget>[
-          body,
-          Column(
-            children: <Widget>[
-              _OpacityTitle(
-                  playlist == null ? "歌单" : playlist["name"], appBarOpacity)
-            ],
-          )
-        ],
+    return Theme(
+      data: Theme.of(context).copyWith(
+          primaryColor: primaryColor ?? Theme.of(context).primaryColor,
+          accentColor: primaryColor),
+      child: Scaffold(
+        body: Stack(
+          children: <Widget>[
+            body,
+            Column(
+              children: <Widget>[
+                _OpacityTitle(
+                    playlist == null ? "歌单" : playlist["name"], appBarOpacity)
+              ],
+            )
+          ],
+        ),
       ),
     );
   }
@@ -156,7 +178,8 @@ class _OpacityTitleState extends State<_OpacityTitle> {
           onPressed: () => Navigator.pop(context)),
       title: Text(appBarOpacityValue < 0.5 ? "歌单" : (widget.name ?? "歌单")),
       toolbarOpacity: 1,
-      backgroundColor: Colors.grey.withOpacity(appBarOpacityValue),
+      backgroundColor:
+          Theme.of(context).primaryColor.withOpacity(appBarOpacityValue),
     );
   }
 }
