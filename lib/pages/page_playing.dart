@@ -149,24 +149,26 @@ class _DurationProgressBar extends StatelessWidget {
       progressIndicator = Stack(
         fit: StackFit.passthrough,
         children: <Widget>[
-          LinearProgressIndicator(
-            value: maxBuffering / duration,
-            valueColor: AlwaysStoppedAnimation<Color>(Colors.white70),
-            backgroundColor: Colors.white12,
-          ),
-          LinearProgressIndicator(
-            value: position / duration,
-            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-            backgroundColor: Colors.transparent,
+//          LinearProgressIndicator(
+//            value: maxBuffering / duration,
+//            valueColor: AlwaysStoppedAnimation<Color>(Colors.white70),
+//            backgroundColor: Colors.white12,
+//          ),
+          Slider(
+            value: position.toDouble(),
+            min: 0.0,
+            activeColor: theme.body1.color.withOpacity(0.75),
+            inactiveColor: theme.caption.color.withOpacity(0.3),
+            max: duration.toDouble(),
+            onChanged: (value) {
+              quiet.seekTo(value.round());
+            },
           ),
         ],
       );
     } else {
-      progressIndicator = LinearProgressIndicator(
-        value: null,
-        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-        backgroundColor: Colors.transparent,
-      );
+      //a disable slider if media is not available
+      progressIndicator = Slider(value: 0, onChanged: (_) => {});
     }
 
     return Padding(
@@ -174,11 +176,11 @@ class _DurationProgressBar extends StatelessWidget {
       child: Row(
         children: <Widget>[
           Text(positionText ?? "00:00", style: theme.body1),
-          Padding(padding: EdgeInsets.only(left: 8)),
+          Padding(padding: EdgeInsets.only(left: 4)),
           Expanded(
             child: progressIndicator,
           ),
-          Padding(padding: EdgeInsets.only(left: 8)),
+          Padding(padding: EdgeInsets.only(left: 4)),
           Text(durationText ?? "00:00", style: theme.body1),
         ],
       ),
