@@ -11,6 +11,9 @@ class SongTileProvider {
 
   final List<Music> musics;
 
+  //song item length plus a header
+  get size => musics.length + 1;
+
   void _playAll() {
     debugPrint("play all _");
   }
@@ -79,7 +82,7 @@ class SongListHeader extends StatelessWidget {
 class SongTile extends StatelessWidget {
   SongTile(this.music, this.index, {this.onTap});
 
-  /// music json item
+  /// music item
   final Music music;
 
   /// [music]'index in list, start with 1
@@ -97,7 +100,7 @@ class SongTile extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Container(
-              margin: EdgeInsets.only(left: 8, right: 8),
+              margin: const EdgeInsets.only(left: 8, right: 8),
               width: 40,
               height: 40,
               child: Center(
