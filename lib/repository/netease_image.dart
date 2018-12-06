@@ -98,7 +98,7 @@ class NeteaseImage extends ImageProvider<NeteaseImage> implements CacheKey {
 _ImageCache __imageCache;
 
 Future<_ImageCache> _imageCache() async {
-  if (_imageCache != null) {
+  if (__imageCache != null) {
     return __imageCache;
   }
   var temp = await getTemporaryDirectory();
