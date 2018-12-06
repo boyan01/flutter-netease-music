@@ -1,7 +1,7 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:quiet/part/part.dart';
 import 'package:quiet/repository/netease.dart';
+import 'package:quiet/repository/netease_image.dart';
 
 class MainPlaylistPage extends StatefulWidget {
   @override
@@ -160,9 +160,9 @@ class _ItemPlaylist extends StatelessWidget {
         child: SizedBox(
           child: ClipRRect(
             borderRadius: BorderRadius.all(Radius.circular(4)),
-            child: CachedNetworkImage(
+            child: Image(
+              image: NeteaseImage(playlist["coverImgUrl"]),
               fit: BoxFit.cover,
-              imageUrl: playlist["coverImgUrl"],
             ),
           ),
           height: 48,

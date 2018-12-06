@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:quiet/pages/page_main_cloud.dart';
 import 'package:quiet/pages/page_main_playlist.dart';
 import 'package:quiet/part/part.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:quiet/repository/netease.dart';
 
 class MainPage extends StatefulWidget {
@@ -113,7 +112,7 @@ class MyDrawerHeader extends StatelessWidget {
     if (LoginState.of(context).isLogin) {
       Map profile = LoginState.of(context).user["profile"];
       name = Text(profile["nickname"]);
-      avatar = CachedNetworkImageProvider(profile["avatarUrl"]);
+      avatar = NeteaseImage(profile["avatarUrl"]);
       otherAccountsPictures = [
         Material(
           color: Colors.transparent,
