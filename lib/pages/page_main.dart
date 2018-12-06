@@ -13,29 +13,15 @@ class _MainPageState extends State<MainPage>
     with SingleTickerProviderStateMixin {
   TabController _tabController;
 
-  PageController _pageController;
-
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
-    _pageController = PageController();
-    _tabController.addListener(() {
-      _pageController.animateToPage(_tabController.index,
-          duration: const Duration(milliseconds: 300), curve: Curves.linear);
-    });
-    _pageController.addListener(() {
-      if (!_tabController.indexIsChanging) {
-        _tabController.index = _pageController.page.toInt();
-        _tabController.offset = _pageController.page;
-      }
-    });
   }
 
   @override
   void dispose() {
     _tabController.dispose();
-    _pageController.dispose();
     super.dispose();
   }
 
@@ -80,8 +66,8 @@ class _MainPageState extends State<MainPage>
             child: TabBar(
               controller: _tabController,
               tabs: <Widget>[
-                Icon(Icons.music_note, color: Colors.white),
-                Icon(Icons.cloud, color: Colors.white)
+                Tab(child: Icon(Icons.music_note, color: Colors.white)),
+                Tab(child: Icon(Icons.cloud, color: Colors.white)),
               ],
             ),
           ),
@@ -94,8 +80,8 @@ class _MainPageState extends State<MainPage>
             )
           ],
         ),
-        body: BoxWithBottomPlayerController(PageView(
-          controller: _pageController,
+        body: BoxWithBottomPlayerController(TabBarView(
+          controller: _tabController,
           children: <Widget>[MainPlaylistPage(), MainCloudPage()],
         )),
       )),
