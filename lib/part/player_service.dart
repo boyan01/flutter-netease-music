@@ -49,7 +49,9 @@ class MusicPlayer extends ValueNotifier<PlayerStateValue> {
   ///if param music is null , current is null , do nothing
   Future<void> play({Music music}) async {
     if (music == null) {
-      if (_controller != null && _controller.value.initialized && !_controller.value.isPlaying) {
+      if (_controller != null &&
+          _controller.value.initialized &&
+          !_controller.value.isPlaying) {
         await _controller.play();
       }
       if (value.current != null) {
@@ -57,7 +59,9 @@ class MusicPlayer extends ValueNotifier<PlayerStateValue> {
       }
       return;
     }
-    if (_controller != null && value.current == music && _controller.value.initialized) {
+    if (_controller != null &&
+        value.current == music &&
+        _controller.value.initialized) {
       await _controller.play();
       return;
     }
@@ -97,6 +101,11 @@ class MusicPlayer extends ValueNotifier<PlayerStateValue> {
   void playNext() {}
 
   void playPrevious() {}
+
+  ///seek to position in milliseconds
+  Future<void> seekTo(int position) {
+    return _controller.seekTo(Duration(milliseconds: position));
+  }
 
   Future<void> setVolume(double volume) {
     return _controller.setVolume(volume);
