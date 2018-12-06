@@ -11,6 +11,8 @@ import 'package:path_provider/path_provider.dart';
 import 'package:quiet/part/part.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+export 'netease_image.dart';
+
 NeteaseRepository neteaseRepository = NeteaseRepository._private();
 
 class NeteaseRepository {
