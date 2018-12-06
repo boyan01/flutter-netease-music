@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:quiet/part/route.dart';
 
@@ -53,9 +52,9 @@ class BottomControllerBar extends StatelessWidget {
                     aspectRatio: 1,
                     child: ClipRRect(
                       borderRadius: BorderRadius.all(Radius.circular(3)),
-                      child: CachedNetworkImage(
+                      child: Image(
                         fit: BoxFit.cover,
-                        imageUrl: music.album.coverImageUrl,
+                        image: NetworkImage(music.album.coverImageUrl),
                       ),
                     ),
                   ),
