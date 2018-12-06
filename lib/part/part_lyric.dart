@@ -12,7 +12,7 @@ class Lyric extends StatefulWidget {
       this.position,
       this.textAlign = TextAlign.center,
       this.highlight = Colors.red,
-      this.size = Size.infinite});
+      @required this.size});
 
   final TextStyle lyricLineStyle;
 
