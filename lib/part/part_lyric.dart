@@ -60,7 +60,7 @@ class LyricState extends State<Lyric> with TickerProviderStateMixin {
       _lineController?.dispose();
       _lineController = AnimationController(
         vsync: this,
-        duration: Duration(milliseconds: 300),
+        duration: Duration(milliseconds: 800),
       )..addStatusListener((status) {
           if (status == AnimationStatus.completed) {
             _lineController.dispose();
@@ -70,6 +70,7 @@ class LyricState extends State<Lyric> with TickerProviderStateMixin {
       Animation<double> animation = Tween<double>(
               begin: lyricPainter.offsetScroll,
               end: lyricPainter.offsetScroll + offset)
+          .chain(CurveTween(curve: Curves.easeInOut))
           .animate(_lineController);
       animation.addListener(() {
         lyricPainter.offsetScroll = animation.value;
