@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:quiet/pages/page_playlist_detail.dart';
 import 'package:quiet/part/part.dart';
@@ -199,8 +198,8 @@ class _PlaylistSectionState extends State<_SectionPlaylist> {
             SizedBox(
               child: ClipRRect(
                 borderRadius: BorderRadius.all(Radius.circular(6)),
-                child: CachedNetworkImage(
-                  imageUrl: playlist["picUrl"],
+                child: Image(
+                  image: NeteaseImage(playlist["picUrl"]),
                 ),
               ),
             ),

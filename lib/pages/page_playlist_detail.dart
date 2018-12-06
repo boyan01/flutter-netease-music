@@ -1,6 +1,5 @@
 import 'dart:ui';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:quiet/part/part.dart';
 import 'package:quiet/repository/netease.dart';
@@ -167,8 +166,7 @@ class _PlaylistDetailHeader extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
           image: DecorationImage(
-              image: CachedNetworkImageProvider(playlist["coverImgUrl"]),
-              fit: BoxFit.cover)),
+              image: NeteaseImage(playlist["coverImgUrl"]), fit: BoxFit.cover)),
       child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
         child: Container(
@@ -194,9 +192,9 @@ class _PlaylistDetailHeader extends StatelessWidget {
                             child: ClipRRect(
                               borderRadius:
                                   BorderRadius.all(Radius.circular(3)),
-                              child: CachedNetworkImage(
+                              child: Image(
                                   fit: BoxFit.cover,
-                                  imageUrl: playlist["coverImgUrl"]),
+                                  image: NeteaseImage(playlist["coverImgUrl"])),
                             ),
                           ),
                         ),
@@ -225,8 +223,9 @@ class _PlaylistDetailHeader extends StatelessWidget {
                                   height: 24,
                                   width: 24,
                                   child: ClipOval(
-                                    child: CachedNetworkImage(
-                                        imageUrl: creator["avatarUrl"]),
+                                    child: Image(
+                                        image:
+                                            NeteaseImage(creator["avatarUrl"])),
                                   ),
                                 ),
                                 Padding(padding: EdgeInsets.only(left: 4)),
