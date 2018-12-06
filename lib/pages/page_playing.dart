@@ -1,7 +1,6 @@
 import 'dart:math';
 import 'dart:ui';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:quiet/part/part.dart';
 import 'package:quiet/repository/netease.dart';
@@ -471,8 +470,8 @@ class _AlbumCoverState extends State<_AlbumCover>
                             image: AssetImage("assets/playing_page_disc.png"))),
                     padding: EdgeInsets.all(30),
                     child: ClipOval(
-                      child: CachedNetworkImage(
-                        imageUrl: music.album.coverImageUrl,
+                      child: Image(
+                        image: NeteaseImage(music.album.coverImageUrl),
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -513,7 +512,7 @@ class _BlurBackground extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
           image: DecorationImage(
-        image: CachedNetworkImageProvider(music.album.coverImageUrl),
+        image: NeteaseImage(music.album.coverImageUrl),
         fit: BoxFit.cover,
       )),
       child: BackdropFilter(

@@ -2,7 +2,6 @@ import 'package:async/async.dart';
 import 'package:flutter/material.dart';
 import 'package:quiet/pages/page_playlist_detail.dart';
 import 'package:quiet/repository/netease.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 
 ///各个排行榜数据
 class LeaderboardPage extends StatefulWidget {
@@ -139,7 +138,7 @@ class _ItemLeaderBoard2 extends StatelessWidget {
                 borderRadius: BorderRadius.circular(3),
                 child: Stack(
                   children: <Widget>[
-                    CachedNetworkImage(imageUrl: row["coverImgUrl"]),
+                    Image(image: NeteaseImage(row["coverImgUrl"])),
                     Align(
                       alignment: Alignment.bottomCenter,
                       child: Container(
@@ -205,7 +204,7 @@ class _ItemLeaderboard1 extends StatelessWidget {
                 borderRadius: BorderRadius.circular(3),
                 child: Stack(
                   children: <Widget>[
-                    CachedNetworkImage(imageUrl: row["coverImgUrl"]),
+                    Image(image: NeteaseImage(row["coverImgUrl"])),
                     Align(
                       alignment: Alignment.bottomCenter,
                       child: Container(
