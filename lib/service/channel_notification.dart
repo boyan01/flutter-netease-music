@@ -5,12 +5,13 @@ import 'package:quiet/part/part_player_service.dart';
 
 MethodChannel _channel = MethodChannel("tech.soit.quiet/notification");
 
-QuietNotification notification = QuietNotification();
+QuietNotification notification = QuietNotification._();
 
 ///use to create a notification for android
 ///has no effect for ios
 class QuietNotification {
-  QuietNotification() {
+
+  QuietNotification._() {
     _initialize();
   }
 
