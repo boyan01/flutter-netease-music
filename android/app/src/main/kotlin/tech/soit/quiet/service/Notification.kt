@@ -20,8 +20,7 @@ import tech.soit.quiet.MainActivity.Companion.KEY_DESTINATION
 import tech.soit.quiet.R
 
 class Notification(
-        private val registrar: PluginRegistry.Registrar,
-        private val channel: MethodChannel
+        private val registrar: PluginRegistry.Registrar
 ) : MethodChannel.MethodCallHandler {
 
     companion object {
@@ -29,7 +28,8 @@ class Notification(
         fun registerWith(registrar: PluginRegistry.Registrar) {
             val channel = MethodChannel(
                     registrar.messenger(), "tech.soit.quiet/notification")
-            channel.setMethodCallHandler(Notification(registrar, channel))
+            channel.setMethodCallHandler(Notification(registrar))
+            QuietPlayerService.channel = channel
         }
 
 
@@ -248,6 +248,8 @@ class QuietPlayerService : Service() {
             context.stopService(Intent(context, QuietPlayerService::class.java))
         }
 
+        var channel: MethodChannel? = null
+
     }
 
     override fun onCreate() {
@@ -261,6 +263,34 @@ class QuietPlayerService : Service() {
     override fun onBind(intent: Intent?): IBinder? {
         return null
     }
+
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        val action = intent?.action
+        when (action) {
+            action_play_previous -> {
+                channel?.invokeMethod("playPrevious",null)
+            }
+            action_play_pause -> {
+                channel?.invokeMethod("playOrPause",null)
+            }
+            action_play_next -> {
+                channel?.invokeMethod("playNext",null)
+            }
+            action_exit -> {
+                stopForeground(true)
+                channel?.invokeMethod("quiet",null)
+                stopSelf()
+            }
+            action_like -> {
+                channel?.invokeMethod("like",null)
+            }
+            action_dislike -> {
+                channel?.invokeMethod("dislike",null)
+            }
+        }
+        return super.onStartCommand(intent, flags, startId)
+    }
+
 
 
     override fun onDestroy() {
