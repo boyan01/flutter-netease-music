@@ -48,7 +48,7 @@ class _DailyPlaylistState extends State<DailyPlaylistPage> {
         child: CircularProgressIndicator(),
       );
     } else {
-      body = _DailyList(SongTileProvider(list));
+      body = _DailyList(SongTileProvider("playlist_daily_recommend", list));
     }
 
     return Scaffold(
@@ -141,7 +141,7 @@ class _DailyList extends StatelessWidget {
               ),
             );
           } else {
-            return songTileProvider.buildWidget(index - 1);
+            return songTileProvider.buildWidget(index - 1, context);
           }
         });
   }
