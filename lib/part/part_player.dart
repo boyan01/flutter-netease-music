@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:quiet/part/route.dart';
 
-import 'player_service.dart';
+import 'part_player_service.dart';
 
 class BoxWithBottomPlayerController extends StatelessWidget {
   BoxWithBottomPlayerController(this.child);

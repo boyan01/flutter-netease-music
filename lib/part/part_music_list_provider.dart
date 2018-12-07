@@ -7,29 +7,45 @@ import 'part.dart';
 
 /// provider song list item widget
 class SongTileProvider {
-  SongTileProvider(this.musics);
+  SongTileProvider(this.token, this.musics)
+      : assert(token != null),
+        assert(musics != null);
 
   final List<Music> musics;
+
+  final String token;
 
   //song item length plus a header
   get size => musics.length + 1;
 
-  void _playAll() {
-    debugPrint("play all _");
+  void _playAll(BuildContext context) {
+    if (quiet.value.playlist.token == token && quiet.value.state.isPlaying) {
+      //open playing page
+      Navigator.pushNamed(null, ROUTE_PAYING);
+    } else {
+      quiet.playWithList(musics[0], musics, token);
+    }
   }
 
-  void _play(int index) {
+  void _play(int index, BuildContext context) {
     var toPlay = musics[index];
-    debugPrint("play : $toPlay");
-    quiet.play(music: toPlay);
+    if (quiet.value.playlist.token == token &&
+        quiet.value.state.isPlaying &&
+        quiet.value.current == toPlay) {
+      //open playing page
+      Navigator.pushNamed(null, ROUTE_PAYING);
+    } else {
+      quiet.playWithList(toPlay, musics, token);
+    }
   }
 
-  Widget buildWidget(int index) {
+  Widget buildWidget(int index, BuildContext context) {
     if (index == 0) {
       return SongListHeader(musics.length, _playAll);
     }
     if (index - 1 < musics.length) {
-      return SongTile(musics[index - 1], index, onTap: () => _play(index - 1));
+      return SongTile(musics[index - 1], index,
+          onTap: () => _play(index - 1, context));
     }
     return null;
   }
@@ -41,12 +57,12 @@ class SongListHeader extends StatelessWidget {
 
   final int count;
 
-  final GestureTapCallback onTap;
+  final void Function(BuildContext) onTap;
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: onTap,
+      onTap: () => onTap(context),
       child: Container(
         height: 40,
         decoration: BoxDecoration(
