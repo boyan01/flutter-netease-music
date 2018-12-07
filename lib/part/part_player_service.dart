@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/widgets.dart';
 import 'package:meta/meta.dart';
 import 'package:quiet/model/model.dart';
+import 'package:quiet/service/channel_notification.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:video_player/video_player.dart';
 
@@ -73,7 +74,7 @@ class MusicPlayer extends ValueNotifier<PlayerStateValue> {
       value.playlist.insertToNext(value.current, music);
       notifyListeners();
     }
-    _performPlay(music);
+    await _performPlay(music);
   }
 
   Future<void> playWithList(Music music, List<Music> list, String token) async {
@@ -101,6 +102,7 @@ class MusicPlayer extends ValueNotifier<PlayerStateValue> {
       if (_controller != null &&
           _controller.value.initialized &&
           !_controller.value.isPlaying) {
+        notification.update(value.current, true);
         await _controller.play();
       }
       if (value.current != null) {
@@ -111,6 +113,7 @@ class MusicPlayer extends ValueNotifier<PlayerStateValue> {
     if (_controller != null &&
         value.current == music &&
         _controller.value.initialized) {
+      notification.update(music, true);
       await _controller.play();
       return;
     }
@@ -119,6 +122,7 @@ class MusicPlayer extends ValueNotifier<PlayerStateValue> {
     _newController(music.url);
     //refresh state
     value = value.copyWith(current: music);
+    notification.update(music, true);
     return await _controller.play();
   }
 
@@ -137,6 +141,11 @@ class MusicPlayer extends ValueNotifier<PlayerStateValue> {
   }
 
   Future<void> pause() {
+    if (value.current != null) {
+      notification.update(value.current, false);
+    } else {
+      notification.cancel();
+    }
     return _controller.pause();
   }
 
