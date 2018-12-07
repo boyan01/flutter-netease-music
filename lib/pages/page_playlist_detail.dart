@@ -189,7 +189,8 @@ class _PlaylistBody extends StatelessWidget {
   final ScrollController scrollController;
 
   _PlaylistBody(this.playlist, {this.scrollController})
-      : songTileProvider = SongTileProvider(_mapPlaylist(playlist["tracks"]));
+      : songTileProvider = SongTileProvider(
+            "playlist_${playlist["id"]}", _mapPlaylist(playlist["tracks"]));
 
   final Map<String, Object> playlist;
   final SongTileProvider songTileProvider;
@@ -212,7 +213,7 @@ class _PlaylistBody extends StatelessWidget {
     if (index == 0) {
       return _PlaylistDetailHeader(playlist);
     }
-    return songTileProvider?.buildWidget(index - 1);
+    return songTileProvider?.buildWidget(index - 1, context);
   }
 
   ///map playlist json tracks to Music list
