@@ -84,10 +84,10 @@ class LyricState extends State<Lyric> with TickerProviderStateMixin {
 
   @override
   void dispose() {
-    super.dispose();
+    widget.position?.removeListener(_onPositionChange);
     _flingController?.dispose();
     _flingController = null;
-    widget.position?.removeListener(_onPositionChange);
+    super.dispose();
   }
 
   @override
@@ -251,7 +251,7 @@ class LyricPainter extends ChangeNotifier implements CustomPainter {
 
   //compute the offset current offset to destination line
   double computeScrollTo(int destination) {
-    if (lyricPainters.length <= 0) {
+    if (lyricPainters.length <= 0 || this.height == 0) {
       return 0;
     }
 

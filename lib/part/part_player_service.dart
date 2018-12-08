@@ -77,6 +77,11 @@ class MusicPlayer extends ValueNotifier<PlayerStateValue> {
 
   ///play a single song
   Future<void> play({Music music}) async {
+    music = music ?? value.current;
+    if (music == null) {
+      //null music, null current playing, this is an error state
+      return;
+    }
     if (!value.playlist.musics.contains(music)) {
       value.playlist.insertToNext(value.current, music);
       notifyListeners();
@@ -105,28 +110,16 @@ class MusicPlayer extends ValueNotifier<PlayerStateValue> {
 
   //perform to play music
   Future<void> _performPlay(Music music) async {
-    if (music == null) {
-      if (_controller != null &&
-          _controller.value.initialized &&
-          !_controller.value.isPlayWhenReady) {
-        notification.update(value.current, true);
-        await _controller.play();
-      }
-      if (value.current != null) {
-        await _performPlay(value.current);
-      }
-      return;
-    }
-    if (_controller != null &&
-        value.current == music &&
-        _controller.value.initialized) {
+    assert(music != null);
+
+    if (value.current == music && _controller.value.initialized) {
       notification.update(music, true);
       await _controller.play();
       return;
     }
     assert(
         music.url != null && music.url.isNotEmpty, "music url can not be null");
-    _controller.prepare(music.url);
+    await _controller.prepare(music.url);
     //refresh state
     value = value.copyWith(current: music);
     notification.update(music, true);
@@ -147,14 +140,20 @@ class MusicPlayer extends ValueNotifier<PlayerStateValue> {
     value = PlayerStateValue.uninitialized();
   }
 
-  void playNext() {
+  Future<void> playNext() async {
     Music next = value.playlist.getNext(value.current);
-    _performPlay(next);
+    if (next == null) {
+      return;
+    }
+    await _performPlay(next);
   }
 
-  void playPrevious() {
+  Future<void> playPrevious() async {
     Music previous = value.playlist.getPrevious(value.current);
-    _performPlay(previous);
+    if (previous == null) {
+      return;
+    }
+    await _performPlay(previous);
   }
 
   ///seek to position in milliseconds
