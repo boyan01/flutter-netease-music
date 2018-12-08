@@ -314,8 +314,9 @@ class _CloudLyricState extends State<_CloudLyric> {
 
   @override
   void dispose() {
-    super.dispose();
     quiet.removeListener(_onMusicStateChanged);
+    position.dispose();
+    super.dispose();
   }
 
   @override
@@ -447,10 +448,10 @@ class _AlbumCoverState extends State<_AlbumCover>
 
   @override
   void dispose() {
-    super.dispose();
     quiet.removeListener(_onMusicStateChanged);
     controller.dispose();
     needleController.dispose();
+    super.dispose();
   }
 
   static const double HEIGHT_SPACE_ALBUM_TOP = 100;
