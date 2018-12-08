@@ -120,7 +120,17 @@ class _ControllerBar extends StatelessWidget {
   }
 }
 
-class _DurationProgressBar extends StatelessWidget {
+///a seek bar for current position
+class _DurationProgressBar extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() => _DurationProgressBarState();
+}
+
+class _DurationProgressBarState extends State<_DurationProgressBar> {
+  bool isUserTracking = false;
+
+  double trackingPosition = 0;
+
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context).primaryTextTheme;
@@ -133,7 +143,9 @@ class _DurationProgressBar extends StatelessWidget {
 
     if (state.initialized) {
       var duration = state.duration.inMilliseconds;
-      var position = state.position.inMilliseconds;
+      var position = isUserTracking
+          ? trackingPosition.round()
+          : state.position.inMilliseconds;
 
       durationText = getTimeStamp(duration);
       positionText = getTimeStamp(position);
@@ -155,13 +167,28 @@ class _DurationProgressBar extends StatelessWidget {
 //            backgroundColor: Colors.white12,
 //          ),
           Slider(
-            value: position.toDouble(),
+            value: position.toDouble().clamp(0.0, duration.toDouble()),
             min: 0.0,
             activeColor: theme.body1.color.withOpacity(0.75),
             inactiveColor: theme.caption.color.withOpacity(0.3),
             max: duration.toDouble(),
+            onChangeStart: (value) {
+              setState(() {
+                isUserTracking = true;
+                trackingPosition = value;
+              });
+            },
             onChanged: (value) {
+              setState(() {
+                trackingPosition = value;
+              });
+            },
+            onChangeEnd: (value) async {
+              isUserTracking = false;
               quiet.seekTo(value.round());
+              if (!quiet.value.state.isPlayWhenReady) {
+                quiet.play();
+              }
             },
           ),
         ],

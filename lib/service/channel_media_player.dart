@@ -39,10 +39,11 @@ class DurationRange {
 class PlayerControllerState {
   PlayerControllerState(
       {this.duration,
-      this.position,
+      this.position = Duration.zero,
       this.isPlayWhenReady = false,
       this.isBuffering = false,
       this.isReady = false,
+      this.isComplete = false,
       this.buffered = const [],
       this.errorMsg});
 
@@ -53,9 +54,17 @@ class PlayerControllerState {
 
   final List<DurationRange> buffered;
 
+  ///whether playback should proceed when isReady become true
   final bool isPlayWhenReady;
+
+  ///audio is buffering
   final bool isBuffering;
+
+  ///audio is ready to play
   final bool isReady;
+
+  ///this audio play complete
+  final bool isComplete;
 
   final String errorMsg;
 
@@ -63,7 +72,7 @@ class PlayerControllerState {
 
   bool get hasError => errorMsg != null;
 
-  bool get isPlaying => isPlayWhenReady && isReady;
+  bool get isPlaying => isPlayWhenReady && isReady && !isComplete;
 
   PlayerControllerState copyWith({
     Duration duration,
@@ -73,6 +82,7 @@ class PlayerControllerState {
     String errorMsg,
     bool isReady,
     List<DurationRange> buffered,
+    bool isComplete,
   }) {
     return PlayerControllerState(
         duration: duration ?? this.duration,
@@ -81,7 +91,8 @@ class PlayerControllerState {
         isBuffering: isBuffering ?? this.isBuffering,
         errorMsg: errorMsg ?? this.errorMsg,
         isReady: isReady ?? this.isReady,
-        buffered: buffered ?? this.buffered);
+        buffered: buffered ?? this.buffered,
+        isComplete: isComplete ?? this.isComplete);
   }
 }
 
@@ -114,7 +125,8 @@ class PlayerController extends ValueNotifier<PlayerControllerState> {
   void _onEvent(Map event) {
     switch (event["eventId"]) {
       case "error":
-        value = value.copyWith(errorMsg: event["msg"]);
+        value = PlayerControllerState(
+            duration: Duration.zero, errorMsg: event["msg"]);
         break;
       case "bufferingUpdate":
         final List<dynamic> values = event['values'];
@@ -128,6 +140,7 @@ class PlayerController extends ValueNotifier<PlayerControllerState> {
         value = value.copyWith(isBuffering: false);
         break;
       case "complete":
+        value = value.copyWith(isComplete: true);
         if (_onComplete != null) {
           _onComplete();
         }
@@ -163,18 +176,15 @@ class PlayerController extends ValueNotifier<PlayerControllerState> {
     await _applyPlayPause();
   }
 
-  bool _isDisposed = false;
-
   Future<void> _applyPlayPause() async {
     if (value.isPlayWhenReady) {
+      if (value.isComplete) {
+        ///replay from start if has been complete
+        await seekTo(0);
+        value.copyWith(isComplete: false);
+      }
       _timer = Timer.periodic(Duration(milliseconds: 300), (timer) async {
-        if (_isDisposed) {
-          return;
-        }
         final Duration newPosition = await position;
-        if (_isDisposed) {
-          return;
-        }
         value = value.copyWith(position: newPosition);
       });
     } else {
@@ -183,8 +193,9 @@ class PlayerController extends ValueNotifier<PlayerControllerState> {
     await _channel.invokeMethod("setPlayWhenReady", value.isPlayWhenReady);
   }
 
-  Future<void> seekTo(int position) {
-    return _channel.invokeMethod("seekTo", {"position": position});
+  Future<void> seekTo(int position) async {
+    await _channel.invokeMethod("seekTo", {"position": position});
+    value = value.copyWith(position: Duration(milliseconds: position));
   }
 
   Future<void> setVolume(double volume) {
@@ -193,9 +204,6 @@ class PlayerController extends ValueNotifier<PlayerControllerState> {
 
   ///the position of current media
   Future<Duration> get position async {
-    if (_isDisposed) {
-      return null;
-    }
     return Duration(milliseconds: await _channel.invokeMethod("position"));
   }
 
