@@ -6,6 +6,7 @@ import io.flutter.app.FlutterActivity
 import io.flutter.plugins.GeneratedPluginRegistrant
 import tech.soit.quiet.service.NeteaseCrypto
 import tech.soit.quiet.service.Notification
+import tech.soit.quiet.service.QuietPlayerChannel
 
 class MainActivity : FlutterActivity() {
 
@@ -29,6 +30,7 @@ class MainActivity : FlutterActivity() {
 
         NeteaseCrypto.init(flutterView)
         Notification.registerWith(registrarFor("tech.soit.quiet.service.Notification"))
+        QuietPlayerChannel.registerWith(registrarFor("tech.soit.quiet.service.QuietPlayerChannel"))
     }
 
 
