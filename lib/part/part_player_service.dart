@@ -3,9 +3,9 @@ import 'dart:convert';
 import 'package:flutter/widgets.dart';
 import 'package:meta/meta.dart';
 import 'package:quiet/model/model.dart';
+import 'package:quiet/service/channel_media_player.dart';
 import 'package:quiet/service/channel_notification.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:video_player/video_player.dart';
 
 MusicPlayer quiet = MusicPlayer._private();
 
@@ -64,9 +64,16 @@ class MusicPlayer extends ValueNotifier<PlayerStateValue> {
       });
       value = value.copyWith(current: current, playlist: playingList);
     }();
+
+    ///listener player controller state
+    _controller
+        .addListener(() => value = value.copyWith(state: _controller.value));
+    _controller.onComplete = () {
+      playNext();
+    };
   }
 
-  VideoPlayerController _controller;
+  PlayerController get _controller => quietPlayerController;
 
   ///play a single song
   Future<void> play({Music music}) async {
@@ -101,7 +108,7 @@ class MusicPlayer extends ValueNotifier<PlayerStateValue> {
     if (music == null) {
       if (_controller != null &&
           _controller.value.initialized &&
-          !_controller.value.isPlaying) {
+          !_controller.value.isPlayWhenReady) {
         notification.update(value.current, true);
         await _controller.play();
       }
@@ -119,25 +126,11 @@ class MusicPlayer extends ValueNotifier<PlayerStateValue> {
     }
     assert(
         music.url != null && music.url.isNotEmpty, "music url can not be null");
-    _newController(music.url);
+    _controller.prepare(music.url);
     //refresh state
     value = value.copyWith(current: music);
     notification.update(music, true);
     return await _controller.play();
-  }
-
-  //create a new player controller
-  void _newController(String url) {
-    _controller?.removeListener(_controllerListener);
-    _controller?.dispose();
-
-    _controller = VideoPlayerController.network(url);
-    _controller.initialize();
-    _controller.addListener(_controllerListener);
-  }
-
-  void _controllerListener() {
-    value = value.copyWith(state: _controller.value);
   }
 
   Future<void> pause() {
@@ -150,9 +143,7 @@ class MusicPlayer extends ValueNotifier<PlayerStateValue> {
   }
 
   void quiet() {
-    _controller.removeListener(_controllerListener);
     _controller.dispose();
-    _controller = null;
     value = PlayerStateValue.uninitialized();
   }
 
@@ -168,7 +159,7 @@ class MusicPlayer extends ValueNotifier<PlayerStateValue> {
 
   ///seek to position in milliseconds
   Future<void> seekTo(int position) {
-    return _controller.seekTo(Duration(milliseconds: position));
+    return _controller.seekTo(position);
   }
 
   Future<void> setVolume(double volume) {
@@ -182,11 +173,11 @@ class PlayerStateValue {
   PlayerStateValue(this.state, this.playlist, this.current);
 
   PlayerStateValue.uninitialized()
-      : this(VideoPlayerValue.uninitialized(), PlayingList.empty, null);
+      : this(PlayerControllerState.uninitialized(), PlayingList.empty, null);
 
   /// The duration, current position, buffering state, error state and settings
   /// of a [VideoPlayerController].
-  final VideoPlayerValue state;
+  final PlayerControllerState state;
 
   ///current playlist
   final PlayingList playlist;
@@ -195,7 +186,7 @@ class PlayerStateValue {
   final Music current;
 
   PlayerStateValue copyWith(
-      {VideoPlayerValue state, PlayingList playlist, Music current}) {
+      {PlayerControllerState state, PlayingList playlist, Music current}) {
     return PlayerStateValue(state ?? this.state, playlist ?? this.playlist,
         current ?? this.current);
   }

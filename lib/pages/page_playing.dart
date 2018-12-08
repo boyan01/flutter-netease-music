@@ -4,7 +4,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:quiet/part/part.dart';
 import 'package:quiet/repository/netease.dart';
-import 'package:video_player/video_player.dart';
+import 'package:quiet/service/channel_media_player.dart';
 
 class PlayingPage extends StatelessWidget {
   @override
