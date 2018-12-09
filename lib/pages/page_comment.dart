@@ -1,7 +1,7 @@
+import 'package:async/async.dart';
 import 'package:flutter/material.dart';
 import 'package:quiet/part/part.dart';
 import 'package:quiet/repository/netease.dart';
-import 'package:async/async.dart';
 
 ///a single CommentPage for music or playlist or album
 class CommentPage extends StatelessWidget {
@@ -27,6 +27,90 @@ class CommentPage extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+}
+
+class _CommentInput extends StatefulWidget {
+  const _CommentInput({Key key, @required this.threadId}) : super(key: key);
+
+  final CommentThreadId threadId;
+
+  @override
+  _CommentInputState createState() => _CommentInputState();
+}
+
+class _CommentInputState extends State<_CommentInput> {
+  TextEditingController _controller;
+
+  FocusNode _focusNode;
+
+  bool _isPosting = false;
+
+  String _error;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController();
+    _focusNode = FocusNode();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    _focusNode.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+          border:
+              Border(top: BorderSide(color: Theme.of(context).dividerColor))),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          Padding(padding: EdgeInsets.only(left: 10)),
+          Expanded(
+              child: Container(
+            child: TextField(
+              focusNode: _focusNode,
+              controller: _controller,
+              decoration:
+                  InputDecoration(hintText: "随乐而起，有感而发", errorText: _error),
+            ),
+          )),
+          IconButton(
+              icon: Icon(Icons.send),
+              onPressed: () async {
+                if (_isPosting || _controller.text.trim().isEmpty) {
+                  //do nothing..
+                  return;
+                }
+                _error = null;
+                _isPosting = true;
+                Map result;
+                try {
+                  result =
+                      await _postComment(_controller.text, widget.threadId);
+                } catch (e) {}
+                if (result != null && result["code"] == 200) {
+                  _controller.text = "";
+                  if (_focusNode.hasFocus) {
+                    _focusNode.unfocus();
+                  }
+                  StatedLoader.of(context).refresh();
+                } else {
+                  setState(() {
+                    _error = "发送失败";
+                  });
+                }
+                _isPosting = false;
+              }),
+        ],
+      ),
     );
   }
 }
@@ -157,37 +241,46 @@ class _CommentListState extends State<_CommentList> {
   @override
   Widget build(BuildContext context) {
     _buildItems();
-    return ListView.builder(
-        itemCount: items.length,
-        controller: _controller,
-        itemBuilder: (context, index) {
-          var item = items[index];
-          switch (item.first) {
-            case TYPE_COMMENT:
-              return _ItemComment(comment: item.last);
-            case TYPE_HEADER:
-              return _ItemHeader(
-                title: item.last,
-              );
-            case TYPE_MORE_HOT:
-              return _ItemMoreHot();
-            case TYPE_LOADING:
-              return _ItemLoadMore();
-            case TYPE_EMPTY:
-              return Container(
-                padding: EdgeInsets.symmetric(vertical: 40),
-                child: Center(
-                  child: Text(
-                    "暂无评论，欢迎抢沙发",
-                    style: TextStyle(color: Colors.black54),
-                  ),
-                ),
-              );
-            case TYPE_TITLE:
-              return _ItemTitle(commentThreadId: item.last);
-          }
-          return null;
-        });
+    return Column(
+      children: <Widget>[
+        Expanded(
+          child: ListView.builder(
+              itemCount: items.length,
+              controller: _controller,
+              itemBuilder: (context, index) {
+                var item = items[index];
+                switch (item.first) {
+                  case TYPE_COMMENT:
+                    return _ItemComment(comment: item.last);
+                  case TYPE_HEADER:
+                    return _ItemHeader(
+                      title: item.last,
+                    );
+                  case TYPE_MORE_HOT:
+                    return _ItemMoreHot();
+                  case TYPE_LOADING:
+                    return _ItemLoadMore();
+                  case TYPE_EMPTY:
+                    return Container(
+                      padding: EdgeInsets.symmetric(vertical: 40),
+                      child: Center(
+                        child: Text(
+                          "暂无评论，欢迎抢沙发",
+                          style: TextStyle(color: Colors.black54),
+                        ),
+                      ),
+                    );
+                  case TYPE_TITLE:
+                    return _ItemTitle(commentThreadId: item.last);
+                }
+                return null;
+              }),
+        ),
+        _CommentInput(
+          threadId: widget.threadId,
+        )
+      ],
+    );
   }
 }
 
@@ -528,5 +621,23 @@ Future<bool> _like(
   var result = await neteaseRepository.doRequest(
       "https://music.163.com/weapi/v1/comment/$op",
       {"threadId": commentThread.threadId, "commentId": commentId});
+  return result["code"] == 200;
+}
+
+///post comment to a comment thread
+Future<Map> _postComment(String content, CommentThreadId commentThread) async {
+  var result = await neteaseRepository.doRequest(
+      "https://music.163.com/weapi/resource/comments/add",
+      {"content": content, "threadId": commentThread.threadId});
+  debugPrint("_postComment :$result");
+  return result;
+}
+
+Future<bool> _deleteComment(
+    CommentThreadId commentThread, int commentId) async {
+  var result = await neteaseRepository.doRequest(
+      "https://music.163.com/weapi/resource/comments/delete",
+      {"commentId": commentId, "threadId": commentThread.threadId});
+  debugPrint("_deleteComment :$result");
   return result["code"] == 200;
 }
