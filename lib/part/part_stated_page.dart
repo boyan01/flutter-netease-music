@@ -12,11 +12,15 @@ class StatedLoader extends StatefulWidget {
 
   final LoaderWidgetBuilder builder;
 
+  static StatedLoaderState of(BuildContext context) {
+    return context.ancestorStateOfType(const TypeMatcher<StatedLoaderState>());
+  }
+
   @override
-  State<StatefulWidget> createState() => _StatedLoaderState();
+  State<StatefulWidget> createState() => StatedLoaderState();
 }
 
-class _StatedLoaderState extends State<StatedLoader> {
+class StatedLoaderState extends State<StatedLoader> {
   /// 0 : loading
   /// 1 : load success
   /// 2 : load failed
@@ -29,6 +33,10 @@ class _StatedLoaderState extends State<StatedLoader> {
   @override
   void initState() {
     super.initState();
+    _loadData();
+  }
+
+  void refresh() {
     _loadData();
   }
 
