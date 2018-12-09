@@ -1,5 +1,6 @@
 import 'package:async/async.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:quiet/part/part.dart';
 import 'package:quiet/repository/netease.dart';
 
@@ -453,78 +454,107 @@ class _ItemCommentState extends State<_ItemComment> {
   @override
   Widget build(BuildContext context) {
     Map user = widget.comment["user"];
-    return Padding(
-      padding: EdgeInsets.only(left: 8, top: 8, right: 8),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              ClipOval(
-                  child: Image(
-                image: NeteaseImage(user["avatarUrl"]),
-                width: 36,
-                height: 36,
-              )),
-              Padding(padding: EdgeInsets.only(left: 8)),
-              Expanded(
-                  child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+    return InkWell(
+      onTap: () {
+        showDialog(
+            context: context,
+            builder: (context) {
+              return SimpleDialog(
+                contentPadding: EdgeInsets.only(),
                 children: <Widget>[
-                  Text(
-                    user["nickname"],
-                    style: Theme.of(context).textTheme.body1,
+                  ListTile(
+                    title: Text("复制"),
+                    onTap: () {
+                      Clipboard.setData(
+                          ClipboardData(text: widget.comment["content"]));
+                      Navigator.pop(context);
+                      Scaffold.of(this.context).showSnackBar(SnackBar(
+                        content: Text("复制成功"),
+                        duration: Duration(seconds: 1),
+                      ));
+                    },
                   ),
-                  Text(
-                    DateTime.fromMillisecondsSinceEpoch(widget.comment["time"])
-                        .toIso8601String(),
-                    style: Theme.of(context).textTheme.caption,
+                  Divider(
+                    height: 0,
                   ),
                 ],
-              )),
-              Text(
-                widget.comment["likedCount"].toString(),
-                style: Theme.of(context).textTheme.caption,
-              ),
-              Padding(padding: EdgeInsets.only(left: 2)),
-              InkResponse(
-                onTap: () async {
-                  bool succeed = await _like(
-                      !widget.comment["liked"],
-                      widget.comment["commentId"],
-                      _CommentList.of(context).threadId);
-                  if (succeed) {
-                    setState(() {
-                      widget.comment["liked"] = !widget.comment["liked"];
-                      int op = widget.comment["liked"] ? 1 : -1;
-                      widget.comment["likedCount"] =
-                          widget.comment["likedCount"] + op;
-                    });
-                  }
-                },
-                child: Icon(
-                  Icons.thumb_up,
-                  size: 15,
-                  color: widget.comment["liked"]
-                      ? Theme.of(context).accentColor
-                      : Theme.of(context).disabledColor,
+              );
+            });
+      },
+      child: Padding(
+        padding: EdgeInsets.only(left: 8, top: 8, right: 8),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                ClipOval(
+                    child: Image(
+                  image: NeteaseImage(user["avatarUrl"]),
+                  width: 36,
+                  height: 36,
+                )),
+                Padding(padding: EdgeInsets.only(left: 8)),
+                Expanded(
+                    child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    Text(
+                      user["nickname"],
+                      style: Theme.of(context).textTheme.body1,
+                    ),
+                    Text(
+                      DateTime.fromMillisecondsSinceEpoch(
+                              widget.comment["time"])
+                          .toIso8601String(),
+                      style: Theme.of(context).textTheme.caption,
+                    ),
+                  ],
+                )),
+                Text(
+                  widget.comment["likedCount"].toString(),
+                  style: Theme.of(context).textTheme.caption,
                 ),
-              )
-            ],
-          ),
-          Container(
-            padding: EdgeInsets.only(left: 44),
-            margin: EdgeInsets.symmetric(vertical: 4),
-            child: Text(widget.comment["content"]),
-          ),
-          Padding(padding: EdgeInsets.only(top: 4)),
-          Divider(
-            height: 0,
-            indent: 44,
-          )
-        ],
+                Padding(padding: EdgeInsets.only(left: 2)),
+                InkResponse(
+                  onTap: () async {
+                    bool succeed = await _like(
+                        !widget.comment["liked"],
+                        widget.comment["commentId"],
+                        _CommentList.of(context).threadId);
+                    if (succeed) {
+                      setState(() {
+                        widget.comment["liked"] = !widget.comment["liked"];
+                        int op = widget.comment["liked"] ? 1 : -1;
+                        widget.comment["likedCount"] =
+                            widget.comment["likedCount"] + op;
+                      });
+                    }
+                  },
+                  child: Icon(
+                    Icons.thumb_up,
+                    size: 15,
+                    color: widget.comment["liked"]
+                        ? Theme.of(context).accentColor
+                        : Theme.of(context).disabledColor,
+                  ),
+                )
+              ],
+            ),
+            Container(
+              padding: EdgeInsets.only(left: 44),
+              margin: EdgeInsets.symmetric(vertical: 4),
+              child: Text(widget.comment["content"]),
+            ),
+            Padding(padding: EdgeInsets.only(top: 4)),
+            Divider(
+              height: 0,
+              indent: 44,
+            )
+          ],
+        ),
       ),
     );
   }
