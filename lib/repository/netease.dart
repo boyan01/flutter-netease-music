@@ -66,7 +66,7 @@ class NeteaseRepository {
       "phone": phone,
       "password": md5.convert(utf8.encode(password)).toString()
     };
-    var result = await _doRequest("/weapi/login/cellphone", request,
+    var result = await doRequest("/weapi/login/cellphone", request,
         options: Options(headers: {"User-Agent": _chooseUserAgent(ua: "pc")}));
 
     if (result["code"] == 200) {
@@ -90,13 +90,13 @@ class NeteaseRepository {
   ///PlayListDetail 中的 tracks 都是空数据
   Future<Map<String, Object>> userPlaylist(int userId,
       [int offset = 0, int limit = 1000]) {
-    return _doRequest("/weapi/user/playlist",
+    return doRequest("/weapi/user/playlist",
         {"offset": offset, "uid": userId, "limit": limit, "csrf_token": ""});
   }
 
   ///根据歌单id获取歌单详情，包括歌曲
   Future<Map<String, dynamic>> playlistDetail(int id) {
-    return _doRequest("https://music.163.com/weapi/v3/playlist/detail",
+    return doRequest("https://music.163.com/weapi/v3/playlist/detail",
         {"id": "$id", "n": 100000, "s": 8},
         type: EncryptType.linux);
   }
@@ -104,18 +104,18 @@ class NeteaseRepository {
   ///推荐歌单
   Future<Map<String, Object>> personalizedPlaylist(
       {int limit = 30, int offset = 0}) {
-    return _doRequest("/weapi/personalized/playlist",
+    return doRequest("/weapi/personalized/playlist",
         {"limit": limit, "offset": offset, "total": true, "n": 1000});
   }
 
   /// 推荐的新歌（10首）
   Future<Map<String, Object>> personalizedNewSong() {
-    return _doRequest("/weapi/personalized/newsong", {"type": "recommend"});
+    return doRequest("/weapi/personalized/newsong", {"type": "recommend"});
   }
 
   /// 榜单摘要
   Future<Map<String, Object>> topListDetail() async {
-    return _doRequest("/weapi/toplist/detail", {
+    return doRequest("/weapi/toplist/detail", {
       "offset": 0,
       "total": true,
       "limit": 20,
@@ -124,12 +124,12 @@ class NeteaseRepository {
 
   ///推荐歌曲
   Future<Map<String, Object>> recommendSongs() async {
-    return _doRequest("/weapi/v1/discovery/recommend/songs", {});
+    return doRequest("/weapi/v1/discovery/recommend/songs", {});
   }
 
   ///根据音乐id获取歌词
   Future<String> lyric(int id) async {
-    var result = await _doRequest(
+    var result = await doRequest(
         "https://music.163.com/weapi/song/lyric?os=osx&id=$id&lv=-1&kv=-1&tv=-1",
         {});
     Map lyc = result["lrc"];
@@ -137,7 +137,7 @@ class NeteaseRepository {
   }
 
   //请求数据
-  Future<Map<String, dynamic>> _doRequest(String path, Map data,
+  Future<Map<String, dynamic>> doRequest(String path, Map data,
       {EncryptType type = EncryptType.we, Options options}) async {
     debugPrint("netease request path = $path params = ${data.toString()}");
 
