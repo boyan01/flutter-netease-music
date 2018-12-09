@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:quiet/part/part.dart';
 import 'package:quiet/repository/netease.dart';
+import 'package:async/async.dart';
 
+///a single CommentPage for music or playlist or album
 class CommentPage extends StatelessWidget {
   const CommentPage({Key key, @required this.threadId})
       : assert(threadId != null),
@@ -77,6 +79,8 @@ class _CommentListState extends State<_CommentList> {
   ///flag to check if need rebuild [items] in [_buildItems]
   bool _isItemsDirty = true;
 
+  CancelableOperation _autoLoadOperation;
+
   void _buildItems() {
     if (!_isItemsDirty) {
       return;
@@ -115,13 +119,35 @@ class _CommentListState extends State<_CommentList> {
   void initState() {
     super.initState();
     _controller = ScrollController();
+    _controller.addListener(_scrollListener);
     _buildItems();
   }
 
   @override
   void dispose() {
     _controller.dispose();
+    _autoLoadOperation?.cancel();
     super.dispose();
+  }
+
+  ///auto load when ListView reached the end
+  void _scrollListener() {
+    if (_controller.position.extentAfter < 500 && _autoLoadOperation == null) {
+      _autoLoadOperation = CancelableOperation.fromFuture(
+          getComments(widget.threadId, offset: comments.length))
+        ..value.then((result) {
+          _autoLoadOperation = null;
+          if (result["code"] == 200) {
+            setState(() {
+              more = result["more"];
+              comments.addAll((result["comments"] as List).cast());
+              _isItemsDirty = true;
+            });
+          }
+        }).catchError(() {
+          _autoLoadOperation = null;
+        });
+    }
   }
 
   @override
