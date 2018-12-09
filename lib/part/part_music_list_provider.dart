@@ -163,16 +163,17 @@ class SongTile extends StatelessWidget {
                         Icons.more_vert,
                         color: Theme.of(context).iconTheme.color,
                       ),
-                      itemBuilder: (context) => <PopupMenuItem<SongPopupMenuType>>[
-                          PopupMenuItem(
-                            child: Text("下一首播放"),
-                            value: SongPopupMenuType.addToNext,
-                          ),
-                          PopupMenuItem(
-                            child: Text("评论"),
-                            value: SongPopupMenuType.comment,
-                          ),
-                        ],
+                      itemBuilder: (context) =>
+                          <PopupMenuItem<SongPopupMenuType>>[
+                            PopupMenuItem(
+                              child: Text("下一首播放"),
+                              value: SongPopupMenuType.addToNext,
+                            ),
+                            PopupMenuItem(
+                              child: Text("评论"),
+                              value: SongPopupMenuType.comment,
+                            ),
+                          ],
                       onSelected: (SongPopupMenuType type) {
                         switch (type) {
                           case SongPopupMenuType.addToNext:
@@ -183,8 +184,10 @@ class SongTile extends StatelessWidget {
                             Navigator.push(context,
                                 MaterialPageRoute(builder: (context) {
                               return CommentPage(
-                                threadId:
-                                    CommentThreadId(music.id, CommentType.song),
+                                threadId: CommentThreadId(
+                                    music.id, CommentType.song,
+                                    playload:
+                                        CommentThreadPlayload.music(music)),
                               );
                             }));
                             break;
