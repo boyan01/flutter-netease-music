@@ -38,6 +38,10 @@ class _CommentList extends StatefulWidget {
 
   final Map comments;
 
+  static _CommentList of(BuildContext context) {
+    return context.ancestorWidgetOfExactType(_CommentList);
+  }
+
   @override
   State<StatefulWidget> createState() => _CommentListState(
         comments["more"],
@@ -341,14 +345,21 @@ class _ItemHeader extends StatelessWidget {
   }
 }
 
-class _ItemComment extends StatelessWidget {
+class _ItemComment extends StatefulWidget {
   const _ItemComment({Key key, @required this.comment}) : super(key: key);
 
   final Map comment;
 
   @override
+  _ItemCommentState createState() {
+    return new _ItemCommentState();
+  }
+}
+
+class _ItemCommentState extends State<_ItemComment> {
+  @override
   Widget build(BuildContext context) {
-    Map user = comment["user"];
+    Map user = widget.comment["user"];
     return Padding(
       padding: EdgeInsets.only(left: 8, top: 8, right: 8),
       child: Column(
@@ -374,30 +385,46 @@ class _ItemComment extends StatelessWidget {
                     style: Theme.of(context).textTheme.body1,
                   ),
                   Text(
-                    DateTime.fromMillisecondsSinceEpoch(comment["time"])
+                    DateTime.fromMillisecondsSinceEpoch(widget.comment["time"])
                         .toIso8601String(),
                     style: Theme.of(context).textTheme.caption,
                   ),
                 ],
               )),
               Text(
-                comment["likedCount"].toString(),
+                widget.comment["likedCount"].toString(),
                 style: Theme.of(context).textTheme.caption,
               ),
               Padding(padding: EdgeInsets.only(left: 2)),
-              Icon(
-                Icons.thumb_up,
-                size: 15,
-                color: comment["liked"]
-                    ? Theme.of(context).accentColor
-                    : Theme.of(context).disabledColor,
+              InkResponse(
+                onTap: () async {
+                  bool succeed = await _like(
+                      !widget.comment["liked"],
+                      widget.comment["commentId"],
+                      _CommentList.of(context).threadId);
+                  if (succeed) {
+                    setState(() {
+                      widget.comment["liked"] = !widget.comment["liked"];
+                      int op = widget.comment["liked"] ? 1 : -1;
+                      widget.comment["likedCount"] =
+                          widget.comment["likedCount"] + op;
+                    });
+                  }
+                },
+                child: Icon(
+                  Icons.thumb_up,
+                  size: 15,
+                  color: widget.comment["liked"]
+                      ? Theme.of(context).accentColor
+                      : Theme.of(context).disabledColor,
+                ),
               )
             ],
           ),
           Container(
             padding: EdgeInsets.only(left: 44),
             margin: EdgeInsets.symmetric(vertical: 4),
-            child: Text(comment["content"]),
+            child: Text(widget.comment["content"]),
           ),
           Padding(padding: EdgeInsets.only(top: 4)),
           Divider(
@@ -491,4 +518,15 @@ Future<Map> getComments(CommentThreadId commentThread,
   return neteaseRepository.doRequest(
       "https://music.163.com/weapi/v1/resource/comments/${commentThread.threadId}",
       {"rid": commentThread.id, "limit": limit, "offset": offset});
+}
+
+///like or unlike a comment
+///return true when operation succeed
+Future<bool> _like(
+    bool like, int commentId, CommentThreadId commentThread) async {
+  String op = like ? "like" : "unlike";
+  var result = await neteaseRepository.doRequest(
+      "https://music.163.com/weapi/v1/comment/$op",
+      {"threadId": commentThread.threadId, "commentId": commentId});
+  return result["code"] == 200;
 }
