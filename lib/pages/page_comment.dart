@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:quiet/part/part.dart';
 import 'package:quiet/repository/netease.dart';
+import 'package:intl/intl.dart';
 
 ///a single CommentPage for music or playlist or album
 class CommentPage extends StatelessWidget {
@@ -506,9 +507,7 @@ class _ItemCommentState extends State<_ItemComment> {
                       style: Theme.of(context).textTheme.body1,
                     ),
                     Text(
-                      DateTime.fromMillisecondsSinceEpoch(
-                              widget.comment["time"])
-                          .toIso8601String(),
+                      getFormattedTime(widget.comment["time"]),
                       style: Theme.of(context).textTheme.caption,
                     ),
                   ],
@@ -633,6 +632,27 @@ enum CommentType {
 
   ///video comments
   video
+}
+
+///format milliseconds to local string
+String getFormattedTime(int milliseconds) {
+  var dateTime = DateTime.fromMillisecondsSinceEpoch(milliseconds);
+  var now = DateTime.now();
+
+  var diff = Duration(milliseconds: now.millisecondsSinceEpoch - dateTime.millisecondsSinceEpoch);
+  if (diff.inMinutes < 1) {
+    return "刚刚";
+  }
+  if (diff.inMinutes <= 60) {
+    return "${diff.inMinutes}分钟前";
+  }
+  if (diff.inHours <= 24) {
+    return "${diff.inHours}小时前";
+  }
+  if (diff.inDays <= 5) {
+    return "${diff.inDays}天前";
+  }
+  return DateFormat("y年M月d日").format(dateTime);
 }
 
 ///get comments

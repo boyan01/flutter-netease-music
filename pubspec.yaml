@@ -24,6 +24,7 @@ dependencies:
   video_player: ^0.7.2
   url_launcher: ^4.0.2
   palette_generator: ^0.1.1
+  intl: ^0.15.7
 
 dev_dependencies:
   flutter_test:
