@@ -3,7 +3,9 @@ import 'package:quiet/part/part.dart';
 import 'package:quiet/repository/netease.dart';
 
 class CommentPage extends StatelessWidget {
-  const CommentPage({Key key, this.threadId}) : super(key: key);
+  const CommentPage({Key key, @required this.threadId})
+      : assert(threadId != null),
+        super(key: key);
 
   final CommentThreadId threadId;
 
@@ -52,6 +54,8 @@ class _CommentListState extends State<_CommentList> {
   static const TYPE_COMMENT = 1;
   static const TYPE_LOADING = 2;
   static const TYPE_MORE_HOT = 3;
+  static const TYPE_EMPTY = 4;
+  static const TYPE_TITLE = 5;
 
   bool more;
 
@@ -79,6 +83,9 @@ class _CommentListState extends State<_CommentList> {
     }
     _isItemsDirty = false;
     items.clear();
+    if (widget.threadId.playload != null) {
+      items.add(Pair(TYPE_TITLE, widget.threadId));
+    }
     if (hotComments.isNotEmpty) {
       items.add(Pair(TYPE_HEADER, "热门评论")); //hot comment header
       for (var comment in hotComments) {
@@ -88,16 +95,19 @@ class _CommentListState extends State<_CommentList> {
         items.add(Pair(TYPE_MORE_HOT, null));
       }
     }
-    if (comments.isNotEmpty) {
-      items.add(Pair(TYPE_HEADER, "最新评论")); //latest comment header
-      for (var comment in comments) {
-        items.add(Pair(TYPE_COMMENT, comment));
-      }
-      if (more) {
-        //need to load more comments
-        //so we add a loading bar on the bottom
-        items.add(Pair(TYPE_LOADING, null));
-      }
+    items.add(
+        Pair(TYPE_HEADER, "最新评论(${comments.length})")); //latest comment header
+    for (var comment in comments) {
+      items.add(Pair(TYPE_COMMENT, comment));
+    }
+    if (more) {
+      //need to load more comments
+      //so we add a loading bar on the bottom
+      items.add(Pair(TYPE_LOADING, null));
+    }
+    if (total == 0) {
+      //have not comments
+      items.add(Pair(TYPE_EMPTY, null));
     }
   }
 
@@ -133,9 +143,114 @@ class _CommentListState extends State<_CommentList> {
               return _ItemMoreHot();
             case TYPE_LOADING:
               return _ItemLoadMore();
+            case TYPE_EMPTY:
+              return Container(
+                padding: EdgeInsets.symmetric(vertical: 40),
+                child: Center(
+                  child: Text(
+                    "暂无评论，欢迎抢沙发",
+                    style: TextStyle(color: Colors.black54),
+                  ),
+                ),
+              );
+            case TYPE_TITLE:
+              return _ItemTitle(commentThreadId: item.last);
           }
           return null;
         });
+  }
+}
+
+class _ItemTitle extends StatelessWidget {
+  const _ItemTitle({Key key, @required this.commentThreadId})
+      : assert(commentThreadId != null),
+        super(key: key);
+
+  final CommentThreadId commentThreadId;
+
+  CommentThreadPlayload get playload => commentThreadId.playload;
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: () async {
+        if (commentThreadId.type == CommentType.playlist) {
+          Navigator.push(context, MaterialPageRoute(builder: (context) {
+            return PagePlaylistDetail(
+              playload.obj["id"],
+              playlist: playload.obj,
+            );
+          }));
+        } else if (commentThreadId.type == CommentType.song) {
+          Music music = playload.obj;
+          if (quiet.value.current != music) {
+            dynamic result = await showDialog(
+                context: context,
+                builder: (context) {
+                  return AlertDialog(
+                    content: Text("开始播放 ${music.title} ?"),
+                    actions: <Widget>[
+                      FlatButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: Text("取消")),
+                      FlatButton(
+                          onPressed: () {
+                            Navigator.pop(context, true);
+                          },
+                          child: Text("播放")),
+                    ],
+                  );
+                });
+            if (!(result is bool && result)) {
+              return;
+            }
+            await quiet.play(music: music);
+          }
+          Navigator.push(context, MaterialPageRoute(builder: (context) {
+            return PlayingPage();
+          }));
+        }
+      },
+      child: Container(
+        padding: EdgeInsets.all(10),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            ClipRRect(
+              borderRadius: BorderRadius.all(Radius.circular(3)),
+              child: Image(
+                fit: BoxFit.cover,
+                image: NeteaseImage(playload.coverImage),
+                width: 60,
+                height: 60,
+              ),
+            ),
+            Padding(padding: EdgeInsets.only(left: 10)),
+            Container(
+              height: 60,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    playload.title,
+                    style: Theme.of(context).textTheme.subtitle,
+                  ),
+                  Text(
+                    playload.subtitle,
+                    style: Theme.of(context).textTheme.caption,
+                  ),
+                ],
+              ),
+            ),
+            Spacer(),
+            Icon(Icons.chevron_right)
+          ],
+        ),
+      ),
+    );
   }
 }
 
@@ -152,7 +267,9 @@ class _ItemLoadMore extends StatelessWidget {
             height: 16,
             width: 16,
           ),
-          Padding(padding: EdgeInsets.only(left: 8),),
+          Padding(
+            padding: EdgeInsets.only(left: 8),
+          ),
           Text("正在加载更多评论...")
         ],
       ),
@@ -268,11 +385,14 @@ class _ItemComment extends StatelessWidget {
 }
 
 class CommentThreadId {
-  CommentThreadId(this.id, this.type) : assert(id != null && type != null);
+  CommentThreadId(this.id, this.type, {this.playload})
+      : assert(id != null && type != null);
 
   final int id;
 
   final CommentType type;
+
+  final CommentThreadPlayload playload;
 
   String get threadId {
     String prefix;
@@ -298,6 +418,25 @@ class CommentThreadId {
     }
     return prefix + id.toString();
   }
+}
+
+class CommentThreadPlayload {
+  final dynamic obj;
+  final String coverImage;
+  final String title;
+  final String subtitle;
+
+  CommentThreadPlayload.music(Music music)
+      : this.obj = music,
+        coverImage = music.album.coverImageUrl,
+        title = music.title,
+        subtitle = music.subTitle;
+
+  CommentThreadPlayload.playlist(Map playlist)
+      : this.obj = playlist,
+        this.coverImage = playlist["coverImgUrl"],
+        this.title = playlist["name"],
+        this.subtitle = (playlist["creator"] as Map)["nickname"];
 }
 
 enum CommentType {
