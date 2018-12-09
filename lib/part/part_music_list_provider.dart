@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:quiet/model/model.dart';
+import 'package:quiet/pages/page_comment.dart';
 
 export 'package:quiet/model/model.dart';
 
@@ -162,12 +163,35 @@ class SongTile extends StatelessWidget {
                         Icons.more_vert,
                         color: Theme.of(context).iconTheme.color,
                       ),
-                      itemBuilder: (context) {
-                        return [
-                          PopupMenuItem(
-                            child: Text("下一首播放"),
-                          )
-                        ];
+                      itemBuilder: (context) =>
+                          <PopupMenuItem<SongPopupMenuType>>[
+                            PopupMenuItem(
+                              child: Text("下一首播放"),
+                              value: SongPopupMenuType.addToNext,
+                            ),
+                            PopupMenuItem(
+                              child: Text("评论"),
+                              value: SongPopupMenuType.comment,
+                            ),
+                          ],
+                      onSelected: (SongPopupMenuType type) {
+                        switch (type) {
+                          case SongPopupMenuType.addToNext:
+                            quiet.value.playlist
+                                .insertToNext(quiet.value.current, music);
+                            break;
+                          case SongPopupMenuType.comment:
+                            Navigator.push(context,
+                                MaterialPageRoute(builder: (context) {
+                              return CommentPage(
+                                threadId: CommentThreadId(
+                                    music.id, CommentType.song,
+                                    playload:
+                                        CommentThreadPlayload.music(music)),
+                              );
+                            }));
+                            break;
+                        }
                       },
                     )
                   ],
@@ -179,4 +203,9 @@ class SongTile extends StatelessWidget {
       ),
     );
   }
+}
+
+enum SongPopupMenuType {
+  addToNext,
+  comment,
 }

@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:quiet/pages/page_comment.dart';
 import 'package:quiet/part/part.dart';
 import 'package:quiet/repository/netease.dart';
 import 'package:palette_generator/palette_generator.dart';
@@ -359,7 +360,17 @@ class _PlaylistDetailHeader extends StatelessWidget {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: <Widget>[
-                        _HeaderAction(Icons.comment, "评论", () => {}),
+                        _HeaderAction(Icons.comment, "评论", () {
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) {
+                            return CommentPage(
+                              threadId: CommentThreadId(
+                                  playlist["id"], CommentType.playlist,
+                                  playload:
+                                      CommentThreadPlayload.playlist(playlist)),
+                            );
+                          }));
+                        }),
                         _HeaderAction(Icons.share, "分享", () => {}),
                         _HeaderAction(Icons.file_download, "下载", () => {}),
                         _HeaderAction(Icons.check_box, "多选", () => {}),

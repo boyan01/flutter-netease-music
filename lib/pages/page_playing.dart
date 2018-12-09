@@ -2,6 +2,7 @@ import 'dart:math';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:quiet/pages/page_comment.dart';
 import 'package:quiet/part/part.dart';
 import 'package:quiet/repository/netease.dart';
 import 'package:quiet/service/channel_media_player.dart';
@@ -220,6 +221,8 @@ class _OperationBar extends StatelessWidget {
   Widget build(BuildContext context) {
     var iconColor = Theme.of(context).primaryIconTheme.color;
 
+    var music = quiet.value.current;
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: <Widget>[
@@ -240,7 +243,17 @@ class _OperationBar extends StatelessWidget {
               Icons.comment,
               color: iconColor,
             ),
-            onPressed: null),
+            onPressed: () {
+              if (music == null) {
+                return;
+              }
+              Navigator.push(context, MaterialPageRoute(builder: (context) {
+                return CommentPage(
+                  threadId: CommentThreadId(music.id, CommentType.song,
+                      playload: CommentThreadPlayload.music(music)),
+                );
+              }));
+            }),
         IconButton(
             icon: Icon(
               Icons.share,
