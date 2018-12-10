@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
+import 'package:quiet/model/model.dart';
+import 'package:quiet/part/part_player_service.dart';
 
 MethodChannel _channel = MethodChannel("tech.soit.quiet/player")
 // This will clear all open videos on the platform when a full restart is
@@ -96,6 +98,8 @@ class PlayerControllerState {
   }
 }
 
+enum PlaybackState { playing, pause, end, none, buffering }
+
 class PlayerController extends ValueNotifier<PlayerControllerState> {
   PlayerController._() : super(PlayerControllerState.uninitialized()) {
     _init();
@@ -166,31 +170,44 @@ class PlayerController extends ValueNotifier<PlayerControllerState> {
     return initializingCompleter.future;
   }
 
-  Future<void> play() async {
-    value = value.copyWith(isPlayWhenReady: true);
-    await _applyPlayPause();
+  Future<void> playNext() {
+    return _channel.invokeMethod("palyNext");
   }
 
-  Future<void> pause() async {
-    value = value.copyWith(isPlayWhenReady: false);
-    await _applyPlayPause();
+  Future<void> playPrevious() {
+    return _channel.invokeMethod("playPrevious");
   }
 
-  Future<void> _applyPlayPause() async {
-    if (value.isPlayWhenReady) {
-      if (value.isComplete) {
-        ///replay from start if has been complete
-        await seekTo(0);
-        value.copyWith(isComplete: false);
-      }
-      _timer = Timer.periodic(Duration(milliseconds: 300), (timer) async {
-        final Duration newPosition = await position;
-        value = value.copyWith(position: newPosition);
-      });
-    } else {
-      _timer?.cancel();
-    }
-    await _channel.invokeMethod("setPlayWhenReady", value.isPlayWhenReady);
+  Future<void> play({Music music}) {
+    debugPrint("_controller play $music");
+
+    return _channel.invokeMethod(
+        "play", music == null ? null : _musicToMap(music));
+  }
+
+  static Map _musicToMap(Music music) {
+    assert(music != null);
+    return <String, String>{
+      "title": music.title,
+      "subtitle": music.subTitle,
+      "imageUrl": music.album.coverImageUrl,
+      "id": "${music.id}",
+      "url": music.url,
+    };
+  }
+
+  Future<void> setPlaylist(List<Music> musics) {
+    assert(musics != null);
+    var arg = musics.map(_musicToMap).toList();
+    return _channel.invokeMethod("setPlaylist", arg);
+  }
+
+  Future<void> pause() {
+    return _channel.invokeMethod("pause");
+  }
+
+  Future<void> setPlayMode(PlayMode playMode) {
+    return _channel.invokeMethod("setPlayMode", playMode.index);
   }
 
   Future<void> seekTo(int position) async {
