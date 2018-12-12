@@ -20,8 +20,8 @@ const String _PREF_KEY_TOKEN = "quiet_player_token";
 ///key which save playing mode to local preference
 const String _PREF_KEY_PLAY_MODE = "quiet_player_play_mode";
 
-class MusicPlayer extends ValueNotifier<PlayerStateValue> {
-  MusicPlayer._private() : super(PlayerStateValue.uninitialized()) {
+class MusicPlayer implements ValueNotifier<PlayerControllerState> {
+  MusicPlayer._private() : super() {
     () async {
       var preference = await SharedPreferences.getInstance();
       Music current;
@@ -46,10 +46,10 @@ class MusicPlayer extends ValueNotifier<PlayerStateValue> {
               json.encode(value.current, toEncodable: (e) => e.toMap()));
           current = value.current;
         }
-        if (playingList != value.playlist) {
+        if (playingList != value.playingList) {
           preference.setString(_PREF_KEY_PLAYLIST,
-              json.encode(value.playlist, toEncodable: (e) => e.toMap()));
-          playingList = value.playlist;
+              json.encode(value.playingList, toEncodable: (e) => e.toMap()));
+          playingList = value.playingList;
         }
         if (playMode != value.playMode) {
           preference.setInt(_PREF_KEY_PLAY_MODE, value.playMode.index);
@@ -60,19 +60,12 @@ class MusicPlayer extends ValueNotifier<PlayerStateValue> {
           token = value.token;
         }
       });
-      value = value.copyWith(
+      _controller.value = _controller.value.copyWith(
           current: current,
-          playlist: playingList,
+          playingList: playingList,
           playMode: playMode,
           token: token);
     }();
-
-    ///listener player controller state
-    _controller
-        .addListener(() => value = value.copyWith(state: _controller.value));
-    _controller.onComplete = () {
-      playNext();
-    };
   }
 
   PlayerController get _controller => quietPlayerController;
@@ -84,10 +77,15 @@ class MusicPlayer extends ValueNotifier<PlayerStateValue> {
       //null music, null current playing, this is an error state
       return;
     }
-    if (!value.playlist.contains(music)) {
-      value.insertToNext(music);
+    if (!value.playingList.contains(music)) {
+      insertToNext(music);
     }
     await _performPlay(music);
+  }
+
+  void insertToNext(Music music) {
+    value.insertToNext(music);
+    notifyListeners();
   }
 
   Future<void> playWithList(Music music, List<Music> list, String token) async {
@@ -100,10 +98,10 @@ class MusicPlayer extends ValueNotifier<PlayerStateValue> {
     }
     assert(list.contains(music));
 
-    if (value.token != token || value.playlist != list) {
+    if (value.token != token || value.playingList != list) {
       //need update playing list
-      value = value.copyWith(playlist: list, token: token);
-      _controller.setPlaylist(list);
+      value = value.copyWith(playingList: list, token: token);
+      _controller.setPlaylist(list, token);
     }
     _performPlay(music);
   }
@@ -130,7 +128,7 @@ class MusicPlayer extends ValueNotifier<PlayerStateValue> {
 
   void quiet() {
     _controller.dispose();
-    value = PlayerStateValue.uninitialized();
+    value = PlayerControllerState.uninitialized();
   }
 
   Future<void> playNext() async {
@@ -149,78 +147,33 @@ class MusicPlayer extends ValueNotifier<PlayerStateValue> {
   Future<void> setVolume(double volume) {
     return _controller.setVolume(volume);
   }
-}
 
-///the current playing list, playing song , player state
-///aways available in [PlayerState]
-class PlayerStateValue {
-  PlayerStateValue(
-      this.state, this.playlist, this.current, this.token, this.playMode);
+  @override
+  PlayerControllerState get value => _controller.value;
 
-  PlayerStateValue.uninitialized()
-      : this(PlayerControllerState.uninitialized(), const [], null, null,
-            PlayMode.sequence);
-
-  /// The duration, current position, buffering state, error state and settings
-  /// of a [VideoPlayerController].
-  final PlayerControllerState state;
-
-  final List<Music> playlist;
-
-  final PlayMode playMode;
-
-  ///current playing music;
-  final Music current;
-
-  final String token;
-
-  PlayerStateValue copyWith(
-      {PlayerControllerState state,
-      List<Music> playlist,
-      Music current,
-      String token,
-      PlayMode playMode}) {
-    return PlayerStateValue(
-        state ?? this.state,
-        playlist ?? this.playlist,
-        current ?? this.current,
-        token ?? this.token,
-        playMode ?? this.playMode);
+  @override
+  void addListener(VoidCallback listener) {
+    _controller.addListener(listener);
   }
 
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is PlayerStateValue &&
-          runtimeType == other.runtimeType &&
-          state == other.state &&
-          playlist == other.playlist &&
-          current == other.current;
-
-  @override
-  int get hashCode => state.hashCode ^ playlist.hashCode ^ current.hashCode;
-
-  @override
-  String toString() {
-    return 'PlayerStateValue{state: $state, playlist: $playlist, current: $current}';
+  void removeListener(VoidCallback listener) {
+    _controller.removeListener(listener);
   }
 
-  ///insert music to after of current playing
-  void insertToNext(Music music) {
-    playlist.insert(playlist.indexOf(current) + 1, music);
+  @override
+  void dispose() => _controller.dispose();
+
+  @override
+  bool get hasListeners => _controller.hasListeners;
+
+  @override
+  void notifyListeners() {
+    _controller.notifyListeners();
   }
-}
 
-///play mode determine [PlayingList] how to play next song
-enum PlayMode {
-  ///aways play single song
-  single,
-
-  ///play current list sequence
-  sequence,
-
-  ///random to play next song
-  shuffle
+  @override
+  set value(PlayerControllerState newValue) => _controller.value = newValue;
 }
 
 class Quiet extends StatefulWidget {
@@ -233,7 +186,7 @@ class Quiet extends StatefulWidget {
 }
 
 class _QuietState extends State<Quiet> {
-  PlayerStateValue value;
+  PlayerControllerState value;
 
   void _onPlayerChange() {
     setState(() {
@@ -268,7 +221,7 @@ class PlayerState extends InheritedModel<PlayerStateAspect> {
       : super(child: child);
 
   ///get current playing music
-  final PlayerStateValue value;
+  final PlayerControllerState value;
 
   static PlayerState of(BuildContext context, {PlayerStateAspect aspect}) {
     return context.inheritFromWidgetOfExactType(PlayerState, aspect: aspect);
@@ -283,15 +236,15 @@ class PlayerState extends InheritedModel<PlayerStateAspect> {
   bool updateShouldNotifyDependent(
       PlayerState oldWidget, Set<PlayerStateAspect> dependencies) {
     if (dependencies.contains(PlayerStateAspect.position) &&
-        (value.state.position != oldWidget.value.state.position)) {
+        (value.position != oldWidget.value.position)) {
       return true;
     }
     if (dependencies.contains(PlayerStateAspect.play) &&
-        (value.state.isPlaying != oldWidget.value.state.isPlaying)) {
+        (value.isPlaying != oldWidget.value.isPlaying)) {
       return true;
     }
     if (dependencies.contains(PlayerStateAspect.playlist) &&
-        (value.playlist != oldWidget.value.playlist)) {
+        (value.playingList != oldWidget.value.playingList)) {
       return true;
     }
     if (dependencies.contains(PlayerStateAspect.music) &&

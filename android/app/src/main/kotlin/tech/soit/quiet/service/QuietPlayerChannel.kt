@@ -1,33 +1,19 @@
 package tech.soit.quiet.service
 
-import android.net.Uri
-import com.google.android.exoplayer2.ExoPlaybackException
-import com.google.android.exoplayer2.ExoPlayerFactory
-import com.google.android.exoplayer2.Player
-import com.google.android.exoplayer2.SimpleExoPlayer
-import com.google.android.exoplayer2.source.ExtractorMediaSource
-import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
-import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
-import com.google.android.exoplayer2.upstream.cache.CacheDataSourceFactory
-import com.google.android.exoplayer2.upstream.cache.LeastRecentlyUsedCacheEvictor
-import com.google.android.exoplayer2.upstream.cache.SimpleCache
+import android.graphics.Bitmap
+import android.os.Parcel
+import android.os.Parcelable
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.PluginRegistry
-import tech.soit.quiet.AppContext
-import java.util.*
+import tech.soit.quiet.model.vo.Music
+import tech.soit.quiet.player.MusicPlayerManager
+import tech.soit.quiet.player.playlist.Playlist
 
 class QuietPlayerChannel(private val registrar: PluginRegistry.Registrar,
                          private val channel: MethodChannel) : MethodChannel.MethodCallHandler {
 
     companion object {
-
-//        const val TAG = "QuietPlayerChannel"
-
-        private const val USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36" +
-                " (KHTML, like Gecko) Chrome/42.0.2311.135 Safari/537.36 Edge/13.10586"
-
-        private val cache = SimpleCache(AppContext.filesDir, LeastRecentlyUsedCacheEvictor(1000 * 1000 * 100))
 
         fun registerWith(registrar: PluginRegistry.Registrar) {
             val methodChannel = MethodChannel(registrar.messenger(), "tech.soit.quiet/player")
@@ -36,87 +22,69 @@ class QuietPlayerChannel(private val registrar: PluginRegistry.Registrar,
 
     }
 
-    private var _player: SimpleExoPlayer? = null
+    init {
+        //FIXME memory leak
+        //MusicPlayerManager have a long lifecycle than a channel
+        MusicPlayerManager.playerState.observeForever {
+            channel.invokeMethod("onPlayStateChanged", it)
+        }
 
-    private val player
-        get() = _player ?: ExoPlayerFactory
-                .newSimpleInstance(registrar.context(), DefaultTrackSelector()).also {
-                    _player = it
-                    initPlayer(it)
-                }
+        MusicPlayerManager.playingMusic.observeForever {
+            channel.invokeMethod("onPlayingMusicChanged", (it as ItemMusic?)?.map)
+        }
 
-    private fun initPlayer(player: SimpleExoPlayer) {
-        player.addListener(object : Player.DefaultEventListener() {
-            override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
-                when (playbackState) {
-                    Player.STATE_BUFFERING -> {
-                        val event = HashMap<String, Any>()
-                        event["eventId"] = "bufferingUpdate"
-                        val range = listOf(0, player.bufferedPercentage)
-                        event["values"] = Collections.singletonList(range)
-                        channel.invokeMethod("onEvent", event)
+        MusicPlayerManager.playlist.observeForever {
+            channel.invokeMethod("onPlayingListChanged", it?.list)
+        }
 
-                        channel.invokeMethod("onEvent", mapOf("eventId" to "bufferingStart"))
+        MusicPlayerManager.position.observeForever {
+            channel.invokeMethod("onPositionChanged", it?.current ?: 0)
+        }
 
-                    }
-                    Player.STATE_ENDED -> channel.invokeMethod("onEvent", mapOf("eventId" to "complete"))
-                    Player.STATE_READY -> channel.invokeMethod("onEvent", mapOf("eventId" to "ready"))
-                }
-            }
-
-            override fun onPlayerError(error: ExoPlaybackException) {
-
-                error.printStackTrace()
-
-                channel.invokeMethod("onEvent", mapOf(
-                        "eventId" to "error",
-                        "msg" to error.localizedMessage
-                ))
-            }
-        })
-//        player.audioAttributes = AudioAttributes.Builder()
-//                .setContentType(C.CONTENT_TYPE_MUSIC)
-//                .build()
     }
 
+    private val player get() = MusicPlayerManager.musicPlayer
 
     override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
         when (call.method) {
-            "init" -> {
-                player?.release()
-                _player = null
-            }
-            "prepare" -> {
-                val source = buildSource(requireNotNull(call.argument("url")))
-                //send duration when player has been ready
-                val listener = object : Player.DefaultEventListener() {
-                    override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
-                        if (playbackState == Player.STATE_READY) {
-                            player.removeListener(this)
-                            result.success(mapOf("duration" to player.duration))
-                        }
-                    }
+            "play" -> {
+                if (call.arguments == null) {
+                    player.playPause()
+                } else {
+                    player.play(ItemMusic(call.arguments<HashMap<String, Any>>()))
                 }
-                player.addListener(listener)
-                player.prepare(source)
+            }
+            "pause" -> {
+                player.playPause()
+            }
+            "playNext" -> {
+                player.playNext()
+            }
+            "playPrevious" -> {
+                player.playPrevious()
+            }
+            "setPlaylist" -> {
+                val token = call.argument<String>("token")!!
+                val list = call.argument<List<HashMap<String, Any>>>("list")!!.map { ItemMusic(it) }
+                MusicPlayerManager.playlist.value = Playlist(
+                        token = token,
+                        musics = list
+                )
             }
             "setPlayWhenReady" -> {
-                player.playWhenReady = call.arguments as? Boolean ?: false
-                result.success(null)
+                player.mediaPlayer.isPlayWhenReady = true
             }
             "seekTo" -> {
-                val position = requireNotNull(call.argument<Number>("position")).toLong()
-                player.seekTo(position)
-                result.success(null)
+                player.mediaPlayer.seekTo(call.arguments())
             }
             "setVolume" -> {
-                player.volume = requireNotNull(call.argument("volume"))
+                //TODO
             }
             "position" -> {
-                result.success(player.currentPosition)
+                result.success(player.mediaPlayer.getPosition())
             }
             "duration" -> {
-                result.success(player.duration)
+                result.success(player.mediaPlayer.getDuration())
             }
             else -> {
                 result.notImplemented()
@@ -124,11 +92,52 @@ class QuietPlayerChannel(private val registrar: PluginRegistry.Registrar,
         }
     }
 
-    private fun buildSource(url: String): ExtractorMediaSource {
-//        Log.i(TAG, "build source : $url")
-        return ExtractorMediaSource.Factory(
-                CacheDataSourceFactory(cache, DefaultDataSourceFactory(AppContext, USER_AGENT)))
-                .createMediaSource(Uri.parse(requireNotNull(url)))
+
+    class ItemMusic(
+            val map: HashMap<String, Any>
+    ) : Music(), Parcelable {
+        override fun getId(): Long {
+            return (map["id"] as Number).toLong()
+        }
+
+        override fun getTitle(): String {
+            return map["title"] as String
+        }
+
+        override fun getSubTitle(): String {
+            return map["subTitle"] as String
+        }
+
+        override fun getPlayUrl(): String {
+            return map["url"] as String
+        }
+
+        override fun isFavorite(): Boolean {
+            return map["isFavorite"] as? Boolean ?: false
+        }
+
+        override fun getCoverBitmap(): Bitmap? {
+            return null
+        }
+
+        @Suppress("UNCHECKED_CAST")
+        constructor(source: Parcel) : this(
+                source.readHashMap(null) as HashMap<String, Any>
+        )
+
+        override fun describeContents() = 0
+
+        override fun writeToParcel(dest: Parcel, flags: Int) = with(dest) {
+            writeSerializable(map)
+        }
+
+        companion object {
+            @JvmField
+            val CREATOR: Parcelable.Creator<ItemMusic> = object : Parcelable.Creator<ItemMusic> {
+                override fun createFromParcel(source: Parcel): ItemMusic = ItemMusic(source)
+                override fun newArray(size: Int): Array<ItemMusic?> = arrayOfNulls(size)
+            }
+        }
     }
 
 }

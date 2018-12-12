@@ -48,6 +48,7 @@ class Music {
       "id": id,
       "title": title,
       "url": url,
+      "subTitle": subTitle,
       "album": album.toMap(),
       "artist": artist.map((e) => e.toMap()).toList()
     };

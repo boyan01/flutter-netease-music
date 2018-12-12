@@ -81,13 +81,13 @@ class BottomControllerBar extends StatelessWidget {
                 ),
               ),
               Builder(builder: (context) {
-                if (state.state.isPlaying) {
+                if (state.isPlaying) {
                   return IconButton(
                       icon: Icon(Icons.pause),
                       onPressed: () {
                         quiet.pause();
                       });
-                } else if (state.state.isBuffering) {
+                } else if (state.isBuffering) {
                   return Center(
                     child: CircularProgressIndicator(),
                   );
