@@ -73,7 +73,7 @@ class _PlayListDetailState extends State<PagePlaylistDetail> {
     }
     PaletteGenerator generator = await PaletteGenerator.fromImageProvider(
         NeteaseImage(playlist["coverImgUrl"]));
-    var primaryColor = generator.mutedColor.color;
+    var primaryColor = generator.mutedColor?.color;
     setState(() {
       this.primaryColor = primaryColor;
     });

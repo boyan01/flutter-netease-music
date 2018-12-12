@@ -20,7 +20,7 @@ class SongTileProvider {
   get size => musics.length + 1;
 
   void _playAll(BuildContext context) {
-    if (quiet.value.token == token && quiet.value.state.isPlaying) {
+    if (quiet.value.token == token && quiet.value.isPlaying) {
       //open playing page
       Navigator.pushNamed(null, ROUTE_PAYING);
     } else {
@@ -31,7 +31,7 @@ class SongTileProvider {
   void _play(int index, BuildContext context) {
     var toPlay = musics[index];
     if (quiet.value.token == token &&
-        quiet.value.state.isPlaying &&
+        quiet.value.isPlaying &&
         quiet.value.current == toPlay) {
       //open playing page
       Navigator.pushNamed(null, ROUTE_PAYING);
