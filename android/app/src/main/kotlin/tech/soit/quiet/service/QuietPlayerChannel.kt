@@ -1,5 +1,9 @@
 package tech.soit.quiet.service
 
+import android.arch.lifecycle.Lifecycle
+import android.arch.lifecycle.LifecycleOwner
+import android.arch.lifecycle.LifecycleRegistry
+import android.arch.lifecycle.Observer
 import android.graphics.Bitmap
 import android.os.Parcel
 import android.os.Parcelable
@@ -8,58 +12,104 @@ import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.PluginRegistry
 import tech.soit.quiet.model.vo.Music
 import tech.soit.quiet.player.MusicPlayerManager
+import tech.soit.quiet.player.PlayMode
 import tech.soit.quiet.player.playlist.Playlist
 import tech.soit.quiet.utils.log
 
-class QuietPlayerChannel(private val registrar: PluginRegistry.Registrar,
-                         private val channel: MethodChannel) : MethodChannel.MethodCallHandler {
+class QuietPlayerChannel(private val channel: MethodChannel) : MethodChannel.MethodCallHandler, LifecycleOwner {
+
+    private val lifecycle = LifecycleRegistry(this)
+
+    override fun getLifecycle(): Lifecycle {
+        return lifecycle
+    }
 
     companion object {
 
-        fun registerWith(registrar: PluginRegistry.Registrar) {
+        fun registerWith(registrar: PluginRegistry.Registrar): QuietPlayerChannel {
             val methodChannel = MethodChannel(registrar.messenger(), "tech.soit.quiet/player")
-            methodChannel.setMethodCallHandler(QuietPlayerChannel(registrar, methodChannel))
+            val quietPlayerChannel = QuietPlayerChannel(methodChannel)
+            methodChannel.setMethodCallHandler(quietPlayerChannel)
+            return quietPlayerChannel
         }
 
     }
 
     init {
-        //FIXME memory leak
-        //MusicPlayerManager have a long lifecycle than a channel
-        MusicPlayerManager.playerState.observeForever {
+
+        lifecycle.handleLifecycleEvent(Lifecycle.Event.ON_START)
+
+        MusicPlayerManager.playerState.observe(this, Observer {
             channel.invokeMethod("onPlayStateChanged", it)
-        }
+        })
 
-        MusicPlayerManager.playingMusic.observeForever {
+        MusicPlayerManager.playingMusic.observe(this, Observer {
             channel.invokeMethod("onPlayingMusicChanged", (it as ItemMusic?)?.map)
-        }
+        })
 
-        MusicPlayerManager.playlist.observeForever { playlist ->
-            channel.invokeMethod("onPlayingListChanged", playlist?.list?.map { (it as ItemMusic).map })
-        }
+        MusicPlayerManager.playlist.observe(this, Observer { playlist ->
+            playlist ?: return@Observer
+            channel.invokeMethod("onPlayingListChanged", mapOf(
+                    "list" to playlist.list.map { (it as ItemMusic).map },
+                    "token" to playlist.token
+            ))
+        })
 
-        MusicPlayerManager.position.observeForever {
+        MusicPlayerManager.position.observe(this, Observer {
             channel.invokeMethod("onPositionChanged", mapOf<String, Any>(
                     "position" to (it?.current ?: 0),
                     "duration" to (it?.total ?: 0)
             ))
-        }
+        })
+    }
 
+
+    /**
+     * destroy this channel callback
+     * remove observe callback
+     */
+    fun destroy() {
+        lifecycle.handleLifecycleEvent(Lifecycle.Event.ON_DESTROY)
     }
 
     private val player get() = MusicPlayerManager.musicPlayer
 
     override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
+
+        log { "call : ${call.method}" }
+
         when (call.method) {
-            "play" -> {
-                if (call.arguments == null) {
-                    player.playPause()
-                } else {
-                    player.play(ItemMusic(call.arguments<HashMap<String, Any>>()))
+            "init" -> {
+                if (player.playlist.token != Playlist.TOKEN_EMPTY) {
+                    //when current player is available, we do not need init playlist
+                    //but also need send event to Flutter Framework
+                    MusicPlayerManager.playlist.postValue(MusicPlayerManager.playlist.value)
+                    return
                 }
+                val token = call.argument<String>("token") ?: return
+                val list = call.argument<List<HashMap<String, Any>>>("list")?.map { ItemMusic(it) }
+                        ?: return
+                player.playlist = Playlist(token, list)
+                player.playlist.current = call.argument<HashMap<String, Any>>("music")?.let { ItemMusic(it) }
+                player.playlist.playMode = PlayMode.values()[call.argument<Int>("playMode") ?: 0]
+
+            }
+            "play" -> {
+                player.play()
+            }
+            "playWithPlaylist" -> {
+                //token , list , music argument must not be null
+
+                val token = call.argument<String>("token")!!
+                val list = call.argument<List<HashMap<String, Any>>>("list")!!.map { ItemMusic(it) }
+                val music = ItemMusic(call.argument<HashMap<String, Any>>("music")!!)
+
+                player.playlist = Playlist(token, list)
+                player.play(music)
+
             }
             "pause" -> {
-                player.playPause()
+                player.pause()
             }
             "playNext" -> {
                 player.playNext()

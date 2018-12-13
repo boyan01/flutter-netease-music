@@ -28,6 +28,10 @@ abstract class Music : Parcelable, Serializable {
         return true
     }
 
+    override fun toString(): String {
+        return "{id : ${getId()} , title : ${getTitle()}}"
+    }
+
     override fun hashCode(): Int {
         return getId().hashCode()
     }

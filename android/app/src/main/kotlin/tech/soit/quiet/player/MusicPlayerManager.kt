@@ -14,7 +14,8 @@ import tech.soit.quiet.player.service.QuietPlayerService
  * and play action such as :
  * [QuietMusicPlayer.playNext],
  * [QuietMusicPlayer.playPrevious],
- * [QuietMusicPlayer.playPause]
+ * [QuietMusicPlayer.pause]
+ * [QuietMusicPlayer.play]
  *
  * provider LiveData such as [playingMusic] [position] [playerState] [playlist]
  * to listen MusicPlayer' state
@@ -31,6 +32,10 @@ interface IMusicPlayerManager {
 
     val position: MutableLiveData<Position>
 
+    /**
+     * current playing list play mode
+     */
+    val playMode: MutableLiveData<PlayMode>
 
     /**
      * [IMediaPlayer.PlayerState]
@@ -56,6 +61,8 @@ interface IMusicPlayerManager {
 
 class MusicPlayerManagerImpl : IMusicPlayerManager {
 
+
+    override val playMode: MutableLiveData<PlayMode> = liveDataWith(PlayMode.Sequence)
     /**
      * music player, manage the playlist and [IMediaPlayer]
      *

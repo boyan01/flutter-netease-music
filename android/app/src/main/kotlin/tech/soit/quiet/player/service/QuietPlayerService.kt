@@ -127,7 +127,11 @@ class QuietPlayerService : Service(), LifecycleOwner {
                 MusicPlayerManager.musicPlayer.playPrevious()
             }
             action_play_pause -> {
-                MusicPlayerManager.musicPlayer.playPause()
+                if (MusicPlayerManager.playerState.value == IMediaPlayer.PLAYING) {
+                    MusicPlayerManager.musicPlayer.pause()
+                } else {
+                    MusicPlayerManager.musicPlayer.play()
+                }
             }
             action_play_next -> {
                 MusicPlayerManager.musicPlayer.playNext()

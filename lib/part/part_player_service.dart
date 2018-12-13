@@ -23,6 +23,7 @@ const String _PREF_KEY_PLAY_MODE = "quiet_player_play_mode";
 class MusicPlayer implements ValueNotifier<PlayerControllerState> {
   MusicPlayer._private() : super() {
     () async {
+      //load former player information from SharedPreference
       var preference = await SharedPreferences.getInstance();
       Music current;
       List<Music> playingList;
@@ -40,6 +41,12 @@ class MusicPlayer implements ValueNotifier<PlayerControllerState> {
         debugPrint(e.toString());
       }
 
+      debugPrint("loaded : $current");
+      debugPrint("loaded : $playingList");
+      debugPrint("loaded : $token");
+      debugPrint("loaded : $playMode");
+
+      //save player info to SharedPreference
       addListener(() {
         if (current != value.current) {
           preference.setString(_PREF_KEY_PLAYING,
@@ -60,11 +67,7 @@ class MusicPlayer implements ValueNotifier<PlayerControllerState> {
           token = value.token;
         }
       });
-      _controller.value = _controller.value.copyWith(
-          current: current,
-          playingList: playingList,
-          playMode: playMode,
-          token: token);
+      _controller.init(playingList, current, token, playMode);
     }();
   }
 
@@ -78,6 +81,7 @@ class MusicPlayer implements ValueNotifier<PlayerControllerState> {
       return;
     }
     if (!value.playingList.contains(music)) {
+      debugPrint("playing list do not contain : $music");
       insertToNext(music);
     }
     await _performPlay(music);
@@ -91,6 +95,8 @@ class MusicPlayer implements ValueNotifier<PlayerControllerState> {
   }
 
   Future<void> playWithList(Music music, List<Music> list, String token) async {
+    debugPrint("playWithList ${list.map((m) => m.title).join(",")}");
+    debugPrint("playWithList token = $token");
     assert(list != null && token != null);
     if (list.isEmpty) {
       return;
@@ -100,11 +106,7 @@ class MusicPlayer implements ValueNotifier<PlayerControllerState> {
     }
     assert(list.contains(music));
 
-    if (value.token != token) {
-      //need update playing list
-      await _controller.setPlaylist(list, token);
-    }
-    await _performPlay(music);
+    await _controller.playWithPlaylist(list, token, music);
   }
 
   //perform to play music
@@ -117,7 +119,8 @@ class MusicPlayer implements ValueNotifier<PlayerControllerState> {
     }
     assert(
         music.url != null && music.url.isNotEmpty, "music url can not be null");
-    return await _controller.play(music: music);
+    return await _controller.playWithPlaylist(
+        value.playingList, value.token, music);
   }
 
   Future<void> pause() {

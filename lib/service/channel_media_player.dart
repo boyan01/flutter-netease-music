@@ -4,7 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:quiet/model/model.dart';
 
-MethodChannel _channel = MethodChannel("tech.soit.quiet/player");
+const MethodChannel _channel = MethodChannel("tech.soit.quiet/player");
 
 PlayerController quietPlayerController = PlayerController._();
 
@@ -126,6 +126,7 @@ enum PlayMode {
 
 enum PlaybackState { none, playing, paused, buffering }
 
+///channel contract with platform player service
 class PlayerController extends ValueNotifier<PlayerControllerState> {
   PlayerController._() : super(PlayerControllerState.uninitialized()) {
     _init();
@@ -157,26 +158,51 @@ class PlayerController extends ValueNotifier<PlayerControllerState> {
     });
   }
 
+  ///play next music
   Future<void> playNext() {
     return _channel.invokeMethod("playNext");
   }
 
+  ///play previous music
   Future<void> playPrevious() {
     return _channel.invokeMethod("playPrevious");
   }
 
-  Future<void> play({Music music}) {
-    debugPrint("try to play $music");
-    return _channel.invokeMethod("play", music == null ? null : music.toMap());
-  }
-
-  Future<void> setPlaylist(List<Music> musics, String token,
-      {PlayMode playMode = PlayMode.sequence}) {
-    assert(musics != null);
-    return _channel.invokeMethod("setPlaylist", {
-      "list": musics.map((m) => m.toMap()).toList(),
+  ///do init to player
+  ///if player is running , will do nothing
+  ///maybe should move load and restore preference logic to player service
+  Future<void> init(
+    List<Music> list,
+    Music music,
+    String token,
+    PlayMode playMode,
+  ) {
+    return _channel.invokeMethod("init", {
+      "list": list == null ? null : list.map((m) => m.toMap()).toList(),
+      "music": music?.toMap(),
       "token": token,
       "playMode": playMode.index
+    });
+  }
+
+  ///start player
+  ///try to play current music if player is not available
+  Future<void> play() {
+    return _channel.invokeMethod("play");
+  }
+
+  Future<void> playWithPlaylist(List<Music> musics, String token, Music music,
+      {PlayMode playMode = PlayMode.sequence}) {
+    assert(musics != null && musics.isNotEmpty);
+    assert(music != null);
+    assert(token != null);
+    assert(playMode != null);
+
+    return _channel.invokeMethod("playWithPlaylist", {
+      "list": musics.map((m) => m.toMap()).toList(),
+      "token": token,
+      "playMode": playMode.index,
+      "music": music.toMap()
     });
   }
 
