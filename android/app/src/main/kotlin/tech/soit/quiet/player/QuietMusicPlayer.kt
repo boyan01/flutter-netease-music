@@ -35,6 +35,7 @@ class QuietMusicPlayer {
         //LiveData change
         MusicPlayerManager.playlist.postValue(newValue)
         MusicPlayerManager.playingMusic.postValue(playlist.current)
+        MusicPlayerManager.playMode.postValue(playlist.playMode)
 
         //stop player
         if (newValue != oldValue) {
@@ -56,22 +57,25 @@ class QuietMusicPlayer {
     }
 
     /**
-     * if is playing , pause
-     * if is not playing , playing current music
+     * pause player
      */
-    fun playPause() = safeAsync {
-        val current = playlist.current
-        if (current == null) {
-            playNext()
-            return@safeAsync
-        }
-        if (current != MusicPlayerManager.playingMusic.value) {
-            MusicPlayerManager.playingMusic.postValue(current)
-        }
+    fun pause() {
+        mediaPlayer.isPlayWhenReady = false
+    }
+
+    /**
+     * start player, if player is idle , try to play current music [Playlist.current]
+     */
+    fun play() = safeAsync {
         if (mediaPlayer.getState() == IMediaPlayer.IDLE) {
-            play(current)
+            val current = playlist.current
+            if (current != null) {
+                play(current)
+            } else {
+                playNext()
+            }
         } else {
-            mediaPlayer.isPlayWhenReady = !mediaPlayer.isPlayWhenReady
+            mediaPlayer.isPlayWhenReady = true
         }
     }
 
