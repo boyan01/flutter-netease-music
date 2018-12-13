@@ -9,6 +9,7 @@ import io.flutter.plugin.common.PluginRegistry
 import tech.soit.quiet.model.vo.Music
 import tech.soit.quiet.player.MusicPlayerManager
 import tech.soit.quiet.player.playlist.Playlist
+import tech.soit.quiet.utils.log
 
 class QuietPlayerChannel(private val registrar: PluginRegistry.Registrar,
                          private val channel: MethodChannel) : MethodChannel.MethodCallHandler {
@@ -33,12 +34,15 @@ class QuietPlayerChannel(private val registrar: PluginRegistry.Registrar,
             channel.invokeMethod("onPlayingMusicChanged", (it as ItemMusic?)?.map)
         }
 
-        MusicPlayerManager.playlist.observeForever {
-            channel.invokeMethod("onPlayingListChanged", it?.list)
+        MusicPlayerManager.playlist.observeForever { playlist ->
+            channel.invokeMethod("onPlayingListChanged", playlist?.list?.map { (it as ItemMusic).map })
         }
 
         MusicPlayerManager.position.observeForever {
-            channel.invokeMethod("onPositionChanged", it?.current ?: 0)
+            channel.invokeMethod("onPositionChanged", mapOf<String, Any>(
+                    "position" to (it?.current ?: 0),
+                    "duration" to (it?.total ?: 0)
+            ))
         }
 
     }
@@ -66,19 +70,20 @@ class QuietPlayerChannel(private val registrar: PluginRegistry.Registrar,
             "setPlaylist" -> {
                 val token = call.argument<String>("token")!!
                 val list = call.argument<List<HashMap<String, Any>>>("list")!!.map { ItemMusic(it) }
-                MusicPlayerManager.playlist.value = Playlist(
+                player.playlist = Playlist(
                         token = token,
                         musics = list
                 )
             }
-            "setPlayWhenReady" -> {
-                player.mediaPlayer.isPlayWhenReady = true
+            "insertToNext" -> {
+                val music = ItemMusic(call.arguments<HashMap<String, Any>>())
+                player.playlist.insertToNext(music)
             }
             "seekTo" -> {
                 player.mediaPlayer.seekTo(call.arguments())
             }
             "setVolume" -> {
-                //TODO
+
             }
             "position" -> {
                 result.success(player.mediaPlayer.getPosition())
