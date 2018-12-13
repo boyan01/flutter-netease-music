@@ -1,6 +1,7 @@
 package tech.soit.quiet.player.playlist
 
 import tech.soit.quiet.model.vo.Music
+import tech.soit.quiet.player.MusicPlayerManager
 import tech.soit.quiet.player.PlayMode
 import tech.soit.quiet.utils.log
 
@@ -134,22 +135,23 @@ open class Playlist(
     open fun insertToNext(next: Music) {
         if (_list.isEmpty()) {
             _list.add(next)
-            return
+        } else {
+            ensureShuffleListGenerate()
+
+            //check if music is playing
+            if (current == next) {
+                return
+            }
+            //remove if musicList contain this item
+            _list.remove(next)
+
+            val index = _list.indexOf(current) + 1
+            _list.add(index, next)
+
+            val indexShuffle = shuffleMusicList.indexOf(current) + 1
+            shuffleMusicList.add(indexShuffle, next)
         }
-        ensureShuffleListGenerate()
-
-        //check if music is playing
-        if (current == next) {
-            return
-        }
-        //remove if musicList contain this item
-        _list.remove(next)
-
-        val index = _list.indexOf(current) + 1
-        _list.add(index, next)
-
-        val indexShuffle = shuffleMusicList.indexOf(current) + 1
-        shuffleMusicList.add(indexShuffle, next)
+        MusicPlayerManager.playlist.postValue(this)
     }
 
 

@@ -55,7 +55,7 @@ class QuietExoPlayer(
         }
 
     override fun release() {
-        exoPlayer.release()
+        exoPlayer.stop(true)
     }
 
     override fun getState(): Int {

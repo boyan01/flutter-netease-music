@@ -150,25 +150,11 @@ class PlayerController extends ValueNotifier<PlayerControllerState> {
           break;
         case "onPositionChanged":
           value = value.copyWith(
-              position: Duration(milliseconds: method.arguments));
+              position: Duration(milliseconds: method.arguments["position"]),
+              duration: Duration(microseconds: method.arguments["duration"]));
           break;
       }
     });
-  }
-
-  ///prepare play url
-  Future<void> prepare(String url) async {
-    value = PlayerControllerState.uninitialized();
-
-    final Completer<void> initializingCompleter = Completer<void>();
-
-    _channel.invokeMethod("prepare", {"url": url}).then((result) {
-      value =
-          value.copyWith(duration: Duration(milliseconds: result["duration"]));
-      initializingCompleter.complete(null);
-    });
-
-    return initializingCompleter.future;
   }
 
   Future<void> playNext() {
@@ -180,18 +166,23 @@ class PlayerController extends ValueNotifier<PlayerControllerState> {
   }
 
   Future<void> play({Music music}) {
+    debugPrint("try to play $music");
     return _channel.invokeMethod("play", music == null ? null : music.toMap());
   }
 
   Future<void> setPlaylist(List<Music> musics, String token,
       {PlayMode playMode = PlayMode.sequence}) {
     assert(musics != null);
-    value = value.copyWith(playingList: musics, token: token);
     return _channel.invokeMethod("setPlaylist", {
       "list": musics.map((m) => m.toMap()).toList(),
       "token": token,
       "playMode": playMode.index
     });
+  }
+
+  Future<void> insertToNext(Music music) {
+    assert(music != null);
+    return _channel.invokeMethod("insertToNext", music.toMap());
   }
 
   Future<void> pause() {

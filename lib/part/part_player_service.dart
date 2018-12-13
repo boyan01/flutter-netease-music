@@ -83,9 +83,11 @@ class MusicPlayer implements ValueNotifier<PlayerControllerState> {
     await _performPlay(music);
   }
 
-  void insertToNext(Music music) {
-    value.insertToNext(music);
-    notifyListeners();
+  void insertToNext(Music music) async {
+    if (value.playingList.contains(music)) {
+      return;
+    }
+    await _controller.insertToNext(music);
   }
 
   Future<void> playWithList(Music music, List<Music> list, String token) async {
@@ -98,12 +100,11 @@ class MusicPlayer implements ValueNotifier<PlayerControllerState> {
     }
     assert(list.contains(music));
 
-    if (value.token != token || value.playingList != list) {
+    if (value.token != token) {
       //need update playing list
-      value = value.copyWith(playingList: list, token: token);
-      _controller.setPlaylist(list, token);
+      await _controller.setPlaylist(list, token);
     }
-    _performPlay(music);
+    await _performPlay(music);
   }
 
   //perform to play music
@@ -116,9 +117,6 @@ class MusicPlayer implements ValueNotifier<PlayerControllerState> {
     }
     assert(
         music.url != null && music.url.isNotEmpty, "music url can not be null");
-    await _controller.play(music: music);
-    //refresh state
-    value = value.copyWith(current: music);
     return await _controller.play(music: music);
   }
 
