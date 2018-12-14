@@ -40,6 +40,12 @@ class QuietPlayerChannel(private val channel: MethodChannel) : MethodChannel.Met
 
     private fun init() {
         if (isInitialized) {
+            //It is unlikely that this will happen under normal circumstances.
+            //but when hot restart dart code modify to running application, will cause this to happen.
+            //so in order to help debug , we need resend events to flutter framework
+            MusicPlayerManager.playerState.postValue(MusicPlayerManager.playerState.value)
+            MusicPlayerManager.playingMusic.postValue(MusicPlayerManager.playingMusic.value)
+            MusicPlayerManager.playlist.postValue(MusicPlayerManager.playlist.value)
             return
         }
 
