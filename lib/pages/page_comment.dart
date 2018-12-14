@@ -222,7 +222,7 @@ class _CommentListState extends State<_CommentList> {
 
   ///auto load when ListView reached the end
   void _scrollListener() {
-    if (_controller.position.extentAfter < 500 && _autoLoadOperation == null) {
+    if (more && _controller.position.extentAfter < 500 && _autoLoadOperation == null) {
       _autoLoadOperation = CancelableOperation.fromFuture(
           getComments(widget.threadId, offset: comments.length))
         ..value.then((result) {
