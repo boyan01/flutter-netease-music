@@ -1,26 +1,37 @@
 import 'package:async/async.dart';
 import 'package:flutter/material.dart';
 
+///build widget when Loader has completed loading...
 typedef LoaderWidgetBuilder = Widget Function(
     BuildContext context, dynamic result);
 
-class StatedLoader extends StatefulWidget {
-  const StatedLoader({Key key, @required this.loadTask, @required this.builder})
+class Loader extends StatefulWidget {
+  const Loader(
+      {Key key,
+      @required this.loadTask,
+      @required this.builder,
+      this.loadingBuilder})
       : super(key: key);
 
+  ///task to load
+  ///returned future'data will send by [LoaderWidgetBuilder]
   final Future<dynamic> Function() loadTask;
 
   final LoaderWidgetBuilder builder;
 
-  static StatedLoaderState of(BuildContext context) {
-    return context.ancestorStateOfType(const TypeMatcher<StatedLoaderState>());
+  ///widget display when loading
+  ///if null ,default to display a white background with a Circle Progress
+  final WidgetBuilder loadingBuilder;
+
+  static LoaderState of(BuildContext context) {
+    return context.ancestorStateOfType(const TypeMatcher<LoaderState>());
   }
 
   @override
-  State<StatefulWidget> createState() => StatedLoaderState();
+  State<StatefulWidget> createState() => LoaderState();
 }
 
-class StatedLoaderState extends State<StatedLoader> {
+class LoaderState extends State<Loader> {
   /// 0 : loading
   /// 1 : load success
   /// 2 : load failed
@@ -67,9 +78,14 @@ class StatedLoaderState extends State<StatedLoader> {
     if (state == 1) {
       return widget.builder(context, value);
     } else if (state == 0) {
-      return Center(
-        child: CircularProgressIndicator(),
-      );
+      return widget.loadingBuilder != null
+          ? widget.loadingBuilder(context)
+          : Container(
+              color: Theme.of(context).backgroundColor,
+              child: Center(
+                child: CircularProgressIndicator(),
+              ),
+            );
     }
     return Center(
       child: RaisedButton(
