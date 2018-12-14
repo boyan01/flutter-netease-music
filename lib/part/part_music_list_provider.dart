@@ -20,7 +20,7 @@ class SongTileProvider {
   get size => musics.length + 1;
 
   void _playAll(BuildContext context) {
-    if (quiet.value.playlist.token == token && quiet.value.state.isPlaying) {
+    if (quiet.value.token == token && quiet.value.isPlaying) {
       //open playing page
       Navigator.pushNamed(null, ROUTE_PAYING);
     } else {
@@ -30,8 +30,8 @@ class SongTileProvider {
 
   void _play(int index, BuildContext context) {
     var toPlay = musics[index];
-    if (quiet.value.playlist.token == token &&
-        quiet.value.state.isPlaying &&
+    if (quiet.value.token == token &&
+        quiet.value.isPlaying &&
         quiet.value.current == toPlay) {
       //open playing page
       Navigator.pushNamed(null, ROUTE_PAYING);
@@ -177,8 +177,7 @@ class SongTile extends StatelessWidget {
                       onSelected: (SongPopupMenuType type) {
                         switch (type) {
                           case SongPopupMenuType.addToNext:
-                            quiet.value.playlist
-                                .insertToNext(quiet.value.current, music);
+                            quiet.value.insertToNext(music);
                             break;
                           case SongPopupMenuType.comment:
                             Navigator.push(context,

@@ -5,7 +5,6 @@ import android.os.Bundle
 import io.flutter.app.FlutterActivity
 import io.flutter.plugins.GeneratedPluginRegistrant
 import tech.soit.quiet.service.NeteaseCrypto
-import tech.soit.quiet.service.Notification
 import tech.soit.quiet.service.QuietPlayerChannel
 
 class MainActivity : FlutterActivity() {
@@ -24,15 +23,20 @@ class MainActivity : FlutterActivity() {
 
     }
 
+    private lateinit var playerChannel: QuietPlayerChannel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         GeneratedPluginRegistrant.registerWith(this)
 
         NeteaseCrypto.init(flutterView)
-        Notification.registerWith(registrarFor("tech.soit.quiet.service.Notification"))
-        QuietPlayerChannel.registerWith(registrarFor("tech.soit.quiet.service.QuietPlayerChannel"))
+        playerChannel = QuietPlayerChannel.registerWith(registrarFor("tech.soit.quiet.service.QuietPlayerChannel"))
     }
 
+    override fun onDestroy() {
+        playerChannel.destroy()
+        super.onDestroy()
+    }
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
