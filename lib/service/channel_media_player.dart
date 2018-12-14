@@ -152,7 +152,7 @@ class PlayerController extends ValueNotifier<PlayerControllerState> {
         case "onPositionChanged":
           value = value.copyWith(
               position: Duration(milliseconds: method.arguments["position"]),
-              duration: Duration(microseconds: method.arguments["duration"]));
+              duration: Duration(milliseconds: method.arguments["duration"]));
           break;
       }
     });
