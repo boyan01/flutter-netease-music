@@ -103,13 +103,6 @@ class PlayerControllerState {
         token: token ?? this.token);
   }
 
-  void insertToNext(Music music) {
-    if (playingList.contains(music)) {
-      return;
-    }
-    var index = playingList.indexOf(current) + 1;
-    playingList.insert(index, music);
-  }
 }
 
 ///play mode determine [PlayingList] how to play next song
