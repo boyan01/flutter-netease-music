@@ -88,7 +88,12 @@ class BottomControllerBar extends StatelessWidget {
                         quiet.pause();
                       });
                 } else if (state.isBuffering) {
-                  return Center(
+                  return Container(
+                    height: 24,
+                    width: 24,
+                    //to fit  IconButton min width 48
+                    margin: EdgeInsets.only(right: 12),
+                    padding: EdgeInsets.all(4),
                     child: CircularProgressIndicator(),
                   );
                 } else {
