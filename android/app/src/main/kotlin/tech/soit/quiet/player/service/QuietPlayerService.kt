@@ -137,8 +137,8 @@ class QuietPlayerService : Service(), LifecycleOwner {
                 MusicPlayerManager.musicPlayer.playNext()
             }
             action_exit -> {
-                stopForeground(true)
                 MusicPlayerManager.musicPlayer.quiet()
+                stopForeground(true)
                 stopSelf()
             }
             action_like -> {
