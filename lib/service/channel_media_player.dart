@@ -220,7 +220,7 @@ class PlayerController extends ValueNotifier<PlayerControllerState> {
   }
 
   Future<void> seekTo(int position) async {
-    await _channel.invokeMethod("seekTo", {"position": position});
+    await _channel.invokeMethod("seekTo", position);
     value = value.copyWith(position: Duration(milliseconds: position));
   }
 
