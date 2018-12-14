@@ -15,7 +15,7 @@ class CommentPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StatedLoader(
+    return Loader(
       loadTask: () => getComments(threadId),
       builder: (context, result) {
         return Scaffold(
@@ -103,7 +103,7 @@ class _CommentInputState extends State<_CommentInput> {
                   if (_focusNode.hasFocus) {
                     _focusNode.unfocus();
                   }
-                  StatedLoader.of(context).refresh();
+                  Loader.of(context).refresh();
                 } else {
                   setState(() {
                     _error = "发送失败";
