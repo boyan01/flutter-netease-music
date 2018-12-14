@@ -41,8 +41,7 @@ class _ControllerBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var color = Theme.of(context).primaryIconTheme.color;
-    var state =
-        PlayerState.of(context, aspect: PlayerStateAspect.play).value;
+    var state = PlayerState.of(context, aspect: PlayerStateAspect.play).value;
 
     Widget iconPlayPause;
     if (state.isPlaying) {
@@ -316,6 +315,7 @@ class _CloudLyricState extends State<_CloudLyric> {
       return;
     }
     setState(() {
+      debugPrint("lyric load state : $state");
       _state = state;
     });
   }
@@ -343,9 +343,16 @@ class _CloudLyricState extends State<_CloudLyric> {
         if (content == null) {
           state = 3;
         } else {
-          lyric = LyricContent.from(content);
-          state = 2;
+          try {
+            lyric = LyricContent.from(content);
+            state = 2;
+          } catch (e) {
+            //parse lyric error
+            state = 3;
+          }
         }
+      }).catchError((dynamic) {
+        state = 1;
       });
     }
 
