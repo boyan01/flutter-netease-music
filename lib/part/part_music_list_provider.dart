@@ -177,7 +177,7 @@ class SongTile extends StatelessWidget {
                       onSelected: (SongPopupMenuType type) {
                         switch (type) {
                           case SongPopupMenuType.addToNext:
-                            quiet.value.insertToNext(music);
+                            quiet.insertToNext(music);
                             break;
                           case SongPopupMenuType.comment:
                             Navigator.push(context,
