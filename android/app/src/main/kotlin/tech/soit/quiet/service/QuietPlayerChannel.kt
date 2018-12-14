@@ -35,8 +35,15 @@ class QuietPlayerChannel(private val channel: MethodChannel) : MethodChannel.Met
 
     }
 
-    init {
+    //flag prevent duplicated init
+    private var isInitialized = false
 
+    private fun init() {
+        if (isInitialized) {
+            return
+        }
+
+        isInitialized = true
         lifecycle.handleLifecycleEvent(Lifecycle.Event.ON_START)
 
         MusicPlayerManager.playerState.observe(this, Observer {
@@ -80,6 +87,7 @@ class QuietPlayerChannel(private val channel: MethodChannel) : MethodChannel.Met
 
         when (call.method) {
             "init" -> {
+                init()
                 if (player.playlist.token != Playlist.TOKEN_EMPTY) {
                     //when current player is available, we do not need init playlist
                     //but also need send event to Flutter Framework
