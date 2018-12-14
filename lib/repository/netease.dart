@@ -34,9 +34,8 @@ class NeteaseRepository {
       this.user.value = user;
       this.user.addListener(() {
         var userValue = this.user.value;
-        if (userValue != null) {
-          preference.setString("login_user", json.encode(userValue));
-        }
+        preference.setString(
+            "login_user", userValue == null ? null : json.encode(userValue));
       });
     });
   }
