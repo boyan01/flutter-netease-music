@@ -42,7 +42,7 @@ class _ControllerBar extends StatelessWidget {
   Widget build(BuildContext context) {
     var color = Theme.of(context).primaryIconTheme.color;
     var state =
-        PlayerState.of(context, aspect: PlayerStateAspect.play).value.state;
+        PlayerState.of(context, aspect: PlayerStateAspect.play).value;
 
     Widget iconPlayPause;
     if (state.isPlaying) {
@@ -135,7 +135,7 @@ class _DurationProgressBarState extends State<_DurationProgressBar> {
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context).primaryTextTheme;
-    var state = PlayerState.of(context).value.state;
+    var state = PlayerState.of(context).value;
 
     Widget progressIndicator;
 
@@ -187,7 +187,7 @@ class _DurationProgressBarState extends State<_DurationProgressBar> {
             onChangeEnd: (value) async {
               isUserTracking = false;
               quiet.seekTo(value.round());
-              if (!quiet.value.state.isPlayWhenReady) {
+              if (!quiet.value.isPlayWhenReady) {
                 quiet.play();
               }
             },
@@ -349,7 +349,7 @@ class _CloudLyricState extends State<_CloudLyric> {
       });
     }
 
-    position.value = quiet.value.state.position.inMilliseconds;
+    position.value = quiet.value.position.inMilliseconds;
   }
 
   @override
@@ -462,7 +462,7 @@ class _AlbumCoverState extends State<_AlbumCover>
   }
 
   void _onMusicStateChanged() {
-    var state = quiet.value.state;
+    var state = quiet.value;
 
     var _isPlaying = state.isPlaying;
 
