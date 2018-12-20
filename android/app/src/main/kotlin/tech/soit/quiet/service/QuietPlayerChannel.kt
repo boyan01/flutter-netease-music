@@ -149,6 +149,10 @@ class QuietPlayerChannel(private val channel: MethodChannel) : MethodChannel.Met
             "setVolume" -> {
 
             }
+            "setPlayMode" -> {
+                val index: Int = call.arguments()
+                player.playlist.playMode = PlayMode.values()[index]
+            }
             "position" -> {
                 result.success(player.mediaPlayer.getPosition())
             }

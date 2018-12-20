@@ -38,6 +38,29 @@ class PlayingPage extends StatelessWidget {
 ///player controller
 /// pause,play,play next,play previous...
 class _ControllerBar extends StatelessWidget {
+  Widget getPlayModeIcon(context, Color color) {
+    var playMode = PlayerState.of(context, aspect: PlayerStateAspect.playMode)
+        .value
+        .playMode;
+    switch (playMode) {
+      case PlayMode.single:
+        return Icon(
+          Icons.repeat_one,
+          color: color,
+        );
+      case PlayMode.sequence:
+        return Icon(
+          Icons.repeat,
+          color: color,
+        );
+      case PlayMode.shuffle:
+        return Icon(
+          Icons.shuffle,
+          color: color,
+        );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     var color = Theme.of(context).primaryIconTheme.color;
@@ -82,11 +105,10 @@ class _ControllerBar extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
           IconButton(
-              icon: Icon(
-                Icons.shuffle,
-                color: color,
-              ),
-              onPressed: () {}),
+              icon: getPlayModeIcon(context, color),
+              onPressed: () {
+                quiet.changePlayMode();
+              }),
           IconButton(
               iconSize: 36,
               icon: Icon(
