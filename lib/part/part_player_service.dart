@@ -150,6 +150,14 @@ class MusicPlayer implements ValueNotifier<PlayerControllerState> {
     return _controller.setVolume(volume);
   }
 
+  ///change playlist play mode
+  ///[PlayMode]
+  Future<void> changePlayMode() {
+    PlayMode next = PlayMode.values[(value.playMode.index + 1) % 3];
+    value = value.copyWith(playMode: next);
+    return _controller.setPlayMode(next);
+  }
+
   @override
   PlayerControllerState get value => _controller.value;
 
@@ -253,6 +261,10 @@ class PlayerState extends InheritedModel<PlayerStateAspect> {
         (value.current != oldWidget.value.current)) {
       return true;
     }
+    if (dependencies.contains(PlayerStateAspect.playMode) &&
+        (value.playMode) != oldWidget.value.playMode) {
+      return true;
+    }
     return false;
   }
 }
@@ -268,7 +280,10 @@ enum PlayerStateAspect {
   music,
 
   ///the current playing playlist
-  playlist
+  playlist,
+
+  ///the play mode of playlist
+  playMode,
 }
 
 ///format milliseconds to time stamp like "06:23", which
