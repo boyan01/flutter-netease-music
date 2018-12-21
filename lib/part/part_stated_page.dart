@@ -2,34 +2,49 @@ import 'package:async/async.dart';
 import 'package:flutter/material.dart';
 
 ///build widget when Loader has completed loading...
-typedef LoaderWidgetBuilder = Widget Function(
-    BuildContext context, dynamic result);
+typedef LoaderWidgetBuilder<T> = Widget Function(
+    BuildContext context, T result);
 
 ///build widget when loader load failed
 ///result and msg might be null
-typedef LoaderFailedWidgetBuilder = Widget Function(
-    BuildContext context, dynamic result, String msg);
+typedef LoaderFailedWidgetBuilder<T> = Widget Function(
+    BuildContext context, T result, String msg);
 
 ///the result of function [TaskResultVerify]
-class VerifyValue {
+class VerifyValue<T> {
   VerifyValue.success(this.result);
 
   VerifyValue.errorMsg(this.errorMsg) : assert(errorMsg != null);
 
-  dynamic result;
+  T result;
   String errorMsg;
 
   bool get isSuccess => errorMsg == null;
 }
 
 ///to verify [Loader.loadTask] result is success
-typedef TaskResultVerify = VerifyValue Function(dynamic result);
+typedef TaskResultVerify<T> = VerifyValue Function(T result);
 
 final TaskResultVerify _emptyVerify = (dynamic result) {
   return VerifyValue.success(result);
 };
 
-class Loader extends StatefulWidget {
+///create a simple [TaskResultVerify]
+///use bool result to check result if valid
+TaskResultVerify<T> simpleLoaderResultVerify<T>(bool test(T),
+    {String errorMsg = "falied"}) {
+  assert(errorMsg != null);
+  TaskResultVerify<T> verify = (result) {
+    if (test(result)) {
+      return VerifyValue.success(result);
+    } else {
+      return VerifyValue.errorMsg(errorMsg);
+    }
+  };
+  return verify;
+}
+
+class Loader<T> extends StatefulWidget {
   const Loader(
       {Key key,
       @required this.loadTask,
@@ -43,14 +58,14 @@ class Loader extends StatefulWidget {
 
   ///task to load
   ///returned future'data will send by [LoaderWidgetBuilder]
-  final Future<dynamic> Function() loadTask;
+  final Future<T> Function() loadTask;
 
-  final LoaderWidgetBuilder builder;
+  final LoaderWidgetBuilder<T> builder;
 
-  final TaskResultVerify resultVerify;
+  final TaskResultVerify<T> resultVerify;
 
   ///if null, build a default error widget when load failed
-  final LoaderFailedWidgetBuilder failedWidgetBuilder;
+  final LoaderFailedWidgetBuilder<T> failedWidgetBuilder;
 
   ///widget display when loading
   ///if null ,default to display a white background with a Circle Progress
@@ -61,7 +76,7 @@ class Loader extends StatefulWidget {
   }
 
   @override
-  State<StatefulWidget> createState() => LoaderState();
+  State<StatefulWidget> createState() => LoaderState<T>();
 }
 
 enum _LoaderState {
@@ -70,14 +85,14 @@ enum _LoaderState {
   failed,
 }
 
-class LoaderState extends State<Loader> {
+class LoaderState<T> extends State<Loader> {
   _LoaderState state = _LoaderState.loading;
 
   String _errorMsg;
 
   CancelableOperation task;
 
-  dynamic value;
+  T value;
 
   @override
   void initState() {
@@ -88,6 +103,9 @@ class LoaderState extends State<Loader> {
   void refresh() {
     _loadData();
   }
+
+  @override
+  Loader<T> get widget => super.widget;
 
   void _loadData() {
     state = _LoaderState.loading;
@@ -106,7 +124,8 @@ class LoaderState extends State<Loader> {
             _errorMsg = verify.errorMsg;
           });
         }
-      }).catchError(() {
+      }).catchError((dynamic) {
+        debugPrint("error to load : $dynamic");
         setState(() {
           state = _LoaderState.failed;
         });
