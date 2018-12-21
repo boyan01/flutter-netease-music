@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:quiet/pages/page_search_sections.dart';
+import 'package:quiet/part/part.dart';
+import 'package:quiet/part/part_player.dart';
 import 'package:quiet/part/part_stated_page.dart';
 import 'package:quiet/repository/netease.dart';
 
@@ -27,8 +30,10 @@ class NeteaseSearchDelegate extends SearchDelegate<void> {
 
   @override
   Widget buildResults(BuildContext context) {
-    return _SearchResultPage(
-      query: query,
+    return Quiet(
+      child: _SearchResultPage(
+        query: query,
+      ),
     );
   }
 
@@ -247,15 +252,17 @@ class _SearchResultPageState extends State<_SearchResultPage>
           controller: _controller,
         ),
         Expanded(
-          child: TabBarView(
-            controller: _controller,
-            children: _SearchResultPage.SECTIONS
-                .map((_) => Container(
-                      height: 200,
-                      width: 200,
-                      color: Colors.blue,
-                    ))
-                .toList(),
+          child: BoxWithBottomPlayerController(
+            TabBarView(
+              controller: _controller,
+              children: [
+                Container(
+                  color: Colors.blue,
+                ),
+                SongsResultSection(query: widget.query),
+                VideosResultSection(query: widget.query),
+              ],
+            ),
           ),
         )
       ],
