@@ -261,6 +261,7 @@ class _SearchResultPageState extends State<_SearchResultPage>
                 ),
                 SongsResultSection(query: widget.query),
                 VideosResultSection(query: widget.query),
+                ArtistsResultSection(query: widget.query)
               ],
             ),
           ),
