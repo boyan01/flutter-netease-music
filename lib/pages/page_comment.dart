@@ -17,6 +17,7 @@ class CommentPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Loader(
       loadTask: () => getComments(threadId),
+      resultVerify: neteaseRepository.responseVerify,
       builder: (context, result) {
         return Scaffold(
           appBar: AppBar(
@@ -118,7 +119,9 @@ class _CommentInputState extends State<_CommentInput> {
 }
 
 class _CommentList extends StatefulWidget {
-  const _CommentList({Key key, this.threadId, this.comments}) : super(key: key);
+  const _CommentList({Key key, this.threadId, this.comments})
+      : assert(comments != null),
+        super(key: key);
 
   final CommentThreadId threadId;
 
@@ -222,7 +225,9 @@ class _CommentListState extends State<_CommentList> {
 
   ///auto load when ListView reached the end
   void _scrollListener() {
-    if (more && _controller.position.extentAfter < 500 && _autoLoadOperation == null) {
+    if (more &&
+        _controller.position.extentAfter < 500 &&
+        _autoLoadOperation == null) {
       _autoLoadOperation = CancelableOperation.fromFuture(
           getComments(widget.threadId, offset: comments.length))
         ..value.then((result) {
@@ -639,7 +644,9 @@ String getFormattedTime(int milliseconds) {
   var dateTime = DateTime.fromMillisecondsSinceEpoch(milliseconds);
   var now = DateTime.now();
 
-  var diff = Duration(milliseconds: now.millisecondsSinceEpoch - dateTime.millisecondsSinceEpoch);
+  var diff = Duration(
+      milliseconds:
+          now.millisecondsSinceEpoch - dateTime.millisecondsSinceEpoch);
   if (diff.inMinutes < 1) {
     return "刚刚";
   }

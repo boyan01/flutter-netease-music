@@ -16,6 +16,18 @@ export 'netease_image.dart';
 NeteaseRepository neteaseRepository = NeteaseRepository._private();
 
 class NeteaseRepository {
+  ///to verify api response is success
+  final TaskResultVerify responseVerify = (dynamic result) {
+    if (result == null) {
+      return VerifyValue.errorMsg("请求失败");
+    }
+    if (result["code"] != 200) {
+      return VerifyValue.errorMsg(
+          "code:${result["code"]} \nmsg:${result["msg"]}");
+    }
+    return VerifyValue.success(result);
+  };
+
   static const String _BASE_URL = "http://music.163.com";
 
   ///current login user
