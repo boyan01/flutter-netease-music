@@ -51,7 +51,8 @@ class VideosResultSection extends StatefulWidget {
   _VideosResultSectionState createState() => _VideosResultSectionState();
 }
 
-class _VideosResultSectionState extends State<VideosResultSection> with AutomaticKeepAliveClientMixin {
+class _VideosResultSectionState extends State<VideosResultSection>
+    with AutomaticKeepAliveClientMixin {
   @override
   Widget build(BuildContext context) {
     return Loader<Map<String, dynamic>>(
@@ -96,7 +97,10 @@ class VideoTile extends StatelessWidget {
               padding: EdgeInsets.all(4),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(3),
-                child: Image(image: NetworkImage(map["coverUrl"])),
+                child: Image(
+                  image: NetworkImage(map["coverUrl"]),
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
             Padding(padding: EdgeInsets.only(left: 8)),
@@ -126,6 +130,91 @@ class VideoTile extends StatelessWidget {
                 )
               ],
             ))
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class ArtistsResultSection extends StatefulWidget {
+  final String query;
+
+  const ArtistsResultSection({Key key, this.query}) : super(key: key);
+
+  @override
+  _ArtistsResultSectionState createState() => _ArtistsResultSectionState();
+}
+
+class _ArtistsResultSectionState extends State<ArtistsResultSection>
+    with AutomaticKeepAliveClientMixin {
+  @override
+  Widget build(BuildContext context) {
+    return Loader<Map<String, dynamic>>(
+        loadTask: () =>
+            neteaseRepository.search(widget.query, NeteaseSearchType.artist),
+        resultVerify: neteaseRepository.responseVerify,
+        builder: (context, result) {
+          List artists = result["result"]["artists"];
+          return ListView.builder(
+            itemCount: artists.length,
+            itemBuilder: (context, index) {
+              return ArtistTile(map: artists[index] as Map);
+            },
+          );
+        });
+  }
+
+  @override
+  bool get wantKeepAlive => true;
+}
+
+class ArtistTile extends StatelessWidget {
+  final Map map;
+
+  const ArtistTile({Key key, @required this.map})
+      : assert(map != null),
+        super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: () {
+        debugPrint("on tap : ${map["id"]}");
+      },
+      child: Container(
+        height: 56,
+        padding: EdgeInsets.symmetric(vertical: 1, horizontal: 8),
+        child: Row(
+          children: <Widget>[
+            AspectRatio(
+              aspectRatio: 1,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(4),
+                child: Image(
+                  image: NetworkImage(map["picUrl"]),
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+            Padding(padding: EdgeInsets.only(left: 8)),
+            Expanded(
+                child: Align(
+              alignment: Alignment.centerLeft,
+              child: Text(map["name"]),
+            )),
+            map["accountId"] == null
+                ? null
+                : Row(
+                    children: <Widget>[
+                      Icon(
+                        Icons.person,
+                        size: 16,
+                      ),
+                      Padding(padding: EdgeInsets.only(left: 2)),
+                      Text("已入驻", style: Theme.of(context).textTheme.caption)
+                    ],
+                  )
           ],
         ),
       ),
