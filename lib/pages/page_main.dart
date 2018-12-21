@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:quiet/pages/page_main_cloud.dart';
 import 'package:quiet/pages/page_main_playlist.dart';
+import 'package:quiet/pages/page_search.dart';
 import 'package:quiet/part/part.dart';
 import 'package:quiet/repository/netease.dart';
 
@@ -12,6 +13,9 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage>
     with SingleTickerProviderStateMixin {
   TabController _tabController;
+
+  final NeteaseSearchDelegate _searchDelegate = NeteaseSearchDelegate();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
@@ -29,6 +33,7 @@ class _MainPageState extends State<MainPage>
   Widget build(BuildContext context) {
     return Quiet(
       child: LoginStateWidget(Scaffold(
+        key: _scaffoldKey,
         drawer: Drawer(
           child: Column(
             children: <Widget>[
@@ -60,14 +65,26 @@ class _MainPageState extends State<MainPage>
           ),
         ),
         appBar: AppBar(
+          leading: IconButton(
+              icon: AnimatedIcon(
+                  icon: AnimatedIcons.menu_arrow,
+                  color: Theme.of(context).primaryIconTheme.color,
+                  progress: _searchDelegate.transitionAnimation),
+              onPressed: () {
+                _scaffoldKey.currentState.openDrawer();
+              }),
           title: Container(
             height: kToolbarHeight,
             width: 128,
             child: TabBar(
               controller: _tabController,
               tabs: <Widget>[
-                Tab(child: Icon(Icons.music_note, color: Colors.white)),
-                Tab(child: Icon(Icons.cloud, color: Colors.white)),
+                Tab(
+                    child: Icon(Icons.music_note,
+                        color: Theme.of(context).primaryIconTheme.color)),
+                Tab(
+                    child: Icon(Icons.cloud,
+                        color: Theme.of(context).primaryIconTheme.color)),
               ],
             ),
           ),
@@ -75,7 +92,9 @@ class _MainPageState extends State<MainPage>
           centerTitle: true,
           actions: <Widget>[
             IconButton(
-              onPressed: () => {},
+              onPressed: () {
+                showSearch(context: context, delegate: _searchDelegate);
+              },
               icon: Icon(Icons.search),
             )
           ],

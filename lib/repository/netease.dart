@@ -147,6 +147,22 @@ class NeteaseRepository {
     return lyc["lyric"];
   }
 
+  ///获取搜索热词
+  Future<List<String>> searchHotWords() async {
+    var result = await doRequest(
+        "https://music.163.com/weapi/search/hot", {"type": 1111},
+        options:
+            Options(headers: {"User-Agent": _chooseUserAgent(ua: "mobile")}));
+    if (result["code"] != 200) {
+      return null;
+    } else {
+      List hots = (result["result"] as Map)["hots"];
+      return hots.cast<Map<String, dynamic>>().map((map) {
+        return map["first"] as String;
+      }).toList();
+    }
+  }
+
   //请求数据
   Future<Map<String, dynamic>> doRequest(String path, Map data,
       {EncryptType type = EncryptType.we, Options options}) async {
