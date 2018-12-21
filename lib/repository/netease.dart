@@ -15,6 +15,23 @@ export 'netease_image.dart';
 
 NeteaseRepository neteaseRepository = NeteaseRepository._private();
 
+///enum for [NeteaseRepository.search] param type
+class NeteaseSearchType {
+  const NeteaseSearchType._(this.type);
+
+  final int type;
+
+  static const NeteaseSearchType song = NeteaseSearchType._(1);
+  static const NeteaseSearchType album = NeteaseSearchType._(10);
+  static const NeteaseSearchType artist = NeteaseSearchType._(100);
+  static const NeteaseSearchType playlist = NeteaseSearchType._(1000);
+  static const NeteaseSearchType user = NeteaseSearchType._(1002);
+  static const NeteaseSearchType mv = NeteaseSearchType._(1004);
+  static const NeteaseSearchType lyric = NeteaseSearchType._(1006);
+  static const NeteaseSearchType dj = NeteaseSearchType._(1009);
+  static const NeteaseSearchType video = NeteaseSearchType._(1014);
+}
+
 class NeteaseRepository {
   ///to verify api response is success
   final TaskResultVerify responseVerify = (dynamic result) {
@@ -161,6 +178,13 @@ class NeteaseRepository {
         return map["first"] as String;
       }).toList();
     }
+  }
+
+  ///search by keyword
+  Future<Map<String, dynamic>> search(String keyword, NeteaseSearchType type,
+      {int limit = 20, int offset = 0}) {
+    return doRequest("https://music.163.com/weapi/search/get",
+        {"s": keyword, "type": type.type, "limit": limit, "offset": offset});
   }
 
   //请求数据
