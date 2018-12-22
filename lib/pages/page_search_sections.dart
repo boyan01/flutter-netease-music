@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:quiet/part/part.dart';
 import 'package:quiet/part/part_music_list_provider.dart';
 import 'package:quiet/part/part_stated_page.dart';
@@ -156,10 +157,16 @@ class _ArtistsResultSectionState extends State<ArtistsResultSection>
         resultVerify: neteaseRepository.responseVerify,
         builder: (context, result) {
           List artists = result["result"]["artists"];
-          return ListView.builder(
+          return ListView.separated(
             itemCount: artists.length,
             itemBuilder: (context, index) {
               return ArtistTile(map: artists[index] as Map);
+            },
+            separatorBuilder: (context, index) {
+              return Divider(
+                indent: 56,
+                height: 0,
+              );
             },
           );
         });
@@ -169,6 +176,67 @@ class _ArtistsResultSectionState extends State<ArtistsResultSection>
   bool get wantKeepAlive => true;
 }
 
+class AlbumsResultSection extends StatefulWidget {
+  final String query;
+
+  const AlbumsResultSection({Key key, this.query}) : super(key: key);
+
+  @override
+  _AlbumsResultSectionState createState() => _AlbumsResultSectionState();
+}
+
+class _AlbumsResultSectionState extends State<AlbumsResultSection>
+    with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
+
+  @override
+  Widget build(BuildContext context) {
+    return Loader<Map<String, dynamic>>(
+        loadTask: () =>
+            neteaseRepository.search(widget.query, NeteaseSearchType.album),
+        resultVerify: neteaseRepository.responseVerify,
+        builder: (context, result) {
+          List albums = result["result"]["albums"];
+          return ListView.builder(
+              itemCount: albums.length,
+              itemBuilder: (context, index) {
+                Map album = albums[index] as Map;
+
+                String subTitle = (album["artists"] as List)
+                    .cast<Map>()
+                    .map((ar) => ar["name"])
+                    .toList()
+                    .join("/");
+                if (album["containedSong"] == null ||
+                    (album["containedSong"] as String).isEmpty) {
+                  String publishTime = DateFormat("y.M.d").format(
+                      DateTime.fromMillisecondsSinceEpoch(
+                          album["publishTime"]));
+                  subTitle = subTitle + " $publishTime";
+                } else {
+                  subTitle = subTitle + " 包含单曲: ${album["containedSong"]}";
+                }
+                return ListTile(
+                  leading: Image(
+                      width: 40,
+                      height: 40,
+                      fit: BoxFit.cover,
+                      image: NeteaseImage(album["picUrl"])),
+                  title: Text(album["name"],
+                      maxLines: 1, overflow: TextOverflow.ellipsis),
+                  subtitle: Text(subTitle,
+                      maxLines: 1, overflow: TextOverflow.ellipsis),
+                  onTap: () {
+                    debugPrint("on tap ${album["id"]} ");
+                  },
+                );
+              });
+        });
+  }
+}
+
+///artist result list tile
 class ArtistTile extends StatelessWidget {
   final Map map;
 
@@ -192,7 +260,7 @@ class ArtistTile extends StatelessWidget {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(4),
                 child: Image(
-                  image: NetworkImage(map["picUrl"]),
+                  image: NeteaseImage(map["img1v1Url"]),
                   fit: BoxFit.cover,
                 ),
               ),
@@ -215,7 +283,7 @@ class ArtistTile extends StatelessWidget {
                       Text("已入驻", style: Theme.of(context).textTheme.caption)
                     ],
                   )
-          ],
+          ]..removeWhere((v) => v == null),
         ),
       ),
     );
