@@ -236,7 +236,7 @@ class SongTile extends StatelessWidget {
                                 threadId: CommentThreadId(
                                     music.id, CommentType.song,
                                     playload:
-                                        CommentThreadPlayload.music(music)),
+                                        CommentThreadPayload.music(music)),
                               );
                             }));
                             break;
