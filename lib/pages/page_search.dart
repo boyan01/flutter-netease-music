@@ -211,7 +211,7 @@ class _SearchResultPage extends StatefulWidget {
 
   final String query;
 
-  static const List<String> SECTIONS = ["综合", "单曲", "视频", "歌手", "专辑"];
+  static const List<String> SECTIONS = ["单曲", "视频", "歌手", "专辑", "歌单"];
 
   @override
   _SearchResultPageState createState() {
@@ -256,13 +256,11 @@ class _SearchResultPageState extends State<_SearchResultPage>
             TabBarView(
               controller: _controller,
               children: [
-                Container(
-                  color: Colors.blue,
-                ),
                 SongsResultSection(query: widget.query),
                 VideosResultSection(query: widget.query),
                 ArtistsResultSection(query: widget.query),
-                AlbumsResultSection(query: widget.query)
+                AlbumsResultSection(query: widget.query),
+                PlaylistResultSection(query: widget.query),
               ],
             ),
           ),
