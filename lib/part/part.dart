@@ -9,5 +9,5 @@ export 'part_player.dart';
 export 'part_login.dart';
 export 'part_lyric.dart';
 export 'part_cache.dart';
-export 'part_stated_page.dart';
+export 'loader.dart';
 export 'part_utils.dart';

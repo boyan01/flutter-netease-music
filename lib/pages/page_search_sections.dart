@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:quiet/part/part.dart';
 import 'package:quiet/part/part_music_list_provider.dart';
-import 'package:quiet/part/part_stated_page.dart';
 import 'package:quiet/repository/netease.dart';
 
 ///song list result

@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:quiet/pages/page_search_sections.dart';
 import 'package:quiet/part/part.dart';
-import 'package:quiet/part/part_player.dart';
-import 'package:quiet/part/part_stated_page.dart';
 import 'package:quiet/repository/netease.dart';
 
 ///search delegate for launch a netease search page

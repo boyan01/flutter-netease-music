@@ -367,7 +367,7 @@ class _PlaylistDetailHeader extends StatelessWidget {
                               threadId: CommentThreadId(
                                   playlist["id"], CommentType.playlist,
                                   playload:
-                                      CommentThreadPlayload.playlist(playlist)),
+                                      CommentThreadPayload.playlist(playlist)),
                             );
                           }));
                         }),
