@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:quiet/pages/page_search_sections.dart';
 import 'package:quiet/part/part.dart';
 import 'package:quiet/repository/netease.dart';
+import 'package:quiet/repository/local_search_history.dart';
 
 ///search delegate for launch a netease search page
 class NeteaseSearchDelegate extends SearchDelegate<void> {
@@ -28,6 +29,7 @@ class NeteaseSearchDelegate extends SearchDelegate<void> {
 
   @override
   Widget buildResults(BuildContext context) {
+    insertSearchHistory(query);
     return Quiet(
       child: _SearchResultPage(
         query: query,
@@ -110,21 +112,6 @@ class _EmptyQuerySuggestionSection extends StatelessWidget {
       : assert(suggestionSelectedCallback != null),
         super(key: key);
 
-  final List<String> hotWords = [
-    "才12541",
-    "与5325",
-    "你135",
-    "周杰伦",
-    "jay chou",
-    "许嵩",
-    "才gdgs",
-    "与afas",
-    "你fsafs",
-    "周杰伦",
-    "jay chou",
-    "许嵩"
-  ];
-
   final SuggestionSelectedCallback suggestionSelectedCallback;
 
   @override
@@ -133,10 +120,16 @@ class _EmptyQuerySuggestionSection extends StatelessWidget {
       children: <Widget>[
         Loader<List<String>>(
             loadTask: () => neteaseRepository.searchHotWords(),
-            resultVerify:
-                simpleLoaderResultVerify<List<String>>((v) => v != null),
+            resultVerify: simpleLoaderResultVerify((v) => v != null),
             //hide when failed load hot words
             failedWidgetBuilder: (context, result, msg) => Container(),
+            loadingBuilder: (context) {
+              return _SuggestionSection(
+                title: "热门搜索",
+                words: [],
+                suggestionSelectedCallback: suggestionSelectedCallback,
+              );
+            },
             builder: (context, result) {
               return _SuggestionSection(
                 title: "热门搜索",
@@ -144,10 +137,18 @@ class _EmptyQuerySuggestionSection extends StatelessWidget {
                 suggestionSelectedCallback: suggestionSelectedCallback,
               );
             }),
-        _SuggestionSection(
-          title: "历史搜索",
-          words: hotWords,
-          suggestionSelectedCallback: suggestionSelectedCallback,
+        Loader<List<String>>(
+          loadTask: () => getSearchHistory(),
+          resultVerify: simpleLoaderResultVerify((v) => v.isNotEmpty),
+          //hide when failed load hot words
+          failedWidgetBuilder: (context, result, msg) => Container(),
+          builder: (context, result) {
+            return _SuggestionSection(
+              title: "历史搜索",
+              words: result,
+              suggestionSelectedCallback: suggestionSelectedCallback,
+            );
+          },
         ),
       ],
     );
