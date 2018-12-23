@@ -31,7 +31,7 @@ final TaskResultVerify _emptyVerify = (dynamic result) {
 
 ///create a simple [TaskResultVerify]
 ///use bool result to check result if valid
-TaskResultVerify<T> simpleLoaderResultVerify<T>(bool test(T),
+TaskResultVerify<T> simpleLoaderResultVerify<T>(bool test(T t),
     {String errorMsg = "falied"}) {
   assert(errorMsg != null);
   TaskResultVerify<T> verify = (result) {
