@@ -236,6 +236,54 @@ class _AlbumsResultSectionState extends State<AlbumsResultSection>
   }
 }
 
+class PlaylistResultSection extends StatefulWidget {
+  final String query;
+
+  const PlaylistResultSection({Key key, this.query}) : super(key: key);
+
+  @override
+  _PlaylistResultSectionState createState() => _PlaylistResultSectionState();
+}
+
+class _PlaylistResultSectionState extends State<PlaylistResultSection>
+    with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
+
+  @override
+  Widget build(BuildContext context) {
+    return Loader(
+        loadTask: () =>
+            neteaseRepository.search(widget.query, NeteaseSearchType.playlist),
+        resultVerify: neteaseRepository.responseVerify,
+        builder: (context, result) {
+          List list = result["result"]["playlists"];
+          return ListView.builder(
+            itemBuilder: (context, index) {
+              Map item = list[index] as Map;
+              String subTitle =
+                  "${item["trackCount"]}首 by ${item["creator"]["nickname"]},"
+                  "播放${getFormattedNumber(item["playCount"])}次";
+              return ListTile(
+                title: Text(item["name"], maxLines: 1),
+                leading: Image(
+                    image: NeteaseImage(item["coverImgUrl"]),
+                    fit: BoxFit.cover,
+                    width: 40,
+                    height: 40),
+                subtitle: Text(
+                  subTitle,
+                  maxLines: 1,
+                  style: Theme.of(context).textTheme.caption,
+                ),
+              );
+            },
+            itemCount: list.length,
+          );
+        });
+  }
+}
+
 ///artist result list tile
 class ArtistTile extends StatelessWidget {
   final Map map;
