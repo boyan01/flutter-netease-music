@@ -32,7 +32,8 @@ class SongsResultSectionState extends State<SongsResultSection>
                   .search(widget.query, NeteaseSearchType.song, offset: count);
               var verify = neteaseRepository.responseVerify(result);
               if (verify.isSuccess) {
-                return result["result"]["songs"];
+                //if verify succeed, we assume that has reached the end
+                return result["result"]["songs"] ?? [];
               }
               return null;
             },
@@ -440,13 +441,14 @@ class _SearchAutoLoadMoreState extends State<_SearchAutoLoadMore> {
           CancelableOperation.fromFuture(widget.loadMore(items.length))
             ..value.then((result) {
               if (result == null) {
-                setState(() {
-                  error = true;
-                });
-                return;
+                error = true;
+              } else if (result.isEmpty) {
+                //assume empty represent end of list
+                hasMore = false;
+              } else {
+                items.addAll(result);
+                hasMore = items.length < widget.totalCount;
               }
-              items.addAll(result);
-              hasMore = items.length < widget.totalCount;
               setState(() {});
             }).whenComplete(() {
               _autoLoadOperation = null;
