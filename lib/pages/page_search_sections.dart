@@ -186,19 +186,42 @@ class _AlbumsResultSectionState extends State<AlbumsResultSection>
                 } else {
                   subTitle = subTitle + " 包含单曲: ${album["containedSong"]}";
                 }
-                return ListTile(
-                  leading: Image(
-                      width: 40,
-                      height: 40,
-                      fit: BoxFit.cover,
-                      image: NeteaseImage(album["picUrl"])),
-                  title: Text(album["name"],
-                      maxLines: 1, overflow: TextOverflow.ellipsis),
-                  subtitle: Text(subTitle,
-                      maxLines: 1, overflow: TextOverflow.ellipsis),
-                  onTap: () {
-                    debugPrint("on tap ${album["id"]} ");
-                  },
+                return InkWell(
+                  onTap: () {},
+                  child: Container(
+                    height: 64,
+                    child: Row(
+                      children: <Widget>[
+                        Padding(
+                          padding: EdgeInsets.all(4),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(4),
+                            child: AspectRatio(
+                              aspectRatio: 1,
+                              child: Image(
+                                  image: NeteaseImage(album["picUrl"]),
+                                  fit: BoxFit.cover),
+                            ),
+                          ),
+                        ),
+                        Padding(padding: EdgeInsets.only(left: 4)),
+                        Expanded(
+                            child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Spacer(),
+                            Text(album["name"], maxLines: 1),
+                            Spacer(),
+                            Text(subTitle,
+                                maxLines: 1,
+                                style: Theme.of(context).textTheme.caption),
+                            Spacer(),
+                            Divider(height: 0)
+                          ],
+                        ))
+                      ],
+                    ),
+                  ),
                 );
               });
         });
@@ -242,24 +265,47 @@ class _PlaylistResultSectionState extends State<PlaylistResultSection>
                 String subTitle =
                     "${item["trackCount"]}首 by ${item["creator"]["nickname"]},"
                     "播放${getFormattedNumber(item["playCount"])}次";
-                return ListTile(
-                  title: Text(item["name"], maxLines: 1),
-                  leading: Image(
-                      image: NeteaseImage(item["coverImgUrl"]),
-                      fit: BoxFit.cover,
-                      width: 40,
-                      height: 40),
-                  subtitle: Text(
-                    subTitle,
-                    maxLines: 1,
-                    style: Theme.of(context).textTheme.caption,
-                  ),
+                return InkWell(
                   onTap: () {
                     Navigator.of(context)
                         .push(MaterialPageRoute(builder: (context) {
                       return PagePlaylistDetail(item["id"]);
                     }));
                   },
+                  child: Container(
+                    height: 64,
+                    child: Row(
+                      children: <Widget>[
+                        Padding(
+                          padding: EdgeInsets.all(4),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(4),
+                            child: AspectRatio(
+                              aspectRatio: 1,
+                              child: Image(
+                                  image: NeteaseImage(item["coverImgUrl"]),
+                                  fit: BoxFit.cover),
+                            ),
+                          ),
+                        ),
+                        Padding(padding: EdgeInsets.only(left: 4)),
+                        Expanded(
+                            child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Spacer(),
+                            Text(item["name"], maxLines: 1),
+                            Spacer(),
+                            Text(subTitle,
+                                maxLines: 1,
+                                style: Theme.of(context).textTheme.caption),
+                            Spacer(),
+                            Divider(height: 0)
+                          ],
+                        ))
+                      ],
+                    ),
+                  ),
                 );
               });
         });
@@ -345,39 +391,51 @@ class ArtistTile extends StatelessWidget {
         debugPrint("on tap : ${map["id"]}");
       },
       child: Container(
-        height: 56,
-        padding: EdgeInsets.symmetric(vertical: 1, horizontal: 8),
+        height: 64,
         child: Row(
           children: <Widget>[
-            AspectRatio(
-              aspectRatio: 1,
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(4),
-                child: Image(
-                  image: NeteaseImage(map["img1v1Url"]),
-                  fit: BoxFit.cover,
+            Padding(
+              padding: const EdgeInsets.all(4.0),
+              child: AspectRatio(
+                aspectRatio: 1,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(4),
+                  child: Image(
+                    image: NeteaseImage(map["img1v1Url"]),
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
             ),
             Padding(padding: EdgeInsets.only(left: 8)),
             Expanded(
-                child: Align(
-              alignment: Alignment.centerLeft,
-              child: Text(map["name"]),
+                child: Column(
+              children: <Widget>[
+                Expanded(
+                    child: Row(
+                  children: <Widget>[
+                    Expanded(
+                        child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(map["name"]))),
+                    map["accountId"] == null
+                        ? null
+                        : Row(children: <Widget>[
+                            Icon(
+                              Icons.person,
+                              size: 16,
+                            ),
+                            Padding(padding: EdgeInsets.only(left: 2)),
+                            Text("已入驻",
+                                style: Theme.of(context).textTheme.caption)
+                          ])
+                  ]..removeWhere((v) => v == null),
+                )),
+                Divider(height: 0)
+              ],
             )),
-            map["accountId"] == null
-                ? null
-                : Row(
-                    children: <Widget>[
-                      Icon(
-                        Icons.person,
-                        size: 16,
-                      ),
-                      Padding(padding: EdgeInsets.only(left: 2)),
-                      Text("已入驻", style: Theme.of(context).textTheme.caption)
-                    ],
-                  )
-          ]..removeWhere((v) => v == null),
+            Padding(padding: EdgeInsets.only(right: 8))
+          ],
         ),
       ),
     );
