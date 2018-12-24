@@ -15,6 +15,23 @@ export 'netease_image.dart';
 
 NeteaseRepository neteaseRepository = NeteaseRepository._private();
 
+///enum for [NeteaseRepository.search] param type
+class NeteaseSearchType {
+  const NeteaseSearchType._(this.type);
+
+  final int type;
+
+  static const NeteaseSearchType song = NeteaseSearchType._(1);
+  static const NeteaseSearchType album = NeteaseSearchType._(10);
+  static const NeteaseSearchType artist = NeteaseSearchType._(100);
+  static const NeteaseSearchType playlist = NeteaseSearchType._(1000);
+  static const NeteaseSearchType user = NeteaseSearchType._(1002);
+  static const NeteaseSearchType mv = NeteaseSearchType._(1004);
+  static const NeteaseSearchType lyric = NeteaseSearchType._(1006);
+  static const NeteaseSearchType dj = NeteaseSearchType._(1009);
+  static const NeteaseSearchType video = NeteaseSearchType._(1014);
+}
+
 class NeteaseRepository {
   ///to verify api response is success
   final TaskResultVerify responseVerify = (dynamic result) {
@@ -145,6 +162,29 @@ class NeteaseRepository {
         {});
     Map lyc = result["lrc"];
     return lyc["lyric"];
+  }
+
+  ///获取搜索热词
+  Future<List<String>> searchHotWords() async {
+    var result = await doRequest(
+        "https://music.163.com/weapi/search/hot", {"type": 1111},
+        options:
+            Options(headers: {"User-Agent": _chooseUserAgent(ua: "mobile")}));
+    if (result["code"] != 200) {
+      return null;
+    } else {
+      List hots = (result["result"] as Map)["hots"];
+      return hots.cast<Map<String, dynamic>>().map((map) {
+        return map["first"] as String;
+      }).toList();
+    }
+  }
+
+  ///search by keyword
+  Future<Map<String, dynamic>> search(String keyword, NeteaseSearchType type,
+      {int limit = 20, int offset = 0}) {
+    return doRequest("https://music.163.com/weapi/search/get",
+        {"s": keyword, "type": type.type, "limit": limit, "offset": offset});
   }
 
   //请求数据
