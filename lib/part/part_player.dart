@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:quiet/part/route.dart';
+import 'package:quiet/repository/netease_image.dart';
 
 import 'part_player_service.dart';
 
@@ -52,10 +53,12 @@ class BottomControllerBar extends StatelessWidget {
                     aspectRatio: 1,
                     child: ClipRRect(
                       borderRadius: BorderRadius.all(Radius.circular(3)),
-                      child: Image(
-                        fit: BoxFit.cover,
-                        image: NetworkImage(music.album.coverImageUrl),
-                      ),
+                      child: music.album.coverImageUrl == null
+                          ? Container(color: Colors.grey)
+                          : Image(
+                              fit: BoxFit.cover,
+                              image: NeteaseImage(music.album.coverImageUrl),
+                            ),
                     ),
                   ),
                 ),

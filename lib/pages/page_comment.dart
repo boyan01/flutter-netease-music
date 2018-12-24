@@ -298,7 +298,7 @@ class _ItemTitle extends StatelessWidget {
 
   final CommentThreadId commentThreadId;
 
-  CommentThreadPlayload get playload => commentThreadId.playload;
+  CommentThreadPayload get payload => commentThreadId.playload;
 
   @override
   Widget build(BuildContext context) {
@@ -307,12 +307,12 @@ class _ItemTitle extends StatelessWidget {
         if (commentThreadId.type == CommentType.playlist) {
           Navigator.push(context, MaterialPageRoute(builder: (context) {
             return PagePlaylistDetail(
-              playload.obj["id"],
-              playlist: playload.obj,
+              payload.obj["id"],
+              playlist: payload.obj,
             );
           }));
         } else if (commentThreadId.type == CommentType.song) {
-          Music music = playload.obj;
+          Music music = payload.obj;
           if (quiet.value.current != music) {
             dynamic result = await showDialog(
                 context: context,
@@ -352,7 +352,7 @@ class _ItemTitle extends StatelessWidget {
               borderRadius: BorderRadius.all(Radius.circular(3)),
               child: Image(
                 fit: BoxFit.cover,
-                image: NeteaseImage(playload.coverImage),
+                image: NeteaseImage(payload.coverImage),
                 width: 60,
                 height: 60,
               ),
@@ -365,11 +365,11 @@ class _ItemTitle extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                    playload.title,
+                    payload.title,
                     style: Theme.of(context).textTheme.subtitle,
                   ),
                   Text(
-                    playload.subtitle,
+                    payload.subtitle,
                     style: Theme.of(context).textTheme.caption,
                   ),
                 ],
@@ -572,7 +572,7 @@ class CommentThreadId {
 
   final CommentType type;
 
-  final CommentThreadPlayload playload;
+  final CommentThreadPayload playload;
 
   String get threadId {
     String prefix;
@@ -600,19 +600,19 @@ class CommentThreadId {
   }
 }
 
-class CommentThreadPlayload {
+class CommentThreadPayload {
   final dynamic obj;
   final String coverImage;
   final String title;
   final String subtitle;
 
-  CommentThreadPlayload.music(Music music)
+  CommentThreadPayload.music(Music music)
       : this.obj = music,
         coverImage = music.album.coverImageUrl,
         title = music.title,
         subtitle = music.subTitle;
 
-  CommentThreadPlayload.playlist(Map playlist)
+  CommentThreadPayload.playlist(Map playlist)
       : this.obj = playlist,
         this.coverImage = playlist["coverImgUrl"],
         this.title = playlist["name"],
