@@ -296,7 +296,7 @@ class _SuggestionsPageState extends State<_SuggestionsPage> {
 ///when query is empty, show default suggestions
 ///with hot query keyword from network
 ///with query history from local
-class _EmptyQuerySuggestionSection extends StatelessWidget {
+class _EmptyQuerySuggestionSection extends StatefulWidget {
   _EmptyQuerySuggestionSection(
       {Key key, @required this.suggestionSelectedCallback})
       : assert(suggestionSelectedCallback != null),
@@ -304,6 +304,14 @@ class _EmptyQuerySuggestionSection extends StatelessWidget {
 
   final SuggestionSelectedCallback suggestionSelectedCallback;
 
+  @override
+  _EmptyQuerySuggestionSectionState createState() {
+    return new _EmptyQuerySuggestionSectionState();
+  }
+}
+
+class _EmptyQuerySuggestionSectionState
+    extends State<_EmptyQuerySuggestionSection> {
   @override
   Widget build(BuildContext context) {
     return ListView(
@@ -317,14 +325,14 @@ class _EmptyQuerySuggestionSection extends StatelessWidget {
               return _SuggestionSection(
                 title: "热门搜索",
                 words: [],
-                suggestionSelectedCallback: suggestionSelectedCallback,
+                suggestionSelectedCallback: widget.suggestionSelectedCallback,
               );
             },
             builder: (context, result) {
               return _SuggestionSection(
                 title: "热门搜索",
                 words: result,
-                suggestionSelectedCallback: suggestionSelectedCallback,
+                suggestionSelectedCallback: widget.suggestionSelectedCallback,
               );
             }),
         Loader<List<String>>(
@@ -336,7 +344,32 @@ class _EmptyQuerySuggestionSection extends StatelessWidget {
             return _SuggestionSection(
               title: "历史搜索",
               words: result,
-              suggestionSelectedCallback: suggestionSelectedCallback,
+              suggestionSelectedCallback: widget.suggestionSelectedCallback,
+              onDeleteClicked: () async {
+                var delete = await showDialog<bool>(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        content: Text("确定清空全部历史记录?"),
+                        actions: <Widget>[
+                          FlatButton(
+                              onPressed: () {
+                                Navigator.of(context).pop(false);
+                              },
+                              child: Text("取消")),
+                          FlatButton(
+                              onPressed: () {
+                                Navigator.of(context).pop(true);
+                              },
+                              child: Text("清空"))
+                        ],
+                      );
+                    });
+                if (delete != null && delete) {
+                  await clearSearchHistory();
+                  setState(() {});
+                }
+              },
             );
           },
         ),
@@ -350,7 +383,8 @@ class _SuggestionSection extends StatelessWidget {
       {Key key,
       @required this.title,
       @required this.words,
-      @required this.suggestionSelectedCallback})
+      @required this.suggestionSelectedCallback,
+      this.onDeleteClicked})
       : assert(title != null),
         assert(words != null),
         assert(suggestionSelectedCallback != null),
@@ -358,6 +392,7 @@ class _SuggestionSection extends StatelessWidget {
 
   final String title;
   final List<String> words;
+  final VoidCallback onDeleteClicked;
 
   final SuggestionSelectedCallback suggestionSelectedCallback;
 
@@ -370,11 +405,25 @@ class _SuggestionSection extends StatelessWidget {
         children: <Widget>[
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 8),
-            child: Text(title,
-                style: Theme.of(context)
-                    .textTheme
-                    .subtitle
-                    .copyWith(fontWeight: FontWeight.bold, fontSize: 17)),
+            child: Row(
+              children: <Widget>[
+                Expanded(
+                  child: Text(title,
+                      style: Theme.of(context)
+                          .textTheme
+                          .subtitle
+                          .copyWith(fontWeight: FontWeight.bold, fontSize: 17)),
+                ),
+                onDeleteClicked == null
+                    ? Container()
+                    : IconButton(
+                        icon: Icon(
+                          Icons.delete_outline,
+                          color: Theme.of(context).iconTheme.color,
+                        ),
+                        onPressed: onDeleteClicked)
+              ],
+            ),
           ),
           Wrap(
             spacing: 4,
