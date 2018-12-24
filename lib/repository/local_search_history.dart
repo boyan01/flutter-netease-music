@@ -30,6 +30,10 @@ Future<bool> insertSearchHistory(String query) async {
   _histories.remove(query);
   _histories.insert(0, query);
 
+  while (_histories.length > 10) {
+    _histories.removeLast();
+  }
+
   final preference = await SharedPreferences.getInstance();
   return preference.setStringList(_KEY_HISTORY, _histories);
 }
