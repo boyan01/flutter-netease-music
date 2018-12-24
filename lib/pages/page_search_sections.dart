@@ -337,7 +337,7 @@ class VideoTile extends StatelessWidget {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(3),
                 child: Image(
-                  image: NetworkImage(map["coverUrl"]),
+                  image: NeteaseImage(map["coverUrl"]),
                   fit: BoxFit.cover,
                 ),
               ),
