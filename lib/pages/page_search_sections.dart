@@ -44,8 +44,25 @@ class SongsResultSectionState extends State<SongsResultSection>
                 mapJsonToMusic(item as Map),
                 0, //we do not need index here
                 leadingType: SongTileLeadingType.none,
-                onTap: () {
-                  quiet.play(music: mapJsonToMusic(item as Map));
+                onTap: () async {
+                  var playable = await neteaseRepository.checkMusic(item["id"]);
+                  if (!playable) {
+                    showDialog(
+                        context: context,
+                        builder: (context) => DialogNoCopyRight());
+                    return;
+                  }
+                  final song =
+                      await neteaseRepository.getMusicDetail(item["id"]);
+                  if (song != null) {
+                    quiet.play(
+                        music: mapJsonToMusic(song,
+                            artistKey: "ar", albumKey: "al"));
+                  } else {
+                    Scaffold.of(context).showSnackBar(SnackBar(
+                        content: Text("播放歌曲失败!"),
+                        duration: Duration(seconds: 1)));
+                  }
                 },
               );
             },

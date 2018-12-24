@@ -45,6 +45,7 @@ flutter:
     - assets/playing_page_disc.png
     - assets/playing_page_needle.png
     - assets/daily_list_background.webp
+    - assets/no_copy_right.png
 
   # To add custom fonts to your application, add a fonts section here,
   # in this "flutter" section. Each entry in this list should have a
