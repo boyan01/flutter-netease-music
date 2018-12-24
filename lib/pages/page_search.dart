@@ -147,6 +147,7 @@ class _NeteaseSearchPageState extends State<NeteaseSearchPage>
               onSubmitted: (String _) => _search(query),
               decoration: InputDecoration(
                   border: InputBorder.none,
+                  hintStyle: theme.primaryTextTheme.title,
                   hintText: MaterialLocalizations.of(context).searchFieldLabel),
             ),
             actions: buildActions(context),
