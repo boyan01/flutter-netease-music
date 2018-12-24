@@ -14,8 +14,10 @@ class _MainPageState extends State<MainPage>
     with SingleTickerProviderStateMixin {
   TabController _tabController;
 
-  final NeteaseSearchDelegate _searchDelegate = NeteaseSearchDelegate();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  ProxyAnimation transitionAnimation =
+      ProxyAnimation(kAlwaysDismissedAnimation);
 
   @override
   void initState() {
@@ -69,7 +71,7 @@ class _MainPageState extends State<MainPage>
               icon: AnimatedIcon(
                   icon: AnimatedIcons.menu_arrow,
                   color: Theme.of(context).primaryIconTheme.color,
-                  progress: _searchDelegate.transitionAnimation),
+                  progress: transitionAnimation),
               onPressed: () {
                 _scaffoldKey.currentState.openDrawer();
               }),
@@ -93,7 +95,8 @@ class _MainPageState extends State<MainPage>
           actions: <Widget>[
             IconButton(
               onPressed: () {
-                showSearch(context: context, delegate: _searchDelegate);
+                Navigator.push(
+                    context, NeteaseSearchPageRoute(transitionAnimation));
               },
               icon: Icon(Icons.search),
             )
