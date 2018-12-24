@@ -146,7 +146,7 @@ class LoaderState<T> extends State<Loader> {
       return widget.loadingBuilder != null
           ? widget.loadingBuilder(context)
           : Container(
-              color: Theme.of(context).backgroundColor,
+              color: Colors.white,
               child: Center(
                 child: CircularProgressIndicator(),
               ),
