@@ -187,6 +187,24 @@ class NeteaseRepository {
         {"s": keyword, "type": type.type, "limit": limit, "offset": offset});
   }
 
+  ///check music is available
+  Future<bool> checkMusic(int id) async {
+    var result = await doRequest(
+        "https://music.163.com/weapi/song/enhance/player/url",
+        {"ids": "[$id]", "br": 999000});
+    return result["code"] == 200 && result["data"][0]["code"] == 200;
+  }
+
+  ///fetch music detail from id
+  Future<Map<String, dynamic>> getMusicDetail(int id) async {
+    final result = await doRequest("https://music.163.com/weapi/v3/song/detail",
+        {"ids": "[$id]", "c": '[{"id":$id}]'});
+    if (result["code"] == 200) {
+      return result["songs"][0];
+    }
+    return null;
+  }
+
   //请求数据
   Future<Map<String, dynamic>> doRequest(String path, Map data,
       {EncryptType type = EncryptType.we, Options options}) async {

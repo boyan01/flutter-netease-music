@@ -11,3 +11,4 @@ export 'part_lyric.dart';
 export 'part_cache.dart';
 export 'loader.dart';
 export 'part_utils.dart';
+export 'dialogs.dart';
