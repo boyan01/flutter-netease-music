@@ -213,7 +213,7 @@ class _DurationProgressBarState extends State<_DurationProgressBar> {
             onChangeEnd: (value) async {
               isUserTracking = false;
               quiet.seekTo(value.round());
-              if (!quiet.value.isPlayWhenReady) {
+              if (!quiet.value.playWhenReady) {
                 quiet.play();
               }
             },

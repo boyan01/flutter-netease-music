@@ -7,11 +7,11 @@ import android.content.Intent
 import android.os.Binder
 import android.os.IBinder
 import android.support.annotation.VisibleForTesting
+import com.google.android.exoplayer2.Player
 import tech.soit.quiet.AppContext
-import tech.soit.quiet.model.vo.Music
+import tech.soit.quiet.player.Music
 import tech.soit.quiet.player.MusicPlayerCallback
 import tech.soit.quiet.player.QuietMusicPlayer
-import tech.soit.quiet.player.core.IMediaPlayer
 
 /**
  *
@@ -60,22 +60,11 @@ class QuietPlayerService : Service() {
         private var isRunning: Boolean = false
 
 
-        /**
-         * init with application.
-         * to ensure service running.
-         */
-        fun init(playerState: LiveData<Int>) {
-            playerState.observeForever {
-                if (it == IMediaPlayer.PLAYING || it == IMediaPlayer.PREPARING) {
-                    ensureServiceRunning()
-                }
-            }
-        }
 
         /**
          * ensure [QuietPlayerService] is Running
          */
-        private fun ensureServiceRunning(context: Context = AppContext) {
+        fun ensureServiceRunning(context: Context = AppContext) {
             if (!isRunning) {
                 context.startService(Intent(context, QuietPlayerService::class.java))
             }
@@ -97,8 +86,10 @@ class QuietPlayerService : Service() {
             }
             notificationHelper.update(this@QuietPlayerService)
         }
+    }
 
-        override fun onPlayerStateChanged(state: Int) {
+    private val playerEventListener = object : Player.EventListener {
+        override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
             notificationHelper.update(this@QuietPlayerService)
         }
     }
@@ -107,6 +98,7 @@ class QuietPlayerService : Service() {
         isRunning = true
         super.onCreate()
         musicPlayer.addCallback(callback)
+        musicPlayer.addListener(playerEventListener)
     }
 
     override fun onBind(intent: Intent?): IBinder? = playerServiceBinder
@@ -118,11 +110,7 @@ class QuietPlayerService : Service() {
                 musicPlayer.playPrevious()
             }
             action_play_pause -> {
-                if (musicPlayer.mediaPlayer.getState() == IMediaPlayer.PLAYING) {
-                    musicPlayer.pause()
-                } else {
-                    musicPlayer.play()
-                }
+                musicPlayer.playWhenReady = !(musicPlayer.playWhenReady && musicPlayer.playbackState == Player.STATE_READY)
             }
             action_play_next -> {
                 musicPlayer.playNext()
@@ -152,6 +140,7 @@ class QuietPlayerService : Service() {
 
     override fun onDestroy() {
         musicPlayer.removeCallback(callback)
+        musicPlayer.removeListener(playerEventListener)
         super.onDestroy()
         musicPlayer.quiet()
         isRunning = false

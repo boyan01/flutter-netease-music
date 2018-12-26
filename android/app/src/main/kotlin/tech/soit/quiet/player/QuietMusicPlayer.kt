@@ -1,15 +1,23 @@
 package tech.soit.quiet.player
 
+import android.net.Uri
+import com.google.android.exoplayer2.ExoPlayerFactory
+import com.google.android.exoplayer2.Player
+import com.google.android.exoplayer2.source.ExtractorMediaSource
+import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
+import com.google.android.exoplayer2.upstream.cache.CacheDataSourceFactory
+import com.google.android.exoplayer2.upstream.cache.LeastRecentlyUsedCacheEvictor
+import com.google.android.exoplayer2.upstream.cache.SimpleCache
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import tech.soit.quiet.model.vo.Music
-import tech.soit.quiet.player.core.IMediaPlayer
-import tech.soit.quiet.player.core.QuietExoPlayer
+import tech.soit.quiet.AppContext
 import tech.soit.quiet.player.playlist.Playlist
+import tech.soit.quiet.player.service.QuietPlayerService.Companion.ensureServiceRunning
 import tech.soit.quiet.utils.LoggerLevel
 import tech.soit.quiet.utils.log
+import java.util.*
 import kotlin.properties.Delegates
 
 /**
@@ -18,6 +26,20 @@ import kotlin.properties.Delegates
 class QuietMusicPlayer {
 
     companion object {
+
+        private const val USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36" +
+                " (KHTML, like Gecko) Chrome/42.0.2311.135 Safari/537.36 Edge/13.10586"
+
+
+        private val cache = SimpleCache(AppContext.filesDir,
+                LeastRecentlyUsedCacheEvictor(1000 * 1000 * 100))
+
+        private fun buildSource(uri: String): ExtractorMediaSource {
+            return ExtractorMediaSource.Factory(CacheDataSourceFactory(cache,
+                    DefaultDataSourceFactory(AppContext, USER_AGENT)))
+                    .createMediaSource(Uri.parse(uri))
+        }
+
         const val DURATION_UPDATE_PROGRESS = 200L
 
         private val instance = QuietMusicPlayer()
@@ -27,10 +49,43 @@ class QuietMusicPlayer {
         }
     }
 
-    /**
-     * @see IMediaPlayer
-     */
-    val mediaPlayer: IMediaPlayer = QuietExoPlayer()
+
+    private val player by lazy {
+        val player = ExoPlayerFactory.newSimpleInstance(AppContext)
+        player.addListener(object : Player.EventListener {
+            override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
+                if (playbackState == Player.STATE_ENDED) {
+                    playNext()//auto play next when ended
+                }
+                if (playbackState == Player.STATE_BUFFERING || playbackState == Player.STATE_READY) {
+                    ensureServiceRunning()
+                }
+            }
+        })
+        player
+    }
+
+    var playWhenReady: Boolean
+        get() = player.playWhenReady
+        set(value) {
+            if (playbackState == Player.STATE_IDLE || playbackError != null) {
+                val current = playlist.current
+                if (current != null) {
+                    play(current)
+                } else {
+                    playNext()
+                }
+            } else {
+                player.playWhenReady = value
+            }
+        }
+
+    fun addListener(listener: Player.EventListener) = player.addListener(listener)
+    fun removeListener(listener: Player.EventListener) = player.removeListener(listener)
+
+    val playbackState: Int get() = player.playbackState
+
+    val playbackError get() = player.playbackError
 
     /**
      * @see Playlist
@@ -63,22 +118,16 @@ class QuietMusicPlayer {
             it.onPlayModeChanged(playMode)
         }
 
-        override fun onError() = callbacks.forEach {
-            it.onError()
-        }
-
-        override fun onBuffering() = callbacks.forEach {
-            it.onBuffering()
-        }
-
         override fun onPositionChanged(position: Long, duration: Long) = callbacks.forEach {
             it.onPositionChanged(position, duration)
         }
 
         val callbacks = ArrayList<MusicPlayerCallback>()
-
     }
 
+    val position: Long get() = player.currentPosition
+
+    val duration: Long get() = player.duration
 
     /**
      * play the music which return by [Playlist.getNext]
@@ -92,28 +141,6 @@ class QuietMusicPlayer {
         play(next)
     }
 
-    /**
-     * pause player
-     */
-    fun pause() {
-        mediaPlayer.isPlayWhenReady = false
-    }
-
-    /**
-     * start player, if player is idle , try to play current music [Playlist.current]
-     */
-    fun play() = safeAsync {
-        if (mediaPlayer.getState() == IMediaPlayer.IDLE) {
-            val current = playlist.current
-            if (current != null) {
-                play(current)
-            } else {
-                playNext()
-            }
-        } else {
-            mediaPlayer.isPlayWhenReady = true
-        }
-    }
 
     /**
      * play the music which return by [Playlist.getPrevious]
@@ -130,7 +157,7 @@ class QuietMusicPlayer {
     /**
      * play [music] , if music is not in [playlist] , insert ot next
      */
-    fun play(music: Music, playWhenReady: Boolean = true) {
+    fun play(music: Music) {
         if (!playlist.list.contains(music)) {
             playlist.insertToNext(music)
             musicPlayerCallback.onPlaylistUpdated(playlist)
@@ -140,8 +167,9 @@ class QuietMusicPlayer {
 
         musicPlayerCallback.onMusicChanged(music)
 
-        val uri = music.getPlayUrl()
-        mediaPlayer.prepare(uri, playWhenReady)
+        val source = buildSource(music.getPlayUrl())
+        player.prepare(source)
+        playWhenReady = true
     }
 
 
@@ -149,13 +177,13 @@ class QuietMusicPlayer {
      * stop play
      */
     fun quiet() {
-        mediaPlayer.release()
+        player.stop()
+        //TODO
     }
 
 
-    private fun safeAsync(block: suspend () -> Unit) {
-        GlobalScope.launch(Dispatchers.Main) { block() }
-    }
+    private fun safeAsync(block: suspend () -> Unit) =
+            GlobalScope.launch(Dispatchers.Main) { block() }
 
     fun addCallback(callback: MusicPlayerCallback) {
         this.musicPlayerCallback.callbacks.add(callback)
@@ -163,6 +191,11 @@ class QuietMusicPlayer {
 
     fun removeCallback(callback: MusicPlayerCallback) {
         this.musicPlayerCallback.callbacks.remove(callback)
+    }
+
+    fun seekTo(position: Long) = player.seekTo(position)
+    fun setVolume(volume: Float) {
+        player.volume = volume
     }
 
     init {
@@ -174,11 +207,11 @@ class QuietMusicPlayer {
                 delay(DURATION_UPDATE_PROGRESS)
                 try {
                     val notify = playlist.current != null
-                            && mediaPlayer.getState() == IMediaPlayer.PLAYING
+                            && playWhenReady && playbackState == Player.STATE_READY
 
                     if (notify) {
-                        musicPlayerCallback?.onPositionChanged(mediaPlayer.getPosition(),
-                                mediaPlayer.getDuration())
+                        musicPlayerCallback.onPositionChanged(player.currentPosition,
+                                player.duration)
                     }
                 } catch (e: Exception) {
                     //ignore
@@ -197,12 +230,6 @@ interface MusicPlayerCallback {
     fun onPlaylistUpdated(playlist: Playlist) {}
 
     fun onPlayModeChanged(playMode: PlayMode) {}
-
-    fun onError() {}
-
-    fun onBuffering() {}
-
-    fun onPlayerStateChanged(state: Int) {}
 
     fun onPositionChanged(position: Long, duration: Long) {}
 

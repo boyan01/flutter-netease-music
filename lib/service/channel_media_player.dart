@@ -35,17 +35,16 @@ class DurationRange {
 }
 
 class PlayerControllerState {
-  PlayerControllerState(
-      {this.duration,
-      this.position = Duration.zero,
-      this.isPlayWhenReady = false,
-      this.buffered = const [],
-      this.playbackState = PlaybackState.none,
-      this.current,
-      this.playingList = const [],
-      this.token,
-      this.playMode = PlayMode.sequence,
-      this.errorMsg});
+  PlayerControllerState({this.duration,
+    this.position = Duration.zero,
+    this.playWhenReady = false,
+    this.buffered = const [],
+    this.playbackState = PlaybackState.none,
+    this.current,
+    this.playingList = const [],
+    this.token,
+    this.playMode = PlayMode.sequence,
+    this.errorMsg});
 
   PlayerControllerState.uninitialized() : this(duration: null);
 
@@ -57,7 +56,7 @@ class PlayerControllerState {
   final PlaybackState playbackState;
 
   ///whether playback should proceed when isReady become true
-  final bool isPlayWhenReady;
+  final bool playWhenReady;
 
   ///audio is buffering
   bool get isBuffering => playbackState == PlaybackState.buffering;
@@ -76,12 +75,12 @@ class PlayerControllerState {
 
   bool get hasError => errorMsg != null;
 
-  bool get isPlaying => playbackState == PlaybackState.playing;
+  bool get isPlaying => (playbackState == PlaybackState.ready) && playWhenReady;
 
   PlayerControllerState copyWith({
     Duration duration,
     Duration position,
-    bool isPlayWhenReady,
+    bool playWhenReady,
     String errorMsg,
     List<DurationRange> buffered,
     PlaybackState playbackState,
@@ -93,7 +92,7 @@ class PlayerControllerState {
     return PlayerControllerState(
         duration: duration ?? this.duration,
         position: position ?? this.position,
-        isPlayWhenReady: isPlayWhenReady ?? this.isPlayWhenReady,
+        playWhenReady: playWhenReady ?? this.playWhenReady,
         errorMsg: errorMsg ?? this.errorMsg,
         buffered: buffered ?? this.buffered,
         playbackState: playbackState ?? this.playbackState,
@@ -102,7 +101,6 @@ class PlayerControllerState {
         playMode: playMode ?? this.playMode,
         token: token ?? this.token);
   }
-
 }
 
 ///play mode determine [PlayingList] how to play next song
@@ -117,7 +115,7 @@ enum PlayMode {
   shuffle
 }
 
-enum PlaybackState { none, playing, paused, buffering }
+enum PlaybackState { none, buffering, ready, ended }
 
 ///channel contract with platform player service
 class PlayerController extends ValueNotifier<PlayerControllerState> {
@@ -128,18 +126,41 @@ class PlayerController extends ValueNotifier<PlayerControllerState> {
   void _init() {
     _channel.setMethodCallHandler((method) {
       switch (method.method) {
-        case "onPlayStateChanged":
+        case "onPlayerStateChanged":
+          PlaybackState newState;
+          bool playWhenReady = method.arguments["playWhenReady"];
+          switch (method.arguments["playbackState"]) {
+            case 1:
+              newState = PlaybackState.none;
+              break;
+            case 2:
+              newState = PlaybackState.buffering;
+              break;
+            case 3:
+              newState = PlaybackState.ready;
+              break;
+            case 4:
+              newState = PlaybackState.ended;
+              break;
+          }
           value = value.copyWith(
-              playbackState: PlaybackState.values[method.arguments]);
+              playbackState: newState,
+              playWhenReady: playWhenReady,
+              errorMsg: null /*clear error*/);
           break;
-        case "onPlayingMusicChanged":
+        case "onPlayerError":
+          value = value.copyWith(
+              errorMsg: method.arguments["message"]
+          );
+          break;
+        case "onMusicChanged":
           value = value.copyWith(current: Music.fromMap(method.arguments));
           break;
-        case "onPlayingListChanged":
+        case "onPlaylistUpdated":
           var map = method.arguments as Map;
           value = value.copyWith(
               playingList:
-                  (map["list"] as List).cast<Map>().map(Music.fromMap).toList(),
+              (map["list"] as List).cast<Map>().map(Music.fromMap).toList(),
               token: map["token"]);
           break;
         case "onPositionChanged":
@@ -164,12 +185,10 @@ class PlayerController extends ValueNotifier<PlayerControllerState> {
   ///do init to player
   ///if player is running , will do nothing
   ///maybe should move load and restore preference logic to player service
-  Future<void> init(
-    List<Music> list,
-    Music music,
-    String token,
-    PlayMode playMode,
-  ) {
+  Future<void> init(List<Music> list,
+      Music music,
+      String token,
+      PlayMode playMode) {
     return _channel.invokeMethod("init", {
       "list": list == null ? null : list.map((m) => m.toMap()).toList(),
       "music": music?.toMap(),
@@ -180,32 +199,23 @@ class PlayerController extends ValueNotifier<PlayerControllerState> {
 
   ///start player
   ///try to play current music if player is not available
-  Future<void> play() {
-    return _channel.invokeMethod("play");
+  Future<void> setPlayWhenReady(bool playWhenReady) {
+    return _channel.invokeMethod("setPlayWhenReady", playWhenReady);
   }
 
-  Future<void> playWithPlaylist(List<Music> musics, String token, Music music,
-      {PlayMode playMode = PlayMode.sequence}) {
-    assert(musics != null && musics.isNotEmpty);
+  Future<void> playWith(Music music) {
     assert(music != null);
-    assert(token != null);
-    assert(playMode != null);
+    return _channel.invokeMethod("playWithQinDing", music.toMap());
+  }
 
-    return _channel.invokeMethod("playWithPlaylist", {
+  Future<void> updatePlaylist(List<Music> musics, String token) {
+    assert(musics != null && musics.isNotEmpty);
+    assert(token != null);
+
+    return _channel.invokeMethod("updatePlaylist", {
       "list": musics.map((m) => m.toMap()).toList(),
       "token": token,
-      "playMode": playMode.index,
-      "music": music.toMap()
     });
-  }
-
-  Future<void> insertToNext(Music music) {
-    assert(music != null);
-    return _channel.invokeMethod("insertToNext", music.toMap());
-  }
-
-  Future<void> pause() {
-    return _channel.invokeMethod("pause");
   }
 
   Future<void> setPlayMode(PlayMode playMode) {
