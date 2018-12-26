@@ -3,7 +3,6 @@ package tech.soit.quiet.service
 import android.arch.lifecycle.Lifecycle
 import android.arch.lifecycle.LifecycleOwner
 import android.arch.lifecycle.LifecycleRegistry
-import android.arch.lifecycle.Observer
 import android.graphics.Bitmap
 import android.os.Parcel
 import android.os.Parcelable
@@ -11,11 +10,70 @@ import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.PluginRegistry
 import tech.soit.quiet.model.vo.Music
-import tech.soit.quiet.player.MusicPlayerManager
+import tech.soit.quiet.player.MusicPlayerCallback
 import tech.soit.quiet.player.PlayMode
+import tech.soit.quiet.player.QuietMusicPlayer
+import tech.soit.quiet.player.core.IMediaPlayer
 import tech.soit.quiet.player.playlist.Playlist
 import tech.soit.quiet.utils.log
 
+object BufferedChannelCallback : MusicPlayerCallback {
+
+    private var channel: MethodChannel? = null
+
+    fun setUpChannel(channel: MethodChannel?) {
+        this.channel = channel
+        channel ?: return
+        onMusicChanged(holder.playing)
+        onPlayerStateChanged(holder.state)
+        onPlaylistUpdated(holder.playlist)
+        onPositionChanged(holder.position, holder.duration)
+    }
+
+    private val holder = object {
+        var playing: Music? = null
+        var state: Int = IMediaPlayer.IDLE
+        var playlist = Playlist.EMPTY
+        var position: Long = 0
+        var duration: Long = 0
+    }
+
+    override fun onMusicChanged(music: Music?) {
+        holder.playing = music
+        channel?.invokeMethod("onPlayingMusicChanged", (music as QuietPlayerChannel.ItemMusic?)?.map)
+    }
+
+    override fun onPlayerStateChanged(state: Int) {
+        holder.state = state
+        channel?.invokeMethod("onPlayStateChanged", state)
+    }
+
+    override fun onPlaylistUpdated(playlist: Playlist) {
+        holder.playlist = playlist
+        channel?.invokeMethod("onPlayingListChanged", mapOf(
+                "list" to playlist.list.map { (it as QuietPlayerChannel.ItemMusic).map },
+                "token" to playlist.token
+        ))
+    }
+
+    override fun onPositionChanged(position: Long, duration: Long) {
+        holder.position = position
+        holder.duration = duration
+        channel?.invokeMethod("onPositionChanged", mapOf<String, Any>(
+                "position" to (position),
+                "duration" to (duration)
+        ))
+
+    }
+}
+
+
+/**
+ * channel contact with Dart
+ *
+ * if dart vm reload: call 'init', to synchronize data with Platform and Flutter
+ *
+ */
 class QuietPlayerChannel(private val channel: MethodChannel) : MethodChannel.MethodCallHandler, LifecycleOwner {
 
     private val lifecycle = LifecycleRegistry(this)
@@ -26,8 +84,10 @@ class QuietPlayerChannel(private val channel: MethodChannel) : MethodChannel.Met
 
     companion object {
 
+        private const val CHANNEL_ID = "tech.soit.quiet/player"
+
         fun registerWith(registrar: PluginRegistry.Registrar): QuietPlayerChannel {
-            val methodChannel = MethodChannel(registrar.messenger(), "tech.soit.quiet/player")
+            val methodChannel = MethodChannel(registrar.messenger(), CHANNEL_ID)
             val quietPlayerChannel = QuietPlayerChannel(methodChannel)
             methodChannel.setMethodCallHandler(quietPlayerChannel)
             return quietPlayerChannel
@@ -35,57 +95,15 @@ class QuietPlayerChannel(private val channel: MethodChannel) : MethodChannel.Met
 
     }
 
-    //flag prevent duplicated init
-    private var isInitialized = false
-
-    private fun init() {
-        if (isInitialized) {
-            //It is unlikely that this will happen under normal circumstances.
-            //but when hot restart dart code modify to running application, will cause this to happen.
-            //so in order to help debug , we need resend events to flutter framework
-            MusicPlayerManager.playerState.postValue(MusicPlayerManager.playerState.value)
-            MusicPlayerManager.playingMusic.postValue(MusicPlayerManager.playingMusic.value)
-            MusicPlayerManager.playlist.postValue(MusicPlayerManager.playlist.value)
-            return
-        }
-
-        isInitialized = true
-        lifecycle.handleLifecycleEvent(Lifecycle.Event.ON_START)
-
-        MusicPlayerManager.playerState.observe(this, Observer {
-            channel.invokeMethod("onPlayStateChanged", it)
-        })
-
-        MusicPlayerManager.playingMusic.observe(this, Observer {
-            channel.invokeMethod("onPlayingMusicChanged", (it as ItemMusic?)?.map)
-        })
-
-        MusicPlayerManager.playlist.observe(this, Observer { playlist ->
-            playlist ?: return@Observer
-            channel.invokeMethod("onPlayingListChanged", mapOf(
-                    "list" to playlist.list.map { (it as ItemMusic).map },
-                    "token" to playlist.token
-            ))
-        })
-
-        MusicPlayerManager.position.observe(this, Observer {
-            channel.invokeMethod("onPositionChanged", mapOf<String, Any>(
-                    "position" to (it?.current ?: 0),
-                    "duration" to (it?.total ?: 0)
-            ))
-        })
-    }
-
-
     /**
      * destroy this channel callback
      * remove observe callback
      */
     fun destroy() {
-        lifecycle.handleLifecycleEvent(Lifecycle.Event.ON_DESTROY)
+        BufferedChannelCallback.setUpChannel(null)
     }
 
-    private val player get() = MusicPlayerManager.musicPlayer
+    private val player get() = QuietMusicPlayer.getInstance()
 
     override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
 
@@ -93,11 +111,10 @@ class QuietPlayerChannel(private val channel: MethodChannel) : MethodChannel.Met
 
         when (call.method) {
             "init" -> {
-                init()
+                BufferedChannelCallback.setUpChannel(channel)
                 if (player.playlist.token != Playlist.TOKEN_EMPTY) {
                     //when current player is available, we do not need init playlist
                     //but also need send event to Flutter Framework
-                    MusicPlayerManager.playlist.postValue(MusicPlayerManager.playlist.value)
                     return
                 }
                 val token = call.argument<String>("token") ?: return
@@ -105,8 +122,7 @@ class QuietPlayerChannel(private val channel: MethodChannel) : MethodChannel.Met
                         ?: return
                 player.playlist = Playlist(token, list)
                 player.playlist.current = call.argument<HashMap<String, Any>>("music")?.let { ItemMusic(it) }
-                player.playlist.playMode = PlayMode.values()[call.argument<Int>("playMode") ?: 0]
-
+                player.playMode = PlayMode.values()[call.argument<Int>("playMode") ?: 0]
             }
             "play" -> {
                 player.play()
@@ -151,7 +167,7 @@ class QuietPlayerChannel(private val channel: MethodChannel) : MethodChannel.Met
             }
             "setPlayMode" -> {
                 val index: Int = call.arguments()
-                player.playlist.playMode = PlayMode.values()[index]
+                player.playMode = PlayMode.values()[index]
             }
             "position" -> {
                 result.success(player.mediaPlayer.getPosition())
@@ -205,6 +221,7 @@ class QuietPlayerChannel(private val channel: MethodChannel) : MethodChannel.Met
         }
 
         companion object {
+            @Suppress("unused")
             @JvmField
             val CREATOR: Parcelable.Creator<ItemMusic> = object : Parcelable.Creator<ItemMusic> {
                 override fun createFromParcel(source: Parcel): ItemMusic = ItemMusic(source)

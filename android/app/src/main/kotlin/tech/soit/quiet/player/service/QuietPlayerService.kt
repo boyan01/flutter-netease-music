@@ -1,18 +1,17 @@
 package tech.soit.quiet.player.service
 
 import android.app.Service
-import android.arch.lifecycle.*
+import android.arch.lifecycle.LiveData
 import android.content.Context
 import android.content.Intent
 import android.os.Binder
 import android.os.IBinder
 import android.support.annotation.VisibleForTesting
 import tech.soit.quiet.AppContext
-import tech.soit.quiet.player.MusicPlayerManager
+import tech.soit.quiet.model.vo.Music
+import tech.soit.quiet.player.MusicPlayerCallback
 import tech.soit.quiet.player.QuietMusicPlayer
 import tech.soit.quiet.player.core.IMediaPlayer
-import tech.soit.quiet.utils.LoggerLevel
-import tech.soit.quiet.utils.log
 
 /**
  *
@@ -22,13 +21,7 @@ import tech.soit.quiet.utils.log
  * author : YangBin
  * date   : 2017/12/27
  */
-class QuietPlayerService : Service(), LifecycleOwner {
-
-    private val lifecycleRegister = LifecycleRegistry(this)
-
-    override fun getLifecycle(): Lifecycle {
-        return lifecycleRegister
-    }
+class QuietPlayerService : Service() {
 
     companion object {
 
@@ -69,7 +62,7 @@ class QuietPlayerService : Service(), LifecycleOwner {
 
         /**
          * init with application.
-         * register [MusicPlayerManager.playerState] to ensure service running.
+         * to ensure service running.
          */
         fun init(playerState: LiveData<Int>) {
             playerState.observeForever {
@@ -85,11 +78,6 @@ class QuietPlayerService : Service(), LifecycleOwner {
         private fun ensureServiceRunning(context: Context = AppContext) {
             if (!isRunning) {
                 context.startService(Intent(context, QuietPlayerService::class.java))
-            } else {
-                log(LoggerLevel.DEBUG) {
-                    "we do not need to start music MusicPlayer service ," +
-                            "because it is already running..."
-                }
             }
         }
 
@@ -100,22 +88,25 @@ class QuietPlayerService : Service(), LifecycleOwner {
 
     private val playerServiceBinder = PlayerServiceBinder()
 
-    private val musicPlayer get() = MusicPlayerManager.musicPlayer
+    private val musicPlayer get() = QuietMusicPlayer.getInstance()
 
+    private val callback = object : MusicPlayerCallback {
+        override fun onMusicChanged(music: Music?) {
+            if (music == null) {
+                stopForeground(false)
+            }
+            notificationHelper.update(this@QuietPlayerService)
+        }
+
+        override fun onPlayerStateChanged(state: Int) {
+            notificationHelper.update(this@QuietPlayerService)
+        }
+    }
 
     override fun onCreate() {
         isRunning = true
         super.onCreate()
-        lifecycleRegister.markState(Lifecycle.State.STARTED)
-        MusicPlayerManager.playerState.observe(this, Observer {
-            notificationHelper.update(this)
-        })
-        MusicPlayerManager.playingMusic.observe(this, Observer {
-            if (it == null) {
-                stopForeground(false)
-            }
-            notificationHelper.update(this)
-        })
+        musicPlayer.addCallback(callback)
     }
 
     override fun onBind(intent: Intent?): IBinder? = playerServiceBinder
@@ -124,20 +115,20 @@ class QuietPlayerService : Service(), LifecycleOwner {
         val action = intent?.action
         when (action) {
             action_play_previous -> {
-                MusicPlayerManager.musicPlayer.playPrevious()
+                musicPlayer.playPrevious()
             }
             action_play_pause -> {
-                if (MusicPlayerManager.playerState.value == IMediaPlayer.PLAYING) {
-                    MusicPlayerManager.musicPlayer.pause()
+                if (musicPlayer.mediaPlayer.getState() == IMediaPlayer.PLAYING) {
+                    musicPlayer.pause()
                 } else {
-                    MusicPlayerManager.musicPlayer.play()
+                    musicPlayer.play()
                 }
             }
             action_play_next -> {
-                MusicPlayerManager.musicPlayer.playNext()
+                musicPlayer.playNext()
             }
             action_exit -> {
-                MusicPlayerManager.musicPlayer.quiet()
+                musicPlayer.quiet()
                 stopForeground(true)
                 stopSelf()
             }
@@ -160,8 +151,8 @@ class QuietPlayerService : Service(), LifecycleOwner {
     }
 
     override fun onDestroy() {
+        musicPlayer.removeCallback(callback)
         super.onDestroy()
-        lifecycleRegister.markState(Lifecycle.State.DESTROYED)
         musicPlayer.quiet()
         isRunning = false
     }
@@ -170,14 +161,7 @@ class QuietPlayerService : Service(), LifecycleOwner {
     /**
      * service binder
      */
-    inner class PlayerServiceBinder : Binder() {
-
-        /**
-         * [QuietPlayerService]
-         */
-        val service get() = this@QuietPlayerService
-
-    }
+    inner class PlayerServiceBinder : Binder()
 
 
 }
