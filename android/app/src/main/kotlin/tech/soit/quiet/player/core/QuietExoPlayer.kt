@@ -1,6 +1,7 @@
 package tech.soit.quiet.player.core
 
 import android.net.Uri
+import com.google.android.exoplayer2.ExoPlaybackException
 import com.google.android.exoplayer2.ExoPlayerFactory
 import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.SimpleExoPlayer
@@ -10,6 +11,7 @@ import com.google.android.exoplayer2.upstream.cache.CacheDataSourceFactory
 import com.google.android.exoplayer2.upstream.cache.LeastRecentlyUsedCacheEvictor
 import com.google.android.exoplayer2.upstream.cache.SimpleCache
 import tech.soit.quiet.AppContext
+import kotlin.properties.Delegates
 
 class QuietExoPlayer(
         private val exoPlayer: SimpleExoPlayer = ExoPlayerFactory.newSimpleInstance(AppContext)
@@ -28,12 +30,37 @@ class QuietExoPlayer(
     init {
         exoPlayer.addListener(object : Player.EventListener {
             override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
-                onStateChangeCallback?.invoke(getState())
-                if (playbackState == Player.STATE_ENDED) {
-                    onCompleteListener?.invoke()
+                when (playbackState) {
+                    Player.STATE_READY -> {
+                        _state = if (playWhenReady) {
+                            IMediaPlayer.PLAYING
+                        } else {
+                            IMediaPlayer.PAUSING
+                        }
+                    }
+                    Player.STATE_BUFFERING -> {
+                        _state = IMediaPlayer.PREPARING
+                    }
+                    Player.STATE_IDLE -> {
+                        _state = IMediaPlayer.IDLE
+                    }
+                    Player.STATE_ENDED -> {
+                        _state = IMediaPlayer.IDLE
+                    }
                 }
             }
+
+            override fun onPlayerError(error: ExoPlaybackException) {
+                _state = IMediaPlayer.ERROR
+                onStateChangeCallback?.invoke(IMediaPlayer.ERROR, error)
+            }
         })
+    }
+
+    private var _state: Int by Delegates.observable(IMediaPlayer.IDLE) { _, _, new ->
+        if (new != IMediaPlayer.ERROR) {
+            onStateChangeCallback?.invoke(new, null)
+        }
     }
 
     override fun prepare(uri: String, playWhenReady: Boolean) {
@@ -58,28 +85,12 @@ class QuietExoPlayer(
         exoPlayer.stop(true)
     }
 
-    override fun getState(): Int {
-        return when (exoPlayer.playbackState) {
-            Player.STATE_BUFFERING -> IMediaPlayer.PREPARING
-            Player.STATE_READY -> if (isPlayWhenReady) {
-                IMediaPlayer.PLAYING
-            } else {
-                IMediaPlayer.PAUSING
-            }
-            else -> IMediaPlayer.IDLE
-        }
-    }
+    override fun getState(): Int = _state
 
-    private var onStateChangeCallback: ((Int) -> Unit)? = null
+    private var onStateChangeCallback: ((Int, payload: Any?) -> Unit)? = null
 
-    override fun setOnStateChangeCallback(callBack: ((state: Int) -> Unit)?) {
+    override fun setOnStateChangeCallback(callBack: ((state: Int, payload: Any?) -> Unit)?) {
         this.onStateChangeCallback = callBack
-    }
-
-    private var onCompleteListener: (() -> Unit)? = null
-
-    override fun setOnCompleteListener(callBack: (() -> Unit)?) {
-        this.onCompleteListener = callBack
     }
 
     override fun getPosition(): Long {

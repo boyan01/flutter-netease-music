@@ -18,8 +18,12 @@ interface IMediaPlayer {
 
         const val PREPARING = 3
 
+        const val ERROR = 4
 
-        @IntDef(IDLE, PLAYING, PAUSING, PREPARING)
+        const val COMPLETE = 5
+
+
+        @IntDef(IDLE, PLAYING, PAUSING, PREPARING, ERROR, COMPLETE)
         @Target(AnnotationTarget.TYPE)
         annotation class PlayerState
 
@@ -69,14 +73,9 @@ interface IMediaPlayer {
      * set a callback to listener state change
      *
      * @param callBack on state change callback, null to remove
+     *
      */
-    fun setOnStateChangeCallback(callBack: ((state: @PlayerState Int) -> Unit)?)
-
-
-    /**
-     * @param callBack invoke when music play complete
-     */
-    fun setOnCompleteListener(callBack: (() -> Unit)?)
+    fun setOnStateChangeCallback(callBack: ((state: @PlayerState Int, payload: Any?) -> Unit)?)
 
     /**
      * get current playing position

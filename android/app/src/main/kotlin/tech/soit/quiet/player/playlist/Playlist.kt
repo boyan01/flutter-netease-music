@@ -1,8 +1,8 @@
 package tech.soit.quiet.player.playlist
 
 import tech.soit.quiet.model.vo.Music
-import tech.soit.quiet.player.MusicPlayerManager
 import tech.soit.quiet.player.PlayMode
+import tech.soit.quiet.player.QuietMusicPlayer
 import tech.soit.quiet.utils.log
 
 
@@ -36,51 +36,51 @@ open class Playlist(
     }
 
     constructor(token: String, musics: List<Music>) : this(token) {
-        _list.addAll(musics)
+        listInternal.addAll(musics)
         if (musics.isNotEmpty()) {
             current = musics[0]
         }
     }
 
-    protected val _list = ArrayList<Music>()
+    private val listInternal = ArrayList<Music>()
 
     /**
      * the playlist' Music List
      */
-    val list: List<Music> get() = _list
+    val list: List<Music> get() = listInternal
 
     var current: Music? = null
 
-    var playMode: PlayMode = PlayMode.Sequence
+    private val playMode: PlayMode get() = QuietMusicPlayer.getInstance().playMode
 
     /**
      * get current playing ' next music
      */
     open suspend fun getNext(): Music? {
-        if (_list.isEmpty()) {
+        if (listInternal.isEmpty()) {
             log { "empty playlist" }
             return null
         }
-        val anchor = this.current ?: /*fast return */ return _list[0]
+        val anchor = this.current ?: /*fast return */ return listInternal[0]
         return when (playMode) {
             PlayMode.Single -> {
                 anchor
             }
             PlayMode.Sequence -> {
                 //if can not find ,index will be zero , it will right too
-                val index = _list.indexOf(anchor) + 1
-                if (index == _list.size) {
-                    _list[0]
+                val index = listInternal.indexOf(anchor) + 1
+                if (index == listInternal.size) {
+                    listInternal[0]
                 } else {
-                    _list[index]
+                    listInternal[index]
                 }
             }
             PlayMode.Shuffle -> {
                 ensureShuffleListGenerate()
                 val index = shuffleMusicList.indexOf(anchor)
                 when (index) {
-                    -1 -> _list[0]
-                    _list.size - 1 -> {
+                    -1 -> listInternal[0]
+                    listInternal.size - 1 -> {
                         generateShuffleList()
                         shuffleMusicList[0]
                     }
@@ -95,28 +95,28 @@ open class Playlist(
      * get current playing ' previous music
      */
     open suspend fun getPrevious(): Music? {
-        if (_list.isEmpty()) {
+        if (listInternal.isEmpty()) {
             log { "try too play next with empty playlist!" }
             return null
         }
-        val anchor = this.current ?: return _list[0]
+        val anchor = this.current ?: return listInternal[0]
         return when (playMode) {
             PlayMode.Single -> {
                 anchor
             }
             PlayMode.Sequence -> {
-                val index = _list.indexOf(anchor)
+                val index = listInternal.indexOf(anchor)
                 when (index) {
-                    -1 -> _list[0]
-                    0 -> _list[_list.size - 1]
-                    else -> _list[index - 1]
+                    -1 -> listInternal[0]
+                    0 -> listInternal[listInternal.size - 1]
+                    else -> listInternal[index - 1]
                 }
             }
             PlayMode.Shuffle -> {
                 ensureShuffleListGenerate()
                 val index = shuffleMusicList.indexOf(anchor)
                 when (index) {
-                    -1 -> _list[0]
+                    -1 -> listInternal[0]
                     0 -> {
                         generateShuffleList()
                         shuffleMusicList[shuffleMusicList.size - 1]
@@ -133,8 +133,8 @@ open class Playlist(
      * it will be played when this music over
      */
     open fun insertToNext(next: Music) {
-        if (_list.isEmpty()) {
-            _list.add(next)
+        if (listInternal.isEmpty()) {
+            listInternal.add(next)
         } else {
             ensureShuffleListGenerate()
 
@@ -143,15 +143,14 @@ open class Playlist(
                 return
             }
             //remove if musicList contain this item
-            _list.remove(next)
+            listInternal.remove(next)
 
-            val index = _list.indexOf(current) + 1
-            _list.add(index, next)
+            val index = listInternal.indexOf(current) + 1
+            listInternal.add(index, next)
 
             val indexShuffle = shuffleMusicList.indexOf(current) + 1
             shuffleMusicList.add(indexShuffle, next)
         }
-        MusicPlayerManager.playlist.postValue(this)
     }
 
 
@@ -159,7 +158,7 @@ open class Playlist(
 
     private fun ensureShuffleListGenerate() {
         // regenerate shuffle playlist when music changed
-        if (shuffleMusicList.size != _list.size) {
+        if (shuffleMusicList.size != listInternal.size) {
             generateShuffleList()
         }
     }
@@ -168,7 +167,7 @@ open class Playlist(
      * create shuffle list for [PlayMode.Shuffle]
      */
     private fun generateShuffleList() {
-        val list = ArrayList(_list)
+        val list = ArrayList(listInternal)
         var position = list.size - 1
         while (position > 0) {
             //生成一个随机数
