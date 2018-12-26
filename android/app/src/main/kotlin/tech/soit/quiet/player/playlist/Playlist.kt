@@ -1,6 +1,6 @@
 package tech.soit.quiet.player.playlist
 
-import tech.soit.quiet.model.vo.Music
+import tech.soit.quiet.player.Music
 import tech.soit.quiet.player.PlayMode
 import tech.soit.quiet.player.QuietMusicPlayer
 import tech.soit.quiet.utils.log
