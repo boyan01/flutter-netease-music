@@ -95,6 +95,13 @@ class MusicPlayer implements ValueNotifier<PlayerControllerState> {
     await _controller.insertToNext(music);
   }
 
+  void removeFromPlayingList(Music music) {
+    if (!value.playingList.contains(music)) {
+      return;
+    }
+    //TODO
+  }
+
   Future<void> playWithList(Music music, List<Music> list, String token) async {
     debugPrint("playWithList ${list.map((m) => m.title).join(",")}");
     debugPrint("playWithList token = $token");

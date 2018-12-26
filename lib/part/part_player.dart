@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:quiet/pages/page_playing_list.dart';
 import 'package:quiet/part/route.dart';
 import 'package:quiet/repository/netease_image.dart';
 
@@ -108,9 +109,14 @@ class BottomControllerBar extends StatelessWidget {
                 }
               }),
               IconButton(
-                  icon: Icon(Icons.skip_next),
+                  tooltip: "当前播放列表",
+                  icon: Icon(Icons.menu),
                   onPressed: () {
-                    quiet.playNext();
+                    showModalBottomSheet(
+                        context: context,
+                        builder: (context) {
+                          return PlayingListDialog();
+                        });
                   }),
             ],
           ),

@@ -3,6 +3,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:quiet/pages/page_comment.dart';
+import 'package:quiet/pages/page_playing_list.dart';
 import 'package:quiet/part/part.dart';
 import 'package:quiet/repository/netease.dart';
 import 'package:quiet/service/channel_media_player.dart';
@@ -135,7 +136,11 @@ class _ControllerBar extends StatelessWidget {
                 Icons.menu,
                 color: color,
               ),
-              onPressed: () {}),
+              onPressed: () {
+                showModalBottomSheet(context: context, builder: (context) {
+                  return PlayingListDialog();
+                });
+              }),
         ],
       ),
     );
