@@ -160,8 +160,11 @@ class _ItemPlaylist extends StatelessWidget {
         child: SizedBox(
           child: ClipRRect(
             borderRadius: BorderRadius.all(Radius.circular(4)),
-            child: Image(
+            child: FadeInImage(
+              placeholder: AssetImage("assets/playlist_playlist.9.png"),
               image: NeteaseImage(playlist["coverImgUrl"]),
+              fadeInDuration: Duration.zero,
+              fadeOutDuration: Duration.zero,
               fit: BoxFit.cover,
             ),
           ),
