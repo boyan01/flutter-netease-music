@@ -198,8 +198,12 @@ class _PlaylistSectionState extends State<_SectionPlaylist> {
             SizedBox(
               child: ClipRRect(
                 borderRadius: BorderRadius.all(Radius.circular(6)),
-                child: Image(
+                child: FadeInImage(
+                  placeholder: AssetImage("assets/playlist_playlist.9.png"),
                   image: NeteaseImage(playlist["picUrl"]),
+                  fadeInDuration: Duration.zero,
+                  fadeOutDuration: Duration.zero,
+                  fit: BoxFit.cover,
                 ),
               ),
             ),
