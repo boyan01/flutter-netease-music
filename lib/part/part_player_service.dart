@@ -259,8 +259,10 @@ class PlayerState extends InheritedModel<PlayerStateAspect> {
         (value.position != oldWidget.value.position)) {
       return true;
     }
-    if (dependencies.contains(PlayerStateAspect.play) &&
-        (value.isPlaying != oldWidget.value.isPlaying)) {
+    if (dependencies.contains(PlayerStateAspect.playbackState) &&
+        ((value.playbackState != oldWidget.value.playbackState) ||
+            (value.playWhenReady != oldWidget.value.playWhenReady ||
+                value.hasError != oldWidget.value.hasError))) {
       return true;
     }
     if (dependencies.contains(PlayerStateAspect.playlist) &&
@@ -284,7 +286,7 @@ enum PlayerStateAspect {
   position,
 
   ///the playing state
-  play,
+  playbackState,
 
   ///the current playing
   music,

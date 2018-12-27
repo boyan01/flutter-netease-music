@@ -37,10 +37,28 @@ class Music(
             source.readHashMap(null) as HashMap<String, Any>
     )
 
+
     override fun describeContents() = 0
 
     override fun writeToParcel(dest: Parcel, flags: Int) = with(dest) {
         writeSerializable(map)
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is Music) return false
+
+        if (getId() != other.getId()) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        return getId().hashCode()
+    }
+
+    override fun toString(): String {
+        return "Music{${getId()},title = ${getTitle()}}"
     }
 
     companion object {

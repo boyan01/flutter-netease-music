@@ -36,7 +36,7 @@ open class Playlist(
     }
 
     constructor(token: String, musics: List<Music>) : this(token) {
-        listInternal.addAll(musics)
+        listInternal.addAll(musics.toSet())
         if (musics.isNotEmpty()) {
             current = musics[0]
         }

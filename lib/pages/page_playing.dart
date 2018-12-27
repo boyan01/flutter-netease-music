@@ -65,7 +65,7 @@ class _ControllerBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var color = Theme.of(context).primaryIconTheme.color;
-    var state = PlayerState.of(context, aspect: PlayerStateAspect.play).value;
+    var state = PlayerState.of(context, aspect: PlayerStateAspect.playbackState).value;
 
     Widget iconPlayPause;
     if (state.isPlaying) {
