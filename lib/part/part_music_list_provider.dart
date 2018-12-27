@@ -54,13 +54,14 @@ class SongTileProvider {
       return SongListHeader(musics.length, _playAll);
     }
     if (index - 1 < musics.length) {
+      var item = musics[index - 1];
       return SongTile(
-        musics[index - 1],
+        item,
         index,
-        onTap: () => onTap == null
-            ? _play(index - 1, context)
-            : onTap(musics[index - 1]),
+        onTap: () => onTap == null ? _play(index - 1, context) : onTap(item),
         leadingType: leadingType,
+        playing: token == PlayerState.of(context).value.token &&
+            item == PlayerState.of(context).value.current,
       );
     }
     return null;
@@ -121,21 +122,34 @@ enum SongTileLeadingType {
 /// song item widget
 class SongTile extends StatelessWidget {
   SongTile(this.music, this.index,
-      {this.onTap, this.leadingType = SongTileLeadingType.number})
+      {this.onTap,
+      this.leadingType = SongTileLeadingType.number,
+      this.playing = false})
       : assert(leadingType != null);
 
-  /// music item
+  /// song data
   final Music music;
 
   /// [music]'index in list, start with 1
   final int index;
 
+  final bool playing;
+
   final GestureTapCallback onTap;
 
   final SongTileLeadingType leadingType;
 
-  @override
-  Widget build(BuildContext context) {
+  Widget buildLeading(BuildContext context) {
+    if (leadingType != SongTileLeadingType.none && playing) {
+      return Container(
+        margin: const EdgeInsets.only(left: 8, right: 8),
+        width: 40,
+        height: 40,
+        child: Center(
+          child: Icon(Icons.volume_up, color: Theme.of(context).primaryColor),
+        ),
+      );
+    }
     Widget leading;
     switch (leadingType) {
       case SongTileLeadingType.number:
@@ -168,7 +182,11 @@ class SongTile extends StatelessWidget {
         );
         break;
     }
+    return leading;
+  }
 
+  @override
+  Widget build(BuildContext context) {
     return Container(
       height: 56,
       child: InkWell(
@@ -176,7 +194,7 @@ class SongTile extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            leading,
+            buildLeading(context),
             Expanded(
               child: Container(
                 decoration: BoxDecoration(
