@@ -203,7 +203,7 @@ class _OpacityTitleState extends State<_OpacityTitle> {
 }
 
 ///body display the list of song item and a header of playlist
-class _PlaylistBody extends StatelessWidget {
+class _PlaylistBody extends StatefulWidget {
   final ScrollController scrollController;
 
   _PlaylistBody(this.playlist, {this.scrollController})
@@ -214,14 +214,21 @@ class _PlaylistBody extends StatelessWidget {
   final SongTileProvider songTileProvider;
 
   @override
+  _PlaylistBodyState createState() {
+    return new _PlaylistBodyState();
+  }
+}
+
+class _PlaylistBodyState extends State<_PlaylistBody> {
+  @override
   Widget build(BuildContext context) {
     return Quiet(
       child: BoxWithBottomPlayerController(
         ListView.builder(
           padding: const EdgeInsets.all(0),
-          itemCount: 1 + (songTileProvider?.size ?? 0),
+          itemCount: 1 + (widget.songTileProvider?.size ?? 0),
           itemBuilder: _buildList,
-          controller: scrollController,
+          controller: widget.scrollController,
         ),
       ),
     );
@@ -229,9 +236,20 @@ class _PlaylistBody extends StatelessWidget {
 
   Widget _buildList(BuildContext context, int index) {
     if (index == 0) {
-      return _PlaylistDetailHeader(playlist);
+      return _PlaylistDetailHeader(widget.playlist);
     }
-    return songTileProvider?.buildWidget(index - 1, context);
+    return widget.songTileProvider?.buildWidget(index - 1, context,
+        onDelete: () async {
+      var result = await neteaseRepository.playlistTracksEdit(
+          PlaylistOperation.remove,
+          widget.playlist["id"],
+          [widget.songTileProvider.musics[index - 2].id]);
+      if (result) {
+        setState(() {
+          widget.songTileProvider.musics.removeAt(index - 2);
+        });
+      }
+    });
   }
 }
 
