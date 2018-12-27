@@ -82,18 +82,20 @@ class MusicPlayer implements ValueNotifier<PlayerControllerState> {
       return;
     }
     if (!value.playingList.contains(music)) {
-      debugPrint("playing list do not contain : $music");
-      insertToNext(music);
+      //playing list do not contain music
+      //so we insert this music to next of current playing
+      await insertToNext(music);
     }
     await _performPlay(music);
   }
 
+  ///insert a music to [value.current] next position
   Future<void> insertToNext(Music music) async {
     if (value.playingList.contains(music)) {
       return;
     }
     final list = List.of(value.playingList);
-    final index = list.indexOf(music) + 1;
+    final index = list.indexOf(value.current) + 1;
     list.insert(index, music);
     await _controller.updatePlaylist(list, value.token);
   }
