@@ -35,16 +35,19 @@ class DurationRange {
 }
 
 class PlayerControllerState {
-  PlayerControllerState({this.duration,
-    this.position = Duration.zero,
-    this.playWhenReady = false,
-    this.buffered = const [],
-    this.playbackState = PlaybackState.none,
-    this.current,
-    this.playingList = const [],
-    this.token,
-    this.playMode = PlayMode.sequence,
-    this.errorMsg});
+  PlayerControllerState(
+      {this.duration,
+      this.position = Duration.zero,
+      this.playWhenReady = false,
+      this.buffered = const [],
+      this.playbackState = PlaybackState.none,
+      this.current,
+      this.playingList = const [],
+      this.token,
+      this.playMode = PlayMode.sequence,
+      this.errorMsg = _ERROR_NONE});
+
+  static const String _ERROR_NONE = "NONE";
 
   PlayerControllerState.uninitialized() : this(duration: null);
 
@@ -59,7 +62,7 @@ class PlayerControllerState {
   final bool playWhenReady;
 
   ///audio is buffering
-  bool get isBuffering => playbackState == PlaybackState.buffering;
+  bool get isBuffering => playbackState == PlaybackState.buffering && !hasError;
 
   final Music current;
 
@@ -73,9 +76,17 @@ class PlayerControllerState {
 
   bool get initialized => duration != null;
 
-  bool get hasError => errorMsg != null;
+  bool get hasError => errorMsg != _ERROR_NONE;
 
-  bool get isPlaying => (playbackState == PlaybackState.ready) && playWhenReady;
+  bool get isPlaying =>
+      (playbackState == PlaybackState.ready) && playWhenReady && !hasError;
+
+  PlayerControllerState clearError() {
+    if (!hasError) {
+      return this;
+    }
+    return copyWith(errorMsg: _ERROR_NONE);
+  }
 
   PlayerControllerState copyWith({
     Duration duration,
@@ -143,15 +154,16 @@ class PlayerController extends ValueNotifier<PlayerControllerState> {
               newState = PlaybackState.ended;
               break;
           }
-          value = value.copyWith(
-              playbackState: newState,
-              playWhenReady: playWhenReady,
-              errorMsg: null /*clear error*/);
+          value = value
+              .copyWith(playbackState: newState, playWhenReady: playWhenReady)
+              .clearError();
           break;
         case "onPlayerError":
           value = value.copyWith(
-              errorMsg: method.arguments["message"]
-          );
+              errorMsg: method.arguments["message"],
+              playWhenReady: false,
+              playbackState: PlaybackState.none);
+          debugPrint("on player error : ${method.arguments}");
           break;
         case "onMusicChanged":
           value = value.copyWith(current: Music.fromMap(method.arguments));
@@ -160,7 +172,7 @@ class PlayerController extends ValueNotifier<PlayerControllerState> {
           var map = method.arguments as Map;
           value = value.copyWith(
               playingList:
-              (map["list"] as List).cast<Map>().map(Music.fromMap).toList(),
+                  (map["list"] as List).cast<Map>().map(Music.fromMap).toList(),
               token: map["token"]);
           break;
         case "onPositionChanged":
@@ -185,10 +197,8 @@ class PlayerController extends ValueNotifier<PlayerControllerState> {
   ///do init to player
   ///if player is running , will do nothing
   ///maybe should move load and restore preference logic to player service
-  Future<void> init(List<Music> list,
-      Music music,
-      String token,
-      PlayMode playMode) {
+  Future<void> init(
+      List<Music> list, Music music, String token, PlayMode playMode) {
     return _channel.invokeMethod("init", {
       "list": list == null ? null : list.map((m) => m.toMap()).toList(),
       "music": music?.toMap(),
