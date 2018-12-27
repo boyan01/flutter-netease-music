@@ -32,6 +32,8 @@ class NeteaseSearchType {
   static const NeteaseSearchType video = NeteaseSearchType._(1014);
 }
 
+enum PlaylistOperation { add, remove }
+
 class NeteaseRepository {
   ///to verify api response is success
   final TaskResultVerify responseVerify = (dynamic result) {
@@ -203,6 +205,23 @@ class NeteaseRepository {
       return result["songs"][0];
     }
     return null;
+  }
+
+  ///edit playlist tracks
+  ///true : succeed
+  Future<bool> playlistTracksEdit(
+      PlaylistOperation operation, int playlistId, List<int> musicIds) async {
+    assert(operation != null);
+    assert(playlistId != null);
+    assert(musicIds != null && musicIds.isNotEmpty);
+
+    var result = await doRequest(
+        "https://music.163.com/weapi/playlist/manipulate/tracks", {
+      "op": operation == PlaylistOperation.add ? "add" : "del",
+      "pid": playlistId,
+      "trackIds": "[${musicIds.join(",")}]"
+    });
+    return responseVerify(result).isSuccess;
   }
 
   //请求数据

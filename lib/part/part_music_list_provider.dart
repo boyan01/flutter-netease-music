@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:quiet/model/model.dart';
 import 'package:quiet/pages/page_comment.dart';
 
-export 'package:quiet/model/model.dart';
-
 import 'part.dart';
+
+export 'package:quiet/model/model.dart';
 
 typedef SongTileCallback = void Function(Music muisc);
 
@@ -49,7 +49,9 @@ class SongTileProvider {
   /// leadingType : the leading of a song tile, detail for [SongTileLeadingType]
   Widget buildWidget(int index, BuildContext context,
       {SongTileLeadingType leadingType = SongTileLeadingType.number,
-      SongTileCallback onTap}) {
+      SongTileCallback onTap,
+      VoidCallback onDelete,
+      bool canDelete = false}) {
     if (index == 0) {
       return SongListHeader(musics.length, _playAll);
     }
@@ -60,6 +62,7 @@ class SongTileProvider {
         index,
         onTap: () => onTap == null ? _play(index - 1, context) : onTap(item),
         leadingType: leadingType,
+        onDelete: onDelete,
         playing: token == PlayerState.of(context).value.token &&
             item == PlayerState.of(context).value.current,
       );
@@ -124,7 +127,8 @@ class SongTile extends StatelessWidget {
   SongTile(this.music, this.index,
       {this.onTap,
       this.leadingType = SongTileLeadingType.number,
-      this.playing = false})
+      this.playing = false,
+      this.onDelete})
       : assert(leadingType != null);
 
   /// song data
@@ -138,6 +142,10 @@ class SongTile extends StatelessWidget {
   final GestureTapCallback onTap;
 
   final SongTileLeadingType leadingType;
+
+  ///callback when popup menu delete selected
+  ///if [onDelete] be null , popup menu will not show delete menu
+  final VoidCallback onDelete;
 
   Widget buildLeading(BuildContext context) {
     if (leadingType != SongTileLeadingType.none && playing) {
@@ -241,8 +249,14 @@ class SongTile extends StatelessWidget {
                               child: Text("评论"),
                               value: SongPopupMenuType.comment,
                             ),
-                          ],
-                      onSelected: (SongPopupMenuType type) {
+                            onDelete == null
+                                ? null
+                                : PopupMenuItem(
+                                    child: Text("删除"),
+                                    value: SongPopupMenuType.delete,
+                                  )
+                          ]..removeWhere((v) => v == null),
+                      onSelected: (SongPopupMenuType type) async {
                         switch (type) {
                           case SongPopupMenuType.addToNext:
                             quiet.insertToNext(music);
@@ -257,6 +271,28 @@ class SongTile extends StatelessWidget {
                                         CommentThreadPayload.music(music)),
                               );
                             }));
+                            break;
+                          case SongPopupMenuType.delete:
+                            bool delete = await showDialog<bool>(
+                                context: context,
+                                builder: (context) {
+                                  return AlertDialog(
+                                    content: Text("确认将所选音乐从列表中删除?"),
+                                    actions: <Widget>[
+                                      FlatButton(
+                                          onPressed: () =>
+                                              Navigator.pop(context, false),
+                                          child: Text("取消")),
+                                      FlatButton(
+                                          onPressed: () =>
+                                              Navigator.pop(context, true),
+                                          child: Text("确认")),
+                                    ],
+                                  );
+                                });
+                            if (delete != null && delete && onDelete != null) {
+                              onDelete();
+                            }
                             break;
                         }
                       },
@@ -275,4 +311,5 @@ class SongTile extends StatelessWidget {
 enum SongPopupMenuType {
   addToNext,
   comment,
+  delete,
 }
