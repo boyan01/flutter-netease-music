@@ -306,7 +306,7 @@ class _ItemTitle extends StatelessWidget {
       onTap: () async {
         if (commentThreadId.type == CommentType.playlist) {
           Navigator.push(context, MaterialPageRoute(builder: (context) {
-            return PagePlaylistDetail(
+            return PlaylistDetailPage(
               payload.obj["id"],
               playlist: payload.obj,
             );

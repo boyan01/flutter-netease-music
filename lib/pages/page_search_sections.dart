@@ -286,7 +286,7 @@ class _PlaylistResultSectionState extends State<PlaylistResultSection>
                   onTap: () {
                     Navigator.of(context)
                         .push(MaterialPageRoute(builder: (context) {
-                      return PagePlaylistDetail(item["id"]);
+                      return PlaylistDetailPage(item["id"]);
                     }));
                   },
                   child: Container(

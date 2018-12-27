@@ -123,7 +123,7 @@ class _ItemLeaderBoard2 extends StatelessWidget {
     return InkWell(
       onTap: () {
         Navigator.push(context, MaterialPageRoute(builder: (context) {
-          return PagePlaylistDetail(row["id"]);
+          return PlaylistDetailPage(row["id"]);
         }));
       },
       child: Container(
@@ -190,7 +190,7 @@ class _ItemLeaderboard1 extends StatelessWidget {
     return InkWell(
       onTap: () {
         Navigator.push(context, MaterialPageRoute(builder: (context) {
-          return PagePlaylistDetail(row["id"]);
+          return PlaylistDetailPage(row["id"]);
         }));
       },
       child: Container(
