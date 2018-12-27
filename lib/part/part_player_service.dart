@@ -88,18 +88,23 @@ class MusicPlayer implements ValueNotifier<PlayerControllerState> {
     await _performPlay(music);
   }
 
-  void insertToNext(Music music) async {
+  Future<void> insertToNext(Music music) async {
     if (value.playingList.contains(music)) {
       return;
     }
-    await _controller.insertToNext(music);
+    final list = List.of(value.playingList);
+    final index = list.indexOf(music) + 1;
+    list.insert(index, music);
+    await _controller.updatePlaylist(list, value.token);
   }
 
-  void removeFromPlayingList(Music music) {
+  Future<void> removeFromPlayingList(Music music) async {
     if (!value.playingList.contains(music)) {
       return;
     }
-    //TODO
+    final list = List.of(value.playingList);
+    list.remove(music);
+    await _controller.updatePlaylist(list, value.token);
   }
 
   Future<void> playWithList(Music music, List<Music> list, String token) async {
@@ -112,27 +117,25 @@ class MusicPlayer implements ValueNotifier<PlayerControllerState> {
     if (music == null) {
       music = list.first;
     }
-    assert(list.contains(music));
-
-    await _controller.playWithPlaylist(list, token, music);
+    await _controller.updatePlaylist(list, token);
+    await _controller.playWith(music);
   }
 
   //perform to play music
   Future<void> _performPlay(Music music) async {
     assert(music != null);
 
-    if (value.current == music && _controller.value.initialized) {
-      await _controller.play();
-      return;
+    if (value.current == music &&
+        _controller.value.playbackState != PlaybackState.none) {
+      return await _controller.setPlayWhenReady(true);
     }
     assert(
         music.url != null && music.url.isNotEmpty, "music url can not be null");
-    return await _controller.playWithPlaylist(
-        value.playingList, value.token, music);
+    return await _controller.playWith(music);
   }
 
   Future<void> pause() {
-    return _controller.pause();
+    return _controller.setPlayWhenReady(false);
   }
 
   void quiet() {
@@ -256,8 +259,10 @@ class PlayerState extends InheritedModel<PlayerStateAspect> {
         (value.position != oldWidget.value.position)) {
       return true;
     }
-    if (dependencies.contains(PlayerStateAspect.play) &&
-        (value.isPlaying != oldWidget.value.isPlaying)) {
+    if (dependencies.contains(PlayerStateAspect.playbackState) &&
+        ((value.playbackState != oldWidget.value.playbackState) ||
+            (value.playWhenReady != oldWidget.value.playWhenReady ||
+                value.hasError != oldWidget.value.hasError))) {
       return true;
     }
     if (dependencies.contains(PlayerStateAspect.playlist) &&
@@ -281,7 +286,7 @@ enum PlayerStateAspect {
   position,
 
   ///the playing state
-  play,
+  playbackState,
 
   ///the current playing
   music,
