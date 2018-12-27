@@ -28,6 +28,8 @@ class QuietPlayerChannel(private val channel: MethodChannel) : MethodChannel.Met
 
         private const val CHANNEL_ID = "tech.soit.quiet/player"
 
+        private var initialized = false
+
         fun registerWith(registrar: PluginRegistry.Registrar): QuietPlayerChannel {
             val methodChannel = MethodChannel(registrar.messenger(), CHANNEL_ID)
             val quietPlayerChannel = QuietPlayerChannel(methodChannel)
@@ -82,7 +84,6 @@ class QuietPlayerChannel(private val channel: MethodChannel) : MethodChannel.Met
 
     }
 
-    private var initialized = false
 
     private fun init(dispatch: Boolean = false) {
         player.addListener(eventListener)
