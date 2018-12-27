@@ -24,7 +24,7 @@ class SongTileProvider {
   void _playAll(BuildContext context) {
     if (quiet.value.token == token && quiet.value.isPlaying) {
       //open playing page
-      Navigator.pushNamed(null, ROUTE_PAYING);
+      Navigator.pushNamed(context, ROUTE_PAYING);
     } else {
       quiet.playWithList(musics[0], musics, token);
     }
@@ -36,7 +36,7 @@ class SongTileProvider {
         quiet.value.isPlaying &&
         quiet.value.current == toPlay) {
       //open playing page
-      Navigator.pushNamed(null, ROUTE_PAYING);
+      Navigator.pushNamed(context, ROUTE_PAYING);
     } else {
       quiet.playWithList(toPlay, musics, token);
     }
