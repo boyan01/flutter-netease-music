@@ -39,6 +39,11 @@ class _PlayListDetailState extends State<PagePlaylistDetail> {
 
   Color primaryColor;
 
+  static _PlayListDetailState of(BuildContext context) {
+    return context
+        .ancestorStateOfType(const TypeMatcher<_PlayListDetailState>());
+  }
+
   @override
   void initState() {
     super.initState();
@@ -272,116 +277,118 @@ class _PlaylistDetailHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     Map<String, Object> creator = playlist["creator"];
 
+    Color color;
+    if (_PlayListDetailState.of(context).primaryColor != null) {
+      //NOTE: use theme.primaryColor to rebuild when primaryColor updated
+      color = Theme.of(context).primaryColor;
+    } else {
+      color = Colors.black;
+    }
+
     return Container(
       decoration: BoxDecoration(
-          image: DecorationImage(
-              image: NeteaseImage(playlist["coverImgUrl"]), fit: BoxFit.cover)),
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+          gradient: LinearGradient(colors: <Color>[
+        color,
+        color.withOpacity(0.8),
+        color.withOpacity(0.5),
+      ], begin: Alignment.topLeft)),
+      child: Material(
+        color: Colors.black.withOpacity(0.5),
         child: Container(
-          color: Colors.black.withOpacity(0.1),
-          child: Padding(
-            padding: EdgeInsets.only(
-                top: MediaQuery.of(context).padding.top + kToolbarHeight),
-            child: Material(
-              elevation: 0,
-              color: Colors.transparent,
-              child: Column(
-                children: <Widget>[
-                  Expanded(
-                      child: Row(
-                    children: <Widget>[
-                      Container(
-                        padding: EdgeInsets.symmetric(vertical: 16),
-                        margin: EdgeInsets.only(left: 32, right: 20),
-                        child: Hero(
-                          tag: playlist["coverImgUrl"],
-                          child: AspectRatio(
-                            aspectRatio: 1,
-                            child: ClipRRect(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(3)),
-                              child: Image(
-                                  fit: BoxFit.cover,
-                                  image: NeteaseImage(playlist["coverImgUrl"])),
-                            ),
+          padding: EdgeInsets.only(
+              top: MediaQuery.of(context).padding.top + kToolbarHeight),
+          child: Column(
+            children: <Widget>[
+              Container(
+                height: 150,
+                child: Row(
+                  children: <Widget>[
+                    Container(
+                      padding: EdgeInsets.symmetric(vertical: 16),
+                      margin: EdgeInsets.only(left: 32, right: 20),
+                      child: Hero(
+                        tag: playlist["coverImgUrl"],
+                        child: AspectRatio(
+                          aspectRatio: 1,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.all(Radius.circular(3)),
+                            child: Image(
+                                fit: BoxFit.cover,
+                                image: NeteaseImage(playlist["coverImgUrl"])),
                           ),
                         ),
                       ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Container(
-                            margin: EdgeInsets.only(top: 40),
-                            child: Text(
-                              playlist["name"],
-                              style: Theme.of(context)
-                                  .primaryTextTheme
-                                  .title
-                                  .copyWith(fontSize: 18),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                          Padding(padding: EdgeInsets.only(top: 20)),
-                          InkWell(
-                            onTap: () => {},
-                            child: Row(
-                              children: <Widget>[
-                                SizedBox(
-                                  height: 24,
-                                  width: 24,
-                                  child: ClipOval(
-                                    child: Image(
-                                        image:
-                                            NeteaseImage(creator["avatarUrl"])),
-                                  ),
-                                ),
-                                Padding(padding: EdgeInsets.only(left: 4)),
-                                Text(
-                                  creator["nickname"],
-                                  style:
-                                      Theme.of(context).primaryTextTheme.body1,
-                                ),
-                                Icon(
-                                  Icons.chevron_right,
-                                  color:
-                                      Theme.of(context).primaryIconTheme.color,
-                                )
-                              ],
-                            ),
-                          )
-                        ],
-                      )
-                    ],
-                  )),
-                  Padding(
-                    padding: EdgeInsets.only(bottom: 12),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: <Widget>[
-                        _HeaderAction(Icons.comment, "评论", () {
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (context) {
-                            return CommentPage(
-                              threadId: CommentThreadId(
-                                  playlist["id"], CommentType.playlist,
-                                  playload:
-                                      CommentThreadPayload.playlist(playlist)),
-                            );
-                          }));
-                        }),
-                        _HeaderAction(Icons.share, "分享", () => {}),
-                        _HeaderAction(Icons.file_download, "下载", () => {}),
-                        _HeaderAction(Icons.check_box, "多选", () => {}),
-                      ],
                     ),
-                  )
-                ],
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Container(
+                          margin: EdgeInsets.only(top: 40),
+                          child: Text(
+                            playlist["name"],
+                            style: Theme.of(context)
+                                .primaryTextTheme
+                                .title
+                                .copyWith(fontSize: 18),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                        Padding(padding: EdgeInsets.only(top: 20)),
+                        InkWell(
+                          onTap: () => {},
+                          child: Row(
+                            children: <Widget>[
+                              SizedBox(
+                                height: 24,
+                                width: 24,
+                                child: ClipOval(
+                                  child: Image(
+                                      image:
+                                          NeteaseImage(creator["avatarUrl"])),
+                                ),
+                              ),
+                              Padding(padding: EdgeInsets.only(left: 4)),
+                              Text(
+                                creator["nickname"],
+                                style: Theme.of(context).primaryTextTheme.body1,
+                              ),
+                              Icon(
+                                Icons.chevron_right,
+                                color: Theme.of(context).primaryIconTheme.color,
+                              )
+                            ],
+                          ),
+                        )
+                      ],
+                    )
+                  ],
+                ),
               ),
-            ),
+              Container(
+                margin: EdgeInsets.symmetric(vertical: 8),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    _HeaderAction(Icons.comment, "评论", () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) {
+                        return CommentPage(
+                          threadId: CommentThreadId(
+                              playlist["id"], CommentType.playlist,
+                              playload:
+                                  CommentThreadPayload.playlist(playlist)),
+                        );
+                      }));
+                    }),
+                    _HeaderAction(Icons.share, "分享", () => {}),
+                    _HeaderAction(Icons.file_download, "下载", () => {}),
+                    _HeaderAction(Icons.check_box, "多选", () => {}),
+                  ],
+                ),
+              )
+            ],
           ),
-          height: _HEIGHT_HEADER,
         ),
       ),
     );
