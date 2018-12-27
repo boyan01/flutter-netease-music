@@ -48,7 +48,7 @@ class LoginStateWidget extends StatefulWidget {
 }
 
 class _LoginState extends State<LoginStateWidget> {
-  Map<String, Object> user;
+  Map<String, Object> user = neteaseRepository.user.value;
 
   @override
   void initState() {

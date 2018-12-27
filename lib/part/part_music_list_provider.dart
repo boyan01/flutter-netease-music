@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:quiet/model/model.dart';
 import 'package:quiet/pages/page_comment.dart';
+import 'package:quiet/repository/netease.dart';
 
 import 'part.dart';
 
@@ -193,6 +194,57 @@ class SongTile extends StatelessWidget {
     return leading;
   }
 
+  void _onPopupMenuSelected(
+      BuildContext context, SongPopupMenuType type) async {
+    switch (type) {
+      case SongPopupMenuType.addToNext:
+        quiet.insertToNext(music);
+        break;
+      case SongPopupMenuType.comment:
+        Navigator.push(context, MaterialPageRoute(builder: (context) {
+          return CommentPage(
+            threadId: CommentThreadId(music.id, CommentType.song,
+                playload: CommentThreadPayload.music(music)),
+          );
+        }));
+        break;
+      case SongPopupMenuType.delete:
+        bool delete = await showDialog<bool>(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                content: Text("确认将所选音乐从列表中删除?"),
+                actions: <Widget>[
+                  FlatButton(
+                      onPressed: () => Navigator.pop(context, false),
+                      child: Text("取消")),
+                  FlatButton(
+                      onPressed: () => Navigator.pop(context, true),
+                      child: Text("确认")),
+                ],
+              );
+            });
+        if (delete != null && delete && onDelete != null) {
+          onDelete();
+        }
+        break;
+      case SongPopupMenuType.addToPlaylist:
+        final id = await showDialog(
+            context: context,
+            builder: (context) {
+              return PlaylistSelectorDialog();
+            });
+        if (id != null) {
+          bool succeed = await neteaseRepository
+              .playlistTracksEdit(PlaylistOperation.add, id, [music.id]);
+          if (succeed) {
+            //
+          }
+        }
+        break;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -246,6 +298,10 @@ class SongTile extends StatelessWidget {
                               value: SongPopupMenuType.addToNext,
                             ),
                             PopupMenuItem(
+                              child: Text("收藏到歌单"),
+                              value: SongPopupMenuType.addToPlaylist,
+                            ),
+                            PopupMenuItem(
                               child: Text("评论"),
                               value: SongPopupMenuType.comment,
                             ),
@@ -254,48 +310,9 @@ class SongTile extends StatelessWidget {
                                 : PopupMenuItem(
                                     child: Text("删除"),
                                     value: SongPopupMenuType.delete,
-                                  )
+                                  ),
                           ]..removeWhere((v) => v == null),
-                      onSelected: (SongPopupMenuType type) async {
-                        switch (type) {
-                          case SongPopupMenuType.addToNext:
-                            quiet.insertToNext(music);
-                            break;
-                          case SongPopupMenuType.comment:
-                            Navigator.push(context,
-                                MaterialPageRoute(builder: (context) {
-                              return CommentPage(
-                                threadId: CommentThreadId(
-                                    music.id, CommentType.song,
-                                    playload:
-                                        CommentThreadPayload.music(music)),
-                              );
-                            }));
-                            break;
-                          case SongPopupMenuType.delete:
-                            bool delete = await showDialog<bool>(
-                                context: context,
-                                builder: (context) {
-                                  return AlertDialog(
-                                    content: Text("确认将所选音乐从列表中删除?"),
-                                    actions: <Widget>[
-                                      FlatButton(
-                                          onPressed: () =>
-                                              Navigator.pop(context, false),
-                                          child: Text("取消")),
-                                      FlatButton(
-                                          onPressed: () =>
-                                              Navigator.pop(context, true),
-                                          child: Text("确认")),
-                                    ],
-                                  );
-                                });
-                            if (delete != null && delete && onDelete != null) {
-                              onDelete();
-                            }
-                            break;
-                        }
-                      },
+                      onSelected: (type) => _onPopupMenuSelected(context, type),
                     )
                   ],
                 ),
@@ -312,4 +329,7 @@ enum SongPopupMenuType {
   addToNext,
   comment,
   delete,
+
+  ///添加到歌单
+  addToPlaylist,
 }
