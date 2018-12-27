@@ -24,7 +24,7 @@ class BoxWithBottomPlayerController extends StatelessWidget {
 class BottomControllerBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    var state = PlayerState.of(context, aspect: PlayerStateAspect.play).value;
+    var state = PlayerState.of(context, aspect: PlayerStateAspect.playbackState).value;
     var music =
         PlayerState.of(context, aspect: PlayerStateAspect.music).value.current;
     if (music == null) {

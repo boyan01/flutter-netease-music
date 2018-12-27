@@ -11,6 +11,7 @@ import android.support.v4.app.NotificationCompat
 import android.support.v7.graphics.Palette
 import android.support.v7.graphics.Target.MUTED
 import android.support.v7.graphics.Target.VIBRANT
+import com.google.android.exoplayer2.Player
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
@@ -18,9 +19,8 @@ import kotlinx.coroutines.launch
 import tech.soit.quiet.AppContext
 import tech.soit.quiet.MainActivity
 import tech.soit.quiet.R
-import tech.soit.quiet.model.vo.Music
-import tech.soit.quiet.player.MusicPlayerManager
-import tech.soit.quiet.player.core.IMediaPlayer
+import tech.soit.quiet.player.Music
+import tech.soit.quiet.player.QuietMusicPlayer
 
 
 /**
@@ -101,8 +101,8 @@ class MusicNotification {
             onCancel: () -> Unit
     ) {
 
-        val playerState = MusicPlayerManager.playerState.value
-        val music = MusicPlayerManager.playingMusic.value
+        val player = QuietMusicPlayer.getInstance()
+        val music = player.current
 
         if (music == null) {
             onCancel()
@@ -112,7 +112,7 @@ class MusicNotification {
         val isPlaying: Boolean
         val isFav: Boolean = music.isFavorite()
         val cancelAble: Boolean
-        if (playerState == IMediaPlayer.PLAYING) {
+        if (player.playbackState == Player.STATE_READY && player.playWhenReady) {
             isPlaying = true
             cancelAble = false
         } else {
