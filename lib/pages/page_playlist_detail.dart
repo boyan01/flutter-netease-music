@@ -1,16 +1,16 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:palette_generator/palette_generator.dart';
 import 'package:quiet/pages/page_comment.dart';
 import 'package:quiet/part/part.dart';
 import 'package:quiet/repository/netease.dart';
-import 'package:palette_generator/palette_generator.dart';
 
 ///歌单详情信息item高度
 const double _HEIGHT_HEADER = 300;
 
-class PagePlaylistDetail extends StatefulWidget {
-  PagePlaylistDetail(this.playlistId, {this.playlist})
+class PlaylistDetailPage extends StatefulWidget {
+  PlaylistDetailPage(this.playlistId, {this.playlist})
       : assert(playlistId != null);
 
   ///playlist id，can not be null
@@ -24,18 +24,12 @@ class PagePlaylistDetail extends StatefulWidget {
   State<StatefulWidget> createState() => _PlayListDetailState();
 }
 
-class _PlayListDetailState extends State<PagePlaylistDetail> {
+class _PlayListDetailState extends State<PlaylistDetailPage> {
   ValueNotifier<double> appBarOpacity = ValueNotifier(0);
 
   ScrollController scrollController;
 
   Map<String, Object> playlist;
-
-  ///the state value of this page
-  ///0 - loading
-  ///1 - load success
-  ///2 - load failed
-  int state = 0;
 
   Color primaryColor;
 
@@ -54,24 +48,9 @@ class _PlayListDetailState extends State<PagePlaylistDetail> {
       double areaHeight = (_HEIGHT_HEADER - appBarHeight);
       this.appBarOpacity.value = (scrollHeight / areaHeight).clamp(0.0, 1.0);
     });
-
-    //加载歌单详情
-    neteaseRepository.playlistDetail(widget.playlistId).then((result) {
-      if (result["code"] == 200) {
-        setState(() {
-          playlist = result["playlist"];
-          state = 1;
-          loadPrimaryColor();
-        });
-      } else {
-        setState(() {
-          state = 2;
-        });
-      }
-    });
-    loadPrimaryColor();
   }
 
+  ///generate a primary color by playlist cover image
   void loadPrimaryColor() async {
     if (playlist == null || this.primaryColor != null) {
       return;
@@ -86,39 +65,12 @@ class _PlayListDetailState extends State<PagePlaylistDetail> {
 
   @override
   void dispose() {
-    super.dispose();
     scrollController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    Widget body;
-
-    if (state == 1) {
-      //load success
-      body = _PlaylistBody(
-        playlist,
-        scrollController: scrollController,
-      );
-    } else {
-      //loading or load failed
-      Widget status = Container(
-        height: 200,
-        width: double.infinity,
-        child: Center(
-          child: Text(state == 0 ? "loading" : "load failed."),
-        ),
-      );
-      if (widget.playlist == null) {
-        body = Center(
-          child: status,
-        );
-      } else {
-        body = Column(
-          children: <Widget>[_PlaylistDetailHeader(widget.playlist), status],
-        );
-      }
-    }
     return Theme(
       data: Theme.of(context).copyWith(
           primaryColor: primaryColor ?? Theme.of(context).primaryColor,
@@ -126,7 +78,53 @@ class _PlayListDetailState extends State<PagePlaylistDetail> {
       child: Scaffold(
         body: Stack(
           children: <Widget>[
-            body,
+            Loader<Map<String, dynamic>>(
+                loadTask: () =>
+                    neteaseRepository.playlistDetail(widget.playlistId),
+                resultVerify: neteaseRepository.responseVerify,
+                loadingBuilder: (context) {
+                  loadPrimaryColor();
+                  Widget layout = Container(
+                    height: 200,
+                    child: Center(child: Text("加载中...")),
+                  );
+                  if (widget.playlist != null) {
+                    layout = Column(
+                      children: <Widget>[
+                        _PlaylistDetailHeader(widget.playlist),
+                        layout
+                      ],
+                    );
+                  } else {
+                    layout = Center(child: layout);
+                  }
+                  return layout;
+                },
+                failedWidgetBuilder: (context, result, msg) {
+                  Widget layout = Container(
+                    height: 200,
+                    child: Center(child: Text("加载失败")),
+                  );
+                  if (widget.playlist != null) {
+                    layout = Column(
+                      children: <Widget>[
+                        _PlaylistDetailHeader(widget.playlist),
+                        layout
+                      ],
+                    );
+                  } else {
+                    layout = Center(child: layout);
+                  }
+                  return layout;
+                },
+                builder: (context, result) {
+                  playlist = result["playlist"];
+                  loadPrimaryColor();
+                  return _PlaylistBody(
+                    playlist,
+                    scrollController: scrollController,
+                  );
+                }),
             Column(
               children: <Widget>[
                 _OpacityTitle(
@@ -186,6 +184,20 @@ class _OpacityTitleState extends State<_OpacityTitle> {
       toolbarOpacity: 1,
       backgroundColor:
           Theme.of(context).primaryColor.withOpacity(appBarOpacityValue),
+      actions: <Widget>[
+        IconButton(
+            icon: Icon(Icons.search),
+            tooltip: "歌单内搜索",
+            onPressed: () {
+              showSearch(
+                  context: context,
+                  delegate: _InternalFilterDelegate(
+                      _PlayListDetailState.of(context).playlist,
+                      Theme.of(context)));
+            }),
+        IconButton(
+            icon: Icon(Icons.more_vert), tooltip: "更多选项", onPressed: () {})
+      ],
     );
   }
 }
@@ -221,14 +233,14 @@ class _PlaylistBody extends StatelessWidget {
     }
     return songTileProvider?.buildWidget(index - 1, context);
   }
+}
 
-  ///map playlist json tracks to Music list
-  static List<Music> _mapPlaylist(List<Object> tracks) {
-    var list = tracks
-        .cast<Map>()
-        .map((e) => mapJsonToMusic(e, artistKey: "ar", albumKey: "al"));
-    return list.toList();
-  }
+///map playlist json tracks to Music list
+List<Music> _mapPlaylist(List<Object> tracks) {
+  var list = tracks
+      .cast<Map>()
+      .map((e) => mapJsonToMusic(e, artistKey: "ar", albumKey: "al"));
+  return list.toList();
 }
 
 ///action button for playlist header
@@ -392,5 +404,99 @@ class _PlaylistDetailHeader extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+class _InternalFilterDelegate extends SearchDelegate {
+  _InternalFilterDelegate(this.playlist, this.theme)
+      : list = _mapPlaylist(playlist["tracks"]);
+
+  final Map<String, dynamic> playlist;
+
+  final List<Music> list;
+
+  final ThemeData theme;
+
+  @override
+  List<Widget> buildActions(BuildContext context) {
+    return [];
+  }
+
+  @override
+  ThemeData appBarTheme(BuildContext context) {
+    var theme = this.theme ?? Theme.of(context);
+    return theme.copyWith(
+        textTheme:
+            theme.textTheme.copyWith(title: theme.primaryTextTheme.title),
+        primaryColorBrightness: Brightness.dark);
+  }
+
+  @override
+  Widget buildLeading(BuildContext context) {
+    return BackButton();
+  }
+
+  @override
+  Widget buildResults(BuildContext context) {
+    return Theme(
+        data: theme,
+        child: BoxWithBottomPlayerController(buildSection(context)));
+  }
+
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    return buildResults(context);
+  }
+
+  Widget buildSection(BuildContext context) {
+    if (query.isEmpty) {
+      return Container();
+    }
+    var result = list
+        ?.where((m) => m.title.contains(query) || m.subTitle.contains(query))
+        ?.toList();
+    if (result == null || result.isEmpty) {
+      return _EmptyResultSection(query);
+    }
+    return _InternalResultSection(musics: result);
+  }
+}
+
+class _EmptyResultSection extends StatelessWidget {
+  const _EmptyResultSection(this.query);
+
+  final String query;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.only(top: 50),
+      child: Center(
+        child: Text('未找到与"$query"相关的内容'),
+      ),
+    );
+  }
+}
+
+class _InternalResultSection extends StatelessWidget {
+  const _InternalResultSection({Key key, this.musics}) : super(key: key);
+
+  ///result song list, can not be null and empty
+  final List<Music> musics;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+        itemCount: musics.length,
+        itemBuilder: (context, index) {
+          return SongTile(
+            musics[index],
+            index,
+            leadingType: SongTileLeadingType.none,
+            onTap: () {
+              quiet.play(music: musics[index]);
+            },
+          );
+        });
   }
 }

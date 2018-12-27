@@ -185,7 +185,7 @@ class _PlaylistSectionState extends State<_SectionPlaylist> {
     return InkWell(
       onTap: () {
         Navigator.push(context, MaterialPageRoute(builder: (context) {
-          return PagePlaylistDetail(
+          return PlaylistDetailPage(
             playlist["id"],
           );
         }));

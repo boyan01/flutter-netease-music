@@ -186,7 +186,7 @@ class _ItemPlaylist extends StatelessWidget {
             context,
             MaterialPageRoute(
                 builder: (context) =>
-                    PagePlaylistDetail(playlist["id"], playlist: playlist)));
+                    PlaylistDetailPage(playlist["id"], playlist: playlist)));
       },
     );
   }
