@@ -91,7 +91,7 @@ class QuietPlayerChannel(private val channel: MethodChannel) : MethodChannel.Met
             eventListener.onPlayerError(player.playbackError)
             eventListener.onPlayerStateChanged(player.playWhenReady, player.playbackState)
 
-            playerCallback.onMusicChanged(player.playlist.current)
+            playerCallback.onMusicChanged(player.current)
             playerCallback.onPlaylistUpdated(player.playlist)
             playerCallback.onPlayModeChanged(player.playMode)
         }
@@ -125,7 +125,7 @@ class QuietPlayerChannel(private val channel: MethodChannel) : MethodChannel.Met
 
                         if (token != null && list != null) {
                             player.playlist = Playlist(token, list)
-                            player.playlist.current = call.argument<HashMap<String, Any>>("music")?.let { Music(it) }
+                            player.current = call.argument<HashMap<String, Any>>("music")?.let { Music(it) }
                             player.playMode = PlayMode.values()[call.argument<Int>("playMode") ?: 0]
                         }
                     }
@@ -152,10 +152,8 @@ class QuietPlayerChannel(private val channel: MethodChannel) : MethodChannel.Met
                 "updatePlaylist" -> {
                     val token = call.argument<String>("token")!!
                     val list = call.argument<List<HashMap<String, Any>>>("list")!!.map { Music(it) }
-                    player.playlist = Playlist(
-                            token = token,
-                            musics = list
-                    )
+                    val newPlaylist = Playlist(token = token, musics = list)
+                    player.playlist = newPlaylist
                     result.success(null)
                 }
                 "seekTo" -> {

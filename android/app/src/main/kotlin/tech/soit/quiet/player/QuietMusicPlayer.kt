@@ -69,7 +69,7 @@ class QuietMusicPlayer {
         get() = player.playWhenReady
         set(value) {
             if (playbackState == Player.STATE_IDLE || playbackError != null) {
-                val current = playlist.current
+                val current = this.current
                 if (current != null) {
                     play(current)
                 } else {
@@ -93,12 +93,15 @@ class QuietMusicPlayer {
     var playlist: Playlist by Delegates.observable(Playlist.EMPTY) { _, oldValue, newValue ->
 
         musicPlayerCallback.onPlaylistUpdated(newValue)
-        musicPlayerCallback.onMusicChanged(playlist.current)
 
         //stop player
         if (newValue != oldValue) {
             quiet()
         }
+    }
+
+    var current: Music? by Delegates.observable<Music?>(null) { _, _, new ->
+        musicPlayerCallback.onMusicChanged(new)
     }
 
     var playMode: PlayMode by Delegates.observable(PlayMode.Sequence) { _, _, new ->
@@ -133,7 +136,7 @@ class QuietMusicPlayer {
      * play the music which return by [Playlist.getNext]
      */
     fun playNext() = safeAsync {
-        val next = playlist.getNext()
+        val next = playlist.getNext(current)
         if (next == null) {
             log(LoggerLevel.WARN) { "next music is null" }
             return@safeAsync
@@ -146,7 +149,7 @@ class QuietMusicPlayer {
      * play the music which return by [Playlist.getPrevious]
      */
     fun playPrevious() = safeAsync {
-        val previous = playlist.getPrevious()
+        val previous = playlist.getPrevious(current)
         if (previous == null) {
             log(LoggerLevel.WARN) { "previous is null , op canceled!" }
             return@safeAsync
@@ -159,13 +162,11 @@ class QuietMusicPlayer {
      */
     fun play(music: Music) {
         if (!playlist.list.contains(music)) {
-            playlist.insertToNext(music)
+            playlist.insertToNext(music, current)
             musicPlayerCallback.onPlaylistUpdated(playlist)
         }
         log { "try to play $music" }
-        playlist.current = music
-
-        musicPlayerCallback.onMusicChanged(music)
+        current = music
 
         val source = buildSource(music.getPlayUrl())
         player.prepare(source)
@@ -206,7 +207,7 @@ class QuietMusicPlayer {
             while (true) {
                 delay(DURATION_UPDATE_PROGRESS)
                 try {
-                    val notify = playlist.current != null
+                    val notify = current != null
                             && playWhenReady && playbackState == Player.STATE_READY
 
                     if (notify) {

@@ -1,7 +1,6 @@
 package tech.soit.quiet.player.service
 
 import android.app.Service
-import android.arch.lifecycle.LiveData
 import android.content.Context
 import android.content.Intent
 import android.os.Binder

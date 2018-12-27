@@ -102,7 +102,7 @@ class MusicNotification {
     ) {
 
         val player = QuietMusicPlayer.getInstance()
-        val music = player.playlist.current
+        val music = player.current
 
         if (music == null) {
             onCancel()

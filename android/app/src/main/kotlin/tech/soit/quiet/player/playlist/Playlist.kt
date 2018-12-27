@@ -10,7 +10,7 @@ import tech.soit.quiet.utils.log
  *
  * playlist: music list which wait to be play
  *
- * a [Playlist] Object holder [list] [playMode] [current]
+ * a [Playlist] Object holder [list] [playMode]
  * and provide method [getNext] and [getPrevious]
  *
  * @param token token to identify this playlist
@@ -28,7 +28,7 @@ open class Playlist(
          */
         const val TOKEN_FM = "token_fm_player"
 
-        const val TOKEN_EMPTY = "empty_playlist"
+        private const val TOKEN_EMPTY = "empty_playlist"
 
 
         val EMPTY = Playlist(TOKEN_EMPTY)
@@ -37,9 +37,6 @@ open class Playlist(
 
     constructor(token: String, musics: List<Music>) : this(token) {
         listInternal.addAll(musics.toSet())
-        if (musics.isNotEmpty()) {
-            current = musics[0]
-        }
     }
 
     private val listInternal = ArrayList<Music>()
@@ -49,19 +46,17 @@ open class Playlist(
      */
     val list: List<Music> get() = listInternal
 
-    var current: Music? = null
-
     private val playMode: PlayMode get() = QuietMusicPlayer.getInstance().playMode
 
     /**
      * get current playing ' next music
      */
-    open suspend fun getNext(): Music? {
+    open suspend fun getNext(current: Music?): Music? {
         if (listInternal.isEmpty()) {
             log { "empty playlist" }
             return null
         }
-        val anchor = this.current ?: /*fast return */ return listInternal[0]
+        val anchor = current ?: /*fast return */ return listInternal[0]
         return when (playMode) {
             PlayMode.Single -> {
                 anchor
@@ -94,12 +89,12 @@ open class Playlist(
     /**
      * get current playing ' previous music
      */
-    open suspend fun getPrevious(): Music? {
+    open suspend fun getPrevious(current: Music?): Music? {
         if (listInternal.isEmpty()) {
             log { "try too play next with empty playlist!" }
             return null
         }
-        val anchor = this.current ?: return listInternal[0]
+        val anchor = current ?: return listInternal[0]
         return when (playMode) {
             PlayMode.Single -> {
                 anchor
@@ -132,7 +127,7 @@ open class Playlist(
      * insert a music to playlist
      * it will be played when this music over
      */
-    open fun insertToNext(next: Music) {
+    open fun insertToNext(next: Music, current: Music?) {
         if (listInternal.isEmpty()) {
             listInternal.add(next)
         } else {
