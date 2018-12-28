@@ -119,10 +119,15 @@ class NeteaseRepository {
 
   ///根据用户ID获取歌单
   ///PlayListDetail 中的 tracks 都是空数据
-  Future<Map<String, Object>> userPlaylist(int userId,
-      [int offset = 0, int limit = 1000]) {
-    return doRequest("/weapi/user/playlist",
+  Future<List<PlaylistDetail>> userPlaylist(int userId,
+      [int offset = 0, int limit = 1000]) async {
+    final response = await doRequest("/weapi/user/playlist",
         {"offset": offset, "uid": userId, "limit": limit, "csrf_token": ""});
+    if (responseVerify(response).isSuccess) {
+      final list = (response["playlist"] as List).cast<Map>();
+      return list.map((e) => PlaylistDetail.fromJson(e)).toList();
+    }
+    return null;
   }
 
   ///根据歌单id获取歌单详情，包括歌曲

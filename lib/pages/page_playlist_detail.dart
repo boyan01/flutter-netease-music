@@ -343,7 +343,7 @@ class _PlaylistDetailHeader extends StatelessWidget {
                       padding: EdgeInsets.symmetric(vertical: 16),
                       margin: EdgeInsets.only(left: 32, right: 20),
                       child: Hero(
-                        tag: playlist.coverUrl,
+                        tag: playlist.heroTag,
                         child: AspectRatio(
                           aspectRatio: 1,
                           child: ClipRRect(

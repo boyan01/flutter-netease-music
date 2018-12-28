@@ -29,9 +29,10 @@ class LoginState extends InheritedWidget {
   }
 
   ///当前登录用户的id
+  ///null if not login
   int get userId {
     if (!isLogin) {
-      throw Exception("当前没有用户登录");
+      return null;
     }
     Map<String, Object> account = user["account"];
     return account["id"];
