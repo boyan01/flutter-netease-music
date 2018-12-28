@@ -9,6 +9,13 @@ import 'package:quiet/repository/netease.dart';
 ///歌单详情信息item高度
 const double _HEIGHT_HEADER = 300;
 
+///page display a Playlist
+///
+///Playlist : a list of musics by user collected
+///
+///need [playlistId] to load data from network
+///
+///
 class PlaylistDetailPage extends StatefulWidget {
   PlaylistDetailPage(this.playlistId, {this.playlist})
       : assert(playlistId != null);
@@ -244,11 +251,17 @@ class _PlaylistBodyState extends State<_PlaylistBody> {
           PlaylistOperation.remove,
           widget.playlist["id"],
           [widget.songTileProvider.musics[index - 2].id]);
+      String msg;
       if (result) {
         setState(() {
           widget.songTileProvider.musics.removeAt(index - 2);
         });
+        msg = "删除成功";
+      } else {
+        msg = "删除失败";
       }
+      Scaffold.of(context).showSnackBar(
+          SnackBar(content: Text(msg), duration: Duration(seconds: 2)));
     });
   }
 }
