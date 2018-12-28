@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:quiet/model/playlist_detail.dart';
 import 'package:quiet/part/loader.dart';
 import 'package:quiet/part/part.dart';
 import 'package:quiet/repository/netease.dart';
@@ -146,12 +147,11 @@ class PlaylistSelectorDialog extends StatelessWidget {
       return _buildDialog(context, Center(child: Text("当前未登陆")));
     }
     final userId = LoginState.of(context).userId;
-    return Loader(
+    return Loader<List<PlaylistDetail>>(
       loadTask: () => neteaseRepository.userPlaylist(userId),
-      resultVerify: neteaseRepository.responseVerify,
+      resultVerify: simpleLoaderResultVerify((v) => v != null),
       builder: (context, result) {
-        final list = (result["playlist"] as List)
-          ..removeWhere((p) => p["creator"]["userId"] != userId);
+        final list = result..removeWhere((p) => p.creator["userId"] != userId);
 
         final widgets = <Widget>[];
 
@@ -174,15 +174,15 @@ class PlaylistSelectorDialog extends StatelessWidget {
           return _buildTile(
               context,
               FadeInImage(
-                image: NeteaseImage(p["coverImgUrl"]),
+                image: NeteaseImage(p.coverUrl),
                 placeholder: AssetImage("assets/playlist_playlist.9.png"),
                 fadeInDuration: Duration.zero,
                 fadeOutDuration: Duration.zero,
                 fit: BoxFit.cover,
               ),
-              Text(p["name"]),
-              Text("共${p["trackCount"]}首"), () {
-            Navigator.of(context).pop(p["id"]);
+              Text(p.name),
+              Text("共${p.trackCount}首"), () {
+            Navigator.of(context).pop(p.id);
           });
         }));
 
