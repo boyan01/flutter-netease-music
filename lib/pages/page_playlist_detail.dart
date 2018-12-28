@@ -259,7 +259,7 @@ class _PlaylistBodyState extends State<_PlaylistBody> {
       String msg;
       if (result) {
         setState(() {
-          _songTileProvider.musics.removeAt(index - 2);
+          widget.playlist.musicList.removeAt(index - 2);
         });
         msg = "删除成功";
       } else {
