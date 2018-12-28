@@ -36,17 +36,24 @@ class PlaylistDetailPage extends StatefulWidget {
 class _PlayListDetailState extends State<PlaylistDetailPage> {
   Color primaryColor;
 
+  bool primaryColorGenerating = false;
+
   ///generate a primary color by playlist cover image
   void loadPrimaryColor(PlaylistDetail playlist) async {
-    if (playlist == null || this.primaryColor != null) {
+    if (playlist == null ||
+        this.primaryColor != null ||
+        primaryColorGenerating) {
       return;
     }
+    primaryColorGenerating = true;
     PaletteGenerator generator = await PaletteGenerator.fromImageProvider(
         NeteaseImage(playlist.coverUrl));
     var primaryColor = generator.mutedColor?.color;
     setState(() {
       this.primaryColor = primaryColor;
+      debugPrint("generated color : $primaryColor");
     });
+    primaryColorGenerating = false;
   }
 
   ///build a preview stack for loading or error
@@ -77,7 +84,8 @@ class _PlayListDetailState extends State<PlaylistDetailPage> {
   Widget build(BuildContext context) {
     return Theme(
       data: Theme.of(context).copyWith(
-          primaryColor: primaryColor ?? Theme.of(context).primaryColor,
+          primaryColor: primaryColor,
+          primaryColorDark: primaryColor,
           accentColor: primaryColor),
       child: Scaffold(
         body: Loader<PlaylistDetail>(
