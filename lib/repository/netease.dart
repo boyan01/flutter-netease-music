@@ -8,6 +8,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:quiet/model/playlist_detail.dart';
 import 'package:quiet/part/part.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -125,10 +126,15 @@ class NeteaseRepository {
   }
 
   ///根据歌单id获取歌单详情，包括歌曲
-  Future<Map<String, dynamic>> playlistDetail(int id) {
-    return doRequest("https://music.163.com/weapi/v3/playlist/detail",
+  Future<PlaylistDetail> playlistDetail(int id) async {
+    final response = await doRequest(
+        "https://music.163.com/weapi/v3/playlist/detail",
         {"id": "$id", "n": 100000, "s": 8},
         type: EncryptType.linux);
+    if (responseVerify(response).isSuccess) {
+      return PlaylistDetail.fromJson(response["playlist"]);
+    }
+    return null;
   }
 
   ///推荐歌单
