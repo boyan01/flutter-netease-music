@@ -48,11 +48,13 @@ class SongTileProvider {
   /// index = other -> song tile
   ///
   /// leadingType : the leading of a song tile, detail for [SongTileLeadingType]
-  Widget buildWidget(int index, BuildContext context,
-      {SongTileLeadingType leadingType = SongTileLeadingType.number,
-      SongTileCallback onTap,
-      VoidCallback onDelete,
-      bool canDelete = false}) {
+  Widget buildWidget(
+    int index,
+    BuildContext context, {
+    SongTileLeadingType leadingType = SongTileLeadingType.number,
+    SongTileCallback onTap,
+    VoidCallback onDelete,
+  }) {
     if (index == 0) {
       return SongListHeader(musics.length, _playAll);
     }
@@ -237,8 +239,21 @@ class SongTile extends StatelessWidget {
         if (id != null) {
           bool succeed = await neteaseRepository
               .playlistTracksEdit(PlaylistOperation.add, id, [music.id]);
+          var scaffold = Scaffold.of(context);
+          if (scaffold == null) {
+            //not notify when scaffold is empty
+            return;
+          }
           if (succeed) {
-            //
+            scaffold.showSnackBar(SnackBar(
+              content: Text("已添加到收藏"),
+              duration: Duration(seconds: 2),
+            ));
+          } else {
+            scaffold.showSnackBar(SnackBar(
+              content: Text("收藏失败!"),
+              duration: Duration(seconds: 2),
+            ));
           }
         }
         break;
