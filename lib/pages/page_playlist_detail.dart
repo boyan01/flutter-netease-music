@@ -2,7 +2,9 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:palette_generator/palette_generator.dart';
+import 'package:quiet/model/playlist_detail.dart';
 import 'package:quiet/pages/page_comment.dart';
+import 'package:quiet/pages/page_playlist_detail_selection.dart';
 import 'package:quiet/part/part.dart';
 import 'package:quiet/repository/netease.dart';
 
@@ -25,55 +27,50 @@ class PlaylistDetailPage extends StatefulWidget {
 
   ///a simple playlist json obj , can be null
   ///used to preview playlist information when loading
-  final Map<String, Object> playlist;
+  final PlaylistDetail playlist;
 
   @override
   State<StatefulWidget> createState() => _PlayListDetailState();
 }
 
 class _PlayListDetailState extends State<PlaylistDetailPage> {
-  ValueNotifier<double> appBarOpacity = ValueNotifier(0);
-
-  ScrollController scrollController;
-
-  Map<String, Object> playlist;
-
   Color primaryColor;
 
-  static _PlayListDetailState of(BuildContext context) {
-    return context
-        .ancestorStateOfType(const TypeMatcher<_PlayListDetailState>());
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    scrollController = ScrollController();
-    scrollController.addListener(() {
-      var scrollHeight = scrollController.offset;
-      double appBarHeight = MediaQuery.of(context).padding.top + kToolbarHeight;
-      double areaHeight = (_HEIGHT_HEADER - appBarHeight);
-      this.appBarOpacity.value = (scrollHeight / areaHeight).clamp(0.0, 1.0);
-    });
-  }
-
   ///generate a primary color by playlist cover image
-  void loadPrimaryColor() async {
+  void loadPrimaryColor(PlaylistDetail playlist) async {
     if (playlist == null || this.primaryColor != null) {
       return;
     }
     PaletteGenerator generator = await PaletteGenerator.fromImageProvider(
-        NeteaseImage(playlist["coverImgUrl"]));
+        NeteaseImage(playlist.coverUrl));
     var primaryColor = generator.mutedColor?.color;
     setState(() {
       this.primaryColor = primaryColor;
     });
   }
 
-  @override
-  void dispose() {
-    scrollController.dispose();
-    super.dispose();
+  ///build a preview stack for loading or error
+  Widget buildPreview(BuildContext context, Widget content) {
+    return Stack(
+      children: <Widget>[
+        Column(
+          children: <Widget>[
+            widget.playlist == null
+                ? null
+                : _PlaylistDetailHeader(widget.playlist),
+            Expanded(child: SafeArea(child: content))
+          ]..removeWhere((v) => v == null),
+        ),
+        Column(
+          children: <Widget>[
+            _OpacityTitle(
+              name: "歌单",
+              appBarOpacity: ValueNotifier(0),
+            )
+          ],
+        )
+      ],
+    );
   }
 
   @override
@@ -83,63 +80,28 @@ class _PlayListDetailState extends State<PlaylistDetailPage> {
           primaryColor: primaryColor ?? Theme.of(context).primaryColor,
           accentColor: primaryColor),
       child: Scaffold(
-        body: Stack(
-          children: <Widget>[
-            Loader<Map<String, dynamic>>(
-                loadTask: () =>
-                    neteaseRepository.playlistDetail(widget.playlistId),
-                resultVerify: neteaseRepository.responseVerify,
-                loadingBuilder: (context) {
-                  loadPrimaryColor();
-                  Widget layout = Container(
+        body: Loader<PlaylistDetail>(
+            loadTask: () => neteaseRepository.playlistDetail(widget.playlistId),
+            loadingBuilder: (context) {
+              return buildPreview(
+                  context,
+                  Container(
                     height: 200,
                     child: Center(child: Text("加载中...")),
-                  );
-                  if (widget.playlist != null) {
-                    layout = Column(
-                      children: <Widget>[
-                        _PlaylistDetailHeader(widget.playlist),
-                        layout
-                      ],
-                    );
-                  } else {
-                    layout = Center(child: layout);
-                  }
-                  return layout;
-                },
-                failedWidgetBuilder: (context, result, msg) {
-                  Widget layout = Container(
+                  ));
+            },
+            failedWidgetBuilder: (context, result, msg) {
+              return buildPreview(
+                  context,
+                  Container(
                     height: 200,
                     child: Center(child: Text("加载失败")),
-                  );
-                  if (widget.playlist != null) {
-                    layout = Column(
-                      children: <Widget>[
-                        _PlaylistDetailHeader(widget.playlist),
-                        layout
-                      ],
-                    );
-                  } else {
-                    layout = Center(child: layout);
-                  }
-                  return layout;
-                },
-                builder: (context, result) {
-                  playlist = result["playlist"];
-                  loadPrimaryColor();
-                  return _PlaylistBody(
-                    playlist,
-                    scrollController: scrollController,
-                  );
-                }),
-            Column(
-              children: <Widget>[
-                _OpacityTitle(
-                    playlist == null ? "歌单" : playlist["name"], appBarOpacity)
-              ],
-            )
-          ],
-        ),
+                  ));
+            },
+            builder: (context, result) {
+              loadPrimaryColor(result);
+              return _PlaylistBody(result);
+            }),
       ),
     );
   }
@@ -147,13 +109,16 @@ class _PlayListDetailState extends State<PlaylistDetailPage> {
 
 ///the title of this page
 class _OpacityTitle extends StatefulWidget {
-  _OpacityTitle(this.name, this.appBarOpacity);
+  _OpacityTitle(
+      {@required this.name, @required this.appBarOpacity, this.onSearchTaped});
 
   ///title background opacity value notifier, from 0 - 1;
   final ValueNotifier<double> appBarOpacity;
 
   ///the name of playlist
   final String name;
+
+  final VoidCallback onSearchTaped;
 
   @override
   State<StatefulWidget> createState() => _OpacityTitleState();
@@ -165,7 +130,7 @@ class _OpacityTitleState extends State<_OpacityTitle> {
   @override
   void initState() {
     super.initState();
-    widget.appBarOpacity.addListener(_onAppBarOpacity);
+    widget.appBarOpacity?.addListener(_onAppBarOpacity);
   }
 
   void _onAppBarOpacity() {
@@ -177,7 +142,7 @@ class _OpacityTitleState extends State<_OpacityTitle> {
   @override
   void dispose() {
     super.dispose();
-    widget.appBarOpacity.removeListener(_onAppBarOpacity);
+    widget.appBarOpacity?.removeListener(_onAppBarOpacity);
   }
 
   @override
@@ -195,13 +160,7 @@ class _OpacityTitleState extends State<_OpacityTitle> {
         IconButton(
             icon: Icon(Icons.search),
             tooltip: "歌单内搜索",
-            onPressed: () {
-              showSearch(
-                  context: context,
-                  delegate: _InternalFilterDelegate(
-                      _PlayListDetailState.of(context).playlist,
-                      Theme.of(context)));
-            }),
+            onPressed: widget.onSearchTaped),
         IconButton(
             icon: Icon(Icons.more_vert), tooltip: "更多选项", onPressed: () {})
       ],
@@ -211,14 +170,11 @@ class _OpacityTitleState extends State<_OpacityTitle> {
 
 ///body display the list of song item and a header of playlist
 class _PlaylistBody extends StatefulWidget {
-  final ScrollController scrollController;
+  _PlaylistBody(this.playlist) : assert(playlist != null);
 
-  _PlaylistBody(this.playlist, {this.scrollController})
-      : songTileProvider = SongTileProvider(
-            "playlist_${playlist["id"]}", _mapPlaylist(playlist["tracks"]));
+  final PlaylistDetail playlist;
 
-  final Map<String, Object> playlist;
-  final SongTileProvider songTileProvider;
+  List<Music> get musicList => playlist.musicList;
 
   @override
   _PlaylistBodyState createState() {
@@ -227,17 +183,66 @@ class _PlaylistBody extends StatefulWidget {
 }
 
 class _PlaylistBodyState extends State<_PlaylistBody> {
+  SongTileProvider _songTileProvider;
+
+  ScrollController scrollController;
+
+  ValueNotifier<double> appBarOpacity = ValueNotifier(0);
+
+  @override
+  void initState() {
+    super.initState();
+    _songTileProvider =
+        SongTileProvider("playlist_${widget.playlist.id}", widget.musicList);
+    scrollController = ScrollController();
+    scrollController.addListener(() {
+      var scrollHeight = scrollController.offset;
+      double appBarHeight = MediaQuery.of(context).padding.top + kToolbarHeight;
+      double areaHeight = (_HEIGHT_HEADER - appBarHeight);
+      this.appBarOpacity.value = (scrollHeight / areaHeight).clamp(0.0, 1.0);
+    });
+  }
+
+  @override
+  void didUpdateWidget(_PlaylistBody oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    _songTileProvider =
+        SongTileProvider("playlist_${widget.playlist.id}", widget.musicList);
+  }
+
+  @override
+  void dispose() {
+    scrollController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Quiet(
-      child: BoxWithBottomPlayerController(
-        ListView.builder(
-          padding: const EdgeInsets.all(0),
-          itemCount: 1 + (widget.songTileProvider?.size ?? 0),
-          itemBuilder: _buildList,
-          controller: widget.scrollController,
+    return Stack(
+      children: <Widget>[
+        BoxWithBottomPlayerController(
+          ListView.builder(
+            padding: const EdgeInsets.all(0),
+            itemCount: 1 + (_songTileProvider?.size ?? 0),
+            itemBuilder: _buildList,
+            controller: scrollController,
+          ),
         ),
-      ),
+        Column(
+          children: <Widget>[
+            _OpacityTitle(
+              name: widget.playlist.name ?? "歌单",
+              appBarOpacity: appBarOpacity,
+              onSearchTaped: () {
+                showSearch(
+                    context: context,
+                    delegate: _InternalFilterDelegate(
+                        widget.playlist, Theme.of(context)));
+              },
+            )
+          ],
+        )
+      ],
     );
   }
 
@@ -245,16 +250,16 @@ class _PlaylistBodyState extends State<_PlaylistBody> {
     if (index == 0) {
       return _PlaylistDetailHeader(widget.playlist);
     }
-    return widget.songTileProvider?.buildWidget(index - 1, context,
+    return _songTileProvider?.buildWidget(index - 1, context,
         onDelete: () async {
       var result = await neteaseRepository.playlistTracksEdit(
           PlaylistOperation.remove,
-          widget.playlist["id"],
-          [widget.songTileProvider.musics[index - 2].id]);
+          widget.playlist.id,
+          [_songTileProvider.musics[index - 2].id]);
       String msg;
       if (result) {
         setState(() {
-          widget.songTileProvider.musics.removeAt(index - 2);
+          _songTileProvider.musics.removeAt(index - 2);
         });
         msg = "删除成功";
       } else {
@@ -264,14 +269,6 @@ class _PlaylistBodyState extends State<_PlaylistBody> {
           SnackBar(content: Text(msg), duration: Duration(seconds: 2)));
     });
   }
-}
-
-///map playlist json tracks to Music list
-List<Music> _mapPlaylist(List<Object> tracks) {
-  var list = tracks
-      .cast<Map>()
-      .map((e) => mapJsonToMusic(e, artistKey: "ar", albumKey: "al"));
-  return list.toList();
 }
 
 ///action button for playlist header
@@ -312,22 +309,18 @@ class _HeaderAction extends StatelessWidget {
 
 ///a detail header describe playlist information
 class _PlaylistDetailHeader extends StatelessWidget {
-  _PlaylistDetailHeader(this.playlist);
+  _PlaylistDetailHeader(this.playlist) : assert(playlist != null);
 
-  final Map<String, Object> playlist;
+  final PlaylistDetail playlist;
+
+  ///the music list
+  ///could be null if music list if not loaded
+  List<Music> get musicList => playlist.musicList;
 
   @override
   Widget build(BuildContext context) {
-    Map<String, Object> creator = playlist["creator"];
-
-    Color color;
-    if (_PlayListDetailState.of(context).primaryColor != null) {
-      //NOTE: use theme.primaryColor to rebuild when primaryColor updated
-      color = Theme.of(context).primaryColor;
-    } else {
-      color = Colors.black;
-    }
-
+    Map<String, Object> creator = playlist.creator;
+    Color color = Theme.of(context).primaryColorDark;
     return Container(
       decoration: BoxDecoration(
           gradient: LinearGradient(colors: <Color>[
@@ -350,14 +343,14 @@ class _PlaylistDetailHeader extends StatelessWidget {
                       padding: EdgeInsets.symmetric(vertical: 16),
                       margin: EdgeInsets.only(left: 32, right: 20),
                       child: Hero(
-                        tag: playlist["coverImgUrl"],
+                        tag: playlist.coverUrl,
                         child: AspectRatio(
                           aspectRatio: 1,
                           child: ClipRRect(
                             borderRadius: BorderRadius.all(Radius.circular(3)),
                             child: Image(
                                 fit: BoxFit.cover,
-                                image: NeteaseImage(playlist["coverImgUrl"])),
+                                image: NeteaseImage(playlist.coverUrl)),
                           ),
                         ),
                       ),
@@ -368,7 +361,7 @@ class _PlaylistDetailHeader extends StatelessWidget {
                         Container(
                           margin: EdgeInsets.only(top: 40),
                           child: Text(
-                            playlist["name"],
+                            playlist.name,
                             style: Theme.of(context)
                                 .primaryTextTheme
                                 .title
@@ -418,7 +411,7 @@ class _PlaylistDetailHeader extends StatelessWidget {
                           MaterialPageRoute(builder: (context) {
                         return CommentPage(
                           threadId: CommentThreadId(
-                              playlist["id"], CommentType.playlist,
+                              playlist.id, CommentType.playlist,
                               playload:
                                   CommentThreadPayload.playlist(playlist)),
                         );
@@ -426,7 +419,17 @@ class _PlaylistDetailHeader extends StatelessWidget {
                     }),
                     _HeaderAction(Icons.share, "分享", () => {}),
                     _HeaderAction(Icons.file_download, "下载", () => {}),
-                    _HeaderAction(Icons.check_box, "多选", () => {}),
+                    _HeaderAction(Icons.check_box, "多选", () async {
+                      if (musicList == null) {
+                        Scaffold.of(context).showSnackBar(SnackBar(
+                          content: Text("歌曲未加载,请加载后再试"),
+                          duration: Duration(milliseconds: 1000),
+                        ));
+                      } else {
+                        await Navigator.of(context)
+                            .push(PlaylistSelectionPageRoute(playlist));
+                      }
+                    }),
                   ],
                 ),
               )
@@ -440,11 +443,11 @@ class _PlaylistDetailHeader extends StatelessWidget {
 
 class _InternalFilterDelegate extends SearchDelegate {
   _InternalFilterDelegate(this.playlist, this.theme)
-      : list = _mapPlaylist(playlist["tracks"]);
+      : assert(playlist != null && playlist.musicList != null);
 
-  final Map<String, dynamic> playlist;
+  final PlaylistDetail playlist;
 
-  final List<Music> list;
+  List<Music> get list => playlist.musicList;
 
   final ThemeData theme;
 

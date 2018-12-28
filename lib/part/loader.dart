@@ -124,8 +124,9 @@ class LoaderState<T> extends State<Loader> {
             _errorMsg = verify.errorMsg;
           });
         }
-      }).catchError((dynamic) {
+      }).catchError((e, StackTrace stack) {
         debugPrint("error to load : $dynamic");
+        debugPrint(stack.toString());
         setState(() {
           state = _LoaderState.failed;
         });

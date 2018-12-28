@@ -1,9 +1,10 @@
 import 'package:async/async.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
+import 'package:quiet/model/playlist_detail.dart';
 import 'package:quiet/part/part.dart';
 import 'package:quiet/repository/netease.dart';
-import 'package:intl/intl.dart';
 
 ///a single CommentPage for music or playlist or album
 class CommentPage extends StatelessWidget {
@@ -306,9 +307,10 @@ class _ItemTitle extends StatelessWidget {
       onTap: () async {
         if (commentThreadId.type == CommentType.playlist) {
           Navigator.push(context, MaterialPageRoute(builder: (context) {
+            final playlist = (payload.obj as PlaylistDetail);
             return PlaylistDetailPage(
-              payload.obj["id"],
-              playlist: payload.obj,
+              playlist.id,
+              playlist: playlist,
             );
           }));
         } else if (commentThreadId.type == CommentType.song) {
@@ -612,11 +614,11 @@ class CommentThreadPayload {
         title = music.title,
         subtitle = music.subTitle;
 
-  CommentThreadPayload.playlist(Map playlist)
+  CommentThreadPayload.playlist(PlaylistDetail playlist)
       : this.obj = playlist,
-        this.coverImage = playlist["coverImgUrl"],
-        this.title = playlist["name"],
-        this.subtitle = (playlist["creator"] as Map)["nickname"];
+        this.coverImage = playlist.coverUrl,
+        this.title = playlist.name,
+        this.subtitle = playlist.creator["nickname"];
 }
 
 enum CommentType {

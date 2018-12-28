@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:quiet/part/loader.dart';
 import 'package:quiet/part/part.dart';
@@ -28,6 +30,28 @@ class DialogNoCopyRight extends StatelessWidget {
 ///pop with a int value which represent selected id
 ///or null indicate selected nothing
 class PlaylistSelectorDialog extends StatelessWidget {
+  ///add songs to user playlist
+  ///return :
+  /// if success -> true
+  /// failed -> false
+  /// cancel -> null
+  static Future<bool> addSongs(BuildContext context, List<int> ids) async {
+    final playlistId = await showDialog(
+        context: context,
+        builder: (context) {
+          return PlaylistSelectorDialog();
+        });
+    if (playlistId == null) {
+      return null;
+    }
+    try {
+      return await neteaseRepository.playlistTracksEdit(
+          PlaylistOperation.add, playlistId, ids);
+    } catch (e) {
+      return false;
+    }
+  }
+
   Widget _buildTile(BuildContext context, Widget leading, Widget title,
       Widget subTitle, GestureTapCallback onTap) {
     return InkWell(
@@ -173,4 +197,38 @@ class PlaylistSelectorDialog extends StatelessWidget {
       },
     );
   }
+}
+
+///show a loading overlay above the screen
+///indicator that page is waiting for response
+Future<T> showLoaderOverlay<T>(BuildContext context, Future<T> data) {
+  assert(data != null);
+
+  final Completer<T> completer = Completer.sync();
+
+  final entry = OverlayEntry(builder: (context) {
+    return AbsorbPointer(
+      child: SafeArea(
+        child: Center(
+          child: Container(
+            height: 160,
+            padding: EdgeInsets.symmetric(horizontal: 24),
+            child: Center(
+              child: CircularProgressIndicator(),
+            ),
+          ),
+        ),
+      ),
+    );
+  });
+  Overlay.of(context).insert(entry);
+
+  data.then((value) {
+    completer.complete(value);
+  }).catchError((e, s) {
+    completer.completeError(e, s);
+  }).whenComplete(() {
+    entry.remove();
+  });
+  return completer.future;
 }
