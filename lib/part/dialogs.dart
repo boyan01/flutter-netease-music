@@ -101,10 +101,7 @@ class PlaylistSelectorDialog extends StatelessWidget {
         children: <Widget>[
           Padding(padding: EdgeInsets.only(left: 16)),
           Expanded(
-              child: Text(
-            "收藏到歌单",
-            style: Theme.of(context).textTheme.title,
-          ))
+              child: Text("收藏到歌单", style: Theme.of(context).textTheme.title))
         ],
       ),
     );
@@ -151,42 +148,57 @@ class PlaylistSelectorDialog extends StatelessWidget {
       loadTask: () => neteaseRepository.userPlaylist(userId),
       resultVerify: simpleLoaderResultVerify((v) => v != null),
       builder: (context, result) {
-        final list = result..removeWhere((p) => p.creator["userId"] != userId);
+        return Builder(builder: (context) {
+          final list = result
+            ..removeWhere((p) => p.creator["userId"] != userId);
 
-        final widgets = <Widget>[];
+          final widgets = <Widget>[];
 
-        widgets.add(_buildTile(
-            context,
-            Container(
-              color: Color(0xFFdedede),
-              child: Center(
-                child: Icon(
-                  Icons.add,
-                  color: Theme.of(context).primaryColor,
+          widgets.add(_buildTile(
+              context,
+              Container(
+                color: Color(0xFFdedede),
+                child: Center(
+                  child: Icon(
+                    Icons.add,
+                    color: Theme.of(context).primaryColor,
+                  ),
                 ),
               ),
-            ),
-            Text("新建歌单"),
-            null,
-            () {}));
+              Text("新建歌单"),
+              null, () async {
+            PlaylistDetail created = await showDialog(
+                context: context,
+                builder: (context) {
+                  return PlaylistCreatorDialog();
+                });
+            created = created;
+            if (created != null) {
+              // ignore: invalid_use_of_protected_member
+              Loader.of(context).setState(() {
+                result.insert(0, created);
+              });
+            }
+          }));
 
-        widgets.addAll(list.map((p) {
-          return _buildTile(
-              context,
-              FadeInImage(
-                image: NeteaseImage(p.coverUrl),
-                placeholder: AssetImage("assets/playlist_playlist.9.png"),
-                fadeInDuration: Duration.zero,
-                fadeOutDuration: Duration.zero,
-                fit: BoxFit.cover,
-              ),
-              Text(p.name),
-              Text("共${p.trackCount}首"), () {
-            Navigator.of(context).pop(p.id);
-          });
-        }));
+          widgets.addAll(list.map((p) {
+            return _buildTile(
+                context,
+                FadeInImage(
+                  image: NeteaseImage(p.coverUrl),
+                  placeholder: AssetImage("assets/playlist_playlist.9.png"),
+                  fadeInDuration: Duration.zero,
+                  fadeOutDuration: Duration.zero,
+                  fit: BoxFit.cover,
+                ),
+                Text(p.name),
+                Text("共${p.trackCount}首"), () {
+              Navigator.of(context).pop(p.id);
+            });
+          }));
 
-        return _buildDialog(context, ListView(children: widgets));
+          return _buildDialog(context, ListView(children: widgets));
+        });
       },
       loadingBuilder: (context) {
         return _buildDialog(
@@ -231,4 +243,73 @@ Future<T> showLoaderOverlay<T>(BuildContext context, Future<T> data) {
     entry.remove();
   });
   return completer.future;
+}
+
+class PlaylistCreatorDialog extends StatefulWidget {
+  @override
+  _PlaylistCreatorDialogState createState() {
+    return _PlaylistCreatorDialogState();
+  }
+}
+
+class _PlaylistCreatorDialogState extends State<PlaylistCreatorDialog> {
+  ///communicate to server,creating new playlist
+  bool creating = false;
+
+  String error;
+
+  GlobalKey<FormFieldState<String>> _formKey = GlobalKey();
+
+  void _create(String name) async {
+    try {
+      PlaylistDetail playlistDetail = await showLoaderOverlay(
+          context, neteaseRepository.createPlaylist(name));
+      Navigator.pop(context, playlistDetail);
+    } catch (e) {
+      setState(() {
+        error = e.toString();
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      contentPadding: const EdgeInsets.only(left: 24, right: 24, top: 4),
+      title: Text("新建歌单"),
+      content: TextFormField(
+        key: _formKey,
+        maxLength: 20,
+        textInputAction: TextInputAction.done,
+        decoration: InputDecoration(
+          hintText: "请输入歌单标题",
+          errorText: error,
+        ),
+        validator: (v) {
+          if (v.isEmpty) {
+            return "歌单名不能为空";
+          }
+          return null;
+        },
+        onFieldSubmitted: _create,
+      ),
+      actions: <Widget>[
+        FlatButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          child: Text("取消"),
+          textColor: Theme.of(context).textTheme.caption.color,
+        ),
+        FlatButton(
+            onPressed: () {
+              if (!_formKey.currentState.validate()) {
+                return;
+              }
+              _create(_formKey.currentState.value);
+            },
+            child: Text("创建"))
+      ],
+    );
+  }
 }

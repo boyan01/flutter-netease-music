@@ -71,7 +71,7 @@ class Loader<T> extends StatefulWidget {
   ///if null ,default to display a white background with a Circle Progress
   final WidgetBuilder loadingBuilder;
 
-  static LoaderState of(BuildContext context) {
+  static LoaderState<T> of<T>(BuildContext context) {
     return context.ancestorStateOfType(const TypeMatcher<LoaderState>());
   }
 

@@ -87,7 +87,11 @@ class NeteaseRepository {
 
     var path = (await getApplicationDocumentsDirectory()).path + "/.cookies/";
     _dio.cookieJar = PersistCookieJar(path);
-
+    _dio.interceptor.request.onSend = (options) {
+      debugPrint("request header :${options.headers}");
+      debugPrint("request cookie :${options.data}");
+      return options;
+    };
     return _dio;
   }
 
@@ -128,6 +132,17 @@ class NeteaseRepository {
       return list.map((e) => PlaylistDetail.fromJson(e)).toList();
     }
     return null;
+  }
+
+  ///create new playlist by [name]
+  Future<PlaylistDetail> createPlaylist(String name) async {
+    final response = await doRequest(
+        "https://music.163.com/weapi/playlist/create", {"name": name},
+        options: Options(headers: {"User-Agent": _chooseUserAgent(ua: "pc")}));
+    if (responseVerify(response).isSuccess) {
+      return PlaylistDetail.fromJson(response["playlist"]);
+    }
+    return Future.error(response["msg"] ?? "error:${response["code"]}");
   }
 
   ///根据歌单id获取歌单详情，包括歌曲
@@ -242,6 +257,10 @@ class NeteaseRepository {
 
     options ??= Options();
 
+    if (path.contains('music.163.com')) {
+      options.headers["Referer"] = "https://music.163.com";
+    }
+
     if (type == EncryptType.linux) {
       data = await _encrypt({
         "params": data,
@@ -261,9 +280,12 @@ class NeteaseRepository {
       data = await _encrypt(data, EncryptType.we);
       path = path.replaceAll(RegExp(r"\w*api"), 'weapi');
     }
+    options.headers["Cookie"] =
+        (await dio).cookieJar.loadForRequest(Uri.parse(_BASE_URL));
+    options.headers['Content-Type'] = 'application/x-www-form-urlencoded';
 
-    Response response =
-        await (await dio).post(path, data: data, options: options);
+    Response response = await (await dio)
+        .post(path, data: Transformer.urlEncodeMap(data), options: options);
     if (response.data is Map) {
       return response.data;
     }
@@ -286,9 +308,6 @@ Future<Map> Function(dynamic, EncryptType) _encrypt = (any, type) async {
 enum EncryptType { linux, we }
 
 Map<String, String> _header = {
-  "Connection": "close",
-  "Accept-Language": "zh-CN,zh;q=0.8,gl;q=0.6,zh-TW;q=0.4",
-  "Accept": "*/*",
   "Referer": "http://music.163.com",
   "Host": "music.163.com",
   "User-Agent": _chooseUserAgent(),
@@ -314,9 +333,9 @@ const List<String> _USER_AGENT_LIST = [
 String _chooseUserAgent({String ua}) {
   var r = Random();
   int index;
-  if (ua == 'pc') {
+  if (ua == 'mobile') {
     index = (r.nextDouble() * 7).floor();
-  } else if (ua == "mobile") {
+  } else if (ua == "pc") {
     index = (r.nextDouble() * 5).floor() + 8;
   } else {
     index = (r.nextDouble() * (_USER_AGENT_LIST.length - 1)).floor();
