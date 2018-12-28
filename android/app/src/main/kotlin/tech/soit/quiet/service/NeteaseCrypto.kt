@@ -7,7 +7,9 @@ import android.util.Base64
 import io.flutter.plugin.common.BinaryMessenger
 import io.flutter.plugin.common.MethodChannel
 import tech.soit.quiet.MainActivity
-import java.math.BigInteger
+import java.security.KeyFactory
+import java.security.PublicKey
+import java.security.spec.X509EncodedKeySpec
 import javax.crypto.Cipher
 import javax.crypto.spec.IvParameterSpec
 import javax.crypto.spec.SecretKeySpec
@@ -21,13 +23,10 @@ import javax.crypto.spec.SecretKeySpec
 object NeteaseCrypto {
     private const val keys = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
 
-    private const val modulus =
-            "00e0b509f6259df8642dbc35662901477df22677ec152b5ff68ace615bb7b725152b3ab17a876aea8a5aa76" +
-                    "d2e417629ec4ee341f56135fccf695280104e0312ecbda92557c93870114af6c9d05c4f7f0c3685b7" +
-                    "a46bee255932575cce10b424d813cfe4875d3e82047b97ddef52741d546b8e289dc6935b3ece046" +
-                    "2db0a22b8e7"
     private const val nonce = "0CoJUm6Qyw8W8jud"
-    private const val publicKey = "010001"
+
+    private const val publicKeyStr = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDgtQn2JZ34ZC28NWYpAUd98iZ37BUrX/aKzmFbt7clFSs6sXqHauqKWqdtLkF2KexO40H1YTX8z2lSgBBOAxLsvaklV8k4cBFK9snQXE9/DDaFt6Rr7iVZMldczhC0JNgTz+SHXT6CBHuX3e9SdB1Ua44oncaTWz7OBGLbCiK45wIDAQAB"
+
 
     private val iv = "0102030405060708".toByteArray()
 
@@ -62,7 +61,7 @@ object NeteaseCrypto {
         //对参数请求进行以 [nonce] 加密后的结果再次使用 createSecretKry() 产生的随机数进行加密
         val encText = aesEncrypt(aesEncrypt(json, nonce), secKey)
         //对第二次使用的随机串进行加密,以便在服务器端解析出具体的参数请求
-        val encSecKey = rsaEncrypt(secKey)
+        val encSecKey = rsaEncrypt(secKey.reversed())
         return mapOf("params" to encText, "encSecKey" to encSecKey)
     }
 
@@ -102,26 +101,20 @@ object NeteaseCrypto {
         return results.toHex().toUpperCase()
     }
 
-    fun ByteArray.toHex() = this.joinToString(separator = "") { it.toInt().and(0xff).toString(16).padStart(2, '0') }
+    private fun ByteArray.toHex() = this.joinToString(separator = "") { it.toInt().and(0xff).toString(16).padStart(2, '0') }
 
-    /**
-     * 填充至 256 字符长度
-     */
-    private fun zFill(str: String, size: Int = 256): String {
-        if (str.length >= size) {
-            return str
-        }
-        val builder = StringBuilder(str)
-        while (builder.length < size) builder.insert(0, 0)
-        return builder.toString()
+
+    private val publicKey: PublicKey
+
+    init {
+        val factory = KeyFactory.getInstance("RSA")
+        publicKey = factory.generatePublic(X509EncodedKeySpec(Base64.decode(publicKeyStr, Base64.DEFAULT)))
     }
 
     private fun rsaEncrypt(text: String): String {
-        val biText = BigInteger(text.reversed().toByteArray())
-        val biEx = BigInteger(publicKey, 16)
-        val biMod = BigInteger(modulus, 16)
-        val biRet = biText.modPow(biEx, biMod)
-        return zFill(biRet.toString(16))
+        val cipher = Cipher.getInstance("RSA")
+        cipher.init(Cipher.ENCRYPT_MODE, publicKey)
+        return cipher.doFinal(text.toByteArray()).toHex()
     }
 
 
