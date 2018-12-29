@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:quiet/model/playlist_detail.dart';
+import 'package:quiet/pages/page_playlist_edit.dart';
 import 'package:quiet/part/part.dart';
 import 'package:quiet/repository/netease.dart';
 import 'package:quiet/repository/netease_image.dart';
@@ -167,19 +168,63 @@ class _ItemPlaylist extends StatelessWidget {
             Padding(padding: EdgeInsets.only(left: 8)),
             Expanded(
                 child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Spacer(),
-                Text(playlist.name,
-                    maxLines: 1,
-                    style: Theme.of(context)
-                        .textTheme
-                        .body1
-                        .copyWith(fontSize: 16)),
-                Padding(padding: EdgeInsets.only(top: 4)),
-                Text("${playlist.trackCount}首",
-                    style: Theme.of(context).textTheme.caption),
-                Spacer(),
+                Expanded(
+                    child: Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Spacer(),
+                          Text(
+                            playlist.name,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: Theme.of(context).textTheme.body1,
+                          ),
+                          Padding(padding: EdgeInsets.only(top: 4)),
+                          Text("${playlist.trackCount}首",
+                              style: Theme.of(context).textTheme.caption),
+                          Spacer(),
+                        ],
+                      ),
+                    ),
+                    PopupMenuButton<PlaylistOp>(
+                      itemBuilder: (context) {
+                        return [
+                          PopupMenuItem(
+                              child: Text("下载"), value: PlaylistOp.download),
+                          PopupMenuItem(
+                              child: Text("分享"), value: PlaylistOp.share),
+                          PopupMenuItem(
+                              child: Text("编辑歌单信息"), value: PlaylistOp.edit),
+                          PopupMenuItem(
+                              child: Text("删除"), value: PlaylistOp.delete),
+                        ];
+                      },
+                      onSelected: (op) {
+                        switch (op) {
+                          case PlaylistOp.delete:
+                          case PlaylistOp.share:
+                          case PlaylistOp.download:
+                            Scaffold.of(context).showSnackBar(SnackBar(
+                              content: Text("Not implemented"),
+                              duration: Duration(milliseconds: 1000),
+                            ));
+                            break;
+                          case PlaylistOp.edit:
+                            Navigator.of(context)
+                                .push(MaterialPageRoute(builder: (context) {
+                              return PlaylistEditPage(playlist);
+                            }));
+                            break;
+                        }
+                      },
+                      icon: Icon(Icons.more_vert),
+                    )
+                  ],
+                )),
                 Divider(height: 0),
               ],
             )),
@@ -189,3 +234,5 @@ class _ItemPlaylist extends StatelessWidget {
     );
   }
 }
+
+enum PlaylistOp { edit, share, download, delete }

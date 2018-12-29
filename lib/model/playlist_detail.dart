@@ -3,18 +3,20 @@ import 'package:quiet/repository/netease.dart';
 
 class PlaylistDetail {
   PlaylistDetail(this.id, this.musicList, this.creator, this.name,
-      this.coverUrl, this.trackCount);
+      this.coverUrl, this.trackCount, this.description);
 
   ///null when playlist not complete loaded
   final List<Music> musicList;
 
-  final String name;
+  String name;
 
-  final String coverUrl;
+  String coverUrl;
 
-  final int id;
+  int id;
 
-  final int trackCount;
+  int trackCount;
+
+  String description;
 
   bool get loaded => musicList != null && musicList.length == trackCount;
 
@@ -34,7 +36,8 @@ class PlaylistDetail {
         playlist["creator"],
         playlist["name"],
         playlist["coverImgUrl"],
-        playlist["trackCount"]);
+        playlist["trackCount"],
+        playlist["description"]);
   }
 }
 

@@ -250,6 +250,29 @@ class NeteaseRepository {
     return responseVerify(result).isSuccess;
   }
 
+  ///update playlist name and description
+  Future<bool> updatePlaylist(PlaylistDetail playlist) async {
+    final response = await doRequest(
+        "https://music.163.com/weapi/batch",
+        {
+          "/api/playlist/desc/update": json
+              .encode({"id": playlist.id, "desc": playlist.description ?? ""}),
+//          "/api/playlist/tags/update":
+//              json.encode({"id": playlist.id, "tags": playlist.tags ?? ""}),
+          "/api/playlist/update/name":
+              json.encode({"id": playlist.id, "name": playlist.name}),
+        },
+        options: Options(headers: {"User-Agent": _chooseUserAgent(ua: "pc")}));
+    debugPrint("response :$response");
+    if (!responseVerify(response).isSuccess) {
+      bool success = response["/api/playlist/desc/update"]["code"] == 200 &&
+//          response["/api/playlist/tags/update"]["code"] == 200 &&
+          response["/api/playlist/update/name"]["code"] == 200;
+      return success;
+    }
+    return Future.error(response["msg"] ?? "失败");
+  }
+
   //请求数据
   Future<Map<String, dynamic>> doRequest(String path, Map data,
       {EncryptType type = EncryptType.we, Options options}) async {
