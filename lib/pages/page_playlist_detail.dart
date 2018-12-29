@@ -258,6 +258,9 @@ class _PlaylistBodyState extends State<_PlaylistBody> {
     if (index == 0) {
       return _PlaylistDetailHeader(widget.playlist);
     }
+    if (widget.musicList.isEmpty) {
+      return _EmptyPlaylistSection();
+    }
     return _songTileProvider?.buildWidget(index - 1, context,
         onDelete: () async {
       var result = await neteaseRepository.playlistTracksEdit(
@@ -276,6 +279,18 @@ class _PlaylistBodyState extends State<_PlaylistBody> {
       Scaffold.of(context).showSnackBar(
           SnackBar(content: Text(msg), duration: Duration(seconds: 2)));
     });
+  }
+}
+
+class _EmptyPlaylistSection extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 200,
+      child: Center(
+        child: Text("暂无音乐"),
+      ),
+    );
   }
 }
 
