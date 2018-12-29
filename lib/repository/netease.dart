@@ -185,11 +185,27 @@ class NeteaseRepository {
 
   ///根据音乐id获取歌词
   Future<String> lyric(int id) async {
+    final lyricCache = await _lyricCache();
+    final key = _LyricCacheKey(id);
+    //check cache first
+    String cached = await lyricCache.get(key);
+    if (cached != null) {
+      return cached;
+    }
     var result = await doRequest(
         "https://music.163.com/weapi/song/lyric?os=osx&id=$id&lv=-1&kv=-1&tv=-1",
         {});
+    if (!responseVerify(result).isSuccess) {
+      return Future.error(result["msg"]);
+    }
     Map lyc = result["lrc"];
-    return lyc["lyric"];
+    if (lyc == null) {
+      return null;
+    }
+    final content = lyc["lyric"];
+    //update cache
+    await lyricCache.update(key, content);
+    return content;
   }
 
   ///获取搜索热词
@@ -384,4 +400,57 @@ Music mapJsonToMusic(Map song,
       album: Album(
           id: album["id"], name: album["name"], coverImageUrl: album["picUrl"]),
       artist: artists);
+}
+
+///cache key for lyric
+class _LyricCacheKey implements CacheKey {
+  final int musicId;
+
+  _LyricCacheKey(this.musicId) : assert(musicId != null);
+
+  @override
+  String getKey() {
+    return musicId.toString();
+  }
+}
+
+_LyricCache __lyricCache;
+
+Future<_LyricCache> _lyricCache() async {
+  if (__lyricCache != null) {
+    return __lyricCache;
+  }
+  var temp = await getTemporaryDirectory();
+  var dir = Directory(temp.path + "/lyrics/");
+  if (!(await dir.exists())) {
+    dir = await dir.create();
+  }
+  __lyricCache = _LyricCache._(dir);
+  return __lyricCache;
+}
+
+class _LyricCache implements Cache<String> {
+  _LyricCache._(Directory dir) : provider = FileCacheProvider(dir);
+
+  final FileCacheProvider provider;
+
+  @override
+  Future<String> get(CacheKey key) async {
+    final file = provider.getFile(key);
+    if (await file.exists()) {
+      return file.readAsStringSync();
+    }
+    return null;
+  }
+
+  @override
+  Future<bool> update(CacheKey key, String t) async {
+    var file = provider.getFile(key);
+    if (await file.exists()) {
+      file.delete();
+    }
+    file = await file.create();
+    await file.writeAsString(t);
+    return await file.exists();
+  }
 }
