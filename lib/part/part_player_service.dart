@@ -90,14 +90,17 @@ class MusicPlayer implements ValueNotifier<PlayerControllerState> {
   }
 
   ///insert a music to [value.current] next position
-  Future<void> insertToNext(Music music) async {
-    if (value.playingList.contains(music)) {
-      return;
-    }
-    final list = List.of(value.playingList);
-    final index = list.indexOf(value.current) + 1;
-    list.insert(index, music);
-    await _controller.updatePlaylist(list, value.token);
+  Future<void> insertToNext(Music music) {
+    return insertToNext2([music]);
+  }
+
+  Future<void> insertToNext2(List<Music> list) async {
+    final playingList = List.of(value.playingList);
+    playingList.removeWhere((m) => list.contains(m));
+
+    final index = playingList.indexOf(value.current) + 1;
+    playingList.insertAll(index, list);
+    await _controller.updatePlaylist(playingList, value.token);
   }
 
   Future<void> removeFromPlayingList(Music music) async {
