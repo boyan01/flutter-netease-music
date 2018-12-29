@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:quiet/part/part.dart';
 import 'package:quiet/service/channel_media_player.dart';
+import 'package:overlay_support/overlay_support.dart';
 
 class PlayingListDialog extends StatelessWidget {
   Widget buildHeader(BuildContext context, int count) {
@@ -38,7 +39,24 @@ class PlayingListDialog extends StatelessWidget {
                 label: Text("$name($count)")),
             Spacer(),
             FlatButton.icon(
-                onPressed: null,
+                onPressed: () async {
+                  final ids = quiet.value.playingList.map((m) => m.id).toList();
+                  if (ids.isEmpty) {
+                    return;
+                  }
+                  final succeed =
+                      await PlaylistSelectorDialog.addSongs(context, ids);
+                  if (succeed == null) {
+                    return;
+                  }
+                  if (succeed) {
+                    showSimpleNotification(context, Text("添加到收藏成功"));
+                  } else {
+                    showSimpleNotification(context, Text("添加到收藏失败"),
+                        icon: Icon(Icons.error),
+                        background: Theme.of(context).errorColor);
+                  }
+                },
                 icon: Icon(Icons.add_box),
                 label: Text("收藏全部")),
             IconButton(
@@ -78,7 +96,6 @@ class PlayingListDialog extends StatelessWidget {
                 controller: ScrollController(initialScrollOffset: offset),
                 itemCount: playingList.length,
                 itemBuilder: (context, index) {
-                  debugPrint("build $index");
                   var item = playingList[index];
                   return _MusicTile(music: item, playing: item == music);
                 }),
