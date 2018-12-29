@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:overlay_support/overlay_support.dart';
 import 'package:quiet/model/playlist_detail.dart';
 import 'package:quiet/pages/page_playlist_edit.dart';
 import 'package:quiet/part/part.dart';
@@ -208,10 +209,9 @@ class _ItemPlaylist extends StatelessWidget {
                           case PlaylistOp.delete:
                           case PlaylistOp.share:
                           case PlaylistOp.download:
-                            Scaffold.of(context).showSnackBar(SnackBar(
-                              content: Text("Not implemented"),
-                              duration: Duration(milliseconds: 1000),
-                            ));
+                            showSimpleNotification(
+                                context, Text("Not implemented"),
+                                background: Theme.of(context).errorColor);
                             break;
                           case PlaylistOp.edit:
                             Navigator.of(context)

@@ -1,6 +1,7 @@
 import 'package:async/async.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:overlay_support/overlay_support.dart';
 import 'package:quiet/part/part.dart';
 import 'package:quiet/part/part_music_list_provider.dart';
 import 'package:quiet/repository/netease.dart';
@@ -59,9 +60,9 @@ class SongsResultSectionState extends State<SongsResultSection>
                         music: mapJsonToMusic(song,
                             artistKey: "ar", albumKey: "al"));
                   } else {
-                    Scaffold.of(context).showSnackBar(SnackBar(
-                        content: Text("播放歌曲失败!"),
-                        duration: Duration(seconds: 1)));
+                    showSimpleNotification(context, Text("播放歌曲失败!"),
+                        icon: Icon(Icons.notification_important),
+                        background: Theme.of(context).errorColor);
                   }
                 },
               );

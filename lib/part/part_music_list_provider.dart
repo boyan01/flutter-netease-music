@@ -6,6 +6,7 @@ import 'package:quiet/repository/netease.dart';
 import 'part.dart';
 
 export 'package:quiet/model/model.dart';
+import 'package:overlay_support/overlay_support.dart';
 
 typedef SongTileCallback = void Function(Music muisc);
 
@@ -245,15 +246,11 @@ class SongTile extends StatelessWidget {
             return;
           }
           if (succeed) {
-            scaffold.showSnackBar(SnackBar(
-              content: Text("已添加到收藏"),
-              duration: Duration(seconds: 2),
-            ));
+            showSimpleNotification(context, Text("已添加到收藏"));
           } else {
-            scaffold.showSnackBar(SnackBar(
-              content: Text("收藏失败!"),
-              duration: Duration(seconds: 2),
-            ));
+            showSimpleNotification(context, Text("收藏歌曲失败!"),
+                icon: Icon(Icons.error),
+                background: Theme.of(context).errorColor);
           }
         }
         break;
