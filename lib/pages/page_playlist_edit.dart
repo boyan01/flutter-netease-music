@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:overlay_support/overlay_support.dart';
 import 'package:quiet/model/playlist_detail.dart';
 import 'package:quiet/repository/netease.dart';
 import 'package:quiet/part/part.dart';
@@ -31,10 +32,8 @@ class _PlaylistEditPageState extends State<PlaylistEditPage> {
             SizedBox(height: 8),
             InkWell(
               onTap: () {
-                Scaffold.of(context).showSnackBar(SnackBar(
-                  content: Text("Not implemented"),
-                  duration: Duration(milliseconds: 1000),
-                ));
+                showSimpleNotification(context, Text("Not implemented"),
+                    background: Theme.of(context).errorColor);
               },
               child: Container(
                 height: 72,
@@ -72,10 +71,9 @@ class _PlaylistEditPageState extends State<PlaylistEditPage> {
             Divider(height: 0, indent: 8),
             InkWell(
               onTap: () {
-                Scaffold.of(context).showSnackBar(SnackBar(
-                  content: Text("Not implemented"),
-                  duration: Duration(milliseconds: 1000),
-                ));
+                showSimpleNotification(
+                    context, Text("Not implemented"),
+                    background: Theme.of(context).errorColor);
               },
               child: Container(
                 height: 56,
@@ -91,10 +89,9 @@ class _PlaylistEditPageState extends State<PlaylistEditPage> {
             Divider(height: 0, indent: 8),
             InkWell(
               onTap: () {
-                Scaffold.of(context).showSnackBar(SnackBar(
-                  content: Text("Not implemented"),
-                  duration: Duration(milliseconds: 1000),
-                ));
+                showSimpleNotification(
+                    context, Text("Not implemented"),
+                    background: Theme.of(context).errorColor);
               },
               child: Container(
                 height: 56,

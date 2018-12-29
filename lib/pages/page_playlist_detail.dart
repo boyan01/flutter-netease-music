@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:overlay_support/overlay_support.dart';
 import 'package:palette_generator/palette_generator.dart';
 import 'package:quiet/model/playlist_detail.dart';
 import 'package:quiet/pages/page_comment.dart';
@@ -267,17 +268,15 @@ class _PlaylistBodyState extends State<_PlaylistBody> {
           PlaylistOperation.remove,
           widget.playlist.id,
           [_songTileProvider.musics[index - 2].id]);
-      String msg;
       if (result) {
         setState(() {
           widget.playlist.musicList.removeAt(index - 2);
         });
-        msg = "删除成功";
+        showSimpleNotification(context, Text("已成功删除歌曲"));
       } else {
-        msg = "删除失败";
+        showSimpleNotification(context, Text("删除歌曲失败"),
+            icon: Icon(Icons.error), background: Theme.of(context).errorColor);
       }
-      Scaffold.of(context).showSnackBar(
-          SnackBar(content: Text(msg), duration: Duration(seconds: 2)));
     });
   }
 }
@@ -444,10 +443,7 @@ class _PlaylistDetailHeader extends StatelessWidget {
                     _HeaderAction(Icons.file_download, "下载", () => {}),
                     _HeaderAction(Icons.check_box, "多选", () async {
                       if (musicList == null) {
-                        Scaffold.of(context).showSnackBar(SnackBar(
-                          content: Text("歌曲未加载,请加载后再试"),
-                          duration: Duration(milliseconds: 1000),
-                        ));
+                        showSimpleNotification(context, Text("歌曲未加载,请加载后再试"));
                       } else {
                         await Navigator.of(context)
                             .push(PlaylistSelectionPageRoute(playlist));

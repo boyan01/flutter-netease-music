@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:overlay_support/overlay_support.dart';
 import 'package:quiet/model/playlist_detail.dart';
 import 'package:quiet/part/part.dart';
 import 'package:quiet/repository/netease.dart';
@@ -134,16 +135,6 @@ class _PlaylistSelectionPageState extends State<_PlaylistSelectionPage> {
     );
   }
 
-  void _notifyUser(String msg) {
-    if (msg == null) {
-      return;
-    }
-    _scaffoldKey.currentState.showSnackBar(SnackBar(
-      content: Text(msg),
-      duration: Duration(milliseconds: 1000),
-    ));
-  }
-
   Widget _buildBottomBar(BuildContext context) {
     return Material(
       elevation: 5,
@@ -164,7 +155,8 @@ class _PlaylistSelectionPageState extends State<_PlaylistSelectionPage> {
                 ),
                 onPressed: () async {
                   await quiet.insertToNext2(selectedList);
-                  _notifyUser("已添加到下一首播放");
+                  showSimpleNotification(
+                      context, Text("已添加${selectedList.length}首歌曲"));
                 },
               ),
               FlatButton(
@@ -182,8 +174,13 @@ class _PlaylistSelectionPageState extends State<_PlaylistSelectionPage> {
                   if (succeed == null) {
                     return;
                   }
-                  String message = succeed ? "加入歌单成功" : "加入歌单失败";
-                  _notifyUser(message);
+                  if (succeed) {
+                    showSimpleNotification(
+                        context, Text("已成功收藏${selectedList.length}首歌曲"));
+                  } else {
+                    showSimpleNotification(context, Text("加入歌单失败"),
+                        background: Theme.of(context).errorColor);
+                  }
                 },
               ),
               FlatButton(
@@ -208,8 +205,15 @@ class _PlaylistSelectionPageState extends State<_PlaylistSelectionPage> {
                       widget.route.needRefresh = true;
                     });
                   }
-                  final message = succeed ? "已删除" : "失败";
-                  _notifyUser(message);
+                  if (succeed) {
+                    showSimpleNotification(
+                        context, Text("已删除${selectedList.length}首歌曲"),
+                        background: Theme.of(context).errorColor);
+                  } else {
+                    showSimpleNotification(context, Text("删除失败"),
+                        icon: Icon(Icons.error),
+                        background: Theme.of(context).errorColor);
+                  }
                 },
               ),
             ],

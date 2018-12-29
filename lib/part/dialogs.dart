@@ -245,24 +245,6 @@ Future<T> showLoaderOverlay<T>(BuildContext context, Future<T> data) {
   return completer.future;
 }
 
-void showNotification(BuildContext context, String text,
-    {Duration duration = const Duration(milliseconds: 1000)}) async {
-  final entry = OverlayEntry(builder: (context) {
-    return SafeArea(
-        child: Center(
-      child: Container(
-        width: MediaQuery.of(context).size.width * 0.618,
-        child: Card(
-          child: Text(text),
-        ),
-      ),
-    ));
-  });
-  Overlay.of(context).insert(entry);
-  Future.delayed(duration).whenComplete(() {
-    entry.remove();
-  });
-}
 
 class PlaylistCreatorDialog extends StatefulWidget {
   @override
