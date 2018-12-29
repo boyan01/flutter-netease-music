@@ -8,6 +8,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:quiet/model/playlist_detail.dart';
 import 'package:quiet/part/part.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -31,6 +32,8 @@ class NeteaseSearchType {
   static const NeteaseSearchType dj = NeteaseSearchType._(1009);
   static const NeteaseSearchType video = NeteaseSearchType._(1014);
 }
+
+enum PlaylistOperation { add, remove }
 
 class NeteaseRepository {
   ///to verify api response is success
@@ -84,7 +87,11 @@ class NeteaseRepository {
 
     var path = (await getApplicationDocumentsDirectory()).path + "/.cookies/";
     _dio.cookieJar = PersistCookieJar(path);
-
+    _dio.interceptor.request.onSend = (options) {
+      debugPrint("request header :${options.headers}");
+      debugPrint("request cookie :${options.data}");
+      return options;
+    };
     return _dio;
   }
 
@@ -116,17 +123,38 @@ class NeteaseRepository {
 
   ///根据用户ID获取歌单
   ///PlayListDetail 中的 tracks 都是空数据
-  Future<Map<String, Object>> userPlaylist(int userId,
-      [int offset = 0, int limit = 1000]) {
-    return doRequest("/weapi/user/playlist",
+  Future<List<PlaylistDetail>> userPlaylist(int userId,
+      [int offset = 0, int limit = 1000]) async {
+    final response = await doRequest("/weapi/user/playlist",
         {"offset": offset, "uid": userId, "limit": limit, "csrf_token": ""});
+    if (responseVerify(response).isSuccess) {
+      final list = (response["playlist"] as List).cast<Map>();
+      return list.map((e) => PlaylistDetail.fromJson(e)).toList();
+    }
+    return null;
+  }
+
+  ///create new playlist by [name]
+  Future<PlaylistDetail> createPlaylist(String name) async {
+    final response = await doRequest(
+        "https://music.163.com/weapi/playlist/create", {"name": name},
+        options: Options(headers: {"User-Agent": _chooseUserAgent(ua: "pc")}));
+    if (responseVerify(response).isSuccess) {
+      return PlaylistDetail.fromJson(response["playlist"]);
+    }
+    return Future.error(response["msg"] ?? "error:${response["code"]}");
   }
 
   ///根据歌单id获取歌单详情，包括歌曲
-  Future<Map<String, dynamic>> playlistDetail(int id) {
-    return doRequest("https://music.163.com/weapi/v3/playlist/detail",
+  Future<PlaylistDetail> playlistDetail(int id) async {
+    final response = await doRequest(
+        "https://music.163.com/weapi/v3/playlist/detail",
         {"id": "$id", "n": 100000, "s": 8},
         type: EncryptType.linux);
+    if (responseVerify(response).isSuccess) {
+      return PlaylistDetail.fromJson(response["playlist"]);
+    }
+    return null;
   }
 
   ///推荐歌单
@@ -205,12 +233,56 @@ class NeteaseRepository {
     return null;
   }
 
+  ///edit playlist tracks
+  ///true : succeed
+  Future<bool> playlistTracksEdit(
+      PlaylistOperation operation, int playlistId, List<int> musicIds) async {
+    assert(operation != null);
+    assert(playlistId != null);
+    assert(musicIds != null && musicIds.isNotEmpty);
+
+    var result = await doRequest(
+        "https://music.163.com/weapi/playlist/manipulate/tracks", {
+      "op": operation == PlaylistOperation.add ? "add" : "del",
+      "pid": playlistId,
+      "trackIds": "[${musicIds.join(",")}]"
+    });
+    return responseVerify(result).isSuccess;
+  }
+
+  ///update playlist name and description
+  Future<bool> updatePlaylist(PlaylistDetail playlist) async {
+    final response = await doRequest(
+        "https://music.163.com/weapi/batch",
+        {
+          "/api/playlist/desc/update": json
+              .encode({"id": playlist.id, "desc": playlist.description ?? ""}),
+//          "/api/playlist/tags/update":
+//              json.encode({"id": playlist.id, "tags": playlist.tags ?? ""}),
+          "/api/playlist/update/name":
+              json.encode({"id": playlist.id, "name": playlist.name}),
+        },
+        options: Options(headers: {"User-Agent": _chooseUserAgent(ua: "pc")}));
+    debugPrint("response :$response");
+    if (!responseVerify(response).isSuccess) {
+      bool success = response["/api/playlist/desc/update"]["code"] == 200 &&
+//          response["/api/playlist/tags/update"]["code"] == 200 &&
+          response["/api/playlist/update/name"]["code"] == 200;
+      return success;
+    }
+    return Future.error(response["msg"] ?? "失败");
+  }
+
   //请求数据
   Future<Map<String, dynamic>> doRequest(String path, Map data,
       {EncryptType type = EncryptType.we, Options options}) async {
     debugPrint("netease request path = $path params = ${data.toString()}");
 
     options ??= Options();
+
+    if (path.contains('music.163.com')) {
+      options.headers["Referer"] = "https://music.163.com";
+    }
 
     if (type == EncryptType.linux) {
       data = await _encrypt({
@@ -231,9 +303,12 @@ class NeteaseRepository {
       data = await _encrypt(data, EncryptType.we);
       path = path.replaceAll(RegExp(r"\w*api"), 'weapi');
     }
+    options.headers["Cookie"] =
+        (await dio).cookieJar.loadForRequest(Uri.parse(_BASE_URL));
+    options.headers['Content-Type'] = 'application/x-www-form-urlencoded';
 
-    Response response =
-        await (await dio).post(path, data: data, options: options);
+    Response response = await (await dio)
+        .post(path, data: Transformer.urlEncodeMap(data), options: options);
     if (response.data is Map) {
       return response.data;
     }
@@ -256,9 +331,6 @@ Future<Map> Function(dynamic, EncryptType) _encrypt = (any, type) async {
 enum EncryptType { linux, we }
 
 Map<String, String> _header = {
-  "Connection": "close",
-  "Accept-Language": "zh-CN,zh;q=0.8,gl;q=0.6,zh-TW;q=0.4",
-  "Accept": "*/*",
   "Referer": "http://music.163.com",
   "Host": "music.163.com",
   "User-Agent": _chooseUserAgent(),
@@ -284,9 +356,9 @@ const List<String> _USER_AGENT_LIST = [
 String _chooseUserAgent({String ua}) {
   var r = Random();
   int index;
-  if (ua == 'pc') {
+  if (ua == 'mobile') {
     index = (r.nextDouble() * 7).floor();
-  } else if (ua == "mobile") {
+  } else if (ua == "pc") {
     index = (r.nextDouble() * 5).floor() + 8;
   } else {
     index = (r.nextDouble() * (_USER_AGENT_LIST.length - 1)).floor();

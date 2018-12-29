@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:quiet/model/playlist_detail.dart';
+import 'package:quiet/pages/page_playlist_edit.dart';
 import 'package:quiet/part/part.dart';
 import 'package:quiet/repository/netease.dart';
 import 'package:quiet/repository/netease_image.dart';
@@ -12,29 +14,6 @@ class _MainPlaylistState extends State<MainPlaylistPage>
     with AutomaticKeepAliveClientMixin {
   ScrollController _controller;
 
-  //flag which indicate that user'playlist has been loaded
-  bool isPlaylistLoaded = false;
-
-  List created;
-
-  List subscribed;
-
-  void _resolvePlaylist(List playlists) {
-    isPlaylistLoaded = true;
-    playlists = playlists.cast<Map<String, Object>>();
-    setState(() {
-      var userId = LoginState.of(context).userId;
-      created = playlists
-          .where(
-              (e) => (e["creator"] as Map<String, Object>)["userId"] == userId)
-          .toList();
-      subscribed = playlists
-          .where(
-              (e) => (e["creator"] as Map<String, Object>)["userId"] != userId)
-          .toList();
-    });
-  }
-
   @override
   void initState() {
     super.initState();
@@ -47,8 +26,7 @@ class _MainPlaylistState extends State<MainPlaylistPage>
     super.dispose();
   }
 
-  @override
-  Widget build(BuildContext context) {
+  List<Widget> _buildPinnedTile(BuildContext context) {
     List<Widget> widgets = [
       ListTile(
         leading: Icon(Icons.music_note),
@@ -94,24 +72,39 @@ class _MainPlaylistState extends State<MainPlaylistPage>
                 Navigator.pushNamed(context, "/login");
               }));
     }
+    return widgets;
+  }
 
-    if (isPlaylistLoaded) {
-      widgets.add(ExpansionPlaylists("创建的歌单", created));
-      widgets.add(ExpansionPlaylists("收藏的歌单", subscribed));
-    } else if (LoginState.of(context).isLogin) {
-      neteaseRepository
-          .userPlaylist(LoginState.of(context).userId)
-          .then((result) {
-        if (result["code"] == 200) {
-          _resolvePlaylist(result["playlist"]);
-        }
-      });
+  @override
+  Widget build(BuildContext context) {
+    final userId = LoginState.of(context).userId;
+
+    if (userId == null) {
+      return ListView(children: _buildPinnedTile(context));
     }
-
-    return ListView(
-      controller: _controller,
-      children: widgets,
-    );
+    return Loader(
+        loadTask: () => neteaseRepository.userPlaylist(userId),
+        resultVerify: simpleLoaderResultVerify((v) => v != null),
+        loadingBuilder: (lo) {
+          final widgets = _buildPinnedTile(context);
+          widgets.add(Container(
+              height: 200, child: Center(child: CircularProgressIndicator())));
+          return ListView(children: widgets);
+        },
+        failedWidgetBuilder: (context, result, msg) {
+          final widgets = _buildPinnedTile(context);
+          return ListView(children: widgets);
+        },
+        builder: (context, result) {
+          final widgets = _buildPinnedTile(context);
+          final created =
+              result.where((p) => p.creator["userId"] == userId).toList();
+          final subscribed =
+              result.where((p) => p.creator["userId"] != userId).toList();
+          widgets.add(ExpansionPlaylists("创建的歌单", created));
+          widgets.add(ExpansionPlaylists("收藏的歌单", subscribed));
+          return ListView(children: widgets, controller: _controller);
+        });
   }
 
   @override
@@ -121,28 +114,16 @@ class _MainPlaylistState extends State<MainPlaylistPage>
 class ExpansionPlaylists extends StatelessWidget {
   ExpansionPlaylists(this.title, this.playlist);
 
-  final List playlist;
+  final List<PlaylistDetail> playlist;
 
   final String title;
 
   @override
   Widget build(BuildContext context) {
-    List<Widget> widgets = [];
-    playlist?.forEach((e) {
-      widgets.add(_ItemPlaylist(playlist: e as Map<String, Object>));
-      widgets.add(Divider(
-        height: 0.5,
-        indent: 80,
-      ));
-    });
-    if (widgets.isNotEmpty) {
-      widgets.removeLast();
-    }
-
     return ExpansionTile(
       title: Text(title),
       initiallyExpanded: true,
-      children: widgets,
+      children: playlist.map((e) => _ItemPlaylist(playlist: e)).toList(),
     );
   }
 }
@@ -150,44 +131,108 @@ class ExpansionPlaylists extends StatelessWidget {
 class _ItemPlaylist extends StatelessWidget {
   const _ItemPlaylist({Key key, @required this.playlist}) : super(key: key);
 
-  final Map<String, Object> playlist;
+  final PlaylistDetail playlist;
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      leading: Hero(
-        tag: playlist["coverImgUrl"],
-        child: SizedBox(
-          child: ClipRRect(
-            borderRadius: BorderRadius.all(Radius.circular(4)),
-            child: FadeInImage(
-              placeholder: AssetImage("assets/playlist_playlist.9.png"),
-              image: NeteaseImage(playlist["coverImgUrl"]),
-              fadeInDuration: Duration.zero,
-              fadeOutDuration: Duration.zero,
-              fit: BoxFit.cover,
-            ),
-          ),
-          height: 48,
-          width: 48,
-        ),
-      ),
-      title: Text(
-        playlist["name"],
-        maxLines: 1,
-        overflow: TextOverflow.ellipsis,
-      ),
-      subtitle: Text(
-        "(共${playlist["trackCount"]}首)",
-        style: Theme.of(context).textTheme.caption,
-      ),
+    return InkWell(
       onTap: () {
         Navigator.push(
             context,
             MaterialPageRoute(
                 builder: (context) =>
-                    PlaylistDetailPage(playlist["id"], playlist: playlist)));
+                    PlaylistDetailPage(playlist.id, playlist: playlist)));
       },
+      child: Container(
+        height: 60,
+        child: Row(
+          children: <Widget>[
+            Padding(padding: EdgeInsets.only(left: 8)),
+            Hero(
+              tag: playlist.heroTag,
+              child: SizedBox(
+                child: ClipRRect(
+                  borderRadius: BorderRadius.all(Radius.circular(4)),
+                  child: FadeInImage(
+                    placeholder: AssetImage("assets/playlist_playlist.9.png"),
+                    image: NeteaseImage(playlist.coverUrl),
+                    fadeInDuration: Duration.zero,
+                    fadeOutDuration: Duration.zero,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                height: 52,
+                width: 52,
+              ),
+            ),
+            Padding(padding: EdgeInsets.only(left: 8)),
+            Expanded(
+                child: Column(
+              children: <Widget>[
+                Expanded(
+                    child: Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Spacer(),
+                          Text(
+                            playlist.name,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: Theme.of(context).textTheme.body1,
+                          ),
+                          Padding(padding: EdgeInsets.only(top: 4)),
+                          Text("${playlist.trackCount}首",
+                              style: Theme.of(context).textTheme.caption),
+                          Spacer(),
+                        ],
+                      ),
+                    ),
+                    PopupMenuButton<PlaylistOp>(
+                      itemBuilder: (context) {
+                        return [
+                          PopupMenuItem(
+                              child: Text("下载"), value: PlaylistOp.download),
+                          PopupMenuItem(
+                              child: Text("分享"), value: PlaylistOp.share),
+                          PopupMenuItem(
+                              child: Text("编辑歌单信息"), value: PlaylistOp.edit),
+                          PopupMenuItem(
+                              child: Text("删除"), value: PlaylistOp.delete),
+                        ];
+                      },
+                      onSelected: (op) {
+                        switch (op) {
+                          case PlaylistOp.delete:
+                          case PlaylistOp.share:
+                          case PlaylistOp.download:
+                            Scaffold.of(context).showSnackBar(SnackBar(
+                              content: Text("Not implemented"),
+                              duration: Duration(milliseconds: 1000),
+                            ));
+                            break;
+                          case PlaylistOp.edit:
+                            Navigator.of(context)
+                                .push(MaterialPageRoute(builder: (context) {
+                              return PlaylistEditPage(playlist);
+                            }));
+                            break;
+                        }
+                      },
+                      icon: Icon(Icons.more_vert),
+                    )
+                  ],
+                )),
+                Divider(height: 0),
+              ],
+            )),
+          ],
+        ),
+      ),
     );
   }
 }
+
+enum PlaylistOp { edit, share, download, delete }
