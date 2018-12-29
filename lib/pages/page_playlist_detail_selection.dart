@@ -149,6 +149,7 @@ class _PlaylistSelectionPageState extends State<_PlaylistSelectionPage> {
       elevation: 5,
       child: Container(
         child: ButtonTheme.bar(
+          textTheme: ButtonTextTheme.normal,
           child: ButtonBar(
             alignment: MainAxisAlignment.spaceAround,
             children: <Widget>[
