@@ -65,40 +65,42 @@ class _ControllerBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var color = Theme.of(context).primaryIconTheme.color;
-    var state = PlayerState.of(context, aspect: PlayerStateAspect.playbackState).value;
+    var state =
+        PlayerState.of(context, aspect: PlayerStateAspect.playbackState).value;
 
-    Widget iconPlayPause;
-    if (state.isPlaying) {
-      iconPlayPause = IconButton(
-          tooltip: "暂停",
-          iconSize: 40,
-          icon: Icon(
-            Icons.pause_circle_outline,
-            color: color,
+    final iconPlayPause = IndexedStack(
+      index: state.isPlaying ? 0 : state.isBuffering ? 2 : 1,
+      children: <Widget>[
+        IconButton(
+            tooltip: "暂停",
+            iconSize: 40,
+            icon: Icon(
+              Icons.pause_circle_outline,
+              color: color,
+            ),
+            onPressed: () {
+              quiet.pause();
+            }),
+        IconButton(
+            tooltip: "播放",
+            iconSize: 40,
+            icon: Icon(
+              Icons.play_circle_outline,
+              color: color,
+            ),
+            onPressed: () {
+              quiet.play();
+            }),
+        Container(
+          height: 56,
+          width: 56,
+          child: Center(
+            child: Container(
+                height: 24, width: 24, child: CircularProgressIndicator()),
           ),
-          onPressed: () {
-            quiet.pause();
-          });
-    } else if (state.isBuffering) {
-      iconPlayPause = SizedBox(
-        height: 40,
-        width: 40,
-        child: Center(
-          child: CircularProgressIndicator(),
         ),
-      );
-    } else {
-      iconPlayPause = IconButton(
-          tooltip: "播放",
-          iconSize: 40,
-          icon: Icon(
-            Icons.play_circle_outline,
-            color: color,
-          ),
-          onPressed: () {
-            quiet.play();
-          });
-    }
+      ],
+    );
 
     return Container(
       padding: EdgeInsets.symmetric(vertical: 16),
@@ -137,9 +139,11 @@ class _ControllerBar extends StatelessWidget {
                 color: color,
               ),
               onPressed: () {
-                showModalBottomSheet(context: context, builder: (context) {
-                  return PlayingListDialog();
-                });
+                showModalBottomSheet(
+                    context: context,
+                    builder: (context) {
+                      return PlayingListDialog();
+                    });
               }),
         ],
       ),
@@ -479,7 +483,7 @@ class _AlbumCoverState extends State<_AlbumCover>
 
     controller = AnimationController(
         vsync: this,
-        duration: Duration(seconds: 13),
+        duration: Duration(seconds: 20),
         animationBehavior: AnimationBehavior.normal)
       ..addListener(() {
         setState(() {
