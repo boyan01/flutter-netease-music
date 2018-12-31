@@ -157,6 +157,11 @@ class NeteaseRepository {
     return null;
   }
 
+  ///根据专辑详细信息
+  Future<Map> albumDetail(int id) async {
+    return doRequest("https://music.163.com/weapi/v1/album/$id", {});
+  }
+
   ///推荐歌单
   Future<Map<String, Object>> personalizedPlaylist(
       {int limit = 30, int offset = 0}) {
@@ -400,6 +405,17 @@ Music mapJsonToMusic(Map song,
       album: Album(
           id: album["id"], name: album["name"], coverImageUrl: album["picUrl"]),
       artist: artists);
+}
+
+List<Music> mapJsonListToMusicList(List tracks,
+    {String artistKey = "artists", String albumKey = "album"}) {
+  if (tracks == null) {
+    return null;
+  }
+  var list = tracks
+      .cast<Map>()
+      .map((e) => mapJsonToMusic(e, artistKey: "ar", albumKey: "al"));
+  return list.toList();
 }
 
 ///cache key for lyric
