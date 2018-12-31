@@ -9,6 +9,8 @@ import 'package:quiet/pages/page_playlist_detail_selection.dart';
 import 'package:quiet/part/part.dart';
 import 'package:quiet/repository/netease.dart';
 
+part 'page_album_detail.dart';
+
 ///歌单详情信息item高度
 const double _HEIGHT_HEADER = 300;
 
@@ -72,7 +74,8 @@ class _PlayListDetailState extends State<PlaylistDetailPage> {
         Column(
           children: <Widget>[
             _OpacityTitle(
-              name: "歌单",
+              name: null,
+              defaultName: "歌单",
               appBarOpacity: ValueNotifier(0),
             )
           ],
@@ -119,7 +122,11 @@ class _PlayListDetailState extends State<PlaylistDetailPage> {
 ///the title of this page
 class _OpacityTitle extends StatefulWidget {
   _OpacityTitle(
-      {@required this.name, @required this.appBarOpacity, this.onSearchTaped});
+      {@required this.name,
+      @required this.appBarOpacity,
+      @required this.defaultName,
+      this.actions})
+      : assert(defaultName != null);
 
   ///title background opacity value notifier, from 0 - 1;
   final ValueNotifier<double> appBarOpacity;
@@ -127,7 +134,9 @@ class _OpacityTitle extends StatefulWidget {
   ///the name of playlist
   final String name;
 
-  final VoidCallback onSearchTaped;
+  final String defaultName;
+
+  final List<Widget> actions;
 
   @override
   State<StatefulWidget> createState() => _OpacityTitleState();
@@ -161,18 +170,12 @@ class _OpacityTitleState extends State<_OpacityTitle> {
       leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () => Navigator.pop(context)),
-      title: Text(appBarOpacityValue < 0.5 ? "歌单" : (widget.name ?? "歌单")),
+      title: Text(
+          appBarOpacityValue < 0.5 ? widget.defaultName : (widget.name ?? "")),
       toolbarOpacity: 1,
       backgroundColor:
           Theme.of(context).primaryColor.withOpacity(appBarOpacityValue),
-      actions: <Widget>[
-        IconButton(
-            icon: Icon(Icons.search),
-            tooltip: "歌单内搜索",
-            onPressed: widget.onSearchTaped),
-        IconButton(
-            icon: Icon(Icons.more_vert), tooltip: "更多选项", onPressed: () {})
-      ],
+      actions: widget.actions,
     );
   }
 }
@@ -240,14 +243,24 @@ class _PlaylistBodyState extends State<_PlaylistBody> {
         Column(
           children: <Widget>[
             _OpacityTitle(
-              name: widget.playlist.name ?? "歌单",
+              name: widget.playlist.name,
+              defaultName: "歌单",
               appBarOpacity: appBarOpacity,
-              onSearchTaped: () {
-                showSearch(
-                    context: context,
-                    delegate: _InternalFilterDelegate(
-                        widget.playlist, Theme.of(context)));
-              },
+              actions: <Widget>[
+                IconButton(
+                    icon: Icon(Icons.search),
+                    tooltip: "歌单内搜索",
+                    onPressed: () {
+                      showSearch(
+                          context: context,
+                          delegate: _InternalFilterDelegate(
+                              widget.playlist, Theme.of(context)));
+                    }),
+                IconButton(
+                    icon: Icon(Icons.more_vert),
+                    tooltip: "更多选项",
+                    onPressed: () {})
+              ],
             )
           ],
         )
@@ -329,20 +342,35 @@ class _HeaderAction extends StatelessWidget {
   }
 }
 
-///a detail header describe playlist information
-class _PlaylistDetailHeader extends StatelessWidget {
-  _PlaylistDetailHeader(this.playlist) : assert(playlist != null);
+///header show list information
+class _DetailHeader extends StatelessWidget {
+  const _DetailHeader(
+      {Key key,
+      @required this.content,
+      this.onCommentTap,
+      this.onShareTap,
+      this.onDownloadTap,
+      this.onSelectionTap,
+      this.commentCount = 0,
+      this.shareCount = 0})
+      : assert(commentCount != null),
+        assert(shareCount != null),
+        super(key: key);
 
-  final PlaylistDetail playlist;
+  final Widget content;
 
-  ///the music list
-  ///could be null if music list if not loaded
-  List<Music> get musicList => playlist.musicList;
+  final GestureTapCallback onCommentTap;
+  final GestureTapCallback onShareTap;
+  final GestureTapCallback onDownloadTap;
+  final GestureTapCallback onSelectionTap;
+
+  final int commentCount;
+  final int shareCount;
 
   @override
   Widget build(BuildContext context) {
-    Map<String, Object> creator = playlist.creator;
     Color color = Theme.of(context).primaryColorDark;
+
     return Container(
       decoration: BoxDecoration(
           gradient: LinearGradient(colors: <Color>[
@@ -357,98 +385,22 @@ class _PlaylistDetailHeader extends StatelessWidget {
               top: MediaQuery.of(context).padding.top + kToolbarHeight),
           child: Column(
             children: <Widget>[
-              Container(
-                height: 150,
-                child: Row(
-                  children: <Widget>[
-                    Container(
-                      padding: EdgeInsets.symmetric(vertical: 16),
-                      margin: EdgeInsets.only(left: 32, right: 20),
-                      child: Hero(
-                        tag: playlist.heroTag,
-                        child: AspectRatio(
-                          aspectRatio: 1,
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.all(Radius.circular(3)),
-                            child: Image(
-                                fit: BoxFit.cover,
-                                image: NeteaseImage(playlist.coverUrl)),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Container(
-                          margin: EdgeInsets.only(top: 40),
-                          child: Text(
-                            playlist.name,
-                            style: Theme.of(context)
-                                .primaryTextTheme
-                                .title
-                                .copyWith(fontSize: 18),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                        Padding(padding: EdgeInsets.only(top: 20)),
-                        InkWell(
-                          onTap: () => {},
-                          child: Row(
-                            children: <Widget>[
-                              SizedBox(
-                                height: 24,
-                                width: 24,
-                                child: ClipOval(
-                                  child: Image(
-                                      image:
-                                          NeteaseImage(creator["avatarUrl"])),
-                                ),
-                              ),
-                              Padding(padding: EdgeInsets.only(left: 4)),
-                              Text(
-                                creator["nickname"],
-                                style: Theme.of(context).primaryTextTheme.body1,
-                              ),
-                              Icon(
-                                Icons.chevron_right,
-                                color: Theme.of(context).primaryIconTheme.color,
-                              )
-                            ],
-                          ),
-                        )
-                      ],
-                    )
-                  ],
-                ),
-              ),
+              content,
               Container(
                 margin: EdgeInsets.symmetric(vertical: 8),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
-                    _HeaderAction(Icons.comment, "评论", () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) {
-                        return CommentPage(
-                          threadId: CommentThreadId(
-                              playlist.id, CommentType.playlist,
-                              playload:
-                                  CommentThreadPayload.playlist(playlist)),
-                        );
-                      }));
-                    }),
-                    _HeaderAction(Icons.share, "分享", () => {}),
-                    _HeaderAction(Icons.file_download, "下载", () => {}),
-                    _HeaderAction(Icons.check_box, "多选", () async {
-                      if (musicList == null) {
-                        showSimpleNotification(context, Text("歌曲未加载,请加载后再试"));
-                      } else {
-                        await Navigator.of(context)
-                            .push(PlaylistSelectionPageRoute(playlist));
-                      }
-                    }),
+                    _HeaderAction(
+                        Icons.comment,
+                        commentCount > 0 ? commentCount.toString() : "评论",
+                        onCommentTap),
+                    _HeaderAction(
+                        Icons.share,
+                        shareCount > 0 ? shareCount.toString() : "分享",
+                        onShareTap),
+                    _HeaderAction(Icons.file_download, "下载", onDownloadTap),
+                    _HeaderAction(Icons.check_box, "多选", onSelectionTap),
                   ],
                 ),
               )
@@ -457,6 +409,107 @@ class _PlaylistDetailHeader extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+///a detail header describe playlist information
+class _PlaylistDetailHeader extends StatelessWidget {
+  _PlaylistDetailHeader(this.playlist) : assert(playlist != null);
+
+  final PlaylistDetail playlist;
+
+  ///the music list
+  ///could be null if music list if not loaded
+  List<Music> get musicList => playlist.musicList;
+
+  @override
+  Widget build(BuildContext context) {
+    Map<String, Object> creator = playlist.creator;
+
+    return _DetailHeader(
+        onCommentTap: () {
+          Navigator.push(context, MaterialPageRoute(builder: (context) {
+            return CommentPage(
+              threadId: CommentThreadId(playlist.id, CommentType.playlist,
+                  playload: CommentThreadPayload.playlist(playlist)),
+            );
+          }));
+        },
+        onSelectionTap: () async {
+          if (musicList == null) {
+            showSimpleNotification(context, Text("歌曲未加载,请加载后再试"));
+          } else {
+            await Navigator.of(context)
+                .push(PlaylistSelectionPageRoute(playlist));
+          }
+        },
+        onDownloadTap: () => notImplemented(context),
+        onShareTap: () => notImplemented(context),
+        content: Container(
+          height: 150,
+          child: Row(
+            children: <Widget>[
+              Container(
+                padding: EdgeInsets.symmetric(vertical: 16),
+                margin: EdgeInsets.only(left: 32, right: 20),
+                child: Hero(
+                  tag: playlist.heroTag,
+                  child: AspectRatio(
+                    aspectRatio: 1,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.all(Radius.circular(3)),
+                      child: Image(
+                          fit: BoxFit.cover,
+                          image: NeteaseImage(playlist.coverUrl)),
+                    ),
+                  ),
+                ),
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Container(
+                    margin: EdgeInsets.only(top: 40),
+                    child: Text(
+                      playlist.name,
+                      style: Theme.of(context)
+                          .primaryTextTheme
+                          .title
+                          .copyWith(fontSize: 18),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                  Padding(padding: EdgeInsets.only(top: 20)),
+                  InkWell(
+                    onTap: () => {},
+                    child: Row(
+                      children: <Widget>[
+                        SizedBox(
+                          height: 24,
+                          width: 24,
+                          child: ClipOval(
+                            child: Image(
+                                image: NeteaseImage(creator["avatarUrl"])),
+                          ),
+                        ),
+                        Padding(padding: EdgeInsets.only(left: 4)),
+                        Text(
+                          creator["nickname"],
+                          style: Theme.of(context).primaryTextTheme.body1,
+                        ),
+                        Icon(
+                          Icons.chevron_right,
+                          color: Theme.of(context).primaryIconTheme.color,
+                        )
+                      ],
+                    ),
+                  )
+                ],
+              )
+            ],
+          ),
+        ));
   }
 }
 

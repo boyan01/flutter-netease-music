@@ -1,5 +1,9 @@
 library part;
 
+import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:overlay_support/overlay_support.dart';
+
 export 'package:quiet/model/model.dart';
 
 export 'part_player_service.dart';
@@ -12,3 +16,8 @@ export 'part_cache.dart';
 export 'loader.dart';
 export 'part_utils.dart';
 export 'dialogs.dart';
+
+void notImplemented(BuildContext context) {
+  showSimpleNotification(context, Text("页面未完成"),
+      background: Theme.of(context).errorColor);
+}

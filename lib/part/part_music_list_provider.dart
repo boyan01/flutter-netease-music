@@ -254,6 +254,11 @@ class SongTile extends StatelessWidget {
           }
         }
         break;
+      case SongPopupMenuType.album:
+        Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+          return AlbumDetailPage(albumId: music.album.id);
+        }));
+        break;
     }
   }
 
@@ -317,6 +322,9 @@ class SongTile extends StatelessWidget {
                               child: Text("评论"),
                               value: SongPopupMenuType.comment,
                             ),
+                            PopupMenuItem(
+                                child: Text("专辑:${music.album.name}"),
+                                value: SongPopupMenuType.album),
                             onDelete == null
                                 ? null
                                 : PopupMenuItem(
@@ -344,4 +352,5 @@ enum SongPopupMenuType {
 
   ///添加到歌单
   addToPlaylist,
+  album,
 }
