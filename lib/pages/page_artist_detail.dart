@@ -7,7 +7,13 @@ import 'package:quiet/repository/netease.dart';
 
 ///歌手详情页
 class ArtistDetailPage extends StatefulWidget {
-  final int artistId = 6452;
+
+  ///歌手ID
+  final int artistId;
+
+  const ArtistDetailPage({Key key, @required this.artistId})
+      : assert(artistId != null),
+        super(key: key);
 
   @override
   ArtistDetailPageState createState() {
