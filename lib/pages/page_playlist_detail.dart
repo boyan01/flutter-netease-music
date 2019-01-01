@@ -461,66 +461,70 @@ class _PlaylistDetailHeader extends StatelessWidget {
         onShareTap: () => notImplemented(context),
         content: Container(
           height: 150,
+          padding: EdgeInsets.symmetric(vertical: 16),
           child: Row(
             children: <Widget>[
-              Container(
-                padding: EdgeInsets.symmetric(vertical: 16),
-                margin: EdgeInsets.only(left: 32, right: 20),
-                child: Hero(
-                  tag: playlist.heroTag,
-                  child: AspectRatio(
-                    aspectRatio: 1,
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.all(Radius.circular(3)),
-                      child: Image(
-                          fit: BoxFit.cover,
-                          image: NeteaseImage(playlist.coverUrl)),
-                    ),
+              SizedBox(width: 24),
+              Hero(
+                tag: playlist.heroTag,
+                child: AspectRatio(
+                  aspectRatio: 1,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.all(Radius.circular(3)),
+                    child: Image(
+                        fit: BoxFit.cover,
+                        image: NeteaseImage(playlist.coverUrl)),
                   ),
                 ),
               ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Container(
-                    margin: EdgeInsets.only(top: 40),
-                    child: Text(
+              SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    SizedBox(height: 10),
+                    Text(
                       playlist.name,
                       style: Theme.of(context)
                           .primaryTextTheme
                           .title
-                          .copyWith(fontSize: 18),
-                      maxLines: 1,
+                          .copyWith(fontSize: 17),
+                      maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
-                  ),
-                  Padding(padding: EdgeInsets.only(top: 20)),
-                  InkWell(
-                    onTap: () => {},
-                    child: Row(
-                      children: <Widget>[
-                        SizedBox(
-                          height: 24,
-                          width: 24,
-                          child: ClipOval(
-                            child: Image(
-                                image: NeteaseImage(creator["avatarUrl"])),
-                          ),
+                    SizedBox(height: 10),
+                    InkWell(
+                      onTap: () => {},
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 4, bottom: 4),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            SizedBox(
+                              height: 24,
+                              width: 24,
+                              child: ClipOval(
+                                child: Image(
+                                    image: NeteaseImage(creator["avatarUrl"])),
+                              ),
+                            ),
+                            Padding(padding: EdgeInsets.only(left: 4)),
+                            Text(
+                              creator["nickname"],
+                              style: Theme.of(context).primaryTextTheme.body1,
+                            ),
+                            Icon(
+                              Icons.chevron_right,
+                              color: Theme.of(context).primaryIconTheme.color,
+                            )
+                          ],
                         ),
-                        Padding(padding: EdgeInsets.only(left: 4)),
-                        Text(
-                          creator["nickname"],
-                          style: Theme.of(context).primaryTextTheme.body1,
-                        ),
-                        Icon(
-                          Icons.chevron_right,
-                          color: Theme.of(context).primaryIconTheme.color,
-                        )
-                      ],
-                    ),
-                  )
-                ],
-              )
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              SizedBox(width: 16),
             ],
           ),
         ));
