@@ -2,12 +2,12 @@ import 'dart:math' as math;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:quiet/pages/page_playlist_detail_selection.dart';
 import 'package:quiet/part/part.dart';
 import 'package:quiet/repository/netease.dart';
 
 ///歌手详情页
 class ArtistDetailPage extends StatefulWidget {
-
   ///歌手ID
   final int artistId;
 
@@ -57,9 +57,20 @@ class ArtistDetailPageState extends State<ArtistDetailPage>
                         expandedHeight: 256,
                         flexibleSpace: FlexibleSpaceBar(
                           title: Text('${artist["name"]}'),
-                          background: Image(
-                            fit: BoxFit.cover,
-                            image: NeteaseImage(artist["img1v1Url"]),
+                          background: Container(
+                            foregroundDecoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                    begin: Alignment.bottomCenter,
+                                    end: Alignment.topCenter,
+                                    colors: [
+                                  Colors.black87,
+                                  Colors.transparent,
+                                  Colors.transparent,
+                                ])),
+                            child: Image(
+                              fit: BoxFit.cover,
+                              image: NeteaseImage(artist["img1v1Url"]),
+                            ),
                           ),
                         ),
                         forceElevated: innerBoxIsScrolled,
@@ -102,17 +113,26 @@ class ArtistDetailPageState extends State<ArtistDetailPage>
 }
 
 ///热门单曲
-class _PageHotSongs extends StatelessWidget {
+class _PageHotSongs extends StatefulWidget {
   const _PageHotSongs({Key key, @required this.musicList})
       : assert(musicList != null),
         super(key: key);
 
   final List<Music> musicList;
 
+  @override
+  _PageHotSongsState createState() {
+    return new _PageHotSongsState();
+  }
+}
+
+class _PageHotSongsState extends State<_PageHotSongs>
+    with AutomaticKeepAliveClientMixin {
   Widget _buildHeader(BuildContext context) {
     return InkWell(
       onTap: () {
-        debugPrint("收藏歌曲");
+        PlaylistSelectorDialog.addSongs(
+            context, widget.musicList.map((m) => m.id).toList());
       },
       child: Container(
         height: 48,
@@ -124,7 +144,15 @@ class _PageHotSongs extends StatelessWidget {
                   SizedBox(width: 8),
                   Icon(Icons.add_box),
                   SizedBox(width: 8),
-                  Expanded(child: Text("收藏热门${musicList.length}单曲"))
+                  Expanded(child: Text("收藏热门${widget.musicList.length}单曲")),
+                  FlatButton(
+                      child: Text("多选"),
+                      onPressed: () {
+                        Navigator.of(context)
+                            .push(MaterialPageRoute(builder: (context) {
+                          return PlaylistSelectionPage(list: widget.musicList);
+                        }));
+                      })
                 ],
               ),
             ),
@@ -137,32 +165,43 @@ class _PageHotSongs extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (musicList.isEmpty) {
+    if (widget.musicList.isEmpty) {
       return Container(
         child: Center(child: Text("该歌手无热门曲目")),
       );
     }
     return ListView.builder(
-        itemCount: musicList.length + 1,
+        itemCount: widget.musicList.length + 1,
         itemBuilder: (context, index) {
           if (index == 0) {
             return _buildHeader(context);
           } else {
-            return SongTile(musicList[index - 1], index);
+            return SongTile(widget.musicList[index - 1], index);
           }
         });
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }
 
-class _PageAlbums extends StatelessWidget {
+class _PageAlbums extends StatefulWidget {
   final int artistId;
 
   const _PageAlbums({Key key, @required this.artistId}) : super(key: key);
 
   @override
+  _PageAlbumsState createState() {
+    return new _PageAlbumsState();
+  }
+}
+
+class _PageAlbumsState extends State<_PageAlbums>
+    with AutomaticKeepAliveClientMixin {
+  @override
   Widget build(BuildContext context) {
     return Loader<Map>(
-        loadTask: () => neteaseRepository.artistAlbums(artistId),
+        loadTask: () => neteaseRepository.artistAlbums(widget.artistId),
         resultVerify: neteaseRepository.responseVerify,
         builder: (context, result) {
           List<Map> albums = (result["hotAlbums"] as List).cast();
@@ -173,17 +212,27 @@ class _PageAlbums extends StatelessWidget {
               });
         });
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }
 
-class _PageMVs extends StatelessWidget {
+class _PageMVs extends StatefulWidget {
   final int artistId;
 
   const _PageMVs({Key key, @required this.artistId}) : super(key: key);
 
   @override
+  _PageMVsState createState() {
+    return new _PageMVsState();
+  }
+}
+
+class _PageMVsState extends State<_PageMVs> with AutomaticKeepAliveClientMixin {
+  @override
   Widget build(BuildContext context) {
     return Loader<Map>(
-      loadTask: () => neteaseRepository.artistMvs(artistId),
+      loadTask: () => neteaseRepository.artistMvs(widget.artistId),
       resultVerify: neteaseRepository.responseVerify,
       builder: (context, result) {
         final List<Map> mvs = (result["mvs"] as List).cast();
@@ -235,9 +284,12 @@ class _PageMVs extends StatelessWidget {
       },
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }
 
-class _PageArtistIntroduction extends StatelessWidget {
+class _PageArtistIntroduction extends StatefulWidget {
   final int artistId;
 
   final String artistName;
@@ -246,10 +298,18 @@ class _PageArtistIntroduction extends StatelessWidget {
       {Key key, @required this.artistId, @required this.artistName})
       : super(key: key);
 
+  @override
+  _PageArtistIntroductionState createState() {
+    return new _PageArtistIntroductionState();
+  }
+}
+
+class _PageArtistIntroductionState extends State<_PageArtistIntroduction>
+    with AutomaticKeepAliveClientMixin {
   List<Widget> _buildIntroduction(BuildContext context, Map result) {
     Widget title = Padding(
         padding: EdgeInsets.symmetric(vertical: 10, horizontal: 8),
-        child: Text(("$artistName简介"),
+        child: Text(("${widget.artistName}简介"),
             style: TextStyle(
                 fontSize: 15, fontWeight: FontWeight.bold, shadows: [])));
 
@@ -349,7 +409,7 @@ class _PageArtistIntroduction extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Loader<Map>(
-      loadTask: () => neteaseRepository.artistDesc(artistId),
+      loadTask: () => neteaseRepository.artistDesc(widget.artistId),
       resultVerify: neteaseRepository.responseVerify,
       builder: (context, result) {
         final widgets = <Widget>[];
@@ -361,6 +421,9 @@ class _PageArtistIntroduction extends StatelessWidget {
       },
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }
 
 class FlexibleSpaceBar extends StatefulWidget {

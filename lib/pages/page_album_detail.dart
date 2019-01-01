@@ -192,7 +192,7 @@ class _AlbumDetailHeader extends StatelessWidget {
         },
         onSelectionTap: () {
           Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-            return _PlaylistSelectionPage(list: musicList);
+            return PlaylistSelectionPage(list: musicList);
           }));
         },
         onDownloadTap: () => notImplemented(context),
