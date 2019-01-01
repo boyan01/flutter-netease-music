@@ -138,7 +138,8 @@ class _AlbumBodyState extends State<_AlbumBody> {
     if (widget.musicList.isEmpty) {
       return _EmptyPlaylistSection();
     }
-    return _songTileProvider?.buildWidget(index - 1, context);
+    return _songTileProvider?.buildWidget(index - 1, context,
+        showAlbumPopupItem: false);
   }
 }
 
