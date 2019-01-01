@@ -38,30 +38,31 @@ class PlaylistDetailPage extends StatefulWidget {
 }
 
 class _PlayListDetailState extends State<PlaylistDetailPage> {
-  Color primaryColor;
+  Color primaryColor = Colors.teal;
 
-  bool primaryColorGenerating = false;
+  bool primaryColorGenerated = false;
 
   ///generate a primary color by playlist cover image
   void loadPrimaryColor(PlaylistDetail playlist) async {
-    if (playlist == null ||
-        this.primaryColor != null ||
-        primaryColorGenerating) {
+    if (primaryColorGenerated) {
       return;
     }
-    primaryColorGenerating = true;
+    primaryColorGenerated = true;
     PaletteGenerator generator = await PaletteGenerator.fromImageProvider(
         NeteaseImage(playlist.coverUrl));
     var primaryColor = generator.mutedColor?.color;
     setState(() {
       this.primaryColor = primaryColor;
-      debugPrint("generated color : $primaryColor");
+      debugPrint(
+          "generated color for playlist(${playlist.name}) : $primaryColor");
     });
-    primaryColorGenerating = false;
   }
 
   ///build a preview stack for loading or error
   Widget buildPreview(BuildContext context, Widget content) {
+    if (widget.playlist != null) {
+      loadPrimaryColor(widget.playlist);
+    }
     return Stack(
       children: <Widget>[
         Column(
