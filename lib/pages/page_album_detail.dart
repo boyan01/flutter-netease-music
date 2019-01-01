@@ -17,6 +17,23 @@ class _AlbumDetailPageState extends State<AlbumDetailPage> {
 
   bool primaryColorGenerated = false;
 
+  ///根据album的cover image 生成 primary color
+  ///此方法的流程只会在初始化时走一次
+  void _generatePrimaryColor(Map album) async {
+    if (primaryColorGenerated) {
+      return;
+    }
+    //不管是否成功生成主颜色，都视为成功生成
+    primaryColorGenerated = true;
+    PaletteGenerator generator =
+        await PaletteGenerator.fromImageProvider(NeteaseImage(album["picUrl"]));
+    var primaryColor = generator.mutedColor?.color;
+    setState(() {
+      this.primaryColor = primaryColor;
+      debugPrint("generated color for album(${album["name"]}) : $primaryColor");
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Theme(
@@ -29,6 +46,7 @@ class _AlbumDetailPageState extends State<AlbumDetailPage> {
               loadTask: () => neteaseRepository.albumDetail(widget.albumId),
               resultVerify: neteaseRepository.responseVerify,
               builder: (context, result) {
+                _generatePrimaryColor(result["album"]);
                 return _AlbumBody(
                   album: result["album"],
                   musicList: mapJsonListToMusicList(result["songs"],
@@ -41,6 +59,9 @@ class _AlbumDetailPageState extends State<AlbumDetailPage> {
 
   ///build a preview stack for loading or error
   Widget buildPreview(BuildContext context, Widget content) {
+    if (widget.album != null) {
+      _generatePrimaryColor(widget.album);
+    }
     return Stack(
       children: <Widget>[
         Column(
