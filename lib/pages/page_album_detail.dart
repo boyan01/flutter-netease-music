@@ -162,7 +162,11 @@ class _AlbumDetailHeader extends StatelessWidget {
                 threadId: CommentThreadId(album["id"], CommentType.album));
           }));
         },
-        onSelectionTap: () => notImplemented(context),
+        onSelectionTap: () {
+          Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+            return _PlaylistSelectionPage(list: musicList);
+          }));
+        },
         onDownloadTap: () => notImplemented(context),
         onShareTap: () => notImplemented(context),
         content: Container(
