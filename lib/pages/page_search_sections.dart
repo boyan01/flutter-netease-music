@@ -190,56 +190,25 @@ class _AlbumsResultSectionState extends State<AlbumsResultSection>
               totalCount: result["result"]["albumCount"],
               initialList: result["result"]["albums"],
               builder: (context, album) {
-                String subTitle = (album["artists"] as List)
-                    .cast<Map>()
-                    .map((ar) => ar["name"])
-                    .toList()
-                    .join("/");
-                if (album["containedSong"] == null ||
-                    (album["containedSong"] as String).isEmpty) {
-                  String publishTime = DateFormat("y.M.d").format(
-                      DateTime.fromMillisecondsSinceEpoch(
-                          album["publishTime"]));
-                  subTitle = subTitle + " $publishTime";
-                } else {
-                  subTitle = subTitle + " 包含单曲: ${album["containedSong"]}";
-                }
-                return InkWell(
-                  onTap: () {},
-                  child: Container(
-                    height: 64,
-                    child: Row(
-                      children: <Widget>[
-                        Padding(
-                          padding: EdgeInsets.all(4),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(4),
-                            child: AspectRatio(
-                              aspectRatio: 1,
-                              child: Image(
-                                  image: NeteaseImage(album["picUrl"]),
-                                  fit: BoxFit.cover),
-                            ),
-                          ),
-                        ),
-                        Padding(padding: EdgeInsets.only(left: 4)),
-                        Expanded(
-                            child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Spacer(),
-                            Text(album["name"], maxLines: 1),
-                            Spacer(),
-                            Text(subTitle,
-                                maxLines: 1,
-                                style: Theme.of(context).textTheme.caption),
-                            Spacer(),
-                            Divider(height: 0)
-                          ],
-                        ))
-                      ],
-                    ),
-                  ),
+                return AlbumTile(
+                  album: album,
+                  subtitle: (album) {
+                    String subTitle = (album["artists"] as List)
+                        .cast<Map>()
+                        .map((ar) => ar["name"])
+                        .toList()
+                        .join("/");
+                    if (album["containedSong"] == null ||
+                        (album["containedSong"] as String).isEmpty) {
+                      String publishTime = DateFormat("y.M.d").format(
+                          DateTime.fromMillisecondsSinceEpoch(
+                              album["publishTime"]));
+                      subTitle = subTitle + " $publishTime";
+                    } else {
+                      subTitle = subTitle + " 包含单曲: ${album["containedSong"]}";
+                    }
+                    return subTitle;
+                  },
                 );
               });
         });

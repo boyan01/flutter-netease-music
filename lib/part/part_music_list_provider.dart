@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:quiet/model/model.dart';
+import 'package:quiet/pages/page_artist_detail.dart';
 import 'package:quiet/pages/page_comment.dart';
 import 'package:quiet/repository/netease.dart';
 
@@ -265,6 +266,12 @@ class SongTile extends StatelessWidget {
           return AlbumDetailPage(albumId: music.album.id);
         }));
         break;
+      case SongPopupMenuType.artists:
+        if (music.artist.length == 1) {
+          Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+            return ArtistDetailPage();
+          }));
+        }
     }
   }
 
@@ -328,6 +335,11 @@ class SongTile extends StatelessWidget {
                               child: Text("评论"),
                               value: SongPopupMenuType.comment,
                             ),
+                            PopupMenuItem(
+                                child: Text(
+                                    "歌手: ${music.artist.map((a) => a.name).join('/')}",
+                                    maxLines: 1),
+                                value: SongPopupMenuType.artists),
                             !showAlbumPopupItem
                                 ? null
                                 : PopupMenuItem(
@@ -365,4 +377,7 @@ enum SongPopupMenuType {
 
   ///导航到专辑
   album,
+
+  ///导航到歌手
+  artists,
 }
