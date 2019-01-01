@@ -154,6 +154,12 @@ class _AlbumDetailHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final artist = (album["artists"] as List)
+        .cast<Map>()
+        .map((m) =>
+            Artist(name: m["name"], id: m["id"], imageUrl: m["img1v1Url"]))
+        .toList(growable: false);
+
     return _DetailHeader(
         shareCount: album["info"]["shareCount"],
         commentCount: album["info"]["commentCount"],
@@ -197,11 +203,19 @@ class _AlbumDetailHeader extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    SizedBox(height: 4),
-                    Text(album["name"], style: TextStyle(fontSize: 17)),
                     SizedBox(height: 8),
-                    Text("歌手:"),
-                    SizedBox(height: 2),
+                    Text(album["name"], style: TextStyle(fontSize: 17)),
+                    SizedBox(height: 10),
+                    InkWell(
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 4, bottom: 4),
+                          child: Text(
+                              "歌手: ${artist.map((a) => a.name).join('/')}"),
+                        ),
+                        onTap: () {
+                          debugPrint("to artist :$artist");
+                        }),
+                    SizedBox(height: 4),
                     Text("发行时间：${getFormattedTime(album["publishTime"])}")
                   ],
                 ),
