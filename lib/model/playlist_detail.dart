@@ -32,22 +32,12 @@ class PlaylistDetail {
   static PlaylistDetail fromJson(Map playlist) {
     return PlaylistDetail(
         playlist["id"],
-        _mapPlaylist(playlist["tracks"]),
+        mapJsonListToMusicList(playlist["tracks"],
+            artistKey: "ar", albumKey: "al"),
         playlist["creator"],
         playlist["name"],
         playlist["coverImgUrl"],
         playlist["trackCount"],
         playlist["description"]);
   }
-}
-
-///map playlist json tracks to Music list
-List<Music> _mapPlaylist(List<Object> tracks) {
-  if (tracks == null) {
-    return null;
-  }
-  var list = tracks
-      .cast<Map>()
-      .map((e) => mapJsonToMusic(e, artistKey: "ar", albumKey: "al"));
-  return list.toList();
 }

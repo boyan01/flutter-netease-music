@@ -1,72 +1,15 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:overlay_support/overlay_support.dart';
-import 'package:quiet/model/playlist_detail.dart';
-import 'package:quiet/part/part.dart';
-import 'package:quiet/repository/netease.dart';
+part of "page_playlist_detail.dart";
 
-///multi select playlist songs
-class PlaylistSelectionPageRoute extends PageRoute<bool> {
-  PlaylistSelectionPageRoute(this.playlist);
-
-  final PlaylistDetail playlist;
-
-  int get playlistId => playlist.id;
-
-  List<Music> get list => playlist.musicList;
-
-  bool needRefresh = false;
-
-  @override
-  void didComplete(bool) {
-    super.didComplete(needRefresh);
-  }
-
-  @override
-  Color get barrierColor => null;
-
-  @override
-  String get barrierLabel => null;
-
-  @override
-  bool canTransitionFrom(TransitionRoute<dynamic> previousRoute) {
-    return previousRoute is MaterialPageRoute ||
-        previousRoute is CupertinoPageRoute;
-  }
-
-  @override
-  Widget buildPage(BuildContext context, Animation<double> animation,
-      Animation<double> secondaryAnimation) {
-    return Semantics(
-      scopesRoute: true,
-      explicitChildNodes: true,
-      child: _PlaylistSelectionPage(route: this),
-    );
-  }
-
-  @override
-  Widget buildTransitions(BuildContext context, Animation<double> animation,
-      Animation<double> secondaryAnimation, Widget child) {
-    final PageTransitionsTheme theme = Theme.of(context).pageTransitionsTheme;
-    return theme.buildTransitions<bool>(
-        this, context, animation, secondaryAnimation, child);
-  }
-
-  @override
-  bool get maintainState => true;
-
-  @override
-  Duration get transitionDuration => const Duration(milliseconds: 300);
-}
+typedef MusicDeletionCallback = Future<bool> Function(List<Music> selected);
 
 class _PlaylistSelectionPage extends StatefulWidget {
-  _PlaylistSelectionPage({Key key, @required this.route}) : super(key: key);
+  _PlaylistSelectionPage({Key key, @required this.list, this.onDelete})
+      : super(key: key);
 
-  final PlaylistSelectionPageRoute route;
+  final List<Music> list;
 
-  int get playlistId => route.playlistId;
-
-  List<Music> get list => route.list;
+  ///null if do not track delete operation
+  final MusicDeletionCallback onDelete;
 
   @override
   _PlaylistSelectionPageState createState() {
@@ -183,40 +126,39 @@ class _PlaylistSelectionPageState extends State<_PlaylistSelectionPage> {
                   }
                 },
               ),
-              FlatButton(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    Icon(Icons.delete_outline),
-                    const SizedBox(height: 2.0),
-                    Text("删除")
-                  ],
-                ),
-                onPressed: () async {
-                  final delete = neteaseRepository.playlistTracksEdit(
-                      PlaylistOperation.remove,
-                      widget.playlistId,
-                      selectedList.map((m) => m.id).toList());
-                  final succeed = await showLoaderOverlay(context, delete);
-                  if (succeed) {
-                    setState(() {
-                      widget.list.removeWhere((v) => selectedList.contains(v));
-                      selectedList.clear();
-                      widget.route.needRefresh = true;
-                    });
-                  }
-                  if (succeed) {
-                    showSimpleNotification(
-                        context, Text("已删除${selectedList.length}首歌曲"),
-                        background: Theme.of(context).errorColor);
-                  } else {
-                    showSimpleNotification(context, Text("删除失败"),
-                        icon: Icon(Icons.error),
-                        background: Theme.of(context).errorColor);
-                  }
-                },
-              ),
-            ],
+              widget.onDelete == null
+                  ? null // 当 widget.onDelete 为空时，不显示删除按钮。
+                  : FlatButton(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          Icon(Icons.delete_outline),
+                          const SizedBox(height: 2.0),
+                          Text("删除")
+                        ],
+                      ),
+                      onPressed: () async {
+                        final succeed = await showLoaderOverlay(
+                            context, widget.onDelete(selectedList));
+                        if (succeed) {
+                          setState(() {
+                            widget.list
+                                .removeWhere((v) => selectedList.contains(v));
+                            selectedList.clear();
+                          });
+                        }
+                        if (succeed) {
+                          showSimpleNotification(
+                              context, Text("已删除${selectedList.length}首歌曲"),
+                              background: Theme.of(context).errorColor);
+                        } else {
+                          showSimpleNotification(context, Text("删除失败"),
+                              icon: Icon(Icons.error),
+                              background: Theme.of(context).errorColor);
+                        }
+                      },
+                    ),
+            ]..removeWhere((v) => v == null),
           ),
         ),
       ),

@@ -55,6 +55,7 @@ class SongTileProvider {
     SongTileLeadingType leadingType = SongTileLeadingType.number,
     SongTileCallback onTap,
     VoidCallback onDelete,
+    bool showAlbumPopupItem = true,
   }) {
     if (index == 0) {
       return SongListHeader(musics.length, _playAll);
@@ -69,6 +70,7 @@ class SongTileProvider {
         onDelete: onDelete,
         playing: token == PlayerState.of(context).value.token &&
             item == PlayerState.of(context).value.current,
+        showAlbumPopupItem: showAlbumPopupItem,
       );
     }
     return null;
@@ -132,7 +134,8 @@ class SongTile extends StatelessWidget {
       {this.onTap,
       this.leadingType = SongTileLeadingType.number,
       this.playing = false,
-      this.onDelete})
+      this.onDelete,
+      this.showAlbumPopupItem = true})
       : assert(leadingType != null);
 
   /// song data
@@ -150,6 +153,9 @@ class SongTile extends StatelessWidget {
   ///callback when popup menu delete selected
   ///if [onDelete] be null , popup menu will not show delete menu
   final VoidCallback onDelete;
+
+  ///是否在更多中显示 [SongPopupMenuType.album] 按钮
+  final bool showAlbumPopupItem;
 
   Widget buildLeading(BuildContext context) {
     if (leadingType != SongTileLeadingType.none && playing) {
@@ -254,6 +260,11 @@ class SongTile extends StatelessWidget {
           }
         }
         break;
+      case SongPopupMenuType.album:
+        Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+          return AlbumDetailPage(albumId: music.album.id);
+        }));
+        break;
     }
   }
 
@@ -317,6 +328,11 @@ class SongTile extends StatelessWidget {
                               child: Text("评论"),
                               value: SongPopupMenuType.comment,
                             ),
+                            !showAlbumPopupItem
+                                ? null
+                                : PopupMenuItem(
+                                    child: Text("专辑:${music.album.name}"),
+                                    value: SongPopupMenuType.album),
                             onDelete == null
                                 ? null
                                 : PopupMenuItem(
@@ -344,4 +360,7 @@ enum SongPopupMenuType {
 
   ///添加到歌单
   addToPlaylist,
+
+  ///导航到专辑
+  album,
 }
