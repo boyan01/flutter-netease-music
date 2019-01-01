@@ -5,12 +5,11 @@ import 'package:overlay_support/overlay_support.dart';
 import 'package:palette_generator/palette_generator.dart';
 import 'package:quiet/model/playlist_detail.dart';
 import 'package:quiet/pages/page_comment.dart';
+import 'package:quiet/pages/page_playlist_detail_selection.dart';
 import 'package:quiet/part/part.dart';
 import 'package:quiet/repository/netease.dart';
 
 part 'page_album_detail.dart';
-
-part 'page_playlist_detail_selection.dart';
 
 ///歌单详情信息item高度
 const double _HEIGHT_HEADER = 300;
@@ -446,7 +445,7 @@ class _PlaylistDetailHeader extends StatelessWidget {
             showSimpleNotification(context, Text("歌曲未加载,请加载后再试"));
           } else {
             await Navigator.push(context, MaterialPageRoute(builder: (context) {
-              return _PlaylistSelectionPage(
+              return PlaylistSelectionPage(
                   list: musicList,
                   onDelete: (selected) async {
                     return neteaseRepository.playlistTracksEdit(
