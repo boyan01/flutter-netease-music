@@ -331,7 +331,9 @@ class SongTile extends StatelessWidget {
                             !showAlbumPopupItem
                                 ? null
                                 : PopupMenuItem(
-                                    child: Text("专辑:${music.album.name}"),
+                                    child: Text("专辑:${music.album.name}",
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis),
                                     value: SongPopupMenuType.album),
                             onDelete == null
                                 ? null
