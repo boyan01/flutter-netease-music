@@ -91,11 +91,13 @@ class Album {
 }
 
 class Artist {
-  Artist({this.name, this.id});
+  Artist({this.name, this.id, this.imageUrl});
 
   String name;
 
   int id;
+
+  String imageUrl;
 
   @override
   String toString() {
