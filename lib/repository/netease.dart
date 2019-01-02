@@ -300,8 +300,13 @@ class NeteaseRepository {
   }
 
   ///获取歌手的专辑列表
-  Future<Map> artistAlbums(int artistId) async {
-    return doRequest("https://music.163.com/weapi/artist/albums/$artistId", {});
+  Future<Map> artistAlbums(int artistId,
+      {int limit = 10, int offset = 0}) async {
+    return doRequest("https://music.163.com/weapi/artist/albums/$artistId", {
+      "limit": limit,
+      "offset": offset,
+      "total": true,
+    });
   }
 
   ///获取歌手的MV列表
