@@ -245,7 +245,6 @@ Future<T> showLoaderOverlay<T>(BuildContext context, Future<T> data) {
   return completer.future;
 }
 
-
 class PlaylistCreatorDialog extends StatefulWidget {
   @override
   _PlaylistCreatorDialogState createState() {
@@ -311,6 +310,32 @@ class _PlaylistCreatorDialogState extends State<PlaylistCreatorDialog> {
             },
             child: Text("创建"))
       ],
+    );
+  }
+}
+
+///歌手选择弹窗
+///返回 [Artist]
+class ArtistSelectionDialog extends StatelessWidget {
+  final List<Artist> artists;
+
+  const ArtistSelectionDialog({Key key, @required this.artists})
+      : assert(artists != null),
+        super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SimpleDialog(
+      children: artists.map<Widget>((artist) {
+        return ListTile(
+          title: Text(artist.name),
+          enabled: artist.id != 0,
+          onTap: () {
+            Navigator.of(context).pop(artist);
+          },
+          dense: true,
+        );
+      }).toList(),
     );
   }
 }

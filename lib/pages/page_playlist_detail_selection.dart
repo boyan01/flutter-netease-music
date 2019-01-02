@@ -1,9 +1,14 @@
-part of "page_playlist_detail.dart";
+
+import 'package:flutter/material.dart';
+import 'package:overlay_support/overlay_support.dart';
+import 'package:quiet/model/model.dart';
+import 'package:quiet/part/part.dart';
 
 typedef MusicDeletionCallback = Future<bool> Function(List<Music> selected);
 
-class _PlaylistSelectionPage extends StatefulWidget {
-  _PlaylistSelectionPage({Key key, @required this.list, this.onDelete})
+///多选歌曲
+class PlaylistSelectionPage extends StatefulWidget {
+  PlaylistSelectionPage({Key key, @required this.list, this.onDelete})
       : super(key: key);
 
   final List<Music> list;
@@ -12,12 +17,12 @@ class _PlaylistSelectionPage extends StatefulWidget {
   final MusicDeletionCallback onDelete;
 
   @override
-  _PlaylistSelectionPageState createState() {
-    return new _PlaylistSelectionPageState();
+  PlaylistSelectionPageState createState() {
+    return new PlaylistSelectionPageState();
   }
 }
 
-class _PlaylistSelectionPageState extends State<_PlaylistSelectionPage> {
+class PlaylistSelectionPageState extends State<PlaylistSelectionPage> {
   bool allSelected = false;
 
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();

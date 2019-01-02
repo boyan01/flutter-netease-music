@@ -123,7 +123,7 @@ class _MusicTile extends StatelessWidget {
     if (playing) {
       Color color = Theme.of(context).primaryColor;
       leading = Container(
-        margin: EdgeInsets.only(right: 4),
+        margin: EdgeInsets.only(right: 8),
         child: Icon(
           Icons.volume_up,
           color: color,
@@ -137,7 +137,6 @@ class _MusicTile extends StatelessWidget {
       name = Theme.of(context).textTheme.body1.color;
       artist = Theme.of(context).textTheme.caption.color;
     }
-
     return InkWell(
       onTap: () {
         quiet.play(music: music);
@@ -153,21 +152,15 @@ class _MusicTile extends StatelessWidget {
           children: <Widget>[
             leading,
             Expanded(
-                child: Row(
-              children: <Widget>[
-                Text(music.title,
-                    style: Theme.of(context)
-                        .textTheme
-                        .body1
-                        .copyWith(color: name)),
-                Text(
-                  " - ${music.artist.map((a) => a.name).join('/')}",
-                  style: Theme.of(context)
-                      .textTheme
-                      .caption
-                      .copyWith(color: artist),
-                ),
-              ],
+                child: Text.rich(
+              TextSpan(children: [
+                TextSpan(text: music.title, style: TextStyle(color: name)),
+                TextSpan(
+                    text: " - ${music.artist.map((a) => a.name).join('/')}",
+                    style: TextStyle(color: artist, fontSize: 12))
+              ]),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
             )),
             IconButton(
                 icon: Icon(Icons.close),
