@@ -1,5 +1,4 @@
-import 'dart:ui';
-
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:palette_generator/palette_generator.dart';
@@ -39,7 +38,9 @@ class PlaylistDetailPage extends StatefulWidget {
 class _PlayListDetailState extends State<PlaylistDetailPage> {
   Color primaryColor = Colors.teal;
 
-  bool primaryColorGenerated = false;
+  ///disable primary color generate by [loadPrimaryColor]
+  ///because of [PaletteGenerator] bad performance
+  bool primaryColorGenerated = true;
 
   ///generate a primary color by playlist cover image
   void loadPrimaryColor(PlaylistDetail playlist) async {

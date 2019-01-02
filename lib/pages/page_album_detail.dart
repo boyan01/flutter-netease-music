@@ -15,7 +15,9 @@ class AlbumDetailPage extends StatefulWidget {
 class _AlbumDetailPageState extends State<AlbumDetailPage> {
   Color primaryColor = Colors.blueGrey;
 
-  bool primaryColorGenerated = false;
+  ///disable primary color generate by [loadPrimaryColor]
+  ///because of [PaletteGenerator] bad performance
+  bool primaryColorGenerated = true;
 
   ///根据album的cover image 生成 primary color
   ///此方法的流程只会在初始化时走一次
