@@ -35,7 +35,7 @@ class _MainPageState extends State<MainPage>
   @override
   Widget build(BuildContext context) {
     return Quiet(
-      child: LoginStateWidget(Scaffold(
+      child: Scaffold(
         key: _scaffoldKey,
         drawer: Drawer(
           child: Column(
@@ -115,7 +115,7 @@ class _MainPageState extends State<MainPage>
           controller: _tabController,
           children: <Widget>[MainPlaylistPage(), MainCloudPage()],
         )),
-      )),
+      ),
     );
   }
 }
