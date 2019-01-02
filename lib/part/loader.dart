@@ -125,9 +125,9 @@ class LoaderState<T> extends State<Loader> {
           });
         }
       }).catchError((e, StackTrace stack) {
-        debugPrint("error to load : $dynamic");
-        debugPrint(stack.toString());
+        debugPrint("error to load : $e");
         setState(() {
+          _errorMsg = e.toString();
           state = _LoaderState.failed;
         });
       });
@@ -154,7 +154,9 @@ class LoaderState<T> extends State<Loader> {
             );
     }
     return widget.failedWidgetBuilder != null
-        ? widget.failedWidgetBuilder(context, value, _errorMsg)
+        ? Builder(
+            builder: (context) =>
+                widget.failedWidgetBuilder(context, value, _errorMsg))
         : Scaffold(
             body: Container(
               constraints: BoxConstraints.expand(),

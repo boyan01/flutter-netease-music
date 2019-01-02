@@ -141,12 +141,51 @@ class PlaylistSelectorDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (!LoginState.of(context).isLogin) {
-      return _buildDialog(context, Center(child: Text("当前未登陆")));
+      return _buildDialog(
+          context,
+          Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Text("当前未登陆"),
+                SizedBox(height: 16),
+                RaisedButton(
+                    color: Theme.of(context).primaryColor,
+                    onPressed: () {
+                      Navigator.of(context).pushNamed(ROUTE_LOGIN);
+                    },
+                    child: Text("点击前往登陆页面")),
+                SizedBox(height: 32),
+              ],
+            ),
+          ));
     }
     final userId = LoginState.of(context).userId;
     return Loader<List<PlaylistDetail>>(
       loadTask: () => neteaseRepository.userPlaylist(userId),
       resultVerify: simpleLoaderResultVerify((v) => v != null),
+      failedWidgetBuilder: (context, result, msg) {
+        return _buildDialog(
+            context,
+            Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Text(msg ?? "加载失败"),
+                  ),
+                  SizedBox(height: 16),
+                  RaisedButton(
+                      onPressed: () {
+                        Loader.of(context).refresh();
+                      },
+                      child: Text("重试")),
+                  SizedBox(height: 32),
+                ],
+              ),
+            ));
+      },
       builder: (context, result) {
         return Builder(builder: (context) {
           final list = result

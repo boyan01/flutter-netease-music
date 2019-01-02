@@ -87,11 +87,11 @@ class NeteaseRepository {
 
     var path = (await getApplicationDocumentsDirectory()).path + "/.cookies/";
     _dio.cookieJar = PersistCookieJar(path);
-    _dio.interceptor.request.onSend = (options) {
-      debugPrint("request header :${options.headers}");
-      debugPrint("request cookie :${options.data}");
-      return options;
-    };
+//    _dio.interceptor.request.onSend = (options) {
+//      debugPrint("request header :${options.headers}");
+//      debugPrint("request cookie :${options.data}");
+//      return options;
+//    };
     return _dio;
   }
 
@@ -359,14 +359,26 @@ class NeteaseRepository {
         (await dio).cookieJar.loadForRequest(Uri.parse(_BASE_URL));
     options.headers['Content-Type'] = 'application/x-www-form-urlencoded';
 
-    Response response = await (await dio)
-        .post(path, data: Transformer.urlEncodeMap(data), options: options);
-    if (response.data is Map) {
-      return response.data;
+    try {
+      Response response = await (await dio)
+          .post(path, data: Transformer.urlEncodeMap(data), options: options);
+      if (response.data is Map) {
+        return response.data;
+      }
+      return json.decode(response.data);
+    } on DioError catch (e) {
+      return Future.error(_errorMessages[e.type]);
     }
-    return json.decode(response.data);
   }
 }
+
+Map<DioErrorType, String> _errorMessages = {
+  DioErrorType.DEFAULT: "连接网络失败,请检查网络后重试",
+  DioErrorType.CANCEL: "访问已取消",
+  DioErrorType.CONNECT_TIMEOUT: "网络连接超时",
+  DioErrorType.RECEIVE_TIMEOUT: "网络响应超时",
+  DioErrorType.RESPONSE: "服务器错误"
+};
 
 const _crypto = const MethodChannel('tech.soit.netease/crypto');
 
