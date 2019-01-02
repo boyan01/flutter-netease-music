@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:overlay_support/overlay_support.dart';
 import 'package:quiet/model/model.dart';
+import 'package:quiet/pages/page_artist_detail.dart';
 import 'package:quiet/pages/page_comment.dart';
 import 'package:quiet/repository/netease.dart';
 
 import 'part.dart';
 
 export 'package:quiet/model/model.dart';
-import 'package:overlay_support/overlay_support.dart';
 
 typedef SongTileCallback = void Function(Music muisc);
 
@@ -265,6 +266,25 @@ class SongTile extends StatelessWidget {
           return AlbumDetailPage(albumId: music.album.id);
         }));
         break;
+      case SongPopupMenuType.artists:
+        debugPrint("on music popup menu artist : ${music.artist}");
+
+        if (music.artist.length == 1) {
+          Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+            return ArtistDetailPage(artistId: music.artist[0].id);
+          }));
+        } else {
+          final artist = await showDialog<Artist>(
+              context: context,
+              builder: (context) {
+                return ArtistSelectionDialog(artists: music.artist);
+              });
+          if (artist != null) {
+            Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+              return ArtistDetailPage(artistId: artist.id);
+            }));
+          }
+        }
     }
   }
 
@@ -328,10 +348,21 @@ class SongTile extends StatelessWidget {
                               child: Text("评论"),
                               value: SongPopupMenuType.comment,
                             ),
+                            PopupMenuItem(
+                                child: Text(
+                                    "歌手: ${music.artist.map((a) => a.name).join('/')}",
+                                    maxLines: 1),
+                                //如果所有artist的id为0，那么disable这个item
+                                enabled: music.artist
+                                        .fold(0, (c, ar) => c + ar.id) !=
+                                    0,
+                                value: SongPopupMenuType.artists),
                             !showAlbumPopupItem
                                 ? null
                                 : PopupMenuItem(
-                                    child: Text("专辑:${music.album.name}"),
+                                    child: Text("专辑:${music.album.name}",
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis),
                                     value: SongPopupMenuType.album),
                             onDelete == null
                                 ? null
@@ -363,4 +394,7 @@ enum SongPopupMenuType {
 
   ///导航到专辑
   album,
+
+  ///导航到歌手
+  artists,
 }

@@ -294,6 +294,37 @@ class NeteaseRepository {
     return Future.error(response["msg"] ?? "失败");
   }
 
+  ///获取歌手信息和单曲
+  Future<Map> artistDetail(int artistId) async {
+    return doRequest("https://music.163.com/weapi/v1/artist/$artistId", {});
+  }
+
+  ///获取歌手的专辑列表
+  Future<Map> artistAlbums(int artistId,
+      {int limit = 10, int offset = 0}) async {
+    return doRequest("https://music.163.com/weapi/artist/albums/$artistId", {
+      "limit": limit,
+      "offset": offset,
+      "total": true,
+    });
+  }
+
+  ///获取歌手的MV列表
+  Future<Map> artistMvs(int artistId, {int limit = 20, int offset = 0}) async {
+    return doRequest("https://music.163.com/weapi/artist/mvs", {
+      "artistId": artistId,
+      "limit": limit,
+      "offset": offset,
+      "total": true
+    });
+  }
+
+  ///获取歌手介绍
+  Future<Map> artistDesc(int artistId) async {
+    return doRequest(
+        "https://music.163.com/weapi/artist/introduction", {"id": artistId});
+  }
+
   //请求数据
   Future<Map<String, dynamic>> doRequest(String path, Map data,
       {EncryptType type = EncryptType.we, Options options}) async {
