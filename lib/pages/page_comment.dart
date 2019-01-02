@@ -19,6 +19,24 @@ class CommentPage extends StatelessWidget {
     return Loader(
       loadTask: () => getComments(threadId),
       resultVerify: neteaseRepository.responseVerify,
+      failedWidgetBuilder: (context, result, msg) {
+        return Scaffold(
+          appBar: AppBar(
+            leading: BackButton(),
+            title: Text("评论"),
+          ),
+          body: Loader.buildSimpleFailedWidget(context, result, msg),
+        );
+      },
+      loadingBuilder: (context) {
+        return Scaffold(
+          appBar: AppBar(
+            leading: BackButton(),
+            title: Text("评论"),
+          ),
+          body: Loader.buildSimpleLoadingWidget(context),
+        );
+      },
       builder: (context, result) {
         return Scaffold(
           appBar: AppBar(

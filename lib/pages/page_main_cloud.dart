@@ -49,6 +49,7 @@ class _NavigationLine extends StatelessWidget {
   }
 }
 
+///common header for section
 class _Header extends StatelessWidget {
   final String text;
   final GestureTapCallback onTap;
@@ -113,57 +114,28 @@ class _ItemNavigator extends StatelessWidget {
   _ItemNavigator(this.icon, this.text, this.onTap);
 }
 
-class _SectionPlaylist extends StatefulWidget {
-  @override
-  State<StatefulWidget> createState() => _PlaylistSectionState();
-}
-
-class _PlaylistSectionState extends State<_SectionPlaylist> {
-  List<Map<String, Object>> list;
-
-  @override
-  void initState() {
-    super.initState();
-    neteaseRepository.personalizedPlaylist(limit: 6).then((result) {
-      if (result["code"] == 200) {
-        setState(() {
-          list = (result["result"] as List).cast();
-          debugPrint("result :$result");
-        });
-      } else {
-        debugPrint(" personalizedPlaylist falied with ${result["code"]}");
-      }
-    });
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
+class _SectionPlaylist extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    int i = 0;
-    List<Widget> widgets = list?.map((e) {
-      return _buildPlaylistItem(context, i++);
-    })?.toList();
-
-    return GridView.count(
-      physics: NeverScrollableScrollPhysics(),
-      shrinkWrap: true,
-      crossAxisCount: 3,
-      childAspectRatio: 10 / 14,
-      children: widgets ?? [],
+    return Loader<Map>(
+      loadTask: () => neteaseRepository.personalizedPlaylist(limit: 6),
+      resultVerify: neteaseRepository.responseVerify,
+      builder: (context, result) {
+        List<Map> list = (result["result"] as List).cast();
+        return GridView.count(
+          physics: NeverScrollableScrollPhysics(),
+          shrinkWrap: true,
+          crossAxisCount: 3,
+          childAspectRatio: 10 / 14,
+          children: list.map<Widget>((p) {
+            return _buildPlaylistItem(context, p);
+          }).toList(),
+        );
+      },
     );
   }
 
-  Widget _buildPlaylistItem(BuildContext context, int index) {
-    Map<String, Object> playlist = list == null ? null : list[index];
-
-    if (playlist == null) {
-      return null;
-    }
-
+  Widget _buildPlaylistItem(BuildContext context, Map playlist) {
     GestureLongPressCallback onLongPress;
 
     String copyWrite = playlist["copywriter"];
@@ -224,30 +196,7 @@ class _PlaylistSectionState extends State<_SectionPlaylist> {
   }
 }
 
-class _SectionNewSongs extends StatefulWidget {
-  @override
-  State<StatefulWidget> createState() => _NewSongState();
-}
-
-class _NewSongState extends State<_SectionNewSongs> {
-  SongTileProvider songTileProvider;
-
-  @override
-  void initState() {
-    super.initState();
-    neteaseRepository.personalizedNewSong().then((result) {
-      if (result["code"] == 200) {
-        setState(() {
-          List<Music> songs = (result["result"] as List)
-              .cast<Map>()
-              .map(_mapJsonToMusic)
-              .toList();
-          songTileProvider = SongTileProvider("playlist_main_newsong", songs);
-        });
-      }
-    });
-  }
-
+class _SectionNewSongs extends StatelessWidget {
   Music _mapJsonToMusic(Map json) {
     Map<String, Object> song = json["song"];
     return mapJsonToMusic(song);
@@ -255,14 +204,26 @@ class _NewSongState extends State<_SectionNewSongs> {
 
   @override
   Widget build(BuildContext context) {
-    List<Widget> widgets = [];
-    if (songTileProvider != null) {
-      for (int i = 1; i <= songTileProvider.musics.length; i++) {
-        widgets.add(songTileProvider.buildWidget(i, context));
-      }
-    }
-    return Column(
-      children: widgets,
+    return Loader<Map>(
+      loadTask: () => neteaseRepository.personalizedNewSong(),
+      resultVerify: neteaseRepository.responseVerify,
+      builder: (context, result) {
+        List<Music> songs = (result["result"] as List)
+            .cast<Map>()
+            .map(_mapJsonToMusic)
+            .toList();
+        final songTileProvider =
+            SongTileProvider("playlist_main_newsong", songs);
+        List<Widget> widgets = [];
+        if (songTileProvider != null) {
+          for (int i = 1; i <= songTileProvider.musics.length; i++) {
+            widgets.add(songTileProvider.buildWidget(i, context));
+          }
+        }
+        return Column(
+          children: widgets,
+        );
+      },
     );
   }
 }
