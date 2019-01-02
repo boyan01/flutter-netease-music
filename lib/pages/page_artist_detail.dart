@@ -44,69 +44,75 @@ class ArtistDetailPageState extends State<ArtistDetailPage>
               artistKey: "ar", albumKey: "al");
 
           return Scaffold(
-              body: DefaultTabController(
-            length: 4,
-            child: NestedScrollView(
-                headerSliverBuilder: (context, innerBoxIsScrolled) {
-                  return [
-                    SliverOverlapAbsorber(
-                      handle: NestedScrollView.sliverOverlapAbsorberHandleFor(
-                          context),
-                      child: SliverAppBar(
-                        pinned: true,
-                        expandedHeight: 256,
-                        flexibleSpace: FlexibleSpaceBar(
-                          title: Text('${artist["name"]}'),
-                          background: Container(
-                            foregroundDecoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                    begin: Alignment.bottomCenter,
-                                    end: Alignment.topCenter,
-                                    colors: [
-                                  Colors.black87,
-                                  Colors.transparent,
-                                  Colors.transparent,
-                                ])),
-                            child: Image(
-                              fit: BoxFit.cover,
-                              image: NeteaseImage(artist["img1v1Url"]),
+              body: BoxWithBottomPlayerController(
+            DefaultTabController(
+              length: 4,
+              child: NestedScrollView(
+                  headerSliverBuilder: (context, innerBoxIsScrolled) {
+                    return [
+                      SliverOverlapAbsorber(
+                        handle: NestedScrollView.sliverOverlapAbsorberHandleFor(
+                            context),
+                        child: SliverAppBar(
+                          pinned: true,
+                          expandedHeight: 300,
+                          flexibleSpace: FlexibleSpaceBar(
+                            title: Text('${artist["name"]}'),
+                            background: Container(
+                              foregroundDecoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                      begin: Alignment.bottomCenter,
+                                      end: Alignment.topCenter,
+                                      colors: [
+                                    Colors.black87,
+                                    Colors.transparent,
+                                    Colors.transparent,
+                                  ])),
+                              child: Image(
+                                fit: BoxFit.cover,
+                                image: NeteaseImage(artist["img1v1Url"]),
+                              ),
                             ),
                           ),
+                          forceElevated: innerBoxIsScrolled,
+                          bottom: TabBar(tabs: [
+                            Tab(text: "热门单曲"),
+                            Tab(text: "专辑${artist["albumSize"]}"),
+                            Tab(text: "视频${artist["mvSize"]}"),
+                            Tab(text: "艺人信息"),
+                          ]),
+                          actions: <Widget>[
+                            IconButton(
+                                icon: Icon(Icons.share,
+                                    color: Theme.of(context)
+                                        .primaryIconTheme
+                                        .color),
+                                onPressed: null)
+                          ],
                         ),
-                        forceElevated: innerBoxIsScrolled,
-                        bottom: TabBar(tabs: [
-                          Tab(text: "热门单曲"),
-                          Tab(text: "专辑${artist["albumSize"]}"),
-                          Tab(text: "视频${artist["mvSize"]}"),
-                          Tab(text: "艺人信息"),
-                        ]),
-                        actions: <Widget>[
-                          IconButton(
-                              icon: Icon(Icons.share,
-                                  color:
-                                      Theme.of(context).primaryIconTheme.color),
-                              onPressed: null)
+                      ),
+                    ];
+                  },
+                  body: SafeArea(
+                    child: Padding(
+                      padding: const EdgeInsets.only(
+                          top: kToolbarHeight + kTextTabBarHeight),
+                      child: TabBarView(
+                        children: [
+                          _PageHotSongs(
+                              musicList: musicList, artistId: widget.artistId),
+                          _PageAlbums(artistId: widget.artistId),
+                          _PageMVs(
+                              artistId: widget.artistId,
+                              mvCount: artist["mvSize"]),
+                          _PageArtistIntroduction(
+                              artistId: widget.artistId,
+                              artistName: artist["name"]),
                         ],
                       ),
                     ),
-                  ];
-                },
-                body: SafeArea(
-                  child: Padding(
-                    padding: const EdgeInsets.only(
-                        top: kToolbarHeight + kTextTabBarHeight),
-                    child: TabBarView(
-                      children: [
-                        _PageHotSongs(musicList: musicList),
-                        _PageAlbums(artistId: widget.artistId),
-                        _PageMVs(artistId: widget.artistId),
-                        _PageArtistIntroduction(
-                            artistId: widget.artistId,
-                            artistName: artist["name"]),
-                      ],
-                    ),
-                  ),
-                )),
+                  )),
+            ),
           ));
         });
   }
@@ -114,11 +120,14 @@ class ArtistDetailPageState extends State<ArtistDetailPage>
 
 ///热门单曲
 class _PageHotSongs extends StatefulWidget {
-  const _PageHotSongs({Key key, @required this.musicList})
+  const _PageHotSongs(
+      {Key key, @required this.musicList, @required this.artistId})
       : assert(musicList != null),
         super(key: key);
 
   final List<Music> musicList;
+
+  final int artistId;
 
   @override
   _PageHotSongsState createState() {
@@ -128,6 +137,8 @@ class _PageHotSongs extends StatefulWidget {
 
 class _PageHotSongsState extends State<_PageHotSongs>
     with AutomaticKeepAliveClientMixin {
+  SongTileProvider songTileProvider;
+
   Widget _buildHeader(BuildContext context) {
     return InkWell(
       onTap: () {
@@ -176,9 +187,16 @@ class _PageHotSongsState extends State<_PageHotSongs>
           if (index == 0) {
             return _buildHeader(context);
           } else {
-            return SongTile(widget.musicList[index - 1], index);
+            return songTileProvider?.buildWidget(index, context);
           }
         });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    songTileProvider = SongTileProvider(
+        "artist_hot_song_${widget.artistId}", widget.musicList);
   }
 
   @override
@@ -205,11 +223,18 @@ class _PageAlbumsState extends State<_PageAlbums>
         resultVerify: neteaseRepository.responseVerify,
         builder: (context, result) {
           List<Map> albums = (result["hotAlbums"] as List).cast();
-          return ListView.builder(
-              itemCount: albums.length,
-              itemBuilder: (context, index) {
-                return AlbumTile(album: albums[index]);
-              });
+          return AutoLoadMoreList<Map>(
+            totalCount: result["artist"]["albumSize"],
+            loadMore: (offset) async {
+              final result = await neteaseRepository
+                  .artistAlbums(widget.artistId, offset: offset);
+              return (result["hotAlbums"] as List).cast();
+            },
+            initialList: albums,
+            builder: (context, album) {
+              return AlbumTile(album: album);
+            },
+          );
         });
   }
 
@@ -220,7 +245,10 @@ class _PageAlbumsState extends State<_PageAlbums>
 class _PageMVs extends StatefulWidget {
   final int artistId;
 
-  const _PageMVs({Key key, @required this.artistId}) : super(key: key);
+  final int mvCount;
+
+  const _PageMVs({Key key, @required this.artistId, @required this.mvCount})
+      : super(key: key);
 
   @override
   _PageMVsState createState() {
@@ -236,10 +264,16 @@ class _PageMVsState extends State<_PageMVs> with AutomaticKeepAliveClientMixin {
       resultVerify: neteaseRepository.responseVerify,
       builder: (context, result) {
         final List<Map> mvs = (result["mvs"] as List).cast();
-        return ListView.builder(
-            itemCount: mvs.length,
-            itemBuilder: (context, index) {
-              final mv = mvs[index];
+
+        return AutoLoadMoreList(
+            loadMore: (offset) async {
+              final result = await neteaseRepository.artistMvs(widget.artistId,
+                  offset: offset);
+              return (result["mvs"] as List).cast();
+            },
+            totalCount: widget.mvCount,
+            initialList: mvs,
+            builder: (context, mv) {
               return InkWell(
                 onTap: () {
                   debugPrint("on tap : ${mv["id"]}");
@@ -335,8 +369,8 @@ class _PageArtistIntroductionState extends State<_PageArtistIntroduction>
   }
 
   List<Widget> _buildTopic(BuildContext context, Map result) {
-    final List<Map> data = (result["topicData"] as List).cast();
-    if (data.length == 0) {
+    final List<Map> data = (result["topicData"] as List)?.cast();
+    if (data == null || data.length == 0) {
       return [];
     }
     Widget title = Padding(

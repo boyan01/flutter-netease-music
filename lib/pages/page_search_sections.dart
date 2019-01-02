@@ -1,4 +1,3 @@
-import 'package:async/async.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:overlay_support/overlay_support.dart';
@@ -27,7 +26,7 @@ class SongsResultSectionState extends State<SongsResultSection>
             neteaseRepository.search(widget.query, NeteaseSearchType.song),
         resultVerify: neteaseRepository.responseVerify,
         builder: (context, result) {
-          return _SearchAutoLoadMore(
+          return AutoLoadMoreList(
             loadMore: (count) async {
               Map result = await neteaseRepository
                   .search(widget.query, NeteaseSearchType.song, offset: count);
@@ -94,7 +93,7 @@ class _VideosResultSectionState extends State<VideosResultSection>
             neteaseRepository.search(widget.query, NeteaseSearchType.video),
         resultVerify: neteaseRepository.responseVerify,
         builder: (context, result) {
-          return _SearchAutoLoadMore(
+          return AutoLoadMoreList(
               loadMore: (offset) async {
                 Map result = await neteaseRepository.search(
                     widget.query, NeteaseSearchType.video,
@@ -134,7 +133,7 @@ class _ArtistsResultSectionState extends State<ArtistsResultSection>
             neteaseRepository.search(widget.query, NeteaseSearchType.artist),
         resultVerify: neteaseRepository.responseVerify,
         builder: (context, result) {
-          return _SearchAutoLoadMore(
+          return AutoLoadMoreList(
               loadMore: (offset) async {
                 Map result = await neteaseRepository.search(
                     widget.query, NeteaseSearchType.artist,
@@ -177,7 +176,7 @@ class _AlbumsResultSectionState extends State<AlbumsResultSection>
             neteaseRepository.search(widget.query, NeteaseSearchType.album),
         resultVerify: neteaseRepository.responseVerify,
         builder: (context, result) {
-          return _SearchAutoLoadMore(
+          return AutoLoadMoreList(
               loadMore: (offset) async {
                 Map result = await neteaseRepository.search(
                     widget.query, NeteaseSearchType.album,
@@ -236,7 +235,7 @@ class _PlaylistResultSectionState extends State<PlaylistResultSection>
             neteaseRepository.search(widget.query, NeteaseSearchType.playlist),
         resultVerify: neteaseRepository.responseVerify,
         builder: (context, result) {
-          return _SearchAutoLoadMore(
+          return AutoLoadMoreList(
               loadMore: (offset) async {
                 Map result = await neteaseRepository.search(
                     widget.query, NeteaseSearchType.playlist,
@@ -424,145 +423,6 @@ class ArtistTile extends StatelessWidget {
             Padding(padding: EdgeInsets.only(right: 8))
           ],
         ),
-      ),
-    );
-  }
-}
-
-class _SearchAutoLoadMore extends StatefulWidget {
-  final totalCount;
-
-  final List initialList;
-
-  ///return the items loaded
-  ///null indicator failed
-  final Future<List> Function(int loadedCount) loadMore;
-
-  final Widget Function(BuildContext context, dynamic item) builder;
-
-  const _SearchAutoLoadMore(
-      {Key key,
-      @required this.loadMore,
-      @required this.totalCount,
-      @required this.initialList,
-      @required this.builder})
-      : super(key: key);
-
-  @override
-  _SearchAutoLoadMoreState createState() => _SearchAutoLoadMoreState();
-}
-
-class _SearchAutoLoadMoreState extends State<_SearchAutoLoadMore> {
-  ///true when more item available
-  bool hasMore;
-
-  ///true when load error occurred
-  bool error = false;
-
-  List items = [];
-
-  ScrollController controller;
-
-  CancelableOperation<List> _autoLoadOperation;
-
-  @override
-  void initState() {
-    super.initState();
-    items.clear();
-    items.addAll(widget.initialList);
-    hasMore = widget.initialList.length < widget.totalCount;
-    controller = ScrollController()
-      ..addListener(() {
-        _load();
-      });
-  }
-
-  void _load() {
-    if (hasMore &&
-        !error &&
-        controller.position.extentAfter < 500 &&
-        _autoLoadOperation == null) {
-      _autoLoadOperation =
-          CancelableOperation.fromFuture(widget.loadMore(items.length))
-            ..value.then((result) {
-              if (result == null) {
-                error = true;
-              } else if (result.isEmpty) {
-                //assume empty represent end of list
-                hasMore = false;
-              } else {
-                items.addAll(result);
-                hasMore = items.length < widget.totalCount;
-              }
-              setState(() {});
-            }).whenComplete(() {
-              _autoLoadOperation = null;
-            }).catchError((e) {
-              setState(() {
-                error = true;
-              });
-            });
-    }
-  }
-
-  @override
-  void dispose() {
-    controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return ListView.builder(
-        itemCount: items.length + (hasMore ? 1 : 0),
-        itemBuilder: (context, index) {
-          if (index >= 0 && index < items.length) {
-            return widget.builder(context, items[index]);
-          } else if (index == items.length && hasMore) {
-            if (!error) {
-              return _ItemLoadMore();
-            } else {
-              return Container(
-                height: 56,
-                child: Center(
-                  child: RaisedButton(
-                    onPressed: () {
-                      error = false;
-                      _load();
-                    },
-                    child: Text("加载失败！点击重试"),
-                    textColor: Theme.of(context).primaryTextTheme.body1.color,
-                    color: Theme.of(context).errorColor,
-                  ),
-                ),
-              );
-            }
-          }
-          throw Exception("illegal state");
-        },
-        controller: controller);
-  }
-}
-
-///suffix of a list, indicator that list is loading more items
-class _ItemLoadMore extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 56,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          SizedBox(
-            child: CircularProgressIndicator(),
-            height: 16,
-            width: 16,
-          ),
-          Padding(
-            padding: EdgeInsets.only(left: 8),
-          ),
-          Text("正在加载更多...")
-        ],
       ),
     );
   }
