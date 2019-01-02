@@ -94,6 +94,7 @@ class _MainPlaylistState extends State<MainPlaylistPage>
         },
         failedWidgetBuilder: (context, result, msg) {
           final widgets = _buildPinnedTile(context);
+          widgets.add(Loader.buildSimpleFailedWidget(context, result, msg));
           return ListView(children: widgets);
         },
         builder: (context, result) {

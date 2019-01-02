@@ -56,6 +56,36 @@ class Loader<T> extends StatefulWidget {
         assert(builder != null),
         super(key: key);
 
+  static Widget buildSimpleFailedWidget<T>(
+      BuildContext context, T result, String msg) {
+    return Container(
+      constraints: BoxConstraints(minHeight: 200),
+      child: Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Text(msg),
+            SizedBox(height: 8),
+            RaisedButton(
+                child: Text("重试"),
+                onPressed: () {
+                  Loader.of(context).refresh();
+                })
+          ],
+        ),
+      ),
+    );
+  }
+
+  static Widget buildSimpleLoadingWidget<T>(BuildContext context) {
+    return Container(
+      constraints: BoxConstraints(minHeight: 200),
+      child: Center(
+        child: CircularProgressIndicator(),
+      ),
+    );
+  }
+
   ///task to load
   ///returned future'data will send by [LoaderWidgetBuilder]
   final Future<T> Function() loadTask;
@@ -108,7 +138,9 @@ class LoaderState<T> extends State<Loader> {
   Loader<T> get widget => super.widget;
 
   void _loadData() {
-    state = _LoaderState.loading;
+    setState(() {
+      state = _LoaderState.loading;
+    });
     task?.cancel();
     task = CancelableOperation.fromFuture(widget.loadTask())
       ..value.then((v) {
@@ -144,51 +176,12 @@ class LoaderState<T> extends State<Loader> {
     if (state == _LoaderState.success) {
       return widget.builder(context, value);
     } else if (state == _LoaderState.loading) {
-      return widget.loadingBuilder != null
-          ? widget.loadingBuilder(context)
-          : Container(
-              color: Colors.white,
-              child: Center(
-                child: CircularProgressIndicator(),
-              ),
-            );
+      return (widget.loadingBuilder ??
+          Loader.buildSimpleLoadingWidget)(context);
     }
-    return widget.failedWidgetBuilder != null
-        ? Builder(
-            builder: (context) =>
-                widget.failedWidgetBuilder(context, value, _errorMsg))
-        : Scaffold(
-            body: Container(
-              constraints: BoxConstraints.expand(),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  Spacer(),
-                  _errorMsg == null
-                      ? null
-                      : Padding(
-                          padding:
-                              EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                          child: Text(
-                            _errorMsg,
-                            style: Theme.of(context).textTheme.body1,
-                          ),
-                        ),
-                  RaisedButton(
-                    color: Theme.of(context).primaryColor,
-                    textColor: Theme.of(context).primaryTextTheme.title.color,
-                    onPressed: () {
-                      setState(() {
-                        _loadData();
-                      });
-                    },
-                    child: Text("加载失败，点击重试"),
-                  ),
-                  Spacer(),
-                ]..removeWhere((v) => v == null),
-              ),
-            ),
-          );
+    return Builder(
+        builder: (context) => (widget.failedWidgetBuilder ??
+            Loader.buildSimpleFailedWidget)(context, value, _errorMsg));
   }
 }
 
