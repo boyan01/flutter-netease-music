@@ -12,25 +12,23 @@ class PlayingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Quiet(
-        child: Stack(
-          children: <Widget>[
-            _BlurBackground(),
-            Material(
-              color: Colors.transparent,
-              child: Column(
-                children: <Widget>[
-                  _PlayingTitle(),
-                  _CenterSection(),
-                  _OperationBar(),
-                  Padding(padding: EdgeInsets.only(top: 10)),
-                  _DurationProgressBar(),
-                  _ControllerBar(),
-                ],
-              ),
+      body: Stack(
+        children: <Widget>[
+          _BlurBackground(),
+          Material(
+            color: Colors.transparent,
+            child: Column(
+              children: <Widget>[
+                _PlayingTitle(),
+                _CenterSection(),
+                _OperationBar(),
+                Padding(padding: EdgeInsets.only(top: 10)),
+                _DurationProgressBar(),
+                _ControllerBar(),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

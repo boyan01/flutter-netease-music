@@ -153,13 +153,11 @@ class _NeteaseSearchPageState extends State<NeteaseSearchPage>
             actions: buildActions(context),
             bottom: tabs,
           ),
-          body: Quiet(
-            child: initialState
-                ? _EmptyQuerySuggestionSection(
-                    suggestionSelectedCallback: (query) => _search(query))
-                : _SearchResultPage(
-                    query: _searchedQuery, tabController: tabController),
-          ),
+          body: initialState
+              ? _EmptyQuerySuggestionSection(
+                  suggestionSelectedCallback: (query) => _search(query))
+              : _SearchResultPage(
+                  query: _searchedQuery, tabController: tabController),
         ),
         SafeArea(
             child: Padding(

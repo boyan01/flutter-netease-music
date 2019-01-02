@@ -1,10 +1,12 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:meta/meta.dart';
 import 'package:quiet/model/model.dart';
 import 'package:quiet/service/channel_media_player.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:overlay_support/overlay_support.dart';
 
 MusicPlayer quiet = MusicPlayer._private();
 
@@ -216,6 +218,11 @@ class _QuietState extends State<Quiet> {
   void _onPlayerChange() {
     setState(() {
       value = quiet.value;
+      if (value.hasError) {
+        showSimpleNotification(
+            context, Text("播放歌曲${value.current?.title ?? ""}失败!"),
+            icon: Icon(Icons.error), background: Theme.of(context).errorColor);
+      }
     });
   }
 
