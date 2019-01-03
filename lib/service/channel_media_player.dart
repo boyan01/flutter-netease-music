@@ -179,6 +179,11 @@ class PlayerController extends ValueNotifier<PlayerControllerState> {
               position: Duration(milliseconds: method.arguments["position"]),
               duration: Duration(milliseconds: method.arguments["duration"]));
           break;
+        case "onPlayModeChanged":
+          value = value.copyWith(
+            playMode:PlayMode.values[method.arguments % 3]
+          );
+          break;
       }
     });
   }
