@@ -172,10 +172,12 @@ class QuietPlayerChannel(private val channel: MethodChannel) : MethodChannel.Met
                 }
                 "position" -> {
                     result.success(player.position)
-                    result.success(null)
                 }
                 "duration" -> {
                     result.success(player.duration)
+                }
+                "quiet" -> {
+                    player.quiet()
                     result.success(null)
                 }
                 else -> {

@@ -147,7 +147,6 @@ class MusicPlayer implements ValueNotifier<PlayerControllerState> {
 
   void quiet() {
     _controller.dispose();
-    value = PlayerControllerState.uninitialized();
   }
 
   Future<void> playNext() async {
@@ -171,7 +170,6 @@ class MusicPlayer implements ValueNotifier<PlayerControllerState> {
   ///[PlayMode]
   Future<void> changePlayMode() {
     PlayMode next = PlayMode.values[(value.playMode.index + 1) % 3];
-    value = value.copyWith(playMode: next);
     return _controller.setPlayMode(next);
   }
 
@@ -200,7 +198,7 @@ class MusicPlayer implements ValueNotifier<PlayerControllerState> {
   }
 
   @override
-  set value(PlayerControllerState newValue) => _controller.value = newValue;
+  set value(PlayerControllerState newValue) => throw "Unsupported operation";
 }
 
 class Quiet extends StatefulWidget {
