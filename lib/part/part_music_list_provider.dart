@@ -267,24 +267,7 @@ class SongTile extends StatelessWidget {
         }));
         break;
       case SongPopupMenuType.artists:
-        debugPrint("on music popup menu artist : ${music.artist}");
-
-        if (music.artist.length == 1) {
-          Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-            return ArtistDetailPage(artistId: music.artist[0].id);
-          }));
-        } else {
-          final artist = await showDialog<Artist>(
-              context: context,
-              builder: (context) {
-                return ArtistSelectionDialog(artists: music.artist);
-              });
-          if (artist != null) {
-            Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-              return ArtistDetailPage(artistId: artist.id);
-            }));
-          }
-        }
+        launchArtistDetailPage(context, music.artist);
     }
   }
 

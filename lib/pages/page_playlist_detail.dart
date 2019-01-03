@@ -7,6 +7,7 @@ import 'package:quiet/pages/page_comment.dart';
 import 'package:quiet/pages/page_playlist_detail_selection.dart';
 import 'package:quiet/part/part.dart';
 import 'package:quiet/repository/netease.dart';
+import 'page_artist_detail.dart';
 
 part 'page_album_detail.dart';
 

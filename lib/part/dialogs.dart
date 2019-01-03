@@ -352,29 +352,3 @@ class _PlaylistCreatorDialogState extends State<PlaylistCreatorDialog> {
     );
   }
 }
-
-///歌手选择弹窗
-///返回 [Artist]
-class ArtistSelectionDialog extends StatelessWidget {
-  final List<Artist> artists;
-
-  const ArtistSelectionDialog({Key key, @required this.artists})
-      : assert(artists != null),
-        super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return SimpleDialog(
-      children: artists.map<Widget>((artist) {
-        return ListTile(
-          title: Text(artist.name),
-          enabled: artist.id != 0,
-          onTap: () {
-            Navigator.of(context).pop(artist);
-          },
-          dense: true,
-        );
-      }).toList(),
-    );
-  }
-}

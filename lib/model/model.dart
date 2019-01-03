@@ -99,9 +99,10 @@ class Artist {
 
   String imageUrl;
 
+
   @override
   String toString() {
-    return 'Artist{name: $name, id: $id}';
+    return 'Artist{name: $name, id: $id, imageUrl: $imageUrl}';
   }
 
   static Artist fromMap(Map map) {
