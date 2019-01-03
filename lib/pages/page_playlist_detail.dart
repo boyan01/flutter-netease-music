@@ -498,10 +498,10 @@ class _DetailHeader extends StatelessWidget {
       this.onShareTap,
       this.onDownloadTap,
       this.onSelectionTap,
-      this.commentCount = 0,
-      this.shareCount = 0})
-      : assert(commentCount != null),
-        assert(shareCount != null),
+      int commentCount = 0,
+      int shareCount = 0})
+      : this.commentCount = commentCount ?? 0,
+        this.shareCount = shareCount ?? 0,
         super(key: key);
 
   final Widget content;
