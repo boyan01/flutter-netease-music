@@ -276,6 +276,25 @@ class _PlaylistBodyState extends State<_PlaylistBody> {
     );
   }
 
+  ///订阅与取消订阅歌单
+  Future<bool> _doSubscribeChanged(bool subscribe) async {
+    bool succeed;
+    try {
+      succeed = await showLoaderOverlay(context,
+          neteaseRepository.playlistSubscribe(widget.playlist.id, !subscribe));
+    } catch (e) {
+      succeed = false;
+    }
+    String action = !subscribe ? "收藏" : "取消收藏";
+    if (succeed) {
+      showSimpleNotification(context, Text("$action成功"));
+    } else {
+      showSimpleNotification(context, Text("$action失败"),
+          background: Theme.of(context).errorColor);
+    }
+    return succeed ? !subscribe : subscribe;
+  }
+
   Widget _buildList(BuildContext context, int index) {
     if (index == 0) {
       return _PlaylistDetailHeader(widget.playlist);
@@ -283,49 +302,35 @@ class _PlaylistBodyState extends State<_PlaylistBody> {
     if (widget.musicList.isEmpty) {
       return _EmptyPlaylistSection();
     }
+    bool owner =
+        widget.playlist.creator["userId"] == LoginState.of(context).userId;
     if (index == 1) {
       Widget tail;
-      if (widget.playlist.creator["userId"] != LoginState.of(context).userId) {
-        tail = _SubscribeButton(
-            widget.playlist.subscribed, widget.playlist.subscribedCount,
-            (subscribe) async {
-          bool succeed;
-          try {
-            succeed = await showLoaderOverlay(
-                context,
-                neteaseRepository.playlistSubscribe(
-                    widget.playlist.id, !subscribe));
-          } catch (e) {
-            succeed = false;
-          }
-          String action = !subscribe ? "收藏" : "取消收藏";
-          if (succeed) {
-            showSimpleNotification(context, Text("$action成功"));
-          } else {
-            showSimpleNotification(context, Text("$action失败"),
-                background: Theme.of(context).errorColor);
-          }
-          return succeed ? !subscribe : subscribe;
-        });
+      if (!owner) {
+        tail = _SubscribeButton(widget.playlist.subscribed,
+            widget.playlist.subscribedCount, _doSubscribeChanged);
       }
       return _songTileProvider?.buildListHeader(context, tail: tail);
     }
     return _songTileProvider?.buildWidget(index - 1, context,
-        onDelete: () async {
-      var result = await neteaseRepository.playlistTracksEdit(
-          PlaylistOperation.remove,
-          widget.playlist.id,
-          [_songTileProvider.musics[index - 2].id]);
-      if (result) {
-        setState(() {
-          widget.playlist.musicList.removeAt(index - 2);
-        });
-        showSimpleNotification(context, Text("已成功删除歌曲"));
-      } else {
-        showSimpleNotification(context, Text("删除歌曲失败"),
-            icon: Icon(Icons.error), background: Theme.of(context).errorColor);
-      }
-    });
+        onDelete: !owner
+            ? null
+            : () async {
+                var result = await neteaseRepository.playlistTracksEdit(
+                    PlaylistOperation.remove,
+                    widget.playlist.id,
+                    [_songTileProvider.musics[index - 2].id]);
+                if (result) {
+                  setState(() {
+                    widget.playlist.musicList.removeAt(index - 2);
+                  });
+                  showSimpleNotification(context, Text("已成功删除歌曲"));
+                } else {
+                  showSimpleNotification(context, Text("删除歌曲失败"),
+                      icon: Icon(Icons.error),
+                      background: Theme.of(context).errorColor);
+                }
+              });
   }
 }
 
