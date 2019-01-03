@@ -236,7 +236,7 @@ class _AlbumDetailHeader extends StatelessWidget {
                               "歌手: ${artist.map((a) => a.name).join('/')}"),
                         ),
                         onTap: () {
-                          debugPrint("to artist :$artist");
+                          launchArtistDetailPage(context, artist);
                         }),
                     SizedBox(height: 4),
                     Text("发行时间：${getFormattedTime(album["publishTime"])}")
