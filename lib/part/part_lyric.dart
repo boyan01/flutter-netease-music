@@ -12,7 +12,8 @@ class Lyric extends StatefulWidget {
       this.position,
       this.textAlign = TextAlign.center,
       this.highlight = Colors.red,
-      @required this.size});
+      @required this.size,
+      this.onTap});
 
   final TextStyle lyricLineStyle;
 
@@ -25,6 +26,8 @@ class Lyric extends StatefulWidget {
   final Color highlight;
 
   final Size size;
+
+  final VoidCallback onTap;
 
   @override
   State<StatefulWidget> createState() => LyricState();
@@ -53,7 +56,7 @@ class LyricState extends State<Lyric> with TickerProviderStateMixin {
 
 //    debugPrint("is being dragging : $isDragging");
 
-    if (lyricPainter.currentLine != line && !isDragging) {
+    if (lyricPainter.currentLine != line && !dragging) {
       double offset = lyricPainter.computeScrollTo(line);
 //      debugPrint("find line : $line , isDragging = $isDragging");
 //      debugPrint("start _lineController : $offset");
@@ -80,7 +83,9 @@ class LyricState extends State<Lyric> with TickerProviderStateMixin {
     lyricPainter.currentLine = line;
   }
 
-  bool isDragging = false;
+  bool dragging = false;
+
+  bool _consumeTap = false;
 
   @override
   void dispose() {
@@ -94,55 +99,62 @@ class LyricState extends State<Lyric> with TickerProviderStateMixin {
   Widget build(BuildContext _) {
     return Container(
       constraints: BoxConstraints(minWidth: 300, minHeight: 120),
-      child: Listener(
-        behavior: HitTestBehavior.translucent,
-        onPointerDown: (_) {
-          isDragging = true;
+      child: GestureDetector(
+        onTap: () {
+          if (!_consumeTap && widget.onTap != null) {
+            widget.onTap();
+          } else {
+            _consumeTap = false;
+          }
         },
-        onPointerUp: (_) {
-          isDragging = false;
-        },
-        onPointerCancel: (_) {
-          isDragging = false;
-        },
-        child: GestureDetector(
-          onVerticalDragStart: (details) {
+        onTapDown: (details) {
+          if (dragging) {
+            _consumeTap = true;
+
+            dragging = false;
             _flingController?.dispose();
             _flingController = null;
-          },
-          onVerticalDragUpdate: (details) {
-            lyricPainter.offsetScroll += details.primaryDelta;
-          },
-          onVerticalDragEnd: (details) {
-            isDragging = true;
-            _flingController = AnimationController.unbounded(
-                vsync: this, duration: const Duration(milliseconds: 300))
-              ..addListener(() {
-                double value = _flingController.value;
+          }
+        },
+        onVerticalDragStart: (details) {
+          dragging = true;
+          _flingController?.dispose();
+          _flingController = null;
+        },
+        onVerticalDragUpdate: (details) {
+          debugPrint("details.primaryDelta : ${details.primaryDelta}");
+          lyricPainter.offsetScroll += details.primaryDelta;
+        },
+        onVerticalDragEnd: (details) {
+          _flingController = AnimationController.unbounded(
+              vsync: this, duration: const Duration(milliseconds: 300))
+            ..addListener(() {
+              double value = _flingController.value;
 
-                if (value < -lyricPainter.height || value >= 0) {
-                  _flingController.dispose();
-                  _flingController = null;
-                  isDragging = false;
-                  value = value.clamp(-lyricPainter.height, 0.0);
-                }
-                lyricPainter.offsetScroll = value;
-                lyricPainter.repaint();
-              })
-              ..addStatusListener((status) {
-                if (status == AnimationStatus.completed ||
-                    status == AnimationStatus.dismissed) {
-                  isDragging = false;
-                }
-              })
-              ..animateWith(ClampingScrollSimulation(
-                  position: lyricPainter.offsetScroll,
-                  velocity: details.primaryVelocity));
-          },
-          child: CustomPaint(
-            size: widget.size,
-            painter: lyricPainter,
-          ),
+              if (value < -lyricPainter.height || value >= 0) {
+                _flingController.dispose();
+                _flingController = null;
+                dragging = false;
+                value = value.clamp(-lyricPainter.height, 0.0);
+              }
+              lyricPainter.offsetScroll = value;
+              lyricPainter.repaint();
+            })
+            ..addStatusListener((status) {
+              if (status == AnimationStatus.completed ||
+                  status == AnimationStatus.dismissed) {
+                dragging = false;
+                _flingController.dispose();
+                _flingController = null;
+              }
+            })
+            ..animateWith(ClampingScrollSimulation(
+                position: lyricPainter.offsetScroll,
+                velocity: details.primaryVelocity));
+        },
+        child: CustomPaint(
+          size: widget.size,
+          painter: lyricPainter,
         ),
       ),
     );

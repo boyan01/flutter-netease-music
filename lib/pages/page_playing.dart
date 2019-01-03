@@ -2,15 +2,24 @@ import 'dart:math';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:quiet/pages/page_comment.dart';
 import 'package:quiet/pages/page_playing_list.dart';
 import 'package:quiet/part/part.dart';
 import 'package:quiet/repository/netease.dart';
 import 'package:quiet/service/channel_media_player.dart';
 
+///歌曲播放页面
 class PlayingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final music = PlayerState.of(context).value.current;
+    if (music == null) {
+      SchedulerBinding.instance.addPostFrameCallback((_) {
+        Navigator.of(context).pop();
+      });
+      return Container();
+    }
     return Scaffold(
       body: Stack(
         children: <Widget>[
@@ -19,8 +28,8 @@ class PlayingPage extends StatelessWidget {
             color: Colors.transparent,
             child: Column(
               children: <Widget>[
-                _PlayingTitle(),
-                _CenterSection(),
+                _PlayingTitle(music: music),
+                _CenterSection(music: music),
                 _OperationBar(),
                 Padding(padding: EdgeInsets.only(top: 10)),
                 _DurationProgressBar(),
@@ -294,6 +303,10 @@ class _OperationBar extends StatelessWidget {
 }
 
 class _CenterSection extends StatefulWidget {
+  final Music music;
+
+  const _CenterSection({Key key, @required this.music}) : super(key: key);
+
   @override
   State<StatefulWidget> createState() => _CenterSectionState();
 }
@@ -304,53 +317,60 @@ class _CenterSectionState extends State<_CenterSection> {
   @override
   Widget build(BuildContext context) {
     return Expanded(
-      child: GestureDetector(
+      child: AnimatedCrossFade(
+        crossFadeState:
+            showLyric ? CrossFadeState.showSecond : CrossFadeState.showFirst,
+        layoutBuilder: (Widget topChild, Key topChildKey, Widget bottomChild,
+            Key bottomChildKey) {
+          return Stack(
+            overflow: Overflow.visible,
+            children: <Widget>[
+              Center(
+                key: bottomChildKey,
+                child: bottomChild,
+              ),
+              Center(
+                key: topChildKey,
+                child: topChild,
+              ),
+            ],
+          );
+        },
+        duration: Duration(milliseconds: 300),
+        firstChild: GestureDetector(
           onTap: () {
             setState(() {
               showLyric = !showLyric;
             });
           },
-          child: AnimatedCrossFade(
-            crossFadeState: showLyric
-                ? CrossFadeState.showSecond
-                : CrossFadeState.showFirst,
-            duration: Duration(milliseconds: 300),
-            firstChild: _AlbumCover(),
-            secondChild: _CloudLyric(),
-          )),
+          child: _AlbumCover(music: widget.music),
+        ),
+        secondChild: _CloudLyric(
+          music: widget.music,
+          onTap: () {
+            setState(() {
+              showLyric = !showLyric;
+            });
+          },
+        ),
+      ),
     );
   }
 }
 
 class _CloudLyric extends StatefulWidget {
+  final VoidCallback onTap;
+
+  final Music music;
+
+  const _CloudLyric({Key key, this.onTap, @required this.music})
+      : super(key: key);
+
   @override
   State<StatefulWidget> createState() => _CloudLyricState();
 }
 
 class _CloudLyricState extends State<_CloudLyric> {
-  Music music;
-
-  LyricContent lyric;
-
-  ///
-  /// 0 -> loading
-  /// 1 -> no lyric
-  /// 2 -> load success
-  /// 3 -> load failed
-  int get state => _state;
-
-  set state(int state) {
-    if (state < 0 || state > 3 || state == _state) {
-      return;
-    }
-    setState(() {
-      debugPrint("lyric load state : $state");
-      _state = state;
-    });
-  }
-
-  int _state = 0;
-
   ValueNotifier<int> position = ValueNotifier(0);
 
   @override
@@ -361,30 +381,6 @@ class _CloudLyricState extends State<_CloudLyric> {
   }
 
   void _onMusicStateChanged() {
-    if (quiet.value.current == music) {
-      if (music == null) {
-        state = 1;
-      }
-    } else {
-      music = quiet.value.current;
-      state = 0;
-      neteaseRepository.lyric(music.id).then((content) {
-        if (content == null) {
-          state = 3;
-        } else {
-          try {
-            lyric = LyricContent.from(content);
-            state = 2;
-          } catch (e) {
-            //parse lyric error
-            state = 3;
-          }
-        }
-      }).catchError((dynamic) {
-        state = 1;
-      });
-    }
-
     position.value = quiet.value.position.inMilliseconds;
   }
 
@@ -397,56 +393,58 @@ class _CloudLyricState extends State<_CloudLyric> {
 
   @override
   Widget build(BuildContext context) {
-    TextStyle style =
-        Theme.of(context).primaryTextTheme.body1.copyWith(height: 1.5);
+    TextStyle style = Theme.of(context)
+        .textTheme
+        .body1
+        .copyWith(height: 1.5, fontSize: 16, color: Colors.white);
 
-    if (state == 2) {
-      //load success
-      return LayoutBuilder(builder: (context, constraints) {
-        return Container(
-          child: Lyric(
-            lyric: lyric,
-            lyricLineStyle: style.copyWith(color: style.color.withAlpha(189)),
-            highlight: style.color,
-            position: position,
-            size: Size(
-                constraints.maxWidth,
-                constraints.maxHeight == double.infinity
-                    ? 0
-                    : constraints.maxHeight),
-          ),
-        );
-      });
-    }
-
-    Widget widget;
-    if (state == 0) {
-      widget = Text(
-        "加载中...",
-        style: style,
-      );
-    } else if (state == 1) {
-      widget = Text(
-        "暂无歌词",
-        style: style,
-      );
-    } else if (state == 3) {
-      widget = Text(
-        "加载失败",
-        style: style,
-      );
-    } else {
-      throw Exception("state erro :$state");
-    }
-    return Container(
-      child: Center(
-        child: widget,
-      ),
-    );
+    return Loader<LyricContent>(
+        key: Key("lyric_${widget.music.id}"),
+        loadTask: () async {
+          final str = await neteaseRepository.lyric(widget.music.id);
+          if (str == null) {
+            throw "暂无歌词";
+          }
+          return LyricContent.from(str);
+        },
+        failedWidgetBuilder: (context, result, msg) {
+          if (!(msg is String)) {
+            msg = "加载歌词出错";
+          }
+          return Container(
+            child: Center(
+              child: Text(msg, style: style),
+            ),
+          );
+        },
+        builder: (context, result) {
+          return LayoutBuilder(builder: (context, constraints) {
+            return Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+              child: Lyric(
+                lyric: result,
+                lyricLineStyle:
+                    style.copyWith(color: style.color.withOpacity(0.7)),
+                highlight: style.color,
+                position: position,
+                onTap: widget.onTap,
+                size: Size(
+                    constraints.maxWidth,
+                    constraints.maxHeight == double.infinity
+                        ? 0
+                        : constraints.maxHeight),
+              ),
+            );
+          });
+        });
   }
 }
 
 class _AlbumCover extends StatefulWidget {
+  final Music music;
+
+  const _AlbumCover({Key key, @required this.music}) : super(key: key);
+
   @override
   State createState() => _AlbumCoverState();
 }
@@ -534,7 +532,6 @@ class _AlbumCoverState extends State<_AlbumCover>
 
   @override
   Widget build(BuildContext context) {
-    var music = PlayerState.of(context).value.current;
     return Stack(
       children: <Widget>[
         Container(
@@ -558,7 +555,7 @@ class _AlbumCoverState extends State<_AlbumCover>
                     padding: EdgeInsets.all(30),
                     child: ClipOval(
                       child: Image(
-                        image: NeteaseImage(music.album.coverImageUrl),
+                        image: NeteaseImage(widget.music.album.coverImageUrl),
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -600,14 +597,23 @@ class _BlurBackground extends StatelessWidget {
     var music = PlayerState.of(context).value.current;
     return Container(
       decoration: BoxDecoration(
-          image: DecorationImage(
-        image: NeteaseImage(music.album.coverImageUrl),
-        fit: BoxFit.cover,
-      )),
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaY: 7, sigmaX: 7),
-        child: Container(
-          color: Colors.black87.withOpacity(0.2),
+        image: DecorationImage(
+          image: NeteaseImage(music.album.coverImageUrl),
+          fit: BoxFit.cover,
+        ),
+      ),
+      child: Container(
+        decoration: BoxDecoration(
+            gradient: LinearGradient(colors: [
+          Colors.black54,
+          Colors.black26,
+          Colors.black45,
+        ])),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaY: 10, sigmaX: 10),
+          child: Container(
+            color: Colors.black87.withOpacity(0.2),
+          ),
         ),
       ),
     );
@@ -615,10 +621,12 @@ class _BlurBackground extends StatelessWidget {
 }
 
 class _PlayingTitle extends StatelessWidget {
+  final Music music;
+
+  const _PlayingTitle({Key key, @required this.music}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    var music =
-        PlayerState.of(context, aspect: PlayerStateAspect.music).value.current;
     return AppBar(
       elevation: 0,
       leading: IconButton(
