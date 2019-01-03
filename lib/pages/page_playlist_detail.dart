@@ -7,6 +7,7 @@ import 'package:quiet/pages/page_comment.dart';
 import 'package:quiet/pages/page_playlist_detail_selection.dart';
 import 'package:quiet/part/part.dart';
 import 'package:quiet/repository/netease.dart';
+
 import 'page_artist_detail.dart';
 
 part 'page_album_detail.dart';
@@ -282,6 +283,33 @@ class _PlaylistBodyState extends State<_PlaylistBody> {
     if (widget.musicList.isEmpty) {
       return _EmptyPlaylistSection();
     }
+    if (index == 1) {
+      Widget tail;
+      if (widget.playlist.creator["userId"] != LoginState.of(context).userId) {
+        tail = _SubscribeButton(
+            widget.playlist.subscribed, widget.playlist.subscribedCount,
+            (subscribe) async {
+          bool succeed;
+          try {
+            succeed = await showLoaderOverlay(
+                context,
+                neteaseRepository.playlistSubscribe(
+                    widget.playlist.id, !subscribe));
+          } catch (e) {
+            succeed = false;
+          }
+          String action = !subscribe ? "收藏" : "取消收藏";
+          if (succeed) {
+            showSimpleNotification(context, Text("$action成功"));
+          } else {
+            showSimpleNotification(context, Text("$action失败"),
+                background: Theme.of(context).errorColor);
+          }
+          return succeed ? !subscribe : subscribe;
+        });
+      }
+      return _songTileProvider?.buildListHeader(context, tail: tail);
+    }
     return _songTileProvider?.buildWidget(index - 1, context,
         onDelete: () async {
       var result = await neteaseRepository.playlistTracksEdit(
@@ -298,6 +326,113 @@ class _PlaylistBodyState extends State<_PlaylistBody> {
             icon: Icon(Icons.error), background: Theme.of(context).errorColor);
       }
     });
+  }
+}
+
+class _SubscribeButton extends StatefulWidget {
+  final bool subscribed;
+
+  final int subscribedCount;
+
+  ///currentState : is playlist be subscribed when function invoked
+  final Future<bool> Function(bool currentState) doSubscribeChanged;
+
+  const _SubscribeButton(
+      this.subscribed, this.subscribedCount, this.doSubscribeChanged,
+      {Key key})
+      : super(key: key);
+
+  @override
+  _SubscribeButtonState createState() => _SubscribeButtonState();
+}
+
+class _SubscribeButtonState extends State<_SubscribeButton> {
+  bool subscribed = false;
+
+  @override
+  void initState() {
+    super.initState();
+    subscribed = widget.subscribed;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (!subscribed) {
+      return Container(
+        height: 40,
+        decoration: BoxDecoration(
+            gradient: LinearGradient(colors: [
+          Theme.of(context).primaryColor.withOpacity(0.5),
+          Theme.of(context).primaryColor
+        ])),
+        child: Material(
+          color: Colors.transparent,
+          child: InkWell(
+            onTap: () async {
+              final result = await widget.doSubscribeChanged(subscribed);
+              setState(() {
+                subscribed = result;
+              });
+            },
+            child: Row(
+              children: <Widget>[
+                SizedBox(width: 16),
+                Icon(Icons.add,
+                    color: Theme.of(context).primaryIconTheme.color),
+                SizedBox(width: 4),
+                Text(
+                  "收藏(${getFormattedNumber(widget.subscribedCount)})",
+                  style: Theme.of(context).primaryTextTheme.body1,
+                ),
+                SizedBox(width: 16),
+              ],
+            ),
+          ),
+        ),
+      );
+    } else {
+      return InkWell(
+          child: Container(
+            height: 40,
+            child: Row(
+              children: <Widget>[
+                SizedBox(width: 16),
+                Icon(Icons.folder_special,
+                    size: 20, color: Theme.of(context).disabledColor),
+                SizedBox(width: 4),
+                Text(getFormattedNumber(widget.subscribedCount),
+                    style: Theme.of(context)
+                        .textTheme
+                        .caption
+                        .copyWith(fontSize: 14)),
+                SizedBox(width: 16),
+              ],
+            ),
+          ),
+          onTap: () async {
+            final result = await showDialog<bool>(
+                context: context,
+                builder: (context) {
+                  return AlertDialog(
+                    content: Text("确定不再收藏此歌单吗?"),
+                    actions: <Widget>[
+                      FlatButton(
+                          onPressed: () => Navigator.pop(context),
+                          child: Text("取消")),
+                      FlatButton(
+                          onPressed: () => Navigator.pop(context, true),
+                          child: Text("不再收藏"))
+                    ],
+                  );
+                });
+            if (result != null && result) {
+              final result = await widget.doSubscribeChanged(subscribed);
+              setState(() {
+                subscribed = result;
+              });
+            }
+          });
+    }
   }
 }
 

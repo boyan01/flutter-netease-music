@@ -157,6 +157,16 @@ class NeteaseRepository {
     return null;
   }
 
+  ///id 歌单id
+  ///return true if action success
+  Future<bool> playlistSubscribe(int id, bool subscribe) async {
+    String action = subscribe ? "subscribe" : "unsubscribe";
+    final response = await doRequest("https://music.163.com/weapi/playlist/$action", {
+      "id":id
+    });
+    return responseVerify(response).isSuccess;
+  }
+
   ///根据专辑详细信息
   Future<Map> albumDetail(int id) async {
     return doRequest("https://music.163.com/weapi/v1/album/$id", {});

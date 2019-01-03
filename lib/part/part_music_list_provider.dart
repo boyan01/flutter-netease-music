@@ -45,6 +45,12 @@ class SongTileProvider {
     }
   }
 
+  ///size : the music count of this list
+  Widget buildListHeader(BuildContext context, {Widget tail, int size}) {
+    size = size ?? musics.length;
+    return SongListHeader(size, _playAll, tail: tail);
+  }
+
   ///build title for song list
   /// index = 0 -> song list header
   /// index = other -> song tile
@@ -59,7 +65,7 @@ class SongTileProvider {
     bool showAlbumPopupItem = true,
   }) {
     if (index == 0) {
-      return SongListHeader(musics.length, _playAll);
+      return buildListHeader(context);
     }
     if (index - 1 < musics.length) {
       var item = musics[index - 1];
@@ -80,11 +86,13 @@ class SongTileProvider {
 
 /// song list header
 class SongListHeader extends StatelessWidget {
-  SongListHeader(this.count, this.onTap);
+  SongListHeader(this.count, this.onTap, {this.tail});
 
   final int count;
 
   final void Function(BuildContext) onTap;
+
+  final Widget tail;
 
   @override
   Widget build(BuildContext context) {
@@ -114,7 +122,9 @@ class SongListHeader extends StatelessWidget {
               "(共$count首)",
               style: Theme.of(context).textTheme.caption,
             ),
-          ],
+            Spacer(),
+            tail,
+          ]..removeWhere((v) => v == null),
         ),
       ),
     );
