@@ -104,9 +104,21 @@ class ArtistDetailPageState extends State<ArtistDetailPage>
 
   @override
   Widget build(BuildContext context) {
-    return Loader(
+    return Loader<Map>(
         loadTask: () => neteaseRepository.artistDetail(widget.artistId),
         resultVerify: neteaseRepository.responseVerify,
+        loadingBuilder: (context) {
+          return Scaffold(
+            appBar: AppBar(title: Text("歌手")),
+            body: Loader.buildSimpleLoadingWidget(context),
+          );
+        },
+        failedWidgetBuilder: (context, result, msg) {
+          return Scaffold(
+            appBar: AppBar(title: Text("歌手")),
+            body: Loader.buildSimpleFailedWidget(context, result, msg),
+          );
+        },
         builder: (context, result) {
           Map artist = result["artist"];
           List<Music> musicList = mapJsonListToMusicList(result["hotSongs"],
