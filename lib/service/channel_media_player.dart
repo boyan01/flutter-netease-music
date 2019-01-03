@@ -35,16 +35,17 @@ class DurationRange {
 }
 
 class PlayerControllerState {
-  PlayerControllerState({this.duration,
-    this.position = Duration.zero,
-    this.playWhenReady = false,
-    this.buffered = const [],
-    this.playbackState = PlaybackState.none,
-    this.current,
-    this.playingList = const [],
-    this.token,
-    this.playMode = PlayMode.sequence,
-    this.errorMsg = _ERROR_NONE});
+  PlayerControllerState(
+      {this.duration,
+      this.position = Duration.zero,
+      this.playWhenReady = false,
+      this.buffered = const [],
+      this.playbackState = PlaybackState.none,
+      this.current,
+      this.playingList = const [],
+      this.token,
+      this.playMode = PlayMode.sequence,
+      this.errorMsg = _ERROR_NONE});
 
   static const String _ERROR_NONE = "NONE";
 
@@ -171,7 +172,7 @@ class PlayerController extends ValueNotifier<PlayerControllerState> {
           var map = method.arguments as Map;
           value = value.copyWith(
               playingList:
-              (map["list"] as List).cast<Map>().map(Music.fromMap).toList(),
+                  (map["list"] as List).cast<Map>().map(Music.fromMap).toList(),
               token: map["token"]);
           break;
         case "onPositionChanged":
@@ -180,9 +181,8 @@ class PlayerController extends ValueNotifier<PlayerControllerState> {
               duration: Duration(milliseconds: method.arguments["duration"]));
           break;
         case "onPlayModeChanged":
-          value = value.copyWith(
-            playMode:PlayMode.values[method.arguments % 3]
-          );
+          value =
+              value.copyWith(playMode: PlayMode.values[method.arguments % 3]);
           break;
       }
     });
@@ -201,8 +201,8 @@ class PlayerController extends ValueNotifier<PlayerControllerState> {
   ///do init to player
   ///if player is running , will do nothing
   ///maybe should move load and restore preference logic to player service
-  Future<void> init(List<Music> list, Music music, String token,
-      PlayMode playMode) {
+  Future<void> init(
+      List<Music> list, Music music, String token, PlayMode playMode) {
     return _channel.invokeMethod("init", {
       "list": list == null ? null : list.map((m) => m.toMap()).toList(),
       "music": music?.toMap(),
@@ -237,6 +237,7 @@ class PlayerController extends ValueNotifier<PlayerControllerState> {
   }
 
   Future<void> seekTo(int position) async {
+    value = value.copyWith(position: Duration(milliseconds: position));
     await _channel.invokeMethod("seekTo", position);
   }
 
