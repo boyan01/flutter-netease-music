@@ -11,7 +11,10 @@ class PlaylistDetail {
       this.trackCount,
       this.description,
       this.subscribed,
-      this.subscribedCount);
+      this.subscribedCount,
+      this.commentCount,
+      this.shareCount,
+      this.playCount);
 
   ///null when playlist not complete loaded
   final List<Music> musicList;
@@ -29,6 +32,12 @@ class PlaylistDetail {
   bool subscribed;
 
   int subscribedCount;
+
+  int commentCount;
+
+  int shareCount;
+
+  int playCount;
 
   bool get loaded => musicList != null && musicList.length == trackCount;
 
@@ -52,6 +61,9 @@ class PlaylistDetail {
         playlist["trackCount"],
         playlist["description"],
         playlist["subscribed"],
-        playlist["subscribedCount"]);
+        playlist["subscribedCount"],
+        playlist["commentCount"],
+        playlist["shareCount"],
+        playlist["playCount"]);
   }
 }
