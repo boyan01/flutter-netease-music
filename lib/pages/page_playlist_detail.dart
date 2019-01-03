@@ -574,6 +574,8 @@ class _PlaylistDetailHeader extends StatelessWidget {
     Map<String, Object> creator = playlist.creator;
 
     return _DetailHeader(
+        commentCount: playlist.commentCount,
+        shareCount: playlist.shareCount,
         onCommentTap: () {
           Navigator.push(context, MaterialPageRoute(builder: (context) {
             return CommentPage(
@@ -606,15 +608,49 @@ class _PlaylistDetailHeader extends StatelessWidget {
           child: Row(
             children: <Widget>[
               SizedBox(width: 24),
-              Hero(
-                tag: playlist.heroTag,
-                child: AspectRatio(
-                  aspectRatio: 1,
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.all(Radius.circular(3)),
-                    child: Image(
-                        fit: BoxFit.cover,
-                        image: NeteaseImage(playlist.coverUrl)),
+              AspectRatio(
+                aspectRatio: 1,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.all(Radius.circular(3)),
+                  child: Stack(
+                    children: <Widget>[
+                      Hero(
+                        tag: playlist.heroTag,
+                        child: Image(
+                            fit: BoxFit.cover,
+                            image: NeteaseImage(playlist.coverUrl)),
+                      ),
+                      Container(
+                        padding: EdgeInsets.all(4),
+                        decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter,
+                                colors: [
+                              Colors.black54,
+                              Colors.black26,
+                              Colors.transparent,
+                              Colors.transparent,
+                            ])),
+                        child: Align(
+                          alignment: Alignment.topRight,
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: <Widget>[
+                              Icon(Icons.headset,
+                                  color:
+                                      Theme.of(context).primaryIconTheme.color,
+                                  size: 12),
+                              Text(getFormattedNumber(playlist.playCount),
+                                  style: Theme.of(context)
+                                      .primaryTextTheme
+                                      .body1
+                                      .copyWith(fontSize: 11))
+                            ],
+                          ),
+                        ),
+                      )
+                    ],
                   ),
                 ),
               ),
