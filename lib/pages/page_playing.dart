@@ -10,26 +10,51 @@ import 'package:quiet/repository/netease.dart';
 import 'package:quiet/service/channel_media_player.dart';
 
 ///歌曲播放页面
-class PlayingPage extends StatelessWidget {
+class PlayingPage extends StatefulWidget {
+  @override
+  _PlayingPageState createState() {
+    return new _PlayingPageState();
+  }
+}
+
+class _PlayingPageState extends State<PlayingPage> {
+  Music _music;
+
+  @override
+  void initState() {
+    super.initState();
+    _music = quiet.value.current;
+    quiet.addListener(_onPlayerStateChanged);
+  }
+
+  void _onPlayerStateChanged() {
+    if (_music != quiet.value.current) {
+      _music = quiet.value.current;
+      if (_music == null) {
+        Navigator.pop(context);
+      } else {
+        setState(() {});
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final music = PlayerState.of(context).value.current;
-    if (music == null) {
-      SchedulerBinding.instance.addPostFrameCallback((_) {
-        Navigator.of(context).pop();
-      });
-      return Container();
-    }
     return Scaffold(
       body: Stack(
         children: <Widget>[
-          _BlurBackground(),
+          _BlurBackground(music: _music),
           Material(
             color: Colors.transparent,
             child: Column(
               children: <Widget>[
-                _PlayingTitle(music: music),
-                _CenterSection(music: music),
+                _PlayingTitle(music: _music),
+                _CenterSection(music: _music),
                 _OperationBar(),
                 Padding(padding: EdgeInsets.only(top: 10)),
                 _DurationProgressBar(),
@@ -592,9 +617,12 @@ class _AlbumCoverState extends State<_AlbumCover>
 }
 
 class _BlurBackground extends StatelessWidget {
+  final Music music;
+
+  const _BlurBackground({Key key, @required this.music}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    var music = PlayerState.of(context).value.current;
     return Container(
       decoration: BoxDecoration(
         image: DecorationImage(

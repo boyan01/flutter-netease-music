@@ -35,17 +35,16 @@ class DurationRange {
 }
 
 class PlayerControllerState {
-  PlayerControllerState(
-      {this.duration,
-      this.position = Duration.zero,
-      this.playWhenReady = false,
-      this.buffered = const [],
-      this.playbackState = PlaybackState.none,
-      this.current,
-      this.playingList = const [],
-      this.token,
-      this.playMode = PlayMode.sequence,
-      this.errorMsg = _ERROR_NONE});
+  PlayerControllerState({this.duration,
+    this.position = Duration.zero,
+    this.playWhenReady = false,
+    this.buffered = const [],
+    this.playbackState = PlaybackState.none,
+    this.current,
+    this.playingList = const [],
+    this.token,
+    this.playMode = PlayMode.sequence,
+    this.errorMsg = _ERROR_NONE});
 
   static const String _ERROR_NONE = "NONE";
 
@@ -172,7 +171,7 @@ class PlayerController extends ValueNotifier<PlayerControllerState> {
           var map = method.arguments as Map;
           value = value.copyWith(
               playingList:
-                  (map["list"] as List).cast<Map>().map(Music.fromMap).toList(),
+              (map["list"] as List).cast<Map>().map(Music.fromMap).toList(),
               token: map["token"]);
           break;
         case "onPositionChanged":
@@ -197,8 +196,8 @@ class PlayerController extends ValueNotifier<PlayerControllerState> {
   ///do init to player
   ///if player is running , will do nothing
   ///maybe should move load and restore preference logic to player service
-  Future<void> init(
-      List<Music> list, Music music, String token, PlayMode playMode) {
+  Future<void> init(List<Music> list, Music music, String token,
+      PlayMode playMode) {
     return _channel.invokeMethod("init", {
       "list": list == null ? null : list.map((m) => m.toMap()).toList(),
       "music": music?.toMap(),
@@ -234,7 +233,6 @@ class PlayerController extends ValueNotifier<PlayerControllerState> {
 
   Future<void> seekTo(int position) async {
     await _channel.invokeMethod("seekTo", position);
-    value = value.copyWith(position: Duration(milliseconds: position));
   }
 
   Future<void> setVolume(double volume) {
@@ -247,7 +245,10 @@ class PlayerController extends ValueNotifier<PlayerControllerState> {
   }
 
   ///this player can not be disposable
-  ///this method will only release media player
+  ///this method will only close MusicPlayer
   // ignore: must_call_super
-  Future<void> dispose() async {}
+  Future<void> dispose() {
+    value = PlayerControllerState.uninitialized();
+    return _channel.invokeMethod("quiet");
+  }
 }

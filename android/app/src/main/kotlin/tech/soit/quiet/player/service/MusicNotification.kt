@@ -4,18 +4,10 @@ import android.app.*
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
-import android.graphics.Color
 import android.os.Build
 import android.support.annotation.VisibleForTesting
 import android.support.v4.app.NotificationCompat
-import android.support.v7.graphics.Palette
-import android.support.v7.graphics.Target.MUTED
-import android.support.v7.graphics.Target.VIBRANT
 import com.google.android.exoplayer2.Player
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.async
-import kotlinx.coroutines.launch
 import tech.soit.quiet.AppContext
 import tech.soit.quiet.MainActivity
 import tech.soit.quiet.R
@@ -61,18 +53,6 @@ class MusicNotification {
         }
     }
 
-    private var music: Music? = null
-
-    private var isPlaying: Boolean = false
-
-    private var isFavorite: Boolean = false
-
-    /**
-     * 标识是否通知正常完成
-     *
-     * 如果图片还在从服务端进行加载，而是使用的默认的图片来弹出通知的话，则视为当前通知还没完成。
-     */
-    private var isNotifyCompleted = false
 
     /**
      * update current music notification
@@ -120,28 +100,13 @@ class MusicNotification {
             isPlaying = false
         }
 
-        val isDataMatched =
-                this.music == music && this.isPlaying == isPlaying
-                        && isFavorite == isFav
-        val notNeedNotify = isDataMatched && isNotifyCompleted
-        if (notNeedNotify) {
-            return
-        }
 
-        this.music = music
-        this.isPlaying = isPlaying
-        isFavorite = isFav
-        isNotifyCompleted = false
-
-        GlobalScope.launch(Dispatchers.Main) {
-            val builder = NotificationCompat
-                    .Builder(context, ID_PLAY_SERVICE)
-                    .buildStep1()
-                    .buildStep2(music)
-                    .buildStep3(music.getCoverBitmap())
-            onNotify(builder, cancelAble)
-        }
-        isNotifyCompleted = true
+        val builder = NotificationCompat
+                .Builder(context, ID_PLAY_SERVICE)
+                .buildStep1()
+                .buildStep2(music, isFav, isPlaying)
+                .buildStep3(music.getCoverBitmap(), null)
+        onNotify(builder, cancelAble)
 
     }
 
@@ -167,7 +132,7 @@ class MusicNotification {
         return this
     }
 
-    private fun NotificationCompat.Builder.buildStep2(music: Music): NotificationCompat.Builder {
+    private fun NotificationCompat.Builder.buildStep2(music: Music, isFavorite: Boolean, isPlaying: Boolean): NotificationCompat.Builder {
         setContentTitle(music.getTitle())
         setContentText(music.getSubTitle())
 
@@ -196,15 +161,13 @@ class MusicNotification {
     }
 
 
-    private suspend fun NotificationCompat.Builder.buildStep3(image: Bitmap?): NotificationCompat.Builder {
+    private fun NotificationCompat.Builder.buildStep3(image: Bitmap?, color: Int?): NotificationCompat.Builder {
         image?.let {
             setLargeIcon(it)
-            val palette = GlobalScope
-                    .async { Palette.from(it).clearTargets().addTarget(MUTED).addTarget(VIBRANT).generate() }
-                    .await()
-            val color = palette.getVibrantColor(palette.getMutedColor(Color.WHITE))
+        }
+        color?.let {
             setColorized(true)
-            setColor(color)
+            setColor(it)
         }
         return this
     }

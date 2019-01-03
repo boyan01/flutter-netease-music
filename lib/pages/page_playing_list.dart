@@ -61,7 +61,8 @@ class PlayingListDialog extends StatelessWidget {
                 label: Text("收藏全部")),
             IconButton(
                 icon: Icon(Icons.delete_outline),
-                onPressed: () {
+                onPressed: () async {
+                  Navigator.pop(context);
                   quiet.quiet();
                 })
           ],
