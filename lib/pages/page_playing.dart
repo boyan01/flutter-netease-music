@@ -368,7 +368,7 @@ class _CenterSectionState extends State<_CenterSection> {
               showLyric = !showLyric;
             });
           },
-          child: _AlbumCover(music: widget.music),
+          child: _AlbumCover(),
         ),
         secondChild: _CloudLyric(
           music: widget.music,
@@ -466,10 +466,6 @@ class _CloudLyricState extends State<_CloudLyric> {
 }
 
 class _AlbumCover extends StatefulWidget {
-  final Music music;
-
-  const _AlbumCover({Key key, @required this.music}) : super(key: key);
-
   @override
   State createState() => _AlbumCoverState();
 }
@@ -477,17 +473,32 @@ class _AlbumCover extends StatefulWidget {
 class _AlbumCoverState extends State<_AlbumCover>
     with TickerProviderStateMixin {
   //cover needle controller
-  AnimationController needleController;
+  AnimationController _needleController;
 
   //cover needle in and out animation
-  Animation<double> needleAnimation;
+  Animation<double> _needleAnimation;
 
   ///music change transition animation;
-  AnimationController transitionController;
+  AnimationController _translateController;
 
-  bool needleAttachCover = false;
+  bool _needleAttachCover = false;
 
-  bool coverRotating = false;
+  bool _coverRotating = false;
+
+  ///专辑封面X偏移量
+  ///[-screenWidth/2,screenWidth/2]
+  double _coverTranslateX = 0;
+
+  bool _beDragging = false;
+
+  ///滑动切换音乐效果上一个封面
+  Music _previous;
+
+  ///当前播放中的音乐
+  Music _current;
+
+  ///滑动切换音乐效果下一个封面
+  Music _next;
 
   @override
   void initState() {
@@ -495,64 +506,158 @@ class _AlbumCoverState extends State<_AlbumCover>
 
     bool attachToCover = quiet.value.playWhenReady &&
         (quiet.value.isPlaying || quiet.value.isBuffering);
-    needleController = AnimationController(
+    _needleController = AnimationController(
         /*preset need position*/
         value: attachToCover ? 1.0 : 0.0,
         vsync: this,
-        duration: Duration(milliseconds: 700),
+        duration: Duration(milliseconds: 500),
         animationBehavior: AnimationBehavior.normal);
-    needleAnimation = Tween<double>(begin: -1 / 12, end: 0)
+    _needleAnimation = Tween<double>(begin: -1 / 12, end: 0)
         .chain(CurveTween(curve: Curves.easeInOut))
-        .animate(needleController);
+        .animate(_needleController);
 
     quiet.addListener(_onMusicStateChanged);
+    _current = quiet.value.current;
+  }
+
+  @override
+  void didUpdateWidget(_AlbumCover oldWidget) {
+    super.didUpdateWidget(oldWidget);
   }
 
   void _onMusicStateChanged() {
     var state = quiet.value;
 
+    if (_current != state.current) {
+      setState(() {
+        _current = state.current;
+      });
+    }
+
     //handle album cover animation
     var _isPlaying = state.isPlaying;
     setState(() {
-      coverRotating = _isPlaying && needleAttachCover;
+      _coverRotating = _isPlaying && _needleAttachCover;
     });
 
-    bool attachToCover =
-        state.playWhenReady && (state.isPlaying || state.isBuffering);
+    bool attachToCover = state.playWhenReady &&
+        (state.isPlaying || state.isBuffering) &&
+        !_beDragging &&
+        _translateController == null;
     _rotateNeedle(attachToCover);
   }
 
   ///rotate needle to (un)attach to cover image
   void _rotateNeedle(bool attachToCover) {
-    if (needleAttachCover == attachToCover) {
+    if (_needleAttachCover == attachToCover) {
       return;
     }
-    needleAttachCover = attachToCover;
+    _needleAttachCover = attachToCover;
     if (attachToCover) {
-      needleController.forward(from: needleController.value);
+      _needleController.forward(from: _needleController.value);
     } else {
-      needleController.reverse(from: needleController.value);
+      _needleController.reverse(from: _needleController.value);
     }
   }
 
   @override
   void dispose() {
     quiet.removeListener(_onMusicStateChanged);
-    needleController.dispose();
+    _needleController.dispose();
     super.dispose();
   }
 
   static const double HEIGHT_SPACE_ALBUM_TOP = 100;
 
+  void _animateCoverTranslateTo(double des, {void onCompleted()}) {
+    _translateController?.dispose();
+    _translateController = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 300));
+    final animation =
+        Tween(begin: _coverTranslateX, end: des).animate(_translateController);
+    animation.addListener(() {
+      setState(() {
+        _coverTranslateX = animation.value;
+      });
+    });
+    animation.addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        _translateController?.dispose();
+        _translateController = null;
+        if (onCompleted != null) {
+          onCompleted();
+        }
+      }
+    });
+    _translateController.forward();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: <Widget>[
-        Container(
-            padding: const EdgeInsets.only(top: HEIGHT_SPACE_ALBUM_TOP),
-            margin: const EdgeInsets.symmetric(horizontal: 64),
-            child: _RotationCoverImage(
-                rotating: coverRotating, music: widget.music)),
+        GestureDetector(
+          onHorizontalDragStart: (detail) {
+            _beDragging = true;
+            _rotateNeedle(false);
+          },
+          onHorizontalDragUpdate: (detail) {
+            if (_beDragging) {
+              setState(() {
+                _coverTranslateX += detail.primaryDelta;
+              });
+            }
+          },
+          onHorizontalDragEnd: (detail) {
+            _beDragging = false;
+            if (_coverTranslateX.abs() >
+                MediaQuery.of(context).size.width / 2) {
+              var des = MediaQuery.of(context).size.width;
+              if (_coverTranslateX < 0) {
+                des = -des;
+              }
+              _animateCoverTranslateTo(des, onCompleted: () {
+                //reset translateX to 0 when animation complete
+                _coverTranslateX = 0;
+                if (des < 0) {
+                  quiet.playPrevious();
+                } else {
+                  quiet.playNext();
+                }
+              });
+            } else {
+              //animate [_coverTranslateX] to 0
+              _animateCoverTranslateTo(0);
+            }
+          },
+          child: Container(
+              color: Colors.transparent,
+              padding: const EdgeInsets.only(
+                  left: 64, right: 64, top: HEIGHT_SPACE_ALBUM_TOP),
+              child: Stack(
+                children: <Widget>[
+                  Transform.translate(
+                    offset: Offset(
+                        _coverTranslateX - MediaQuery.of(context).size.width,
+                        0),
+                    child:
+                        _RotationCoverImage(rotating: false, music: _previous),
+                  ),
+                  Transform.translate(
+                    offset: Offset(_coverTranslateX, 0),
+                    child: _RotationCoverImage(
+                        rotating: _coverRotating && !_beDragging,
+                        music: _current),
+                  ),
+                  Transform.translate(
+                    offset: Offset(
+                        _coverTranslateX + MediaQuery.of(context).size.width,
+                        0),
+                    child: _RotationCoverImage(rotating: false, music: _next),
+                  ),
+                ],
+              )),
+        ),
         ClipRect(
           child: Container(
             child: Align(
@@ -560,7 +665,7 @@ class _AlbumCoverState extends State<_AlbumCover>
               child: Transform.translate(
                 offset: Offset(40, -15),
                 child: RotationTransition(
-                  turns: needleAnimation,
+                  turns: _needleAnimation,
                   alignment:
                       //44,37 是针尾的圆形的中心点像素坐标, 273,402是playing_page_needle.png的宽高
                       //所以对此计算旋转中心点的偏移,以保重旋转动画的中心在针尾圆形的中点
@@ -586,7 +691,6 @@ class _RotationCoverImage extends StatefulWidget {
   const _RotationCoverImage(
       {Key key, @required this.rotating, @required this.music})
       : assert(rotating != null),
-        assert(music != null),
         super(key: key);
 
   @override
@@ -641,6 +745,12 @@ class _RotationCoverImageState extends State<_RotationCoverImage>
 
   @override
   Widget build(BuildContext context) {
+    ImageProvider image;
+    if (widget.music == null || widget.music.album.coverImageUrl == null) {
+      image = AssetImage("assets/playing_page_disc.png");
+    } else {
+      image = NeteaseImage(widget.music.album.coverImageUrl);
+    }
     return Transform.rotate(
       angle: rotation,
       child: Material(
@@ -657,7 +767,7 @@ class _RotationCoverImageState extends State<_RotationCoverImage>
             padding: EdgeInsets.all(30),
             child: ClipOval(
               child: Image(
-                image: NeteaseImage(widget.music.album.coverImageUrl),
+                image: image,
                 fit: BoxFit.cover,
               ),
             ),
