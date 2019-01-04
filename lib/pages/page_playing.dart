@@ -485,16 +485,23 @@ class _AlbumCoverState extends State<_AlbumCover>
   //cover needle in and out animation
   Animation<double> needleAnimation;
 
+  ///music change transition animation;
+  AnimationController transitionController;
+
   //album cover rotation
   double rotation = 0;
 
-  bool isPlaying = false;
+  bool needleAttachCover = false;
 
   @override
   void initState() {
     super.initState();
 
+    bool attachToCover = quiet.value.playWhenReady &&
+        (quiet.value.isPlaying || quiet.value.isBuffering);
     needleController = AnimationController(
+        /*preset need position*/
+        value: attachToCover ? 1.0 : 0.0,
         vsync: this,
         duration: Duration(milliseconds: 700),
         animationBehavior: AnimationBehavior.normal);
@@ -526,23 +533,28 @@ class _AlbumCoverState extends State<_AlbumCover>
     var _isPlaying = state.isPlaying;
 
     //handle album cover animation
-    if (_isPlaying && !isPlaying) {
-      debugPrint("controller status : ${controller.status}");
+    if (_isPlaying && needleAttachCover) {
       controller.forward(from: (rotation) / (2 * pi));
     } else if (!_isPlaying) {
       controller.stop();
     }
 
-    //handle needle rotation animation
-    if (isPlaying != _isPlaying) {
-      if (_isPlaying) {
-        needleController.forward(from: controller.value);
-      } else {
-        needleController.reverse(from: controller.value);
-      }
-    }
+    bool attachToCover =
+        state.playWhenReady && (state.isPlaying || state.isBuffering);
+    _rotateNeedle(attachToCover);
+  }
 
-    isPlaying = _isPlaying;
+  ///rotate needle to (un)attach to cover image
+  void _rotateNeedle(bool attachToCover) {
+    if (needleAttachCover == attachToCover) {
+      return;
+    }
+    needleAttachCover = attachToCover;
+    if (attachToCover) {
+      needleController.forward(from: controller.value);
+    } else {
+      needleController.reverse(from: controller.value);
+    }
   }
 
   @override
