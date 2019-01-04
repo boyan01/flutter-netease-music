@@ -64,6 +64,7 @@ class PlayerControllerState {
   ///audio is buffering
   bool get isBuffering => playbackState == PlaybackState.buffering && !hasError;
 
+  ///might be null
   final Music current;
 
   final String errorMsg;
@@ -186,6 +187,16 @@ class PlayerController extends ValueNotifier<PlayerControllerState> {
           break;
       }
     });
+  }
+
+  ///return the previous of current playing music
+  Future<Music> getPrevious() async {
+    return Music.fromMap(await _channel.invokeMethod("getPrevious"));
+  }
+
+  ///return the next of current playing music
+  Future<Music> getNext() async {
+    return Music.fromMap(await _channel.invokeMethod("getNext"));
   }
 
   ///play next music

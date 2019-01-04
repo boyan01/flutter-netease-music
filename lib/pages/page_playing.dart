@@ -491,6 +491,8 @@ class _AlbumCoverState extends State<_AlbumCover>
 
   bool _beDragging = false;
 
+  bool _previousNextDirty = false;
+
   ///滑动切换音乐效果上一个封面
   Music _previous;
 
@@ -518,19 +520,40 @@ class _AlbumCoverState extends State<_AlbumCover>
 
     quiet.addListener(_onMusicStateChanged);
     _current = quiet.value.current;
+    () async {
+      _previous = await quiet.getPrevious();
+      _next = await quiet.getNext();
+    }();
   }
 
-  @override
-  void didUpdateWidget(_AlbumCover oldWidget) {
-    super.didUpdateWidget(oldWidget);
+  void _handleMusicChanged(Music music) {
+    _current = music;
+    setState(() async {
+      double offset = 0;
+      if (music == _previous) {
+        offset = -MediaQuery.of(context).size.width;
+      } else if (music == _next) {
+        offset = MediaQuery.of(context).size.width;
+      }
+      _previousNextDirty = false;
+      _coverTranslateX = offset;
+      _next = await quiet.getNext();
+      _previous = await quiet.getPrevious();
+      _animateCoverTranslateTo(0);
+    });
+
   }
 
   void _onMusicStateChanged() {
     var state = quiet.value;
 
     if (_current != state.current) {
-      setState(() {
-        _current = state.current;
+      _handleMusicChanged(state.current);
+    } else if (_previousNextDirty) {
+      _previousNextDirty = false;
+      setState(() async {
+        _previous = await quiet.getPrevious();
+        _next = await quiet.getNext();
       });
     }
 
@@ -571,6 +594,7 @@ class _AlbumCoverState extends State<_AlbumCover>
 
   void _animateCoverTranslateTo(double des, {void onCompleted()}) {
     _translateController?.dispose();
+    _translateController = null;
     _translateController = AnimationController(
         vsync: this, duration: const Duration(milliseconds: 300));
     final animation =
@@ -617,13 +641,18 @@ class _AlbumCoverState extends State<_AlbumCover>
                 des = -des;
               }
               _animateCoverTranslateTo(des, onCompleted: () {
-                //reset translateX to 0 when animation complete
-                _coverTranslateX = 0;
-                if (des < 0) {
-                  quiet.playPrevious();
-                } else {
-                  quiet.playNext();
-                }
+                setState(() {
+                  //reset translateX to 0 when animation complete
+                  _coverTranslateX = 0;
+                  if (des > 0) {
+                    _current = _previous;
+                    quiet.playPrevious();
+                  } else {
+                    _current = _next;
+                    quiet.playNext();
+                  }
+                  _previousNextDirty = true;
+                });
               });
             } else {
               //animate [_coverTranslateX] to 0
@@ -712,6 +741,9 @@ class _RotationCoverImageState extends State<_RotationCoverImage>
       controller.forward(from: controller.value);
     } else {
       controller.stop();
+    }
+    if (widget.music != oldWidget.music) {
+      controller.value = 0;
     }
   }
 
