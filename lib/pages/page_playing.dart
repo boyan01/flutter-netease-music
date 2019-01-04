@@ -476,9 +476,6 @@ class _AlbumCover extends StatefulWidget {
 
 class _AlbumCoverState extends State<_AlbumCover>
     with TickerProviderStateMixin {
-  //album cover rotation animation
-  AnimationController controller;
-
   //cover needle controller
   AnimationController needleController;
 
@@ -488,10 +485,9 @@ class _AlbumCoverState extends State<_AlbumCover>
   ///music change transition animation;
   AnimationController transitionController;
 
-  //album cover rotation
-  double rotation = 0;
-
   bool needleAttachCover = false;
+
+  bool coverRotating = false;
 
   @override
   void initState() {
@@ -509,35 +505,17 @@ class _AlbumCoverState extends State<_AlbumCover>
         .chain(CurveTween(curve: Curves.easeInOut))
         .animate(needleController);
 
-    controller = AnimationController(
-        vsync: this,
-        duration: Duration(seconds: 20),
-        animationBehavior: AnimationBehavior.normal)
-      ..addListener(() {
-        setState(() {
-          rotation = controller.value * 2 * pi;
-        });
-      })
-      ..addStatusListener((status) {
-        if (status == AnimationStatus.completed && controller.value == 1) {
-          controller.forward(from: 0);
-        }
-      });
-
     quiet.addListener(_onMusicStateChanged);
   }
 
   void _onMusicStateChanged() {
     var state = quiet.value;
 
-    var _isPlaying = state.isPlaying;
-
     //handle album cover animation
-    if (_isPlaying && needleAttachCover) {
-      controller.forward(from: (rotation) / (2 * pi));
-    } else if (!_isPlaying) {
-      controller.stop();
-    }
+    var _isPlaying = state.isPlaying;
+    setState(() {
+      coverRotating = _isPlaying && needleAttachCover;
+    });
 
     bool attachToCover =
         state.playWhenReady && (state.isPlaying || state.isBuffering);
@@ -551,16 +529,15 @@ class _AlbumCoverState extends State<_AlbumCover>
     }
     needleAttachCover = attachToCover;
     if (attachToCover) {
-      needleController.forward(from: controller.value);
+      needleController.forward(from: needleController.value);
     } else {
-      needleController.reverse(from: controller.value);
+      needleController.reverse(from: needleController.value);
     }
   }
 
   @override
   void dispose() {
     quiet.removeListener(_onMusicStateChanged);
-    controller.dispose();
     needleController.dispose();
     super.dispose();
   }
@@ -572,36 +549,10 @@ class _AlbumCoverState extends State<_AlbumCover>
     return Stack(
       children: <Widget>[
         Container(
-          padding: const EdgeInsets.only(top: HEIGHT_SPACE_ALBUM_TOP),
-          margin: const EdgeInsets.symmetric(horizontal: 64),
-          child: Transform.rotate(
-            angle: rotation,
-            child: Material(
-              elevation: 3,
-              color: Colors.transparent,
-              borderRadius: BorderRadius.circular(500),
-              clipBehavior: Clip.antiAlias,
-              child: AspectRatio(
-                aspectRatio: 1,
-                child: Hero(
-                  tag: "album_cover",
-                  child: Container(
-                    foregroundDecoration: BoxDecoration(
-                        image: DecorationImage(
-                            image: AssetImage("assets/playing_page_disc.png"))),
-                    padding: EdgeInsets.all(30),
-                    child: ClipOval(
-                      child: Image(
-                        image: NeteaseImage(widget.music.album.coverImageUrl),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ),
+            padding: const EdgeInsets.only(top: HEIGHT_SPACE_ALBUM_TOP),
+            margin: const EdgeInsets.symmetric(horizontal: 64),
+            child: _RotationCoverImage(
+                rotating: coverRotating, music: widget.music)),
         ClipRect(
           child: Container(
             child: Align(
@@ -624,6 +575,95 @@ class _AlbumCoverState extends State<_AlbumCover>
           ),
         )
       ],
+    );
+  }
+}
+
+class _RotationCoverImage extends StatefulWidget {
+  final bool rotating;
+  final Music music;
+
+  const _RotationCoverImage(
+      {Key key, @required this.rotating, @required this.music})
+      : assert(rotating != null),
+        assert(music != null),
+        super(key: key);
+
+  @override
+  _RotationCoverImageState createState() => _RotationCoverImageState();
+}
+
+class _RotationCoverImageState extends State<_RotationCoverImage>
+    with SingleTickerProviderStateMixin {
+  //album cover rotation
+  double rotation = 0;
+
+  //album cover rotation animation
+  AnimationController controller;
+
+  @override
+  void didUpdateWidget(_RotationCoverImage oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.rotating) {
+      controller.forward(from: controller.value);
+    } else {
+      controller.stop();
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    controller = AnimationController(
+        vsync: this,
+        duration: Duration(seconds: 20),
+        animationBehavior: AnimationBehavior.normal)
+      ..addListener(() {
+        setState(() {
+          rotation = controller.value * 2 * pi;
+        });
+      })
+      ..addStatusListener((status) {
+        if (status == AnimationStatus.completed && controller.value == 1) {
+          controller.forward(from: 0);
+        }
+      });
+//    if (widget.rotating) {
+//      controller.forward(from: controller.value);
+//    }
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Transform.rotate(
+      angle: rotation,
+      child: Material(
+        elevation: 3,
+        color: Colors.transparent,
+        borderRadius: BorderRadius.circular(500),
+        clipBehavior: Clip.antiAlias,
+        child: AspectRatio(
+          aspectRatio: 1,
+          child: Container(
+            foregroundDecoration: BoxDecoration(
+                image: DecorationImage(
+                    image: AssetImage("assets/playing_page_disc.png"))),
+            padding: EdgeInsets.all(30),
+            child: ClipOval(
+              child: Image(
+                image: NeteaseImage(widget.music.album.coverImageUrl),
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
