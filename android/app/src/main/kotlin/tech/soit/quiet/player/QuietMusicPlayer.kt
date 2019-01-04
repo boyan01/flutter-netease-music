@@ -60,7 +60,14 @@ class QuietMusicPlayer {
             it.addListener(object : Player.EventListener {
                 override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
                     if (playbackState == Player.STATE_ENDED) {
-                        playNext()//auto play next when ended
+                        if (playMode == PlayMode.Single) {
+                            player?.apply {
+                                seekTo(0)
+                                setPlayWhenReady(true)
+                            }
+                        } else {
+                            playNext()//auto play next when ended
+                        }
                     }
                     if (playbackState == Player.STATE_BUFFERING || playbackState == Player.STATE_READY) {
                         ensureServiceRunning()

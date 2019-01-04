@@ -157,6 +157,16 @@ class MusicPlayer implements ValueNotifier<PlayerControllerState> {
     await _controller.playPrevious();
   }
 
+  ///might be null
+  Future<Music> getNext() {
+    return _controller.getNext();
+  }
+
+  ///might be null
+  Future<Music> getPrevious() {
+    return _controller.getPrevious();
+  }
+
   ///seek to position in milliseconds
   Future<void> seekTo(int position) {
     return _controller.seekTo(position);
