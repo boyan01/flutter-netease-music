@@ -154,11 +154,11 @@ class _NeteaseSearchPageState extends State<NeteaseSearchPage>
             actions: buildActions(context),
             bottom: tabs,
           ),
-          body: initialState
+          body: BoxWithBottomPlayerController(initialState
               ? _EmptyQuerySuggestionSection(
                   suggestionSelectedCallback: (query) => _search(query))
               : _SearchResultPage(
-                  query: _searchedQuery, tabController: tabController),
+                  query: _searchedQuery, tabController: tabController)),
         ),
         SafeArea(
             child: Padding(
@@ -522,17 +522,15 @@ class _SearchResultPageState extends State<_SearchResultPage> {
 
   @override
   Widget build(BuildContext context) {
-    return BoxWithBottomPlayerController(
-      TabBarView(
-        controller: widget.tabController,
-        children: [
-          SongsResultSection(query: query, key: Key("SongTab_$query")),
-          VideosResultSection(query: query, key: Key("VideoTab_$query")),
-          ArtistsResultSection(query: query, key: Key("Artists_$query")),
-          AlbumsResultSection(query: query, key: Key("AlbumTab_$query")),
-          PlaylistResultSection(query: query, key: Key("PlaylistTab_$query")),
-        ],
-      ),
+    return TabBarView(
+      controller: widget.tabController,
+      children: [
+        SongsResultSection(query: query, key: Key("SongTab_$query")),
+        VideosResultSection(query: query, key: Key("VideoTab_$query")),
+        ArtistsResultSection(query: query, key: Key("Artists_$query")),
+        AlbumsResultSection(query: query, key: Key("AlbumTab_$query")),
+        PlaylistResultSection(query: query, key: Key("PlaylistTab_$query")),
+      ],
     );
   }
 }
