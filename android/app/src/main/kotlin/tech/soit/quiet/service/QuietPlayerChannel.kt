@@ -30,11 +30,17 @@ class QuietPlayerChannel(private val channel: MethodChannel) : MethodChannel.Met
 
         private var initialized = false
 
-        fun registerWith(registrar: PluginRegistry.Registrar): QuietPlayerChannel {
+        fun registerWith(registrar: PluginRegistry.Registrar) {
             val methodChannel = MethodChannel(registrar.messenger(), CHANNEL_ID)
             val quietPlayerChannel = QuietPlayerChannel(methodChannel)
             methodChannel.setMethodCallHandler(quietPlayerChannel)
-            return quietPlayerChannel
+            registrar.addViewDestroyListener {
+                //we can adopt FlutterNativeView by return ture
+                //so maybe do not need destory the channel yet
+                //?
+//                quietPlayerChannel.destroy()
+                return@addViewDestroyListener true
+            }
         }
 
     }
