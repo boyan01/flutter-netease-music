@@ -92,6 +92,8 @@ class LyricState extends State<Lyric> with TickerProviderStateMixin {
     widget.position?.removeListener(_onPositionChange);
     _flingController?.dispose();
     _flingController = null;
+    _lineController?.dispose();
+    _lineController = null;
     super.dispose();
   }
 
