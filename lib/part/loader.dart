@@ -231,8 +231,8 @@ class _AutoLoadMoreListState<T> extends State<AutoLoadMoreList> {
   void initState() {
     super.initState();
     items.clear();
-    items.addAll(widget.initialList);
-    hasMore = widget.initialList.length < widget.totalCount;
+    items.addAll(widget.initialList ?? []);
+    hasMore = items.length < widget.totalCount;
   }
 
   void _load() {
