@@ -11,6 +11,7 @@ import tech.soit.quiet.AppContext
 import tech.soit.quiet.player.Music
 import tech.soit.quiet.player.MusicPlayerCallback
 import tech.soit.quiet.player.QuietMusicPlayer
+import java.util.concurrent.atomic.AtomicBoolean
 
 /**
  *
@@ -56,15 +57,14 @@ class QuietPlayerService : Service() {
 
 
         /** flag that [QuietPlayerService] is Running */
-        private var isRunning: Boolean = false
-
+        private val serviceRunning: AtomicBoolean = AtomicBoolean()
 
 
         /**
          * ensure [QuietPlayerService] is Running
          */
         fun ensureServiceRunning(context: Context = AppContext) {
-            if (!isRunning) {
+            if (!serviceRunning.get()) {
                 context.startService(Intent(context, QuietPlayerService::class.java))
             }
         }
@@ -81,7 +81,7 @@ class QuietPlayerService : Service() {
     private val callback = object : MusicPlayerCallback {
         override fun onMusicChanged(music: Music?) {
             if (music == null) {
-                stopForeground(false)
+                stopForeground(true)
             }
             notificationHelper.update(this@QuietPlayerService)
         }
@@ -94,10 +94,16 @@ class QuietPlayerService : Service() {
     }
 
     override fun onCreate() {
-        isRunning = true
+        serviceRunning.set(true)
         super.onCreate()
         musicPlayer.addCallback(callback)
         musicPlayer.addListener(playerEventListener)
+        if (musicPlayer.playWhenReady
+                && (musicPlayer.playbackState == Player.STATE_READY
+                        || musicPlayer.playbackState == Player.STATE_BUFFERING)) {
+            ///notification on create when player is playing
+            notificationHelper.update(this)
+        }
     }
 
     override fun onBind(intent: Intent?): IBinder? = playerServiceBinder
@@ -115,9 +121,11 @@ class QuietPlayerService : Service() {
                 musicPlayer.playNext()
             }
             action_exit -> {
-                musicPlayer.quiet()
+                musicPlayer.removeCallback(callback)
+                musicPlayer.removeListener(playerEventListener)
                 stopForeground(true)
                 stopSelf()
+                musicPlayer.release()
             }
             action_like -> {
 
@@ -126,23 +134,15 @@ class QuietPlayerService : Service() {
 
             }
         }
-        bindPlayerToService()
         return super.onStartCommand(intent, flags, startId)
-    }
-
-    // to holder the instance of MusicPlayer
-    private var instanceHolder: QuietMusicPlayer? = null
-
-    private fun bindPlayerToService() {
-        instanceHolder = musicPlayer
     }
 
     override fun onDestroy() {
         musicPlayer.removeCallback(callback)
         musicPlayer.removeListener(playerEventListener)
         super.onDestroy()
-        musicPlayer.quiet()
-        isRunning = false
+        musicPlayer.release()
+        serviceRunning.set(false)
     }
 
 

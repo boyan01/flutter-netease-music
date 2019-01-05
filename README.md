@@ -14,6 +14,13 @@ all API information comes from this project: [NeteaseCloudMusicApi](https://gith
  flutter run --profile
  ```
 
+# interaction
+
+| ![playing_page](./_preview/playing_interaction.gif) | todo |
+| :-------------------------------------------------: | :--: |
+|                                                     |      |
+
+
 # Preview
 
 |  ![main_playlist](./_preview/main_playlists.jpg)   |        ![main_cloud](./_preview/main_cloud.jpg)        | ![playlist_detail](./_preview/playlist_detail.jpg) | ![artist_detail](./_preview/artist_detail.jpg) |
