@@ -4,6 +4,7 @@ import 'package:overlay_support/overlay_support.dart';
 import 'package:quiet/part/part.dart';
 import 'package:quiet/part/part_music_list_provider.dart';
 import 'package:quiet/repository/netease.dart';
+import 'page_artist_detail.dart';
 
 ///song list result
 class SongsResultSection extends StatefulWidget {
@@ -373,9 +374,13 @@ class ArtistTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {
-        debugPrint("on tap : ${map["id"]}");
-      },
+      onTap: map["id"] == 0
+          ? null
+          : () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) {
+                return ArtistDetailPage(artistId: map["id"]);
+              }));
+            },
       child: Container(
         height: 64,
         child: Row(
