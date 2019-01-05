@@ -16,7 +16,7 @@ all API information comes from this project: [NeteaseCloudMusicApi](https://gith
 
 # interaction
 
-| ![playing_page](./_preview/playing_interaction.gif) | todo |
+| ![playing_page](./_preview/playing_Interaction.gif) | todo |
 | :-------------------------------------------------: | :--: |
 |                                                     |      |
 
