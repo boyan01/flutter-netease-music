@@ -25,6 +25,8 @@ class _PlayingPageState extends State<PlayingPage> {
     super.initState();
     _music = quiet.value.current;
     quiet.addListener(_onPlayerStateChanged);
+
+    debugPrint("_PlayingPageState : init stated");
   }
 
   void _onPlayerStateChanged() {
@@ -40,6 +42,7 @@ class _PlayingPageState extends State<PlayingPage> {
 
   @override
   void dispose() {
+    quiet.removeListener(_onPlayerStateChanged);
     super.dispose();
   }
 
@@ -527,6 +530,9 @@ class _AlbumCoverState extends State<_AlbumCover>
     () async {
       _previous = await quiet.getPrevious();
       _next = await quiet.getNext();
+      if (mounted) {
+        setState(() {});
+      }
     }();
   }
 
@@ -539,7 +545,9 @@ class _AlbumCoverState extends State<_AlbumCover>
         () async {
           _previous = await quiet.getPrevious();
           _next = await quiet.getNext();
-          setState(() {});
+          if (mounted) {
+            setState(() {});
+          }
         }();
       }
       return;
@@ -553,12 +561,17 @@ class _AlbumCoverState extends State<_AlbumCover>
         offset = -MediaQuery.of(context).size.width;
       }
       _animateCoverTranslateTo(offset, onCompleted: () {
-        setState(() async {
+        setState(() {
           _coverTranslateX = 0;
           _current = widget.music;
-          _next = await quiet.getNext();
-          _previous = await quiet.getPrevious();
           _previousNextDirty = false;
+          () async {
+            _next = await quiet.getNext();
+            _previous = await quiet.getPrevious();
+            if (mounted) {
+              setState(() {});
+            }
+          }();
         });
       });
     });
@@ -597,6 +610,8 @@ class _AlbumCoverState extends State<_AlbumCover>
   void dispose() {
     quiet.removeListener(_onMusicStateChanged);
     _needleController.dispose();
+    _translateController?.dispose();
+    _translateController = null;
     super.dispose();
   }
 
