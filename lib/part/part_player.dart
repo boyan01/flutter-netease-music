@@ -12,10 +12,16 @@ class BoxWithBottomPlayerController extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    //hide bottom player controller when view inserts
+    //bottom too height (such as typing with soft keyboard)
+    bool hide = MediaQuery.of(context).viewInsets.bottom /
+            MediaQuery.of(context).size.height >
+        0.4;
     return Column(
       children: <Widget>[
         Expanded(child: child),
-        BottomControllerBar(),
+        hide ? Container() : BottomControllerBar(),
       ],
     );
   }
@@ -24,7 +30,8 @@ class BoxWithBottomPlayerController extends StatelessWidget {
 class BottomControllerBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    var state = PlayerState.of(context, aspect: PlayerStateAspect.playbackState).value;
+    var state =
+        PlayerState.of(context, aspect: PlayerStateAspect.playbackState).value;
     var music =
         PlayerState.of(context, aspect: PlayerStateAspect.music).value.current;
     if (music == null) {
