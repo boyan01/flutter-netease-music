@@ -65,23 +65,26 @@ class BottomControllerBar extends StatelessWidget {
                 ),
               ),
               Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Spacer(),
-                    Text(
-                      music.title,
-                      style: Theme.of(context).textTheme.body1,
-                    ),
-                    Padding(padding: const EdgeInsets.only(top: 2)),
-                    Text(
-                      music.subTitle,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: Theme.of(context).textTheme.caption,
-                    ),
-                    Spacer(),
-                  ],
+                child: DefaultTextStyle(
+                  style: TextStyle(),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Spacer(),
+                      Text(
+                        music.title,
+                        style: Theme.of(context).textTheme.body1,
+                      ),
+                      Padding(padding: const EdgeInsets.only(top: 2)),
+                      Text(
+                        music.subTitle,
+                        style: Theme.of(context).textTheme.caption,
+                      ),
+                      Spacer(),
+                    ],
+                  ),
                 ),
               ),
               Builder(builder: (context) {
