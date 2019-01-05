@@ -690,6 +690,17 @@ class _AlbumCoverState extends State<_AlbumCover>
                   left: 64, right: 64, top: HEIGHT_SPACE_ALBUM_TOP),
               child: Stack(
                 children: <Widget>[
+                  Transform.scale(
+                    scale: 1.035,
+                    child: AspectRatio(
+                      aspectRatio: 1,
+                      child: ClipOval(
+                        child: Container(
+                          color: Colors.white10,
+                        ),
+                      ),
+                    ),
+                  ),
                   Transform.translate(
                     offset: Offset(
                         _coverTranslateX - MediaQuery.of(context).size.width,
