@@ -368,7 +368,7 @@ class _CenterSectionState extends State<_CenterSection> {
               showLyric = !showLyric;
             });
           },
-          child: _AlbumCover(),
+          child: _AlbumCover(music: widget.music),
         ),
         secondChild: _CloudLyric(
           music: widget.music,
@@ -466,6 +466,10 @@ class _CloudLyricState extends State<_CloudLyric> {
 }
 
 class _AlbumCover extends StatefulWidget {
+  final Music music;
+
+  const _AlbumCover({Key key, @required this.music}) : super(key: key);
+
   @override
   State createState() => _AlbumCoverState();
 }
@@ -519,43 +523,49 @@ class _AlbumCoverState extends State<_AlbumCover>
         .animate(_needleController);
 
     quiet.addListener(_onMusicStateChanged);
-    _current = quiet.value.current;
+    _current = widget.music;
     () async {
       _previous = await quiet.getPrevious();
       _next = await quiet.getNext();
     }();
   }
 
-  void _handleMusicChanged(Music music) {
-    _current = music;
-    setState(() async {
-      double offset = 0;
-      if (music == _previous) {
-        offset = -MediaQuery.of(context).size.width;
-      } else if (music == _next) {
-        offset = MediaQuery.of(context).size.width;
+  @override
+  void didUpdateWidget(_AlbumCover oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (_current == widget.music) {
+      if (_previousNextDirty) {
+        _previousNextDirty = false;
+        () async {
+          _previous = await quiet.getPrevious();
+          _next = await quiet.getNext();
+          setState(() {});
+        }();
       }
-      _previousNextDirty = false;
-      _coverTranslateX = offset;
-      _next = await quiet.getNext();
-      _previous = await quiet.getPrevious();
-      _animateCoverTranslateTo(0);
+      return;
+    }
+    _rotateNeedle(false);
+    setState(() {
+      double offset = 0;
+      if (widget.music == _previous) {
+        offset = MediaQuery.of(context).size.width;
+      } else if (widget.music == _next) {
+        offset = -MediaQuery.of(context).size.width;
+      }
+      _animateCoverTranslateTo(offset, onCompleted: () {
+        setState(() async {
+          _coverTranslateX = 0;
+          _current = widget.music;
+          _next = await quiet.getNext();
+          _previous = await quiet.getPrevious();
+          _previousNextDirty = false;
+        });
+      });
     });
-
   }
 
   void _onMusicStateChanged() {
     var state = quiet.value;
-
-    if (_current != state.current) {
-      _handleMusicChanged(state.current);
-    } else if (_previousNextDirty) {
-      _previousNextDirty = false;
-      setState(() async {
-        _previous = await quiet.getPrevious();
-        _next = await quiet.getNext();
-      });
-    }
 
     //handle album cover animation
     var _isPlaying = state.isPlaying;
