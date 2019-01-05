@@ -1,3 +1,4 @@
+import 'package:async/async.dart';
 import 'package:flutter/material.dart';
 import 'package:keyboard_visibility/keyboard_visibility.dart';
 import 'package:quiet/pages/page_search_sections.dart';
@@ -242,6 +243,7 @@ class _NeteaseSearchPageState extends State<NeteaseSearchPage>
 
 typedef SuggestionSelectedCallback = void Function(String keyword);
 
+///搜索建议
 class _SuggestionsPage extends StatefulWidget {
   _SuggestionsPage({@required this.query, @required this.onSuggestionSelected})
       : assert(query != null),
@@ -258,6 +260,32 @@ class _SuggestionsPage extends StatefulWidget {
 }
 
 class _SuggestionsPageState extends State<_SuggestionsPage> {
+  String _query;
+
+  CancelableOperation _operationDelay;
+
+  @override
+  void didUpdateWidget(_SuggestionsPage oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    _operationDelay?.cancel();
+    _operationDelay = CancelableOperation.fromFuture(() async {
+      //we should delay some time to load the suggest for query
+      await Future.delayed(Duration(milliseconds: 1000));
+      return widget.query;
+    }())
+      ..value.then((keyword) {
+        setState(() {
+          _query = keyword;
+        });
+      });
+  }
+
+  @override
+  void dispose() {
+    _operationDelay?.cancel();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return AnimatedPadding(
@@ -280,9 +308,25 @@ class _SuggestionsPageState extends State<_SuggestionsPage> {
                   widget.onSuggestionSelected(widget.query);
                 },
               ),
-              Divider(
-                height: 0,
-              )
+              Loader<List<String>>(
+                  key: Key("suggest_$_query"),
+                  loadTask: () => neteaseRepository.searchSuggest(_query),
+                  loadingBuilder: (context) {
+                    return Container();
+                  },
+                  builder: (context, result) {
+                    return Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: result.map((keyword) {
+                        return ListTile(
+                          title: Text(keyword),
+                          onTap: () {
+                            widget.onSuggestionSelected(keyword);
+                          },
+                        );
+                      }).toList(),
+                    );
+                  })
             ],
           ),
         ),

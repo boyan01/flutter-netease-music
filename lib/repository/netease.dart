@@ -161,9 +161,8 @@ class NeteaseRepository {
   ///return true if action success
   Future<bool> playlistSubscribe(int id, bool subscribe) async {
     String action = subscribe ? "subscribe" : "unsubscribe";
-    final response = await doRequest("https://music.163.com/weapi/playlist/$action", {
-      "id":id
-    });
+    final response = await doRequest(
+        "https://music.163.com/weapi/playlist/$action", {"id": id});
     return responseVerify(response).isSuccess;
   }
 
@@ -244,6 +243,30 @@ class NeteaseRepository {
       {int limit = 20, int offset = 0}) {
     return doRequest("https://music.163.com/weapi/search/get",
         {"s": keyword, "type": type.type, "limit": limit, "offset": offset});
+  }
+
+  ///搜索建议
+  ///返回搜索建议列表，结果一定不会为null
+  Future<List<String>> searchSuggest(String keyword) async {
+    if (keyword == null || keyword.isEmpty || keyword.trim().isEmpty) {
+      return [];
+    }
+    keyword = keyword.trim();
+    try {
+      final response = await doRequest(
+          "https://music.163.com/weapi/search/suggest/keyword", {"s": keyword});
+      if (!responseVerify(response).isSuccess) {
+        return [];
+      }
+      List<Map> match = ((response["result"]["allMatch"]) as List)?.cast();
+      if (match == null) {
+        return [];
+      }
+      return match.map((m) => m["keyword"]).cast<String>().toList();
+    } catch (e) {
+      debugPrint(e.toString());
+      return [];
+    }
   }
 
   ///check music is available
