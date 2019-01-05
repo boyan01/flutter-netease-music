@@ -64,6 +64,7 @@ class PlayerControllerState {
   ///audio is buffering
   bool get isBuffering => playbackState == PlaybackState.buffering && !hasError;
 
+  ///might be null
   final Music current;
 
   final String errorMsg;
@@ -180,8 +181,22 @@ class PlayerController extends ValueNotifier<PlayerControllerState> {
               position: Duration(milliseconds: method.arguments["position"]),
               duration: Duration(milliseconds: method.arguments["duration"]));
           break;
+        case "onPlayModeChanged":
+          value =
+              value.copyWith(playMode: PlayMode.values[method.arguments % 3]);
+          break;
       }
     });
+  }
+
+  ///return the previous of current playing music
+  Future<Music> getPrevious() async {
+    return Music.fromMap(await _channel.invokeMethod("getPrevious"));
+  }
+
+  ///return the next of current playing music
+  Future<Music> getNext() async {
+    return Music.fromMap(await _channel.invokeMethod("getNext"));
   }
 
   ///play next music
@@ -233,8 +248,8 @@ class PlayerController extends ValueNotifier<PlayerControllerState> {
   }
 
   Future<void> seekTo(int position) async {
-    await _channel.invokeMethod("seekTo", position);
     value = value.copyWith(position: Duration(milliseconds: position));
+    await _channel.invokeMethod("seekTo", position);
   }
 
   Future<void> setVolume(double volume) {
@@ -247,7 +262,10 @@ class PlayerController extends ValueNotifier<PlayerControllerState> {
   }
 
   ///this player can not be disposable
-  ///this method will only release media player
+  ///this method will only close MusicPlayer
   // ignore: must_call_super
-  Future<void> dispose() async {}
+  Future<void> dispose() {
+    value = PlayerControllerState.uninitialized();
+    return _channel.invokeMethod("quiet");
+  }
 }

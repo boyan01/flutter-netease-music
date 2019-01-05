@@ -172,10 +172,18 @@ class QuietPlayerChannel(private val channel: MethodChannel) : MethodChannel.Met
                 }
                 "position" -> {
                     result.success(player.position)
-                    result.success(null)
                 }
                 "duration" -> {
                     result.success(player.duration)
+                }
+                "getNext" -> {
+                    result.success(player.playlist.getNext(player.current)?.map)
+                }
+                "getPrevious" -> {
+                    result.success(player.playlist.getPrevious(player.current)?.map)
+                }
+                "quiet" -> {
+                    player.quiet()
                     result.success(null)
                 }
                 else -> {

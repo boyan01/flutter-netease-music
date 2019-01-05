@@ -1,8 +1,10 @@
 package tech.soit.quiet.player
 
+import android.content.Intent
 import android.net.Uri
 import com.google.android.exoplayer2.ExoPlayerFactory
 import com.google.android.exoplayer2.Player
+import com.google.android.exoplayer2.SimpleExoPlayer
 import com.google.android.exoplayer2.source.ExtractorMediaSource
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.upstream.cache.CacheDataSourceFactory
@@ -14,10 +16,10 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import tech.soit.quiet.AppContext
 import tech.soit.quiet.player.playlist.Playlist
+import tech.soit.quiet.player.service.QuietPlayerService
 import tech.soit.quiet.player.service.QuietPlayerService.Companion.ensureServiceRunning
 import tech.soit.quiet.utils.LoggerLevel
 import tech.soit.quiet.utils.log
-import java.util.*
 import kotlin.properties.Delegates
 
 /**
@@ -50,23 +52,34 @@ class QuietMusicPlayer {
     }
 
 
-    private val player by lazy {
-        val player = ExoPlayerFactory.newSimpleInstance(AppContext)
-        player.addListener(object : Player.EventListener {
-            override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
-                if (playbackState == Player.STATE_ENDED) {
-                    playNext()//auto play next when ended
+    private var player: SimpleExoPlayer? = null
+
+
+    private fun initPlayer() {
+        player = ExoPlayerFactory.newSimpleInstance(AppContext).also {
+            it.addListener(object : Player.EventListener {
+                override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
+                    if (playbackState == Player.STATE_ENDED) {
+                        if (playMode == PlayMode.Single) {
+                            player?.apply {
+                                seekTo(0)
+                                setPlayWhenReady(true)
+                            }
+                        } else {
+                            playNext()//auto play next when ended
+                        }
+                    }
+                    if (playbackState == Player.STATE_BUFFERING || playbackState == Player.STATE_READY) {
+                        ensureServiceRunning()
+                    }
                 }
-                if (playbackState == Player.STATE_BUFFERING || playbackState == Player.STATE_READY) {
-                    ensureServiceRunning()
-                }
-            }
-        })
-        player
+            })
+            eventListeners.forEach(it::addListener)
+        }
     }
 
     var playWhenReady: Boolean
-        get() = player.playWhenReady
+        get() = player?.playWhenReady ?: false
         set(value) {
             if (playbackState == Player.STATE_IDLE || playbackError != null) {
                 val current = this.current
@@ -76,16 +89,25 @@ class QuietMusicPlayer {
                     playNext()
                 }
             } else {
-                player.playWhenReady = value
+                player?.playWhenReady = value
             }
         }
 
-    fun addListener(listener: Player.EventListener) = player.addListener(listener)
-    fun removeListener(listener: Player.EventListener) = player.removeListener(listener)
+    private val eventListeners = ArrayList<Player.EventListener>()
 
-    val playbackState: Int get() = player.playbackState
+    fun addListener(listener: Player.EventListener) {
+        eventListeners.add(listener)
+        player?.addListener(listener)
+    }
 
-    val playbackError get() = player.playbackError
+    fun removeListener(listener: Player.EventListener) {
+        eventListeners.remove(listener)
+        player?.removeListener(listener)
+    }
+
+    val playbackState: Int get() = player?.playbackState ?: Player.STATE_IDLE
+
+    val playbackError get() = player?.playbackError
 
     /**
      * @see Playlist
@@ -96,7 +118,7 @@ class QuietMusicPlayer {
 
         //stop player
         if (newValue != oldValue) {
-            quiet()
+            player?.stop()
         }
     }
 
@@ -128,9 +150,9 @@ class QuietMusicPlayer {
         val callbacks = ArrayList<MusicPlayerCallback>()
     }
 
-    val position: Long get() = player.currentPosition
+    val position: Long get() = player?.currentPosition ?: 0
 
-    val duration: Long get() = player.duration
+    val duration: Long get() = player?.duration ?: 0
 
     /**
      * play the music which return by [Playlist.getNext]
@@ -169,19 +191,32 @@ class QuietMusicPlayer {
         current = music
 
         val source = buildSource(music.getPlayUrl())
-        player.prepare(source)
+        if (player == null) {
+            initPlayer()
+        }
+        player?.prepare(source)
         playWhenReady = true
     }
 
 
-    /**
-     * stop play
-     */
-    fun quiet() {
-        player.stop()
-        //TODO
+    fun release() {
+        player?.release()
+        player = null
+        eventListeners.forEach {
+            it.onPlayerStateChanged(false, Player.STATE_IDLE)
+        }
     }
 
+    /**
+     * stop play and clear playing list
+     */
+    fun quiet() {
+        if (player != null) {
+            release()
+        }
+        playlist = Playlist.EMPTY
+        current = null
+    }
 
     private fun safeAsync(block: suspend () -> Unit) =
             GlobalScope.launch(Dispatchers.Main) { block() }
@@ -194,9 +229,9 @@ class QuietMusicPlayer {
         this.musicPlayerCallback.callbacks.remove(callback)
     }
 
-    fun seekTo(position: Long) = player.seekTo(position)
+    fun seekTo(position: Long) = player?.seekTo(position)
     fun setVolume(volume: Float) {
-        player.volume = volume
+        player?.volume = volume
     }
 
     init {
@@ -211,8 +246,8 @@ class QuietMusicPlayer {
                             && playWhenReady && playbackState == Player.STATE_READY
 
                     if (notify) {
-                        musicPlayerCallback.onPositionChanged(player.currentPosition,
-                                player.duration)
+                        musicPlayerCallback.onPositionChanged(position,
+                                duration)
                     }
                 } catch (e: Exception) {
                     //ignore

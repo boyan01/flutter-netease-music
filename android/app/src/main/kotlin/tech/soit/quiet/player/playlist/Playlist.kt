@@ -58,10 +58,7 @@ open class Playlist(
         }
         val anchor = current ?: /*fast return */ return listInternal[0]
         return when (playMode) {
-            PlayMode.Single -> {
-                anchor
-            }
-            PlayMode.Sequence -> {
+            PlayMode.Single, PlayMode.Sequence -> {
                 //if can not find ,index will be zero , it will right too
                 val index = listInternal.indexOf(anchor) + 1
                 if (index == listInternal.size) {
@@ -96,10 +93,7 @@ open class Playlist(
         }
         val anchor = current ?: return listInternal[0]
         return when (playMode) {
-            PlayMode.Single -> {
-                anchor
-            }
-            PlayMode.Sequence -> {
+            PlayMode.Single, PlayMode.Sequence -> {
                 val index = listInternal.indexOf(anchor)
                 when (index) {
                     -1 -> listInternal[0]
