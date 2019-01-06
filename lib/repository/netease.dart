@@ -9,6 +9,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:quiet/model/playlist_detail.dart';
+import 'package:quiet/pages/page_comment.dart';
 import 'package:quiet/part/part.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -87,11 +88,11 @@ class NeteaseRepository {
 
     var path = (await getApplicationDocumentsDirectory()).path + "/.cookies/";
     _dio.cookieJar = PersistCookieJar(path);
-//    _dio.interceptor.request.onSend = (options) {
-//      debugPrint("request header :${options.headers}");
+    _dio.interceptor.request.onSend = (options) {
+      debugPrint("request header :${options.headers}");
 //      debugPrint("request cookie :${options.data}");
-//      return options;
-//    };
+      return options;
+    };
     return _dio;
   }
 
@@ -358,9 +359,20 @@ class NeteaseRepository {
         "https://music.163.com/weapi/artist/introduction", {"id": artistId});
   }
 
+  ///get comments
+  Future<Map> getComments(CommentThreadId commentThread,
+      {int limit = 20, int offset = 0}) {
+    return neteaseRepository.doRequest(
+        "https://music.163.com/weapi/v1/resource/comments/${commentThread.threadId}",
+        {"rid": commentThread.id, "limit": limit, "offset": offset},
+        cookies: [Cookie("os", "pc")]);
+  }
+
   //请求数据
   Future<Map<String, dynamic>> doRequest(String path, Map data,
-      {EncryptType type = EncryptType.we, Options options}) async {
+      {EncryptType type = EncryptType.we,
+      Options options,
+      List<Cookie> cookies = const []}) async {
     debugPrint("netease request path = $path params = ${data.toString()}");
 
     options ??= Options();
@@ -388,8 +400,10 @@ class NeteaseRepository {
       data = await _encrypt(data, EncryptType.we);
       path = path.replaceAll(RegExp(r"\w*api"), 'weapi');
     }
-    options.headers["Cookie"] =
-        (await dio).cookieJar.loadForRequest(Uri.parse(_BASE_URL));
+    options.headers["Cookie"] = (await dio)
+        .cookieJar
+        .loadForRequest(Uri.parse(_BASE_URL))
+          ..addAll(cookies);
     options.headers['Content-Type'] = 'application/x-www-form-urlencoded';
 
     try {

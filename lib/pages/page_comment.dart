@@ -17,7 +17,7 @@ class CommentPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Loader(
-      loadTask: () => getComments(threadId),
+      loadTask: () => neteaseRepository.getComments(threadId),
       resultVerify: neteaseRepository.responseVerify,
       failedWidgetBuilder: (context, result, msg) {
         return Scaffold(
@@ -247,8 +247,8 @@ class _CommentListState extends State<_CommentList> {
     if (more &&
         _controller.position.extentAfter < 500 &&
         _autoLoadOperation == null) {
-      _autoLoadOperation = CancelableOperation.fromFuture(
-          getComments(widget.threadId, offset: comments.length))
+      _autoLoadOperation = CancelableOperation.fromFuture(neteaseRepository
+          .getComments(widget.threadId, offset: comments.length))
         ..value.then((result) {
           _autoLoadOperation = null;
           if (result["code"] == 200) {
@@ -680,14 +680,6 @@ String getFormattedTime(int milliseconds) {
     return "${diff.inDays}天前";
   }
   return DateFormat("y年M月d日").format(dateTime);
-}
-
-///get comments
-Future<Map> getComments(CommentThreadId commentThread,
-    {int limit = 20, int offset = 0}) {
-  return neteaseRepository.doRequest(
-      "https://music.163.com/weapi/v1/resource/comments/${commentThread.threadId}",
-      {"rid": commentThread.id, "limit": limit, "offset": offset});
 }
 
 ///like or unlike a comment
