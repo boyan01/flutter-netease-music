@@ -23,15 +23,20 @@ class MainActivity : FlutterActivity() {
 
     }
 
+    private lateinit var playerChannel: QuietPlayerChannel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         GeneratedPluginRegistrant.registerWith(this)
 
         NeteaseCrypto.init(flutterView)
-        QuietPlayerChannel.registerWith(registrarFor("tech.soit.quiet.service.QuietPlayerChannel"))
+        playerChannel = QuietPlayerChannel.registerWith(registrarFor("tech.soit.quiet.service.QuietPlayerChannel"))
     }
 
+    override fun onDestroy() {
+        playerChannel.destroy()
+        super.onDestroy()
+    }
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
