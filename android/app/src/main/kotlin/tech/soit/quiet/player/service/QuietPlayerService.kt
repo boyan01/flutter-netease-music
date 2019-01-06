@@ -11,6 +11,7 @@ import tech.soit.quiet.AppContext
 import tech.soit.quiet.player.Music
 import tech.soit.quiet.player.MusicPlayerCallback
 import tech.soit.quiet.player.QuietMusicPlayer
+import tech.soit.quiet.service.QuietPlayerChannel
 import java.util.concurrent.atomic.AtomicBoolean
 
 /**
@@ -126,6 +127,7 @@ class QuietPlayerService : Service() {
                 stopForeground(true)
                 stopSelf()
                 musicPlayer.release()
+                QuietPlayerChannel.destroyNativeView()
             }
             action_like -> {
 

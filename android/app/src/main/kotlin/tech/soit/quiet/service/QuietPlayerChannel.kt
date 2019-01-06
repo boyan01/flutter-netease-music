@@ -1,10 +1,12 @@
 package tech.soit.quiet.service
 
+import android.annotation.SuppressLint
 import com.google.android.exoplayer2.ExoPlaybackException
 import com.google.android.exoplayer2.Player
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.PluginRegistry
+import io.flutter.view.FlutterNativeView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -30,17 +32,26 @@ class QuietPlayerChannel(private val channel: MethodChannel) : MethodChannel.Met
 
         private var initialized = false
 
+        //native view Context field is Application
+        //will not leak activity context
+        @SuppressLint("StaticFieldLeak")
+        private var destroyedNativeView: FlutterNativeView? = null
+
         fun registerWith(registrar: PluginRegistry.Registrar) {
             val methodChannel = MethodChannel(registrar.messenger(), CHANNEL_ID)
             val quietPlayerChannel = QuietPlayerChannel(methodChannel)
             methodChannel.setMethodCallHandler(quietPlayerChannel)
             registrar.addViewDestroyListener {
-                //we can adopt FlutterNativeView by return ture
-                //so maybe do not need destory the channel yet
-                //?
-//                quietPlayerChannel.destroy()
+                quietPlayerChannel.destroy()
+                destroyedNativeView = it
+                //remain native view
                 return@addViewDestroyListener true
             }
+        }
+
+        fun destroyNativeView() {
+            destroyedNativeView?.destroy()
+            destroyedNativeView = null
         }
 
     }
@@ -108,7 +119,7 @@ class QuietPlayerChannel(private val channel: MethodChannel) : MethodChannel.Met
      * destroy this channel callback
      * remove observe callback
      */
-    fun destroy() {
+    private fun destroy() {
         player.removeListener(eventListener)
         player.removeCallback(playerCallback)
     }
@@ -124,6 +135,7 @@ class QuietPlayerChannel(private val channel: MethodChannel) : MethodChannel.Met
                         //when current player is available, we do not need init playlist
                         //but also need send event to Flutter Framework
                         init(true)
+                        destroyNativeView()
                     } else {
                         initialized = true
                         init(false)
