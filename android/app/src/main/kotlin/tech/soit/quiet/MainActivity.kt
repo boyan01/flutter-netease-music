@@ -4,17 +4,12 @@ import android.content.Intent
 import android.os.Bundle
 import io.flutter.app.FlutterActivity
 import io.flutter.plugins.GeneratedPluginRegistrant
-import tech.soit.quiet.service.NeteaseCrypto
+import tech.soit.quiet.plugin.PluginRegistrant
 import tech.soit.quiet.service.QuietPlayerChannel
 
 class MainActivity : FlutterActivity() {
 
     companion object {
-
-        /**
-         * 网易云音乐加密
-         */
-        const val CHANNEL_NETEASE_CRYPTO = "tech.soit.netease/crypto"
 
 
         const val KEY_DESTINATION = "destination"
@@ -28,8 +23,7 @@ class MainActivity : FlutterActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         GeneratedPluginRegistrant.registerWith(this)
-
-        NeteaseCrypto.init(flutterView)
+        PluginRegistrant.registerWith(this)
         playerChannel = QuietPlayerChannel.registerWith(registrarFor("tech.soit.quiet.service.QuietPlayerChannel"))
     }
 

@@ -48,6 +48,9 @@ class _MainPlaylistState extends State<MainPlaylistPage>
       ListTile(
         leading: Icon(Icons.file_download),
         title: Text("下载管理"),
+        onTap: () {
+          Navigator.pushNamed(context, ROUTE_DOWNLOADS);
+        },
       ),
       Divider(
         height: 1,
