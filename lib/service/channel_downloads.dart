@@ -6,6 +6,7 @@ import 'package:quiet/model/model.dart';
 
 const MethodChannel _channel = MethodChannel("tech.soit.quiet/Download");
 
+///Download item
 class Download<T> {
   final int id;
 
@@ -39,9 +40,15 @@ class Download<T> {
         etaInMilliSeconds: eta, downloadedBytesPerSecond: speed);
   }
 
+  Download<T> _withError(String error) {
+    return Download(id, file, total, status, error, progress, extras,
+        etaInMilliSeconds: etaInMilliSeconds,
+        downloadedBytesPerSecond: downloadedBytesPerSecond);
+  }
+
   @override
   String toString() {
-    return 'Download{id: $id, total: $total, error: $error, progress: $progress}';
+    return 'Download{id: $id, extras: $extras total: $total, error: $error, progress: $progress}';
   }
 
   @override
@@ -89,6 +96,8 @@ class DownloadStateValue<T> {
   }
 }
 
+///download status
+///NOTE : this enum index must be consistent with Native Status enum
 enum DownloadStatus {
   NONE,
   QUEUED,
@@ -111,56 +120,55 @@ class DownloadManager extends ChangeNotifier {
   final DownloadStateValue<Music> value = DownloadStateValue();
 
   DownloadManager._() : super() {
-    _channel
-        .invokeMethod("init")
-        .whenComplete(() async {
+    _channel.invokeMethod("init").whenComplete(() async {
       value._init(await getCompletedDownloads(), await getDownloading());
       debugPrint("value init : ${value._downloads}");
       notifyListeners();
     });
-    _channel.setMethodCallHandler(_methodHandler);
+    _channel.setMethodCallHandler((call) {
+      debugPrint("call ${call.method}");
+      switch (call.method) {
+        case "update":
+          _update(call.arguments);
+          break;
+      }
+    });
+  }
+
+  void _update(arguments) {
+    var download = _convertDownload(arguments["download"]);
+
+    final index = _downloads.indexWhere((d) => d.id == download.id);
+
+    if (index != -1) {
+      if (download.status == DownloadStatus.DOWNLOADING) {
+        //Estimated time remaining in milliseconds for the download to complete.
+        int eta = arguments["eta"] ?? -1;
+        // Average downloaded bytes per second
+        int speed = arguments["speed"] ?? 0;
+        download = download._withEta(eta, speed);
+      } else if (download.status == DownloadStatus.FAILED) {
+        download = download._withError(arguments["error"] ?? "错误");
+      } else if (download.status == DownloadStatus.CANCELLED ||
+          download.status == DownloadStatus.DELETED ||
+          download.status == DownloadStatus.REMOVED) {
+        download = null;
+      }
+      if (download == null) {
+        _downloads.removeAt(index);
+      } else {
+        _downloads[index] = download;
+      }
+    } else {
+      if (download.status == DownloadStatus.ADDED ||
+          download.status == DownloadStatus.QUEUED) {
+        _downloads.add(download);
+      }
+    }
+    notifyListeners();
   }
 
   List<Download<Music>> get _downloads => value._downloads;
-
-  Future<dynamic> _methodHandler(MethodCall call) async {
-    switch (call.method) {
-      case "update":
-        final download = _convertDownload(call.arguments["download"]);
-        for (int i = 0; i < _downloads.length; i++) {
-          if (_downloads[i].id == download.id) {
-            switch (download.status) {
-              case DownloadStatus.NONE:
-                return;
-              case DownloadStatus.DOWNLOADING:
-                //Estimated time remaining in milliseconds for the download to complete.
-                int eta = call.arguments["eta"];
-                // Average downloaded bytes per second
-                int speed = call.arguments["speed"];
-                _downloads[i] = download._withEta(eta, speed);
-                break;
-              case DownloadStatus.PAUSED:
-              case DownloadStatus.FAILED:
-              case DownloadStatus.COMPLETED:
-                //TODO handle ERROR msg
-                _downloads[i] = download;
-                break;
-              case DownloadStatus.CANCELLED:
-              case DownloadStatus.REMOVED:
-              case DownloadStatus.DELETED:
-                _downloads.removeAt(i);
-                break;
-              case DownloadStatus.ADDED:
-              case DownloadStatus.QUEUED:
-                _downloads.add(download);
-                break;
-            }
-            notifyListeners();
-          }
-        }
-        break;
-    }
-  }
 
   static Download<Music> _convertDownload(Map map) {
     final extras = map["extras"] as Map;
@@ -195,6 +203,59 @@ class DownloadManager extends ChangeNotifier {
   Future<void> addToDownload(List<Music> musics) async {
     await _channel.invokeMethod(
         "download", musics.map((m) => m.toMap()).toList());
+  }
+
+  ///Pauses all currently downloading items,
+  ///and pauses all download processing fetch operations.
+  Future<void> freeze() {
+    return _channel.invokeMethod("freeze");
+  }
+
+  ///Allow fetch to resume operations after freeze has been called.
+  Future<void> unfreeze() {
+    return _channel.invokeMethod("unfreeze");
+  }
+
+  ///pause all downloading
+  Future<void> pauseAll() {
+    final ids = value.downloading.map((d) => d.id).toList();
+    return pause(ids);
+  }
+
+  ///resume all download which paused
+  Future<void> resumeAll() {
+    final ids = value._downloads
+        .where((d) => d.status == DownloadStatus.PAUSED)
+        .map((d) => d.id)
+        .toList();
+    return resume(ids);
+  }
+
+  ///delete all download which do not completed
+  Future<void> deleteAll() {
+    final ids = value.downloading.map((d) => d.id).toList();
+    return delete(ids);
+  }
+
+  ///pause download
+  Future<void> pause(List<int> downloadIds) {
+    return _channel.invokeMethod("pause", downloadIds);
+  }
+
+  ///resume a download
+  Future<void> resume(List<int> downloadIds) {
+    return _channel.invokeMethod("resume", downloadIds);
+  }
+
+  ///resume a download
+  Future<void> retry(List<int> downloadIds) {
+    return _channel.invokeMethod("retry", downloadIds);
+  }
+
+  ///delete download from download list
+  Future<void> delete(List<int> downloadIds, {bool removeFile = false}) {
+    return _channel
+        .invokeMethod("delete", {"ids": downloadIds, "removeFile": removeFile});
   }
 
   Future<List<Download<Music>>> _getDownloads(DownloadStatus status) async {

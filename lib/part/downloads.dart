@@ -22,9 +22,8 @@ class DownloadServiceState extends State<DownloadService> {
   }
 
   void _onDownloadStateChanged() {
-    setState(() {
-      value = downloadManager.value;
-    });
+    debugPrint("_onDownloadStateChanged : ${value.downloading}");
+    setState(() {});
   }
 
   @override
@@ -54,6 +53,6 @@ class DownloadState extends InheritedWidget {
 
   @override
   bool updateShouldNotify(DownloadState oldWidget) {
-    return value != oldWidget.value;
+    return true;
   }
 }
