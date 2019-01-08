@@ -1,19 +1,20 @@
 package tech.soit.quiet.plugin
 
+import android.content.Context
+import android.support.v4.app.NotificationCompat
 import com.tonyodev.fetch2.*
-import com.tonyodev.fetch2core.DownloadBlock
-import com.tonyodev.fetch2core.Downloader
-import com.tonyodev.fetch2core.Extras
-import com.tonyodev.fetch2core.Func
+import com.tonyodev.fetch2core.*
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.PluginRegistry
 import org.json.JSONObject
 import tech.soit.quiet.AppContext
 import tech.soit.quiet.player.Music
+import tech.soit.quiet.utils.LoggerLevel
 import tech.soit.quiet.utils.log
 import java.io.File
 
+private const val MUSIC_DOWNLOAD_GROUP = 1
 
 /**
  * plugin for download
@@ -52,6 +53,31 @@ class DownloadPlugin(
                                 return 1//slow down the download speed
                             }
                         })
+                        .setNotificationManager(FetchNotificationManager())
+                        .enableAutoStart(false)
+                        .enableLogging(false)
+                        .setLogger(object : Logger {
+                            override var enabled: Boolean
+                                get() = true
+                                set(_) {}
+
+                            override fun d(message: String) {
+                                log(LoggerLevel.DEBUG) { message }
+                            }
+
+                            override fun d(message: String, throwable: Throwable) {
+                                log(LoggerLevel.DEBUG) { throwable.printStackTrace();message }
+                            }
+
+                            override fun e(message: String) {
+                                log(LoggerLevel.ERROR) { message }
+                            }
+
+                            override fun e(message: String, throwable: Throwable) {
+                                log(LoggerLevel.ERROR) { throwable.printStackTrace();message }
+                            }
+
+                        })
                         .build()
                 fetch = Fetch.getInstance(fetchConfiguration)
                 fetch.addListener(object : FetchListener {
@@ -69,6 +95,7 @@ class DownloadPlugin(
                     }
 
                     private fun update(download: Download) {
+                        log { "update :${download.toMap()}" }
                         channel.invokeMethod("update", mapOf(
                                 "download" to download.toMap()
                         ))
@@ -83,8 +110,10 @@ class DownloadPlugin(
                     }
 
                     override fun onError(download: Download, error: Error, throwable: Throwable?) {
+                        log { throwable?.printStackTrace();"on error $error" }
                         channel.invokeMethod("update", mapOf(
-                                "download" to download.toMap()
+                                "download" to download.toMap(),
+                                "error" to throwable?.message
                         ))
                     }
 
@@ -94,7 +123,9 @@ class DownloadPlugin(
 
                     override fun onProgress(download: Download, etaInMilliSeconds: Long, downloadedBytesPerSecond: Long) {
                         channel.invokeMethod("update", mapOf(
-                                "download" to download.toMap()
+                                "download" to download.toMap(),
+                                "eta" to etaInMilliSeconds,
+                                "speed" to downloadedBytesPerSecond
                         ))
                     }
 
@@ -156,8 +187,24 @@ class DownloadPlugin(
                 }
             }
             "pause" -> {
-                val id: Int = call.arguments()
-                fetch.pause(id, func = Func {
+                val ids: List<Int> = call.arguments()
+                fetch.pause(ids, func = Func {
+                    result.success(null)
+                }, func2 = Func { error: Error ->
+                    result.error(error.name, null, null)
+                })
+            }
+            "resume" -> {
+                val ids: List<Int> = call.arguments()
+                fetch.resume(ids, func = Func {
+                    result.success(null)
+                }, func2 = Func { error: Error ->
+                    result.error(error.name, null, null)
+                })
+            }
+            "retry" -> {
+                val ids: List<Int> = call.arguments()
+                fetch.retry(ids, func = Func {
                     result.success(null)
                 }, func2 = Func { error: Error ->
                     result.error(error.name, null, null)
@@ -172,17 +219,34 @@ class DownloadPlugin(
                 result.success(null)
             }
             "delete" -> {
-                val ids: List<Int> = call.arguments()
-                fetch.delete(ids, func = Func {
+                val ids: List<Int> = call.argument("ids")!!
+                val removeFile: Boolean = call.argument("removeFile")!!
+
+                val func = Func<List<Download>> {
                     result.success(it.size)
-                }, func2 = Func {
+                }
+                val func2 = Func<Error> {
                     result.error(it.name, null, null)
-                })
+                }
+                if (removeFile) {
+                    fetch.delete(ids, func = func, func2 = func2)
+                } else {
+                    fetch.remove(ids, func = func, func2 = func2)
+                }
             }
             else -> {
                 result.notImplemented()
             }
         }
+    }
+
+}
+
+class FetchNotificationManager : DefaultFetchNotificationManager(AppContext) {
+
+    override fun updateGroupSummaryNotification(groupId: Int, notificationBuilder: NotificationCompat.Builder, downloadNotifications: List<DownloadNotification>, context: Context): Boolean {
+        super.updateGroupSummaryNotification(groupId, notificationBuilder, downloadNotifications, context)
+        return true
     }
 
 }
@@ -208,7 +272,7 @@ private fun buildRequest(music: Music): Request {
     if (suffix.isEmpty()) {
         suffix = "mp3"
     }
-    val file = File("${DownloadPlugin.DEFAULT_DOWNLOAD_PATH}/${music.getSubTitle()}.$suffix")
+    val file = File("${DownloadPlugin.DEFAULT_DOWNLOAD_PATH}/${music.getTitle()} -${music.getSubTitle().substringAfter('-')}.$suffix")
     if (file.exists()) {
         log { "file exists" }
         throw FileAlreadyExistsException(file)
@@ -218,5 +282,6 @@ private fun buildRequest(music: Music): Request {
     request.extras = Extras(mapOf(
             "music" to JSONObject(music.map).toString()
     ))
+    request.groupId = MUSIC_DOWNLOAD_GROUP
     return request
 }
