@@ -72,6 +72,8 @@ dependencies {
     //exo player
     implementation 'com.google.android.exoplayer:exoplayer-core:2.9.1'
 
+    implementation "com.tonyodev.fetch2:fetch2:2.3.4"
+
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutine_version"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutine_version"
 
