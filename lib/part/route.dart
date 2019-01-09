@@ -4,6 +4,7 @@ import 'package:quiet/pages/page_leaderboard.dart';
 import 'package:quiet/pages/page_login.dart';
 import 'package:quiet/pages/page_main.dart';
 import 'package:quiet/pages/page_playing.dart';
+import 'package:quiet/pages/page_downloads.dart';
 
 export 'package:quiet/pages/page_login.dart';
 export 'package:quiet/pages/page_main.dart';
@@ -24,6 +25,8 @@ const ROUTE_LEADERBOARD = "/leaderboard";
 
 const ROUTE_DAILY = "/daily";
 
+const ROUTE_DOWNLOADS = "/downloads";
+
 ///app routers
 final Map<String, WidgetBuilder> routes = {
   ROUTE_MAIN: (context) => MainPage(),
@@ -31,4 +34,5 @@ final Map<String, WidgetBuilder> routes = {
   ROUTE_PAYING: (context) => PlayingPage(),
   ROUTE_LEADERBOARD: (context) => LeaderboardPage(),
   ROUTE_DAILY: (context) => DailyPlaylistPage(),
+  ROUTE_DOWNLOADS: (context) => DownloadPage(),
 };

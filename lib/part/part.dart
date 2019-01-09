@@ -17,6 +17,7 @@ export 'loader.dart';
 export 'part_utils.dart';
 export 'dialogs.dart';
 export 'tiles.dart';
+export 'downloads.dart';
 
 void notImplemented(BuildContext context) {
   showSimpleNotification(context, Text("页面未完成"),

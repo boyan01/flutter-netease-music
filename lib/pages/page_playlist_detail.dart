@@ -7,6 +7,7 @@ import 'package:quiet/pages/page_comment.dart';
 import 'package:quiet/pages/page_playlist_detail_selection.dart';
 import 'package:quiet/part/part.dart';
 import 'package:quiet/repository/netease.dart';
+import 'package:quiet/service/channel_downloads.dart';
 
 import 'page_artist_detail.dart';
 
@@ -600,7 +601,17 @@ class _PlaylistDetailHeader extends StatelessWidget {
             }));
           }
         },
-        onDownloadTap: () => notImplemented(context),
+        onDownloadTap: musicList.isEmpty
+            ? null
+            : () async {
+                if (await showLoaderOverlay(
+                    context, downloadManager.addToDownload(musicList))) {
+                  showSimpleNotification(context, Text("加入下载列表成功"));
+                } else {
+                  showSimpleNotification(context, Text("加入下载列表失败"),
+                      background: Theme.of(context).errorColor);
+                }
+              },
         onShareTap: () => notImplemented(context),
         content: Container(
           height: 150,

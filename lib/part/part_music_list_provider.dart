@@ -4,6 +4,7 @@ import 'package:quiet/model/model.dart';
 import 'package:quiet/pages/page_artist_detail.dart';
 import 'package:quiet/pages/page_comment.dart';
 import 'package:quiet/repository/netease.dart';
+import 'package:quiet/service/channel_downloads.dart';
 
 import 'part.dart';
 
@@ -278,6 +279,16 @@ class SongTile extends StatelessWidget {
         break;
       case SongPopupMenuType.artists:
         launchArtistDetailPage(context, music.artist);
+        break;
+      case SongPopupMenuType.download:
+        if (await showLoaderOverlay(
+            context, downloadManager.addToDownload([music]))) {
+          showSimpleNotification(context, Text("加入下载列表成功"));
+        } else {
+          showSimpleNotification(context, Text("加入下载列表失败"),
+              background: Theme.of(context).errorColor);
+        }
+        break;
     }
   }
 
@@ -338,6 +349,10 @@ class SongTile extends StatelessWidget {
                               value: SongPopupMenuType.addToPlaylist,
                             ),
                             PopupMenuItem(
+                              child: Text("下载"),
+                              value: SongPopupMenuType.download,
+                            ),
+                            PopupMenuItem(
                               child: Text("评论"),
                               value: SongPopupMenuType.comment,
                             ),
@@ -390,4 +405,5 @@ enum SongPopupMenuType {
 
   ///导航到歌手
   artists,
+  download,
 }

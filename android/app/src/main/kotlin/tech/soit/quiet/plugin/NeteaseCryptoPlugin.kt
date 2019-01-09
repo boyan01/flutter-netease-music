@@ -1,12 +1,11 @@
 @file:Suppress("SpellCheckingInspection")
 
-package tech.soit.quiet.service
+package tech.soit.quiet.plugin
 
 import android.annotation.SuppressLint
 import android.util.Base64
-import io.flutter.plugin.common.BinaryMessenger
 import io.flutter.plugin.common.MethodChannel
-import tech.soit.quiet.MainActivity
+import io.flutter.plugin.common.PluginRegistry
 import java.security.KeyFactory
 import java.security.PublicKey
 import java.security.spec.X509EncodedKeySpec
@@ -20,7 +19,7 @@ import javax.crypto.spec.SecretKeySpec
  * time   : 2017/8/22
  * desc   : 改编自 https://github.com/Binaryify/NeteaseCloudMusicApi/blob/master/util/crypto.js
  */
-object NeteaseCrypto {
+object NeteaseCryptoPlugin {
     private const val keys = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
 
     private const val nonce = "0CoJUm6Qyw8W8jud"
@@ -32,8 +31,10 @@ object NeteaseCrypto {
 
     private const val linuxapiKey = "rFgB&h#%2?^eDg:Q"
 
-    fun init(messenger: BinaryMessenger) {
-        MethodChannel(messenger, MainActivity.CHANNEL_NETEASE_CRYPTO).setMethodCallHandler { methodCall, result ->
+    private const val CHANNEL_NAME = "tech.soit.netease/crypto"
+
+    fun registerWith(registrar: PluginRegistry.Registrar) {
+        MethodChannel(registrar.messenger(), CHANNEL_NAME).setMethodCallHandler { methodCall, result ->
             when (methodCall.method) {
                 "encrypt" -> {
                     val json = methodCall.argument<String>("json")
