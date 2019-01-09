@@ -40,7 +40,7 @@ class _MainPageState extends State<MainPage>
         drawer: Drawer(
           child: Column(
             children: <Widget>[
-              MyDrawerHeader(),
+              _AppDrawerHeader(),
               MediaQuery.removePadding(
                   context: context,
                   removeTop: true,
@@ -89,13 +89,12 @@ class _MainPageState extends State<MainPage>
             width: 128,
             child: TabBar(
               controller: _tabController,
+              indicator:
+                  UnderlineTabIndicator(insets: EdgeInsets.only(bottom: 4)),
+              indicatorSize: TabBarIndicatorSize.label,
               tabs: <Widget>[
-                Tab(
-                    child: Icon(Icons.music_note,
-                        color: Theme.of(context).primaryIconTheme.color)),
-                Tab(
-                    child: Icon(Icons.cloud,
-                        color: Theme.of(context).primaryIconTheme.color)),
+                Tab(child: Icon(Icons.music_note)),
+                Tab(child: Icon(Icons.cloud)),
               ],
             ),
           ),
@@ -120,17 +119,33 @@ class _MainPageState extends State<MainPage>
   }
 }
 
-class MyDrawerHeader extends StatelessWidget {
+///the header of drawer
+class _AppDrawerHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    Widget name;
-    ImageProvider avatar;
-    List<Widget> otherAccountsPictures;
     if (LoginState.of(context).isLogin) {
-      Map profile = LoginState.of(context).user["profile"];
-      name = Text(profile["nickname"]);
-      avatar = NeteaseImage(profile["avatarUrl"]);
-      otherAccountsPictures = [
+      return _buildHeader(context);
+    } else {
+      return _buildHeaderNotLogin(context);
+    }
+  }
+
+  Widget _buildHeader(BuildContext context) {
+    Map profile = LoginState.of(context).user["profile"];
+    return UserAccountsDrawerHeader(
+      currentAccountPicture: InkResponse(
+        onTap: () {
+          if (LoginState.of(context).isLogin) {
+            debugPrint("work in process...");
+          }
+        },
+        child: CircleAvatar(
+          backgroundImage: NeteaseImage(profile["avatarUrl"]),
+        ),
+      ),
+      accountName: Text(profile["nickname"]),
+      accountEmail: null,
+      otherAccountsPictures: [
         Material(
           color: Colors.transparent,
           child: IconButton(
@@ -144,29 +159,47 @@ class MyDrawerHeader extends StatelessWidget {
             },
           ),
         )
-      ];
-    } else {
-      name = const Text("未登录");
-    }
+      ],
+    );
+  }
 
-    void _onAvatarClick() {
-      if (!LoginState.of(context).isLogin) {
-        Navigator.of(context).pushNamed(ROUTE_LOGIN);
-      } else {
-        debugPrint("work in process...");
-      }
-    }
-
-    return UserAccountsDrawerHeader(
-      currentAccountPicture: InkResponse(
-        onTap: _onAvatarClick,
-        child: CircleAvatar(
-          backgroundImage: avatar,
+  Widget _buildHeaderNotLogin(BuildContext context) {
+    return DrawerHeader(
+      decoration: BoxDecoration(
+        color: Theme.of(context).primaryColorDark,
+      ),
+      child: Container(
+        constraints: BoxConstraints.expand(),
+        child: DefaultTextStyle(
+          style:
+              Theme.of(context).primaryTextTheme.caption.copyWith(fontSize: 14),
+          child: Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Text("登陆网易云音乐"),
+                Text("手机电脑多端同步,尽享海量高品质音乐"),
+                SizedBox(height: 8),
+                FlatButton(
+                    shape: RoundedRectangleBorder(
+                        side: BorderSide(
+                            color: Theme.of(context)
+                                .primaryTextTheme
+                                .body1
+                                .color
+                                .withOpacity(0.3)),
+                        borderRadius: BorderRadius.circular(20)),
+                    padding: EdgeInsets.symmetric(horizontal: 40),
+                    onPressed: () {
+                      Navigator.pushNamed(context, ROUTE_LOGIN);
+                    },
+                    textColor: Theme.of(context).primaryTextTheme.body1.color,
+                    child: Text("立即登陆"))
+              ],
+            ),
+          ),
         ),
       ),
-      accountName: name,
-      accountEmail: null,
-      otherAccountsPictures: otherAccountsPictures,
     );
   }
 }

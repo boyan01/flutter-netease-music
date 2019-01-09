@@ -18,8 +18,9 @@ export 'part_utils.dart';
 export 'dialogs.dart';
 export 'tiles.dart';
 export 'downloads.dart';
+export 'src/dividers.dart';
 
 void notImplemented(BuildContext context) {
   showSimpleNotification(context, Text("页面未完成"),
-      background: Theme.of(context).errorColor);
+      background: Color(0xFFd2dd37), foreground: Colors.black);
 }
