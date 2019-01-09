@@ -36,7 +36,9 @@ class _NavigationLine extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
-          _ItemNavigator(Icons.radio, "私人FM", () {}),
+          _ItemNavigator(Icons.radio, "私人FM", () {
+            notImplemented(context);
+          }),
           _ItemNavigator(Icons.today, "每日推荐", () {
             Navigator.pushNamed(context, ROUTE_DAILY);
           }),
@@ -93,14 +95,18 @@ class _ItemNavigator extends StatelessWidget {
           padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
           child: Column(
             children: <Widget>[
-              ClipOval(
-                child: Container(
-                  width: 40,
-                  height: 40,
-                  color: Theme.of(context).primaryColor,
-                  child: Icon(
-                    icon,
-                    color: Theme.of(context).primaryIconTheme.color,
+              Material(
+                shape: CircleBorder(),
+                elevation: 5,
+                child: ClipOval(
+                  child: Container(
+                    width: 40,
+                    height: 40,
+                    color: Theme.of(context).primaryColor,
+                    child: Icon(
+                      icon,
+                      color: Theme.of(context).primaryIconTheme.color,
+                    ),
                   ),
                 ),
               ),
@@ -183,10 +189,6 @@ class _SectionPlaylist extends StatelessWidget {
             Text(
               playlist["name"],
               maxLines: 2,
-              style: Theme.of(context)
-                  .textTheme
-                  .body2
-                  .copyWith(fontWeight: FontWeight.w600),
               overflow: TextOverflow.ellipsis,
             ),
           ],

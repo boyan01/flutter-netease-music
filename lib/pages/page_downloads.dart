@@ -14,6 +14,8 @@ class DownloadPage extends StatelessWidget {
             elevation: 0,
             title: Text("下载管理"),
             bottom: TabBar(
+              indicator:
+                  UnderlineTabIndicator(insets: EdgeInsets.only(bottom: 4)),
               tabs: [Tab(text: "下载完成"), Tab(text: "下载中")],
               indicatorSize: TabBarIndicatorSize.label,
             ),

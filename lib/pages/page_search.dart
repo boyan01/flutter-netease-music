@@ -67,8 +67,7 @@ class NeteaseSearchPage extends StatefulWidget {
   }
 }
 
-class _NeteaseSearchPageState extends State<NeteaseSearchPage>
-    with SingleTickerProviderStateMixin {
+class _NeteaseSearchPageState extends State<NeteaseSearchPage> {
   final TextEditingController _queryTextController = TextEditingController();
 
   final FocusNode _focusNode = FocusNode();
@@ -87,8 +86,6 @@ class _NeteaseSearchPageState extends State<NeteaseSearchPage>
 
   bool initialState = true;
 
-  TabController tabController;
-
   KeyboardVisibilityNotification keyboardVisibilityNotification;
 
   @override
@@ -97,7 +94,6 @@ class _NeteaseSearchPageState extends State<NeteaseSearchPage>
     _queryTextController.addListener(_onQueryTextChanged);
     widget.animation.addStatusListener(_onAnimationStatusChanged);
     _focusNode.addListener(_onFocusChanged);
-    tabController = TabController(length: _SECTIONS.length, vsync: this);
     keyboardVisibilityNotification = KeyboardVisibilityNotification()
       ..addNewListener(onShow: () {
         setState(() {
@@ -115,7 +111,6 @@ class _NeteaseSearchPageState extends State<NeteaseSearchPage>
     _queryTextController.removeListener(_onQueryTextChanged);
     widget.animation.removeStatusListener(_onAnimationStatusChanged);
     _focusNode.removeListener(_onFocusChanged);
-    tabController.dispose();
     keyboardVisibilityNotification.dispose();
     super.dispose();
   }
@@ -127,38 +122,42 @@ class _NeteaseSearchPageState extends State<NeteaseSearchPage>
     Widget tabs;
     if (!initialState) {
       tabs = TabBar(
-          tabs: _SECTIONS.map((title) => Tab(child: Text(title))).toList(),
-          controller: tabController);
+          indicator: UnderlineTabIndicator(insets: EdgeInsets.only(bottom: 4)),
+          indicatorSize: TabBarIndicatorSize.label,
+          tabs: _SECTIONS.map((title) => Tab(child: Text(title))).toList());
     }
 
     return Stack(
       children: <Widget>[
-        Scaffold(
-          appBar: AppBar(
-            backgroundColor: theme.primaryColor,
-            iconTheme: theme.primaryIconTheme,
-            textTheme: theme.primaryTextTheme,
-            brightness: theme.primaryColorBrightness,
-            leading: BackButton(),
-            title: TextField(
-              controller: _queryTextController,
-              focusNode: _focusNode,
-              style: theme.primaryTextTheme.title,
-              textInputAction: TextInputAction.search,
-              onSubmitted: (String _) => _search(query),
-              decoration: InputDecoration(
-                  border: InputBorder.none,
-                  hintStyle: theme.primaryTextTheme.title,
-                  hintText: MaterialLocalizations.of(context).searchFieldLabel),
+        DefaultTabController(
+          length: _SECTIONS.length,
+          child: Scaffold(
+            appBar: AppBar(
+              backgroundColor: theme.primaryColor,
+              iconTheme: theme.primaryIconTheme,
+              textTheme: theme.primaryTextTheme,
+              brightness: theme.primaryColorBrightness,
+              leading: BackButton(),
+              title: TextField(
+                controller: _queryTextController,
+                focusNode: _focusNode,
+                style: theme.primaryTextTheme.title,
+                textInputAction: TextInputAction.search,
+                onSubmitted: (String _) => _search(query),
+                decoration: InputDecoration(
+                    border: InputBorder.none,
+                    hintStyle: theme.primaryTextTheme.title,
+                    hintText:
+                        MaterialLocalizations.of(context).searchFieldLabel),
+              ),
+              actions: buildActions(context),
+              bottom: tabs,
             ),
-            actions: buildActions(context),
-            bottom: tabs,
+            body: initialState
+                ? _EmptyQuerySuggestionSection(
+                    suggestionSelectedCallback: (query) => _search(query))
+                : _SearchResultPage(query: _searchedQuery),
           ),
-          body: initialState
-              ? _EmptyQuerySuggestionSection(
-                  suggestionSelectedCallback: (query) => _search(query))
-              : _SearchResultPage(
-                  query: _searchedQuery, tabController: tabController),
         ),
         SafeArea(
             child: Padding(
@@ -485,13 +484,11 @@ class _SuggestionSection extends StatelessWidget {
 }
 
 class _SearchResultPage extends StatefulWidget {
-  _SearchResultPage({Key key, this.query, this.tabController})
+  _SearchResultPage({Key key, this.query})
       : assert(query != null && query.isNotEmpty),
         super(key: key);
 
   final String query;
-
-  final TabController tabController;
 
   @override
   _SearchResultPageState createState() {
@@ -524,7 +521,6 @@ class _SearchResultPageState extends State<_SearchResultPage> {
   Widget build(BuildContext context) {
     return BoxWithBottomPlayerController(
       TabBarView(
-        controller: widget.tabController,
         children: [
           SongsResultSection(query: query, key: Key("SongTab_$query")),
           VideosResultSection(query: query, key: Key("VideoTab_$query")),
