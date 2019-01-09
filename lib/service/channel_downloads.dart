@@ -89,10 +89,9 @@ class DownloadStateValue<T> {
   List<Download<T>> get completed => List.unmodifiable(
       _downloads.where((d) => d.status == DownloadStatus.COMPLETED));
 
-  void _init(List<Download<T>> completed, List<Download<T>> downloading) {
+  void _init(List<Download<T>> downloads) {
     this._downloads.clear();
-    _downloads.addAll(completed);
-    _downloads.addAll(downloading);
+    _downloads.addAll(downloads);
   }
 }
 
@@ -121,7 +120,7 @@ class DownloadManager extends ChangeNotifier {
 
   DownloadManager._() : super() {
     _channel.invokeMethod("init").whenComplete(() async {
-      value._init(await getCompletedDownloads(), await getDownloading());
+      value._init(await _getDownloads());
       debugPrint("value init : ${value._downloads}");
       notifyListeners();
     });
@@ -183,26 +182,10 @@ class DownloadManager extends ChangeNotifier {
         music);
   }
 
-  Future<List<Download<Music>>> getCompletedDownloads() async {
-    return _getDownloads(DownloadStatus.COMPLETED);
-  }
-
-  Future<List<Download<Music>>> getDownloading() async {
-    final failed = await _getDownloads(DownloadStatus.FAILED);
-    final downloading = await _getDownloads(DownloadStatus.DOWNLOADING);
-    final paused = await _getDownloads(DownloadStatus.PAUSED);
-    final queued = await _getDownloads(DownloadStatus.QUEUED);
-    List<Download<Music>> list = [];
-    list.addAll(failed);
-    list.addAll(downloading);
-    list.addAll(paused);
-    list.addAll(queued);
-    return list;
-  }
-
-  Future<void> addToDownload(List<Music> musics) async {
-    await _channel.invokeMethod(
+  Future<bool> addToDownload(List<Music> musics) async {
+    final result = await _channel.invokeMethod(
         "download", musics.map((m) => m.toMap()).toList());
+    return result["succeed"] ?? false;
   }
 
   ///Pauses all currently downloading items,
@@ -258,11 +241,9 @@ class DownloadManager extends ChangeNotifier {
         .invokeMethod("delete", {"ids": downloadIds, "removeFile": removeFile});
   }
 
-  Future<List<Download<Music>>> _getDownloads(DownloadStatus status) async {
-    assert(status != null);
-    List<Map> result = (await _channel
-            .invokeMethod("getDownloads", {"status": status.index}) as List)
-        .cast();
+  Future<List<Download<Music>>> _getDownloads() async {
+    List<Map> result =
+        (await _channel.invokeMethod("getDownloads") as List).cast();
     assert(result != null);
     return result.map(_convertDownload).toList();
   }

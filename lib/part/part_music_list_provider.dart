@@ -281,7 +281,13 @@ class SongTile extends StatelessWidget {
         launchArtistDetailPage(context, music.artist);
         break;
       case SongPopupMenuType.download:
-        showLoaderOverlay(context, downloadManager.addToDownload([music]));
+        if (await showLoaderOverlay(
+            context, downloadManager.addToDownload([music]))) {
+          showSimpleNotification(context, Text("加入下载列表成功"));
+        } else {
+          showSimpleNotification(context, Text("加入下载列表失败"),
+              background: Theme.of(context).errorColor);
+        }
         break;
     }
   }
