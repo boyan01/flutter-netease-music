@@ -175,8 +175,9 @@ class _OpacityTitleState extends State<_OpacityTitle> {
       leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () => Navigator.pop(context)),
-      title: Text(
-          appBarOpacityValue < 0.5 ? widget.defaultName : (widget.name ?? "")),
+      title: Text(appBarOpacityValue < 0.5
+          ? widget.defaultName
+          : (widget.name ?? widget.defaultName)),
       toolbarOpacity: 1,
       backgroundColor:
           Theme.of(context).primaryColor.withOpacity(appBarOpacityValue),
@@ -560,6 +561,22 @@ class _DetailHeader extends StatelessWidget {
   }
 }
 
+Future<void> _downloadList(BuildContext context, List<Music> musicList) async {
+  final downloadList = musicList;
+  final confirmed = await showConfirmDialog(
+      context, Text("下载列表歌曲大约将消耗${downloadList.length * 3}m存储空间"));
+  if (!confirmed) {
+    return;
+  }
+  if (await showLoaderOverlay(
+      context, downloadManager.addToDownload(musicList))) {
+    showSimpleNotification(context, Text("加入下载列表成功"));
+  } else {
+    showSimpleNotification(context, Text("加入下载列表失败"),
+        background: Theme.of(context).errorColor);
+  }
+}
+
 ///a detail header describe playlist information
 class _PlaylistDetailHeader extends StatelessWidget {
   _PlaylistDetailHeader(this.playlist) : assert(playlist != null);
@@ -601,17 +618,9 @@ class _PlaylistDetailHeader extends StatelessWidget {
             }));
           }
         },
-        onDownloadTap: musicList.isEmpty
+        onDownloadTap: musicList?.isEmpty == true
             ? null
-            : () async {
-                if (await showLoaderOverlay(
-                    context, downloadManager.addToDownload(musicList))) {
-                  showSimpleNotification(context, Text("加入下载列表成功"));
-                } else {
-                  showSimpleNotification(context, Text("加入下载列表失败"),
-                      background: Theme.of(context).errorColor);
-                }
-              },
+            : () => _downloadList(context, musicList),
         onShareTap: () => notImplemented(context),
         content: Container(
           height: 150,

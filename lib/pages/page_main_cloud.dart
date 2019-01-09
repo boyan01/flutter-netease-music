@@ -173,9 +173,10 @@ class _SectionPlaylist extends StatelessWidget {
         padding: EdgeInsets.symmetric(horizontal: 4, vertical: 8),
         child: Column(
           children: <Widget>[
-            SizedBox(
-              child: ClipRRect(
-                borderRadius: BorderRadius.all(Radius.circular(6)),
+            ClipRRect(
+              borderRadius: BorderRadius.all(Radius.circular(6)),
+              child: AspectRatio(
+                aspectRatio: 1,
                 child: FadeInImage(
                   placeholder: AssetImage("assets/playlist_playlist.9.png"),
                   image: NeteaseImage(playlist["picUrl"]),
