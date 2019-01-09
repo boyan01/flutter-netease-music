@@ -603,8 +603,14 @@ class _PlaylistDetailHeader extends StatelessWidget {
         },
         onDownloadTap: musicList.isEmpty
             ? null
-            : () {
-                downloadManager.addToDownload(musicList);
+            : () async {
+                if (await showLoaderOverlay(
+                    context, downloadManager.addToDownload(musicList))) {
+                  showSimpleNotification(context, Text("加入下载列表成功"));
+                } else {
+                  showSimpleNotification(context, Text("加入下载列表失败"),
+                      background: Theme.of(context).errorColor);
+                }
               },
         onShareTap: () => notImplemented(context),
         content: Container(

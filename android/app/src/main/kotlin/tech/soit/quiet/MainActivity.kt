@@ -16,6 +16,8 @@ class MainActivity : FlutterActivity() {
 
         const val DESTINATION_PLAYING_PAGE = "action_playing_page"
 
+        const val DESTINATION_DOWNLOAD_PAGE = "action_download_page"
+
     }
 
     private lateinit var playerChannel: QuietPlayerChannel
@@ -25,6 +27,7 @@ class MainActivity : FlutterActivity() {
         GeneratedPluginRegistrant.registerWith(this)
         PluginRegistrant.registerWith(this)
         playerChannel = QuietPlayerChannel.registerWith(registrarFor("tech.soit.quiet.service.QuietPlayerChannel"))
+        route(intent)
     }
 
     override fun onDestroy() {
@@ -34,9 +37,16 @@ class MainActivity : FlutterActivity() {
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
+        route(intent)
+    }
+
+    private fun route(intent: Intent) {
         when (intent.getStringExtra(KEY_DESTINATION)) {
             DESTINATION_PLAYING_PAGE -> {
                 flutterView.pushRoute("/playing")
+            }
+            DESTINATION_DOWNLOAD_PAGE -> {
+                flutterView.pushRoute("/downloads")
             }
         }
     }

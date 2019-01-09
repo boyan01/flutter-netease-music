@@ -16,6 +16,11 @@ class Music(
         return map["title"] as String
     }
 
+    fun getArtistsString(): String {
+        @Suppress("UNCHECKED_CAST")
+        return (map["artist"] as List<Map<String, Any>>).joinToString(separator = "/") { it["name"].toString() }
+    }
+
     fun getSubTitle(): String {
         return map["subTitle"] as String
     }
