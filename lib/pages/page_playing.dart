@@ -3,6 +3,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:quiet/pages/page_artist_detail.dart';
 import 'package:quiet/pages/page_comment.dart';
 import 'package:quiet/pages/page_playing_list.dart';
 import 'package:quiet/part/part.dart';
@@ -95,6 +96,7 @@ class _ControllerBar extends StatelessWidget {
           color: color,
         );
     }
+    return Container();
   }
 
   @override
@@ -296,13 +298,17 @@ class _OperationBar extends StatelessWidget {
               Icons.favorite_border,
               color: iconColor,
             ),
-            onPressed: null),
+            onPressed: () {
+              notImplemented(context);
+            }),
         IconButton(
             icon: Icon(
               Icons.file_download,
               color: iconColor,
             ),
-            onPressed: null),
+            onPressed: () {
+              notImplemented(context);
+            }),
         IconButton(
             icon: Icon(
               Icons.comment,
@@ -324,7 +330,9 @@ class _OperationBar extends StatelessWidget {
               Icons.share,
               color: iconColor,
             ),
-            onPressed: null),
+            onPressed: () {
+              notImplemented(context);
+            }),
       ],
     );
   }
@@ -894,9 +902,38 @@ class _PlayingTitle extends StatelessWidget {
             color: Theme.of(context).primaryIconTheme.color,
           ),
           onPressed: () => Navigator.pop(context)),
-      title: Text(music.title),
+      titleSpacing: 0,
+      title: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          Text(
+            music.title,
+            style: TextStyle(fontSize: 17),
+          ),
+          InkWell(
+            onTap: () {
+              launchArtistDetailPage(context, music.artist);
+            },
+            child: Wrap(
+              crossAxisAlignment: WrapCrossAlignment.center,
+              children: <Widget>[
+                Text(
+                  wrapText(music.artist.map((a) => a.name).join('/'),
+                      maxLength: 10),
+                  style: Theme.of(context)
+                      .primaryTextTheme
+                      .body1
+                      .copyWith(fontSize: 13),
+                  maxLines: 1,
+                ),
+                Icon(Icons.chevron_right, size: 17)
+              ],
+            ),
+          )
+        ],
+      ),
       backgroundColor: Colors.transparent,
-      centerTitle: true,
       actions: <Widget>[
         PopupMenuButton(
           itemBuilder: (context) {

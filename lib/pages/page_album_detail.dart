@@ -59,33 +59,6 @@ class _AlbumDetailPageState extends State<AlbumDetailPage> {
         ));
   }
 
-  ///build a preview stack for loading or error
-  Widget buildPreview(BuildContext context, Widget content) {
-    if (widget.album != null) {
-      _generatePrimaryColor(widget.album);
-    }
-    return Stack(
-      children: <Widget>[
-        Column(
-          children: <Widget>[
-            widget.album == null
-                ? null
-                : _AlbumDetailHeader(album: widget.album),
-            Expanded(child: SafeArea(child: content))
-          ]..removeWhere((v) => v == null),
-        ),
-        Column(
-          children: <Widget>[
-            _OpacityTitle(
-              name: null,
-              defaultName: "专辑",
-              appBarOpacity: ValueNotifier(0),
-            )
-          ],
-        )
-      ],
-    );
-  }
 }
 
 class _AlbumBody extends StatefulWidget {
@@ -197,7 +170,7 @@ class _AlbumDetailHeader extends StatelessWidget {
             return PlaylistSelectionPage(list: musicList);
           }));
         },
-        onDownloadTap: () => notImplemented(context),
+        onDownloadTap: () => _downloadList(context, musicList),
         onShareTap: () => notImplemented(context),
         content: Container(
           padding: EdgeInsets.symmetric(vertical: 16),
