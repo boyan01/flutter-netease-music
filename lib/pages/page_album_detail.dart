@@ -13,11 +13,11 @@ class AlbumDetailPage extends StatefulWidget {
 }
 
 class _AlbumDetailPageState extends State<AlbumDetailPage> {
-  Color primaryColor = Colors.blueGrey;
+  Color primaryColor = _default_background;
 
   ///disable primary color generate by [loadPrimaryColor]
   ///because of [PaletteGenerator] bad performance
-  bool primaryColorGenerated = true;
+  bool primaryColorGenerated = false;
 
   ///根据album的cover image 生成 primary color
   ///此方法的流程只会在初始化时走一次
@@ -27,12 +27,10 @@ class _AlbumDetailPageState extends State<AlbumDetailPage> {
     }
     //不管是否成功生成主颜色，都视为成功生成
     primaryColorGenerated = true;
-    PaletteGenerator generator =
-        await PaletteGenerator.fromImageProvider(NeteaseImage(album["picUrl"]));
-    var primaryColor = generator.mutedColor?.color;
+    final color =
+        await PaletteGenerator.getPrimaryColor(NeteaseImage(album["picUrl"]));
     setState(() {
-      this.primaryColor = primaryColor;
-      debugPrint("generated color for album(${album["name"]}) : $primaryColor");
+      this.primaryColor = color;
     });
   }
 
@@ -58,7 +56,6 @@ class _AlbumDetailPageState extends State<AlbumDetailPage> {
               }),
         ));
   }
-
 }
 
 class _AlbumBody extends StatefulWidget {
