@@ -1,13 +1,13 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:overlay_support/overlay_support.dart';
-import 'package:palette_generator/palette_generator.dart';
 import 'package:quiet/model/playlist_detail.dart';
 import 'package:quiet/pages/page_comment.dart';
 import 'package:quiet/pages/page_playlist_detail_selection.dart';
 import 'package:quiet/part/part.dart';
 import 'package:quiet/repository/netease.dart';
 import 'package:quiet/service/channel_downloads.dart';
+import 'package:quiet/service/channel_palette_generator.dart';
 
 import 'page_artist_detail.dart';
 
@@ -15,6 +15,8 @@ part 'page_album_detail.dart';
 
 ///歌单详情信息item高度
 const double _HEIGHT_HEADER = 300;
+
+const Color _default_background = Colors.black38;
 
 ///page display a Playlist
 ///
@@ -39,11 +41,11 @@ class PlaylistDetailPage extends StatefulWidget {
 }
 
 class _PlayListDetailState extends State<PlaylistDetailPage> {
-  Color primaryColor = Colors.teal;
+  Color primaryColor = _default_background;
 
   ///disable primary color generate by [loadPrimaryColor]
   ///because of [PaletteGenerator] bad performance
-  bool primaryColorGenerated = true;
+  bool primaryColorGenerated = false;
 
   ///generate a primary color by playlist cover image
   void loadPrimaryColor(PlaylistDetail playlist) async {
@@ -51,13 +53,10 @@ class _PlayListDetailState extends State<PlaylistDetailPage> {
       return;
     }
     primaryColorGenerated = true;
-    PaletteGenerator generator = await PaletteGenerator.fromImageProvider(
-        NeteaseImage(playlist.coverUrl));
-    var primaryColor = generator.mutedColor?.color;
+    final color =
+        await PaletteGenerator.getPrimaryColor(NeteaseImage(playlist.coverUrl));
     setState(() {
-      this.primaryColor = primaryColor;
-      debugPrint(
-          "generated color for playlist(${playlist.name}) : $primaryColor");
+      this.primaryColor = color;
     });
   }
 
