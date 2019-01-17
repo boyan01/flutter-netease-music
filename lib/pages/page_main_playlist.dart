@@ -14,6 +14,10 @@ class MainPlaylistPage extends StatefulWidget {
 
 class _MainPlaylistState extends State<MainPlaylistPage>
     with AutomaticKeepAliveClientMixin {
+  GlobalKey<RefreshIndicatorState> _indicatorKey = GlobalKey();
+
+  GlobalKey<LoaderState> _loaderKey = GlobalKey();
+
   @override
   Widget build(BuildContext context) {
     final userId = LoginState.of(context).userId;
@@ -23,32 +27,37 @@ class _MainPlaylistState extends State<MainPlaylistPage>
     if (!LoginState.of(context).isLogin) {
       widget = _PinnedHeader();
     } else {
-      widget = Loader(
-          loadTask: () => neteaseRepository.userPlaylist(userId),
-          resultVerify: simpleLoaderResultVerify((v) => v != null),
-          loadingBuilder: (context) {
-            return ListView(children: [
-              _PinnedHeader(),
-              Loader.buildSimpleLoadingWidget(context),
-            ]);
-          },
-          failedWidgetBuilder: (context, result, msg) {
-            return ListView(children: [
-              _PinnedHeader(),
-              Loader.buildSimpleFailedWidget(context, result, msg),
-            ]);
-          },
-          builder: (context, result) {
-            final created =
-                result.where((p) => p.creator["userId"] == userId).toList();
-            final subscribed =
-                result.where((p) => p.creator["userId"] != userId).toList();
-            return ListView(children: [
-              _PinnedHeader(),
-              _ExpansionPlaylists("创建的歌单", created),
-              _ExpansionPlaylists("收藏的歌单", subscribed)
-            ]);
-          });
+      widget = RefreshIndicator(
+        key: _indicatorKey,
+        onRefresh: () => _loaderKey.currentState.refresh(),
+        child: Loader(
+            key: _loaderKey,
+            loadTask: () => neteaseRepository.userPlaylist(userId),
+            resultVerify: simpleLoaderResultVerify((v) => v != null),
+            loadingBuilder: (context) {
+              _indicatorKey.currentState.show();
+              return ListView(children: [
+                _PinnedHeader(),
+              ]);
+            },
+            failedWidgetBuilder: (context, result, msg) {
+              return ListView(children: [
+                _PinnedHeader(),
+                Loader.buildSimpleFailedWidget(context, result, msg),
+              ]);
+            },
+            builder: (context, result) {
+              final created =
+                  result.where((p) => p.creator["userId"] == userId).toList();
+              final subscribed =
+                  result.where((p) => p.creator["userId"] != userId).toList();
+              return ListView(children: [
+                _PinnedHeader(),
+                _ExpansionPlaylists("创建的歌单", created),
+                _ExpansionPlaylists("收藏的歌单", subscribed)
+              ]);
+            }),
+      );
     }
     return widget;
   }
