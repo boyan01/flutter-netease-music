@@ -59,8 +59,7 @@ class MyApp extends StatelessWidget {
 class _CopyrightPainter extends CustomPainter {
   final TextPainter _textPainter = TextPainter(
       text: TextSpan(
-        text:
-            "只用作个人学习研究，禁止用于商业及非法用途     只用作个人学习研究，禁止用于商业及非法用途",
+        text: "只用作个人学习研究，禁止用于商业及非法用途     只用作个人学习研究，禁止用于商业及非法用途",
         style: TextStyle(color: Colors.grey.withOpacity(0.3)),
       ),
       textDirection: TextDirection.ltr);
@@ -71,6 +70,15 @@ class _CopyrightPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
+    var debugMode = false;
+    assert(() {
+      debugMode = true;
+      return true;
+    }());
+    if (debugMode) {
+      return;
+    }
+
     if (_dirty) {
       _textPainter.layout();
       _dirty = false;
