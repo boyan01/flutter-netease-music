@@ -26,7 +26,8 @@ dependencies:
   intl: ^0.15.7
   keyboard_visibility: ^0.5.0
   overlay_support:
-    path: ./overlay_support/
+    git:
+      url: git://github.com/boyan01/overlay_support.git
 
 dev_dependencies:
   flutter_test:
@@ -43,11 +44,11 @@ flutter:
   uses-material-design: true
 
   assets:
-    - assets/playing_page_disc.png
-    - assets/playing_page_needle.png
-    - assets/daily_list_background.webp
-    - assets/no_copy_right.png
-    - assets/playlist_playlist.9.png
+  - assets/playing_page_disc.png
+  - assets/playing_page_needle.png
+  - assets/daily_list_background.webp
+  - assets/no_copy_right.png
+  - assets/playlist_playlist.9.png
   # To add custom fonts to your application, add a fonts section here,
   # in this "flutter" section. Each entry in this list should have a
   # "family" key with the font family name, and a "fonts" key with a
