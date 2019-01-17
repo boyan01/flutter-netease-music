@@ -32,6 +32,7 @@ class _MainPlaylistState extends State<MainPlaylistPage>
         onRefresh: () => _loaderKey.currentState.refresh(),
         child: Loader(
             key: _loaderKey,
+            initialData: neteaseLocalData.getUserPlaylist(userId),
             loadTask: () => neteaseRepository.userPlaylist(userId),
             resultVerify: simpleLoaderResultVerify((v) => v != null),
             loadingBuilder: (context) {

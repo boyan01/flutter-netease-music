@@ -66,4 +66,43 @@ class PlaylistDetail {
         playlist["shareCount"],
         playlist["playCount"]);
   }
+
+  static PlaylistDetail fromMap(Map map) {
+    if (map == null) {
+      return null;
+    }
+    return PlaylistDetail(
+        map['id'],
+        (map['musicList'] as List)
+            ?.cast<Map>()
+            ?.map((m) => Music.fromMap(m))
+            ?.toList(),
+        map['creator'],
+        map['name'],
+        map['coverUrl'],
+        map['trackCount'],
+        map['description'],
+        map['subscribed'],
+        map['subscribedCount'],
+        map['commentCount'],
+        map['shareCount'],
+        map['playCount']);
+  }
+
+  Map toMap() {
+    return {
+      'id': id,
+      'musicList': musicList?.map((m) => m.toMap())?.toList(),
+      'creator': creator,
+      'name': name,
+      'coverUrl': coverUrl,
+      'trackCount': trackCount,
+      'description': description,
+      'subscribed': subscribed,
+      'subscribedCount': subscribedCount,
+      'commentCount': commentCount,
+      'shareCount': shareCount,
+      'playCount': playCount
+    };
+  }
 }

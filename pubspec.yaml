@@ -20,7 +20,6 @@ dependencies:
   dio: ^1.0.9
   path_provider: ^0.4.1
   shared_preferences: ^0.4.3
-  cached_network_image: ^0.6.0-alpha.2
   video_player: ^0.8.0
   url_launcher: ^4.0.2
   intl: ^0.15.7
@@ -28,6 +27,7 @@ dependencies:
   overlay_support:
     git:
       url: git://github.com/boyan01/overlay_support.git
+  sembast: ^1.13.2
 
 dev_dependencies:
   flutter_test:

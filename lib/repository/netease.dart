@@ -11,9 +11,11 @@ import 'package:path_provider/path_provider.dart';
 import 'package:quiet/model/playlist_detail.dart';
 import 'package:quiet/pages/page_comment.dart';
 import 'package:quiet/part/part.dart';
+import 'netease_local_data.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 export 'netease_image.dart';
+export 'netease_local_data.dart';
 
 NeteaseRepository neteaseRepository = NeteaseRepository._private();
 
@@ -129,8 +131,12 @@ class NeteaseRepository {
     final response = await doRequest("/weapi/user/playlist",
         {"offset": offset, "uid": userId, "limit": limit, "csrf_token": ""});
     if (responseVerify(response).isSuccess) {
-      final list = (response["playlist"] as List).cast<Map>();
-      return list.map((e) => PlaylistDetail.fromJson(e)).toList();
+      final list = (response["playlist"] as List)
+          .cast<Map>()
+          .map((e) => PlaylistDetail.fromJson(e))
+          .toList();
+      neteaseLocalData.updateUserPlaylist(userId, list);
+      return list;
     }
     return null;
   }
@@ -153,7 +159,9 @@ class NeteaseRepository {
         {"id": "$id", "n": 100000, "s": 8},
         type: EncryptType.linux);
     if (responseVerify(response).isSuccess) {
-      return PlaylistDetail.fromJson(response["playlist"]);
+      final result = PlaylistDetail.fromJson(response["playlist"]);
+      neteaseLocalData.updatePlaylistDetail(result);
+      return result;
     }
     return null;
   }
@@ -366,6 +374,29 @@ class NeteaseRepository {
         "https://music.163.com/weapi/v1/resource/comments/${commentThread.threadId}",
         {"rid": commentThread.id, "limit": limit, "offset": offset},
         cookies: [Cookie("os", "pc")]);
+  }
+
+  ///给歌曲加红心
+  Future<bool> like(int musicId, bool like) async {
+    try {
+      final response = await doRequest(
+          "https://music.163.com/weapi/radio/like?alg=itembased&trackId=$musicId&like=$like&time=25",
+          {"trackId": musicId, "like": like});
+      return responseVerify(response).isSuccess;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  ///获取用户红心歌曲id列表
+  Future<List<int>> likedList(int userId) async {
+    final response = await doRequest(
+        "https://music.163.com/weapi/song/like/get", {"uid": userId});
+    final result = responseVerify(response);
+    if (result.isSuccess) {
+      return (response["ids"] as List).cast();
+    }
+    throw result.errorMsg;
   }
 
   //请求数据

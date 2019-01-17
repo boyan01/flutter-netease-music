@@ -97,6 +97,7 @@ class _PlayListDetailState extends State<PlaylistDetailPage> {
           accentColor: primaryColor),
       child: Scaffold(
         body: Loader<PlaylistDetail>(
+            initialData: neteaseLocalData.getPlaylistDetail(widget.playlistId),
             loadTask: () => neteaseRepository.playlistDetail(widget.playlistId),
             loadingBuilder: (context) {
               return buildPreview(
