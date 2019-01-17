@@ -14,106 +14,40 @@ class MainPlaylistPage extends StatefulWidget {
 
 class _MainPlaylistState extends State<MainPlaylistPage>
     with AutomaticKeepAliveClientMixin {
-  List<Widget> _buildPinnedTile(BuildContext context) {
-    List<Widget> widgets = [
-      DividerWrapper(
-          indent: 16,
-          child: ListTile(
-            leading: Icon(
-              Icons.schedule,
-              color: Theme.of(context).primaryColor,
-            ),
-            title: Text("最近播放"),
-            onTap: () {
-              notImplemented(context);
-            },
-          )),
-      DividerWrapper(
-        indent: 16,
-        child: ListTile(
-            leading: Icon(
-              Icons.file_download,
-              color: Theme.of(context).primaryColor,
-            ),
-            title: Text("下载管理"),
-            onTap: () {
-              Navigator.pushNamed(context, ROUTE_DOWNLOADS);
-            }),
-      ),
-      DividerWrapper(
-          indent: 16,
-          child: ListTile(
-            leading: Icon(
-              Icons.cast,
-              color: Theme.of(context).primaryColor,
-            ),
-            title: Text("我的电台"),
-            onTap: () {
-              notImplemented(context);
-            },
-          )),
-      DividerWrapper(
-          indent: 16,
-          child: ListTile(
-            leading: Icon(
-              Icons.library_music,
-              color: Theme.of(context).primaryColor,
-            ),
-            title: Text("我的收藏"),
-            onTap: () {
-              notImplemented(context);
-            },
-          )),
-    ];
-
-    if (!LoginState.of(context).isLogin) {
-      widgets.insert(
-          0,
-          DividerWrapper(
-            child: ListTile(
-                title: Text("当前未登录，点击登录!"),
-                trailing: Icon(Icons.chevron_right),
-                onTap: () {
-                  Navigator.pushNamed(context, "/login");
-                }),
-          ));
-    }
-    return widgets;
-  }
-
   @override
   Widget build(BuildContext context) {
     final userId = LoginState.of(context).userId;
 
     Widget widget;
 
-    if (userId == null) {
-      widget = ListView(children: _buildPinnedTile(context));
+    if (!LoginState.of(context).isLogin) {
+      widget = _PinnedHeader();
     } else {
       widget = Loader(
           loadTask: () => neteaseRepository.userPlaylist(userId),
           resultVerify: simpleLoaderResultVerify((v) => v != null),
-          loadingBuilder: (lo) {
-            final widgets = _buildPinnedTile(context);
-            widgets.add(Container(
-                height: 200,
-                child: Center(child: CircularProgressIndicator())));
-            return ListView(children: widgets);
+          loadingBuilder: (context) {
+            return ListView(children: [
+              _PinnedHeader(),
+              Loader.buildSimpleLoadingWidget(context),
+            ]);
           },
           failedWidgetBuilder: (context, result, msg) {
-            final widgets = _buildPinnedTile(context);
-            widgets.add(Loader.buildSimpleFailedWidget(context, result, msg));
-            return ListView(children: widgets);
+            return ListView(children: [
+              _PinnedHeader(),
+              Loader.buildSimpleFailedWidget(context, result, msg),
+            ]);
           },
           builder: (context, result) {
-            final widgets = _buildPinnedTile(context);
             final created =
                 result.where((p) => p.creator["userId"] == userId).toList();
             final subscribed =
                 result.where((p) => p.creator["userId"] != userId).toList();
-            widgets.add(_ExpansionPlaylists("创建的歌单", created));
-            widgets.add(_ExpansionPlaylists("收藏的歌单", subscribed));
-            return ListView(children: widgets);
+            return ListView(children: [
+              _PinnedHeader(),
+              _ExpansionPlaylists("创建的歌单", created),
+              _ExpansionPlaylists("收藏的歌单", subscribed)
+            ]);
           });
     }
     return widget;
@@ -121,6 +55,75 @@ class _MainPlaylistState extends State<MainPlaylistPage>
 
   @override
   bool get wantKeepAlive => true;
+}
+
+class _PinnedHeader extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: <Widget>[
+        LoginState.of(context).isLogin
+            ? null
+            : DividerWrapper(
+                child: ListTile(
+                    title: Text("当前未登录，点击登录!"),
+                    trailing: Icon(Icons.chevron_right),
+                    onTap: () {
+                      Navigator.pushNamed(context, "/login");
+                    }),
+              ),
+        DividerWrapper(
+            indent: 16,
+            child: ListTile(
+              leading: Icon(
+                Icons.schedule,
+                color: Theme.of(context).primaryColor,
+              ),
+              title: Text("最近播放"),
+              onTap: () {
+                notImplemented(context);
+              },
+            )),
+        DividerWrapper(
+          indent: 16,
+          child: ListTile(
+              leading: Icon(
+                Icons.file_download,
+                color: Theme.of(context).primaryColor,
+              ),
+              title: Text("下载管理"),
+              onTap: () {
+                Navigator.pushNamed(context, ROUTE_DOWNLOADS);
+              }),
+        ),
+        DividerWrapper(
+            indent: 16,
+            child: ListTile(
+              leading: Icon(
+                Icons.cast,
+                color: Theme.of(context).primaryColor,
+              ),
+              title: Text("我的电台"),
+              onTap: () {
+                notImplemented(context);
+              },
+            )),
+        DividerWrapper(
+            indent: 16,
+            child: ListTile(
+              leading: Icon(
+                Icons.library_music,
+                color: Theme.of(context).primaryColor,
+              ),
+              title: Text("我的收藏"),
+              onTap: () {
+                notImplemented(context);
+              },
+            )),
+      ]..removeWhere((v) => v == null),
+    );
+  }
 }
 
 class _ExpansionPlaylists extends StatelessWidget {
