@@ -203,6 +203,7 @@ class LoaderState<T> extends State<Loader> {
         if (value != null && widget.onFailed != null) {
           widget.onFailed(context, null, _errorMsg);
         }
+        setState(() {});
       });
     return task.value;
   }
