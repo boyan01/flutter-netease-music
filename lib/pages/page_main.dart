@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:quiet/pages/page_main_cloud.dart';
 import 'package:quiet/pages/page_main_playlist.dart';
 import 'package:quiet/pages/page_search.dart';
-import 'package:quiet/pages/page_toast.dart';
 import 'package:quiet/part/part.dart';
 import 'package:quiet/repository/netease.dart';
 
@@ -54,17 +53,6 @@ class _MainPageState extends State<MainPage>
                             title: Text("设置"),
                             onTap: () {
                               //TODO to setting
-                            },
-                          ),
-                          Divider(height: 0, indent: 16),
-                          ListTile(
-                            leading: Icon(Icons.bug_report),
-                            title: Text("DEBUG"),
-                            onTap: () {
-                              Navigator.of(context)
-                                  .push(MaterialPageRoute(builder: (context) {
-                                return ToastPage();
-                              }));
                             },
                           ),
                           Divider(height: 0, indent: 16),
