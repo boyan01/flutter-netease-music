@@ -42,25 +42,47 @@ class DownloadPlugin(
 
         const val DEFAULT_DOWNLOAD_PATH = "sdcard/music"
 
+        private val fetch: Fetch = Fetch.getInstance(FetchConfiguration.Builder(AppContext)
+                .setDownloadConcurrentLimit(1)
+                .setNotificationManager(DefaultFetchNotificationManager(AppContext))
+                .setHttpDownloader(object : HttpUrlConnectionDownloader() {
+                    override fun getRequestBufferSize(request: Downloader.ServerRequest): Int {
+                        return 1//slow down the download speed
+                    }
+                })
+                .setNotificationManager(MusicDownloadNotificationManager())
+                .enableAutoStart(false)
+                .enableLogging(false)
+                .build())
+
+        private var fetchListener: FetchListener? = null
+
+
         fun registerWith(registrar: PluginRegistry.Registrar) {
             val channel = MethodChannel(registrar.messenger(), CHANNEL_NAME)
             val plugin = DownloadPlugin(channel)
             channel.setMethodCallHandler(plugin)
             registrar.addViewDestroyListener {
-                plugin.fetch.close()
-                false
+                fetchListener?.let { l ->
+                    fetch.removeListener(l)
+                }
+                false//we do not interest in adopt flutter view
             }
         }
 
     }
 
-    private lateinit var fetch: Fetch
+
+    private var initialized = false
 
     override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
         GlobalScope.launch(context = Dispatchers.Main) {
             when (call.method) {
                 "init" -> {
-                    init()
+                    if (!initialized) {
+                        init()
+                        initialized = true
+                    }
                     result.success(null)
                 }
                 "getDownloads" -> {
@@ -164,20 +186,7 @@ class DownloadPlugin(
     }
 
     private fun init() {
-        val fetchConfiguration = FetchConfiguration.Builder(AppContext)
-                .setDownloadConcurrentLimit(1)
-                .setNotificationManager(DefaultFetchNotificationManager(AppContext))
-                .setHttpDownloader(object : HttpUrlConnectionDownloader() {
-                    override fun getRequestBufferSize(request: Downloader.ServerRequest): Int {
-                        return 1//slow down the download speed
-                    }
-                })
-                .setNotificationManager(MusicDownloadNotificationManager())
-                .enableAutoStart(false)
-                .enableLogging(false)
-                .build()
-        fetch = Fetch.getInstance(fetchConfiguration)
-        fetch.addListener(object : FetchListener {
+        val listener = object : FetchListener {
 
             override fun onAdded(download: Download) {
                 update(download)
@@ -250,7 +259,9 @@ class DownloadPlugin(
                         "download" to download.toMap()
                 ))
             }
-        })
+        }
+        fetch.addListener(listener)
+        fetchListener = listener
     }
 
     private suspend fun getDownloadByMusicId(musicId: Long) = suspendCoroutine<Download?> { continuation ->
