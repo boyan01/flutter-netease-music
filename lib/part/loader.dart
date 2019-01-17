@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:async/async.dart';
 import 'package:flutter/material.dart';
 
@@ -130,17 +132,22 @@ class LoaderState<T> extends State<Loader> {
     _loadData();
   }
 
-  void refresh() {
-    _loadData();
+  Future<void> refresh() async {
+    await _loadData();
   }
 
   @override
   Loader<T> get widget => super.widget;
 
-  void _loadData() {
-    setState(() {
-      state = _LoaderState.loading;
-    });
+  Future<dynamic> _loadData() {
+    if (state == _LoaderState.loading && task != null) {
+      return task.value;
+    }
+    bool needUpdateState = state == null;
+    state = _LoaderState.loading;
+    if (needUpdateState) {
+      setState(() {});
+    }
     task?.cancel();
     task = CancelableOperation.fromFuture(widget.loadTask())
       ..value.then((v) {
@@ -163,19 +170,21 @@ class LoaderState<T> extends State<Loader> {
           state = _LoaderState.failed;
         });
       });
+    return task.value;
   }
 
   @override
   void dispose() {
     super.dispose();
     task?.cancel();
+    task = null;
   }
 
   @override
   Widget build(BuildContext context) {
     if (state == _LoaderState.success) {
       return widget.builder(context, value);
-    } else if (state == _LoaderState.loading) {
+    } else if (state == _LoaderState.loading || state == null) {
       return (widget.loadingBuilder ??
           Loader.buildSimpleLoadingWidget)(context);
     }
