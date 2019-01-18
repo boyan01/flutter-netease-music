@@ -23,8 +23,8 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return LoginStateWidget(
-      Quiet(
+    return Netease(
+      child: Quiet(
         child: CustomPaint(
           foregroundPainter: _CopyrightPainter(),
           child: MaterialApp(

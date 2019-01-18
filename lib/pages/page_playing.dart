@@ -286,20 +286,25 @@ class _DurationProgressBarState extends State<_DurationProgressBar> {
 class _OperationBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    var iconColor = Theme.of(context).primaryIconTheme.color;
+    final iconColor = Theme.of(context).primaryIconTheme.color;
 
-    var music = quiet.value.current;
+    final music = quiet.value.current;
+    final liked = LikedSongList.contain(context, music);
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: <Widget>[
         IconButton(
             icon: Icon(
-              Icons.favorite_border,
+              liked ? Icons.favorite : Icons.favorite_border,
               color: iconColor,
             ),
             onPressed: () {
-              notImplemented(context);
+              if (liked) {
+                Netease.of(context).dislikeMusic(music);
+              } else {
+                Netease.of(context).likeMusic(music);
+              }
             }),
         IconButton(
             icon: Icon(
