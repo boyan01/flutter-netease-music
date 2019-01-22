@@ -22,6 +22,7 @@ export 'src/dividers.dart';
 export 'netease/netease.dart';
 export 'netease/liked_song_list.dart';
 export 'netease/login.dart';
+export 'netease/counter.dart';
 
 void notImplemented(BuildContext context) {
   showSimpleNotification(context, Text("页面未完成"),

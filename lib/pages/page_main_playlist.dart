@@ -29,7 +29,10 @@ class _MainPlaylistState extends State<MainPlaylistPage>
     } else {
       widget = RefreshIndicator(
         key: _indicatorKey,
-        onRefresh: () => _loaderKey.currentState.refresh(),
+        onRefresh: () => Future.wait([
+              _loaderKey.currentState.refresh(),
+              Counter.refresh(context),
+            ]),
         child: Loader(
             key: _loaderKey,
             initialData: neteaseLocalData.getUserPlaylist(userId),
@@ -114,7 +117,13 @@ class _PinnedHeader extends StatelessWidget {
                 Icons.cast,
                 color: Theme.of(context).primaryColor,
               ),
-              title: Text("我的电台"),
+              title: Text.rich(TextSpan(children: [
+                TextSpan(text: '我的电台 '),
+                TextSpan(
+                    style: const TextStyle(fontSize: 13, color: Colors.grey),
+                    text:
+                        '(${Counter.of(context).djRadioCount + Counter.of(context).createDjRadioCount})'),
+              ])),
               onTap: () {
                 notImplemented(context);
               },
@@ -126,7 +135,13 @@ class _PinnedHeader extends StatelessWidget {
                 Icons.library_music,
                 color: Theme.of(context).primaryColor,
               ),
-              title: Text("我的收藏"),
+              title: Text.rich(TextSpan(children: [
+                TextSpan(text: '我的收藏 '),
+                TextSpan(
+                    style: const TextStyle(fontSize: 13, color: Colors.grey),
+                    text:
+                        '(${Counter.of(context).mvCount + Counter.of(context).artistCount})'),
+              ])),
               onTap: () {
                 notImplemented(context);
               },

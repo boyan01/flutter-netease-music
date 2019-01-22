@@ -399,6 +399,17 @@ class NeteaseRepository {
     throw result.errorMsg;
   }
 
+  ///获取用户信息 , 歌单，收藏，mv, dj 数量
+  Future<Map> subCount() async {
+    final response =
+        await doRequest('https://music.163.com/weapi/subcount', {});
+    final result = responseVerify(response);
+    if (result.isSuccess) {
+      return response;
+    }
+    return Future.error(result.errorMsg);
+  }
+
   //请求数据
   Future<Map<String, dynamic>> doRequest(String path, Map data,
       {EncryptType type = EncryptType.we,
