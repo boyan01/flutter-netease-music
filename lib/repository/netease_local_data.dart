@@ -1,10 +1,32 @@
 import 'package:quiet/model/playlist_detail.dart';
+import 'package:flutter/foundation.dart';
 
 import 'database.dart';
 
 NeteaseLocalData neteaseLocalData = NeteaseLocalData._();
 
 class NeteaseLocalData {
+  ///netData 类型必须是可以放入 [store] 中的类型
+  static Stream<T> withData<T>(String key, Future<T> netData,
+      {void onNetError(dynamic e)}) async* {
+    final data = neteaseLocalData[key];
+    if (data != null) {
+      final cached = await data;
+      if (cached != null) {
+        assert(cached is T, "local espect be $T, but is $cached");
+        yield cached;
+      }
+    }
+    try {
+      final net = await netData;
+      neteaseLocalData[key] = net;
+      yield net;
+    } catch (e) {
+      if (debugPrint != null) debugPrint("$e");
+      onNetError(e);
+    }
+  }
+
   NeteaseLocalData._();
 
   Store _store;
