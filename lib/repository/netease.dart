@@ -410,6 +410,30 @@ class NeteaseRepository {
     return Future.error(result.errorMsg);
   }
 
+  ///获取用户创建的电台
+  Future<List<Map>> userDj(int userId) async {
+    final response = await doRequest(
+        'https://music.163.com/weapi/dj/program/$userId',
+        {'limit': 30, 'offset': 0});
+    final result = responseVerify(response);
+    if (result.isSuccess) {
+      return (response['programs'] as List).cast();
+    }
+    throw result.errorMsg;
+  }
+
+  ///登陆后调用此接口 , 可获取订阅的电台列表
+  Future<List<Map>> djSubList() async {
+    final response = await doRequest(
+        'https://music.163.com/weapi/djradio/get/subed',
+        {'total': true, 'offset': 0, 'limit': 30});
+    final result = responseVerify(response);
+    if (result.isSuccess) {
+      return (response['djRadios'] as List).cast();
+    }
+    throw result.errorMsg;
+  }
+
   //请求数据
   Future<Map<String, dynamic>> doRequest(String path, Map data,
       {EncryptType type = EncryptType.we,

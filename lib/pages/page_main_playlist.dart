@@ -125,7 +125,7 @@ class _PinnedHeader extends StatelessWidget {
                         '(${Counter.of(context).djRadioCount + Counter.of(context).createDjRadioCount})'),
               ])),
               onTap: () {
-                notImplemented(context);
+                Navigator.pushNamed(context, ROUTE_MY_DJ);
               },
             )),
         DividerWrapper(
