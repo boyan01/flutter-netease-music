@@ -80,6 +80,6 @@ class NeteaseState extends State<Netease> {
   Widget build(BuildContext context) {
     return LoginState(_user,
         child: LikedSongList(_likedSongList,
-            child: CounterHolder(child: widget.child)));
+            child: CounterHolder(_user != null, child: widget.child)));
   }
 }

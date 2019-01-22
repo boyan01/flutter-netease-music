@@ -53,7 +53,9 @@ class Counter extends InheritedWidget {
 class CounterHolder extends StatefulWidget {
   final Widget child;
 
-  const CounterHolder({Key key, this.child}) : super(key: key);
+  final bool login;
+
+  const CounterHolder(this.login, {Key key, this.child}) : super(key: key);
 
   @override
   _CounterHolderState createState() => _CounterHolderState();
@@ -65,7 +67,17 @@ class _CounterHolderState extends State<CounterHolder> {
   @override
   void initState() {
     super.initState();
-    _refresh();
+    if (widget.login) {
+      _refresh();
+    }
+  }
+
+  @override
+  void didUpdateWidget(CounterHolder oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.login && !oldWidget.login) {
+      _refresh();
+    }
   }
 
   @override
