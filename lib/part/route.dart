@@ -13,6 +13,7 @@ export 'package:quiet/pages/page_playlist_detail.dart';
 export 'package:quiet/pages/page_playing.dart';
 export 'package:quiet/pages/page_leaderboard.dart';
 export 'package:quiet/pages/page_daily_playlist.dart';
+export 'package:quiet/pages/page_mv_detail.dart';
 
 const ROUTE_MAIN = "/";
 
