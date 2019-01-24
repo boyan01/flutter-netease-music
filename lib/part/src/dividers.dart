@@ -5,7 +5,9 @@ class DividerWrapper extends StatelessWidget {
 
   final double indent;
 
-  const DividerWrapper({Key key, this.child, this.indent = 0})
+  final double extent;
+
+  const DividerWrapper({Key key, this.child, this.indent = 0, this.extent = 0})
       : super(key: key);
 
   @override
@@ -14,7 +16,11 @@ class DividerWrapper extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[child, Divider(height: 0, indent: indent)],
+        children: <Widget>[
+          child,
+          SizedBox(height: extent),
+          Divider(height: 0, indent: indent)
+        ],
       ),
     );
   }
