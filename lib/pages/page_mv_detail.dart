@@ -80,6 +80,7 @@ class _MvDetailPageState extends State<_MvDetailPage> {
         children: <Widget>[
           _SimpleMvScreen(),
           _MvInformationSection(data: widget.result['data']),
+          _MvActionsSection(),
         ],
       ),
     );
@@ -420,6 +421,70 @@ class _MvInformationSection extends StatelessWidget {
             ),
           )
         ],
+      ),
+    );
+  }
+}
+
+///mv 点赞/收藏/评论/分享
+class _MvActionsSection extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final data = MvPlayerModel.of(context).mvData;
+    return DividerWrapper(
+      extent: 10,
+      child: ButtonTheme(
+        textTheme: ButtonTextTheme.accent,
+        colorScheme: ColorScheme.light(secondary: Colors.black54),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: <Widget>[
+            FlatButton(
+                onPressed: () {},
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    const SizedBox(height: 4.0),
+                    Icon(Icons.thumb_up),
+                    const SizedBox(height: 4.0),
+                    Text('${data['likeCount']}'),
+                  ],
+                )),
+            FlatButton(
+                onPressed: () {},
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    const SizedBox(height: 4.0),
+                    Icon(Icons.add_box),
+                    const SizedBox(height: 4.0),
+                    Text('${data['subCount']}'),
+                  ],
+                )),
+            FlatButton(
+                onPressed: () {},
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    const SizedBox(height: 4.0),
+                    Icon(Icons.comment),
+                    const SizedBox(height: 4.0),
+                    Text('${data['commentCount']}'),
+                  ],
+                )),
+            FlatButton(
+                onPressed: () {},
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    const SizedBox(height: 4.0),
+                    Icon(Icons.share),
+                    const SizedBox(height: 4.0),
+                    Text('${data['shareCount']}'),
+                  ],
+                )),
+          ],
+        ),
       ),
     );
   }
