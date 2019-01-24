@@ -17,7 +17,6 @@ class FullScreenMvPlayer extends StatefulWidget {
 }
 
 class FullScreenMvPlayerState extends State<FullScreenMvPlayer> {
-
   @override
   void initState() {
     super.initState();
@@ -104,6 +103,7 @@ class _FullScreenControllerState extends State<_FullScreenController>
   @override
   void dispose() {
     _controller.dispose();
+    _hideOperation?.cancel();
     super.dispose();
     SystemChrome.setEnabledSystemUIOverlays(
         const [SystemUiOverlay.top, SystemUiOverlay.bottom]);
