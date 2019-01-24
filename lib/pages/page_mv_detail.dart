@@ -1,8 +1,10 @@
 import 'package:async/async.dart';
-
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:quiet/part/mv/mv_player_controller.dart';
 import 'package:quiet/part/part.dart';
 import 'package:quiet/repository/netease.dart';
+import 'package:scoped_model/scoped_model.dart';
 import 'package:video_player/video_player.dart';
 
 ///MV详情页面
@@ -32,16 +34,7 @@ class MvDetailPage extends StatelessWidget {
                   resultVerify: neteaseRepository.responseVerify,
                   loadTask: () => neteaseRepository.mvDetail(mvId),
                   builder: (context, result) {
-                    return MvPlayer(
-                      data: result['data'],
-                      subscribed: false,
-                      child: ListView(
-                        children: <Widget>[
-                          _SimpleMvScreen(data: result['data']),
-                          _MvInformationSection(data: result['data']),
-                        ],
-                      ),
-                    );
+                    return _MvDetailPage(result: result);
                   }),
             ),
           ),
@@ -51,127 +44,128 @@ class MvDetailPage extends StatelessWidget {
   }
 }
 
-class MvPlayer extends StatefulWidget {
-  final Widget child;
+class _MvDetailPage extends StatefulWidget {
+  ///response of [NeteaseRepository.mvDetail]
+  final Map result;
 
-  final Map data;
-  final bool subscribed;
-
-  const MvPlayer(
-      {Key key, @required this.data, @required this.subscribed, this.child})
-      : super(key: key);
+  const _MvDetailPage({Key key, this.result}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => MvPlayerState();
+  _MvDetailPageState createState() {
+    return new _MvDetailPageState();
+  }
 }
 
-class MvPlayerState extends State<MvPlayer> {
-  VideoPlayerController videoPlayerController;
-
-  List<String> imageResolutions;
-
-  String currentImageResolution;
-
-  VideoPlayerValue playerValue = VideoPlayerValue.uninitialized();
-
-  @override
-  void didUpdateWidget(MvPlayer oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (widget.data['id'] != oldWidget.data['id']) {
-      _doInit();
-    }
-  }
-
-  void _doInit() {
-    final Map brs = widget.data['brs'];
-    assert(brs != null && brs.isNotEmpty);
-    imageResolutions = brs.keys.toList();
-    currentImageResolution = imageResolutions.last;
-    videoPlayerController?.dispose();
-    videoPlayerController =
-        VideoPlayerController.network(brs[currentImageResolution]);
-    videoPlayerController.initialize();
-//    videoPlayerController.play();
-    videoPlayerController.addListener(() {
-      setState(() {
-        playerValue = videoPlayerController.value;
-      });
-    });
-  }
+class _MvDetailPageState extends State<_MvDetailPage> {
+  MvPlayerModel _model;
 
   @override
   void initState() {
     super.initState();
-    _doInit();
+    _model = MvPlayerModel(widget.result['data'], subscribed: false);
+    _model.videoPlayerController.play();
   }
 
   @override
   void dispose() {
     super.dispose();
-    videoPlayerController?.dispose();
+    _model.videoPlayerController.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return MvPlayerValue(widget.data['id'],
-        videoPlayerController: videoPlayerController,
-        imageResolutions: imageResolutions,
-        currentImageResolution: currentImageResolution,
-        playerValue: playerValue,
-        child: widget.child);
+    return ScopedModel<MvPlayerModel>(
+      model: _model,
+      child: ListView(
+        children: <Widget>[
+          _SimpleMvScreen(),
+          _MvInformationSection(data: widget.result['data']),
+        ],
+      ),
+    );
   }
 }
 
-class MvPlayerValue extends InheritedWidget {
-  final VideoPlayerController videoPlayerController;
-  final List<String> imageResolutions;
-  final String currentImageResolution;
-  final int mvId;
-  final VideoPlayerValue playerValue;
-
-  const MvPlayerValue(
-    this.mvId, {
-    @required this.videoPlayerController,
-    @required this.imageResolutions,
-    @required this.currentImageResolution,
-    @required this.playerValue,
-    Key key,
-    @required Widget child,
-  })  : assert(child != null),
-        super(key: key, child: child);
-
-  static MvPlayerValue of(BuildContext context) {
-    return context.inheritFromWidgetOfExactType(MvPlayerValue) as MvPlayerValue;
+class MvPlayerModel extends Model {
+  static MvPlayerModel of(BuildContext context, {bool rebuildOnChange = true}) {
+    return ScopedModel.of<MvPlayerModel>(context,
+        rebuildOnChange: rebuildOnChange);
   }
 
-  static VideoPlayerValue value(BuildContext context) {
-    return of(context).playerValue;
+  MvPlayerModel(this.mvData, {this.subscribed = false}) {
+    final Map brs = mvData['brs'];
+    assert(brs != null && brs.isNotEmpty);
+    _imageResolutions = brs.keys.toList();
+    _initPlayerController(imageResolutions.first);
   }
 
-  @override
-  bool updateShouldNotify(MvPlayerValue old) {
-    return currentImageResolution != old.currentImageResolution ||
-        mvId != old.mvId ||
-        playerValue != old.playerValue;
+  ///根据分辨率初始化播放器
+  void _initPlayerController(String imageResolution) {
+    final Map brs = mvData['brs'];
+    _currentImageResolution = imageResolution;
+
+    Duration moment = Duration.zero;
+    bool play = false;
+    if (_videoPlayerController != null) {
+      moment = _videoPlayerController.value.position;
+      play = _videoPlayerController.value.isPlaying;
+      _videoPlayerController.dispose();
+    }
+
+    //之所以使用MvPlayerController,是因为原有的VideoPlayerController并未对disposed状态做保护处理
+    //VideoPlayerController被 dispose 后,有可能会被 VideoPlayer 调用 removeListener 方法,从而引发错误
+    //所以包裹了一层保护
+    _videoPlayerController = MvPlayerController.network(brs[imageResolution]);
+    _videoPlayerController.initialize().then((_) {
+      _videoPlayerController.seekTo(moment);
+      if (play) _videoPlayerController.play();
+    });
+
+    _videoPlayerController.addListener(() {
+      notifyListeners();
+    });
+  }
+
+  ///mv数据
+  final Map mvData;
+
+  bool subscribed;
+
+  VideoPlayerController _videoPlayerController;
+
+  VideoPlayerController get videoPlayerController => _videoPlayerController;
+
+  VideoPlayerValue get playerValue => videoPlayerController.value;
+
+  ///分辨率
+  List<String> _imageResolutions;
+
+  List<String> get imageResolutions => _imageResolutions;
+
+  ///当前的分辨率
+  String _currentImageResolution;
+
+  String get currentImageResolution => _currentImageResolution;
+
+  set currentImageResolution(String value) {
+    _initPlayerController(value);
   }
 }
 
 class _SimpleMvScreen extends StatelessWidget {
-  ///mv data
-  final Map data;
-
-  const _SimpleMvScreen({Key key, this.data}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
+    final model = MvPlayerModel.of(context);
     return Container(
       child: AspectRatio(
-        aspectRatio: 16 / 10,
+        aspectRatio: model.playerValue.initialized
+            ? model.playerValue.aspectRatio
+            : 16 / 10,
         child: Container(
           color: Colors.black87,
           child: Stack(children: <Widget>[
-            VideoPlayer(MvPlayerValue.of(context).videoPlayerController),
-            _SimpleMvScreenForeground(data: data),
+            VideoPlayer(model.videoPlayerController),
+            _SimpleMvScreenForeground(),
           ]),
         ),
       ),
@@ -179,15 +173,9 @@ class _SimpleMvScreen extends StatelessWidget {
   }
 }
 
-///
+///小屏幕下的mv控制栏
 class _SimpleMvScreenForeground extends StatefulWidget {
-  ///mv data
-  final Map data;
-
   static const closeDelay = const Duration(seconds: 5);
-
-  const _SimpleMvScreenForeground({Key key, @required this.data})
-      : super(key: key);
 
   @override
   _SimpleMvScreenForegroundState createState() =>
@@ -238,39 +226,104 @@ class _SimpleMvScreenForegroundState extends State<_SimpleMvScreenForeground>
   }
 
   Widget _buildControllerWidget(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        AppBar(
-            backgroundColor: Colors.transparent,
-            title: Text(widget.data['name'])),
-        Expanded(child: _PlayPauseButton(onInteracted: _hideDelay)),
-        Row(
-          children: <Widget>[
-            SizedBox(width: 8),
-            Text.rich(
-              TextSpan(children: <TextSpan>[
-                TextSpan(
-                    text: getTimeStamp(
-                        MvPlayerValue.value(context).position.inMilliseconds)),
-                TextSpan(text: ' / ', style: TextStyle(color: Colors.white70)),
-                TextSpan(
-                    text: getTimeStamp(
-                        MvPlayerValue.value(context).duration.inMilliseconds),
-                    style: TextStyle(color: Colors.white70)),
-              ]),
-              style: Theme.of(context).primaryTextTheme.body1,
+    final model = ScopedModel.of<MvPlayerModel>(context);
+    final data = model.mvData;
+    return Material(
+      color: Colors.transparent,
+      child: Column(
+        children: <Widget>[
+          Container(
+            decoration: const BoxDecoration(
+                gradient: const LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                  Colors.black38,
+                  Colors.black26,
+                  Colors.transparent,
+                ])),
+            child: AppBar(
+                elevation: 0,
+                backgroundColor: Colors.transparent,
+                title: Text(data['name'])),
+          ),
+          Expanded(child: MvPlayPauseButton(onInteracted: _hideDelay)),
+          Container(
+            decoration: const BoxDecoration(
+                gradient: const LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                  Colors.transparent,
+                  Colors.black26,
+                  Colors.black38,
+                ])),
+            child: Row(
+              children: <Widget>[
+                SizedBox(width: 8),
+                Text.rich(
+                  TextSpan(children: <TextSpan>[
+                    TextSpan(
+                        text: getTimeStamp(
+                            model.playerValue.position.inMilliseconds),
+                        style: TextStyle(color: Colors.white)),
+                    TextSpan(
+                        text: ' / ', style: TextStyle(color: Colors.white70)),
+                    TextSpan(
+                        text: getTimeStamp(
+                            model.playerValue.duration.inMilliseconds),
+                        style: TextStyle(color: Colors.white70)),
+                  ]),
+                  style: TextStyle(fontSize: 13),
+                ),
+                Expanded(
+                    child: Slider(
+                        max: model.playerValue.duration.inMilliseconds
+                            .toDouble(),
+                        value: model.playerValue.position.inMilliseconds
+                            .toDouble()
+                            .clamp(
+                                0,
+                                model.playerValue.duration.inMilliseconds
+                                    .toDouble()),
+                        onChanged: (v) async {
+                          await model.videoPlayerController
+                              .seekTo(Duration(milliseconds: v.toInt()));
+                          model.videoPlayerController.play();
+                        })),
+                InkWell(
+                    splashColor: Colors.white,
+                    child: Padding(
+                        padding: const EdgeInsets.all(8),
+                        child: Icon(Icons.fullscreen)),
+                    onTap: () async {
+                      final route = MaterialPageRoute(
+                          builder: (_) => ScopedModel<MvPlayerModel>(
+                              model: ScopedModel.of<MvPlayerModel>(context),
+                              child: FullScreenMvPlayer()));
+                      SystemChrome.setPreferredOrientations(const [
+                        DeviceOrientation.landscapeLeft,
+                        DeviceOrientation.landscapeRight,
+                      ]);
+                      await Navigator.push(context, route);
+                      SystemChrome.setPreferredOrientations(const [
+                        DeviceOrientation.portraitUp,
+                        DeviceOrientation.portraitDown,
+                        DeviceOrientation.landscapeLeft,
+                        DeviceOrientation.landscapeRight,
+                      ]);
+                    }),
+              ],
             ),
-            Spacer(),
-            IconButton(icon: Icon(Icons.fullscreen), onPressed: () {})
-          ],
-        )
-      ],
+          )
+        ],
+      ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    if (!MvPlayerValue.value(context).initialized) {
+    if (!MvPlayerModel.of(context).playerValue.initialized) {
       return Center(
         child: CircularProgressIndicator(),
       );
@@ -293,65 +346,42 @@ class _SimpleMvScreenForegroundState extends State<_SimpleMvScreenForeground>
           });
         },
         child: result);
-    result = Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Expanded(child: result),
-        Transform.translate(
-          transformHitTests: true,
-          offset: Offset(0, 16),
-          child: SizedBox(
-            width: MediaQuery.of(context).size.width,
-            child: Slider(
-                max: MvPlayerValue.value(context)
-                    .duration
-                    .inMilliseconds
-                    .toDouble(),
-                value: MvPlayerValue.value(context)
-                    .position
-                    .inMilliseconds
-                    .toDouble(),
-                onChanged: (v) async {
-                  await MvPlayerValue.of(context)
-                      .videoPlayerController
-                      .seekTo(Duration(milliseconds: v.toInt()));
-                  MvPlayerValue.of(context).videoPlayerController.play();
-                }),
-          ),
-        ),
-      ],
-    );
     return result;
   }
 }
 
-class _PlayPauseButton extends StatelessWidget {
+class MvPlayPauseButton extends StatelessWidget {
   final VoidCallback onInteracted;
 
-  const _PlayPauseButton({Key key, this.onInteracted}) : super(key: key);
+  const MvPlayPauseButton({Key key, this.onInteracted}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final controller = MvPlayerValue.of(context).videoPlayerController;
+    final controller = MvPlayerModel.of(context).videoPlayerController;
+
+    final reachEnd = controller.value.position >= controller.value.duration;
+    final isPlaying = controller.value.isPlaying && !reachEnd;
+
     return Center(
       child: GestureDetector(
         child: ClipOval(
           child: Material(
-            color: Colors.black38,
+            color: Colors.black26,
             child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Icon(
-                  controller.value.isPlaying ? Icons.pause : Icons.play_arrow,
-                  color: Colors.white,
-                  size: 56),
+              padding: const EdgeInsets.all(10),
+              child: Icon(isPlaying ? Icons.pause : Icons.play_arrow,
+                  color: Colors.white, size: 56),
             ),
           ),
         ),
-        onTap: () {
+        onTap: () async {
           if (onInteracted != null) onInteracted();
-          if (controller.value.isPlaying) {
+          if (isPlaying) {
             controller.pause();
           } else {
+            if (reachEnd) {
+              await controller.seekTo(Duration.zero);
+            }
             controller.play();
           }
         },

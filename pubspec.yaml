@@ -28,6 +28,7 @@ dependencies:
     git:
       url: git://github.com/boyan01/overlay_support.git
   sembast: ^1.13.2
+  scoped_model: ^1.0.1
 
 dev_dependencies:
   flutter_test:
