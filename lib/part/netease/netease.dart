@@ -58,7 +58,8 @@ class NeteaseState extends State<Netease> {
     if (_user == null) {
       return;
     }
-    _likedSongList = (await neteaseLocalData['likedSongList'] as List).cast();
+    _likedSongList =
+        (await neteaseLocalData['likedSongList'] as List)?.cast() ?? const [];
     setState(() {});
     try {
       _likedSongList =

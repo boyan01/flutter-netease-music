@@ -326,7 +326,7 @@ class _OperationBar extends StatelessWidget {
               Navigator.push(context, MaterialPageRoute(builder: (context) {
                 return CommentPage(
                   threadId: CommentThreadId(music.id, CommentType.song,
-                      playload: CommentThreadPayload.music(music)),
+                      payload: CommentThreadPayload.music(music)),
                 );
               }));
             }),

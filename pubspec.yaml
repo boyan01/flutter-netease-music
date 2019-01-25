@@ -21,13 +21,14 @@ dependencies:
   path_provider: ^0.4.1
   shared_preferences: ^0.4.3
   video_player: ^0.8.0
-  url_launcher: ^4.0.2
+  url_launcher: ^4.1.0+1
   intl: ^0.15.7
   keyboard_visibility: ^0.5.0
   overlay_support:
     git:
       url: git://github.com/boyan01/overlay_support.git
   sembast: ^1.13.2
+  scoped_model: ^1.0.1
 
 dev_dependencies:
   flutter_test:
