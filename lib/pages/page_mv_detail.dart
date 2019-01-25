@@ -1,6 +1,7 @@
 import 'package:async/async.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:quiet/pages/page_comment.dart';
 import 'package:quiet/part/mv/mv_player_model.dart';
 import 'package:quiet/part/part.dart';
 import 'package:quiet/repository/netease.dart';
@@ -74,13 +75,34 @@ class _MvDetailPageState extends State<_MvDetailPage> {
 
   @override
   Widget build(BuildContext context) {
+    final commentId = CommentThreadId(_model.mvData['id'], CommentType.mv);
     return ScopedModel<MvPlayerModel>(
       model: _model,
-      child: ListView(
+      child: Column(
         children: <Widget>[
           _SimpleMvScreen(),
-          _MvInformationSection(data: widget.result['data']),
-          _MvActionsSection(),
+          Expanded(
+            child: NestedScrollView(
+                headerSliverBuilder: (context, innerBoxIsScrolled) {
+                  return [
+                    SliverFixedExtentList(
+                        delegate: SliverChildListDelegate([
+                          _MvInformationSection(data: widget.result['data'])
+                        ]),
+                        itemExtent: 72),
+                    SliverFixedExtentList(
+                        delegate: SliverChildListDelegate([
+                          _MvActionsSection(),
+                        ]),
+                        itemExtent: 60),
+                  ];
+                },
+                body: Loader(
+                    loadTask: () => neteaseRepository.getComments(commentId),
+                    builder: (context, result) {
+                      return CommentList(threadId: commentId, comments: result);
+                    })),
+          ),
         ],
       ),
     );

@@ -598,7 +598,7 @@ class _PlaylistDetailHeader extends StatelessWidget {
           Navigator.push(context, MaterialPageRoute(builder: (context) {
             return CommentPage(
               threadId: CommentThreadId(playlist.id, CommentType.playlist,
-                  playload: CommentThreadPayload.playlist(playlist)),
+                  payload: CommentThreadPayload.playlist(playlist)),
             );
           }));
         },
