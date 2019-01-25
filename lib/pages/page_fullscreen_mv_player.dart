@@ -1,6 +1,7 @@
 import 'package:async/async.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:quiet/part/mv/mv_player_model.dart';
 import 'package:quiet/part/part.dart';
 import 'package:video_player/video_player.dart';
 
