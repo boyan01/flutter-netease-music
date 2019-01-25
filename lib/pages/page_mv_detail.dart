@@ -1,7 +1,7 @@
-import 'package:async/async.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:quiet/pages/page_comment.dart';
+import 'package:quiet/part/mv/mv_foreground_controller.dart';
 import 'package:quiet/part/mv/mv_player_model.dart';
 import 'package:quiet/part/part.dart';
 import 'package:quiet/repository/netease.dart';
@@ -134,179 +134,97 @@ class _SimpleMvScreen extends StatelessWidget {
 }
 
 ///小屏幕下的mv控制栏
-class _SimpleMvScreenForeground extends StatefulWidget {
+class _SimpleMvScreenForeground extends StatelessWidget {
   static const closeDelay = const Duration(seconds: 5);
 
   @override
-  _SimpleMvScreenForegroundState createState() =>
-      _SimpleMvScreenForegroundState();
-}
-
-class _SimpleMvScreenForegroundState extends State<_SimpleMvScreenForeground>
-    with SingleTickerProviderStateMixin {
-  AnimationController _controller;
-
-  ///true 在视频上显示控制栏和标题栏,但是[closeDelay]时间段后会自动关闭
-  ///false 关闭控制栏的显示
-  bool _show = true;
-
-  CancelableOperation _hideOperation;
-
-  @override
-  void initState() {
-    _controller = AnimationController(vsync: this);
-    super.initState();
-    _hideDelay();
-  }
-
-  void _hideDelay() {
-    if (!_show) {
-      return;
-    }
-    _hideOperation?.cancel();
-    _hideOperation = CancelableOperation.fromFuture(
-        Future.delayed(_SimpleMvScreenForeground.closeDelay))
-      ..value.whenComplete(() {
-        setState(() {
-          _show = false;
-        });
-      });
-  }
-
-  @override
-  void didUpdateWidget(_SimpleMvScreenForeground oldWidget) {
-    super.didUpdateWidget(oldWidget);
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    _hideOperation.cancel();
-    super.dispose();
-  }
-
-  Widget _buildControllerWidget(BuildContext context) {
+  Widget build(BuildContext context) {
     final model = ScopedModel.of<MvPlayerModel>(context);
     final data = model.mvData;
-    return Material(
-      color: Colors.transparent,
-      child: Column(
-        children: <Widget>[
-          Container(
-            decoration: const BoxDecoration(
-                gradient: const LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [
-                  Colors.black38,
-                  Colors.black26,
-                  Colors.transparent,
-                ])),
-            child: AppBar(
-                elevation: 0,
-                backgroundColor: Colors.transparent,
-                title: Text(data['name'])),
+    return AnimatedMvController(
+        top: Container(
+          decoration: const BoxDecoration(
+              gradient: const LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                Colors.black38,
+                Colors.black26,
+                Colors.transparent,
+              ])),
+          child: AppBar(
+              elevation: 0,
+              backgroundColor: Colors.transparent,
+              title: Text(data['name'])),
+        ),
+        bottom: Container(
+          decoration: const BoxDecoration(
+              gradient: const LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                Colors.transparent,
+                Colors.black26,
+                Colors.black38,
+              ])),
+          child: Row(
+            children: <Widget>[
+              SizedBox(width: 8),
+              Text.rich(
+                TextSpan(children: <TextSpan>[
+                  TextSpan(
+                      text: getTimeStamp(
+                          model.playerValue.position.inMilliseconds),
+                      style: TextStyle(color: Colors.white)),
+                  TextSpan(
+                      text: ' / ', style: TextStyle(color: Colors.white70)),
+                  TextSpan(
+                      text: getTimeStamp(
+                          model.playerValue.duration.inMilliseconds),
+                      style: TextStyle(color: Colors.white70)),
+                ]),
+                style: TextStyle(fontSize: 13),
+              ),
+              Expanded(
+                  child: Slider(
+                      max: model.playerValue.duration.inMilliseconds.toDouble(),
+                      value: model.playerValue.position.inMilliseconds
+                          .toDouble()
+                          .clamp(
+                              0,
+                              model.playerValue.duration.inMilliseconds
+                                  .toDouble()),
+                      onChanged: (v) async {
+                        await model.videoPlayerController
+                            .seekTo(Duration(milliseconds: v.toInt()));
+                        model.videoPlayerController.play();
+                      })),
+              InkWell(
+                  splashColor: Colors.white,
+                  child: Padding(
+                      padding: const EdgeInsets.all(8),
+                      child: Icon(Icons.fullscreen)),
+                  onTap: () async {
+                    final route = MaterialPageRoute(
+                        builder: (_) => ScopedModel<MvPlayerModel>(
+                            model: ScopedModel.of<MvPlayerModel>(context),
+                            child: FullScreenMvPlayer()));
+                    SystemChrome.setPreferredOrientations(const [
+                      DeviceOrientation.landscapeLeft,
+                      DeviceOrientation.landscapeRight,
+                    ]);
+                    await Navigator.push(context, route);
+                    SystemChrome.setPreferredOrientations(const [
+                      DeviceOrientation.portraitUp,
+                      DeviceOrientation.portraitDown,
+                      DeviceOrientation.landscapeLeft,
+                      DeviceOrientation.landscapeRight,
+                    ]);
+                  }),
+            ],
           ),
-          Expanded(child: MvPlayPauseButton(onInteracted: _hideDelay)),
-          Container(
-            decoration: const BoxDecoration(
-                gradient: const LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [
-                  Colors.transparent,
-                  Colors.black26,
-                  Colors.black38,
-                ])),
-            child: Row(
-              children: <Widget>[
-                SizedBox(width: 8),
-                Text.rich(
-                  TextSpan(children: <TextSpan>[
-                    TextSpan(
-                        text: getTimeStamp(
-                            model.playerValue.position.inMilliseconds),
-                        style: TextStyle(color: Colors.white)),
-                    TextSpan(
-                        text: ' / ', style: TextStyle(color: Colors.white70)),
-                    TextSpan(
-                        text: getTimeStamp(
-                            model.playerValue.duration.inMilliseconds),
-                        style: TextStyle(color: Colors.white70)),
-                  ]),
-                  style: TextStyle(fontSize: 13),
-                ),
-                Expanded(
-                    child: Slider(
-                        max: model.playerValue.duration.inMilliseconds
-                            .toDouble(),
-                        value: model.playerValue.position.inMilliseconds
-                            .toDouble()
-                            .clamp(
-                                0,
-                                model.playerValue.duration.inMilliseconds
-                                    .toDouble()),
-                        onChanged: (v) async {
-                          await model.videoPlayerController
-                              .seekTo(Duration(milliseconds: v.toInt()));
-                          model.videoPlayerController.play();
-                        })),
-                InkWell(
-                    splashColor: Colors.white,
-                    child: Padding(
-                        padding: const EdgeInsets.all(8),
-                        child: Icon(Icons.fullscreen)),
-                    onTap: () async {
-                      final route = MaterialPageRoute(
-                          builder: (_) => ScopedModel<MvPlayerModel>(
-                              model: ScopedModel.of<MvPlayerModel>(context),
-                              child: FullScreenMvPlayer()));
-                      SystemChrome.setPreferredOrientations(const [
-                        DeviceOrientation.landscapeLeft,
-                        DeviceOrientation.landscapeRight,
-                      ]);
-                      await Navigator.push(context, route);
-                      SystemChrome.setPreferredOrientations(const [
-                        DeviceOrientation.portraitUp,
-                        DeviceOrientation.portraitDown,
-                        DeviceOrientation.landscapeLeft,
-                        DeviceOrientation.landscapeRight,
-                      ]);
-                    }),
-              ],
-            ),
-          )
-        ],
-      ),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    if (!MvPlayerModel.of(context).playerValue.initialized) {
-      return Center(
-        child: CircularProgressIndicator(),
-      );
-    }
-    Widget result;
-    if (!_show) {
-      result = SizedBox.expand();
-    } else {
-      result = _buildControllerWidget(context);
-    }
-    result = GestureDetector(
-        behavior: HitTestBehavior.opaque,
-        onTapDown: (_) {
-          _hideDelay();
-        },
-        onTap: () {
-          setState(() {
-            _show = !_show;
-            _hideDelay();
-          });
-        },
-        child: result);
-    return result;
+        ),
+        center: MvPlayPauseButton());
   }
 }
 
