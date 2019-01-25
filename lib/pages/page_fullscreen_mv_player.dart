@@ -1,6 +1,6 @@
-import 'package:async/async.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:quiet/part/mv/mv_foreground_controller.dart';
 import 'package:quiet/part/mv/mv_player_model.dart';
 import 'package:quiet/part/part.dart';
 import 'package:video_player/video_player.dart';
@@ -19,8 +19,11 @@ class FullScreenMvPlayer extends StatefulWidget {
 
 class FullScreenMvPlayerState extends State<FullScreenMvPlayer> {
   @override
-  void initState() {
-    super.initState();
+  void dispose() {
+    super.dispose();
+    //re enable System UI
+    SystemChrome.setEnabledSystemUIOverlays(
+        const [SystemUiOverlay.top, SystemUiOverlay.bottom]);
   }
 
   @override
@@ -44,104 +47,24 @@ class FullScreenMvPlayerState extends State<FullScreenMvPlayer> {
 }
 
 ///控制页面
-class _FullScreenController extends StatefulWidget {
-  @override
-  _FullScreenControllerState createState() {
-    return new _FullScreenControllerState();
-  }
-}
-
-class _FullScreenControllerState extends State<_FullScreenController>
-    with SingleTickerProviderStateMixin {
-  ///ui显示和隐藏的动画,lowerBound代表隐藏
-  AnimationController _controller;
-
-  CancelableOperation _hideOperation;
-
-  bool get _show => _controller.status == AnimationStatus.completed;
-
-  bool get _hide => _controller.status == AnimationStatus.dismissed;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 300));
-    _controller.addListener(() => setState(() {}));
-    _controller.addStatusListener((status) {
-      if (status == AnimationStatus.completed) {
-        _hideDelay();
-      }
-    });
-    _controller.forward(from: 0);
-  }
-
-  void _setUiVisibility(bool show) {
-    if (show) {
-      _controller.forward(from: _controller.value);
-      SystemChrome.setEnabledSystemUIOverlays(
-          const [SystemUiOverlay.top, SystemUiOverlay.bottom]);
-    } else {
-      _controller.reverse(from: _controller.value).then((_) {
-        SystemChrome.setEnabledSystemUIOverlays(const []);
-      });
-    }
-  }
-
-  void _hideDelay() {
-    if (_controller.status == AnimationStatus.dismissed) {
-      //already hidden
-      return;
-    }
-    _hideOperation?.cancel();
-    _hideOperation = CancelableOperation.fromFuture(
-        Future.delayed(const Duration(seconds: 3)))
-      ..value.whenComplete(() {
-        _setUiVisibility(false);
-      });
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    _hideOperation?.cancel();
-    super.dispose();
-    SystemChrome.setEnabledSystemUIOverlays(
-        const [SystemUiOverlay.top, SystemUiOverlay.bottom]);
-  }
-
+class _FullScreenController extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      behavior: HitTestBehavior.opaque,
-      onTap: () {
-        debugPrint("on tap");
-        if (_show) {
-          _setUiVisibility(false);
-        } else if (_hide) {
-          _setUiVisibility(true);
+    return AnimatedMvController(
+      top: _buildTop(context),
+      bottom: _buildBottom(context),
+      center: MvPlayPauseButton(),
+      beforeChange: (show) {
+        if (show) {
+          SystemChrome.setEnabledSystemUIOverlays(
+              const [SystemUiOverlay.top, SystemUiOverlay.bottom]);
         }
-        _hideDelay();
       },
-      child: Column(
-        children: <Widget>[
-          FractionalTranslation(
-              child: _buildTop(context),
-              translation: Offset(0, _controller.value - 1)),
-          Expanded(
-            child: IgnorePointer(
-              ignoring: _controller.value <= 0.1,
-              child: Opacity(
-                  opacity: _controller.value,
-                  child: Center(
-                      child: MvPlayPauseButton(onInteracted: _hideDelay))),
-            ),
-          ),
-          FractionalTranslation(
-              child: _buildBottom(context),
-              translation: Offset(0, 1 - _controller.value))
-        ],
-      ),
+      afterChange: (show) {
+        if (!show) {
+          SystemChrome.setEnabledSystemUIOverlays(const []);
+        }
+      },
     );
   }
 
