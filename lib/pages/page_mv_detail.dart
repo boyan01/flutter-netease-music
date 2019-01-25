@@ -89,12 +89,12 @@ class _MvDetailPageState extends State<_MvDetailPage> {
                         delegate: SliverChildListDelegate([
                           _MvInformationSection(data: widget.result['data'])
                         ]),
-                        itemExtent: 72),
+                        itemExtent: 76),
                     SliverFixedExtentList(
                         delegate: SliverChildListDelegate([
                           _MvActionsSection(),
                         ]),
-                        itemExtent: 60),
+                        itemExtent: 62),
                   ];
                 },
                 body: Loader(
@@ -157,74 +157,74 @@ class _SimpleMvScreenForeground extends StatelessWidget {
               backgroundColor: Colors.transparent,
               title: Text(data['name'])),
         ),
-        bottom: Container(
-          decoration: const BoxDecoration(
-              gradient: const LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                Colors.transparent,
-                Colors.black26,
-                Colors.black38,
-              ])),
-          child: Row(
-            children: <Widget>[
-              SizedBox(width: 8),
-              Text.rich(
-                TextSpan(children: <TextSpan>[
-                  TextSpan(
-                      text: getTimeStamp(
-                          model.playerValue.position.inMilliseconds),
-                      style: TextStyle(color: Colors.white)),
-                  TextSpan(
-                      text: ' / ', style: TextStyle(color: Colors.white70)),
-                  TextSpan(
-                      text: getTimeStamp(
-                          model.playerValue.duration.inMilliseconds),
-                      style: TextStyle(color: Colors.white70)),
-                ]),
-                style: TextStyle(fontSize: 13),
-              ),
-              Expanded(
-                  child: Slider(
-                      max: model.playerValue.duration.inMilliseconds.toDouble(),
-                      value: model.playerValue.position.inMilliseconds
-                          .toDouble()
-                          .clamp(
-                              0,
-                              model.playerValue.duration.inMilliseconds
-                                  .toDouble()),
-                      onChanged: (v) async {
-                        await model.videoPlayerController
-                            .seekTo(Duration(milliseconds: v.toInt()));
-                        model.videoPlayerController.play();
-                      })),
-              InkWell(
-                  splashColor: Colors.white,
-                  child: Padding(
-                      padding: const EdgeInsets.all(8),
-                      child: Icon(Icons.fullscreen)),
-                  onTap: () async {
-                    final route = MaterialPageRoute(
-                        builder: (_) => ScopedModel<MvPlayerModel>(
-                            model: ScopedModel.of<MvPlayerModel>(context),
-                            child: FullScreenMvPlayer()));
-                    SystemChrome.setPreferredOrientations(const [
-                      DeviceOrientation.landscapeLeft,
-                      DeviceOrientation.landscapeRight,
-                    ]);
-                    await Navigator.push(context, route);
-                    SystemChrome.setPreferredOrientations(const [
-                      DeviceOrientation.portraitUp,
-                      DeviceOrientation.portraitDown,
-                      DeviceOrientation.landscapeLeft,
-                      DeviceOrientation.landscapeRight,
-                    ]);
-                  }),
-            ],
-          ),
-        ),
+        bottom: _buildBottom(context),
         center: MvPlayPauseButton());
+  }
+
+  Widget _buildBottom(BuildContext context) {
+    final value = MvPlayerModel.of(context).playerValue;
+
+    final position = value.position.inMilliseconds;
+    final duration = value.duration?.inMilliseconds ?? 0;
+    return Container(
+      decoration: const BoxDecoration(
+          gradient: const LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+            Colors.transparent,
+            Colors.black26,
+            Colors.black38,
+          ])),
+      child: Row(
+        children: <Widget>[
+          SizedBox(width: 8),
+          Text.rich(
+            TextSpan(children: <TextSpan>[
+              TextSpan(
+                  text: getTimeStamp(position),
+                  style: TextStyle(color: Colors.white)),
+              TextSpan(text: ' / ', style: TextStyle(color: Colors.white70)),
+              TextSpan(
+                  text: getTimeStamp(duration),
+                  style: TextStyle(color: Colors.white70)),
+            ]),
+            style: TextStyle(fontSize: 13),
+          ),
+          Expanded(
+              child: Slider(
+                  max: duration.toDouble(),
+                  value: position.clamp(0, duration).toDouble(),
+                  onChanged: (v) async {
+                    MvPlayerModel.of(context).videoPlayerController
+                      ..seekTo(Duration(milliseconds: v.toInt()))
+                      ..play();
+                  })),
+          InkWell(
+              splashColor: Colors.white,
+              child: Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: Icon(Icons.fullscreen, color: Colors.white)),
+              onTap: () async {
+                final route = MaterialPageRoute(
+                    builder: (_) => ScopedModel<MvPlayerModel>(
+                        model: ScopedModel.of<MvPlayerModel>(context),
+                        child: FullScreenMvPlayer()));
+                SystemChrome.setPreferredOrientations(const [
+                  DeviceOrientation.landscapeLeft,
+                  DeviceOrientation.landscapeRight,
+                ]);
+                await Navigator.push(context, route);
+                SystemChrome.setPreferredOrientations(const [
+                  DeviceOrientation.portraitUp,
+                  DeviceOrientation.portraitDown,
+                  DeviceOrientation.landscapeLeft,
+                  DeviceOrientation.landscapeRight,
+                ]);
+              }),
+        ],
+      ),
+    );
   }
 }
 
@@ -237,7 +237,7 @@ class MvPlayPauseButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = MvPlayerModel.of(context).videoPlayerController;
 
-    final reachEnd = controller.value.position >= controller.value.duration;
+    final reachEnd = controller.value.initialized && controller.value.position >= controller.value.duration;
     final isPlaying = controller.value.isPlaying && !reachEnd;
 
     return Center(
