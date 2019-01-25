@@ -108,57 +108,54 @@ class _FullScreenController extends StatelessWidget {
     final position = value.position.inMilliseconds;
     final duration = value.duration?.inMilliseconds ?? 0;
 
-    return Material(
-      color: Colors.transparent,
-      child: Container(
-        decoration: const BoxDecoration(
-            gradient: const LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: const [Colors.black12, Colors.black87])),
-        child: DefaultTextStyle(
-          style: Theme.of(context).primaryTextTheme.body1,
-          child: Row(
-            children: <Widget>[
-              Text(getTimeStamp(position)),
-              Expanded(
-                child: Slider(
-                    value: position.clamp(0, duration).toDouble(),
-                    max: duration.toDouble(),
-                    onChanged: value.initialized
-                        ? (v) {
-                            MvPlayerModel.of(context).videoPlayerController
-                              ..seekTo(Duration(milliseconds: v.toInt()))
-                              ..play();
-                          }
-                        : null),
-              ),
-              Text(getTimeStamp(duration)),
-              SizedBox(width: 4),
-              PopupMenuButton<String>(
-                  itemBuilder: (context) {
-                    return MvPlayerModel.of(context)
-                        .imageResolutions
-                        .map((str) => PopupMenuItem<String>(
-                              value: str,
-                              child: Container(child: Text('${str}P')),
-                            ))
-                        .toList();
-                  },
-                  onSelected: (v) =>
-                      MvPlayerModel.of(context).currentImageResolution = v,
-                  child: Container(
-                    padding: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
-                    child: Text(
-                        '${MvPlayerModel.of(context).currentImageResolution}P'),
-                  )),
-              IconButton(
-                  icon: Icon(Icons.fullscreen_exit, color: Colors.white),
-                  onPressed: () {
-                    Navigator.pop(context);
-                  })
-            ],
-          ),
+    return Container(
+      decoration: const BoxDecoration(
+          gradient: const LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: const [Colors.black12, Colors.black87])),
+      child: DefaultTextStyle(
+        style: Theme.of(context).primaryTextTheme.body1,
+        child: Row(
+          children: <Widget>[
+            Text(getTimeStamp(position)),
+            Expanded(
+              child: Slider(
+                  value: position.clamp(0, duration).toDouble(),
+                  max: duration.toDouble(),
+                  onChanged: value.initialized
+                      ? (v) {
+                          MvPlayerModel.of(context).videoPlayerController
+                            ..seekTo(Duration(milliseconds: v.toInt()))
+                            ..play();
+                        }
+                      : null),
+            ),
+            Text(getTimeStamp(duration)),
+            SizedBox(width: 4),
+            PopupMenuButton<String>(
+                itemBuilder: (context) {
+                  return MvPlayerModel.of(context)
+                      .imageResolutions
+                      .map((str) => PopupMenuItem<String>(
+                            value: str,
+                            child: Container(child: Text('${str}P')),
+                          ))
+                      .toList();
+                },
+                onSelected: (v) =>
+                    MvPlayerModel.of(context).currentImageResolution = v,
+                child: Container(
+                  padding: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+                  child: Text(
+                      '${MvPlayerModel.of(context).currentImageResolution}P'),
+                )),
+            IconButton(
+                icon: Icon(Icons.fullscreen_exit, color: Colors.white),
+                onPressed: () {
+                  Navigator.pop(context);
+                })
+          ],
         ),
       ),
     );

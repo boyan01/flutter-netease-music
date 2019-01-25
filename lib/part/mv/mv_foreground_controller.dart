@@ -31,8 +31,10 @@ class _AnimatedMvControllerState extends State<AnimatedMvController>
 
   CancelableOperation _hideOperation;
 
+  //完全显示
   bool get _show => _controller.status == AnimationStatus.completed;
 
+  //完全隐藏
   bool get _hide => _controller.status == AnimationStatus.dismissed;
 
   @override
@@ -84,35 +86,39 @@ class _AnimatedMvControllerState extends State<AnimatedMvController>
 
   @override
   Widget build(BuildContext context) {
-    return ClipRect(
-      child: GestureDetector(
-        behavior: HitTestBehavior.translucent,
-        onTap: () {
-          debugPrint("on tap");
-          if (_show) {
-            _setUiVisibility(false);
-          } else if (_hide) {
-            _setUiVisibility(true);
-          }
-          _hideDelay();
-        },
-        child: Column(
-          children: <Widget>[
-            FractionalTranslation(
-                child: widget.top,
-                translation: Offset(0, _controller.value - 1)),
-            Expanded(
-              child: IgnorePointer(
-                ignoring: _controller.value <= 0.1,
-                child: Opacity(
-                    opacity: _controller.value,
-                    child: Center(child: widget.center)),
+    return Material(
+      color: Colors.transparent,
+      child: ClipRect(
+        child: GestureDetector(
+          behavior: HitTestBehavior.translucent,
+          onTapDown: (_) {
+            _hideDelay();
+          },
+          onTap: () {
+            if (_show) {
+              _setUiVisibility(false);
+            } else if (_hide) {
+              _setUiVisibility(true);
+            }
+          },
+          child: Column(
+            children: <Widget>[
+              FractionalTranslation(
+                  child: widget.top,
+                  translation: Offset(0, _controller.value - 1)),
+              Expanded(
+                child: IgnorePointer(
+                  ignoring: _controller.value <= 0.1,
+                  child: Opacity(
+                      opacity: _controller.value,
+                      child: Center(child: widget.center)),
+                ),
               ),
-            ),
-            FractionalTranslation(
-                child: widget.bottom,
-                translation: Offset(0, 1 - _controller.value))
-          ],
+              FractionalTranslation(
+                  child: widget.bottom,
+                  translation: Offset(0, 1 - _controller.value))
+            ],
+          ),
         ),
       ),
     );
