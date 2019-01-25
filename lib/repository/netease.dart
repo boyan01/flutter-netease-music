@@ -434,6 +434,11 @@ class NeteaseRepository {
     throw result.errorMsg;
   }
 
+  ///获取对应 MV 数据 , 数据包含 mv 名字 , 歌手 , 发布时间 , mv 视频地址等数据
+  Future<Map> mvDetail(int mvId) {
+    return doRequest('https://music.163.com/weapi/mv/detail', {'id': mvId});
+  }
+
   //请求数据
   Future<Map<String, dynamic>> doRequest(String path, Map data,
       {EncryptType type = EncryptType.we,
@@ -557,6 +562,7 @@ Music mapJsonToMusic(Map song,
   return Music(
       id: song["id"],
       title: song["name"],
+      mvId: song['mv'],
       url: "http://music.163.com/song/media/outer/url?id=${song["id"]}.mp3",
       album: Album(
           id: album["id"], name: album["name"], coverImageUrl: album["picUrl"]),

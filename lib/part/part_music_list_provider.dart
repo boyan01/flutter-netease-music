@@ -225,7 +225,7 @@ class SongTile extends StatelessWidget {
         Navigator.push(context, MaterialPageRoute(builder: (context) {
           return CommentPage(
             threadId: CommentThreadId(music.id, CommentType.song,
-                playload: CommentThreadPayload.music(music)),
+                payload: CommentThreadPayload.music(music)),
           );
         }));
         break;
@@ -333,6 +333,7 @@ class SongTile extends StatelessWidget {
                         Spacer(),
                       ],
                     )),
+                    _MvIcon(music),
                     PopupMenuButton(
                       icon: Icon(
                         Icons.more_vert,
@@ -388,6 +389,36 @@ class SongTile extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+///歌曲item的mv icon
+class _MvIcon extends StatelessWidget {
+  final Music music;
+
+  const _MvIcon(this.music, {Key key})
+      : assert(music != null),
+        super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    if (music.mvId == 0) {
+      return Container();
+    }
+    return Tooltip(
+      message: 'mv',
+      child: InkWell(
+          child: Container(
+            constraints: BoxConstraints.expand(width: 40),
+            child: Icon(Icons.videocam),
+          ),
+          onTap: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => MvDetailPage(music.mvId)));
+          }),
     );
   }
 }

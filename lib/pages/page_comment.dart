@@ -43,7 +43,7 @@ class CommentPage extends StatelessWidget {
             leading: BackButton(),
             title: Text("评论(${result["total"]})"),
           ),
-          body: _CommentList(
+          body: CommentList(
             threadId: threadId,
             comments: result,
           ),
@@ -137,17 +137,20 @@ class _CommentInputState extends State<_CommentInput> {
   }
 }
 
-class _CommentList extends StatefulWidget {
-  const _CommentList({Key key, this.threadId, this.comments})
+///评论列表
+class CommentList extends StatefulWidget {
+  const CommentList({Key key, @required this.threadId, @required this.comments})
       : assert(comments != null),
         super(key: key);
 
+  ///评论id
   final CommentThreadId threadId;
 
+  ///评论数据
   final Map comments;
 
-  static _CommentList of(BuildContext context) {
-    return context.ancestorWidgetOfExactType(_CommentList);
+  static CommentList of(BuildContext context) {
+    return context.ancestorWidgetOfExactType(CommentList);
   }
 
   @override
@@ -160,7 +163,7 @@ class _CommentList extends StatefulWidget {
       );
 }
 
-class _CommentListState extends State<_CommentList> {
+class _CommentListState extends State<CommentList> {
   _CommentListState(
       this.more, this.moreHot, this.hotComments, this.comments, this.total);
 
@@ -181,8 +184,6 @@ class _CommentListState extends State<_CommentList> {
 
   int total;
 
-  ScrollController _controller;
-
   ///the items show in list
   ///int : the item type of this item
   ///dynamic: the item data object for this item
@@ -199,7 +200,7 @@ class _CommentListState extends State<_CommentList> {
     }
     _isItemsDirty = false;
     items.clear();
-    if (widget.threadId.playload != null) {
+    if (widget.threadId.payload != null) {
       items.add(Pair(TYPE_TITLE, widget.threadId));
     }
     if (hotComments.isNotEmpty) {
@@ -230,23 +231,18 @@ class _CommentListState extends State<_CommentList> {
   @override
   void initState() {
     super.initState();
-    _controller = ScrollController();
-    _controller.addListener(_scrollListener);
     _buildItems();
   }
 
   @override
   void dispose() {
-    _controller.dispose();
     _autoLoadOperation?.cancel();
     super.dispose();
   }
 
   ///auto load when ListView reached the end
-  void _scrollListener() {
-    if (more &&
-        _controller.position.extentAfter < 500 &&
-        _autoLoadOperation == null) {
+  void _autoLoad(double extentAfter) {
+    if (more && extentAfter < 500 && _autoLoadOperation == null) {
       _autoLoadOperation = CancelableOperation.fromFuture(neteaseRepository
           .getComments(widget.threadId, offset: comments.length))
         ..value.then((result) {
@@ -270,37 +266,41 @@ class _CommentListState extends State<_CommentList> {
     return Column(
       children: <Widget>[
         Expanded(
-          child: ListView.builder(
-              itemCount: items.length,
-              controller: _controller,
-              itemBuilder: (context, index) {
-                var item = items[index];
-                switch (item.first) {
-                  case TYPE_COMMENT:
-                    return _ItemComment(comment: item.last);
-                  case TYPE_HEADER:
-                    return _ItemHeader(
-                      title: item.last,
-                    );
-                  case TYPE_MORE_HOT:
-                    return _ItemMoreHot();
-                  case TYPE_LOADING:
-                    return _ItemLoadMore();
-                  case TYPE_EMPTY:
-                    return Container(
-                      padding: EdgeInsets.symmetric(vertical: 40),
-                      child: Center(
-                        child: Text(
-                          "暂无评论，欢迎抢沙发",
-                          style: TextStyle(color: Colors.black54),
+          child: NotificationListener<ScrollEndNotification>(
+            onNotification: (notification) {
+              _autoLoad(notification.metrics.extentAfter);
+            },
+            child: ListView.builder(
+                itemCount: items.length,
+                itemBuilder: (context, index) {
+                  var item = items[index];
+                  switch (item.first) {
+                    case TYPE_COMMENT:
+                      return _ItemComment(comment: item.last);
+                    case TYPE_HEADER:
+                      return _ItemHeader(
+                        title: item.last,
+                      );
+                    case TYPE_MORE_HOT:
+                      return _ItemMoreHot();
+                    case TYPE_LOADING:
+                      return _ItemLoadMore();
+                    case TYPE_EMPTY:
+                      return Container(
+                        padding: EdgeInsets.symmetric(vertical: 40),
+                        child: Center(
+                          child: Text(
+                            "暂无评论，欢迎抢沙发",
+                            style: TextStyle(color: Colors.black54),
+                          ),
                         ),
-                      ),
-                    );
-                  case TYPE_TITLE:
-                    return _ItemTitle(commentThreadId: item.last);
-                }
-                return null;
-              }),
+                      );
+                    case TYPE_TITLE:
+                      return _ItemTitle(commentThreadId: item.last);
+                  }
+                  return null;
+                }),
+          ),
         ),
         _CommentInput(
           threadId: widget.threadId,
@@ -317,7 +317,7 @@ class _ItemTitle extends StatelessWidget {
 
   final CommentThreadId commentThreadId;
 
-  CommentThreadPayload get payload => commentThreadId.playload;
+  CommentThreadPayload get payload => commentThreadId.payload;
 
   @override
   Widget build(BuildContext context) {
@@ -547,7 +547,7 @@ class _ItemCommentState extends State<_ItemComment> {
                     bool succeed = await _like(
                         !widget.comment["liked"],
                         widget.comment["commentId"],
-                        _CommentList.of(context).threadId);
+                        CommentList.of(context).threadId);
                     if (succeed) {
                       setState(() {
                         widget.comment["liked"] = !widget.comment["liked"];
@@ -585,14 +585,14 @@ class _ItemCommentState extends State<_ItemComment> {
 }
 
 class CommentThreadId {
-  CommentThreadId(this.id, this.type, {this.playload})
+  CommentThreadId(this.id, this.type, {this.payload})
       : assert(id != null && type != null);
 
   final int id;
 
   final CommentType type;
 
-  final CommentThreadPayload playload;
+  final CommentThreadPayload payload;
 
   String get threadId {
     String prefix;

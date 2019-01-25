@@ -22,8 +22,8 @@ class NeteaseLocalData {
       neteaseLocalData[key] = net;
       yield net;
     } catch (e) {
-      if (debugPrint != null) debugPrint("$e");
-      onNetError(e);
+      if (onNetError != null) onNetError("$e");
+      debugPrint(e);
     }
   }
 

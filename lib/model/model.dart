@@ -1,5 +1,5 @@
 class Music {
-  Music({this.id, this.title, this.url, this.album, this.artist});
+  Music({this.id, this.title, this.url, this.album, this.artist, this.mvId});
 
   int id;
 
@@ -10,6 +10,9 @@ class Music {
   Album album;
 
   List<Artist> artist;
+
+  ///歌曲mv id,当其为0时,表示没有mv
+  int mvId;
 
   String get subTitle {
     var ar = artist.map((a) => a.name).join('/');
@@ -39,6 +42,7 @@ class Music {
         title: map["title"],
         url: map["url"],
         album: Album.fromMap(map["album"]),
+        mvId: map['mvId'] ?? 0,
         artist:
             (map["artist"] as List).cast<Map>().map(Artist.fromMap).toList());
   }
@@ -49,6 +53,7 @@ class Music {
       "title": title,
       "url": url,
       "subTitle": subTitle,
+      'mvId': mvId,
       "album": album.toMap(),
       "artist": artist.map((e) => e.toMap()).toList()
     };
@@ -98,7 +103,6 @@ class Artist {
   int id;
 
   String imageUrl;
-
 
   @override
   String toString() {
