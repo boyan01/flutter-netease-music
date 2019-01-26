@@ -60,17 +60,27 @@ class _MvDetailPage extends StatefulWidget {
 class _MvDetailPageState extends State<_MvDetailPage> {
   MvPlayerModel _model;
 
+  bool _pausedPlayingMusic = false;
+
   @override
   void initState() {
     super.initState();
     _model = MvPlayerModel(widget.result['data'], subscribed: false);
     _model.videoPlayerController.play();
+    if (quiet.value.isPlaying) {
+      quiet.pause();
+      _pausedPlayingMusic = true;
+    }
   }
 
   @override
   void dispose() {
     super.dispose();
     _model.videoPlayerController.dispose();
+    //try to resume paused music
+    if (_pausedPlayingMusic) {
+      quiet.play();
+    }
   }
 
   @override
@@ -237,7 +247,8 @@ class MvPlayPauseButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = MvPlayerModel.of(context).videoPlayerController;
 
-    final reachEnd = controller.value.initialized && controller.value.position >= controller.value.duration;
+    final reachEnd = controller.value.initialized &&
+        controller.value.position >= controller.value.duration;
     final isPlaying = controller.value.isPlaying && !reachEnd;
 
     return Center(
