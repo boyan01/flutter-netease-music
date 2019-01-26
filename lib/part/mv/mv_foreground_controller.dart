@@ -1,8 +1,11 @@
 import 'package:async/async.dart';
 import 'package:flutter/material.dart';
 
+import 'mv_player_model.dart';
+
 typedef void MvControllerChangeCallback(bool show);
 
+///祖先节点必须存在 [MvPlayerModel]
 class AnimatedMvController extends StatefulWidget {
   final Widget top;
   final Widget bottom;
@@ -64,6 +67,7 @@ class _AnimatedMvControllerState extends State<AnimatedMvController>
     }
   }
 
+  ///当控制器可见时，3s后隐藏
   void _hideDelay() {
     if (_controller.status == AnimationStatus.dismissed) {
       //already hidden
@@ -93,6 +97,17 @@ class _AnimatedMvControllerState extends State<AnimatedMvController>
           behavior: HitTestBehavior.translucent,
           onTapDown: (_) {
             _hideDelay();
+          },
+          onDoubleTap: () {
+            final controller = MvPlayerModel.of(context).videoPlayerController;
+            final value = controller.value;
+            if (value.initialized) {
+              if (value.isPlaying) {
+                controller.pause();
+              } else {
+                controller.play();
+              }
+            }
           },
           onTap: () {
             if (_show) {
