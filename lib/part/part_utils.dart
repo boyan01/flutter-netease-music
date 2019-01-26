@@ -1,3 +1,5 @@
+import 'package:intl/intl.dart';
+
 /// A pair of values.
 class Pair<E, F> {
   final E first;
@@ -40,4 +42,28 @@ String wrapText(String text, {int maxLength = 1 << 62, String suffix = "..."}) {
     return text;
   }
   return text.substring(0, maxLength) + suffix;
+}
+
+
+///format milliseconds to local string
+String getFormattedTime(int milliseconds) {
+  var dateTime = DateTime.fromMillisecondsSinceEpoch(milliseconds);
+  var now = DateTime.now();
+
+  var diff = Duration(
+      milliseconds:
+      now.millisecondsSinceEpoch - dateTime.millisecondsSinceEpoch);
+  if (diff.inMinutes < 1) {
+    return "刚刚";
+  }
+  if (diff.inMinutes <= 60) {
+    return "${diff.inMinutes}分钟前";
+  }
+  if (diff.inHours <= 24) {
+    return "${diff.inHours}小时前";
+  }
+  if (diff.inDays <= 5) {
+    return "${diff.inDays}天前";
+  }
+  return DateFormat("y年M月d日").format(dateTime);
 }
