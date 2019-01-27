@@ -86,8 +86,10 @@ class _FullScreenController extends StatelessWidget {
             onPressed: () => notImplemented(context),
           ),
           IconButton(
-            icon: Icon(Icons.add_box),
-            onPressed: () => notImplemented(context),
+            icon: Icon(MvPlayerModel.of(context).subscribed
+                ? Icons.check_box
+                : Icons.add_box),
+            onPressed: () => subscribeOrUnSubscribeMv(context),
           ),
           IconButton(
             icon: Icon(Icons.share),

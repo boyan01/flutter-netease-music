@@ -65,7 +65,8 @@ class _MvDetailPageState extends State<_MvDetailPage> {
   @override
   void initState() {
     super.initState();
-    _model = MvPlayerModel(widget.result['data'], subscribed: false);
+    _model = MvPlayerModel(widget.result['data'],
+        subscribed: widget.result['subed']);
     _model.videoPlayerController.play();
     if (quiet.value.isPlaying) {
       quiet.pause();
@@ -336,7 +337,7 @@ class _MvActionsSection extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
               FlatButton(
-                  onPressed: () {},
+                  onPressed: () => notImplemented(context),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
@@ -346,19 +347,9 @@ class _MvActionsSection extends StatelessWidget {
                       Text('${data['likeCount']}'),
                     ],
                   )),
+              _SubscribeButton(),
               FlatButton(
-                  onPressed: () {},
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      const SizedBox(height: 4.0),
-                      Icon(Icons.add_box),
-                      const SizedBox(height: 4.0),
-                      Text('${data['subCount']}'),
-                    ],
-                  )),
-              FlatButton(
-                  onPressed: () {},
+                  onPressed: () => notImplemented(context),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
@@ -369,7 +360,7 @@ class _MvActionsSection extends StatelessWidget {
                     ],
                   )),
               FlatButton(
-                  onPressed: () {},
+                  onPressed: () => notImplemented(context),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
@@ -384,5 +375,23 @@ class _MvActionsSection extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+class _SubscribeButton extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final model = MvPlayerModel.of(context);
+    return FlatButton(
+        onPressed: () => subscribeOrUnSubscribeMv(context),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            const SizedBox(height: 4.0),
+            Icon(model.subscribed ? Icons.check_box : Icons.add_box),
+            const SizedBox(height: 4.0),
+            Text('${model.mvData['subCount']}'),
+          ],
+        ));
   }
 }
