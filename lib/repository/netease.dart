@@ -439,6 +439,18 @@ class NeteaseRepository {
     return doRequest('https://music.163.com/weapi/mv/detail', {'id': mvId});
   }
 
+  ///调用此接口,可收藏 MV
+  Future<void> mvSubscribe(int mvId, bool subscribe) async {
+    final action = subscribe ? 'sub' : 'unsub';
+    final result = responseVerify(await doRequest(
+        'https://music.163.com/weapi/mv/$action',
+        {'mvId': mvId, 'mvIds': '["$mvId"]'}));
+    if (result.isSuccess) {
+      return;
+    }
+    throw result.errorMsg;
+  }
+
   //请求数据
   Future<Map<String, dynamic>> doRequest(String path, Map data,
       {EncryptType type = EncryptType.we,
