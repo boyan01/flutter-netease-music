@@ -1,5 +1,6 @@
 class Music {
-  Music({this.id, this.title, this.url, this.album, this.artist, this.mvId});
+  Music({this.id, this.title, this.url, this.album, this.artist, int mvId})
+      : this.mvId = mvId ?? 0;
 
   int id;
 

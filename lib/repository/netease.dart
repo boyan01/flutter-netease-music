@@ -562,7 +562,7 @@ Music mapJsonToMusic(Map song,
   return Music(
       id: song["id"],
       title: song["name"],
-      mvId: song['mv'],
+      mvId: song['mv'] ?? 0,
       url: "http://music.163.com/song/media/outer/url?id=${song["id"]}.mp3",
       album: Album(
           id: album["id"], name: album["name"], coverImageUrl: album["picUrl"]),
