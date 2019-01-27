@@ -1,18 +1,23 @@
 import 'package:flutter/widgets.dart';
+import 'package:overlay_support/overlay_support.dart';
 import 'package:quiet/part/mv/mv_player_controller.dart';
+import 'package:quiet/part/part.dart';
+import 'package:quiet/repository/netease.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:video_player/video_player.dart';
 
+///播放中mv的model
 class MvPlayerModel extends Model {
   static MvPlayerModel of(BuildContext context, {bool rebuildOnChange = true}) {
     return ScopedModel.of<MvPlayerModel>(context,
         rebuildOnChange: rebuildOnChange);
   }
 
-  MvPlayerModel(this.mvData, {this.subscribed = false}) {
+  MvPlayerModel(this.mvData, {subscribed = false}) {
     final Map brs = mvData['brs'];
     assert(brs != null && brs.isNotEmpty);
     _imageResolutions = brs.keys.toList();
+    _subscribed = subscribed;
     _initPlayerController(imageResolutions.first);
   }
 
@@ -46,7 +51,19 @@ class MvPlayerModel extends Model {
   ///mv数据
   final Map mvData;
 
-  bool subscribed;
+  bool _subscribed;
+
+  bool get subscribed => _subscribed;
+
+  ///收藏或者取消收藏mv
+  Future<void> subscribe(bool subscribe) async {
+    if (subscribe == _subscribed) {
+      return;
+    }
+    await neteaseRepository.mvSubscribe(mvData['id'], subscribe);
+    _subscribed = subscribe;
+    notifyListeners();
+  }
 
   VideoPlayerController _videoPlayerController;
 
@@ -66,5 +83,21 @@ class MvPlayerModel extends Model {
 
   set currentImageResolution(String value) {
     _initPlayerController(value);
+  }
+}
+
+///收藏或者取消收藏mv
+void subscribeOrUnSubscribeMv(BuildContext context) async {
+  final model = MvPlayerModel.of(context);
+  if (model.subscribed &&
+      !await showConfirmDialog(context, Text('确定要取消收藏吗？'),
+          positiveLabel: '不再收藏')) {
+    return;
+  }
+  try {
+    await showLoaderOverlay(context, model.subscribe(!model.subscribed));
+  } catch (e) {
+    showSimpleNotification(
+        context, Text('${model.subscribed ? '取消收藏' : '收藏'}失败'));
   }
 }
