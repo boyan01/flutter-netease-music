@@ -60,17 +60,28 @@ class _MvDetailPage extends StatefulWidget {
 class _MvDetailPageState extends State<_MvDetailPage> {
   MvPlayerModel _model;
 
+  bool _pausedPlayingMusic = false;
+
   @override
   void initState() {
     super.initState();
-    _model = MvPlayerModel(widget.result['data'], subscribed: false);
+    _model = MvPlayerModel(widget.result['data'],
+        subscribed: widget.result['subed']);
     _model.videoPlayerController.play();
+    if (quiet.value.isPlaying) {
+      quiet.pause();
+      _pausedPlayingMusic = true;
+    }
   }
 
   @override
   void dispose() {
     super.dispose();
     _model.videoPlayerController.dispose();
+    //try to resume paused music
+    if (_pausedPlayingMusic) {
+      quiet.play();
+    }
   }
 
   @override
@@ -89,12 +100,12 @@ class _MvDetailPageState extends State<_MvDetailPage> {
                         delegate: SliverChildListDelegate([
                           _MvInformationSection(data: widget.result['data'])
                         ]),
-                        itemExtent: 76),
+                        itemExtent: _MvInformationSection.height),
                     SliverFixedExtentList(
                         delegate: SliverChildListDelegate([
                           _MvActionsSection(),
                         ]),
-                        itemExtent: 62),
+                        itemExtent: _MvActionsSection.height),
                   ];
                 },
                 body: Loader(
@@ -237,7 +248,8 @@ class MvPlayPauseButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = MvPlayerModel.of(context).videoPlayerController;
 
-    final reachEnd = controller.value.initialized && controller.value.position >= controller.value.duration;
+    final reachEnd = controller.value.initialized &&
+        controller.value.position >= controller.value.duration;
     final isPlaying = controller.value.isPlaying && !reachEnd;
 
     return Center(
@@ -274,30 +286,35 @@ class _MvInformationSection extends StatelessWidget {
 
   const _MvInformationSection({Key key, this.data}) : super(key: key);
 
+  static const double height = 70;
+
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.all(8),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Text(data['name'],
-              style: Theme.of(context)
-                  .textTheme
-                  .title
-                  .copyWith(fontWeight: FontWeight.bold)),
-          DefaultTextStyle(
-            style: TextStyle(color: Colors.grey),
-            child: Row(
-              children: <Widget>[
-                Text('发布: ${data['publishTime']}'),
-                VerticalDivider(color: Theme.of(context).dividerColor),
-                Text('播放: ${getFormattedNumber(data['playCount'])}')
-              ],
-            ),
-          )
-        ],
+    return Container(
+      height: 70,
+      padding: const EdgeInsets.symmetric(horizontal: 8),
+      child: Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text(data['name'],
+                style: Theme.of(context)
+                    .textTheme
+                    .title
+                    .copyWith(fontWeight: FontWeight.bold)),
+            DefaultTextStyle(
+              style: TextStyle(color: Colors.grey),
+              child: Row(
+                children: <Widget>[
+                  Text('发布: ${data['publishTime']}'),
+                  VerticalDivider(color: Theme.of(context).dividerColor),
+                  Text('播放: ${getFormattedNumber(data['playCount'])}')
+                ],
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
@@ -305,64 +322,76 @@ class _MvInformationSection extends StatelessWidget {
 
 ///mv 点赞/收藏/评论/分享
 class _MvActionsSection extends StatelessWidget {
+  static final double height = 72;
+
   @override
   Widget build(BuildContext context) {
     final data = MvPlayerModel.of(context).mvData;
     return DividerWrapper(
-      extent: 10,
       child: ButtonTheme(
         textTheme: ButtonTextTheme.accent,
         colorScheme: ColorScheme.light(secondary: Colors.black54),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget>[
-            FlatButton(
-                onPressed: () {},
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    const SizedBox(height: 4.0),
-                    Icon(Icons.thumb_up),
-                    const SizedBox(height: 4.0),
-                    Text('${data['likeCount']}'),
-                  ],
-                )),
-            FlatButton(
-                onPressed: () {},
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    const SizedBox(height: 4.0),
-                    Icon(Icons.add_box),
-                    const SizedBox(height: 4.0),
-                    Text('${data['subCount']}'),
-                  ],
-                )),
-            FlatButton(
-                onPressed: () {},
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    const SizedBox(height: 4.0),
-                    Icon(Icons.comment),
-                    const SizedBox(height: 4.0),
-                    Text('${data['commentCount']}'),
-                  ],
-                )),
-            FlatButton(
-                onPressed: () {},
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    const SizedBox(height: 4.0),
-                    Icon(Icons.share),
-                    const SizedBox(height: 4.0),
-                    Text('${data['shareCount']}'),
-                  ],
-                )),
-          ],
+        child: Container(
+          height: height,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              FlatButton(
+                  onPressed: () => notImplemented(context),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      const SizedBox(height: 4.0),
+                      Icon(Icons.thumb_up),
+                      const SizedBox(height: 4.0),
+                      Text('${data['likeCount']}'),
+                    ],
+                  )),
+              _SubscribeButton(),
+              FlatButton(
+                  onPressed: () => notImplemented(context),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      const SizedBox(height: 4.0),
+                      Icon(Icons.comment),
+                      const SizedBox(height: 4.0),
+                      Text('${data['commentCount']}'),
+                    ],
+                  )),
+              FlatButton(
+                  onPressed: () => notImplemented(context),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      const SizedBox(height: 4.0),
+                      Icon(Icons.share),
+                      const SizedBox(height: 4.0),
+                      Text('${data['shareCount']}'),
+                    ],
+                  )),
+            ],
+          ),
         ),
       ),
     );
+  }
+}
+
+class _SubscribeButton extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final model = MvPlayerModel.of(context);
+    return FlatButton(
+        onPressed: () => subscribeOrUnSubscribeMv(context),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            const SizedBox(height: 4.0),
+            Icon(model.subscribed ? Icons.check_box : Icons.add_box),
+            const SizedBox(height: 4.0),
+            Text('${model.mvData['subCount']}'),
+          ],
+        ));
   }
 }
