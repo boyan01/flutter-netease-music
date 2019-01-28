@@ -301,9 +301,9 @@ class _OperationBar extends StatelessWidget {
             ),
             onPressed: () {
               if (liked) {
-                Netease.of(context).dislikeMusic(music);
+                LikedSongList.of(context).dislikeMusic(music);
               } else {
-                Netease.of(context).likeMusic(music);
+                LikedSongList.of(context).likeMusic(music);
               }
             }),
         IconButton(

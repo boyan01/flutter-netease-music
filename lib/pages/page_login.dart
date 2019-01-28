@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:quiet/repository/netease.dart';
+import 'package:quiet/part/part.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -84,8 +84,10 @@ class _LoginState extends State<LoginPage> {
                           showDialog(
                               context: context, builder: _buildLoginDialog);
                           Form.of(context);
-                          var result = await neteaseRepository.login(
-                              _phoneController.text, _passwordController.text);
+                          var result = await LoginState.of(context,
+                                  rebuildOnChange: false)
+                              .login(_phoneController.text,
+                                  _passwordController.text);
                           if (result["code"] == 200) {
                             Navigator.popUntil(
                                 context, ModalRoute.withName("/"));
