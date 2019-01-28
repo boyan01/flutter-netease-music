@@ -17,7 +17,7 @@ export 'part_utils.dart';
 export 'dialogs.dart';
 export 'tiles.dart';
 export 'downloads.dart';
-export 'src/dividers.dart';
+export 'package:quiet/part/material/dividers.dart';
 
 export 'netease/netease.dart';
 export 'netease/liked_song_list.dart';
