@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+///在 widget 底部添加分割线
 class DividerWrapper extends StatelessWidget {
   final Widget child;
 
