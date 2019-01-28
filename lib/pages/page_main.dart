@@ -143,7 +143,7 @@ class _AppDrawerHeader extends StatelessWidget {
             ),
             tooltip: "退出登陆",
             onPressed: () {
-              neteaseRepository.logout();
+              LoginState.of(context,rebuildOnChange: false).logout();
             },
           ),
         )

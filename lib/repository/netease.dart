@@ -11,8 +11,8 @@ import 'package:path_provider/path_provider.dart';
 import 'package:quiet/model/playlist_detail.dart';
 import 'package:quiet/pages/page_comment.dart';
 import 'package:quiet/part/part.dart';
+
 import 'netease_local_data.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 export 'netease_image.dart';
 export 'netease_local_data.dart';
@@ -38,13 +38,17 @@ class NeteaseSearchType {
 
 enum PlaylistOperation { add, remove }
 
+const _CODE_SUCCESS = 200;
+
+const _CODE_NEED_LOGIN = 301;
+
 class NeteaseRepository {
   ///to verify api response is success
   final TaskResultVerify responseVerify = (dynamic result) {
     if (result == null) {
       return VerifyValue.errorMsg("请求失败");
     }
-    if (result["code"] != 200) {
+    if (result["code"] != _CODE_SUCCESS) {
       return VerifyValue.errorMsg(
           "code:${result["code"]} \nmsg:${result["msg"]}");
     }
@@ -53,27 +57,7 @@ class NeteaseRepository {
 
   static const String _BASE_URL = "http://music.163.com";
 
-  ///current login user
-  final ValueNotifier<Map> user = ValueNotifier(null);
-
-  NeteaseRepository._private() {
-    SharedPreferences.getInstance().then((preference) {
-      var userJson = preference.getString("login_user");
-      Map<String, Object> user;
-      if (userJson == null || userJson.isEmpty) {
-        user = null;
-      }
-      try {
-        user = json.decode(userJson);
-      } catch (e) {}
-      this.user.value = user;
-      this.user.addListener(() {
-        var userValue = this.user.value;
-        preference.setString(
-            "login_user", userValue == null ? null : json.encode(userValue));
-      });
-    });
-  }
+  NeteaseRepository._private();
 
   Dio _dio;
 
@@ -108,20 +92,30 @@ class NeteaseRepository {
         options: Options(headers: {"User-Agent": _chooseUserAgent(ua: "pc")}));
 
     if (result["code"] == 200) {
-      //保存登陆的用户
-      user.value = result;
-      return result;
-    } else {
       return result;
     }
+    throw '登陆失败';
   }
 
-  ///登出
+  ///刷新登陆状态
+  ///返回结果：true 正常登陆状态
+  ///         false 需要重新登陆
+  Future<bool> refreshLogin() async {
+    final result = await doRequest(
+        'https://music.163.com/weapi/login/token/refresh', {},
+        options: Options(headers: {"User-Agent": _chooseUserAgent(ua: "pc")}));
+    if (result['code'] == _CODE_SUCCESS) {
+      return true;
+    } else if (result['code'] == _CODE_NEED_LOGIN) {
+      return false;
+    }
+    throw '服务器错误';
+  }
+
+  ///登出,删除本地cookie信息
   Future<void> logout() async {
     //删除cookie
     ((await dio).cookieJar as PersistCookieJar).delete(Uri.parse(_BASE_URL));
-    //删除preference
-    user.value = null;
   }
 
   ///根据用户ID获取歌单
