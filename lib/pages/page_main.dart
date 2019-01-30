@@ -142,8 +142,11 @@ class _AppDrawerHeader extends StatelessWidget {
               color: Theme.of(context).primaryIconTheme.color,
             ),
             tooltip: "退出登陆",
-            onPressed: () {
-              LoginState.of(context,rebuildOnChange: false).logout();
+            onPressed: () async {
+              if (await showConfirmDialog(context, Text('确认退出登录吗？'),
+                  positiveLabel: '退出登录')) {
+                LoginState.of(context, rebuildOnChange: false).logout();
+              }
             },
           ),
         )
