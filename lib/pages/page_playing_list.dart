@@ -3,12 +3,66 @@ import 'package:quiet/part/part.dart';
 import 'package:quiet/service/channel_media_player.dart';
 import 'package:overlay_support/overlay_support.dart';
 
-class PlayingListDialog extends StatelessWidget {
-  Widget buildHeader(BuildContext context, int count) {
-    PlayMode playMode =
-        PlayerState.of(context, aspect: PlayerStateAspect.playMode)
+class PlayingListDialog extends StatefulWidget {
+  @override
+  PlayingListDialogState createState() {
+    return new PlayingListDialogState();
+  }
+}
+
+class PlayingListDialogState extends State<PlayingListDialog> {
+  ScrollController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    final playingList = quiet.value.playingList;
+    final music = quiet.value.current;
+    assert(music != null, '展示播放列表时，当前音乐不能为空！');
+    double offset = playingList.indexOf(music) * _HEIGHT_MUSIC_TILE;
+    _controller = ScrollController(initialScrollOffset: offset);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    List<Music> playingList =
+        PlayerState.of(context, aspect: PlayerStateAspect.playlist)
             .value
-            .playMode;
+            .playingList;
+    Music music =
+        PlayerState.of(context, aspect: PlayerStateAspect.music).value.current;
+
+    return Container(
+      height: MediaQuery.of(context).size.height / 2,
+      child: Column(
+        children: <Widget>[
+          _Header(),
+          Expanded(
+            child: ListView.builder(
+                controller: _controller,
+                itemCount: playingList.length,
+                itemBuilder: (context, index) {
+                  var item = playingList[index];
+                  return _MusicTile(music: item, playing: item == music);
+                }),
+          )
+        ],
+      ),
+    );
+  }
+}
+
+class _Header extends StatelessWidget {
+  @override
+  StatelessElement createElement() {
+    return super.createElement();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final state = PlayerState.of(context, aspect: PlayerStateAspect.playMode);
+    final playMode = state.value.playMode;
+    final count = state.value.playingList.length;
     IconData icon;
     String name;
     switch (playMode) {
@@ -67,41 +121,6 @@ class PlayingListDialog extends StatelessWidget {
                 })
           ],
         ),
-      ),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    List<Music> playingList =
-        PlayerState.of(context, aspect: PlayerStateAspect.playlist)
-            .value
-            .playingList;
-    Music music =
-        PlayerState.of(context, aspect: PlayerStateAspect.music).value.current;
-
-    Widget header = buildHeader(context, playingList.length);
-
-    double offset = playingList.indexOf(music) * _HEIGHT_MUSIC_TILE;
-    if (offset < 0) {
-      offset = 0;
-    }
-
-    return Container(
-      height: MediaQuery.of(context).size.height / 2,
-      child: Column(
-        children: <Widget>[
-          header,
-          Expanded(
-            child: ListView.builder(
-                controller: ScrollController(initialScrollOffset: offset),
-                itemCount: playingList.length,
-                itemBuilder: (context, index) {
-                  var item = playingList[index];
-                  return _MusicTile(music: item, playing: item == music);
-                }),
-          )
-        ],
       ),
     );
   }
