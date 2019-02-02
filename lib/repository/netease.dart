@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
@@ -394,7 +395,7 @@ class NeteaseRepository {
   }
 
   ///获取用户信息 , 歌单，收藏，mv, dj 数量
-  Future<Map> subCount() async {
+  FutureOr<Map> subCount() async {
     final response =
         await doRequest('https://music.163.com/weapi/subcount', {});
     final result = responseVerify(response);

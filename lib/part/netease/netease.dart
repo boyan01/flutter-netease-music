@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:quiet/part/part.dart';
+import 'package:quiet/repository/netease.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 class Netease extends StatefulWidget {
@@ -16,9 +17,15 @@ class Netease extends StatefulWidget {
 }
 
 class NeteaseState extends State<Netease> {
-
   final LoginState loginState = LoginState();
 
+  Counter counter;
+
+  @override
+  void initState() {
+    super.initState();
+    counter = Counter(loginState, neteaseRepository, neteaseLocalData);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,10 +33,8 @@ class NeteaseState extends State<Netease> {
       model: loginState,
       child: ScopedModel<LikedSongList>(
         model: LikedSongList(loginState),
-        child: ScopedModelDescendant<LoginState>(
-          builder: (context, child, loginState) {
-            return CounterHolder(loginState.isLogin, child: child);
-          },
+        child: ScopedModel<Counter>(
+          model: counter,
           child: widget.child,
         ),
       ),

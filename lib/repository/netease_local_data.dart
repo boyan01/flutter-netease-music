@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:quiet/model/playlist_detail.dart';
 import 'package:flutter/foundation.dart';
 
@@ -40,7 +42,7 @@ class NeteaseLocalData {
     return _store;
   }
 
-  Future operator [](key) async {
+  FutureOr operator [](key) async {
     return _get(key);
   }
 

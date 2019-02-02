@@ -10,7 +10,7 @@ description: a music player
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.0.0-dev.68.0 <3.0.0"
+  sdk: ">=2.1.0 <3.0.0"
 
 dependencies:
   flutter:
@@ -29,6 +29,7 @@ dependencies:
       url: git://github.com/boyan01/overlay_support.git
   sembast: ^1.13.2
   scoped_model: ^1.0.1
+  mockito: ^4.0.0
 
 dev_dependencies:
   flutter_test:

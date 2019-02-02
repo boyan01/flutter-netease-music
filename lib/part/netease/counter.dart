@@ -1,118 +1,93 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:quiet/part/part.dart';
 import 'package:quiet/repository/netease.dart';
+import 'package:scoped_model/scoped_model.dart';
 
 ///
 /// 提供各种数目,比如收藏数目,我的电台数目
 ///
-class Counter extends InheritedWidget {
-  final int djRadioCount;
+class Counter extends Model {
+  static final key = 'netease_sub_count';
 
-  final int artistCount;
+  int _djRadioCount = 0;
 
-  final int mvCount;
+  int get djRadioCount => _djRadioCount;
 
-  final int createDjRadioCount;
+  int _artistCount = 0;
 
-  final int createdPlaylistCount;
+  int get artistCount => _artistCount;
 
-  final int subPlaylistCount;
+  int _mvCount = 0;
 
-  const Counter({
-    @required this.djRadioCount,
-    @required this.artistCount,
-    @required this.mvCount,
-    @required this.createDjRadioCount,
-    @required this.createdPlaylistCount,
-    @required this.subPlaylistCount,
-    Key key,
-    @required Widget child,
-  })  : assert(child != null),
-        super(key: key, child: child);
+  int get mvCount => _mvCount;
+
+  int _createDjRadioCount = 0;
+
+  int get createDjRadioCount => _createDjRadioCount;
+
+  int _createdPlaylistCount = 0;
+
+  int get createdPlaylistCount => _createdPlaylistCount;
+
+  int _subPlaylistCount = 0;
+
+  int get subPlaylistCount => _subPlaylistCount;
+
+  void _handleData(Map data) {
+    _artistCount = data['artistCount'] ?? 0;
+    _djRadioCount = data['djRadioCount'] ?? 0;
+    _mvCount = data['mvCount'] ?? 0;
+    _createDjRadioCount = data['createDjRadioCount'] ?? 0;
+    _createdPlaylistCount = data['createdPlaylistCount'] ?? 0;
+    _subPlaylistCount = data['subPlaylistCount'] ?? 0;
+    notifyListeners();
+  }
+
+  final LoginState loginState;
+  final NeteaseRepository repository;
+  final NeteaseLocalData cache;
+
+  Counter(this.loginState, this.repository, this.cache) {
+    void _onLoginStateChanged() {
+      if (loginState.isLogin) {
+        scheduleMicrotask(_loadUserCounterData);
+      } else {
+        _handleData({});
+      }
+    }
+
+    loginState.addListener(() {
+      _onLoginStateChanged();
+    });
+    _onLoginStateChanged();
+  }
+
+  Future<void> _loadUserCounterData() async {
+    final c = await cache[key];
+    if (c != null) {
+      _handleData(c);
+    }
+    try {
+      final loaded = await repository.subCount();
+      cache[key] = loaded;//cache loaded data
+      _handleData(loaded);
+    } catch (e) {}
+  }
 
   static Counter of(BuildContext context) {
-    return context.inheritFromWidgetOfExactType(Counter) as Counter;
+    return ScopedModel.of<Counter>(context, rebuildOnChange: true);
   }
 
-  static Future refresh(BuildContext context) {
-    _CounterHolderState state =
-        context.ancestorStateOfType(const TypeMatcher<_CounterHolderState>());
-    return state._refresh();
-  }
-
-  @override
-  bool updateShouldNotify(Counter old) {
-    return djRadioCount != old.djRadioCount &&
-        artistCount != old.artistCount &&
-        mvCount != old.mvCount &&
-        createDjRadioCount != old.createDjRadioCount &&
-        createdPlaylistCount != old.createdPlaylistCount &&
-        subPlaylistCount != old.subPlaylistCount;
-  }
-}
-
-class CounterHolder extends StatefulWidget {
-  final Widget child;
-
-  final bool login;
-
-  const CounterHolder(this.login, {Key key, this.child}) : super(key: key);
-
-  @override
-  _CounterHolderState createState() => _CounterHolderState();
-}
-
-class _CounterHolderState extends State<CounterHolder> {
-  Map result;
-
-  @override
-  void initState() {
-    super.initState();
-    if (widget.login) {
-      _refresh();
-    }
-  }
-
-  @override
-  void didUpdateWidget(CounterHolder oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (widget.login && !oldWidget.login) {
-      _refresh();
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    if (result == null) {
-      return Counter(
-          djRadioCount: 0,
-          artistCount: 0,
-          mvCount: 0,
-          createDjRadioCount: 0,
-          createdPlaylistCount: 0,
-          subPlaylistCount: 0,
-          child: widget.child);
+  ///刷新当前登陆用户收藏数据
+  static Future refresh(BuildContext context) async {
+    final counter = of(context);
+    final loginState = LoginState.of(context, rebuildOnChange: false);
+    if (loginState.isLogin) {
+      await counter._loadUserCounterData();
     } else {
-      return Counter(
-        child: widget.child,
-        artistCount: result['artistCount'] ?? 0,
-        djRadioCount: result['djRadioCount'] ?? 0,
-        mvCount: result['mvCount'] ?? 0,
-        createDjRadioCount: result['createDjRadioCount'] ?? 0,
-        createdPlaylistCount: result['createdPlaylistCount'] ?? 0,
-        subPlaylistCount: result['subPlaylistCount'] ?? 0,
-      );
+      counter._handleData({});
     }
-  }
-
-  Future _refresh() {
-    final stream = NeteaseLocalData.withData(
-        "netease_sub_count", neteaseRepository.subCount());
-    return stream.listen((data) {
-      setState(() {
-        result = data;
-      });
-    }, onError: (error) {
-      debugPrint("on _refresh error $error");
-    }).asFuture();
   }
 }

@@ -32,9 +32,9 @@ class LoginState extends Model {
 
   LoginState() {
     scheduleMicrotask(() async {
-      final login = neteaseLocalData[persistenceKey];
+      final login = await neteaseLocalData[persistenceKey];
       if (login != null) {
-        _user = await login;
+        _user = login;
         debugPrint('persistence user :${_user['account']['id']}');
         notifyListeners();
         //访问api，刷新登陆状态
