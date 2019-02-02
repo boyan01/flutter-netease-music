@@ -1,6 +1,6 @@
 # Quiet 
 [![Build Status](https://travis-ci.com/boyan01/quiet-flutter.svg?branch=master)](https://travis-ci.com/boyan01/quiet-flutter)
-
+[![codecov](https://codecov.io/gh/boyan01/quiet-flutter/branch/master/graph/badge.svg)](https://codecov.io/gh/boyan01/quiet-flutter)
 
 仿网易云音乐，一边学习一边开发。希望能多点**star**，给予动力完成此项目。
 
