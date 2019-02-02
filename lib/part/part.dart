@@ -19,6 +19,8 @@ export 'tiles.dart';
 export 'downloads.dart';
 export 'package:quiet/part/material/dividers.dart';
 
+export 'package:scoped_model/scoped_model.dart';
+
 export 'netease/netease.dart';
 export 'netease/liked_song_list.dart';
 export 'netease/login.dart';
