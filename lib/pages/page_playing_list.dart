@@ -107,7 +107,7 @@ class _Header extends StatelessWidget {
                     showSimpleNotification(context, Text("添加到收藏成功"));
                   } else {
                     showSimpleNotification(context, Text("添加到收藏失败"),
-                        icon: Icon(Icons.error),
+                        leading: Icon(Icons.error),
                         background: Theme.of(context).errorColor);
                   }
                 },
