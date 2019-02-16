@@ -43,15 +43,19 @@ class NeteaseLocalData {
   }
 
   FutureOr operator [](key) async {
-    return _get(key);
+    return get(key);
   }
 
   void operator []=(key, value) {
     _put(value, key);
   }
 
-  Future _get(dynamic key) async {
-    return (await store).get(key);
+  Future<T> get<T>(dynamic key) async {
+    final result = await (await store).get(key);
+    if (result is T) {
+      return result;
+    }
+    return null;
   }
 
   Future _put(dynamic value, [dynamic key]) async {
@@ -59,7 +63,7 @@ class NeteaseLocalData {
   }
 
   Future<List<PlaylistDetail>> getUserPlaylist(int userId) async {
-    final data = await _get("user_playlist_$userId");
+    final data = await get("user_playlist_$userId");
     if (data == null) {
       return null;
     }
@@ -75,7 +79,7 @@ class NeteaseLocalData {
   }
 
   Future<PlaylistDetail> getPlaylistDetail(int playlistId) async {
-    final data = await _get("playlist_detail_$playlistId");
+    final data = await get("playlist_detail_$playlistId");
     return PlaylistDetail.fromMap(data);
   }
 

@@ -145,7 +145,7 @@ class _PinnedHeader extends StatelessWidget {
                         '(${Counter.of(context).mvCount + Counter.of(context).artistCount})'),
               ])),
               onTap: () {
-                notImplemented(context);
+                Navigator.pushNamed(context, ROUTE_MY_COLLECTION);
               },
             )),
       ]..removeWhere((v) => v == null),
