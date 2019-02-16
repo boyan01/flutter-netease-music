@@ -229,7 +229,7 @@ class _QuietState extends State<Quiet> {
       if (value.hasError) {
         showSimpleNotification(
             context, Text("播放歌曲${value.current?.title ?? ""}失败!"),
-            icon: Icon(Icons.error), background: Theme.of(context).errorColor);
+            leading: Icon(Icons.error), background: Theme.of(context).errorColor);
       }
     });
   }

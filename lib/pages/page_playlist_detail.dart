@@ -329,7 +329,7 @@ class _PlaylistBodyState extends State<_PlaylistBody> {
                   showSimpleNotification(context, Text("已成功删除歌曲"));
                 } else {
                   showSimpleNotification(context, Text("删除歌曲失败"),
-                      icon: Icon(Icons.error),
+                      leading: Icon(Icons.error),
                       background: Theme.of(context).errorColor);
                 }
               });

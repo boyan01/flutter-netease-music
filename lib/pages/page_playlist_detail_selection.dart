@@ -158,7 +158,7 @@ class PlaylistSelectionPageState extends State<PlaylistSelectionPage> {
                               background: Theme.of(context).errorColor);
                         } else {
                           showSimpleNotification(context, Text("删除失败"),
-                              icon: Icon(Icons.error),
+                              leading: Icon(Icons.error),
                               background: Theme.of(context).errorColor);
                         }
                       },

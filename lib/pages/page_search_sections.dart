@@ -61,7 +61,7 @@ class SongsResultSectionState extends State<SongsResultSection>
                             artistKey: "ar", albumKey: "al"));
                   } else {
                     showSimpleNotification(context, Text("播放歌曲失败!"),
-                        icon: Icon(Icons.notification_important),
+                        leading: Icon(Icons.notification_important),
                         background: Theme.of(context).errorColor);
                   }
                 },
