@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+
+import 'package:quiet/part/part.dart';
+
 import 'package:quiet/pages/collection/albums.dart';
 import 'package:quiet/pages/collection/articles.dart';
 import 'package:quiet/pages/collection/artists.dart';
@@ -25,12 +28,14 @@ class MyCollectionPage extends StatelessWidget {
             indicatorSize: TabBarIndicatorSize.label,
           ),
         ),
-        body: TabBarView(children: [
-          CollectionAlbums(),
-          CollectionArtists(),
-          CollectionVideos(),
-          CollectionArticles(),
-        ]),
+        body: BoxWithBottomPlayerController(
+          TabBarView(children: [
+            CollectionAlbums(),
+            CollectionArtists(),
+            CollectionVideos(),
+            CollectionArticles(),
+          ]),
+        ),
       ),
     );
   }
