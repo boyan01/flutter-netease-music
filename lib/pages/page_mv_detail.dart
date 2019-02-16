@@ -153,6 +153,7 @@ class _SimpleMvScreenForeground extends StatelessWidget {
     final model = ScopedModel.of<MvPlayerModel>(context);
     final data = model.mvData;
     return AnimatedMvController(
+        showBottomIndicator: true,
         top: Container(
           decoration: const BoxDecoration(
               gradient: const LinearGradient(

@@ -6,10 +6,16 @@ import 'mv_player_model.dart';
 typedef void MvControllerChangeCallback(bool show);
 
 ///祖先节点必须存在 [MvPlayerModel]
+///[top] 从顶部滑出
+///[center] 更改透明度浮现
+///[bottom] 从底部滑出
 class AnimatedMvController extends StatefulWidget {
   final Widget top;
   final Widget bottom;
   final Widget center;
+
+  ///当 controller 隐藏的是否是否显示底部的播放进度条
+  final bool showBottomIndicator;
 
   final MvControllerChangeCallback beforeChange;
   final MvControllerChangeCallback afterChange;
@@ -20,7 +26,8 @@ class AnimatedMvController extends StatefulWidget {
       @required this.bottom,
       @required this.center,
       this.beforeChange,
-      this.afterChange})
+      this.afterChange,
+      this.showBottomIndicator = false})
       : super(key: key);
 
   @override
@@ -116,25 +123,56 @@ class _AnimatedMvControllerState extends State<AnimatedMvController>
               _setUiVisibility(true);
             }
           },
-          child: Column(
+          child: Stack(
             children: <Widget>[
-              FractionalTranslation(
-                  child: widget.top,
-                  translation: Offset(0, _controller.value - 1)),
-              Expanded(
-                child: IgnorePointer(
-                  ignoring: _controller.value <= 0.1,
-                  child: Opacity(
-                      opacity: _controller.value,
-                      child: Center(child: widget.center)),
-                ),
+              Column(
+                children: <Widget>[
+                  FractionalTranslation(
+                      child: widget.top,
+                      translation: Offset(0, _controller.value - 1)),
+                  Expanded(
+                    child: IgnorePointer(
+                      ignoring: _controller.value <= 0.1,
+                      child: Opacity(
+                          opacity: _controller.value,
+                          child: Center(child: widget.center)),
+                    ),
+                  ),
+                  FractionalTranslation(
+                      child: widget.bottom,
+                      translation: Offset(0, 1 - _controller.value))
+                ],
               ),
-              FractionalTranslation(
-                  child: widget.bottom,
-                  translation: Offset(0, 1 - _controller.value))
+              _buildBottomIndicator(context),
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildBottomIndicator(BuildContext context) {
+    double progress;
+    final playerValue = MvPlayerModel.of(context).playerValue;
+    if (playerValue.initialized) {
+      progress = playerValue.position.inMilliseconds /
+          playerValue.duration.inMilliseconds;
+    }
+
+    return Visibility(
+      visible: widget.showBottomIndicator &&
+          _controller.status == AnimationStatus.dismissed,
+      child: Column(
+        children: <Widget>[
+          Spacer(),
+          Container(
+            height: 4,
+            child: LinearProgressIndicator(
+              value: progress,
+              backgroundColor: Colors.transparent,
+            ),
+          ),
+        ],
       ),
     );
   }
