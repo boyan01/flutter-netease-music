@@ -3,17 +3,13 @@ import 'package:quiet/pages/page_artist_detail.dart';
 import 'package:quiet/part/netease/netease_loader.dart';
 import 'package:quiet/repository/netease.dart';
 
-Future<Map> _getArtists() {
-  return neteaseRepository.doRequest(
-      'https://music.163.com/weapi/artist/sublist',
-      {'limit': 25, 'offset': 0, 'total': true});
-}
+import 'api.dart';
 
 class CollectionArtists extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return NeteaseLoader<Map>(
-        loadTask: _getArtists,
+        loadTask: MyCollectionApi.of(context).getArtists,
         builder: (context, result) {
           final data = result['data'] as List;
           return ListView(
