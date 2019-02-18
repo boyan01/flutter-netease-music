@@ -3,6 +3,8 @@ import 'package:quiet/part/loader.dart';
 
 import 'package:quiet/repository/netease.dart';
 
+bool enableCache = true;
+
 ///[T] 一定为 [neteaseLocalData] 所能保存的类型，例如 map, String , int
 class NeteaseLoader<T> extends StatelessWidget {
   final Future<T> Function() loadTask;
@@ -20,12 +22,17 @@ class NeteaseLoader<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    () async {
+      debugPrint("cache_$cacheKey : ${await neteaseLocalData.get(cacheKey)}");
+    }();
     return Loader<T>(
-      initialData: neteaseLocalData.get(cacheKey),
+      initialData: enableCache ? neteaseLocalData.get(cacheKey) : null,
       resultVerify: neteaseRepository.responseVerify,
       loadTask: loadTask,
       builder: (context, result) {
-        neteaseLocalData[cacheKey] = result;
+        if (enableCache) {
+          neteaseLocalData[cacheKey] = result;
+        }
         return builder(context, result);
       },
     );
