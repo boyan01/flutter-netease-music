@@ -62,24 +62,29 @@ class NeteaseRepository {
 
   Dio _dio;
 
+  PersistCookieJar _cookieJar;
+
   Future<Dio> get dio async {
     if (_dio != null) {
       return _dio;
     }
-    _dio = Dio(Options(
+    _dio = Dio(BaseOptions(
         method: "POST",
         baseUrl: _BASE_URL,
         headers: _header,
-        responseType: ResponseType.JSON,
+        responseType: ResponseType.json,
         contentType: ContentType.parse("application/x-www-form-urlencoded")));
 
     var path = (await getApplicationDocumentsDirectory()).path + "/.cookies/";
-    _dio.cookieJar = PersistCookieJar(path);
-    _dio.interceptor.request.onSend = (options) {
-      debugPrint("request header :${options.headers}");
+    _cookieJar = PersistCookieJar(path);
+
+    _dio.interceptors
+      ..add(CookieManager(_cookieJar))
+      ..add(InterceptorsWrapper(onRequest: (options) {
+        debugPrint("request header :${options.headers}");
 //      debugPrint("request cookie :${options.data}");
-      return options;
-    };
+        return options;
+      }));
     return _dio;
   }
 
@@ -116,7 +121,7 @@ class NeteaseRepository {
   ///登出,删除本地cookie信息
   Future<void> logout() async {
     //删除cookie
-    ((await dio).cookieJar as PersistCookieJar).delete(Uri.parse(_BASE_URL));
+    _cookieJar.delete(Uri.parse(_BASE_URL));
   }
 
   ///根据用户ID获取歌单
@@ -452,6 +457,8 @@ class NeteaseRepository {
       Options options,
       List<Cookie> cookies = const []}) async {
     debugPrint("netease request path = $path params = ${data.toString()}");
+    //init dio first
+    final dio = await this.dio;
 
     options ??= Options();
 
@@ -465,12 +472,11 @@ class NeteaseRepository {
         "url": path.replaceAll(RegExp(r"\w*api"), 'api'),
         "method": "post",
       }, EncryptType.linux);
-      options.baseUrl = null;
       options.headers["User-Agent"] =
           "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.90 Safari/537.36";
       path = "https://music.163.com/api/linux/forward";
     } else if (type == EncryptType.we) {
-      var cookies = (await dio).cookieJar.loadForRequest(Uri.parse(_BASE_URL));
+      var cookies = _cookieJar.loadForRequest(Uri.parse(_BASE_URL));
       var csrfToken =
           cookies.firstWhere((c) => c.name == "__csrf", orElse: () => null);
       data["csrf_token"] = csrfToken?.value ?? "";
@@ -478,15 +484,13 @@ class NeteaseRepository {
       data = await _encrypt(data, EncryptType.we);
       path = path.replaceAll(RegExp(r"\w*api"), 'weapi');
     }
-    options.headers["Cookie"] = (await dio)
-        .cookieJar
-        .loadForRequest(Uri.parse(_BASE_URL))
-          ..addAll(cookies);
+    options.headers["Cookie"] = _cookieJar.loadForRequest(Uri.parse(_BASE_URL))
+      ..addAll(cookies);
     options.headers['Content-Type'] = 'application/x-www-form-urlencoded';
 
     try {
-      Response response = await (await dio)
-          .post(path, data: Transformer.urlEncodeMap(data), options: options);
+      Response response = await dio.post(path,
+          data: Transformer.urlEncodeMap(data), options: options);
       if (response.data is Map) {
         return response.data;
       }
