@@ -76,7 +76,7 @@ class NeteaseRepository {
         contentType: ContentType.parse("application/x-www-form-urlencoded")));
 
     var path = (await getApplicationDocumentsDirectory()).path + "/.cookies/";
-    _cookieJar = PersistCookieJar(path);
+    _cookieJar = PersistCookieJar(dir: path);
 
     _dio.interceptors
       ..add(CookieManager(_cookieJar))
