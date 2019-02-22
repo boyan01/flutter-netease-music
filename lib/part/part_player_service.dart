@@ -3,10 +3,12 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:meta/meta.dart';
-import 'package:quiet/model/model.dart';
-import 'package:quiet/service/channel_media_player.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:overlay_support/overlay_support.dart';
+import 'package:quiet/model/model.dart';
+import 'package:quiet/part/player/lryic.dart';
+import 'package:quiet/service/channel_media_player.dart';
+import 'package:scoped_model/scoped_model.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 MusicPlayer quiet = MusicPlayer._private();
 
@@ -229,7 +231,8 @@ class _QuietState extends State<Quiet> {
       if (value.hasError) {
         showSimpleNotification(
             context, Text("播放歌曲${value.current?.title ?? ""}失败!"),
-            leading: Icon(Icons.error), background: Theme.of(context).errorColor);
+            leading: Icon(Icons.error),
+            background: Theme.of(context).errorColor);
       }
     });
   }
@@ -247,11 +250,16 @@ class _QuietState extends State<Quiet> {
     quiet.removeListener(_onPlayerChange);
   }
 
+  final _playingLyric = PlayingLyric(quiet);
+
   @override
   Widget build(BuildContext context) {
-    return PlayerState(
-      child: widget.child,
-      value: value,
+    return ScopedModel(
+      model: _playingLyric,
+      child: PlayerState(
+        child: widget.child,
+        value: value,
+      ),
     );
   }
 }

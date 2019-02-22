@@ -438,46 +438,33 @@ class _CloudLyricState extends State<_CloudLyric> {
         .textTheme
         .body1
         .copyWith(height: 1.5, fontSize: 16, color: Colors.white);
+    final playingLyric = PlayingLyric.of(context);
 
-    return Loader<LyricContent>(
-        key: Key("lyric_${widget.music.id}"),
-        loadTask: () async {
-          final str = await neteaseRepository.lyric(widget.music.id);
-          if (str == null) {
-            throw "暂无歌词";
-          }
-          return LyricContent.from(str);
-        },
-        failedWidgetBuilder: (context, result, msg) {
-          if (!(msg is String)) {
-            msg = "加载歌词出错";
-          }
-          return Container(
-            child: Center(
-              child: Text(msg, style: style),
-            ),
-          );
-        },
-        builder: (context, result) {
-          return LayoutBuilder(builder: (context, constraints) {
-            return Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-              child: Lyric(
-                lyric: result,
-                lyricLineStyle:
-                    style.copyWith(color: style.color.withOpacity(0.7)),
-                highlight: style.color,
-                position: position,
-                onTap: widget.onTap,
-                size: Size(
-                    constraints.maxWidth,
-                    constraints.maxHeight == double.infinity
-                        ? 0
-                        : constraints.maxHeight),
-              ),
-            );
-          });
-        });
+    if (playingLyric.hasLyric) {
+      return LayoutBuilder(builder: (context, constraints) {
+        return Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+          child: Lyric(
+            lyric: playingLyric.lyric,
+            lyricLineStyle: style.copyWith(color: style.color.withOpacity(0.7)),
+            highlight: style.color,
+            position: position,
+            onTap: widget.onTap,
+            size: Size(
+                constraints.maxWidth,
+                constraints.maxHeight == double.infinity
+                    ? 0
+                    : constraints.maxHeight),
+          ),
+        );
+      });
+    } else {
+      return Container(
+        child: Center(
+          child: Text(playingLyric.message, style: style),
+        ),
+      );
+    }
   }
 }
 

@@ -320,6 +320,11 @@ class LyricContent {
     return _durations[index];
   }
 
+  LyricEntry getLineByTimeStamp(final int timeStamp, final int anchorLine) {
+    final line = findLineByTimeStamp(timeStamp, anchorLine);
+    return this[line];
+  }
+
   ///
   ///根据时间戳来寻找匹配当前时刻的歌词
   ///

@@ -9,7 +9,6 @@ export 'package:quiet/model/model.dart';
 export 'part_player_service.dart';
 export 'route.dart';
 export 'part_music_list_provider.dart';
-export 'part_player.dart';
 export 'part_lyric.dart';
 export 'part_cache.dart';
 export 'loader.dart';
@@ -25,6 +24,8 @@ export 'netease/netease.dart';
 export 'netease/liked_song_list.dart';
 export 'netease/login.dart';
 export 'netease/counter.dart';
+
+export 'player/player.dart';
 
 void notImplemented(BuildContext context) {
   showSimpleNotification(context, Text("页面未完成"),

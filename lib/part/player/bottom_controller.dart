@@ -1,9 +1,9 @@
+library player;
+
 import 'package:flutter/material.dart';
 import 'package:quiet/pages/page_playing_list.dart';
-import 'package:quiet/part/route.dart';
+import 'package:quiet/part/part.dart';
 import 'package:quiet/repository/netease_image.dart';
-
-import 'part_player_service.dart';
 
 class BoxWithBottomPlayerController extends StatelessWidget {
   BoxWithBottomPlayerController(this.child);
@@ -12,7 +12,6 @@ class BoxWithBottomPlayerController extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     //hide bottom player controller when view inserts
     //bottom too height (such as typing with soft keyboard)
     bool hide = MediaQuery.of(context).viewInsets.bottom /
@@ -27,11 +26,29 @@ class BoxWithBottomPlayerController extends StatelessWidget {
   }
 }
 
+///底部当前音乐播放控制栏
 class BottomControllerBar extends StatelessWidget {
+  Widget _buildSubtitle(BuildContext context, Music music) {
+    final playingLyric = PlayingLyric.of(context);
+    if (!playingLyric.hasLyric) {
+      return Text(music.subTitle);
+    }
+    final line = playingLyric.lyric
+        .getLineByTimeStamp(
+            PlayerState.of(context, aspect: PlayerStateAspect.position)
+                .value
+                .position
+                .inMilliseconds,
+            0)
+        .line;
+    if (line.isEmpty) {
+      return Text(music.subTitle);
+    }
+    return Text(line);
+  }
+
   @override
   Widget build(BuildContext context) {
-    var state =
-        PlayerState.of(context, aspect: PlayerStateAspect.playbackState).value;
     var music =
         PlayerState.of(context, aspect: PlayerStateAspect.music).value.current;
     if (music == null) {
@@ -85,8 +102,9 @@ class BottomControllerBar extends StatelessWidget {
                         style: Theme.of(context).textTheme.body1,
                       ),
                       Padding(padding: const EdgeInsets.only(top: 2)),
-                      Text(
-                        music.subTitle,
+                      DefaultTextStyle(
+                        child: _buildSubtitle(context, music),
+                        maxLines: 1,
                         style: Theme.of(context).textTheme.caption,
                       ),
                       Spacer(),
@@ -94,30 +112,7 @@ class BottomControllerBar extends StatelessWidget {
                   ),
                 ),
               ),
-              Builder(builder: (context) {
-                if (state.isPlaying) {
-                  return IconButton(
-                      icon: Icon(Icons.pause),
-                      onPressed: () {
-                        quiet.pause();
-                      });
-                } else if (state.isBuffering) {
-                  return Container(
-                    height: 24,
-                    width: 24,
-                    //to fit  IconButton min width 48
-                    margin: EdgeInsets.only(right: 12),
-                    padding: EdgeInsets.all(4),
-                    child: CircularProgressIndicator(),
-                  );
-                } else {
-                  return IconButton(
-                      icon: Icon(Icons.play_arrow),
-                      onPressed: () {
-                        quiet.play();
-                      });
-                }
-              }),
+              _PauseButton(),
               IconButton(
                   tooltip: "当前播放列表",
                   icon: Icon(Icons.menu),
@@ -133,5 +128,37 @@ class BottomControllerBar extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+class _PauseButton extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final state =
+        PlayerState.of(context, aspect: PlayerStateAspect.playbackState).value;
+    return Builder(builder: (context) {
+      if (state.isPlaying) {
+        return IconButton(
+            icon: Icon(Icons.pause),
+            onPressed: () {
+              quiet.pause();
+            });
+      } else if (state.isBuffering) {
+        return Container(
+          height: 24,
+          width: 24,
+          //to fit  IconButton min width 48
+          margin: EdgeInsets.only(right: 12),
+          padding: EdgeInsets.all(4),
+          child: CircularProgressIndicator(),
+        );
+      } else {
+        return IconButton(
+            icon: Icon(Icons.play_arrow),
+            onPressed: () {
+              quiet.play();
+            });
+      }
+    });
   }
 }
