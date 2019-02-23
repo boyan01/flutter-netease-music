@@ -1,5 +1,5 @@
 import 'dart:math';
-import 'dart:ui';
+import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -488,6 +488,8 @@ class _AlbumCoverState extends State<_AlbumCover>
 
   ///专辑封面X偏移量
   ///[-screenWidth/2,screenWidth/2]
+  /// 0 表示当前播放音乐封面
+  /// -screenWidth/2 - 0 表示向左滑动 |_coverTranslateX| 距离，即滑动显示后一首歌曲的封面
   double _coverTranslateX = 0;
 
   bool _beDragging = false;
@@ -653,8 +655,17 @@ class _AlbumCoverState extends State<_AlbumCover>
           },
           onHorizontalDragEnd: (detail) {
             _beDragging = false;
+
+            ///滚动速度阈值
+            final vThreshold =
+                1.0 / (0.050 * MediaQuery.of(context).devicePixelRatio);
+
+            final sameDirection =
+                (_coverTranslateX > 0 && detail.primaryVelocity > 0) ||
+                    (_coverTranslateX < 0 && detail.primaryVelocity < 0);
             if (_coverTranslateX.abs() >
-                MediaQuery.of(context).size.width / 2) {
+                    MediaQuery.of(context).size.width / 2 ||
+                (sameDirection && detail.primaryVelocity.abs() > vThreshold)) {
               var des = MediaQuery.of(context).size.width;
               if (_coverTranslateX < 0) {
                 des = -des;
@@ -862,7 +873,7 @@ class _BlurBackground extends StatelessWidget {
           Colors.black45,
         ])),
         child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaY: 10, sigmaX: 10),
+          filter: ui.ImageFilter.blur(sigmaY: 10, sigmaX: 10),
           child: Container(
             color: Colors.black87.withOpacity(0.2),
           ),
