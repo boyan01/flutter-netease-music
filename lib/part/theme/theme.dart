@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 const _swatchNeteaseRed = const MaterialColor(0xFFdd4237, {
   900: const Color(0xFFae2a20),
@@ -23,8 +24,19 @@ const _swatchList = const [
 ];
 
 class QuietTheme extends Model {
-  static QuietTheme of(BuildContext context,
-      {bool rebuildOnChange = true}) {
+  static const _key = 'theme_index';
+
+  QuietTheme() {
+    SharedPreferences.getInstance().then((preference) {
+      _index = preference.getInt(_key) ?? 0;
+      if (_index < 0 || _index > all.length) {
+        _index = 0;
+      }
+      notifyListeners();
+    });
+  }
+
+  static QuietTheme of(BuildContext context, {bool rebuildOnChange = true}) {
     return ScopedModel.of<QuietTheme>(context,
         rebuildOnChange: rebuildOnChange);
   }
@@ -38,5 +50,8 @@ class QuietTheme extends Model {
   void setTheme(int index) {
     _index = index;
     notifyListeners();
+    SharedPreferences.getInstance().then((preference) {
+      preference.setInt(_key, _index);
+    });
   }
 }
