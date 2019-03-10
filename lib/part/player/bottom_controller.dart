@@ -14,9 +14,8 @@ class BoxWithBottomPlayerController extends StatelessWidget {
   Widget build(BuildContext context) {
     //hide bottom player controller when view inserts
     //bottom too height (such as typing with soft keyboard)
-    bool hide = MediaQuery.of(context).viewInsets.bottom /
-            MediaQuery.of(context).size.height >
-        0.4;
+    ///fixme [Scaffold#resizeToAvoidBottomInset] 影响了这个判断
+    bool hide = isSoftKeyboardDisplay(MediaQuery.of(context));
     return Column(
       children: <Widget>[
         Expanded(child: child),

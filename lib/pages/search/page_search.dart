@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:keyboard_visibility/keyboard_visibility.dart';
 import 'package:quiet/pages/search/model_search_history.dart';
 import 'package:quiet/part/part.dart';
 import 'package:quiet/repository/netease.dart';
@@ -83,11 +82,7 @@ class _NeteaseSearchPageState extends State<NeteaseSearchPage> {
   ///the query of [_SearchResultPage]
   String _searchedQuery = "";
 
-  bool showSuggestion = false;
-
   bool initialState = true;
-
-  KeyboardVisibilityNotification keyboardVisibilityNotification;
 
   SearchHistory _searchHistory = SearchHistory();
 
@@ -97,16 +92,6 @@ class _NeteaseSearchPageState extends State<NeteaseSearchPage> {
     _queryTextController.addListener(_onQueryTextChanged);
     widget.animation.addStatusListener(_onAnimationStatusChanged);
     _focusNode.addListener(_onFocusChanged);
-    keyboardVisibilityNotification = KeyboardVisibilityNotification()
-      ..addNewListener(onShow: () {
-        setState(() {
-          showSuggestion = true;
-        });
-      }, onHide: () {
-        setState(() {
-          showSuggestion = false;
-        });
-      });
   }
 
   @override
@@ -114,7 +99,6 @@ class _NeteaseSearchPageState extends State<NeteaseSearchPage> {
     _queryTextController.removeListener(_onQueryTextChanged);
     widget.animation.removeStatusListener(_onAnimationStatusChanged);
     _focusNode.removeListener(_onFocusChanged);
-    keyboardVisibilityNotification.dispose();
     super.dispose();
   }
 
@@ -158,6 +142,7 @@ class _NeteaseSearchPageState extends State<NeteaseSearchPage> {
                 actions: buildActions(context),
                 bottom: tabs,
               ),
+              resizeToAvoidBottomInset: false,
               body: BoxWithBottomPlayerController(initialState
                   ? _EmptyQuerySuggestionSection(
                       suggestionSelectedCallback: (query) => _search(query))
@@ -203,19 +188,7 @@ class _NeteaseSearchPageState extends State<NeteaseSearchPage> {
   }
 
   void _onFocusChanged() {
-    if (_focusNode.hasFocus) {
-      if (!showSuggestion) {
-        setState(() {
-          showSuggestion = true;
-        });
-      }
-    } else {
-      if (showSuggestion) {
-        setState(() {
-          showSuggestion = false;
-        });
-      }
-    }
+    setState(() {});
   }
 
   List<Widget> buildActions(BuildContext context) {
@@ -233,7 +206,9 @@ class _NeteaseSearchPageState extends State<NeteaseSearchPage> {
   }
 
   Widget buildSuggestions(BuildContext context) {
-    if (!showSuggestion || query.isEmpty) {
+    if (query.isEmpty ||
+        !isSoftKeyboardDisplay(MediaQuery.of(context)) ||
+        !_focusNode.hasFocus) {
       return Container(height: 0, width: 0);
     }
     return SuggestionOverflow(

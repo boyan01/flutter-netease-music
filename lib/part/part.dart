@@ -26,6 +26,7 @@ export 'netease/login.dart';
 export 'netease/counter.dart';
 
 export 'player/player.dart';
+export 'utils/utils.dart';
 
 void notImplemented(BuildContext context) {
   showSimpleNotification(context, Text("页面未完成"),
