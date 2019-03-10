@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:quiet/pages/page_daily_playlist.dart';
 import 'package:quiet/pages/page_leaderboard.dart';
 import 'package:quiet/pages/page_login.dart';
-import 'package:quiet/pages/page_main.dart';
+import 'package:quiet/pages/main/page_main.dart';
 import 'package:quiet/pages/page_playing.dart';
 import 'package:quiet/pages/page_downloads.dart';
 import 'package:quiet/pages/page_my_dj.dart';
 import 'package:quiet/pages/collection/page_collections.dart';
 
 export 'package:quiet/pages/page_login.dart';
-export 'package:quiet/pages/page_main.dart';
+export 'package:quiet/pages/main/page_main.dart';
 export 'package:quiet/pages/page_playlist_detail.dart';
 export 'package:quiet/pages/page_playing.dart';
 export 'package:quiet/pages/page_leaderboard.dart';
