@@ -59,8 +59,8 @@ class _MainPlaylistState extends State<MainPlaylistPage>
                   result.where((p) => p.creator["userId"] != userId).toList();
               return ListView(children: [
                 _PinnedHeader(),
-                _ExpansionPlaylists("创建的歌单", created),
-                _ExpansionPlaylists("收藏的歌单", subscribed)
+                _ExpansionPlaylistGroup.fromPlaylist("创建的歌单", created),
+                _ExpansionPlaylistGroup.fromPlaylist("收藏的歌单", subscribed)
               ]);
             }),
       );
@@ -153,19 +153,116 @@ class _PinnedHeader extends StatelessWidget {
   }
 }
 
-class _ExpansionPlaylists extends StatelessWidget {
-  _ExpansionPlaylists(this.title, this.playlist);
+class _ExpansionPlaylistGroup extends StatefulWidget {
+  _ExpansionPlaylistGroup(this.title, this.children);
 
-  final List<PlaylistDetail> playlist;
+  _ExpansionPlaylistGroup.fromPlaylist(String title, List<PlaylistDetail> list)
+      : this(title, list.map((p) => _ItemPlaylist(playlist: p)).toList());
 
   final String title;
 
+  final List<Widget> children;
+
+  @override
+  _ExpansionPlaylistGroupState createState() => _ExpansionPlaylistGroupState();
+}
+
+class _ExpansionPlaylistGroupState extends State<_ExpansionPlaylistGroup>
+    with SingleTickerProviderStateMixin {
+  static final Animatable<double> _easeInTween =
+      CurveTween(curve: Curves.easeIn);
+  static final Animatable<double> _quarterTween =
+      Tween<double>(begin: 0.0, end: 0.25);
+
+  AnimationController _controller;
+
+  Animation<double> _iconTurns;
+  Animation<double> _heightFactor;
+
+  bool _expanded;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 300));
+    _iconTurns = _controller.drive(_quarterTween.chain(_easeInTween));
+    _heightFactor = _controller.drive(_easeInTween);
+
+    _expanded = PageStorage.of(context)?.readState(context) ?? true;
+    if (_expanded) {
+      _controller.value = 1.0;
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  void _handleTap() {
+    setState(() {
+      _expanded = !_expanded;
+      if (_expanded) {
+        _controller.forward();
+      } else {
+        _controller.reverse().then<void>((_) {
+          if (mounted) {
+            setState(() {}); //Rebuild without widget.children.
+          }
+        });
+      }
+      PageStorage.of(context)?.writeState(context, _expanded);
+    });
+  }
+
+  Widget _buildChildren(BuildContext context, Widget child) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: <Widget>[
+        _buildTitle(context),
+        ClipRect(
+          child: Align(
+            heightFactor: _heightFactor.value,
+            child: child,
+          ),
+        )
+      ],
+    );
+  }
+
+  Widget _buildTitle(BuildContext context) {
+    final color = Theme.of(context).textTheme.caption.color;
+    return Container(
+      color: const Color.fromARGB(255, 243, 243, 243),
+      padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 4),
+      child: InkWell(
+        onTap: _handleTap,
+        child: Row(
+          children: <Widget>[
+            RotationTransition(
+                turns: _iconTurns,
+                child: Icon(
+                  Icons.chevron_right,
+                  color: color,
+                )),
+            SizedBox(width: 4),
+            Text('${widget.title}(${widget.children.length})',
+                style: TextStyle(color: color)),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return ExpansionTile(
-      title: Text(title),
-      initiallyExpanded: true,
-      children: playlist.map((e) => _ItemPlaylist(playlist: e)).toList(),
+    final bool closed = !_expanded && _controller.isDismissed;
+    return AnimatedBuilder(
+      animation: _controller.view,
+      builder: _buildChildren,
+      child: closed ? null : Column(children: widget.children),
     );
   }
 }
