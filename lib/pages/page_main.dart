@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:quiet/pages/page_main_cloud.dart';
 import 'package:quiet/pages/page_main_playlist.dart';
-import 'package:quiet/pages/page_search.dart';
+import 'package:quiet/pages/search/page_search.dart';
 import 'package:quiet/part/part.dart';
 import 'package:quiet/repository/netease.dart';
 
