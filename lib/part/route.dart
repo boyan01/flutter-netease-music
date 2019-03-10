@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:quiet/pages/page_daily_playlist.dart';
+import 'package:quiet/pages/playlist/page_daily_playlist.dart';
 import 'package:quiet/pages/page_leaderboard.dart';
 import 'package:quiet/pages/page_login.dart';
 import 'package:quiet/pages/main/page_main.dart';
@@ -14,7 +14,7 @@ export 'package:quiet/pages/main/page_main.dart';
 export 'package:quiet/pages/page_playlist_detail.dart';
 export 'package:quiet/pages/page_playing.dart';
 export 'package:quiet/pages/page_leaderboard.dart';
-export 'package:quiet/pages/page_daily_playlist.dart';
+export 'package:quiet/pages/playlist/page_daily_playlist.dart';
 export 'package:quiet/pages/page_mv_detail.dart';
 export 'package:quiet/pages/page_fullscreen_mv_player.dart';
 export 'package:quiet/pages/collection/page_collections.dart';
