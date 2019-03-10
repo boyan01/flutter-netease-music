@@ -52,7 +52,7 @@ class _MainPageState extends State<MainPage>
                             leading: Icon(Icons.settings),
                             title: Text("设置"),
                             onTap: () {
-                              //TODO to setting
+                              Navigator.pushNamed(context, ROUTE_SETTING);
                             },
                           ),
                           Divider(height: 0, indent: 16),
