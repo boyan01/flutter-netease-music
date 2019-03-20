@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:quiet/pages/playlist/music_list.dart';
 import 'package:quiet/part/part.dart';
 import 'package:quiet/service/channel_downloads.dart';
 
@@ -32,12 +33,14 @@ class _DownloadedPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final completed = DownloadState.of(context).completed;
-    return ListView.builder(
-        itemCount: completed.length,
-        itemBuilder: (context, index) {
-          return SongTile(completed[index].extras, 0,
-              leadingType: SongTileLeadingType.none);
-        });
+    return MusicList(
+      musics: const [],
+      child: ListView.builder(
+          itemCount: completed.length,
+          itemBuilder: (context, index) {
+            return MusicTile(completed[index].extras);
+          }),
+    );
   }
 }
 

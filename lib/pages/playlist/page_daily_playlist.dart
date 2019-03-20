@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:quiet/pages/playlist/music_list.dart';
 import 'package:quiet/part/part.dart';
 import 'package:quiet/repository/netease.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -32,8 +33,19 @@ class DailyPlaylistPage extends StatelessWidget {
                   .cast<Map>()
                   .map(mapJsonToMusic)
                   .toList();
-              return _DailyList(
-                  SongTileProvider("playlist_daily_recommend", list));
+              return MusicList(
+                  token: 'playlist_daily_recommend',
+                  musics: list,
+                  trailingBuilder: MusicList.defaultTrailingBuilder,
+                  leadingBuilder: MusicList.coverLeadingBuilder,
+                  onMusicTap: MusicList.defaultOnTap,
+                  child: ListView.builder(itemBuilder: (context, index) {
+                    if (index == 0) {
+                      return MusicListHeader(list.length);
+                    } else {
+                      return MusicTile(list[index - 1]);
+                    }
+                  }));
             }),
       ),
     );
@@ -49,41 +61,14 @@ class _Header extends StatelessWidget {
           image: DecorationImage(
               fit: BoxFit.cover,
               image: AssetImage("assets/daily_list_background.webp"))),
-      height: 180,
+      height: 150,
       child: Container(
         padding: EdgeInsets.only(left: 16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Spacer(),
-            Container(
-              height: 80,
-              child: AspectRatio(
-                aspectRatio: 1,
-                child: Stack(
-                  children: <Widget>[
-                    Icon(
-                      Icons.calendar_today,
-                      size: 80,
-                      color: Theme.of(context).primaryIconTheme.color,
-                    ),
-                    Container(
-                      child: Align(
-                        alignment: Alignment(0, 0.5),
-                        child: Text(
-                          DateTime.now().day.toString(),
-                          style: Theme.of(context)
-                              .primaryTextTheme
-                              .body1
-                              .copyWith(
-                                  fontSize: 40, fontWeight: FontWeight.w900),
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-              ),
-            ),
+            _Calendar(),
             Padding(padding: EdgeInsets.only(top: 12)),
             Row(
               children: <Widget>[
@@ -105,21 +90,35 @@ class _Header extends StatelessWidget {
   }
 }
 
-class _DailyList extends StatelessWidget {
-  _DailyList(this.songTileProvider);
-
-  final SongTileProvider songTileProvider;
-
+class _Calendar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-        itemCount: songTileProvider.musics.length + 2,
-        itemBuilder: (context, int index) {
-          if (index == 0) {
-            return _Header();
-          } else {
-            return songTileProvider.buildWidget(index - 1, context);
-          }
-        });
+    return Container(
+      height: 64,
+      child: AspectRatio(
+        aspectRatio: 1,
+        child: Stack(
+          children: <Widget>[
+            Icon(
+              Icons.calendar_today,
+              size: 64,
+              color: Theme.of(context).primaryIconTheme.color,
+            ),
+            Container(
+              child: Align(
+                alignment: Alignment(0, 0.5),
+                child: Text(
+                  DateTime.now().day.toString(),
+                  style: Theme.of(context)
+                      .primaryTextTheme
+                      .body1
+                      .copyWith(fontSize: 28, fontWeight: FontWeight.w400),
+                ),
+              ),
+            )
+          ],
+        ),
+      ),
+    );
   }
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:quiet/part/route.dart';
 import 'package:quiet/repository/netease_image.dart';
-import 'package:quiet/pages/page_playlist_detail.dart';
 
 class AlbumTile extends StatelessWidget {
   const AlbumTile({Key key, @required this.album, this.subtitle})
