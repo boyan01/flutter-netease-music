@@ -17,7 +17,6 @@ export 'netease/login.dart';
 export 'netease/netease.dart';
 export 'part_cache.dart';
 export 'part_lyric.dart';
-export 'part_music_list_provider.dart';
 export 'part_player_service.dart';
 export 'part_utils.dart';
 export 'player/player.dart';

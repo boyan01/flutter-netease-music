@@ -1,4 +1,10 @@
-part of "page_playlist_detail.dart";
+import 'package:flutter/material.dart';
+import 'package:quiet/pages/page_artist_detail.dart';
+import 'package:quiet/pages/page_comment.dart';
+import 'package:quiet/pages/playlist/music_list.dart';
+import 'package:quiet/pages/playlist/page_playlist_detail_selection.dart';
+import 'package:quiet/part/part.dart';
+import 'package:quiet/repository/netease.dart';
 
 class AlbumDetailPage extends StatefulWidget {
   final int albumId;
@@ -13,48 +19,21 @@ class AlbumDetailPage extends StatefulWidget {
 }
 
 class _AlbumDetailPageState extends State<AlbumDetailPage> {
-  Color primaryColor = _default_background;
-
-  ///disable primary color generate by [loadPrimaryColor]
-  ///because of [PaletteGenerator] bad performance
-  bool primaryColorGenerated = false;
-
-  ///根据album的cover image 生成 primary color
-  ///此方法的流程只会在初始化时走一次
-  void _generatePrimaryColor(Map album) async {
-    if (primaryColorGenerated) {
-      return;
-    }
-    //不管是否成功生成主颜色，都视为成功生成
-    primaryColorGenerated = true;
-    final color =
-        await PaletteGenerator.getPrimaryColor(NeteaseImage(album["picUrl"]));
-    setState(() {
-      this.primaryColor = color;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
-    return Theme(
-        data: Theme.of(context).copyWith(
-            primaryColor: primaryColor,
-            primaryColorDark: primaryColor,
-            accentColor: primaryColor),
-        child: Scaffold(
-          body: Loader<Map>(
-              loadTask: () => neteaseRepository.albumDetail(widget.albumId),
-              resultVerify: neteaseRepository.responseVerify,
-              builder: (context, result) {
-                _generatePrimaryColor(result["album"]);
-                return _AlbumBody(
-                  album: result["album"],
-                  musicList: mapJsonListToMusicList(result["songs"],
-                          artistKey: "ar", albumKey: "al") ??
-                      [],
-                );
-              }),
-        ));
+    return Scaffold(
+      body: Loader<Map>(
+          loadTask: () => neteaseRepository.albumDetail(widget.albumId),
+          resultVerify: neteaseRepository.responseVerify,
+          builder: (context, result) {
+            return _AlbumBody(
+              album: result["album"],
+              musicList: mapJsonListToMusicList(result["songs"],
+                      artistKey: "ar", albumKey: "al") ??
+                  [],
+            );
+          }),
+    );
   }
 }
 
@@ -72,8 +51,6 @@ class _AlbumBody extends StatefulWidget {
 }
 
 class _AlbumBodyState extends State<_AlbumBody> {
-  SongTileProvider _songTileProvider;
-
   ScrollController scrollController;
 
   ValueNotifier<double> appBarOpacity = ValueNotifier(0);
@@ -81,13 +58,11 @@ class _AlbumBodyState extends State<_AlbumBody> {
   @override
   void initState() {
     super.initState();
-    _songTileProvider =
-        SongTileProvider("album_${widget.album["id"]}", widget.musicList);
     scrollController = ScrollController();
     scrollController.addListener(() {
       var scrollHeight = scrollController.offset;
       double appBarHeight = MediaQuery.of(context).padding.top + kToolbarHeight;
-      double areaHeight = (_HEIGHT_HEADER - appBarHeight);
+      double areaHeight = (HEIGHT_HEADER - appBarHeight);
       this.appBarOpacity.value = (scrollHeight / areaHeight).clamp(0.0, 1.0);
     });
   }
@@ -100,26 +75,33 @@ class _AlbumBodyState extends State<_AlbumBody> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: <Widget>[
-        BoxWithBottomPlayerController(
-          ListView.builder(
-            padding: const EdgeInsets.all(0),
-            itemCount: 1 + (_songTileProvider?.size ?? 0),
-            itemBuilder: _buildList,
-            controller: scrollController,
+    return MusicList(
+      token: 'album_${widget.album['id']}',
+      musics: widget.musicList,
+      onMusicTap: MusicList.defaultOnTap,
+      leadingBuilder: MusicList.indexedLeadingBuilder,
+      trailingBuilder: MusicList.defaultTrailingBuilder,
+      child: Stack(
+        children: <Widget>[
+          BoxWithBottomPlayerController(
+            ListView.builder(
+              padding: const EdgeInsets.all(0),
+              itemCount: widget.musicList.length + 2,
+              itemBuilder: _buildList,
+              controller: scrollController,
+            ),
           ),
-        ),
-        Column(
-          children: <Widget>[
-            _OpacityTitle(
-              defaultName: "专辑",
-              name: widget.album["name"],
-              appBarOpacity: appBarOpacity,
-            )
-          ],
-        )
-      ],
+          Column(
+            children: <Widget>[
+              OpacityTitle(
+                defaultName: "专辑",
+                name: widget.album["name"],
+                appBarOpacity: appBarOpacity,
+              )
+            ],
+          )
+        ],
+      ),
     );
   }
 
@@ -129,10 +111,14 @@ class _AlbumBodyState extends State<_AlbumBody> {
           album: widget.album, musicList: widget.musicList);
     }
     if (widget.musicList.isEmpty) {
-      return _EmptyPlaylistSection();
+      return Container(
+        child: Text('暂无音乐'),
+      );
     }
-    return _songTileProvider?.buildWidget(index - 1, context,
-        showAlbumPopupItem: false);
+    if (index == 1) {
+      return MusicListHeader(widget.musicList.length);
+    }
+    return MusicTile(widget.musicList[index - 2]);
   }
 }
 
@@ -153,7 +139,7 @@ class _AlbumDetailHeader extends StatelessWidget {
             Artist(name: m["name"], id: m["id"], imageUrl: m["img1v1Url"]))
         .toList(growable: false);
 
-    return _DetailHeader(
+    return DetailHeader(
         shareCount: album["info"]["shareCount"],
         commentCount: album["info"]["commentCount"],
         onCommentTap: () {
@@ -167,7 +153,7 @@ class _AlbumDetailHeader extends StatelessWidget {
             return PlaylistSelectionPage(list: musicList);
           }));
         },
-        onDownloadTap: () => _downloadList(context, musicList),
+        onDownloadTap: () => downloadList(context, musicList),
         onShareTap: () => notImplemented(context),
         content: Container(
           padding: EdgeInsets.symmetric(vertical: 16),
