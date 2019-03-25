@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:overlay_support/overlay_support.dart';
 import 'package:quiet/part/part.dart';
 
 class LoginPage extends StatefulWidget {
@@ -7,6 +8,8 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginState extends State<LoginPage> {
+  final GlobalKey<FormState> _formState = GlobalKey();
+
   TextEditingController _phoneController;
   TextEditingController _passwordController;
 
@@ -30,12 +33,11 @@ class _LoginState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          leading: IconButton(
-              icon: Icon(Icons.arrow_back),
-              onPressed: () => Navigator.pop(context)),
           title: Text("登录"),
         ),
         body: Form(
+          key: _formState,
+          autovalidate: true,
           child: SingleChildScrollView(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: Column(
@@ -77,30 +79,11 @@ class _LoginState extends State<LoginPage> {
                 const SizedBox(
                   height: 24,
                 ),
-                Builder(
-                  builder: (context) => RaisedButton(
-                      onPressed: () async {
-                        if (Form.of(context).validate()) {
-                          showDialog(
-                              context: context, builder: _buildLoginDialog);
-                          Form.of(context);
-                          var result = await LoginState.of(context,
-                                  rebuildOnChange: false)
-                              .login(_phoneController.text,
-                                  _passwordController.text);
-                          if (result["code"] == 200) {
-                            Navigator.popUntil(
-                                context, ModalRoute.withName("/"));
-                          } else {
-                            Navigator.pop(context); //dismiss dialog
-                            setState(() {
-                              _loginFailedMessage =
-                                  result["msg"] ?? "登录失败"; //login failed
-                            });
-                          }
-                        }
-                      },
-                      child: Text("点击登录")),
+                RaisedButton(
+                  onPressed: _onLogin,
+                  child: Text("点击登录",
+                      style: Theme.of(context).primaryTextTheme.body1),
+                  color: Theme.of(context).primaryColor,
                 ),
               ],
             ),
@@ -108,13 +91,22 @@ class _LoginState extends State<LoginPage> {
         ));
   }
 
-  Widget _buildLoginDialog(BuildContext context) {
-    return Dialog(
-      child: SizedBox(
-        height: 200,
-        child: Center(child: CircularProgressIndicator()),
-      ),
-    );
+  void _onLogin() async {
+    if (_formState.currentState.validate()) {
+      try {
+        var result = await showLoaderOverlay(
+            context,
+            UserAccount.of(context, rebuildOnChange: false)
+                .login(_phoneController.text, _passwordController.text));
+        if (result["code"] == 200) {
+          Navigator.pop(context); //login succeed
+        } else {
+          showSimpleNotification(context, Text(result["msg"] ?? "登录失败"));
+        }
+      } catch (e) {
+        showSimpleNotification(context, Text('$e'));
+      }
+    }
   }
 }
 
@@ -152,7 +144,7 @@ class _PasswordFieldState extends State<PasswordField> {
           },
           child: Icon(
             _obscureText ? Icons.visibility : Icons.visibility_off,
-            semanticLabel: _obscureText ? 'show password' : 'hide password',
+            semanticLabel: _obscureText ? '显示密码' : '隐藏密码',
           ),
         ),
       ),

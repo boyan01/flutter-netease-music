@@ -197,7 +197,7 @@ class _PlaylistBodyState extends State<_PlaylistBody> {
     return MusicList(
       token: "playlist_${widget.playlist.id}",
       musics: widget.musicList,
-      remove: widget.playlist.creator["userId"] != LoginState.of(context).userId
+      remove: widget.playlist.creator["userId"] != UserAccount.of(context).userId
           ? null
           : (music) async {
               var result = await neteaseRepository.playlistTracksEdit(
@@ -281,7 +281,7 @@ class _PlaylistBodyState extends State<_PlaylistBody> {
     }
 
     bool owner =
-        widget.playlist.creator["userId"] == LoginState.of(context).userId;
+        widget.playlist.creator["userId"] == UserAccount.of(context).userId;
     if (index == 1) {
       Widget tail;
       if (!owner) {

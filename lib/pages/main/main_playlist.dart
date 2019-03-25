@@ -22,11 +22,11 @@ class _MainPlaylistState extends State<MainPlaylistPage>
 
   @override
   Widget build(BuildContext context) {
-    final userId = LoginState.of(context).userId;
+    final userId = UserAccount.of(context).userId;
 
     Widget widget;
 
-    if (!LoginState.of(context).isLogin) {
+    if (!UserAccount.of(context).isLogin) {
       widget = _PinnedHeader();
     } else {
       widget = RefreshIndicator(
@@ -78,7 +78,7 @@ class _PinnedHeader extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
-        LoginState.of(context).isLogin
+        UserAccount.of(context).isLogin
             ? null
             : DividerWrapper(
                 child: ListTile(

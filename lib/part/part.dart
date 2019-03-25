@@ -12,7 +12,7 @@ export 'dialogs.dart';
 export 'loader.dart';
 export 'netease/counter.dart';
 export 'netease/liked_song_list.dart';
-export 'netease/login.dart';
+export 'package:quiet/pages/account/account.dart';
 export 'netease/netease.dart';
 export 'part_cache.dart';
 export 'part_lyric.dart';
