@@ -111,7 +111,7 @@ class _MainPageState extends State<MainPage>
 class _AppDrawerHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    if (LoginState.of(context).isLogin) {
+    if (UserAccount.of(context).isLogin) {
       return _buildHeader(context);
     } else {
       return _buildHeaderNotLogin(context);
@@ -119,11 +119,11 @@ class _AppDrawerHeader extends StatelessWidget {
   }
 
   Widget _buildHeader(BuildContext context) {
-    Map profile = LoginState.of(context).user["profile"];
+    Map profile = UserAccount.of(context).user["profile"];
     return UserAccountsDrawerHeader(
       currentAccountPicture: InkResponse(
         onTap: () {
-          if (LoginState.of(context).isLogin) {
+          if (UserAccount.of(context).isLogin) {
             debugPrint("work in process...");
           }
         },
@@ -145,7 +145,7 @@ class _AppDrawerHeader extends StatelessWidget {
             onPressed: () async {
               if (await showConfirmDialog(context, Text('确认退出登录吗？'),
                   positiveLabel: '退出登录')) {
-                LoginState.of(context, rebuildOnChange: false).logout();
+                UserAccount.of(context, rebuildOnChange: false).logout();
               }
             },
           ),

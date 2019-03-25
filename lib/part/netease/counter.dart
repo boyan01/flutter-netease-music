@@ -45,23 +45,23 @@ class Counter extends Model {
     notifyListeners();
   }
 
-  final LoginState loginState;
+  final UserAccount account;
   final NeteaseRepository repository;
   final NeteaseLocalData cache;
 
-  Counter(this.loginState, this.repository, this.cache) {
-    void _onLoginStateChanged() {
-      if (loginState.isLogin) {
+  Counter(this.account, this.repository, this.cache) {
+    void _onAccountStateChanged() {
+      if (account.isLogin) {
         scheduleMicrotask(_loadUserCounterData);
       } else {
         _handleData({});
       }
     }
 
-    loginState.addListener(() {
-      _onLoginStateChanged();
+    account.addListener(() {
+      _onAccountStateChanged();
     });
-    _onLoginStateChanged();
+    _onAccountStateChanged();
   }
 
   Future<void> _loadUserCounterData() async {
@@ -83,8 +83,8 @@ class Counter extends Model {
   ///刷新当前登陆用户收藏数据
   static Future refresh(BuildContext context) async {
     final counter = of(context);
-    final loginState = LoginState.of(context, rebuildOnChange: false);
-    if (loginState.isLogin) {
+    final account = UserAccount.of(context, rebuildOnChange: false);
+    if (account.isLogin) {
       await counter._loadUserCounterData();
     } else {
       counter._handleData({});

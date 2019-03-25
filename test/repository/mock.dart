@@ -6,4 +6,4 @@ class MockNeteaseRepository extends Mock implements NeteaseRepository {}
 
 class MockNeteaseLocalData extends Mock implements NeteaseLocalData {}
 
-class MockLoginState extends Mock implements LoginState {}
+class MockLoginState extends Mock implements UserAccount {}

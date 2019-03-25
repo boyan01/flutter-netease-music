@@ -17,22 +17,22 @@ class Netease extends StatefulWidget {
 }
 
 class NeteaseState extends State<Netease> {
-  final LoginState loginState = LoginState();
+  final UserAccount account = UserAccount();
 
   Counter counter;
 
   @override
   void initState() {
     super.initState();
-    counter = Counter(loginState, neteaseRepository, neteaseLocalData);
+    counter = Counter(account, neteaseRepository, neteaseLocalData);
   }
 
   @override
   Widget build(BuildContext context) {
-    return ScopedModel<LoginState>(
-      model: loginState,
+    return ScopedModel<UserAccount>(
+      model: account,
       child: ScopedModel<LikedSongList>(
-        model: LikedSongList(loginState),
+        model: LikedSongList(account),
         child: ScopedModel<Counter>(
           model: counter,
           child: widget.child,
