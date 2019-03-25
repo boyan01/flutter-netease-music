@@ -9,7 +9,6 @@ export 'package:quiet/part/material/dividers.dart';
 export 'package:scoped_model/scoped_model.dart';
 
 export 'dialogs.dart';
-export 'downloads.dart';
 export 'loader.dart';
 export 'netease/counter.dart';
 export 'netease/liked_song_list.dart';

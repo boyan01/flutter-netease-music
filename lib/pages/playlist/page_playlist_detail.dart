@@ -9,7 +9,6 @@ import 'package:quiet/pages/playlist/page_playlist_detail_selection.dart';
 import 'package:quiet/pages/playlist/playlist_internal_search.dart';
 import 'package:quiet/part/part.dart';
 import 'package:quiet/repository/netease.dart';
-import 'package:quiet/service/channel_downloads.dart';
 
 import 'music_list.dart';
 
@@ -461,7 +460,6 @@ class DetailHeader extends StatelessWidget {
       @required this.content,
       this.onCommentTap,
       this.onShareTap,
-      this.onDownloadTap,
       this.onSelectionTap,
       int commentCount = 0,
       int shareCount = 0})
@@ -473,7 +471,6 @@ class DetailHeader extends StatelessWidget {
 
   final GestureTapCallback onCommentTap;
   final GestureTapCallback onShareTap;
-  final GestureTapCallback onDownloadTap;
   final GestureTapCallback onSelectionTap;
 
   final int commentCount;
@@ -505,7 +502,6 @@ class DetailHeader extends StatelessWidget {
                           Icons.share,
                           shareCount > 0 ? shareCount.toString() : "分享",
                           onShareTap),
-                      _HeaderAction(Icons.file_download, "下载", onDownloadTap),
                       _HeaderAction(Icons.check_box, "多选", onSelectionTap),
                     ],
                   ),
@@ -516,22 +512,6 @@ class DetailHeader extends StatelessWidget {
         ),
       ],
     );
-  }
-}
-
-Future<void> downloadList(BuildContext context, List<Music> musicList) async {
-  final downloadList = musicList;
-  final confirmed = await showConfirmDialog(
-      context, Text("下载列表歌曲大约将消耗${downloadList.length * 3}m存储空间"));
-  if (!confirmed) {
-    return;
-  }
-  if (await showLoaderOverlay(
-      context, downloadManager.addToDownload(musicList))) {
-    showSimpleNotification(context, Text("加入下载列表成功"));
-  } else {
-    showSimpleNotification(context, Text("加入下载列表失败"),
-        background: Theme.of(context).errorColor);
   }
 }
 
@@ -576,9 +556,6 @@ class _PlaylistDetailHeader extends StatelessWidget {
             }));
           }
         },
-        onDownloadTap: musicList?.isEmpty == true
-            ? null
-            : () => downloadList(context, musicList),
         onShareTap: () => notImplemented(context),
         content: Container(
           height: 150,

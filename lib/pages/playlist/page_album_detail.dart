@@ -153,7 +153,6 @@ class _AlbumDetailHeader extends StatelessWidget {
             return PlaylistSelectionPage(list: musicList);
           }));
         },
-        onDownloadTap: () => downloadList(context, musicList),
         onShareTap: () => notImplemented(context),
         content: Container(
           padding: EdgeInsets.symmetric(vertical: 16),
