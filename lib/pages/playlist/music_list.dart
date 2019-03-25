@@ -7,7 +7,6 @@ import 'package:quiet/part/material/dividers.dart';
 import 'package:quiet/part/part.dart';
 import 'package:quiet/part/route.dart';
 import 'package:quiet/repository/netease.dart';
-import 'package:quiet/service/channel_downloads.dart';
 
 class MusicList extends StatelessWidget {
   static MusicList of(BuildContext context) {
@@ -284,7 +283,6 @@ enum _MusicAction {
 
   ///导航到歌手
   artists,
-  download,
 }
 
 class _IconMore extends StatelessWidget {
@@ -301,10 +299,6 @@ class _IconMore extends StatelessWidget {
       PopupMenuItem(
         child: Text("收藏到歌单"),
         value: _MusicAction.addToPlaylist,
-      ),
-      PopupMenuItem(
-        child: Text("下载"),
-        value: _MusicAction.download,
       ),
       PopupMenuItem(
         child: Text("评论"),
@@ -380,15 +374,6 @@ class _IconMore extends StatelessWidget {
         break;
       case _MusicAction.artists:
         launchArtistDetailPage(context, music.artist);
-        break;
-      case _MusicAction.download:
-        if (await showLoaderOverlay(
-            context, downloadManager.addToDownload([music]))) {
-          showSimpleNotification(context, Text("加入下载列表成功"));
-        } else {
-          showSimpleNotification(context, Text("加入下载列表失败"),
-              background: Theme.of(context).errorColor);
-        }
         break;
     }
   }

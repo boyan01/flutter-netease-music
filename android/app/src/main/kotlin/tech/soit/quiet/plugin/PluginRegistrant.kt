@@ -7,7 +7,6 @@ object PluginRegistrant {
         if (alreadyRegisteredWith(registry)) {
             return
         }
-        DownloadPlugin.registerWith(registry.registrarFor("tech.soit.quiet.plugin.DownloadPlugin"))
         NeteaseCryptoPlugin.registerWith(registry.registrarFor("tech.soit.quiet.plugin.NeteaseCryptoPlugin"))
         PaletteGeneratorPlugin.registerWith(registry.registrarFor("tech.soit.quiet.plugin.PaletteGeneratorPlugin"))
     }
