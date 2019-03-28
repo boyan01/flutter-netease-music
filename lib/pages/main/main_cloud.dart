@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:quiet/pages/page_playlist_detail.dart';
+import 'package:quiet/pages/playlist/music_list.dart';
+import 'package:quiet/pages/playlist/page_playlist_detail.dart';
 import 'package:quiet/part/part.dart';
-import 'package:quiet/part/part_music_list_provider.dart';
 import 'package:quiet/repository/netease.dart';
 
 class MainCloudPage extends StatefulWidget {
@@ -215,16 +215,15 @@ class _SectionNewSongs extends StatelessWidget {
             .cast<Map>()
             .map(_mapJsonToMusic)
             .toList();
-        final songTileProvider =
-            SongTileProvider("playlist_main_newsong", songs);
-        List<Widget> widgets = [];
-        if (songTileProvider != null) {
-          for (int i = 1; i <= songTileProvider.musics.length; i++) {
-            widgets.add(songTileProvider.buildWidget(i, context));
-          }
-        }
-        return Column(
-          children: widgets,
+        return MusicList(
+          musics: songs,
+          token: 'playlist_main_newsong',
+          onMusicTap: MusicList.defaultOnTap,
+          leadingBuilder: MusicList.indexedLeadingBuilder,
+          trailingBuilder: MusicList.defaultTrailingBuilder,
+          child: Column(
+            children: songs.map((m) => MusicTile(m)).toList(),
+          ),
         );
       },
     );

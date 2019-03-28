@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:quiet/model/model.dart';
 import 'package:quiet/part/part.dart';
@@ -5,13 +7,13 @@ import 'package:quiet/repository/netease.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 class LikedSongList extends Model {
-  LikedSongList(LoginState loginState) {
+  LikedSongList(UserAccount account) {
     int userId = 0;
-    loginState.addListener(() {
-      if (loginState.isLogin && loginState.userId != userId) {
-        userId = loginState.userId;
+    account.addListener(() {
+      if (account.isLogin && account.userId != userId) {
+        userId = account.userId;
         _loadUserLikedList(userId);
-      } else if (!loginState.isLogin) {
+      } else if (!account.isLogin) {
         userId = 0;
         _ids = const [];
         notifyListeners();

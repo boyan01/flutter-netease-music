@@ -16,8 +16,6 @@ class MainActivity : FlutterActivity() {
 
         const val DESTINATION_PLAYING_PAGE = "action_playing_page"
 
-        const val DESTINATION_DOWNLOAD_PAGE = "action_download_page"
-
     }
 
     private lateinit var playerChannel: QuietPlayerChannel
@@ -44,9 +42,6 @@ class MainActivity : FlutterActivity() {
         when (intent.getStringExtra(KEY_DESTINATION)) {
             DESTINATION_PLAYING_PAGE -> {
                 flutterView.pushRoute("/playing")
-            }
-            DESTINATION_DOWNLOAD_PAGE -> {
-                flutterView.pushRoute("/downloads")
             }
         }
     }

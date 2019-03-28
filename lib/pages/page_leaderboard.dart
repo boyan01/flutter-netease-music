@@ -1,6 +1,6 @@
 import 'package:async/async.dart';
 import 'package:flutter/material.dart';
-import 'package:quiet/pages/page_playlist_detail.dart';
+import 'package:quiet/pages/playlist/page_playlist_detail.dart';
 import 'package:quiet/repository/netease.dart';
 
 ///各个排行榜数据
