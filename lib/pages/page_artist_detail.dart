@@ -2,7 +2,8 @@ import 'dart:math' as math;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:quiet/pages/page_playlist_detail_selection.dart';
+import 'package:quiet/pages/playlist/music_list.dart';
+import 'package:quiet/pages/playlist/page_playlist_detail_selection.dart';
 import 'package:quiet/part/part.dart';
 import 'package:quiet/repository/netease.dart';
 
@@ -218,8 +219,6 @@ class _PageHotSongs extends StatefulWidget {
 
 class _PageHotSongsState extends State<_PageHotSongs>
     with AutomaticKeepAliveClientMixin {
-  SongTileProvider songTileProvider;
-
   Widget _buildHeader(BuildContext context) {
     return InkWell(
       onTap: () {
@@ -262,22 +261,22 @@ class _PageHotSongsState extends State<_PageHotSongs>
         child: Center(child: Text("该歌手无热门曲目")),
       );
     }
-    return ListView.builder(
-        itemCount: widget.musicList.length + 1,
-        itemBuilder: (context, index) {
-          if (index == 0) {
-            return _buildHeader(context);
-          } else {
-            return songTileProvider?.buildWidget(index, context);
-          }
-        });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    songTileProvider = SongTileProvider(
-        "artist_hot_song_${widget.artistId}", widget.musicList);
+    return MusicList(
+      musics: widget.musicList,
+      token: 'artist_${widget.artistId}_hot',
+      leadingBuilder: MusicList.indexedLeadingBuilder,
+      trailingBuilder: MusicList.defaultTrailingBuilder,
+      onMusicTap: MusicList.defaultOnTap,
+      child: ListView.builder(
+          itemCount: widget.musicList.length + 1,
+          itemBuilder: (context, index) {
+            if (index == 0) {
+              return _buildHeader(context);
+            } else {
+              return MusicTile(widget.musicList[index - 1]);
+            }
+          }),
+    );
   }
 
   @override

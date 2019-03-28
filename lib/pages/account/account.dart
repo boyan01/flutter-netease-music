@@ -5,13 +5,12 @@ import 'package:quiet/repository/netease.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 ///登录状态
-///在上层嵌套 LoginStateWidget 以监听用户登录状态
-class LoginState extends Model {
+class UserAccount extends Model {
   static const persistenceKey = 'neteaseLoginUser';
 
-  ///根据BuildContext获取 [LoginState]
-  static LoginState of(BuildContext context, {bool rebuildOnChange = true}) {
-    return ScopedModel.of<LoginState>(context,
+  ///根据BuildContext获取 [UserAccount]
+  static UserAccount of(BuildContext context, {bool rebuildOnChange = true}) {
+    return ScopedModel.of<UserAccount>(context,
         rebuildOnChange: rebuildOnChange);
   }
 
@@ -30,7 +29,7 @@ class LoginState extends Model {
     neteaseRepository.logout();
   }
 
-  LoginState() {
+  UserAccount() {
     scheduleMicrotask(() async {
       final login = await neteaseLocalData[persistenceKey];
       if (login != null) {

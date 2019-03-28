@@ -22,11 +22,11 @@ class _MainPlaylistState extends State<MainPlaylistPage>
 
   @override
   Widget build(BuildContext context) {
-    final userId = LoginState.of(context).userId;
+    final userId = UserAccount.of(context).userId;
 
     Widget widget;
 
-    if (!LoginState.of(context).isLogin) {
+    if (!UserAccount.of(context).isLogin) {
       widget = _PinnedHeader();
     } else {
       widget = RefreshIndicator(
@@ -78,7 +78,7 @@ class _PinnedHeader extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
-        LoginState.of(context).isLogin
+        UserAccount.of(context).isLogin
             ? null
             : DividerWrapper(
                 child: ListTile(
@@ -100,18 +100,6 @@ class _PinnedHeader extends StatelessWidget {
                 notImplemented(context);
               },
             )),
-        DividerWrapper(
-          indent: 16,
-          child: ListTile(
-              leading: Icon(
-                Icons.file_download,
-                color: Theme.of(context).primaryColor,
-              ),
-              title: Text("下载管理"),
-              onTap: () {
-                Navigator.pushNamed(context, ROUTE_DOWNLOADS);
-              }),
-        ),
         DividerWrapper(
             indent: 16,
             child: ListTile(
@@ -333,8 +321,6 @@ class _ItemPlaylist extends StatelessWidget {
                       itemBuilder: (context) {
                         return [
                           PopupMenuItem(
-                              child: Text("下载"), value: PlaylistOp.download),
-                          PopupMenuItem(
                               child: Text("分享"), value: PlaylistOp.share),
                           PopupMenuItem(
                               child: Text("编辑歌单信息"), value: PlaylistOp.edit),
@@ -346,7 +332,6 @@ class _ItemPlaylist extends StatelessWidget {
                         switch (op) {
                           case PlaylistOp.delete:
                           case PlaylistOp.share:
-                          case PlaylistOp.download:
                             showSimpleNotification(
                                 context, Text("Not implemented"),
                                 background: Theme.of(context).errorColor);
@@ -373,4 +358,4 @@ class _ItemPlaylist extends StatelessWidget {
   }
 }
 
-enum PlaylistOp { edit, share, download, delete }
+enum PlaylistOp { edit, share, delete }

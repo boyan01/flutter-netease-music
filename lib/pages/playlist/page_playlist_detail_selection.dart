@@ -1,7 +1,9 @@
+import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:quiet/model/model.dart';
+import 'package:quiet/pages/playlist/music_list.dart';
 import 'package:quiet/part/part.dart';
 
 typedef MusicDeletionCallback = Future<bool> Function(List<Music> selected);
@@ -56,29 +58,30 @@ class PlaylistSelectionPageState extends State<PlaylistSelectionPage> {
           )
         ],
       ),
-      body: ListView.builder(
-          controller: controller,
-          itemCount: widget.list.length,
-          itemBuilder: (context, index) {
-            debugPrint("build item $index");
-            final item = widget.list[index];
-            final checked = selectedList.contains(item);
-            return _SelectionItem(
-                music: item,
-                selected: checked,
-                callback: (item) {
-                  setState(() {
-                    if (!selectedList.remove(item)) {
-                      selectedList.add(item);
-                    }
-                    if (selectedList.length == widget.list.length) {
-                      allSelected = true;
-                    } else {
-                      allSelected = false;
-                    }
-                  });
-                });
-          }),
+      body: MusicList(
+        musics: widget.list,
+        onMusicTap: (context, item) {
+          setState(() {
+            if (!selectedList.remove(item)) {
+              selectedList.add(item);
+            }
+            if (selectedList.length == widget.list.length) {
+              allSelected = true;
+            } else {
+              allSelected = false;
+            }
+          });
+        },
+        child: ListView.builder(
+            controller: controller,
+            itemCount: widget.list.length,
+            itemBuilder: (context, index) {
+              debugPrint("build item $index");
+              final item = widget.list[index];
+              final checked = selectedList.contains(item);
+              return _SelectionItem(music: item, selected: checked);
+            }),
+      ),
       bottomNavigationBar: _buildBottomBar(context),
     );
   }
@@ -172,23 +175,17 @@ class PlaylistSelectionPageState extends State<PlaylistSelectionPage> {
 }
 
 class _SelectionItem extends StatelessWidget {
-  const _SelectionItem(
-      {Key key,
-      @required this.music,
-      @required this.selected,
-      @required this.callback})
+  const _SelectionItem({Key key, @required this.music, @required this.selected})
       : super(key: key);
 
   final Music music;
 
   final bool selected;
 
-  final SongTileCallback callback;
-
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () => callback(music),
+      onTap: () => MusicList.of(context).onMusicTap(context, music),
       child: IgnorePointer(
         child: Row(
           children: <Widget>[
@@ -197,12 +194,7 @@ class _SelectionItem extends StatelessWidget {
                 onChanged: (v) => {
                       /*ignored pointer ,so we do not handle this event*/
                     }),
-            Expanded(
-                child: SongTile(
-              music,
-              0,
-              leadingType: SongTileLeadingType.none,
-            ))
+            Expanded(child: MusicTile(music))
           ],
         ),
       ),

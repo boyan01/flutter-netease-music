@@ -140,7 +140,7 @@ class PlaylistSelectorDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (!LoginState.of(context).isLogin) {
+    if (!UserAccount.of(context).isLogin) {
       return _buildDialog(
           context,
           Center(
@@ -160,7 +160,7 @@ class PlaylistSelectorDialog extends StatelessWidget {
             ),
           ));
     }
-    final userId = LoginState.of(context).userId;
+    final userId = UserAccount.of(context).userId;
     return Loader<List<PlaylistDetail>>(
       loadTask: () => neteaseRepository.userPlaylist(userId),
       resultVerify: simpleLoaderResultVerify((v) => v != null),

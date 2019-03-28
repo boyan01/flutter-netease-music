@@ -114,10 +114,10 @@ class _SectionSubscribed extends StatelessWidget {
 class _SectionMyCreated extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    if (LoginState.of(context).isLogin) {
+    if (UserAccount.of(context).isLogin) {
       return Loader<List<Map>>(
           loadTask: () =>
-              neteaseRepository.userDj(LoginState.of(context).userId),
+              neteaseRepository.userDj(UserAccount.of(context).userId),
           loadingBuilder: (context) {
             return Loader.buildSimpleLoadingWidget(context);
           },
