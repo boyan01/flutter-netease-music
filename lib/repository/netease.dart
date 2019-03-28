@@ -451,6 +451,14 @@ class NeteaseRepository {
     throw result.errorMsg;
   }
 
+  ///获取用户播放记录
+  ///type : 0 all , 1 this week
+  Future<Map> getRecord(int uid, int type) {
+    assert(type == 0 || type == 1);
+    return doRequest('https://music.163.com/weapi/v1/play/record',
+        {'uid': uid, 'type': type});
+  }
+
   //请求数据
   Future<Map<String, dynamic>> doRequest(String path, Map data,
       {EncryptType type = EncryptType.we,

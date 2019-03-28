@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:quiet/model/playlist_detail.dart';
 import 'package:quiet/pages/page_playlist_edit.dart';
+import 'package:quiet/pages/record/page_record.dart';
 import 'package:quiet/part/part.dart';
 import 'package:quiet/repository/netease.dart';
 import 'package:quiet/repository/netease_image.dart';
@@ -95,9 +96,17 @@ class _PinnedHeader extends StatelessWidget {
                 Icons.schedule,
                 color: Theme.of(context).primaryColor,
               ),
-              title: Text("最近播放"),
+              title: Text('播放记录'),
               onTap: () {
-                notImplemented(context);
+                if (UserAccount.of(context, rebuildOnChange: false).isLogin) {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    return RecordPage(
+                        uid: UserAccount.of(context, rebuildOnChange: false)
+                            .userId);
+                  }));
+                } else {
+                  //todo show login dialog
+                }
               },
             )),
         DividerWrapper(
