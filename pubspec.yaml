@@ -23,7 +23,7 @@ dependencies:
   video_player: ^0.8.0
   url_launcher: ^4.1.0+1
   intl: ^0.15.7
-  overlay_support: ^0.0.2
+  overlay_support: ^0.1.0
   sembast: ^1.13.2
   scoped_model: ^1.0.1
   mockito: ^4.0.0
