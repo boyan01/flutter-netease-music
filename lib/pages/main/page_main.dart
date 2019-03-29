@@ -4,6 +4,7 @@ import 'package:quiet/pages/main/main_playlist.dart';
 import 'package:quiet/pages/search/page_search.dart';
 import 'package:quiet/part/part.dart';
 import 'package:quiet/repository/netease.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class MainPage extends StatefulWidget {
   @override
@@ -56,6 +57,14 @@ class _MainPageState extends State<MainPage>
                             },
                           ),
                           Divider(height: 0, indent: 16),
+                          ListTile(
+                            leading: Icon(Icons.format_quote),
+                            title: Text("Star On GitHub"),
+                            onTap: () {
+                              launch(
+                                  "https://github.com/boyan01/quiet-flutter");
+                            },
+                          ),
                         ],
                       ),
                     ),
