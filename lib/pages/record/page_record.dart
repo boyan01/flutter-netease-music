@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:overlay_support/overlay_support.dart';
 import 'package:quiet/material/tab_indicator.dart';
 import 'package:quiet/pages/playlist/music_list.dart';
 import 'package:quiet/part/loader.dart';
@@ -28,10 +29,12 @@ class RecordPage extends StatelessWidget {
               indicatorSize: TabBarIndicatorSize.label,
             ),
           ),
-          body: TabBarView(children: [
-            _RecordSection(uid: uid, type: 1),
-            _RecordSection(uid: uid, type: 0),
-          ]),
+          body: BoxWithBottomPlayerController(
+            TabBarView(children: [
+              _RecordSection(uid: uid, type: 1),
+              _RecordSection(uid: uid, type: 0),
+            ]),
+          ),
         ));
   }
 }
@@ -89,11 +92,19 @@ class _RecordMusicList extends StatelessWidget {
 
   final List<Music> musicList;
 
+  final Map<int, _RecordMusic> _recordMap = Map();
+
   final int type;
 
   _RecordMusicList({Key key, this.recordList, this.type})
-      : this.musicList = recordList.map((r) => r.music).toList(),
-        super(key: key);
+      : musicList = List(recordList.length),
+        super(key: key) {
+    for (int i = 0; i < recordList.length; i++) {
+      final r = recordList[i];
+      musicList[i] = r.music;
+      _recordMap[r.music.id] = r;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -101,7 +112,22 @@ class _RecordMusicList extends StatelessWidget {
       musics: musicList,
       token: 'play_record_$type',
       leadingBuilder: MusicList.indexedLeadingBuilder,
-      onMusicTap: MusicList.defaultOnTap,
+      onMusicTap: (context, music) {
+        toast(context, "can not play music from record page");
+      },
+      trailingBuilder: (context, music) {
+        return Container(
+          padding: EdgeInsets.symmetric(horizontal: 16),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Icon(Icons.play_circle_outline, size: 16),
+              SizedBox(width: 4),
+              Text('${_recordMap[music.id].playCount}次'),
+            ],
+          ),
+        );
+      },
       child: ListView.builder(
           itemCount: musicList.length,
           itemBuilder: (context, index) {

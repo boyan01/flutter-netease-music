@@ -3,7 +3,6 @@ import 'package:overlay_support/overlay_support.dart';
 import 'package:quiet/model/model.dart';
 import 'package:quiet/pages/page_artist_detail.dart';
 import 'package:quiet/pages/page_comment.dart';
-import 'package:quiet/part/material/dividers.dart';
 import 'package:quiet/part/part.dart';
 import 'package:quiet/part/route.dart';
 import 'package:quiet/repository/netease.dart';
@@ -143,7 +142,7 @@ class MusicTile extends StatelessWidget {
           children: <Widget>[
             (list.leadingBuilder ?? _buildPadding)(context, music),
             Expanded(
-              child: DividerWrapper(child: _SimpleMusicTile(music)),
+              child: _SimpleMusicTile(music),
             ),
             (list.trailingBuilder ?? _buildPadding)(context, music),
           ],
