@@ -2,14 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:quiet/pages/comments/comments.dart';
 import 'package:quiet/pages/comments/page_comment.dart';
-import 'package:quiet/pages/video/video_controller.dart';
-import 'package:quiet/pages/video/video_player_model.dart';
 import 'package:quiet/part/part.dart';
 import 'package:quiet/repository/netease.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:video_player/video_player.dart';
 
+import 'music_video_datail.dart';
 import 'page_music_video_player_fullscreen.dart';
+import 'video_controller.dart';
+import 'video_player_model.dart';
 
 ///MV详情页面
 ///顶部是视频播放
@@ -68,7 +69,8 @@ class _MvDetailPageState extends State<_MvDetailPage> {
   @override
   void initState() {
     super.initState();
-    _model = VideoPlayerModel(widget.result['data'],
+    _model = VideoPlayerModel(
+        MusicVideoDetail.fromJsonMap(widget.result['data']),
         subscribed: widget.result['subed']);
     _model.videoPlayerController.play();
     if (quiet.value.isPlaying) {
@@ -89,7 +91,7 @@ class _MvDetailPageState extends State<_MvDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    final commentId = CommentThreadId(_model.mvData['id'], CommentType.mv);
+    final commentId = CommentThreadId(_model.data.id, CommentType.mv);
     return ScopedModel<VideoPlayerModel>(
       model: _model,
       child: ScopedModel<CommentList>(
@@ -167,7 +169,7 @@ class _SimpleVideoController extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final model = ScopedModel.of<VideoPlayerModel>(context);
-    final data = model.mvData;
+    final data = model.data;
     return AnimatedMvController(
         showBottomIndicator: true,
         top: Container(
@@ -184,7 +186,7 @@ class _SimpleVideoController extends StatelessWidget {
               elevation: 0,
               titleSpacing: 0,
               backgroundColor: Colors.transparent,
-              title: Text(data['name'])),
+              title: Text(data.name)),
         ),
         bottom: _buildBottom(context),
         center: MvPlayPauseButton());
@@ -299,39 +301,79 @@ class MvPlayPauseButton extends StatelessWidget {
 }
 
 /// title
-class _InformationSection extends StatelessWidget {
-
-
+class _InformationSection extends StatefulWidget {
   const _InformationSection({Key key}) : super(key: key);
 
   @override
+  _InformationSectionState createState() => _InformationSectionState();
+}
+
+class _InformationSectionState extends State<_InformationSection> {
+  static bool _expanded = false;
+
+  @override
   Widget build(BuildContext context) {
-    final data = VideoPlayerModel.of(context).mvData;
-    return Container(
-      height: 70,
-      padding: const EdgeInsets.symmetric(horizontal: 8),
-      child: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Text(data['name'],
-                style: Theme.of(context)
-                    .textTheme
-                    .title
-                    .copyWith(fontWeight: FontWeight.bold)),
-            DefaultTextStyle(
-              style: TextStyle(color: Colors.grey),
-              child: Row(
-                children: <Widget>[
-                  Text('发布: ${data['publishTime']}'),
-                  VerticalDivider(color: Theme.of(context).dividerColor),
-                  Text('播放: ${getFormattedNumber(data['playCount'])}')
-                ],
-              ),
-            )
-          ],
+    final data = VideoPlayerModel.of(context).data;
+
+    Widget description;
+    if (_expanded) {
+      description = Padding(
+        padding: const EdgeInsets.only(top: 8),
+        child: Text(
+          data.desc,
+          maxLines: 6,
         ),
+      );
+    } else {
+      description = Container();
+    }
+
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Row(
+            children: <Widget>[
+              Expanded(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      data.name,
+                      style: Theme.of(context)
+                          .textTheme
+                          .title
+                          .copyWith(fontWeight: FontWeight.bold),
+                    ),
+                    DefaultTextStyle(
+                      style: TextStyle(color: Colors.grey),
+                      child: Row(
+                        children: <Widget>[
+                          Text('发布: ${data.publishTime}'),
+                          VerticalDivider(
+                              color: Theme.of(context).dividerColor),
+                          Text('播放: ${getFormattedNumber(data.playCount)}')
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              IconButton(
+                icon: Icon(
+                    _expanded ? Icons.arrow_drop_up : Icons.arrow_drop_down),
+                onPressed: () {
+                  setState(() {
+                    _expanded = !_expanded;
+                  });
+                },
+              )
+            ],
+          ),
+          description,
+        ],
       ),
     );
   }
@@ -341,49 +383,52 @@ class _InformationSection extends StatelessWidget {
 class _ActionsSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final data = VideoPlayerModel.of(context).mvData;
+    final data = VideoPlayerModel.of(context).data;
     return DividerWrapper(
       child: ButtonTheme(
         textTheme: ButtonTextTheme.accent,
         colorScheme: ColorScheme.light(secondary: Colors.black54),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget>[
-            FlatButton(
-                onPressed: () => notImplemented(context),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    const SizedBox(height: 4.0),
-                    Icon(Icons.thumb_up),
-                    const SizedBox(height: 4.0),
-                    Text('${data['likeCount']}'),
-                  ],
-                )),
-            _SubscribeButton(),
-            FlatButton(
-                onPressed: () => notImplemented(context),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    const SizedBox(height: 4.0),
-                    Icon(Icons.comment),
-                    const SizedBox(height: 4.0),
-                    Text('${data['commentCount']}'),
-                  ],
-                )),
-            FlatButton(
-                onPressed: () => notImplemented(context),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    const SizedBox(height: 4.0),
-                    Icon(Icons.share),
-                    const SizedBox(height: 4.0),
-                    Text('${data['shareCount']}'),
-                  ],
-                )),
-          ],
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 8),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              FlatButton(
+                  onPressed: () => notImplemented(context),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      const SizedBox(height: 4.0),
+                      Icon(Icons.thumb_up),
+                      const SizedBox(height: 4.0),
+                      Text('${data.likeCount}'),
+                    ],
+                  )),
+              _SubscribeButton(),
+              FlatButton(
+                  onPressed: () => notImplemented(context),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      const SizedBox(height: 4.0),
+                      Icon(Icons.comment),
+                      const SizedBox(height: 4.0),
+                      Text('${data.commentCount}'),
+                    ],
+                  )),
+              FlatButton(
+                  onPressed: () => notImplemented(context),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      const SizedBox(height: 4.0),
+                      Icon(Icons.share),
+                      const SizedBox(height: 4.0),
+                      Text('${data.shareCount}'),
+                    ],
+                  )),
+            ],
+          ),
         ),
       ),
     );
@@ -402,7 +447,7 @@ class _SubscribeButton extends StatelessWidget {
             const SizedBox(height: 4.0),
             Icon(model.subscribed ? Icons.check_box : Icons.add_box),
             const SizedBox(height: 4.0),
-            Text('${model.mvData['subCount']}'),
+            Text('${model.data.subCount}'),
           ],
         ));
   }

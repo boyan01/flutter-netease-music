@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:quiet/pages/video/video_controller.dart';
-import 'package:quiet/pages/video/video_player_model.dart';
 import 'package:quiet/part/part.dart';
 import 'package:video_player/video_player.dart';
+
+import 'video_controller.dart';
+import 'video_player_model.dart';
 
 ///全屏播放界面
 class FullScreenMvPlayer extends StatefulWidget {
@@ -77,7 +78,7 @@ class _FullScreenController extends StatelessWidget {
         backgroundColor: Colors.transparent,
         elevation: 0,
         titleSpacing: 0,
-        title: Text(VideoPlayerModel.of(context).mvData['name']),
+        title: Text(VideoPlayerModel.of(context).data.name),
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.thumb_up),

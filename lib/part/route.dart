@@ -17,7 +17,7 @@ export 'package:quiet/pages/playlist/page_album_detail.dart';
 export 'package:quiet/pages/playlist/page_daily_playlist.dart';
 export 'package:quiet/pages/playlist/page_playlist_detail.dart';
 export 'package:quiet/pages/setting/page_setting.dart';
-export 'package:quiet/pages/video//page_music_video_player.dart';
+export 'package:quiet/pages/video/page_music_video_player.dart';
 
 const ROUTE_MAIN = "/";
 

@@ -7,15 +7,18 @@ import 'package:quiet/repository/netease.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:video_player/video_player.dart';
 
+import 'music_video_datail.dart';
+
 ///播放中mv的model
 class VideoPlayerModel extends Model {
-  static VideoPlayerModel of(BuildContext context, {bool rebuildOnChange = true}) {
+  static VideoPlayerModel of(BuildContext context,
+      {bool rebuildOnChange = true}) {
     return ScopedModel.of<VideoPlayerModel>(context,
         rebuildOnChange: rebuildOnChange);
   }
 
-  VideoPlayerModel(this.mvData, {subscribed = false}) {
-    final Map brs = mvData['brs'];
+  VideoPlayerModel(this.data, {subscribed = false}) {
+    final Map brs = data.brs;
     assert(brs != null && brs.isNotEmpty);
     _imageResolutions = brs.keys.toList();
     _subscribed = subscribed;
@@ -24,7 +27,7 @@ class VideoPlayerModel extends Model {
 
   ///根据分辨率初始化播放器
   void _initPlayerController(String imageResolution) {
-    final Map brs = mvData['brs'];
+    final Map brs = data.brs;
     _currentImageResolution = imageResolution;
 
     Duration moment = Duration.zero;
@@ -34,7 +37,6 @@ class VideoPlayerModel extends Model {
       play = _videoPlayerController.value.isPlaying;
       _videoPlayerController.dispose();
     }
-
 
     _videoPlayerController =
         _VideoPlayerControllerWrapper.network(brs[imageResolution]);
@@ -49,7 +51,7 @@ class VideoPlayerModel extends Model {
   }
 
   ///mv数据
-  final Map mvData;
+  final MusicVideoDetail data;
 
   bool _subscribed;
 
@@ -60,7 +62,7 @@ class VideoPlayerModel extends Model {
     if (subscribe == _subscribed) {
       return;
     }
-    await neteaseRepository.mvSubscribe(mvData['id'], subscribe);
+    await neteaseRepository.mvSubscribe(data.id, subscribe);
     _subscribed = subscribe;
     notifyListeners();
   }
