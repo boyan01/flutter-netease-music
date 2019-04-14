@@ -10,7 +10,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:quiet/model/playlist_detail.dart';
-import 'package:quiet/pages/page_comment.dart';
+import 'package:quiet/pages/comments/page_comment.dart';
 import 'package:quiet/part/part.dart';
 
 import 'netease_local_data.dart';
@@ -78,6 +78,13 @@ class NeteaseRepository {
     var path = (await getApplicationDocumentsDirectory()).path + "/.cookies/";
     _cookieJar = PersistCookieJar(dir: path);
 
+    _dio = Dio(BaseOptions(
+        method: "POST",
+        baseUrl: _BASE_URL,
+        headers: _header,
+        responseType: ResponseType.json,
+        contentType: ContentType.parse("application/x-www-form-urlencoded")));
+
     _dio.interceptors
       ..add(CookieManager(_cookieJar))
       ..add(InterceptorsWrapper(onRequest: (options) {
@@ -85,6 +92,7 @@ class NeteaseRepository {
 //      debugPrint("request cookie :${options.data}");
         return options;
       }));
+
     return _dio;
   }
 
