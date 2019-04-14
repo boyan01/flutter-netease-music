@@ -1,19 +1,20 @@
+import 'dart:async';
+
 import 'package:flutter/widgets.dart';
 import 'package:overlay_support/overlay_support.dart';
-import 'package:quiet/part/mv/mv_player_controller.dart';
 import 'package:quiet/part/part.dart';
 import 'package:quiet/repository/netease.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:video_player/video_player.dart';
 
 ///播放中mv的model
-class MvPlayerModel extends Model {
-  static MvPlayerModel of(BuildContext context, {bool rebuildOnChange = true}) {
-    return ScopedModel.of<MvPlayerModel>(context,
+class VideoPlayerModel extends Model {
+  static VideoPlayerModel of(BuildContext context, {bool rebuildOnChange = true}) {
+    return ScopedModel.of<VideoPlayerModel>(context,
         rebuildOnChange: rebuildOnChange);
   }
 
-  MvPlayerModel(this.mvData, {subscribed = false}) {
+  VideoPlayerModel(this.mvData, {subscribed = false}) {
     final Map brs = mvData['brs'];
     assert(brs != null && brs.isNotEmpty);
     _imageResolutions = brs.keys.toList();
@@ -34,10 +35,9 @@ class MvPlayerModel extends Model {
       _videoPlayerController.dispose();
     }
 
-    //之所以使用MvPlayerController,是因为原有的VideoPlayerController并未对disposed状态做保护处理
-    //VideoPlayerController被 dispose 后,有可能会被 VideoPlayer 调用 removeListener 方法,从而引发错误
-    //所以包裹了一层保护
-    _videoPlayerController = MvPlayerController.network(brs[imageResolution]);
+
+    _videoPlayerController =
+        _VideoPlayerControllerWrapper.network(brs[imageResolution]);
     _videoPlayerController.initialize().then((_) {
       _videoPlayerController.seekTo(moment);
       if (play) _videoPlayerController.play();
@@ -88,7 +88,7 @@ class MvPlayerModel extends Model {
 
 ///收藏或者取消收藏mv
 void subscribeOrUnSubscribeMv(BuildContext context) async {
-  final model = MvPlayerModel.of(context);
+  final model = VideoPlayerModel.of(context);
   if (model.subscribed &&
       !await showConfirmDialog(context, Text('确定要取消收藏吗？'),
           positiveLabel: '不再收藏')) {
@@ -99,5 +99,45 @@ void subscribeOrUnSubscribeMv(BuildContext context) async {
   } catch (e) {
     showSimpleNotification(
         context, Text('${model.subscribed ? '取消收藏' : '收藏'}失败'));
+  }
+}
+
+///之所以使用MvPlayerController,是因为原有的VideoPlayerController并未对disposed状态做保护处理
+///VideoPlayerController被 dispose 后,有可能会被 VideoPlayer 调用 removeListener 方法,从而引发错误
+///所以包裹了一层保护
+class _VideoPlayerControllerWrapper extends VideoPlayerController {
+  _VideoPlayerControllerWrapper.network(String dataSource)
+      : super.network(dataSource);
+
+  bool _disposed = false;
+
+  @override
+  Future<void> dispose() {
+    _disposed = true;
+    return super.dispose();
+  }
+
+  @override
+  void removeListener(listener) {
+    if (_disposed) {
+      return;
+    }
+    super.removeListener(listener);
+  }
+
+  @override
+  void addListener(listener) {
+    if (_disposed) {
+      return;
+    }
+    super.addListener(listener);
+  }
+
+  @override
+  void notifyListeners() {
+    if (_disposed) {
+      return;
+    }
+    super.notifyListeners();
   }
 }

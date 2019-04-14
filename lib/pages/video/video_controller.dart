@@ -1,11 +1,11 @@
 import 'package:async/async.dart';
 import 'package:flutter/material.dart';
 
-import 'mv_player_model.dart';
+import 'package:quiet/pages/video/video_player_model.dart';
 
 typedef void MvControllerChangeCallback(bool show);
 
-///祖先节点必须存在 [MvPlayerModel]
+///祖先节点必须存在 [VideoPlayerModel]
 ///[top] 从顶部滑出
 ///[center] 更改透明度浮现
 ///[bottom] 从底部滑出
@@ -106,7 +106,7 @@ class _AnimatedMvControllerState extends State<AnimatedMvController>
             _hideDelay();
           },
           onDoubleTap: () {
-            final controller = MvPlayerModel.of(context).videoPlayerController;
+            final controller = VideoPlayerModel.of(context).videoPlayerController;
             final value = controller.value;
             if (value.initialized) {
               if (value.isPlaying) {
@@ -153,7 +153,7 @@ class _AnimatedMvControllerState extends State<AnimatedMvController>
 
   Widget _buildBottomIndicator(BuildContext context) {
     double progress;
-    final playerValue = MvPlayerModel.of(context).playerValue;
+    final playerValue = VideoPlayerModel.of(context).playerValue;
     if (playerValue.initialized) {
       progress = playerValue.position.inMilliseconds /
           playerValue.duration.inMilliseconds;
