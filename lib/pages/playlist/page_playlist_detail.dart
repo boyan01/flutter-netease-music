@@ -4,7 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:quiet/model/playlist_detail.dart';
-import 'package:quiet/pages/page_comment.dart';
+import 'package:quiet/pages/comments/page_comment.dart';
 import 'package:quiet/pages/playlist/page_playlist_detail_selection.dart';
 import 'package:quiet/pages/playlist/playlist_internal_search.dart';
 import 'package:quiet/part/part.dart';

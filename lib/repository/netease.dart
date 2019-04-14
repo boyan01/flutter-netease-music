@@ -68,13 +68,6 @@ class NeteaseRepository {
     if (_dio != null) {
       return _dio;
     }
-    _dio = Dio(BaseOptions(
-        method: "POST",
-        baseUrl: _BASE_URL,
-        headers: _header,
-        responseType: ResponseType.json,
-        contentType: ContentType.parse("application/x-www-form-urlencoded")));
-
     var path = (await getApplicationDocumentsDirectory()).path + "/.cookies/";
     _cookieJar = PersistCookieJar(dir: path);
 

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:quiet/pages/page_artist_detail.dart';
-import 'package:quiet/pages/page_comment.dart';
+import 'package:quiet/pages/comments/page_comment.dart';
 import 'package:quiet/pages/playlist/music_list.dart';
 import 'package:quiet/pages/playlist/page_playlist_detail_selection.dart';
 import 'package:quiet/part/part.dart';

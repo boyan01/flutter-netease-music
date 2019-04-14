@@ -8,13 +8,15 @@ import 'package:quiet/repository/netease.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:video_player/video_player.dart';
 
+import 'page_music_video_player_fullscreen.dart';
+
 ///MV详情页面
 ///顶部是视频播放
 ///下方显示评论
-class MvDetailPage extends StatelessWidget {
+class MusicVideoPlayerPage extends StatelessWidget {
   final int mvId;
 
-  const MvDetailPage(this.mvId, {Key key})
+  MusicVideoPlayerPage(this.mvId, {Key key})
       : assert(mvId != null),
         super(key: key);
 
@@ -58,14 +60,14 @@ class _MvDetailPage extends StatefulWidget {
 }
 
 class _MvDetailPageState extends State<_MvDetailPage> {
-  MvPlayerModel _model;
+  VideoPlayerModel _model;
 
   bool _pausedPlayingMusic = false;
 
   @override
   void initState() {
     super.initState();
-    _model = MvPlayerModel(widget.result['data'],
+    _model = VideoPlayerModel(widget.result['data'],
         subscribed: widget.result['subed']);
     _model.videoPlayerController.play();
     if (quiet.value.isPlaying) {
@@ -87,7 +89,7 @@ class _MvDetailPageState extends State<_MvDetailPage> {
   @override
   Widget build(BuildContext context) {
     final commentId = CommentThreadId(_model.mvData['id'], CommentType.mv);
-    return ScopedModel<MvPlayerModel>(
+    return ScopedModel<VideoPlayerModel>(
       model: _model,
       child: Column(
         children: <Widget>[
@@ -123,7 +125,7 @@ class _MvDetailPageState extends State<_MvDetailPage> {
 class _SimpleMvScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final model = MvPlayerModel.of(context);
+    final model = VideoPlayerModel.of(context);
     return Container(
       child: AspectRatio(
         aspectRatio: 16 / 10,
@@ -150,7 +152,7 @@ class _SimpleMvScreenForeground extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final model = ScopedModel.of<MvPlayerModel>(context);
+    final model = ScopedModel.of<VideoPlayerModel>(context);
     final data = model.mvData;
     return AnimatedMvController(
         showBottomIndicator: true,
@@ -174,7 +176,7 @@ class _SimpleMvScreenForeground extends StatelessWidget {
   }
 
   Widget _buildBottom(BuildContext context) {
-    final value = MvPlayerModel.of(context).playerValue;
+    final value = VideoPlayerModel.of(context).playerValue;
 
     final position = value.position.inMilliseconds;
     final duration = value.duration?.inMilliseconds ?? 0;
@@ -208,7 +210,7 @@ class _SimpleMvScreenForeground extends StatelessWidget {
                   max: duration.toDouble(),
                   value: position.clamp(0, duration).toDouble(),
                   onChanged: (v) async {
-                    MvPlayerModel.of(context).videoPlayerController
+                    VideoPlayerModel.of(context).videoPlayerController
                       ..seekTo(Duration(milliseconds: v.toInt()))
                       ..play();
                   })),
@@ -219,8 +221,8 @@ class _SimpleMvScreenForeground extends StatelessWidget {
                   child: Icon(Icons.fullscreen, color: Colors.white)),
               onTap: () async {
                 final route = MaterialPageRoute(
-                    builder: (_) => ScopedModel<MvPlayerModel>(
-                        model: ScopedModel.of<MvPlayerModel>(context),
+                    builder: (_) => ScopedModel<VideoPlayerModel>(
+                        model: ScopedModel.of<VideoPlayerModel>(context),
                         child: FullScreenMvPlayer()));
                 SystemChrome.setPreferredOrientations(const [
                   DeviceOrientation.landscapeLeft,
@@ -247,7 +249,7 @@ class MvPlayPauseButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = MvPlayerModel.of(context).videoPlayerController;
+    final controller = VideoPlayerModel.of(context).videoPlayerController;
 
     final reachEnd = controller.value.initialized &&
         controller.value.position >= controller.value.duration;
@@ -327,7 +329,7 @@ class _MvActionsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final data = MvPlayerModel.of(context).mvData;
+    final data = VideoPlayerModel.of(context).mvData;
     return DividerWrapper(
       child: ButtonTheme(
         textTheme: ButtonTextTheme.accent,
@@ -382,7 +384,7 @@ class _MvActionsSection extends StatelessWidget {
 class _SubscribeButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final model = MvPlayerModel.of(context);
+    final model = VideoPlayerModel.of(context);
     return FlatButton(
         onPressed: () => subscribeOrUnSubscribeMv(context),
         child: Column(

@@ -1,0 +1,264 @@
+part of 'comments.dart';
+
+class _ItemTitle extends StatelessWidget {
+  const _ItemTitle({Key key, @required this.commentThreadId})
+      : assert(commentThreadId != null),
+        super(key: key);
+
+  final CommentThreadId commentThreadId;
+
+  CommentThreadPayload get payload => commentThreadId.payload;
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: () async {
+        if (commentThreadId.type == CommentType.playlist) {
+          Navigator.push(context, MaterialPageRoute(builder: (context) {
+            final playlist = (payload.obj as PlaylistDetail);
+            return PlaylistDetailPage(
+              playlist.id,
+              playlist: playlist,
+            );
+          }));
+        } else if (commentThreadId.type == CommentType.song) {
+          Music music = payload.obj;
+          if (quiet.value.current != music) {
+            dynamic result = await showDialog(
+                context: context,
+                builder: (context) {
+                  return AlertDialog(
+                    content: Text("开始播放 ${music.title} ?"),
+                    actions: <Widget>[
+                      FlatButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: Text("取消")),
+                      FlatButton(
+                          onPressed: () {
+                            Navigator.pop(context, true);
+                          },
+                          child: Text("播放")),
+                    ],
+                  );
+                });
+            if (!(result is bool && result)) {
+              return;
+            }
+            await quiet.play(music: music);
+          }
+          Navigator.push(context, MaterialPageRoute(builder: (context) {
+            return PlayingPage();
+          }));
+        }
+      },
+      child: Container(
+        padding: EdgeInsets.all(10),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            ClipRRect(
+              borderRadius: BorderRadius.all(Radius.circular(3)),
+              child: Image(
+                fit: BoxFit.cover,
+                image: NeteaseImage(payload.coverImage),
+                width: 60,
+                height: 60,
+              ),
+            ),
+            Padding(padding: EdgeInsets.only(left: 10)),
+            Container(
+              height: 60,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    payload.title,
+                    style: Theme.of(context).textTheme.subtitle,
+                  ),
+                  Text(
+                    payload.subtitle,
+                    style: Theme.of(context).textTheme.caption,
+                  ),
+                ],
+              ),
+            ),
+            Spacer(),
+            Icon(Icons.chevron_right)
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _ItemLoadMore extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 56,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          SizedBox(
+            child: CircularProgressIndicator(),
+            height: 16,
+            width: 16,
+          ),
+          Padding(
+            padding: EdgeInsets.only(left: 8),
+          ),
+          Text("正在加载更多评论...")
+        ],
+      ),
+    );
+  }
+}
+
+class _ItemMoreHot extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: () {
+        debugPrint("go to hot comments");
+      },
+      child: Container(
+        padding: EdgeInsets.symmetric(vertical: 16),
+        child: Center(
+          child: Text(
+            "全部精彩评论 >",
+            style: Theme.of(context).textTheme.caption,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _ItemHeader extends StatelessWidget {
+  final String title;
+
+  const _ItemHeader({Key key, @required this.title}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.only(left: 8, top: 4, bottom: 4),
+      color: Theme.of(context).dividerColor,
+      child: Text(
+        title,
+        style: Theme.of(context).textTheme.caption,
+      ),
+    );
+  }
+}
+
+class _ItemComment extends StatefulWidget {
+  const _ItemComment({Key key, @required this.comment}) : super(key: key);
+
+  final Comment comment;
+
+  @override
+  _ItemCommentState createState() {
+    return new _ItemCommentState();
+  }
+}
+
+class _ItemCommentState extends State<_ItemComment> {
+  @override
+  Widget build(BuildContext context) {
+    User user = widget.comment.user;
+    return InkWell(
+      onTap: () {
+        showDialog(
+            context: context,
+            builder: (context) {
+              return SimpleDialog(
+                contentPadding: EdgeInsets.only(),
+                children: <Widget>[
+                  ListTile(
+                    title: Text("复制"),
+                    onTap: () {
+                      Clipboard.setData(
+                          ClipboardData(text: widget.comment.content));
+                      Navigator.pop(context);
+                      Scaffold.of(this.context).showSnackBar(SnackBar(
+                        content: Text("复制成功"),
+                        duration: Duration(seconds: 1),
+                      ));
+                    },
+                  ),
+                  Divider(
+                    height: 0,
+                  ),
+                ],
+              );
+            });
+      },
+      child: Padding(
+        padding: EdgeInsets.only(left: 8, top: 8, right: 8),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                ClipOval(
+                    child: Image(
+                  image: NeteaseImage(user.avatarUrl),
+                  width: 36,
+                  height: 36,
+                )),
+                Padding(padding: EdgeInsets.only(left: 8)),
+                Expanded(
+                    child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    Text(
+                      user.nickname,
+                      style: Theme.of(context).textTheme.body1,
+                    ),
+                    Text(
+                      getFormattedTime(widget.comment.time),
+                      style: Theme.of(context).textTheme.caption,
+                    ),
+                  ],
+                )),
+                Text(
+                  widget.comment.likedCount.toString(),
+                  style: Theme.of(context).textTheme.caption,
+                ),
+                Padding(padding: EdgeInsets.only(left: 2)),
+                InkResponse(
+                  onTap: () async {
+                    //TODO
+                  },
+                  child: Icon(
+                    Icons.thumb_up,
+                    size: 15,
+                    color: widget.comment.liked
+                        ? Theme.of(context).accentColor
+                        : Theme.of(context).disabledColor,
+                  ),
+                )
+              ],
+            ),
+            Container(
+              padding: EdgeInsets.only(left: 44),
+              margin: EdgeInsets.symmetric(vertical: 4),
+              child: Text(widget.comment.content),
+            ),
+            Padding(padding: EdgeInsets.only(top: 4)),
+            Divider(
+              height: 0,
+              indent: 44,
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}
