@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:quiet/pages/comments/comments.dart';
 import 'package:quiet/pages/comments/page_comment.dart';
 import 'package:quiet/pages/video/video_controller.dart';
 import 'package:quiet/pages/video/video_player_model.dart';
@@ -91,38 +92,51 @@ class _MvDetailPageState extends State<_MvDetailPage> {
     final commentId = CommentThreadId(_model.mvData['id'], CommentType.mv);
     return ScopedModel<VideoPlayerModel>(
       model: _model,
-      child: Column(
-        children: <Widget>[
-          _SimpleMvScreen(),
-          Expanded(
-            child: NestedScrollView(
-                headerSliverBuilder: (context, innerBoxIsScrolled) {
-                  return [
-                    SliverFixedExtentList(
-                        delegate: SliverChildListDelegate([
-                          _MvInformationSection(data: widget.result['data'])
-                        ]),
-                        itemExtent: _MvInformationSection.height),
-                    SliverFixedExtentList(
-                        delegate: SliverChildListDelegate([
-                          _MvActionsSection(),
-                        ]),
-                        itemExtent: _MvActionsSection.height),
-                  ];
-                },
-                body: Loader(
-                    loadTask: () => neteaseRepository.getComments(commentId),
-                    builder: (context, result) {
-                      return Container();
-                    })),
-          ),
-        ],
+      child: ScopedModel<CommentList>(
+        model: CommentList(commentId),
+        child: Column(
+          children: <Widget>[
+            _SimpleMusicVideo(),
+            Expanded(child: ScopedModelDescendant<CommentList>(
+              builder: (context, child, model) {
+                List data = [];
+                data.addAll(MusicVideoFloor.values);
+                data.addAll(model.getCommentList());
+
+                return NotificationListener<ScrollEndNotification>(
+                  onNotification: (notification) {
+                    model.autoLoad(notification: notification);
+                  },
+                  child: ListView.builder(
+                      itemCount: data.length,
+                      itemBuilder: CommentListBuilder(data,
+                          defaultBuilder: (context, index) {
+                        final item = data[index];
+                        switch (item) {
+                          case MusicVideoFloor.title:
+                            return _InformationSection();
+                          case MusicVideoFloor.actions:
+                            return _ActionsSection();
+                        }
+                        assert(false, "error to build($index) for $item ");
+                        return Container();
+                      }).builder),
+                );
+              },
+            )),
+          ],
+        ),
       ),
     );
   }
 }
 
-class _SimpleMvScreen extends StatelessWidget {
+enum MusicVideoFloor {
+  title,
+  actions,
+}
+
+class _SimpleMusicVideo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final model = VideoPlayerModel.of(context);
@@ -138,7 +152,7 @@ class _SimpleMvScreen extends StatelessWidget {
                         ? model.playerValue.aspectRatio
                         : 16 / 10,
                     child: VideoPlayer(model.videoPlayerController))),
-            _SimpleMvScreenForeground(),
+            _SimpleVideoController(),
           ]),
         ),
       ),
@@ -147,7 +161,7 @@ class _SimpleMvScreen extends StatelessWidget {
 }
 
 ///小屏幕下的mv控制栏
-class _SimpleMvScreenForeground extends StatelessWidget {
+class _SimpleVideoController extends StatelessWidget {
   static const closeDelay = const Duration(seconds: 5);
 
   @override
@@ -168,6 +182,7 @@ class _SimpleMvScreenForeground extends StatelessWidget {
               ])),
           child: AppBar(
               elevation: 0,
+              titleSpacing: 0,
               backgroundColor: Colors.transparent,
               title: Text(data['name'])),
         ),
@@ -283,16 +298,15 @@ class MvPlayPauseButton extends StatelessWidget {
   }
 }
 
-class _MvInformationSection extends StatelessWidget {
-  ///mv data
-  final Map data;
+/// title
+class _InformationSection extends StatelessWidget {
 
-  const _MvInformationSection({Key key, this.data}) : super(key: key);
 
-  static const double height = 70;
+  const _InformationSection({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final data = VideoPlayerModel.of(context).mvData;
     return Container(
       height: 70,
       padding: const EdgeInsets.symmetric(horizontal: 8),
@@ -324,9 +338,7 @@ class _MvInformationSection extends StatelessWidget {
 }
 
 ///mv 点赞/收藏/评论/分享
-class _MvActionsSection extends StatelessWidget {
-  static final double height = 72;
-
+class _ActionsSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final data = VideoPlayerModel.of(context).mvData;
@@ -334,47 +346,44 @@ class _MvActionsSection extends StatelessWidget {
       child: ButtonTheme(
         textTheme: ButtonTextTheme.accent,
         colorScheme: ColorScheme.light(secondary: Colors.black54),
-        child: Container(
-          height: height,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: <Widget>[
-              FlatButton(
-                  onPressed: () => notImplemented(context),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      const SizedBox(height: 4.0),
-                      Icon(Icons.thumb_up),
-                      const SizedBox(height: 4.0),
-                      Text('${data['likeCount']}'),
-                    ],
-                  )),
-              _SubscribeButton(),
-              FlatButton(
-                  onPressed: () => notImplemented(context),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      const SizedBox(height: 4.0),
-                      Icon(Icons.comment),
-                      const SizedBox(height: 4.0),
-                      Text('${data['commentCount']}'),
-                    ],
-                  )),
-              FlatButton(
-                  onPressed: () => notImplemented(context),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      const SizedBox(height: 4.0),
-                      Icon(Icons.share),
-                      const SizedBox(height: 4.0),
-                      Text('${data['shareCount']}'),
-                    ],
-                  )),
-            ],
-          ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: <Widget>[
+            FlatButton(
+                onPressed: () => notImplemented(context),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    const SizedBox(height: 4.0),
+                    Icon(Icons.thumb_up),
+                    const SizedBox(height: 4.0),
+                    Text('${data['likeCount']}'),
+                  ],
+                )),
+            _SubscribeButton(),
+            FlatButton(
+                onPressed: () => notImplemented(context),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    const SizedBox(height: 4.0),
+                    Icon(Icons.comment),
+                    const SizedBox(height: 4.0),
+                    Text('${data['commentCount']}'),
+                  ],
+                )),
+            FlatButton(
+                onPressed: () => notImplemented(context),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    const SizedBox(height: 4.0),
+                    Icon(Icons.share),
+                    const SizedBox(height: 4.0),
+                    Text('${data['shareCount']}'),
+                  ],
+                )),
+          ],
         ),
       ),
     );
