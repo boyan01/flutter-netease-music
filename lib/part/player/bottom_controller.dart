@@ -1,6 +1,7 @@
 library player;
 
 import 'package:flutter/material.dart';
+import 'package:quiet/material/playing_indicator.dart';
 import 'package:quiet/pages/page_playing_list.dart';
 import 'package:quiet/part/part.dart';
 import 'package:quiet/repository/netease_image.dart';
@@ -133,31 +134,25 @@ class BottomControllerBar extends StatelessWidget {
 class _PauseButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final state =
-        PlayerState.of(context, aspect: PlayerStateAspect.playbackState).value;
-    return Builder(builder: (context) {
-      if (state.isPlaying) {
-        return IconButton(
-            icon: Icon(Icons.pause),
-            onPressed: () {
-              quiet.pause();
-            });
-      } else if (state.isBuffering) {
-        return Container(
-          height: 24,
-          width: 24,
-          //to fit  IconButton min width 48
-          margin: EdgeInsets.only(right: 12),
-          padding: EdgeInsets.all(4),
-          child: CircularProgressIndicator(),
-        );
-      } else {
-        return IconButton(
-            icon: Icon(Icons.play_arrow),
-            onPressed: () {
-              quiet.play();
-            });
-      }
-    });
+    return PlayingIndicator(
+      playing: IconButton(
+          icon: Icon(Icons.pause),
+          onPressed: () {
+            quiet.pause();
+          }),
+      pausing: IconButton(
+          icon: Icon(Icons.play_arrow),
+          onPressed: () {
+            quiet.play();
+          }),
+      buffering: Container(
+        height: 24,
+        width: 24,
+        //to fit  IconButton min width 48
+        margin: EdgeInsets.only(right: 12),
+        padding: EdgeInsets.all(4),
+        child: CircularProgressIndicator(),
+      ),
+    );
   }
 }

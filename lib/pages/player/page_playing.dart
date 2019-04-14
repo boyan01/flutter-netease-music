@@ -3,6 +3,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:quiet/material/playing_indicator.dart';
 import 'package:quiet/pages/page_artist_detail.dart';
 import 'package:quiet/pages/page_comment.dart';
 import 'package:quiet/pages/page_playing_list.dart';
@@ -100,41 +101,36 @@ class _ControllerBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var color = Theme.of(context).primaryIconTheme.color;
-    var state =
-        PlayerState.of(context, aspect: PlayerStateAspect.playbackState).value;
 
-    final iconPlayPause = IndexedStack(
-      index: state.isPlaying ? 0 : state.isBuffering ? 2 : 1,
-      children: <Widget>[
-        IconButton(
-            tooltip: "暂停",
-            iconSize: 40,
-            icon: Icon(
-              Icons.pause_circle_outline,
-              color: color,
-            ),
-            onPressed: () {
-              quiet.pause();
-            }),
-        IconButton(
-            tooltip: "播放",
-            iconSize: 40,
-            icon: Icon(
-              Icons.play_circle_outline,
-              color: color,
-            ),
-            onPressed: () {
-              quiet.play();
-            }),
-        Container(
-          height: 56,
-          width: 56,
-          child: Center(
-            child: Container(
-                height: 24, width: 24, child: CircularProgressIndicator()),
+    final iconPlayPause = PlayingIndicator(
+      playing: IconButton(
+          tooltip: "暂停",
+          iconSize: 40,
+          icon: Icon(
+            Icons.pause_circle_outline,
+            color: color,
           ),
+          onPressed: () {
+            quiet.pause();
+          }),
+      pausing: IconButton(
+          tooltip: "播放",
+          iconSize: 40,
+          icon: Icon(
+            Icons.play_circle_outline,
+            color: color,
+          ),
+          onPressed: () {
+            quiet.play();
+          }),
+      buffering: Container(
+        height: 56,
+        width: 56,
+        child: Center(
+          child: Container(
+              height: 24, width: 24, child: CircularProgressIndicator()),
         ),
-      ],
+      ),
     );
 
     return Container(
@@ -351,7 +347,6 @@ class _CenterSection extends StatefulWidget {
 }
 
 class _CenterSectionState extends State<_CenterSection> {
-
   static bool _showLyric = false;
 
   @override
