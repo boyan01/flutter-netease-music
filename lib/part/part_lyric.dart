@@ -45,40 +45,54 @@ class LyricState extends State<Lyric> with TickerProviderStateMixin {
     super.initState();
     lyricPainter = LyricPainter(widget.lyricLineStyle, widget.lyric,
         textAlign: widget.textAlign, highlight: widget.highlight);
-    widget.position?.addListener(_onPositionChange);
+    widget.position?.addListener(_scrollToCurrentPosition);
+    _scrollToCurrentPosition();
   }
 
-  void _onPositionChange() {
+  //scroll lyric to current playing position
+  void _scrollToCurrentPosition({bool animate = true}) {
+    if (lyricPainter.height == 0 && lyricPainter.lyricPainters.length > 0) {
+      WidgetsBinding.instance.addPostFrameCallback((d) {
+        debugPrint("try to init scroll to position ${widget.position.value},"
+            "but lyricPainter is unavaiable, so scroll(without animate) on next frame $d");
+        _scrollToCurrentPosition(animate: false);
+      });
+      return;
+    }
+
     int milliseconds = widget.position.value;
 
     int line = widget.lyric
         .findLineByTimeStamp(milliseconds, lyricPainter.currentLine);
 
-//    debugPrint("is being dragging : $isDragging");
-
     if (lyricPainter.currentLine != line && !dragging) {
       double offset = lyricPainter.computeScrollTo(line);
-//      debugPrint("find line : $line , isDragging = $isDragging");
-//      debugPrint("start _lineController : $offset");
-      _lineController?.dispose();
-      _lineController = AnimationController(
-        vsync: this,
-        duration: Duration(milliseconds: 800),
-      )..addStatusListener((status) {
-          if (status == AnimationStatus.completed) {
-            _lineController.dispose();
-            _lineController = null;
-          }
+      debugPrint("find line : $line , isDragging = $dragging");
+      debugPrint("start _lineController : $offset");
+
+      if (animate) {
+        _lineController?.dispose();
+        _lineController = AnimationController(
+          vsync: this,
+          duration: Duration(milliseconds: 800),
+        )..addStatusListener((status) {
+            if (status == AnimationStatus.completed) {
+              _lineController.dispose();
+              _lineController = null;
+            }
+          });
+        Animation<double> animation = Tween<double>(
+                begin: lyricPainter.offsetScroll,
+                end: lyricPainter.offsetScroll + offset)
+            .chain(CurveTween(curve: Curves.easeInOut))
+            .animate(_lineController);
+        animation.addListener(() {
+          lyricPainter.offsetScroll = animation.value;
         });
-      Animation<double> animation = Tween<double>(
-              begin: lyricPainter.offsetScroll,
-              end: lyricPainter.offsetScroll + offset)
-          .chain(CurveTween(curve: Curves.easeInOut))
-          .animate(_lineController);
-      animation.addListener(() {
-        lyricPainter.offsetScroll = animation.value;
-      });
-      _lineController.forward();
+        _lineController.forward();
+      } else {
+        lyricPainter.offsetScroll += offset;
+      }
     }
     lyricPainter.currentLine = line;
   }
@@ -89,7 +103,7 @@ class LyricState extends State<Lyric> with TickerProviderStateMixin {
 
   @override
   void dispose() {
-    widget.position?.removeListener(_onPositionChange);
+    widget.position?.removeListener(_scrollToCurrentPosition);
     _flingController?.dispose();
     _flingController = null;
     _lineController?.dispose();
