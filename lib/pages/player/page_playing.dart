@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:quiet/material/playing_indicator.dart';
 import 'package:quiet/pages/page_artist_detail.dart';
-import 'package:quiet/pages/page_comment.dart';
+import 'package:quiet/pages/comments/page_comment.dart';
 import 'package:quiet/pages/page_playing_list.dart';
 import 'package:quiet/part/part.dart';
 import 'package:quiet/repository/netease.dart';

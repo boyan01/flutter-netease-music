@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:async/async.dart';
 import 'package:flutter/material.dart';
 import 'package:overlay_support/overlay_support.dart';
+import 'package:scoped_model/scoped_model.dart';
 
 ///build widget when Loader has completed loading...
 typedef LoaderWidgetBuilder<T> = Widget Function(
@@ -365,3 +366,4 @@ class _ItemLoadMore extends StatelessWidget {
     );
   }
 }
+
