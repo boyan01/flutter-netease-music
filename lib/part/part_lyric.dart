@@ -49,13 +49,28 @@ class LyricState extends State<Lyric> with TickerProviderStateMixin {
     _scrollToCurrentPosition();
   }
 
+  @override
+  void didUpdateWidget(Lyric oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.lyric != oldWidget.lyric) {
+      lyricPainter = LyricPainter(widget.lyricLineStyle, widget.lyric,
+          textAlign: widget.textAlign, highlight: widget.highlight);
+    }
+    if (widget.position != oldWidget.position) {
+      oldWidget.position?.removeListener(_scrollToCurrentPosition);
+      widget.position?.addListener(_scrollToCurrentPosition);
+    }
+    _scrollToCurrentPosition();
+  }
+
   //scroll lyric to current playing position
   void _scrollToCurrentPosition({bool animate = true}) {
-    if (lyricPainter.height == 0 && lyricPainter.lyricPainters.length > 0) {
+    if (lyricPainter.height == -1) {
       WidgetsBinding.instance.addPostFrameCallback((d) {
-        debugPrint("try to init scroll to position ${widget.position.value},"
-            "but lyricPainter is unavaiable, so scroll(without animate) on next frame $d");
-        _scrollToCurrentPosition(animate: false);
+//        debugPrint("try to init scroll to position ${widget.position.value},"
+//            "but lyricPainter is unavaiable, so scroll(without animate) on next frame $d");
+        //TODO maybe cause bad performance
+        if (mounted) _scrollToCurrentPosition(animate: false);
       });
       return;
     }
@@ -217,7 +232,7 @@ class LyricPainter extends ChangeNotifier implements CustomPainter {
   }
 
   double get height => _height;
-  double _height = 0;
+  double _height = -1;
 
   Paint debugPaint = Paint();
 
@@ -302,7 +317,7 @@ class LyricPainter extends ChangeNotifier implements CustomPainter {
 
   @override
   bool shouldRebuildSemantics(CustomPainter oldDelegate) =>
-      shouldRebuildSemantics(oldDelegate);
+      shouldRepaint(oldDelegate);
 }
 
 class LyricContent {
