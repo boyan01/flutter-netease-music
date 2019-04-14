@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:quiet/part/mv/mv_foreground_controller.dart';
-import 'package:quiet/part/mv/mv_player_model.dart';
+import 'package:quiet/pages/video/video_controller.dart';
+import 'package:quiet/pages/video/video_player_model.dart';
 import 'package:quiet/part/part.dart';
 import 'package:video_player/video_player.dart';
-
-import 'page_mv_detail.dart';
 
 ///全屏播放界面
 class FullScreenMvPlayer extends StatefulWidget {
@@ -28,7 +26,7 @@ class FullScreenMvPlayerState extends State<FullScreenMvPlayer> {
 
   @override
   Widget build(BuildContext context) {
-    final value = MvPlayerModel.of(context).playerValue;
+    final value = VideoPlayerModel.of(context).playerValue;
     return Scaffold(
       backgroundColor: Colors.black,
       body: Stack(
@@ -37,7 +35,7 @@ class FullScreenMvPlayerState extends State<FullScreenMvPlayer> {
             child: AspectRatio(
                 aspectRatio: value.initialized ? value.aspectRatio : 1,
                 child: VideoPlayer(
-                    MvPlayerModel.of(context).videoPlayerController)),
+                    VideoPlayerModel.of(context).videoPlayerController)),
           ),
           _FullScreenController(),
         ],
@@ -79,14 +77,14 @@ class _FullScreenController extends StatelessWidget {
         backgroundColor: Colors.transparent,
         elevation: 0,
         titleSpacing: 0,
-        title: Text(MvPlayerModel.of(context).mvData['name']),
+        title: Text(VideoPlayerModel.of(context).mvData['name']),
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.thumb_up),
             onPressed: () => notImplemented(context),
           ),
           IconButton(
-            icon: Icon(MvPlayerModel.of(context).subscribed
+            icon: Icon(VideoPlayerModel.of(context).subscribed
                 ? Icons.check_box
                 : Icons.add_box),
             onPressed: () => subscribeOrUnSubscribeMv(context),
@@ -105,7 +103,7 @@ class _FullScreenController extends StatelessWidget {
   }
 
   Widget _buildBottom(BuildContext context) {
-    final value = MvPlayerModel.of(context).playerValue;
+    final value = VideoPlayerModel.of(context).playerValue;
 
     final position = value.position.inMilliseconds;
     final duration = value.duration?.inMilliseconds ?? 0;
@@ -127,7 +125,7 @@ class _FullScreenController extends StatelessWidget {
                   max: duration.toDouble(),
                   onChanged: value.initialized
                       ? (v) {
-                          MvPlayerModel.of(context).videoPlayerController
+                          VideoPlayerModel.of(context).videoPlayerController
                             ..seekTo(Duration(milliseconds: v.toInt()))
                             ..play();
                         }
@@ -137,7 +135,7 @@ class _FullScreenController extends StatelessWidget {
             SizedBox(width: 4),
             PopupMenuButton<String>(
                 itemBuilder: (context) {
-                  return MvPlayerModel.of(context)
+                  return VideoPlayerModel.of(context)
                       .imageResolutions
                       .map((str) => PopupMenuItem<String>(
                             value: str,
@@ -146,11 +144,11 @@ class _FullScreenController extends StatelessWidget {
                       .toList();
                 },
                 onSelected: (v) =>
-                    MvPlayerModel.of(context).currentImageResolution = v,
+                    VideoPlayerModel.of(context).currentImageResolution = v,
                 child: Container(
                   padding: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
                   child: Text(
-                      '${MvPlayerModel.of(context).currentImageResolution}P'),
+                      '${VideoPlayerModel.of(context).currentImageResolution}P'),
                 )),
             IconButton(
                 icon: Icon(Icons.fullscreen_exit, color: Colors.white),
