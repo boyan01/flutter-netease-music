@@ -26,8 +26,6 @@ class _PlayingPageState extends State<PlayingPage> {
     super.initState();
     _music = quiet.value.current;
     quiet.addListener(_onPlayerStateChanged);
-
-    debugPrint("_PlayingPageState : init stated");
   }
 
   void _onPlayerStateChanged() {
@@ -353,14 +351,15 @@ class _CenterSection extends StatefulWidget {
 }
 
 class _CenterSectionState extends State<_CenterSection> {
-  bool showLyric = false;
+
+  static bool _showLyric = false;
 
   @override
   Widget build(BuildContext context) {
     return Expanded(
       child: AnimatedCrossFade(
         crossFadeState:
-            showLyric ? CrossFadeState.showSecond : CrossFadeState.showFirst,
+            _showLyric ? CrossFadeState.showSecond : CrossFadeState.showFirst,
         layoutBuilder: (Widget topChild, Key topChildKey, Widget bottomChild,
             Key bottomChildKey) {
           return Stack(
@@ -381,7 +380,7 @@ class _CenterSectionState extends State<_CenterSection> {
         firstChild: GestureDetector(
           onTap: () {
             setState(() {
-              showLyric = !showLyric;
+              _showLyric = !_showLyric;
             });
           },
           child: _AlbumCover(music: widget.music),
@@ -390,7 +389,7 @@ class _CenterSectionState extends State<_CenterSection> {
           music: widget.music,
           onTap: () {
             setState(() {
-              showLyric = !showLyric;
+              _showLyric = !_showLyric;
             });
           },
         ),
