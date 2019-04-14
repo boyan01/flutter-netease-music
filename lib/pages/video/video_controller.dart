@@ -1,7 +1,9 @@
+import 'dart:async';
+
 import 'package:async/async.dart';
 import 'package:flutter/material.dart';
 
-import 'package:quiet/pages/video/video_player_model.dart';
+import 'video_player_model.dart';
 
 typedef void MvControllerChangeCallback(bool show);
 
@@ -106,7 +108,8 @@ class _AnimatedMvControllerState extends State<AnimatedMvController>
             _hideDelay();
           },
           onDoubleTap: () {
-            final controller = VideoPlayerModel.of(context).videoPlayerController;
+            final controller =
+                VideoPlayerModel.of(context).videoPlayerController;
             final value = controller.value;
             if (value.initialized) {
               if (value.isPlaying) {
