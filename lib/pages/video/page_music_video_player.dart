@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:overlay_support/overlay_support.dart';
+import 'package:quiet/material/button.dart';
 import 'package:quiet/pages/comments/comments.dart';
 import 'package:quiet/pages/comments/page_comment.dart';
+import 'package:quiet/pages/page_artist_detail.dart';
 import 'package:quiet/part/part.dart';
 import 'package:quiet/repository/netease.dart';
 import 'package:scoped_model/scoped_model.dart';
@@ -119,6 +122,8 @@ class _MvDetailPageState extends State<_MvDetailPage> {
                             return _InformationSection();
                           case MusicVideoFloor.actions:
                             return _ActionsSection();
+                          case MusicVideoFloor.artists:
+                            return _ArtistSection();
                         }
                         assert(false, "error to build($index) for $item ");
                         return Container();
@@ -136,6 +141,7 @@ class _MvDetailPageState extends State<_MvDetailPage> {
 enum MusicVideoFloor {
   title,
   actions,
+  artists,
 }
 
 class _SimpleMusicVideo extends StatelessWidget {
@@ -450,5 +456,71 @@ class _SubscribeButton extends StatelessWidget {
             Text('${model.data.subCount}'),
           ],
         ));
+  }
+}
+
+class _ArtistSection extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    var data = VideoPlayerModel.of(context).data;
+
+    Widget widget;
+    if (data.artists == null || data.artists.isEmpty) {
+      widget = Container();
+    } else {
+      widget = _buildArtistTile(context, data.artists);
+    }
+
+    return Column(children: [
+      widget,
+      Container(
+        color: Theme.of(context).dividerColor,
+        height: 8,
+      )
+    ]);
+  }
+
+  Widget _buildArtistTile(BuildContext context, List<Artist> artist) {
+    return InkWell(
+      onTap: () {
+        launchArtistDetailPage(context, artist);
+      },
+      child: Container(
+        padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+        child: Row(
+          children: <Widget>[
+            ClipOval(
+              //TODO add artist image
+              child: SizedBox(
+                width: 36,
+                height: 36,
+                child: Container(color: Theme.of(context).disabledColor),
+              ),
+            ),
+            SizedBox(width: 12),
+            Text(artist.map((ar) => ar.name).join('/')),
+            Spacer(),
+            ButtonTheme(
+              minWidth: 30,
+              height: 32,
+              padding: EdgeInsets.all(0),
+              child: RaisedButtonWithIcon(
+                onPressed: () {
+                  toast(context, '收藏');
+                },
+                materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                textColor: Theme.of(context).primaryTextTheme.body1.color,
+                icon: Icon(Icons.add, size: 18),
+                label: Text('收藏', style: TextStyle(fontSize: 12)),
+                color: Theme.of(context).primaryColor,
+                labelSpacing: 4,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(20))),
+              ),
+            )
+          ],
+        ),
+      ),
+    );
   }
 }
