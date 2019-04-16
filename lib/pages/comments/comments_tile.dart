@@ -11,85 +11,90 @@ class _ItemTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () async {
-        if (commentThreadId.type == CommentType.playlist) {
-          Navigator.push(context, MaterialPageRoute(builder: (context) {
-            final playlist = (payload.obj as PlaylistDetail);
-            return PlaylistDetailPage(
-              playlist.id,
-              playlist: playlist,
-            );
-          }));
-        } else if (commentThreadId.type == CommentType.song) {
-          Music music = payload.obj;
-          if (quiet.value.current != music) {
-            dynamic result = await showDialog(
-                context: context,
-                builder: (context) {
-                  return AlertDialog(
-                    content: Text("开始播放 ${music.title} ?"),
-                    actions: <Widget>[
-                      FlatButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          child: Text("取消")),
-                      FlatButton(
-                          onPressed: () {
-                            Navigator.pop(context, true);
-                          },
-                          child: Text("播放")),
-                    ],
-                  );
-                });
-            if (!(result is bool && result)) {
-              return;
+    return Column(
+      children: <Widget>[
+        InkWell(
+          onTap: () async {
+            if (commentThreadId.type == CommentType.playlist) {
+              Navigator.push(context, MaterialPageRoute(builder: (context) {
+                final playlist = (payload.obj as PlaylistDetail);
+                return PlaylistDetailPage(
+                  playlist.id,
+                  playlist: playlist,
+                );
+              }));
+            } else if (commentThreadId.type == CommentType.song) {
+              Music music = payload.obj;
+              if (quiet.value.current != music) {
+                dynamic result = await showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        content: Text("开始播放 ${music.title} ?"),
+                        actions: <Widget>[
+                          FlatButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              child: Text("取消")),
+                          FlatButton(
+                              onPressed: () {
+                                Navigator.pop(context, true);
+                              },
+                              child: Text("播放")),
+                        ],
+                      );
+                    });
+                if (!(result is bool && result)) {
+                  return;
+                }
+                await quiet.play(music: music);
+              }
+              Navigator.push(context, MaterialPageRoute(builder: (context) {
+                return PlayingPage();
+              }));
             }
-            await quiet.play(music: music);
-          }
-          Navigator.push(context, MaterialPageRoute(builder: (context) {
-            return PlayingPage();
-          }));
-        }
-      },
-      child: Container(
-        padding: EdgeInsets.all(10),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            ClipRRect(
-              borderRadius: BorderRadius.all(Radius.circular(3)),
-              child: Image(
-                fit: BoxFit.cover,
-                image: NeteaseImage(payload.coverImage),
-                width: 60,
-                height: 60,
-              ),
-            ),
-            Padding(padding: EdgeInsets.only(left: 10)),
-            Container(
-              height: 60,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    payload.title,
-                    style: Theme.of(context).textTheme.subtitle,
+          },
+          child: Container(
+            padding: EdgeInsets.all(10),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                ClipRRect(
+                  borderRadius: BorderRadius.all(Radius.circular(3)),
+                  child: Image(
+                    fit: BoxFit.cover,
+                    image: NeteaseImage(payload.coverImage),
+                    width: 60,
+                    height: 60,
                   ),
-                  Text(
-                    payload.subtitle,
-                    style: Theme.of(context).textTheme.caption,
+                ),
+                Padding(padding: EdgeInsets.only(left: 10)),
+                Container(
+                  height: 60,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        payload.title,
+                        style: Theme.of(context).textTheme.subtitle,
+                      ),
+                      Text(
+                        payload.subtitle,
+                        style: Theme.of(context).textTheme.caption,
+                      ),
+                    ],
                   ),
-                ],
-              ),
+                ),
+                Spacer(),
+                Icon(Icons.chevron_right)
+              ],
             ),
-            Spacer(),
-            Icon(Icons.chevron_right)
-          ],
+          ),
         ),
-      ),
+        Container(height: 7, color: Theme.of(context).dividerColor)
+      ],
     );
   }
 }
@@ -145,11 +150,10 @@ class _ItemHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.only(left: 8, top: 4, bottom: 4),
-      color: Theme.of(context).dividerColor,
+      padding: EdgeInsets.only(left: 16, top: 16, bottom: 10),
       child: Text(
         title,
-        style: Theme.of(context).textTheme.caption,
+        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
       ),
     );
   }
@@ -197,66 +201,71 @@ class _ItemCommentState extends State<_ItemComment> {
               );
             });
       },
-      child: Padding(
-        padding: EdgeInsets.only(left: 8, top: 8, right: 8),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                ClipOval(
-                    child: Image(
-                  image: NeteaseImage(user.avatarUrl),
-                  width: 36,
-                  height: 36,
-                )),
-                Padding(padding: EdgeInsets.only(left: 8)),
-                Expanded(
-                    child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    Text(
-                      user.nickname,
-                      style: Theme.of(context).textTheme.body1,
-                    ),
-                    Text(
-                      getFormattedTime(widget.comment.time),
-                      style: Theme.of(context).textTheme.caption,
-                    ),
-                  ],
-                )),
-                Text(
-                  widget.comment.likedCount.toString(),
-                  style: Theme.of(context).textTheme.caption,
-                ),
-                Padding(padding: EdgeInsets.only(left: 2)),
-                InkResponse(
-                  onTap: () async {
-                    //TODO
-                  },
-                  child: Icon(
-                    Icons.thumb_up,
-                    size: 15,
-                    color: widget.comment.liked
-                        ? Theme.of(context).accentColor
-                        : Theme.of(context).disabledColor,
+      child: DividerWrapper(
+        indent: 60,
+        child: Padding(
+          padding: EdgeInsets.only(left: 16, top: 10, right: 16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  ClipOval(
+                      child: Image(
+                    image: NeteaseImage(user.avatarUrl),
+                    width: 36,
+                    height: 36,
+                  )),
+                  Padding(padding: EdgeInsets.only(left: 10)),
+                  Expanded(
+                      child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[
+                      Text(
+                        user.nickname,
+                        style: Theme.of(context).textTheme.body1,
+                      ),
+                      Text(
+                        getFormattedTime(widget.comment.time),
+                        style: Theme.of(context).textTheme.caption,
+                      ),
+                    ],
+                  )),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.baseline,
+                    textBaseline: TextBaseline.ideographic,
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      Text(
+                        widget.comment.likedCount.toString(),
+                        style: TextStyle(fontSize: 11),
+                      ),
+                      Padding(padding: EdgeInsets.only(left: 5)),
+                      InkResponse(
+                        onTap: () async {
+                          //TODO
+                        },
+                        child: Icon(
+                          Icons.thumb_up,
+                          size: 15,
+                          color: widget.comment.liked
+                              ? Theme.of(context).accentColor
+                              : Theme.of(context).disabledColor,
+                        ),
+                      )
+                    ],
                   ),
-                )
-              ],
-            ),
-            Container(
-              padding: EdgeInsets.only(left: 44),
-              margin: EdgeInsets.symmetric(vertical: 4),
-              child: Text(widget.comment.content),
-            ),
-            Padding(padding: EdgeInsets.only(top: 4)),
-            Divider(
-              height: 0,
-              indent: 44,
-            )
-          ],
+                ],
+              ),
+              Container(
+                padding: EdgeInsets.only(left: 44),
+                margin: EdgeInsets.symmetric(vertical: 8),
+                child: Text(widget.comment.content, maxLines: 10),
+              ),
+            ],
+          ),
         ),
       ),
     );

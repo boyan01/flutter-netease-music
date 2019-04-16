@@ -20,7 +20,7 @@ class DividerWrapper extends StatelessWidget {
         children: <Widget>[
           child,
           SizedBox(height: extent),
-          Divider(height: 0, indent: indent)
+          Divider(height: 0, indent: indent,color: Colors.black12,)
         ],
       ),
     );
