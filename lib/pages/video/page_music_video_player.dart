@@ -322,7 +322,7 @@ class _InformationSectionState extends State<_InformationSection> {
     final data = VideoPlayerModel.of(context).data;
 
     Widget description;
-    if (_expanded) {
+    if (_expanded && data.desc != null) {
       description = Padding(
         padding: const EdgeInsets.only(top: 8),
         child: Text(
@@ -367,14 +367,17 @@ class _InformationSectionState extends State<_InformationSection> {
                   ],
                 ),
               ),
-              IconButton(
-                icon: Icon(
-                    _expanded ? Icons.arrow_drop_up : Icons.arrow_drop_down),
-                onPressed: () {
-                  setState(() {
-                    _expanded = !_expanded;
-                  });
-                },
+              Visibility(
+                visible: data.desc != null,
+                child: IconButton(
+                  icon: Icon(
+                      _expanded ? Icons.arrow_drop_up : Icons.arrow_drop_down),
+                  onPressed: () {
+                    setState(() {
+                      _expanded = !_expanded;
+                    });
+                  },
+                ),
               )
             ],
           ),
