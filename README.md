@@ -37,6 +37,6 @@ all API information comes from this project: [NeteaseCloudMusicApi](https://gith
 |  ![main_playlist](./_preview/main_playlists.jpg)   |        ![main_cloud](./_preview/main_cloud.jpg)        | ![playlist_detail](./_preview/playlist_detail.jpg) | ![artist_detail](./_preview/artist_detail.jpg) |
 | :------------------------------------------------: | :----------------------------------------------------: | :------------------------------------------------: | :--------------------------------------------: |
 |    ![page_comment](./_preview/page_comment.jpg)    |           ![playing](./_preview/playing.jpg)           |          ![search](./_preview/search.jpg)          | ![search_result](./_preview/search_result.jpg) |
-| ![music_selection](./_preview/music_selection.jpg) | ![playlist_selector](./_preview/playlist_selector.jpg) |   ![playlist_selector](./_preview/mv_detail.jpg)   |                                                |
+| ![music_selection](./_preview/music_selection.jpg) | ![playlist_selector](./_preview/playlist_selector.jpg) |   ![music video](https://boyan01.github.io/quiet/music_video.png)   |                                                |
 
 
