@@ -39,6 +39,7 @@ class MyApp extends StatelessWidget {
                           color: Colors.black87)
                     ]),
                   ),
+                  dividerColor: Color(0xfff5f5f5),
                   iconTheme: IconThemeData(color: Color(0xFFb3b3b3)),
                 ),
               );
