@@ -1,3 +1,5 @@
+import 'package:quiet/model/model.dart';
+
 class MusicVideoDetail {
   int id;
   String name;
@@ -19,7 +21,7 @@ class MusicVideoDetail {
   ///key: video stream name
   ///value:video stream url
   Map brs;
-  List<Artists> artists;
+  List<Artist> artists;
   bool isReward;
   String commentThreadId;
 
@@ -41,8 +43,8 @@ class MusicVideoDetail {
         nType = map["nType"],
         publishTime = map["publishTime"],
         brs = map["brs"],
-        artists = List<Artists>.from(
-            map["artists"].map((it) => Artists.fromJsonMap(it))),
+        artists =
+            List<Artist>.from(map["artists"].map((it) => Artist.fromMap(it))),
         isReward = map["isReward"],
         commentThreadId = map["commentThreadId"];
 
@@ -66,25 +68,9 @@ class MusicVideoDetail {
     data['publishTime'] = publishTime;
     data['brs'] = brs;
     data['artists'] =
-        artists != null ? this.artists.map((v) => v.toJson()).toList() : null;
+        artists != null ? this.artists.map((v) => v.toMap()).toList() : null;
     data['isReward'] = isReward;
     data['commentThreadId'] = commentThreadId;
-    return data;
-  }
-}
-
-class Artists {
-  int id;
-  String name;
-
-  Artists.fromJsonMap(Map<String, dynamic> map)
-      : id = map["id"],
-        name = map["name"];
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = id;
-    data['name'] = name;
     return data;
   }
 }
