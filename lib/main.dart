@@ -1,6 +1,5 @@
-import 'dart:math' as math;
-
 import 'package:flutter/material.dart';
+import 'package:quiet/material/app.dart';
 
 import 'part/part.dart';
 
@@ -13,8 +12,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return Netease(
       child: Quiet(
-        child: CustomPaint(
-          foregroundPainter: _CopyrightPainter(),
+        child: CopyRightOverlay(
           child: ScopedModel<QuietTheme>(
             model: _theme,
             child: ScopedModelDescendant<QuietTheme>(
@@ -48,51 +46,5 @@ class MyApp extends StatelessWidget {
         ),
       ),
     );
-  }
-}
-
-class _CopyrightPainter extends CustomPainter {
-  final TextPainter _textPainter = TextPainter(
-      text: TextSpan(
-        text: "只用作个人学习研究，禁止用于商业及非法用途     只用作个人学习研究，禁止用于商业及非法用途",
-        style: TextStyle(color: Colors.grey.withOpacity(0.3)),
-      ),
-      textDirection: TextDirection.ltr);
-
-  bool _dirty = true;
-
-  static const double radius = (math.pi / 4);
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    var debugMode = false;
-    assert(() {
-      debugMode = true;
-      return true;
-    }());
-    if (debugMode) {
-      return;
-    }
-
-    if (_dirty) {
-      _textPainter.layout();
-      _dirty = false;
-    }
-    canvas.rotate(-radius);
-
-    double dy = 0;
-    while (dy < size.height) {
-      canvas.save();
-      double dx = dy * math.tan(radius);
-      canvas.translate(-dx, dy);
-      _textPainter.paint(canvas, Offset.zero);
-      dy += _textPainter.height * 3;
-      canvas.restore();
-    }
-  }
-
-  @override
-  bool shouldRepaint(CustomPainter oldDelegate) {
-    return false;
   }
 }
