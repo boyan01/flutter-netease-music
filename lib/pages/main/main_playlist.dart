@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:overlay_support/overlay_support.dart';
+import 'package:quiet/material/button.dart';
 import 'package:quiet/model/playlist_detail.dart';
 import 'package:quiet/pages/page_playlist_edit.dart';
 import 'package:quiet/pages/record/page_record.dart';
@@ -60,8 +61,23 @@ class _MainPlaylistState extends State<MainPlaylistPage>
                   result.where((p) => p.creator["userId"] != userId).toList();
               return ListView(children: [
                 _PinnedHeader(),
-                _ExpansionPlaylistGroup.fromPlaylist("创建的歌单", created),
-                _ExpansionPlaylistGroup.fromPlaylist("收藏的歌单", subscribed)
+                _ExpansionPlaylistGroup.fromPlaylist(
+                  "创建的歌单",
+                  created,
+                  onAddClick: () {
+                    toast(context, 'add: todo');
+                  },
+                  onMoreClick: () {
+                    toast(context, 'more: todo');
+                  },
+                ),
+                _ExpansionPlaylistGroup.fromPlaylist(
+                  "收藏的歌单",
+                  subscribed,
+                  onMoreClick: () {
+                    toast(context, 'more: todo');
+                  },
+                )
               ]);
             }),
       );
@@ -127,38 +143,46 @@ class _PinnedHeader extends StatelessWidget {
                 Navigator.pushNamed(context, ROUTE_MY_DJ);
               },
             )),
-        DividerWrapper(
-            indent: 16,
-            child: ListTile(
-              leading: Icon(
-                Icons.library_music,
-                color: Theme.of(context).primaryColor,
-              ),
-              title: Text.rich(TextSpan(children: [
-                TextSpan(text: '我的收藏 '),
-                TextSpan(
-                    style: const TextStyle(fontSize: 13, color: Colors.grey),
-                    text:
-                        '(${Counter.of(context).mvCount + Counter.of(context).artistCount})'),
-              ])),
-              onTap: () {
-                Navigator.pushNamed(context, ROUTE_MY_COLLECTION);
-              },
-            )),
+        ListTile(
+          leading: Icon(
+            Icons.library_music,
+            color: Theme.of(context).primaryColor,
+          ),
+          title: Text.rich(TextSpan(children: [
+            TextSpan(text: '我的收藏 '),
+            TextSpan(
+                style: const TextStyle(fontSize: 13, color: Colors.grey),
+                text:
+                    '(${Counter.of(context).mvCount + Counter.of(context).artistCount})'),
+          ])),
+          onTap: () {
+            Navigator.pushNamed(context, ROUTE_MY_COLLECTION);
+          },
+        ),
+        Container(height: 8, color: Color(0xfff5f5f5))
       ]..removeWhere((v) => v == null),
     );
   }
 }
 
 class _ExpansionPlaylistGroup extends StatefulWidget {
-  _ExpansionPlaylistGroup(this.title, this.children);
+  _ExpansionPlaylistGroup(this.title, this.children,
+      {this.onMoreClick, this.onAddClick});
 
-  _ExpansionPlaylistGroup.fromPlaylist(String title, List<PlaylistDetail> list)
-      : this(title, list.map((p) => _ItemPlaylist(playlist: p)).toList());
+  _ExpansionPlaylistGroup.fromPlaylist(String title, List<PlaylistDetail> list,
+      {@required VoidCallback onMoreClick, VoidCallback onAddClick})
+      : this(title, list.map((p) => _ItemPlaylist(playlist: p)).toList(),
+            onAddClick: onAddClick, onMoreClick: onMoreClick);
 
   final String title;
 
   final List<Widget> children;
+
+  //icon more click callback
+  final VoidCallback onMoreClick;
+
+  //icon add click callback. if null, hide
+  final VoidCallback onAddClick;
 
   @override
   _ExpansionPlaylistGroupState createState() => _ExpansionPlaylistGroupState();
@@ -230,23 +254,43 @@ class _ExpansionPlaylistGroupState extends State<_ExpansionPlaylistGroup>
   }
 
   Widget _buildTitle(BuildContext context) {
-    final color = Theme.of(context).textTheme.caption.color;
-    return Container(
-      color: const Color.fromARGB(255, 243, 243, 243),
-      padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 4),
-      child: InkWell(
-        onTap: _handleTap,
+    return InkWell(
+      onTap: _handleTap,
+      child: Container(
+        height: 40,
         child: Row(
           children: <Widget>[
             RotationTransition(
                 turns: _iconTurns,
                 child: Icon(
                   Icons.chevron_right,
-                  color: color,
+                  size: 25,
+                  color: Color(0xff4d4d4d),
                 )),
             SizedBox(width: 4),
-            Text('${widget.title}(${widget.children.length})',
-                style: TextStyle(color: color)),
+            Text('${widget.title}',
+                style: Theme.of(context)
+                    .textTheme
+                    .title
+                    .copyWith(fontWeight: FontWeight.bold, fontSize: 16)),
+            SizedBox(width: 4),
+            Text(
+              '(${widget.children.length})',
+              style: Theme.of(context).textTheme.caption,
+            ),
+            Spacer(),
+            widget.onAddClick == null
+                ? Container()
+                : IconButton2(
+                    iconSize: 24,
+                    padding: EdgeInsets.all(4),
+                    icon: Icon(Icons.add),
+                    onPressed: widget.onAddClick),
+            IconButton2(
+                padding: EdgeInsets.all(4),
+                icon: Icon(Icons.more_vert),
+                onPressed: widget.onMoreClick),
+            SizedBox(width: 8),
           ],
         ),
       ),
@@ -283,7 +327,7 @@ class _ItemPlaylist extends StatelessWidget {
         height: 60,
         child: Row(
           children: <Widget>[
-            Padding(padding: EdgeInsets.only(left: 8)),
+            Padding(padding: EdgeInsets.only(left: 16)),
             Hero(
               tag: playlist.heroTag,
               child: SizedBox(
@@ -297,69 +341,54 @@ class _ItemPlaylist extends StatelessWidget {
                     fit: BoxFit.cover,
                   ),
                 ),
-                height: 52,
-                width: 52,
+                height: 50,
+                width: 50,
               ),
             ),
-            Padding(padding: EdgeInsets.only(left: 8)),
+            Padding(padding: EdgeInsets.only(left: 10)),
             Expanded(
-                child: Column(
-              children: <Widget>[
-                Expanded(
-                    child: Row(
-                  children: <Widget>[
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Spacer(),
-                          Text(
-                            playlist.name,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: Theme.of(context).textTheme.body1,
-                          ),
-                          Padding(padding: EdgeInsets.only(top: 4)),
-                          Text("${playlist.trackCount}首",
-                              style: Theme.of(context).textTheme.caption),
-                          Spacer(),
-                        ],
-                      ),
-                    ),
-                    PopupMenuButton<PlaylistOp>(
-                      itemBuilder: (context) {
-                        return [
-                          PopupMenuItem(
-                              child: Text("分享"), value: PlaylistOp.share),
-                          PopupMenuItem(
-                              child: Text("编辑歌单信息"), value: PlaylistOp.edit),
-                          PopupMenuItem(
-                              child: Text("删除"), value: PlaylistOp.delete),
-                        ];
-                      },
-                      onSelected: (op) {
-                        switch (op) {
-                          case PlaylistOp.delete:
-                          case PlaylistOp.share:
-                            showSimpleNotification(
-                                context, Text("Not implemented"),
-                                background: Theme.of(context).errorColor);
-                            break;
-                          case PlaylistOp.edit:
-                            Navigator.of(context)
-                                .push(MaterialPageRoute(builder: (context) {
-                              return PlaylistEditPage(playlist);
-                            }));
-                            break;
-                        }
-                      },
-                      icon: Icon(Icons.more_vert),
-                    )
-                  ],
-                )),
-                Divider(height: 0),
-              ],
-            )),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Spacer(),
+                  Text(
+                    playlist.name,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(fontSize: 15),
+                  ),
+                  Padding(padding: EdgeInsets.only(top: 4)),
+                  Text("${playlist.trackCount}首",
+                      style: Theme.of(context).textTheme.caption),
+                  Spacer(),
+                ],
+              ),
+            ),
+            PopupMenuButton<PlaylistOp>(
+              itemBuilder: (context) {
+                return [
+                  PopupMenuItem(child: Text("分享"), value: PlaylistOp.share),
+                  PopupMenuItem(child: Text("编辑歌单信息"), value: PlaylistOp.edit),
+                  PopupMenuItem(child: Text("删除"), value: PlaylistOp.delete),
+                ];
+              },
+              onSelected: (op) {
+                switch (op) {
+                  case PlaylistOp.delete:
+                  case PlaylistOp.share:
+                    showSimpleNotification(context, Text("Not implemented"),
+                        background: Theme.of(context).errorColor);
+                    break;
+                  case PlaylistOp.edit:
+                    Navigator.of(context)
+                        .push(MaterialPageRoute(builder: (context) {
+                      return PlaylistEditPage(playlist);
+                    }));
+                    break;
+                }
+              },
+              icon: Icon(Icons.more_vert),
+            ),
           ],
         ),
       ),
