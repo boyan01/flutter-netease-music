@@ -217,8 +217,8 @@ class NeteaseRepository {
       return cached;
     }
     var result = await doRequest(
-        "https://music.163.com/weapi/song/lyric?os=osx&id=$id&lv=-1&kv=-1&tv=-1",
-        {});
+        'https://music.163.com/weapi/song/lyric?lv=-1&kv=-1&tv=-1', {"id": id},
+        type: EncryptType.linux);
     if (!responseVerify(result).isSuccess) {
       return Future.error(result["msg"]);
     }
