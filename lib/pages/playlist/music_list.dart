@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:quiet/model/model.dart';
-import 'package:quiet/pages/page_artist_detail.dart';
+import 'package:quiet/pages/artists/page_artist_detail.dart';
 import 'package:quiet/pages/comments/page_comment.dart';
 import 'package:quiet/part/part.dart';
 import 'package:quiet/part/route.dart';

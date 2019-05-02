@@ -16,6 +16,7 @@ class _VideosResultSectionState extends State<VideosResultSection>
     with AutomaticKeepAliveClientMixin {
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Loader<Map<String, dynamic>>(
         loadTask: () =>
             neteaseRepository.search(widget.query, NeteaseSearchType.video),

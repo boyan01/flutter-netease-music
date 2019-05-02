@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:quiet/pages/page_artist_detail.dart';
+import 'package:quiet/pages/artists/page_artist_detail.dart';
 import 'package:quiet/part/part.dart';
 import 'package:quiet/repository/netease.dart';
 
@@ -16,6 +16,7 @@ class _ArtistsResultSectionState extends State<ArtistsResultSection>
     with AutomaticKeepAliveClientMixin {
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Loader<Map<String, dynamic>>(
         loadTask: () =>
             neteaseRepository.search(widget.query, NeteaseSearchType.artist),

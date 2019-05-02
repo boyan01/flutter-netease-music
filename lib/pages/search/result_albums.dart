@@ -19,6 +19,7 @@ class _AlbumsResultSectionState extends State<AlbumsResultSection>
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Loader<Map<String, dynamic>>(
         loadTask: () =>
             neteaseRepository.search(widget.query, NeteaseSearchType.album),
