@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:quiet/component/utils/utils.dart';
 import 'package:quiet/pages/artists/page_artist_detail.dart';
 import 'package:quiet/pages/comments/page_comment.dart';
 import 'package:quiet/pages/playlist/music_list.dart';

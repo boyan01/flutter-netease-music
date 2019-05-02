@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:overlay_support/overlay_support.dart';
+import 'package:quiet/component/utils/utils.dart';
 import 'package:quiet/model/playlist_detail.dart';
 import 'package:quiet/pages/comments/page_comment.dart';
 import 'package:quiet/pages/playlist/page_playlist_detail_selection.dart';
@@ -197,18 +198,19 @@ class _PlaylistBodyState extends State<_PlaylistBody> {
     return MusicList(
       token: "playlist_${widget.playlist.id}",
       musics: widget.musicList,
-      remove: widget.playlist.creator["userId"] != UserAccount.of(context).userId
-          ? null
-          : (music) async {
-              var result = await neteaseRepository.playlistTracksEdit(
-                  PlaylistOperation.remove, widget.playlist.id, [music.id]);
-              if (result) {
-                setState(() {
-                  widget.playlist.musicList.remove(music);
-                });
-              }
-              toast(context, result ? '删除成功' : '删除失败');
-            },
+      remove:
+          widget.playlist.creator["userId"] != UserAccount.of(context).userId
+              ? null
+              : (music) async {
+                  var result = await neteaseRepository.playlistTracksEdit(
+                      PlaylistOperation.remove, widget.playlist.id, [music.id]);
+                  if (result) {
+                    setState(() {
+                      widget.playlist.musicList.remove(music);
+                    });
+                  }
+                  toast(context, result ? '删除成功' : '删除失败');
+                },
       onMusicTap: MusicList.defaultOnTap,
       leadingBuilder: MusicList.indexedLeadingBuilder,
       trailingBuilder: MusicList.defaultTrailingBuilder,

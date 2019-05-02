@@ -6,7 +6,7 @@ import 'package:flutter/widgets.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:ui' as ui show Codec;
 
-import 'package:quiet/part/part_cache.dart';
+import 'package:quiet/component/cache/key_value_cache.dart';
 
 ///image provider for netease image
 class NeteaseImage extends ImageProvider<NeteaseImage> implements CacheKey {

@@ -3,7 +3,7 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:quiet/part/part.dart';
+import 'package:quiet/component/utils/utils.dart';
 
 class Lyric extends StatefulWidget {
   Lyric(
