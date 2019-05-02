@@ -3,6 +3,7 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:quiet/component/utils/utils.dart';
 import 'package:quiet/material/playing_indicator.dart';
 import 'package:quiet/pages/artists/page_artist_detail.dart';
 import 'package:quiet/pages/comments/page_comment.dart';
@@ -914,19 +915,22 @@ class _PlayingTitle extends StatelessWidget {
             onTap: () {
               launchArtistDetailPage(context, music.artist);
             },
-            child: Wrap(
-              crossAxisAlignment: WrapCrossAlignment.center,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
               children: <Widget>[
-                Text(
-                  wrapText(music.artist.map((a) => a.name).join('/'),
-                      maxLength: 10),
-                  style: Theme.of(context)
-                      .primaryTextTheme
-                      .body1
-                      .copyWith(fontSize: 13),
-                  maxLines: 1,
+                Container(
+                  constraints: BoxConstraints(maxWidth: 200),
+                  child: Text(
+                    music.artist.map((a) => a.name).join('/'),
+                    style: Theme.of(context)
+                        .primaryTextTheme
+                        .body1
+                        .copyWith(fontSize: 13),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
-                Icon(Icons.chevron_right, size: 17)
+                Icon(Icons.chevron_right, size: 17),
               ],
             ),
           )

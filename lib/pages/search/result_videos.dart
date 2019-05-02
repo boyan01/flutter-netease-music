@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:quiet/component/utils/utils.dart';
 import 'package:quiet/part/part.dart';
 import 'package:quiet/repository/netease.dart';
 
@@ -44,7 +45,6 @@ class _VideosResultSectionState extends State<VideosResultSection>
   bool get wantKeepAlive => true;
 }
 
-
 ///item for video
 class VideoTile extends StatelessWidget {
   const VideoTile({Key key, this.map})
@@ -78,30 +78,30 @@ class VideoTile extends StatelessWidget {
             Padding(padding: EdgeInsets.only(left: 8)),
             Expanded(
                 child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Expanded(
+                    child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
-                    Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: <Widget>[
-                            Text(map["title"],
-                                maxLines: 2, overflow: TextOverflow.ellipsis),
-                            Text(
-                              "${getTimeStamp(map["durationms"])} by ${(map["creator"] as List).cast<Map>().map((creator) {
-                                return creator["userName"];
-                              }).join("/")}",
-                              style: Theme.of(context).textTheme.caption,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ],
-                        )),
-                    Divider(
-                      height: 0,
-                    )
+                    Text(map["title"],
+                        maxLines: 2, overflow: TextOverflow.ellipsis),
+                    Text(
+                      "${getTimeStamp(map["durationms"])} by ${(map["creator"] as List).cast<Map>().map((creator) {
+                        return creator["userName"];
+                      }).join("/")}",
+                      style: Theme.of(context).textTheme.caption,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ],
-                ))
+                )),
+                Divider(
+                  height: 0,
+                )
+              ],
+            ))
           ],
         ),
       ),

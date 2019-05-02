@@ -1,6 +1,7 @@
 library player;
 
 import 'package:flutter/material.dart';
+import 'package:quiet/component/utils/utils.dart';
 import 'package:quiet/material/playing_indicator.dart';
 import 'package:quiet/pages/page_playing_list.dart';
 import 'package:quiet/part/part.dart';
