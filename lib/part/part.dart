@@ -5,9 +5,9 @@ import 'package:flutter/widgets.dart';
 import 'package:overlay_support/overlay_support.dart';
 
 export 'package:quiet/component/cache/cache.dart';
+export 'package:quiet/material/dividers.dart';
 export 'package:quiet/model/model.dart';
 export 'package:quiet/pages/account/account.dart';
-export 'package:quiet/part/material/dividers.dart';
 export 'package:scoped_model/scoped_model.dart';
 
 export 'dialogs.dart';
