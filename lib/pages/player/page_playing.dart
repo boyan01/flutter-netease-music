@@ -11,6 +11,8 @@ import 'package:quiet/part/part.dart';
 import 'package:quiet/repository/netease.dart';
 import 'package:quiet/service/channel_media_player.dart';
 
+import 'lyric.dart';
+
 ///歌曲播放页面
 class PlayingPage extends StatefulWidget {
   @override
