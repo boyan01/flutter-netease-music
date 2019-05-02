@@ -5,6 +5,7 @@ import 'package:flutter/widgets.dart';
 import 'package:overlay_support/overlay_support.dart';
 
 export 'package:quiet/model/model.dart';
+export 'package:quiet/pages/account/account.dart';
 export 'package:quiet/part/material/dividers.dart';
 export 'package:scoped_model/scoped_model.dart';
 
@@ -12,10 +13,8 @@ export 'dialogs.dart';
 export 'loader.dart';
 export 'netease/counter.dart';
 export 'netease/liked_song_list.dart';
-export 'package:quiet/pages/account/account.dart';
 export 'netease/netease.dart';
 export 'part_cache.dart';
-export 'part_player_service.dart';
 export 'part_utils.dart';
 export 'player/player.dart';
 export 'route.dart';
