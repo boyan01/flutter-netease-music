@@ -24,6 +24,7 @@ class _MainPlaylistState extends State<MainPlaylistPage>
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     final userId = UserAccount.of(context).userId;
 
     Widget widget;

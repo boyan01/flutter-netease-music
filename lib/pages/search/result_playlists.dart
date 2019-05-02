@@ -18,6 +18,7 @@ class _PlaylistResultSectionState extends State<PlaylistResultSection>
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Loader(
         loadTask: () =>
             neteaseRepository.search(widget.query, NeteaseSearchType.playlist),

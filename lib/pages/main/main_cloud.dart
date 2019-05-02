@@ -16,6 +16,7 @@ class CloudPageState extends State<MainCloudPage>
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return ListView(
       children: <Widget>[
         _NavigationLine(),

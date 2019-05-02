@@ -60,6 +60,7 @@ class _RecordSectionState extends State<_RecordSection>
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Loader<Map>(
       loadTask: () => neteaseRepository.getRecord(widget.uid, widget.type),
       resultVerify: neteaseRepository.responseVerify,
