@@ -1,8 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:quiet/part/loader.dart';
-
+import 'package:loader/loader.dart';
 import 'package:quiet/repository/netease.dart';
 
 bool enableCache = true;
