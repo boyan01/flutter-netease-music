@@ -17,7 +17,6 @@ export 'netease/liked_song_list.dart';
 export 'netease/netease.dart';
 export 'player/player.dart';
 export 'route.dart';
-export 'theme/theme.dart';
 export 'tiles.dart';
 
 void notImplemented(BuildContext context) {
