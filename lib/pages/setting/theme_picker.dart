@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:quiet/part/part.dart';
+import 'package:quiet/component/theme/theme.dart';
 
 class ThemePicker extends StatelessWidget {
   ///show theme picker dialog
