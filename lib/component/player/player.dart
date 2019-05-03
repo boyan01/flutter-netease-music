@@ -5,14 +5,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:meta/meta.dart';
 import 'package:overlay_support/overlay_support.dart';
+import 'package:quiet/component/player/lryic.dart';
 import 'package:quiet/model/model.dart';
-import 'package:quiet/part/player/lryic.dart';
 import 'package:quiet/service/channel_media_player.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-export 'bottom_controller.dart';
-export 'lryic.dart';
+export 'package:quiet/component/player/bottom_player_bar.dart';
+export 'package:quiet/component/player/lryic.dart';
 
 MusicPlayer quiet = MusicPlayer._private();
 

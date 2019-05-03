@@ -2,29 +2,10 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:quiet/model/playlist_detail.dart';
+import 'package:quiet/pages/main/dialog_creator.dart';
 import 'package:quiet/part/loader.dart';
 import 'package:quiet/part/part.dart';
 import 'package:quiet/repository/netease.dart';
-
-class DialogNoCopyRight extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Dialog(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          Image(image: AssetImage("assets/no_copy_right.png")),
-          Padding(padding: EdgeInsets.only(top: 16)),
-          Text(
-            "抱歉,该资源暂时不能播放.",
-            textAlign: TextAlign.center,
-          ),
-          Padding(padding: EdgeInsets.only(top: 16))
-        ],
-      ),
-    );
-  }
-}
 
 ///dialog for select current login user'playlist
 ///
@@ -246,144 +227,6 @@ class PlaylistSelectorDialog extends StatelessWidget {
               child: CircularProgressIndicator(),
             ));
       },
-    );
-  }
-}
-
-///show a loading overlay above the screen
-///indicator that page is waiting for response
-Future<T> showLoaderOverlay<T>(BuildContext context, Future<T> data,
-    {Duration timeout = const Duration(seconds: 5)}) {
-  assert(data != null);
-
-  final Completer<T> completer = Completer.sync();
-
-  final entry = OverlayEntry(builder: (context) {
-    return AbsorbPointer(
-      child: SafeArea(
-        child: Center(
-          child: Container(
-            height: 160,
-            padding: EdgeInsets.symmetric(horizontal: 24),
-            child: Center(
-              child: CircularProgressIndicator(),
-            ),
-          ),
-        ),
-      ),
-    );
-  });
-  Overlay.of(context).insert(entry);
-  data
-      .then((value) {
-        completer.complete(value);
-      })
-      .timeout(timeout)
-      .catchError((e, s) {
-        completer.completeError(e, s);
-      })
-      .whenComplete(() {
-        entry.remove();
-      });
-  return completer.future;
-}
-
-///show a alert dialog to warning user this operation need confirm
-///return true when clicked positive button
-///other return false
-Future<bool> showConfirmDialog(BuildContext context, Widget content,
-    {String positiveLabel, String negativeLabel}) async {
-  negativeLabel ??= "取消";
-  positiveLabel ??= "确认";
-
-  bool result = await showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          content: content,
-          actions: <Widget>[
-            FlatButton(
-                onPressed: () {
-                  Navigator.pop(context, false);
-                },
-                child: Text(negativeLabel)),
-            FlatButton(
-                onPressed: () {
-                  Navigator.pop(context, true);
-                },
-                child: Text(positiveLabel)),
-          ],
-        );
-      });
-  result ??= false;
-  return result;
-}
-
-class PlaylistCreatorDialog extends StatefulWidget {
-  @override
-  _PlaylistCreatorDialogState createState() {
-    return _PlaylistCreatorDialogState();
-  }
-}
-
-class _PlaylistCreatorDialogState extends State<PlaylistCreatorDialog> {
-  ///communicate to server,creating new playlist
-  bool creating = false;
-
-  String error;
-
-  GlobalKey<FormFieldState<String>> _formKey = GlobalKey();
-
-  void _create(String name) async {
-    try {
-      PlaylistDetail playlistDetail = await showLoaderOverlay(
-          context, neteaseRepository.createPlaylist(name));
-      Navigator.pop(context, playlistDetail);
-    } catch (e) {
-      setState(() {
-        error = e.toString();
-      });
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return AlertDialog(
-      contentPadding: const EdgeInsets.only(left: 24, right: 24, top: 4),
-      title: Text("新建歌单"),
-      content: TextFormField(
-        key: _formKey,
-        maxLength: 20,
-        textInputAction: TextInputAction.done,
-        decoration: InputDecoration(
-          hintText: "请输入歌单标题",
-          errorText: error,
-        ),
-        validator: (v) {
-          if (v.isEmpty) {
-            return "歌单名不能为空";
-          }
-          return null;
-        },
-        onFieldSubmitted: _create,
-      ),
-      actions: <Widget>[
-        FlatButton(
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-          child: Text("取消"),
-          textColor: Theme.of(context).textTheme.caption.color,
-        ),
-        FlatButton(
-            onPressed: () {
-              if (!_formKey.currentState.validate()) {
-                return;
-              }
-              _create(_formKey.currentState.value);
-            },
-            child: Text("创建"))
-      ],
     );
   }
 }

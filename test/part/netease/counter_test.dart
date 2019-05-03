@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+import 'package:quiet/component/netease/netease.dart';
 import 'package:quiet/part/part.dart';
 
 import '../../repository/mock.dart';
-
 
 void main() {
   final netease = MockNeteaseRepository();

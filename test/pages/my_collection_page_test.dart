@@ -3,10 +3,10 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+import 'package:quiet/component/netease/netease.dart';
 import 'package:quiet/pages/collection/albums.dart';
 import 'package:quiet/pages/collection/api.dart';
-import 'package:quiet/part/netease/netease_loader.dart';
-import 'package:quiet/part/tiles.dart';
+import 'package:quiet/material/tiles.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 part 'my_collection_page_mock_data.dart';

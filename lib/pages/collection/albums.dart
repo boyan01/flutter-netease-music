@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:quiet/part/netease/netease_loader.dart';
+import 'package:quiet/component/netease/netease.dart';
 import 'package:quiet/part/part.dart';
 import 'api.dart';
 

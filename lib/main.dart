@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:quiet/material/app.dart';
 
+import 'component/netease/netease.dart';
 import 'component/theme/theme.dart';
 import 'part/part.dart';
 

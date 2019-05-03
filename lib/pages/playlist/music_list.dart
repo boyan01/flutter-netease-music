@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:overlay_support/overlay_support.dart';
+import 'package:quiet/component/route.dart';
 import 'package:quiet/model/model.dart';
 import 'package:quiet/pages/artists/page_artist_detail.dart';
 import 'package:quiet/pages/comments/page_comment.dart';
 import 'package:quiet/part/part.dart';
-import 'package:quiet/part/route.dart';
 import 'package:quiet/repository/netease.dart';
+
+import 'dialog_selector.dart';
 
 class MusicList extends StatelessWidget {
   static MusicList of(BuildContext context) {
@@ -263,7 +265,8 @@ class IconMV extends StatelessWidget {
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => MusicVideoPlayerPage(music.mvId)),
+            MaterialPageRoute(
+                builder: (context) => MusicVideoPlayerPage(music.mvId)),
           );
         });
   }
