@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:quiet/part/route.dart';
+import 'package:quiet/component/route.dart';
 import 'package:quiet/repository/netease_image.dart';
 
 class AlbumTile extends StatelessWidget {

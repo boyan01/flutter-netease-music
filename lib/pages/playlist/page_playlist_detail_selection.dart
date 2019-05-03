@@ -6,6 +6,8 @@ import 'package:quiet/model/model.dart';
 import 'package:quiet/pages/playlist/music_list.dart';
 import 'package:quiet/part/part.dart';
 
+import 'dialog_selector.dart';
+
 typedef MusicDeletionCallback = Future<bool> Function(List<Music> selected);
 
 ///多选歌曲

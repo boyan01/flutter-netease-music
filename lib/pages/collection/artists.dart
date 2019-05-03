@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:quiet/component/netease/netease.dart';
 import 'package:quiet/pages/artists/page_artist_detail.dart';
-import 'package:quiet/part/netease/netease_loader.dart';
 import 'package:quiet/repository/netease.dart';
 
 import 'api.dart';
