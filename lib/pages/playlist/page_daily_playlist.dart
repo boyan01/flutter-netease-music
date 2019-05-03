@@ -39,13 +39,15 @@ class DailyPlaylistPage extends StatelessWidget {
                   trailingBuilder: MusicList.defaultTrailingBuilder,
                   leadingBuilder: MusicList.coverLeadingBuilder,
                   onMusicTap: MusicList.defaultOnTap,
-                  child: ListView.builder(itemBuilder: (context, index) {
-                    if (index == 0) {
-                      return MusicListHeader(list.length);
-                    } else {
-                      return MusicTile(list[index - 1]);
-                    }
-                  }));
+                  child: ListView.builder(
+                      itemCount: list.length + 1,
+                      itemBuilder: (context, index) {
+                        if (index == 0) {
+                          return MusicListHeader(list.length);
+                        } else {
+                          return MusicTile(list[index - 1]);
+                        }
+                      }));
             }),
       ),
     );
