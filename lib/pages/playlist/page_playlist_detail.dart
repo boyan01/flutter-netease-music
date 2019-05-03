@@ -325,34 +325,37 @@ class _SubscribeButtonState extends State<_SubscribeButton> {
   @override
   Widget build(BuildContext context) {
     if (!subscribed) {
-      return Container(
-        height: 40,
-        decoration: BoxDecoration(
-            gradient: LinearGradient(colors: [
-          Theme.of(context).primaryColor.withOpacity(0.5),
-          Theme.of(context).primaryColor
-        ])),
-        child: Material(
-          color: Colors.transparent,
-          child: InkWell(
-            onTap: () async {
-              final result = await widget.doSubscribeChanged(subscribed);
-              setState(() {
-                subscribed = result;
-              });
-            },
-            child: Row(
-              children: <Widget>[
-                SizedBox(width: 16),
-                Icon(Icons.add,
-                    color: Theme.of(context).primaryIconTheme.color),
-                SizedBox(width: 4),
-                Text(
-                  "收藏(${getFormattedNumber(widget.subscribedCount)})",
-                  style: Theme.of(context).primaryTextTheme.body1,
-                ),
-                SizedBox(width: 16),
-              ],
+      return ClipRRect(
+        borderRadius: BorderRadius.all(Radius.circular(16)),
+        child: Container(
+          height: 40,
+          decoration: BoxDecoration(
+              gradient: LinearGradient(colors: [
+            Theme.of(context).primaryColor.withOpacity(0.5),
+            Theme.of(context).primaryColor
+          ])),
+          child: Material(
+            color: Colors.transparent,
+            child: InkWell(
+              onTap: () async {
+                final result = await widget.doSubscribeChanged(subscribed);
+                setState(() {
+                  subscribed = result;
+                });
+              },
+              child: Row(
+                children: <Widget>[
+                  SizedBox(width: 16),
+                  Icon(Icons.add,
+                      color: Theme.of(context).primaryIconTheme.color),
+                  SizedBox(width: 4),
+                  Text(
+                    "收藏(${getFormattedNumber(widget.subscribedCount)})",
+                    style: Theme.of(context).primaryTextTheme.body1,
+                  ),
+                  SizedBox(width: 16),
+                ],
+              ),
             ),
           ),
         ),

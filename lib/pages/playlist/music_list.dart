@@ -194,7 +194,7 @@ class _SimpleMusicTile extends StatelessWidget {
 }
 
 ///音乐列表头
-class MusicListHeader extends StatelessWidget {
+class MusicListHeader extends StatelessWidget implements PreferredSizeWidget {
   MusicListHeader(this.count, {this.tail});
 
   final int count;
@@ -203,47 +203,52 @@ class MusicListHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        final list = MusicList.of(context);
-        if (quiet.value.token == list.token && quiet.value.isPlaying) {
-          //open playing page
-          Navigator.pushNamed(context, ROUTE_PAYING);
-        } else {
-          quiet.playWithList(null, list.musics, list.token);
-        }
-      },
-      child: Container(
-        height: 40,
-        decoration: BoxDecoration(
-            border: Border(
-                bottom: BorderSide(
-                    color: Theme.of(context).dividerColor, width: 0.5))),
-        child: Row(
-          children: <Widget>[
-            Padding(padding: EdgeInsets.only(left: 16)),
-            Icon(
-              Icons.play_circle_outline,
-              size: 18,
-              color: Theme.of(context).iconTheme.color,
+    return ClipRRect(
+      borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      child: Material(
+        color: Theme.of(context).scaffoldBackgroundColor,
+        elevation: 0,
+        child: InkWell(
+          onTap: () {
+            final list = MusicList.of(context);
+            if (quiet.value.token == list.token && quiet.value.isPlaying) {
+              //open playing page
+              Navigator.pushNamed(context, ROUTE_PAYING);
+            } else {
+              quiet.playWithList(null, list.musics, list.token);
+            }
+          },
+          child: SizedBox.fromSize(
+            size: preferredSize,
+            child: Row(
+              children: <Widget>[
+                Padding(padding: EdgeInsets.only(left: 16)),
+                Icon(
+                  Icons.play_circle_outline,
+                  color: Theme.of(context).iconTheme.color,
+                ),
+                Padding(padding: EdgeInsets.only(left: 4)),
+                Text(
+                  "播放全部",
+                  style: Theme.of(context).textTheme.body1,
+                ),
+                Padding(padding: EdgeInsets.only(left: 2)),
+                Text(
+                  "(共$count首)",
+                  style: Theme.of(context).textTheme.caption,
+                ),
+                Spacer(),
+                tail,
+              ]..removeWhere((v) => v == null),
             ),
-            Padding(padding: EdgeInsets.only(left: 4)),
-            Text(
-              "播放全部",
-              style: Theme.of(context).textTheme.body1,
-            ),
-            Padding(padding: EdgeInsets.only(left: 2)),
-            Text(
-              "(共$count首)",
-              style: Theme.of(context).textTheme.caption,
-            ),
-            Spacer(),
-            tail,
-          ]..removeWhere((v) => v == null),
+          ),
         ),
       ),
     );
   }
+
+  @override
+  Size get preferredSize => const Size.fromHeight(50);
 }
 
 ///歌曲item的mv icon
