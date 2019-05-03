@@ -1,3 +1,5 @@
+library loader;
+
 import 'dart:async';
 
 import 'package:async/async.dart';

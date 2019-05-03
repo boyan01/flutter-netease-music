@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:quiet/model/playlist_detail.dart';
 import 'package:quiet/pages/main/dialog_creator.dart';
-import 'package:quiet/part/loader.dart';
 import 'package:quiet/part/part.dart';
 import 'package:quiet/repository/netease.dart';
 

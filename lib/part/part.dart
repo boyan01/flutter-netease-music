@@ -14,7 +14,7 @@ export 'package:quiet/model/model.dart';
 export 'package:quiet/pages/account/account.dart';
 export 'package:scoped_model/scoped_model.dart';
 
-export 'loader.dart';
+export 'package:loader/loader.dart';
 
 void notImplemented(BuildContext context) {
   showSimpleNotification(context, Text("页面未完成"),
