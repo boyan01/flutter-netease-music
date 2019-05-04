@@ -27,14 +27,14 @@ all API information comes from this project: [NeteaseCloudMusicApi](https://gith
 
 # interaction
 
-| ![playing_page](./_preview/playing_Interaction.gif) | ![playing_page](./_preview/mv_rise.gif) |
+| ![playing_page](./_preview/playing_Interaction.gif) | ![playing_page](https://boyan01.github.io/quiet/interation_playlist.gif) |
 | :-------------------------------------------------: | :-------------------------------------: |
 |                                                     |                                         |
 
 
 # Preview
 
-| ![main_playlist](https://boyan01.github.io/quiet/main_playlist.png) |        ![main_cloud](./_preview/main_cloud.jpg)        |      ![playlist_detail](./_preview/playlist_detail.jpg)      |        ![artist_detail](./_preview/artist_detail.jpg)        |
+| ![main_playlist](https://boyan01.github.io/quiet/main_playlist.png) |        ![main_cloud](./_preview/main_cloud.jpg)        | ![playlist_detail](https://boyan01.github.io/quiet/playlist_detail.png) |        ![artist_detail](./_preview/artist_detail.jpg)        |
 | :----------------------------------------------------------: | :----------------------------------------------------: | :----------------------------------------------------------: | :----------------------------------------------------------: |
 |         ![page_comment](./_preview/page_comment.jpg)         |           ![playing](./_preview/playing.jpg)           |               ![search](./_preview/search.jpg)               |        ![search_result](./_preview/search_result.jpg)        |
 |      ![music_selection](./_preview/music_selection.jpg)      | ![playlist_selector](./_preview/playlist_selector.jpg) | ![music video](https://boyan01.github.io/quiet/music_video.png) | ![每日推荐](https://boyan01.github.io/quiet/daily_playlist.png) |
