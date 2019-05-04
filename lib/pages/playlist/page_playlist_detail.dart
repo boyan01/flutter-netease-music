@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
@@ -133,6 +134,7 @@ class _PlaylistBodyState extends State<_PlaylistBody> {
           SliverAppBar(
             elevation: 0,
             pinned: true,
+            backgroundColor: Colors.transparent,
             expandedHeight: HEIGHT_HEADER,
             bottom: _buildListHeader(context),
             flexibleSpace: _PlaylistDetailHeader(widget.playlist),
@@ -327,16 +329,22 @@ class _HeaderAction extends StatelessWidget {
 
 ///播放列表头部背景
 class PlayListHeaderBackground extends StatelessWidget {
+  final String imageUrl;
+
+  const PlayListHeaderBackground({Key key, @required this.imageUrl})
+      : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    final color = Theme.of(context).primaryColor;
-    return Container(
-      decoration: BoxDecoration(
-          gradient: LinearGradient(colors: <Color>[
-        color,
-        color.withOpacity(0.8),
-        color.withOpacity(0.5),
-      ], begin: Alignment.topLeft)),
+    return Stack(
+      fit: StackFit.expand,
+      children: <Widget>[
+        Image(image: NeteaseImage(imageUrl), fit: BoxFit.cover),
+        BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 24, sigmaY: 24),
+          child: Container(color: Colors.black.withOpacity(0.1)),
+        )
+      ],
     );
   }
 }
@@ -350,7 +358,8 @@ class DetailHeader extends StatelessWidget {
       this.onShareTap,
       this.onSelectionTap,
       int commentCount = 0,
-      int shareCount = 0})
+      int shareCount = 0,
+      this.background})
       : this.commentCount = commentCount ?? 0,
         this.shareCount = shareCount ?? 0,
         super(key: key);
@@ -364,11 +373,13 @@ class DetailHeader extends StatelessWidget {
   final int commentCount;
   final int shareCount;
 
+  final Widget background;
+
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: <Widget>[
-        PlayListHeaderBackground(),
+        background,
         Material(
           color: Colors.black.withOpacity(0.2),
           child: Container(
@@ -400,7 +411,7 @@ class DetailHeader extends StatelessWidget {
             ),
           ),
         ),
-      ],
+      ]..removeWhere((v) => v == null),
     );
   }
 }
@@ -418,10 +429,11 @@ class _PlaylistDetailHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FlexibleDetailBar(
+      background: PlayListHeaderBackground(imageUrl: playlist.coverUrl),
       content: _buildContent(context),
       builder: (context, t) => AppBar(
             title: Text(t > 0.5 ? playlist.name : '歌单'),
-            backgroundColor: Theme.of(context).primaryColor.withOpacity(t),
+            backgroundColor: Colors.transparent,
             elevation: 0,
             titleSpacing: 0,
             actions: <Widget>[

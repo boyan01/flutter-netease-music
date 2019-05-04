@@ -61,6 +61,7 @@ class _AlbumBody extends StatelessWidget {
           SliverAppBar(
             automaticallyImplyLeading: false,
             expandedHeight: HEIGHT_HEADER,
+            backgroundColor: Colors.transparent,
             pinned: true,
             elevation: 0,
             flexibleSpace: _AlbumDetailHeader(album: album),
@@ -86,12 +87,13 @@ class _AlbumDetailHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FlexibleDetailBar(
+        background: PlayListHeaderBackground(imageUrl: album['picUrl']),
         content: _buildContent(context),
         builder: (context, t) => AppBar(
               title: Text(t > 0.5 ? album["name"] : '专辑'),
               titleSpacing: 0,
               elevation: 0,
-              backgroundColor: Theme.of(context).primaryColor.withOpacity(t),
+              backgroundColor: Colors.transparent,
             ));
   }
 
