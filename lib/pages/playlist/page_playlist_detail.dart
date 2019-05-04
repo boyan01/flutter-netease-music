@@ -1,20 +1,22 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:quiet/component/utils/utils.dart';
 import 'package:quiet/model/playlist_detail.dart';
 import 'package:quiet/pages/comments/page_comment.dart';
-import 'package:quiet/pages/playlist/page_playlist_detail_selection.dart';
-import 'package:quiet/pages/playlist/playlist_internal_search.dart';
 import 'package:quiet/part/part.dart';
 import 'package:quiet/repository/netease.dart';
 
+import 'flexible_app_bar.dart';
 import 'music_list.dart';
+import 'page_playlist_detail_selection.dart';
+import 'playlist_internal_search.dart';
 
-///歌单详情信息item高度
-const double HEIGHT_HEADER = 300;
+///歌单详情信息 header 高度
+const double HEIGHT_HEADER = 280 + kToolbarHeight;
 
 ///page display a Playlist
 ///
@@ -41,116 +43,51 @@ class PlaylistDetailPage extends StatefulWidget {
 class _PlayListDetailState extends State<PlaylistDetailPage> {
   ///build a preview stack for loading or error
   Widget buildPreview(BuildContext context, Widget content) {
-    return Stack(
-      children: <Widget>[
-        Column(
-          children: <Widget>[
-            widget.playlist == null
-                ? null
-                : _PlaylistDetailHeader(widget.playlist),
-            Expanded(child: SafeArea(child: content))
-          ]..removeWhere((v) => v == null),
+    return CustomScrollView(
+      slivers: <Widget>[
+        SliverAppBar(
+          title: widget.playlist == null ? Text('歌单') : null,
+          expandedHeight:
+              widget.playlist == null ? kToolbarHeight : HEIGHT_HEADER,
+          flexibleSpace: widget.playlist == null
+              ? null
+              : _PlaylistDetailHeader(widget.playlist),
+          bottom: widget.playlist == null
+              ? null
+              : MusicListHeader(widget.playlist.trackCount),
         ),
-        Column(
-          children: <Widget>[
-            OpacityTitle(
-              name: null,
-              defaultName: "歌单",
-              appBarOpacity: ValueNotifier(0),
-            )
-          ],
-        )
-      ],
+        SliverList(delegate: SliverChildListDelegate([content]))
+      ]..removeWhere((v) => v == null),
     );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Loader<PlaylistDetail>(
-          initialData: neteaseLocalData.getPlaylistDetail(widget.playlistId),
-          loadTask: () => neteaseRepository.playlistDetail(widget.playlistId),
-          loadingBuilder: (context) {
-            return buildPreview(
-                context,
-                Container(
-                  height: 200,
-                  child: Center(child: Text("加载中...")),
-                ));
-          },
-          failedWidgetBuilder: (context, result, msg) {
-            return buildPreview(
-                context,
-                Container(
-                  height: 200,
-                  child: Center(child: Text("加载失败")),
-                ));
-          },
-          builder: (context, result) {
-            return _PlaylistBody(result);
-          }),
-    );
-  }
-}
-
-///the title of this page
-class OpacityTitle extends StatefulWidget {
-  OpacityTitle(
-      {@required this.name,
-      @required this.appBarOpacity,
-      @required this.defaultName,
-      this.actions})
-      : assert(defaultName != null);
-
-  ///title background opacity value notifier, from 0 - 1;
-  final ValueNotifier<double> appBarOpacity;
-
-  ///the name of playlist
-  final String name;
-
-  final String defaultName;
-
-  final List<Widget> actions;
-
-  @override
-  State<StatefulWidget> createState() => OpacityTitleState();
-}
-
-class OpacityTitleState extends State<OpacityTitle> {
-  double appBarOpacityValue = 0;
-
-  @override
-  void initState() {
-    super.initState();
-    widget.appBarOpacity?.addListener(_onAppBarOpacity);
-  }
-
-  void _onAppBarOpacity() {
-    setState(() {
-      appBarOpacityValue = widget.appBarOpacity.value;
-    });
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    widget.appBarOpacity?.removeListener(_onAppBarOpacity);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return AppBar(
-      elevation: 0,
-      leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () => Navigator.pop(context)),
-      title: Text(appBarOpacityValue < 0.5
-          ? widget.defaultName
-          : (widget.name ?? widget.defaultName)),
-      toolbarOpacity: 1,
-      backgroundColor:
-          Theme.of(context).primaryColor.withOpacity(appBarOpacityValue),
-      actions: widget.actions,
+      body: BoxWithBottomPlayerController(
+        Loader<PlaylistDetail>(
+            initialData: neteaseLocalData.getPlaylistDetail(widget.playlistId),
+            loadTask: () => neteaseRepository.playlistDetail(widget.playlistId),
+            loadingBuilder: (context) {
+              return buildPreview(
+                  context,
+                  Container(
+                    height: 200,
+                    child: Center(child: Text("加载中...")),
+                  ));
+            },
+            failedWidgetBuilder: (context, result, msg) {
+              return buildPreview(
+                  context,
+                  Container(
+                    height: 200,
+                    child: Center(child: Text("加载失败")),
+                  ));
+            },
+            builder: (context, result) {
+              return _PlaylistBody(result);
+            }),
+      ),
     );
   }
 }
@@ -170,29 +107,6 @@ class _PlaylistBody extends StatefulWidget {
 }
 
 class _PlaylistBodyState extends State<_PlaylistBody> {
-  ScrollController scrollController;
-
-  ValueNotifier<double> appBarOpacity = ValueNotifier(0);
-
-  @override
-  void initState() {
-    super.initState();
-
-    scrollController = ScrollController();
-    scrollController.addListener(() {
-      var scrollHeight = scrollController.offset;
-      double appBarHeight = MediaQuery.of(context).padding.top + kToolbarHeight;
-      double areaHeight = (HEIGHT_HEADER - appBarHeight);
-      this.appBarOpacity.value = (scrollHeight / areaHeight).clamp(0.0, 1.0);
-    });
-  }
-
-  @override
-  void dispose() {
-    scrollController.dispose();
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
     return MusicList(
@@ -214,40 +128,20 @@ class _PlaylistBodyState extends State<_PlaylistBody> {
       onMusicTap: MusicList.defaultOnTap,
       leadingBuilder: MusicList.indexedLeadingBuilder,
       trailingBuilder: MusicList.defaultTrailingBuilder,
-      child: Stack(
-        children: <Widget>[
-          BoxWithBottomPlayerController(
-            ListView.builder(
-              padding: const EdgeInsets.all(0),
-              itemCount: widget.musicList.length + 2,
-              itemBuilder: _buildList,
-              controller: scrollController,
-            ),
+      child: CustomScrollView(
+        slivers: <Widget>[
+          SliverAppBar(
+            elevation: 0,
+            pinned: true,
+            expandedHeight: HEIGHT_HEADER,
+            bottom: _buildListHeader(context),
+            flexibleSpace: _PlaylistDetailHeader(widget.playlist),
           ),
-          Column(
-            children: <Widget>[
-              OpacityTitle(
-                name: widget.playlist.name,
-                defaultName: "歌单",
-                appBarOpacity: appBarOpacity,
-                actions: <Widget>[
-                  IconButton(
-                      icon: Icon(Icons.search),
-                      tooltip: "歌单内搜索",
-                      onPressed: () {
-                        showSearch(
-                            context: context,
-                            delegate: PlaylistInternalSearchDelegate(
-                                widget.playlist, Theme.of(context)));
-                      }),
-                  IconButton(
-                      icon: Icon(Icons.more_vert),
-                      tooltip: "更多选项",
-                      onPressed: () {})
-                ],
-              )
-            ],
-          )
+          SliverList(
+            delegate: SliverChildBuilderDelegate(
+                (context, index) => MusicTile(widget.musicList[index]),
+                childCount: widget.musicList.length),
+          ),
         ],
       ),
     );
@@ -272,27 +166,15 @@ class _PlaylistBodyState extends State<_PlaylistBody> {
     return succeed ? !subscribe : subscribe;
   }
 
-  Widget _buildList(BuildContext context, int index) {
-    if (index == 0) {
-      return _PlaylistDetailHeader(widget.playlist);
-    }
-    if (widget.musicList.isEmpty) {
-      return Container(
-        child: Text('暂时还没有音乐'),
-      );
-    }
-
+  Widget _buildListHeader(BuildContext context) {
     bool owner =
         widget.playlist.creator["userId"] == UserAccount.of(context).userId;
-    if (index == 1) {
-      Widget tail;
-      if (!owner) {
-        tail = _SubscribeButton(widget.playlist.subscribed,
-            widget.playlist.subscribedCount, _doSubscribeChanged);
-      }
-      return MusicListHeader(widget.musicList.length, tail: tail);
+    Widget tail;
+    if (!owner) {
+      tail = _SubscribeButton(widget.playlist.subscribed,
+          widget.playlist.subscribedCount, _doSubscribeChanged);
     }
-    return MusicTile(widget.musicList[index - 2]);
+    return MusicListHeader(widget.musicList.length, tail: tail);
   }
 }
 
@@ -423,20 +305,21 @@ class _HeaderAction extends StatelessWidget {
     return InkResponse(
       onTap: onTap,
       splashColor: textTheme.body1.color,
-      child: Column(
-        children: <Widget>[
-          Icon(
-            icon,
-            color: textTheme.body1.color,
-          ),
-          const Padding(
-            padding: EdgeInsets.only(top: 2),
-          ),
-          Text(
-            action,
-            style: textTheme.caption,
-          )
-        ],
+      child: Opacity(
+        opacity: onTap == null ? 0.5 : 1,
+        child: Column(
+          children: <Widget>[
+            Icon(
+              icon,
+              color: textTheme.body1.color,
+            ),
+            const Padding(padding: EdgeInsets.only(top: 4)),
+            Text(
+              action,
+              style: textTheme.caption.copyWith(fontSize: 13),
+            )
+          ],
+        ),
       ),
     );
   }
@@ -487,30 +370,32 @@ class DetailHeader extends StatelessWidget {
       children: <Widget>[
         PlayListHeaderBackground(),
         Material(
-          color: Colors.black.withOpacity(0.5),
+          color: Colors.black.withOpacity(0.2),
           child: Container(
             padding: EdgeInsets.only(
-                top: MediaQuery.of(context).padding.top + kToolbarHeight),
+                top: MediaQuery.of(context).padding.top + kToolbarHeight,
+                bottom: 50),
             child: Column(
               children: <Widget>[
                 content,
-                Container(
-                  margin: EdgeInsets.symmetric(vertical: 8),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: <Widget>[
-                      _HeaderAction(
-                          Icons.comment,
-                          commentCount > 0 ? commentCount.toString() : "评论",
-                          onCommentTap),
-                      _HeaderAction(
-                          Icons.share,
-                          shareCount > 0 ? shareCount.toString() : "分享",
-                          onShareTap),
-                      _HeaderAction(Icons.check_box, "多选", onSelectionTap),
-                    ],
-                  ),
-                )
+                SizedBox(height: 10),
+                Spacer(),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    _HeaderAction(
+                        Icons.comment,
+                        commentCount > 0 ? commentCount.toString() : "评论",
+                        onCommentTap),
+                    _HeaderAction(
+                        Icons.share,
+                        shareCount > 0 ? shareCount.toString() : "分享",
+                        onShareTap),
+                    _HeaderAction(Icons.file_download, '下载', null),
+                    _HeaderAction(Icons.check_box, "多选", onSelectionTap),
+                  ],
+                ),
+                Spacer(),
               ],
             ),
           ),
@@ -532,6 +417,33 @@ class _PlaylistDetailHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return FlexibleDetailBar(
+      content: _buildContent(context),
+      builder: (context, t) => AppBar(
+            title: Text(t > 0.5 ? playlist.name : '歌单'),
+            backgroundColor: Theme.of(context).primaryColor.withOpacity(t),
+            elevation: 0,
+            titleSpacing: 0,
+            actions: <Widget>[
+              IconButton(
+                  icon: Icon(Icons.search),
+                  tooltip: "歌单内搜索",
+                  onPressed: () {
+                    showSearch(
+                        context: context,
+                        delegate: PlaylistInternalSearchDelegate(
+                            playlist, Theme.of(context)));
+                  }),
+              IconButton(
+                  icon: Icon(Icons.more_vert),
+                  tooltip: "更多选项",
+                  onPressed: () {})
+            ],
+          ),
+    );
+  }
+
+  Widget _buildContent(BuildContext context) {
     Map<String, Object> creator = playlist.creator;
 
     return DetailHeader(
@@ -563,11 +475,11 @@ class _PlaylistDetailHeader extends StatelessWidget {
         },
         onShareTap: () => notImplemented(context),
         content: Container(
-          height: 150,
-          padding: EdgeInsets.symmetric(vertical: 16),
+          height: 146,
+          padding: EdgeInsets.only(top: 20),
           child: Row(
             children: <Widget>[
-              SizedBox(width: 24),
+              SizedBox(width: 16),
               AspectRatio(
                 aspectRatio: 1,
                 child: ClipRRect(

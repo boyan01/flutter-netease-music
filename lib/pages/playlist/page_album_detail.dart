@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:quiet/component/utils/utils.dart';
 import 'package:quiet/pages/artists/page_artist_detail.dart';
 import 'package:quiet/pages/comments/page_comment.dart';
-import 'package:quiet/pages/playlist/music_list.dart';
-import 'package:quiet/pages/playlist/page_playlist_detail_selection.dart';
 import 'package:quiet/part/part.dart';
 import 'package:quiet/repository/netease.dart';
+
+import 'music_list.dart';
+import 'page_playlist_detail_selection.dart';
+import 'flexible_app_bar.dart';
 
 class AlbumDetailPage extends StatefulWidget {
   final int albumId;
@@ -38,7 +40,7 @@ class _AlbumDetailPageState extends State<AlbumDetailPage> {
   }
 }
 
-class _AlbumBody extends StatefulWidget {
+class _AlbumBody extends StatelessWidget {
   final Map album;
   final List<Music> musicList;
 
@@ -48,78 +50,27 @@ class _AlbumBody extends StatefulWidget {
         super(key: key);
 
   @override
-  _AlbumBodyState createState() => _AlbumBodyState();
-}
-
-class _AlbumBodyState extends State<_AlbumBody> {
-  ScrollController scrollController;
-
-  ValueNotifier<double> appBarOpacity = ValueNotifier(0);
-
-  @override
-  void initState() {
-    super.initState();
-    scrollController = ScrollController();
-    scrollController.addListener(() {
-      var scrollHeight = scrollController.offset;
-      double appBarHeight = MediaQuery.of(context).padding.top + kToolbarHeight;
-      double areaHeight = (HEIGHT_HEADER - appBarHeight);
-      this.appBarOpacity.value = (scrollHeight / areaHeight).clamp(0.0, 1.0);
-    });
-  }
-
-  @override
-  void dispose() {
-    scrollController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return MusicList(
-      token: 'album_${widget.album['id']}',
-      musics: widget.musicList,
-      onMusicTap: MusicList.defaultOnTap,
-      leadingBuilder: MusicList.indexedLeadingBuilder,
-      trailingBuilder: MusicList.defaultTrailingBuilder,
-      child: Stack(
-        children: <Widget>[
-          BoxWithBottomPlayerController(
-            ListView.builder(
-              padding: const EdgeInsets.all(0),
-              itemCount: widget.musicList.length + 2,
-              itemBuilder: _buildList,
-              controller: scrollController,
-            ),
+        token: 'album_${album['id']}',
+        musics: musicList,
+        onMusicTap: MusicList.defaultOnTap,
+        leadingBuilder: MusicList.indexedLeadingBuilder,
+        trailingBuilder: MusicList.defaultTrailingBuilder,
+        child: BoxWithBottomPlayerController(CustomScrollView(slivers: [
+          SliverAppBar(
+            automaticallyImplyLeading: false,
+            expandedHeight: HEIGHT_HEADER,
+            pinned: true,
+            elevation: 0,
+            flexibleSpace: _AlbumDetailHeader(album: album),
+            bottom: MusicListHeader(musicList.length),
           ),
-          Column(
-            children: <Widget>[
-              OpacityTitle(
-                defaultName: "专辑",
-                name: widget.album["name"],
-                appBarOpacity: appBarOpacity,
-              )
-            ],
-          )
-        ],
-      ),
-    );
-  }
-
-  Widget _buildList(BuildContext context, int index) {
-    if (index == 0) {
-      return _AlbumDetailHeader(
-          album: widget.album, musicList: widget.musicList);
-    }
-    if (widget.musicList.isEmpty) {
-      return Container(
-        child: Text('暂无音乐'),
-      );
-    }
-    if (index == 1) {
-      return MusicListHeader(widget.musicList.length);
-    }
-    return MusicTile(widget.musicList[index - 2]);
+          SliverList(
+              delegate: SliverChildBuilderDelegate(
+                  (context, index) => MusicTile(musicList[index]),
+                  childCount: musicList.length)),
+        ])));
   }
 }
 
@@ -134,6 +85,17 @@ class _AlbumDetailHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return FlexibleDetailBar(
+        content: _buildContent(context),
+        builder: (context, t) => AppBar(
+              title: Text(t > 0.5 ? album["name"] : '专辑'),
+              titleSpacing: 0,
+              elevation: 0,
+              backgroundColor: Theme.of(context).primaryColor.withOpacity(t),
+            ));
+  }
+
+  Widget _buildContent(BuildContext context) {
     final artist = (album["artists"] as List)
         .cast<Map>()
         .map((m) =>

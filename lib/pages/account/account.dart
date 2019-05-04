@@ -37,8 +37,11 @@ class UserAccount extends Model {
         debugPrint('persistence user :${_user['account']['id']}');
         notifyListeners();
         //访问api，刷新登陆状态
-        final state = await neteaseRepository.refreshLogin();
-        if (!state) {
+        bool needLogin = false;
+        try {
+          needLogin = !await neteaseRepository.refreshLogin();
+        } catch (e) {}
+        if (needLogin) {
           _user = null;
           notifyListeners();
         }
