@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:quiet/pages/account/page_need_login.dart';
 import 'package:quiet/pages/playlist/music_list.dart';
 import 'package:quiet/part/part.dart';
 import 'package:quiet/repository/netease.dart';
@@ -11,26 +12,28 @@ import 'package:url_launcher/url_launcher.dart';
 class DailyPlaylistPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      body: BoxWithBottomPlayerController(
-        Loader<Map<String, Object>>(
-            loadTask: () => neteaseRepository.recommendSongs(),
-            resultVerify: neteaseRepository.responseVerify,
-            builder: (context, result) {
-              final list = (result["recommend"] as List)
-                  .cast<Map>()
-                  .map(mapJsonToMusic)
-                  .toList();
-              return MusicList(
-                  token: 'playlist_daily_recommend',
-                  musics: list,
-                  trailingBuilder: MusicList.defaultTrailingBuilder,
-                  leadingBuilder: MusicList.coverLeadingBuilder,
-                  onMusicTap: MusicList.defaultOnTap,
-                  child: _DailyMusicList());
-            }),
-      ),
+    return PageNeedLogin(
+      builder: (context) => Scaffold(
+            resizeToAvoidBottomInset: false,
+            body: BoxWithBottomPlayerController(
+              Loader<Map<String, Object>>(
+                  loadTask: () => neteaseRepository.recommendSongs(),
+                  resultVerify: neteaseRepository.responseVerify,
+                  builder: (context, result) {
+                    final list = (result["recommend"] as List)
+                        .cast<Map>()
+                        .map(mapJsonToMusic)
+                        .toList();
+                    return MusicList(
+                        token: 'playlist_daily_recommend',
+                        musics: list,
+                        trailingBuilder: MusicList.defaultTrailingBuilder,
+                        leadingBuilder: MusicList.coverLeadingBuilder,
+                        onMusicTap: MusicList.defaultOnTap,
+                        child: _DailyMusicList());
+                  }),
+            ),
+          ),
     );
   }
 }
