@@ -41,8 +41,8 @@ class BottomControllerBar extends StatelessWidget {
                 .position
                 .inMilliseconds,
             0)
-        .line;
-    if (line.isEmpty) {
+        ?.line;
+    if (line == null || line.isEmpty) {
       return Text(music.subTitle);
     }
     return Text(line);
