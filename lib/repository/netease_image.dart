@@ -1,13 +1,15 @@
 import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
+import 'dart:ui' as ui;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:path_provider/path_provider.dart';
-import 'dart:ui' as ui show Codec;
-
 import 'package:quiet/component/cache/key_value_cache.dart';
+
+///default image size in dimens
+const _defaultImageSize = const Size.fromHeight(200);
 
 ///image provider for netease image
 class NeteaseImage extends ImageProvider<NeteaseImage> implements CacheKey {
@@ -16,13 +18,29 @@ class NeteaseImage extends ImageProvider<NeteaseImage> implements CacheKey {
   /// The arguments must not be null.
   const NeteaseImage(this.url, {this.scale = 1.0, this.headers})
       : assert(url != null),
-        assert(scale != null);
+        assert(scale != null),
+        this._size = null;
+
+  const NeteaseImage._internal(this.url, this._size,
+      {this.scale = 1.0, this.headers});
 
   /// The URL from which the image will be fetched.
   final String url;
 
   /// The scale to place in the [ImageInfo] object of the image.
   final double scale;
+
+  /// the size in pixel (widget & height) of this image
+  /// might be null
+  final Size _size;
+
+  int get height => _size == null || _size.height == double.infinity
+      ? -1
+      : _size.height.toInt();
+
+  int get width => _size == null || _size.width == double.infinity
+      ? -1
+      : _size.width.toInt();
 
   /// The HTTP headers that will be used with [HttpClient.get] to fetch image from network.
   final Map<String, String> headers;
@@ -37,10 +55,11 @@ class NeteaseImage extends ImageProvider<NeteaseImage> implements CacheKey {
       other is NeteaseImage &&
           runtimeType == other.runtimeType &&
           id == other.id &&
-          scale == other.scale;
+          scale == other.scale &&
+          _size == other._size;
 
   @override
-  int get hashCode => hashValues(id, scale);
+  int get hashCode => hashValues(id, scale, _size);
 
   @override
   ImageStreamCompleter load(NeteaseImage key) {
@@ -51,13 +70,12 @@ class NeteaseImage extends ImageProvider<NeteaseImage> implements CacheKey {
   static final HttpClient _httpClient = HttpClient();
 
   Future<ui.Codec> _loadAsync(NeteaseImage key) async {
-    assert(key == this);
     var cache = await _imageCache();
 
     var image = await cache.get(key);
     if (image != null) {
-      return PaintingBinding.instance
-          .instantiateImageCodec(Uint8List.fromList(image));
+      return await ui.instantiateImageCodec(Uint8List.fromList(image),
+          targetWidth: key.width, targetHeight: key.height);
     }
     //request network source
     final Uri resolved = Uri.base.resolve(key.url);
@@ -77,17 +95,23 @@ class NeteaseImage extends ImageProvider<NeteaseImage> implements CacheKey {
     //save image to cache
     await cache.update(key, bytes);
 
-    return await PaintingBinding.instance.instantiateImageCodec(bytes);
+    return await ui.instantiateImageCodec(Uint8List.fromList(bytes),
+        targetWidth: key.width, targetHeight: key.height);
   }
 
   @override
   Future<NeteaseImage> obtainKey(ImageConfiguration configuration) {
-    return SynchronousFuture<NeteaseImage>(this);
+    return SynchronousFuture<NeteaseImage>(NeteaseImage._internal(
+        url,
+        (configuration.size ?? _defaultImageSize) *
+            configuration.devicePixelRatio,
+        scale: scale,
+        headers: headers));
   }
 
   @override
   String toString() {
-    return 'NeteaseImage{url: $url, scale: $scale}';
+    return 'NeteaseImage{url: $url, scale: $scale, size: $_size}';
   }
 
   @override

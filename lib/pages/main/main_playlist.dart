@@ -332,7 +332,7 @@ class _ItemPlaylist extends StatelessWidget {
             Padding(padding: EdgeInsets.only(left: 16)),
             Hero(
               tag: playlist.heroTag,
-              child: SizedBox(
+              child: Container(
                 child: ClipRRect(
                   borderRadius: BorderRadius.all(Radius.circular(4)),
                   child: FadeInImage(
@@ -341,10 +341,10 @@ class _ItemPlaylist extends StatelessWidget {
                     fadeInDuration: Duration.zero,
                     fadeOutDuration: Duration.zero,
                     fit: BoxFit.cover,
+                    height: 50,
+                    width: 50,
                   ),
                 ),
-                height: 50,
-                width: 50,
               ),
             ),
             Padding(padding: EdgeInsets.only(left: 10)),
