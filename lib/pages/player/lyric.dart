@@ -13,7 +13,8 @@ class Lyric extends StatefulWidget {
       this.textAlign = TextAlign.center,
       this.highlight = Colors.red,
       @required this.size,
-      this.onTap});
+      this.onTap})
+      : assert(lyric.size > 0);
 
   final TextStyle lyricLineStyle;
 
@@ -350,6 +351,9 @@ class LyricContent {
   }
 
   LyricEntry getLineByTimeStamp(final int timeStamp, final int anchorLine) {
+    if (size <= 0) {
+      return null;
+    }
     final line = findLineByTimeStamp(timeStamp, anchorLine);
     return this[line];
   }

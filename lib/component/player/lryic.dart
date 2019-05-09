@@ -30,7 +30,7 @@ class PlayingLyric extends Model {
 
   LyricContent get lyric => _lyricContent;
 
-  bool get hasLyric => lyric != null;
+  bool get hasLyric => lyric != null && lyric.size > 0;
 
   Music _music;
 
@@ -55,14 +55,15 @@ class PlayingLyric extends Model {
 
   void _setLyric({String lyric, String message}) {
     assert(lyric == null || message == null);
-    if (lyric == null && message == null) {
-      _message = '暂无歌词';
-    }
     _message = message;
-    if (lyric != null) {
+    if (lyric != null && lyric.isNotEmpty) {
       _lyricContent = LyricContent.from(lyric);
-    } else {
+    }
+    if (_lyricContent.size == 0) {
       _lyricContent = null;
+    }
+    if (_lyricContent == null) {
+      _message = '暂无歌词';
     }
     notifyListeners();
   }
