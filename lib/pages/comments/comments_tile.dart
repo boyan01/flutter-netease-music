@@ -188,10 +188,7 @@ class _ItemCommentState extends State<_ItemComment> {
                       Clipboard.setData(
                           ClipboardData(text: widget.comment.content));
                       Navigator.pop(context);
-                      Scaffold.of(this.context).showSnackBar(SnackBar(
-                        content: Text("复制成功"),
-                        duration: Duration(seconds: 1),
-                      ));
+                      toast(this.context, '复制成功');
                     },
                   ),
                   Divider(
