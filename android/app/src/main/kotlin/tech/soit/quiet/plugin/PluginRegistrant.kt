@@ -7,7 +7,6 @@ object PluginRegistrant {
         if (alreadyRegisteredWith(registry)) {
             return
         }
-        NeteaseCryptoPlugin.registerWith(registry.registrarFor("tech.soit.quiet.plugin.NeteaseCryptoPlugin"))
     }
 
     private fun alreadyRegisteredWith(registry: PluginRegistry): Boolean {
