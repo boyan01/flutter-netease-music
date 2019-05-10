@@ -75,7 +75,7 @@ class NeteaseImage extends ImageProvider<NeteaseImage> implements CacheKey {
     var image = await cache.get(key);
     if (image != null) {
       return await ui.instantiateImageCodec(Uint8List.fromList(image),
-          targetWidth: key.width, targetHeight: key.height);
+          targetWidth: key.width, targetHeight: -1);
     }
     //request network source
     final Uri resolved = Uri.base.resolve(key.url);
@@ -96,7 +96,7 @@ class NeteaseImage extends ImageProvider<NeteaseImage> implements CacheKey {
     await cache.update(key, bytes);
 
     return await ui.instantiateImageCodec(Uint8List.fromList(bytes),
-        targetWidth: key.width, targetHeight: key.height);
+        targetWidth: key.width, targetHeight: -1);
   }
 
   @override
