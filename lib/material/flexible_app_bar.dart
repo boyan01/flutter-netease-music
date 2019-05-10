@@ -2,20 +2,24 @@ import 'package:flutter/material.dart';
 
 ///the same as [FlexibleSpaceBar]
 class FlexibleDetailBar extends StatelessWidget {
+  ///the content of bar
+  ///scroll with the parent ScrollView
   final Widget content;
 
+  ///the background of bar
+  ///scroll in parallax
   final Widget background;
 
+  ///custom content interaction with t
   ///[t] 0.0 -> Expanded  1.0 -> Collapsed to toolbar
   final Widget Function(BuildContext context, double t) builder;
 
   const FlexibleDetailBar({
     Key key,
     @required this.content,
-    @required this.builder,
+    this.builder,
     @required this.background,
   })  : assert(content != null),
-        assert(builder != null),
         assert(background != null),
         super(key: key);
 
@@ -53,7 +57,9 @@ class FlexibleDetailBar extends StatelessWidget {
       ),
     ));
 
-    children.add(Column(children: <Widget>[builder(context, t)]));
+    if (builder != null) {
+      children.add(Column(children: <Widget>[builder(context, t)]));
+    }
 
     return ClipRect(child: Stack(children: children, fit: StackFit.expand));
   }
