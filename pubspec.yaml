@@ -28,6 +28,7 @@ dependencies:
   mockito: ^4.0.0
   loader:
     path: loader/
+  encrypt: ^3.0.0
 
 dev_dependencies:
   flutter_test:
