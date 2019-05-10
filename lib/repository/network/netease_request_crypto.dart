@@ -1,20 +1,24 @@
-import 'dart:typed_data';
-import 'dart:math' as math;
 import 'dart:convert';
+import 'dart:math' as math;
 
 import 'package:encrypt/encrypt.dart';
+import 'package:meta/meta.dart';
+import 'package:pointycastle/api.dart';
+import 'package:pointycastle/asymmetric/api.dart';
+import 'package:pointycastle/asymmetric/rsa.dart';
 
 const _keys = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
-const _publicKey =
+@visibleForTesting
+const publicKey =
     '-----BEGIN PUBLIC KEY-----\nMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDgtQn2JZ34ZC28NWYpAUd98iZ37BUrX/aKzmFbt7clFSs6sXqHauqKWqdtLkF2KexO40H1YTX8z2lSgBBOAxLsvaklV8k4cBFK9snQXE9/DDaFt6Rr7iVZMldczhC0JNgTz+SHXT6CBHuX3e9SdB1Ua44oncaTWz7OBGLbCiK45wIDAQAB\n-----END PUBLIC KEY-----';
 
 const _presetKey = '0CoJUm6Qyw8W8jud';
 const _linuxApiKey = 'rFgB&h#%2?^eDg:Q';
 
-final IV _iv = IV.fromUtf8("0102030405060708");
+final IV _iv = IV.fromUtf8('0102030405060708');
 
-Map weApi(Map obj) {
+Map<String, String> weApi(Map obj) {
   final text = json.encode(obj);
   final secKey = _createdSecretKey();
   final mode = AESMode.cbc;
@@ -22,7 +26,7 @@ Map weApi(Map obj) {
     "params": _aesEncrypt(
             _aesEncrypt(text, mode, _presetKey, _iv).base64, mode, secKey, _iv)
         .base64,
-    "encSecKey": _rsaEncrypt(_reverse(secKey), _publicKey).base16
+    "encSecKey": rsaEncrypt(_reverse(secKey), publicKey).base16
   };
 }
 
@@ -49,12 +53,14 @@ Encrypted _aesEncrypt(String text, AESMode mode, String key, IV iv) {
   return encrypt.encrypt(text, iv: iv);
 }
 
-Encrypted _rsaEncrypt(String text, String key) {
-  final encrypt = Encrypter(RSA(publicKey: RSAKeyParser().parse(key)));
-
-  final Uint8List buffer = Uint8List(128);
-  List.copyRange(buffer, 0, Uint8List.fromList(utf8.encode(text)));
-  return encrypt.algo.encrypt(Uint8List.fromList(utf8.encode(text)));
+///rsa encrypt with NO_PADDING
+@visibleForTesting
+Encrypted rsaEncrypt(String text, String key) {
+  RSAPublicKey pubKey = RSAKeyParser().parse(key);
+  final rsa = RSAEngine();
+  rsa.init(true, PublicKeyParameter<RSAPublicKey>(pubKey));
+  final encrypted = rsa.process(utf8.encode(text));
+  return Encrypted(encrypted);
 }
 
 String _reverse(String content) {
