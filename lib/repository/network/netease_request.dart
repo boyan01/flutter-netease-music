@@ -5,6 +5,7 @@ import 'dart:math';
 
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 
 import 'netease_request_crypto.dart';
@@ -123,9 +124,13 @@ class NeteaseRequestService {
         cookies + cookieJar.loadForRequest(Uri.parse(_BASE_URL));
     options.headers['Content-Type'] = 'application/x-www-form-urlencoded';
 
+    debugPrint("request url : $path, option :$options");
+    debugPrint("request data : $data");
+
     try {
       Response response = await dio.post(path,
           data: Transformer.urlEncodeMap(data), options: options);
+      debugPrint("response :${response.data}");
       if (response.data is Map) {
         return response.data;
       }
