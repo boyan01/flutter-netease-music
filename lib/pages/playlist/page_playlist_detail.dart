@@ -11,7 +11,7 @@ import 'package:quiet/pages/comments/page_comment.dart';
 import 'package:quiet/part/part.dart';
 import 'package:quiet/repository/netease.dart';
 
-import 'flexible_app_bar.dart';
+import 'package:quiet/material/flexible_app_bar.dart';
 import 'music_list.dart';
 import 'page_playlist_detail_selection.dart';
 import 'playlist_internal_search.dart';

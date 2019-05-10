@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:quiet/material/flexible_app_bar.dart';
 import 'package:quiet/pages/account/page_need_login.dart';
 import 'package:quiet/pages/playlist/music_list.dart';
 import 'package:quiet/part/part.dart';
@@ -45,41 +46,31 @@ class DailyPlaylistPage extends StatelessWidget {
 class _DailyMusicList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return NestedScrollView(
-      headerSliverBuilder: (context, innerBoxIsScrolled) {
-        return [
-          SliverAppBar(
-            title: Text('每日推荐'),
-            titleSpacing: 0,
-            forceElevated: innerBoxIsScrolled,
-            elevation: 0,
-            actions: <Widget>[
-              IconButton(
-                  icon: Icon(Icons.help_outline),
-                  onPressed: () {
-                    launch("http://music.163.com/m/topic/19193112",
-                        forceWebView: true);
-                  })
-            ],
-            flexibleSpace: Container(
-              padding: EdgeInsets.only(bottom: 50, top: kToolbarHeight),
-              child: SafeArea(child: _HeaderContent()),
-            ),
-            expandedHeight: 232 - MediaQuery.of(context).padding.top,
-            pinned: true,
-            bottom: MusicListHeader(MusicList.of(context).musics.length),
-          ),
-        ];
-      },
-      body: MediaQuery.removePadding(
-        removeTop: true,
-        context: context,
-        child: ListView.builder(
-            itemCount: MusicList.of(context).musics.length,
-            itemBuilder: (context, index) {
-              return MusicTile(MusicList.of(context).musics[index]);
-            }),
-      ),
+    return CustomScrollView(
+      slivers: <Widget>[
+        SliverAppBar(
+          title: Text('每日推荐'),
+          titleSpacing: 0,
+          forceElevated: false,
+          elevation: 0,
+          actions: <Widget>[
+            IconButton(
+                icon: Icon(Icons.help_outline),
+                onPressed: () {
+                  launch("http://music.163.com/m/topic/19193112",
+                      forceWebView: true);
+                })
+          ],
+          flexibleSpace: _HeaderContent(),
+          expandedHeight: 232 - MediaQuery.of(context).padding.top,
+          pinned: true,
+          bottom: MusicListHeader(MusicList.of(context).musics.length),
+        ),
+        SliverList(
+            delegate: SliverChildBuilderDelegate((context, index) {
+          return MusicTile(MusicList.of(context).musics[index]);
+        }, childCount: MusicList.of(context).musics.length)),
+      ],
     );
   }
 }
@@ -90,30 +81,38 @@ class _HeaderContent extends StatelessWidget {
   Widget build(BuildContext context) {
     final date = DateTime.now();
     final textTheme = Theme.of(context).primaryTextTheme;
-    return DefaultTextStyle(
-      maxLines: 1,
-      style: textTheme.body1.copyWith(fontWeight: FontWeight.bold),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Spacer(),
-            Text.rich(TextSpan(children: [
-              TextSpan(
-                  text: date.day.toString().padLeft(2, '0'),
-                  style: TextStyle(fontSize: 23)),
-              TextSpan(text: ' / '),
-              TextSpan(text: date.month.toString().padLeft(2, '0')),
-            ])),
-            SizedBox(height: 4),
-            Text(
-              '根据你的音乐口味，为你推荐好音乐',
-              style: textTheme.caption,
-            ),
-            Spacer(),
-          ],
+    return FlexibleDetailBar(
+      background: Container(color: Theme.of(context).primaryColor),
+      content: DefaultTextStyle(
+        maxLines: 1,
+        style: textTheme.body1.copyWith(fontWeight: FontWeight.bold),
+        child: Padding(
+          padding: EdgeInsets.only(
+            left: 16,
+            right: 16,
+            top: MediaQuery.of(context).padding.top + kToolbarHeight,
+            bottom: 50, //music header
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Spacer(flex: 10),
+              Text.rich(TextSpan(children: [
+                TextSpan(
+                    text: date.day.toString().padLeft(2, '0'),
+                    style: TextStyle(fontSize: 23)),
+                TextSpan(text: ' / '),
+                TextSpan(text: date.month.toString().padLeft(2, '0')),
+              ])),
+              SizedBox(height: 4),
+              Text(
+                '根据你的音乐口味，为你推荐好音乐',
+                style: textTheme.caption,
+              ),
+              Spacer(flex: 12),
+            ],
+          ),
         ),
       ),
     );
