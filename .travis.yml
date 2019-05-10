@@ -10,7 +10,7 @@ addons:
       - fonts-droid
       - lib32stdc++6
 before_script:
-  - git clone https://github.com/flutter/flutter.git -b master --depth 1
+  - git clone https://github.com/flutter/flutter.git --depth 1
   - ./flutter/bin/flutter doctor
 script:
   - ./flutter/bin/flutter test --coverage --coverage-path=lcov.info
