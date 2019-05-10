@@ -46,12 +46,14 @@ class MusicList extends StatelessWidget {
     return _buildPlayingLeading(context, music) ??
         Container(
           margin: const EdgeInsets.only(left: 8, right: 8),
-          width: 40,
-          height: 40,
           child: ClipRRect(
             borderRadius: BorderRadius.circular(3),
-            child: Image(
-              image: NetworkImage(music.album.coverImageUrl),
+            child: FadeInImage(
+              width: 40,
+              height: 40,
+              fit: BoxFit.cover,
+              image: NeteaseImage(music.album.coverImageUrl),
+              placeholder: AssetImage("assets/playlist_playlist.9.png"),
             ),
           ),
         );
