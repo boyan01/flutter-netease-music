@@ -10,6 +10,7 @@ addons:
       - fonts-droid
 before_script:
   - git clone -b stable --depth 1 https://github.com/flutter/flutter.git
+  - ./flutter/bin/flutter upgrade
   - ./flutter/bin/flutter channel master
   - ./flutter/bin/flutter upgrade
 script:
