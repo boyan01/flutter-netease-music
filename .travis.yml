@@ -1,6 +1,6 @@
 os:
   - linux
-sudo: false
+sudo: true
 addons:
   apt:
     sources:
@@ -8,7 +8,6 @@ addons:
     packages:
       - libstdc++6
       - fonts-droid
-      - lib32stdc++6
 before_script:
   - git clone -b master --depth 1 https://github.com/flutter/flutter.git
   - ./flutter/bin/flutter --version
