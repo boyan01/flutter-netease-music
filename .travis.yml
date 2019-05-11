@@ -1,6 +1,6 @@
 os:
   - linux
-sudo: false
+sudo: true
 addons:
   apt:
     sources:
@@ -9,7 +9,7 @@ addons:
       - libstdc++6
       - fonts-droid
 before_script:
-  - git clone https://github.com/flutter/flutter.git -b master --depth 1
+  - git clone -b master https://github.com/flutter/flutter.git
   - ./flutter/bin/flutter doctor
 script:
   - ./flutter/bin/flutter test --coverage --coverage-path=lcov.info
