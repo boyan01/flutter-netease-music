@@ -9,9 +9,9 @@ addons:
       - libstdc++6
       - fonts-droid
 before_script:
-  - git clone -b master --depth 1 https://github.com/flutter/flutter.git
-  - ./flutter/bin/flutter --version
-  - ./flutter/bin/flutter doctor
+  - git clone -b stable --depth 1 https://github.com/flutter/flutter.git
+  - ./flutter/bin/flutter channel master
+  - ./flutter/bin/flutter upgrade
 script:
   - ./flutter/bin/flutter test --coverage --coverage-path=lcov.info
 after_success:
