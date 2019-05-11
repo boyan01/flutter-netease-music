@@ -25,6 +25,8 @@ all API information comes from this project: [NeteaseCloudMusicApi](https://gith
  flutter run --profile
  ```
 
+in addtion, this project Used api not in stable version. so need [switch flutter channel](https://flutter.dev/docs/development/tools/sdk/upgrading#switching-flutter-channels) to master first.
+
 # interaction
 
 | ![playing_page](./_preview/playing_Interaction.gif) | ![playing_page](https://boyan01.github.io/quiet/interation_playlist.gif) |
