@@ -93,18 +93,14 @@ class _LoginState extends State<LoginPage> {
 
   void _onLogin() async {
     if (_formState.currentState.validate()) {
-      try {
-        var result = await showLoaderOverlay(
-            context,
-            UserAccount.of(context, rebuildOnChange: false)
-                .login(_phoneController.text, _passwordController.text));
-        if (result["code"] == 200) {
-          Navigator.pop(context); //login succeed
-        } else {
-          showSimpleNotification(context, Text(result["msg"] ?? "登录失败"));
-        }
-      } catch (e) {
-        showSimpleNotification(context, Text('$e'));
+      var result = await showLoaderOverlay(
+          context,
+          UserAccount.of(context, rebuildOnChange: false)
+              .login(_phoneController.text, _passwordController.text));
+      if (!result.isError) {
+        Navigator.pop(context); //login succeed
+      } else {
+        showSimpleNotification(context, Text(result.asError.error.toString()));
       }
     }
   }

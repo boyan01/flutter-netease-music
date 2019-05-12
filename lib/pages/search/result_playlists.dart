@@ -23,15 +23,14 @@ class _PlaylistResultSectionState extends State<PlaylistResultSection>
     return Loader(
         loadTask: () =>
             neteaseRepository.search(widget.query, NeteaseSearchType.playlist),
-        resultVerify: neteaseRepository.responseVerify,
         builder: (context, result) {
           return AutoLoadMoreList(
               loadMore: (offset) async {
-                Map result = await neteaseRepository.search(
+                final result = await neteaseRepository.search(
                     widget.query, NeteaseSearchType.playlist,
                     offset: offset);
-                if (neteaseRepository.responseVerify(result).isSuccess) {
-                  return result["result"]["playlists"];
+                if (result.isValue) {
+                  return result.asValue.value["result"]["playlists"];
                 }
                 return null;
               },

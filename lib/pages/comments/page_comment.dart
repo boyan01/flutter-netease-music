@@ -104,12 +104,9 @@ class _CommentInputState extends State<_CommentInput> {
                 }
                 _error = null;
                 _isPosting = true;
-                Map result;
-                try {
-                  result =
-                      await _postComment(_controller.text, widget.threadId);
-                } catch (e) {}
-                if (result != null && result["code"] == 200) {
+                final result =
+                    await _postComment(_controller.text, widget.threadId);
+                if (result.isValue) {
                   _controller.text = "";
                   if (_focusNode.hasFocus) {
                     _focusNode.unfocus();
@@ -211,16 +208,15 @@ Future<bool> _like(
   var result = await neteaseRepository.doRequest(
       "https://music.163.com/weapi/v1/comment/$op",
       {"threadId": commentThread.threadId, "commentId": commentId});
-  return result["code"] == 200;
+  return result.isValue;
 }
 
 ///post comment to a comment thread
-Future<Map> _postComment(String content, CommentThreadId commentThread) async {
-  var result = await neteaseRepository.doRequest(
+Future<Result<Map>> _postComment(
+    String content, CommentThreadId commentThread) async {
+  return await neteaseRepository.doRequest(
       "https://music.163.com/weapi/resource/comments/add",
       {"content": content, "threadId": commentThread.threadId});
-  debugPrint("_postComment :$result");
-  return result;
 }
 
 Future<bool> _deleteComment(
@@ -229,5 +225,5 @@ Future<bool> _deleteComment(
       "https://music.163.com/weapi/resource/comments/delete",
       {"commentId": commentId, "threadId": commentThread.threadId});
   debugPrint("_deleteComment :$result");
-  return result["code"] == 200;
+  return result.isValue;
 }

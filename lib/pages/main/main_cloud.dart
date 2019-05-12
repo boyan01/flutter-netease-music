@@ -126,7 +126,6 @@ class _SectionPlaylist extends StatelessWidget {
   Widget build(BuildContext context) {
     return Loader<Map>(
       loadTask: () => neteaseRepository.personalizedPlaylist(limit: 6),
-      resultVerify: neteaseRepository.responseVerify,
       builder: (context, result) {
         List<Map> list = (result["result"] as List).cast();
         return GridView.count(
@@ -210,7 +209,6 @@ class _SectionNewSongs extends StatelessWidget {
   Widget build(BuildContext context) {
     return Loader<Map>(
       loadTask: () => neteaseRepository.personalizedNewSong(),
-      resultVerify: neteaseRepository.responseVerify,
       builder: (context, result) {
         List<Music> songs = (result["result"] as List)
             .cast<Map>()

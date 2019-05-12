@@ -239,9 +239,8 @@ class _EmptyQuerySuggestionSection extends StatelessWidget {
       children: <Widget>[
         Loader<List<String>>(
             loadTask: () => neteaseRepository.searchHotWords(),
-            resultVerify: simpleLoaderResultVerify((v) => v != null),
             //hide when failed load hot words
-            failedWidgetBuilder: (context, result, msg) => Container(),
+            errorBuilder: (context, result) => Container(),
             loadingBuilder: (context) {
               return SuggestionSection(
                 title: "热门搜索",

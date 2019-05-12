@@ -1,3 +1,4 @@
+import 'package:async/async.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
@@ -53,7 +54,7 @@ void main() {
     await tester.pump();
 
     when(loginModel.login(_PHONE_NUMBER, _PASSWORD))
-        .thenAnswer((_) => Future.value({"code": 100}));
+        .thenAnswer((_) => Future.value(Result.value({"code": 100})));
 
     await tester.enterText(find.byType(TextFormField).first, _PHONE_NUMBER);
     await tester.enterText(find.byType(PasswordField), _PASSWORD);

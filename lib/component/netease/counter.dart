@@ -69,11 +69,11 @@ class Counter extends Model {
     if (c != null) {
       _handleData(c);
     }
-    try {
-      final loaded = await repository.subCount();
-      cache[key] = loaded;//cache loaded data
-      _handleData(loaded);
-    } catch (e) {}
+    final loaded = await repository.subCount();
+    if (loaded.isValue) {
+      cache[key] = loaded.asValue.value; //cache loaded data
+      _handleData(loaded.asValue.value);
+    }
   }
 
   static Counter of(BuildContext context) {

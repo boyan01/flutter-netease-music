@@ -8,7 +8,7 @@ bool enableCache = true;
 
 ///[T] 一定为 [neteaseLocalData] 所能保存的类型，例如 map, String , int
 class NeteaseLoader<T> extends StatelessWidget {
-  final Future<T> Function() loadTask;
+  final Future<Result<T>> Function() loadTask;
 
   final LoaderWidgetBuilder<T> builder;
 
@@ -28,7 +28,6 @@ class NeteaseLoader<T> extends StatelessWidget {
     }();
     return Loader<T>(
       initialData: enableCache ? neteaseLocalData.get(cacheKey) : null,
-      resultVerify: neteaseRepository.responseVerify,
       loadTask: loadTask,
       builder: (context, result) {
         if (enableCache) {

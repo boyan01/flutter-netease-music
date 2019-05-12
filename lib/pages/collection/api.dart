@@ -10,7 +10,7 @@ class MyCollectionApi extends Model {
     return ScopedModel.of<MyCollectionApi>(context);
   }
 
-  Future<Map> getAlbums() {
+  Future<Result<Map>> getAlbums() {
     return neteaseRepository
         .doRequest('https://music.163.com/weapi/album/sublist', {
       'offset': 0,
@@ -18,7 +18,7 @@ class MyCollectionApi extends Model {
     });
   }
 
-  Future<Map> getArtists() {
+  Future<Result<Map>> getArtists() {
     return neteaseRepository.doRequest(
         'https://music.163.com/weapi/artist/sublist',
         {'limit': 25, 'offset': 0, 'total': true});

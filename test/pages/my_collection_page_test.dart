@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:async/async.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
@@ -20,9 +21,9 @@ void main() {
   enableCache = false;
 
   testWidgets('test albums page loading', (WidgetTester tester) async {
-    final completer = Completer<Map>();
+    final completer = Completer<Result<Map>>();
     final timer = Timer(const Duration(milliseconds: 1000), () {
-      completer.complete(_albums);
+      completer.complete(Result.value(_albums));
     });
 
     when(api.getAlbums()).thenAnswer((_) => completer.future);
@@ -36,7 +37,7 @@ void main() {
   });
 
   testWidgets('test albums page load succeed', (tester) async {
-    when(api.getAlbums()).thenAnswer((_) => Future.value(_albums));
+    when(api.getAlbums()).thenAnswer((_) => Future.value(Result.value(_albums)));
     await tester.pumpWidget(ScopedModel<MyCollectionApi>(
         model: api,
         child: Material(

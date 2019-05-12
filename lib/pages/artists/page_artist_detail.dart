@@ -41,17 +41,16 @@ class ArtistDetailPageState extends State<ArtistDetailPage>
   Widget build(BuildContext context) {
     return Loader<Map>(
         loadTask: () => neteaseRepository.artistDetail(widget.artistId),
-        resultVerify: neteaseRepository.responseVerify,
         loadingBuilder: (context) {
           return Scaffold(
             appBar: AppBar(title: Text("歌手")),
             body: Loader.buildSimpleLoadingWidget(context),
           );
         },
-        failedWidgetBuilder: (context, result, msg) {
+        errorBuilder: (context, result) {
           return Scaffold(
             appBar: AppBar(title: Text("歌手")),
-            body: Loader.buildSimpleFailedWidget(context, result, msg),
+            body: Loader.buildSimpleFailedWidget(context, result),
           );
         },
         builder: (context, result) {
@@ -236,7 +235,6 @@ class _PageAlbumsState extends State<_PageAlbums>
     super.build(context);
     return Loader<Map>(
         loadTask: () => neteaseRepository.artistAlbums(widget.artistId),
-        resultVerify: neteaseRepository.responseVerify,
         builder: (context, result) {
           List<Map> albums = (result["hotAlbums"] as List).cast();
           return AutoLoadMoreList<Map>(
@@ -244,7 +242,7 @@ class _PageAlbumsState extends State<_PageAlbums>
             loadMore: (offset) async {
               final result = await neteaseRepository
                   .artistAlbums(widget.artistId, offset: offset);
-              return (result["hotAlbums"] as List).cast();
+              return (result.asValue.value["hotAlbums"] as List).cast();
             },
             initialList: albums,
             builder: (context, album) {
@@ -278,7 +276,6 @@ class _PageMVsState extends State<_PageMVs> with AutomaticKeepAliveClientMixin {
     super.build(context);
     return Loader<Map>(
       loadTask: () => neteaseRepository.artistMvs(widget.artistId),
-      resultVerify: neteaseRepository.responseVerify,
       builder: (context, result) {
         final List<Map> mvs = (result["mvs"] as List).cast();
 
@@ -286,7 +283,7 @@ class _PageMVsState extends State<_PageMVs> with AutomaticKeepAliveClientMixin {
             loadMore: (offset) async {
               final result = await neteaseRepository.artistMvs(widget.artistId,
                   offset: offset);
-              return (result["mvs"] as List).cast();
+              return (result.asValue.value["mvs"] as List).cast();
             },
             totalCount: widget.mvCount,
             initialList: mvs,
@@ -462,7 +459,6 @@ class _PageArtistIntroductionState extends State<_PageArtistIntroduction>
     super.build(context);
     return Loader<Map>(
       loadTask: () => neteaseRepository.artistDesc(widget.artistId),
-      resultVerify: neteaseRepository.responseVerify,
       builder: (context, result) {
         final widgets = <Widget>[];
         widgets.addAll(_buildIntroduction(context, result));

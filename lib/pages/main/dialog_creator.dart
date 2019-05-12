@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:quiet/model/playlist_detail.dart';
 import 'package:quiet/part/part.dart';
 import 'package:quiet/repository/netease.dart';
 
@@ -19,13 +18,13 @@ class _PlaylistCreatorDialogState extends State<PlaylistCreatorDialog> {
   GlobalKey<FormFieldState<String>> _formKey = GlobalKey();
 
   void _create(String name) async {
-    try {
-      PlaylistDetail playlistDetail = await showLoaderOverlay(
-          context, neteaseRepository.createPlaylist(name));
+    final playlistDetail = await showLoaderOverlay(
+        context, neteaseRepository.createPlaylist(name));
+    if (playlistDetail.isValue) {
       Navigator.pop(context, playlistDetail);
-    } catch (e) {
+    } else {
       setState(() {
-        error = e.toString();
+        error = playlistDetail.asError.error.toString();
       });
     }
   }

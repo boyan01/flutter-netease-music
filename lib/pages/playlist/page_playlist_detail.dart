@@ -77,7 +77,7 @@ class _PlayListDetailState extends State<PlaylistDetailPage> {
                     child: Center(child: Text("加载中...")),
                   ));
             },
-            failedWidgetBuilder: (context, result, msg) {
+            errorBuilder: (context, result) {
               return buildPreview(
                   context,
                   Container(
