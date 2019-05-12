@@ -21,15 +21,14 @@ class _VideosResultSectionState extends State<VideosResultSection>
     return Loader<Map<String, dynamic>>(
         loadTask: () =>
             neteaseRepository.search(widget.query, NeteaseSearchType.video),
-        resultVerify: neteaseRepository.responseVerify,
         builder: (context, result) {
           return AutoLoadMoreList(
               loadMore: (offset) async {
-                Map result = await neteaseRepository.search(
+                final result = await neteaseRepository.search(
                     widget.query, NeteaseSearchType.video,
                     offset: offset);
-                if (neteaseRepository.responseVerify(result).isSuccess) {
-                  return result["result"]["videos"];
+                if (result.isValue) {
+                  return result.asValue.value["result"]["videos"];
                 }
                 return null;
               },

@@ -71,8 +71,7 @@ class _PlaylistEditPageState extends State<PlaylistEditPage> {
             Divider(height: 0, indent: 8),
             InkWell(
               onTap: () {
-                showSimpleNotification(
-                    context, Text("Not implemented"),
+                showSimpleNotification(context, Text("Not implemented"),
                     background: Theme.of(context).errorColor);
               },
               child: Container(
@@ -89,8 +88,7 @@ class _PlaylistEditPageState extends State<PlaylistEditPage> {
             Divider(height: 0, indent: 8),
             InkWell(
               onTap: () {
-                showSimpleNotification(
-                    context, Text("Not implemented"),
+                showSimpleNotification(context, Text("Not implemented"),
                     background: Theme.of(context).errorColor);
               },
               child: Container(

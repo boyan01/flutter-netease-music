@@ -58,13 +58,17 @@ class VideoPlayerModel extends Model {
   bool get subscribed => _subscribed;
 
   ///收藏或者取消收藏mv
-  Future<void> subscribe(bool subscribe) async {
+  ///return: true: 操作成功
+  Future<bool> subscribe(bool subscribe) async {
     if (subscribe == _subscribed) {
-      return;
+      return false;
     }
-    await neteaseRepository.mvSubscribe(data.id, subscribe);
-    _subscribed = subscribe;
-    notifyListeners();
+    final success = await neteaseRepository.mvSubscribe(data.id, subscribe);
+    if (success) {
+      _subscribed = subscribe;
+      notifyListeners();
+    }
+    return success;
   }
 
   VideoPlayerController _videoPlayerController;
@@ -96,9 +100,9 @@ void subscribeOrUnSubscribeMv(BuildContext context) async {
           positiveLabel: '不再收藏')) {
     return;
   }
-  try {
-    await showLoaderOverlay(context, model.subscribe(!model.subscribed));
-  } catch (e) {
+  bool succeed =
+      await showLoaderOverlay(context, model.subscribe(!model.subscribed));
+  if (!succeed) {
     showSimpleNotification(
         context, Text('${model.subscribed ? '取消收藏' : '收藏'}失败'));
   }

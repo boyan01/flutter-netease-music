@@ -62,7 +62,6 @@ class _RecordSectionState extends State<_RecordSection>
     super.build(context);
     return Loader<Map>(
       loadTask: () => neteaseRepository.getRecord(widget.uid, widget.type),
-      resultVerify: neteaseRepository.responseVerify,
       builder: (context, result) {
         debugPrint('Record(${widget.type}) result : $result');
         List data = result[_keys[widget.type]];

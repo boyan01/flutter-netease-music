@@ -27,7 +27,6 @@ class _AlbumDetailPageState extends State<AlbumDetailPage> {
     return Scaffold(
       body: Loader<Map>(
           loadTask: () => neteaseRepository.albumDetail(widget.albumId),
-          resultVerify: neteaseRepository.responseVerify,
           builder: (context, result) {
             return _AlbumBody(
               album: result["album"],

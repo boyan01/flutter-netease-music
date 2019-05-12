@@ -16,7 +16,7 @@ void main() {
     //no cache
     when(cache[Counter.key]).thenReturn(null);
 
-    when(netease.subCount()).thenReturn({
+    when(netease.subCount()).thenReturn(Result.value({
       "programCount": 0,
       "djRadioCount": 10,
       "mvCount": 3,
@@ -26,7 +26,7 @@ void main() {
       "createdPlaylistCount": 12,
       "subPlaylistCount": 16,
       "code": 200
-    });
+    }));
 
     await tester.pumpWidget(ScopedModel(
         model: loginModel,
@@ -46,7 +46,7 @@ void main() {
     //no cache
     when(cache[Counter.key]).thenReturn(null);
 
-    when(netease.subCount()).thenReturn({
+    when(netease.subCount()).thenReturn(Result.value({
       "programCount": 0,
       "djRadioCount": 10,
       "mvCount": 3,
@@ -56,7 +56,7 @@ void main() {
       "createdPlaylistCount": 12,
       "subPlaylistCount": 16,
       "code": 200
-    });
+    }));
 
     await tester.pumpWidget(
       ScopedModel(
@@ -79,7 +79,7 @@ void main() {
     //no cache
     when(cache[Counter.key]).thenReturn(null);
 
-    when(netease.subCount()).thenThrow('网络异常');
+    when(netease.subCount()).thenReturn(Result.error('网络异常'));
 
     await tester.pumpWidget(
       ScopedModel(
@@ -111,7 +111,7 @@ void main() {
       "code": 200
     });
 
-    when(netease.subCount()).thenThrow('网络异常');
+    when(netease.subCount()).thenReturn(Result.error('网络异常'));
 
     await tester.pumpWidget(
       ScopedModel(

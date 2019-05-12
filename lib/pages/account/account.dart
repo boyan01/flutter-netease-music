@@ -14,11 +14,14 @@ class UserAccount extends Model {
         rebuildOnChange: rebuildOnChange);
   }
 
-  Future<Map> login(String phone, String password) async {
+  Future<Result<Map>> login(String phone, String password) async {
     final result = await neteaseRepository.login(phone, password);
-    neteaseLocalData[persistenceKey] = result;
-    _user = result;
-    notifyListeners();
+    if (result.isValue) {
+      final json = result.asValue.value;
+      neteaseLocalData[persistenceKey] = json;
+      _user = json;
+      notifyListeners();
+    }
     return result;
   }
 

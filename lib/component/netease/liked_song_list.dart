@@ -25,12 +25,11 @@ class LikedSongList extends Model {
     _ids =
         (await neteaseLocalData['likedSongList'] as List)?.cast() ?? const [];
     notifyListeners();
-    try {
-      _ids = await neteaseRepository.likedList(userId);
+    final result = await neteaseRepository.likedList(userId);
+    if (result.isValue) {
+      _ids = result.asValue.value;
       notifyListeners();
       neteaseLocalData['likedSongList'] = _ids;
-    } catch (e) {
-      debugPrint("$e");
     }
   }
 

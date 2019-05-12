@@ -43,17 +43,16 @@ class _MainPlaylistState extends State<MainPlaylistPage>
             key: _loaderKey,
             initialData: neteaseLocalData.getUserPlaylist(userId),
             loadTask: () => neteaseRepository.userPlaylist(userId),
-            resultVerify: simpleLoaderResultVerify((v) => v != null),
             loadingBuilder: (context) {
               _indicatorKey.currentState.show();
               return ListView(children: [
                 _PinnedHeader(),
               ]);
             },
-            failedWidgetBuilder: (context, result, msg) {
+            errorBuilder: (context, result) {
               return ListView(children: [
                 _PinnedHeader(),
-                Loader.buildSimpleFailedWidget(context, result, msg),
+                Loader.buildSimpleFailedWidget(context, result),
               ]);
             },
             builder: (context, result) {

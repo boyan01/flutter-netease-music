@@ -23,15 +23,14 @@ class _AlbumsResultSectionState extends State<AlbumsResultSection>
     return Loader<Map<String, dynamic>>(
         loadTask: () =>
             neteaseRepository.search(widget.query, NeteaseSearchType.album),
-        resultVerify: neteaseRepository.responseVerify,
         builder: (context, result) {
           return AutoLoadMoreList(
               loadMore: (offset) async {
-                Map result = await neteaseRepository.search(
+                final result = await neteaseRepository.search(
                     widget.query, NeteaseSearchType.album,
                     offset: offset);
-                if (neteaseRepository.responseVerify(result).isSuccess) {
-                  return result["result"]["albums"];
+                if (result.isValue) {
+                  return result.asValue.value["result"]["albums"];
                 }
                 return null;
               },

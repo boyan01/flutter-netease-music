@@ -25,7 +25,6 @@ class SongsResultSectionState extends State<SongsResultSection>
     return Loader<Map<String, dynamic>>(
         loadTask: () =>
             neteaseRepository.search(widget.query, NeteaseSearchType.song),
-        resultVerify: neteaseRepository.responseVerify,
         builder: (context, result) {
           return MusicList(
             musics: const [],
@@ -38,10 +37,10 @@ class SongsResultSectionState extends State<SongsResultSection>
                 return;
               }
               final song = await neteaseRepository.getMusicDetail(item.id);
-              if (song != null) {
+              if (song.isValue) {
                 quiet.play(
-                    music:
-                        mapJsonToMusic(song, artistKey: "ar", albumKey: "al"));
+                    music: mapJsonToMusic(song.asValue.value,
+                        artistKey: "ar", albumKey: "al"));
               } else {
                 showSimpleNotification(context, Text("播放歌曲失败!"),
                     leading: Icon(Icons.notification_important),
@@ -50,13 +49,12 @@ class SongsResultSectionState extends State<SongsResultSection>
             },
             child: AutoLoadMoreList(
               loadMore: (count) async {
-                Map result = await neteaseRepository.search(
+                final result = await neteaseRepository.search(
                     widget.query, NeteaseSearchType.song,
                     offset: count);
-                var verify = neteaseRepository.responseVerify(result);
-                if (verify.isSuccess) {
+                if (result.isValue) {
                   //if verify succeed, we assume that has reached the end
-                  return result["result"]["songs"] ?? [];
+                  return result.asValue.value["result"]["songs"] ?? [];
                 }
                 return null;
               },

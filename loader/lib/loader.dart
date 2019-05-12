@@ -4,49 +4,19 @@ import 'dart:async';
 
 import 'package:async/async.dart';
 import 'package:flutter/material.dart';
+import 'package:meta/meta.dart';
 import 'package:overlay_support/overlay_support.dart';
+
+export 'package:async/async.dart' show Result;
+export 'package:async/async.dart' show ErrorResult;
+export 'package:async/async.dart' show ValueResult;
 
 ///build widget when Loader has completed loading...
 typedef LoaderWidgetBuilder<T> = Widget Function(
     BuildContext context, T result);
 
-///build widget when loader load failed
-///result and msg might be null
-typedef LoaderFailedWidgetBuilder<T> = Widget Function(
-    BuildContext context, T result, String msg);
-
-///the result of function [TaskResultVerify]
-class VerifyValue<T> {
-  VerifyValue.success(this.result);
-
-  VerifyValue.errorMsg(this.errorMsg) : assert(errorMsg != null);
-
-  T result;
-  String errorMsg;
-
-  bool get isSuccess => errorMsg == null;
-}
-
-///to verify [Loader.loadTask] result is success
-typedef TaskResultVerify<T> = VerifyValue Function(T result);
-
-final TaskResultVerify _emptyVerify = (dynamic result) {
-  return VerifyValue.success(result);
-};
-
-///create a simple [TaskResultVerify]
-///use bool result to check result if valid
-TaskResultVerify<T> simpleLoaderResultVerify<T>(bool test(T t),
-    {String errorMsg = "falied"}) {
-  assert(errorMsg != null);
-  TaskResultVerify<T> verify = (result) {
-    if (test(result)) {
-      return VerifyValue.success(result);
-    } else {
-      return VerifyValue.errorMsg(errorMsg);
-    }
-  };
-  return verify;
+void _defaultFailedHandler(BuildContext context, ErrorResult result) {
+  toast(context, result.error?.toString() ?? defaultErrorMessage);
 }
 
 class Loader<T> extends StatefulWidget {
@@ -54,35 +24,13 @@ class Loader<T> extends StatefulWidget {
       {Key key,
       @required this.loadTask,
       @required this.builder,
-      this.resultVerify,
       this.loadingBuilder,
-      this.failedWidgetBuilder,
       this.initialData,
-      this.onFailed = defaultFailedHandler})
+      this.onError = _defaultFailedHandler,
+      this.errorBuilder})
       : assert(loadTask != null),
         assert(builder != null),
         super(key: key);
-
-  static Widget buildSimpleFailedWidget<T>(
-      BuildContext context, T result, String msg) {
-    return Container(
-      constraints: BoxConstraints(minHeight: 200),
-      child: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            Text(msg),
-            SizedBox(height: 8),
-            RaisedButton(
-                child: Text("重试"),
-                onPressed: () {
-                  Loader.of(context).refresh();
-                })
-          ],
-        ),
-      ),
-    );
-  }
 
   static Widget buildSimpleLoadingWidget<T>(BuildContext context) {
     return Container(
@@ -93,29 +41,42 @@ class Loader<T> extends StatefulWidget {
     );
   }
 
-  static void defaultFailedHandler<T>(
-      BuildContext context, T result, String msg) {
-    showSimpleNotification(context, Text(msg));
+  static Widget buildSimpleFailedWidget(
+      BuildContext context, ErrorResult result) {
+    return Container(
+      constraints: BoxConstraints(minHeight: 200),
+      child: Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Text(result.error.toString()),
+            SizedBox(height: 8),
+            RaisedButton(
+                child: Text(MaterialLocalizations.of(context)
+                    .refreshIndicatorSemanticLabel),
+                onPressed: () {
+                  Loader.of(context).refresh();
+                })
+          ],
+        ),
+      ),
+    );
   }
 
   final FutureOr<T> initialData;
 
   ///task to load
   ///returned future'data will send by [LoaderWidgetBuilder]
-  final Future<T> Function() loadTask;
+  final Future<Result<T>> Function() loadTask;
 
   final LoaderWidgetBuilder<T> builder;
 
-  final TaskResultVerify<T> resultVerify;
-
-  ///if null, build a default error widget when load failed
-  final LoaderFailedWidgetBuilder<T> failedWidgetBuilder;
+  final Widget Function(BuildContext context, ErrorResult result) errorBuilder;
 
   ///callback to handle error, could be null
-  ///if [initialData] has been loaded, [failedWidgetBuilder] will never be invoked
-  ///because current is showing initial data
-  ///so we need send the error msg to callback, let caller handle it.
-  final void Function<T>(BuildContext context, T result, String msg) onFailed;
+  ///
+  /// if null, will do nothing when an error occurred in [loadTask]
+  final void Function(BuildContext context, ErrorResult result) onError;
 
   ///widget display when loading
   ///if null ,default to display a white background with a Circle Progress
@@ -129,104 +90,123 @@ class Loader<T> extends StatefulWidget {
   State<StatefulWidget> createState() => LoaderState<T>();
 }
 
-enum _LoaderState {
-  loading,
-  success,
-  failed,
-}
+@visibleForTesting
+const defaultErrorMessage = '啊哦，出错了~';
 
 class LoaderState<T> extends State<Loader> {
-  _LoaderState state = _LoaderState.loading;
+  bool get isLoading => _loadingTask != null;
 
-  String _errorMsg;
+  CancelableOperation _loadingTask;
 
-  CancelableOperation task;
-
-  T value;
+  Result<T> value;
 
   @override
   void initState() {
     super.initState();
     if (widget.initialData != null) {
-      _loadInitialData();
+      scheduleMicrotask(() async {
+        final initialData =
+            Future.value(Result.value(await widget.initialData));
+        await _loadData(initialData, force: true);
+        await refresh();
+      });
     } else {
-      _loadData();
+      refresh();
     }
-  }
-
-  void _loadInitialData() async {
-    try {
-      final result = await widget.initialData;
-      if (result != null) {
-        setState(() {
-          this.value = result;
-        });
-      }
-    } catch (e) {
-      //do nothing...
-      debugPrint("_loadInitialData error $e");
-    }
-    _loadData();
-  }
-
-  Future<void> refresh() async {
-    await _loadData();
   }
 
   @override
   Loader<T> get widget => super.widget;
 
-  Future<dynamic> _loadData() {
-    if (state == _LoaderState.loading && task != null) {
-      return task.value;
+  ///refresh data
+  ///force: true to force refresh when a loading ongoing
+  Future<void> refresh({bool force: false}) async {
+    await _loadData(widget.loadTask(), force: false);
+  }
+
+  Future<Result<T>> _loadData(Future<Result<T>> future, {bool force = false}) {
+    assert(future != null);
+    assert(force != null);
+
+    if (_loadingTask != null && !force) {
+      return _loadingTask.value;
     }
-    setState(() {
-      state = _LoaderState.loading;
-    });
-    task?.cancel();
-    task = CancelableOperation.fromFuture(widget.loadTask())
-      ..value.then((v) {
-        var verify = (widget.resultVerify ?? _emptyVerify)(v);
-        if (verify.isSuccess) {
-          setState(() {
-            this.value = verify.result;
-            state = _LoaderState.success;
-          });
+    _loadingTask?.cancel();
+    _loadingTask = CancelableOperation<Result<T>>.fromFuture(future)
+      ..value.then((result) {
+        assert(result != null, "result can not be null");
+        if (result.isError) {
+          _onError(result);
         } else {
-          setState(() {
-            state = _LoaderState.failed;
-            _errorMsg = verify.errorMsg;
-          });
+          value = result;
         }
       }).catchError((e, StackTrace stack) {
-        debugPrint("error to load : $e");
-        _errorMsg = e.toString() ?? "出错";
-        state = _LoaderState.failed;
-        if (value != null && widget.onFailed != null) {
-          widget.onFailed(context, null, _errorMsg);
-        }
+        _onError(Result.error(e, stack));
+      }).whenComplete(() {
+        _loadingTask = null;
         setState(() {});
       });
-    return task.value;
+    //notify if should be in loading status
+    setState(() {});
+    return _loadingTask.value;
+  }
+
+  void _onError(ErrorResult result) {
+    if (result.stackTrace != null) {
+      debugPrint(result.stackTrace.toString());
+    }
+
+    if (value == null || value.isError) {
+      value = result;
+    }
+    if (widget.onError != null) {
+      widget.onError(context, result);
+    }
   }
 
   @override
   void dispose() {
     super.dispose();
-    task?.cancel();
-    task = null;
+    _loadingTask?.cancel();
+    _loadingTask = null;
   }
 
   @override
   Widget build(BuildContext context) {
-    if (state == _LoaderState.success || value != null) {
-      return widget.builder(context, value);
-    } else if (state == _LoaderState.failed || _errorMsg != null) {
-      return Builder(
-          builder: (context) => (widget.failedWidgetBuilder ??
-              Loader.buildSimpleFailedWidget)(context, value, _errorMsg));
+    if (value != null) {
+      return LoaderResultWidget(
+          result: value,
+          valueBuilder: widget.builder,
+          errorBuilder: widget.errorBuilder ?? Loader.buildSimpleFailedWidget);
     }
     return (widget.loadingBuilder ?? Loader.buildSimpleLoadingWidget)(context);
+  }
+}
+
+@visibleForTesting
+class LoaderResultWidget<T> extends StatelessWidget {
+  final Result<T> result;
+
+  final LoaderWidgetBuilder<T> valueBuilder;
+  final Widget Function(BuildContext context, ErrorResult result) errorBuilder;
+
+  const LoaderResultWidget(
+      {Key key,
+      @required this.result,
+      @required this.valueBuilder,
+      @required this.errorBuilder})
+      : assert(result != null),
+        assert(valueBuilder != null),
+        assert(errorBuilder != null),
+        super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    if (result.isValue) {
+      return valueBuilder(context, result.asValue.value);
+    } else {
+      return errorBuilder(context, result);
+    }
   }
 }
 

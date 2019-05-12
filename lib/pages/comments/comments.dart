@@ -108,11 +108,11 @@ class CommentList extends Model {
       return;
     }
 
-    _autoLoadOperation = CancelableOperation.fromFuture(
+    _autoLoadOperation = CancelableOperation<Result<Map>>.fromFuture(
         neteaseRepository.getComments(threadId, offset: comments.length))
-      ..value.then((result) {
-        _autoLoadOperation = null;
-        if (result["code"] == 200) {
+      ..value.then((r) {
+        if (r is ValueResult) {
+          final result = r.asValue.value;
           _more = result["more"];
           if (comments.isEmpty) {
             total = result['total'];
@@ -128,8 +128,7 @@ class CommentList extends Model {
         } else {
           //error handle
         }
-      }).catchError((e) {
-        debugPrint(e.toString());
+      }).whenComplete(() {
         _autoLoadOperation = null;
       });
   }

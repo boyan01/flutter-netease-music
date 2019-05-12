@@ -25,7 +25,6 @@ dependencies:
   intl: ^0.15.7
   sembast: ^1.13.2
   scoped_model: ^1.0.1
-  mockito: ^4.0.0
   loader:
     path: loader/
   encrypt: ^3.0.0
@@ -35,6 +34,7 @@ dev_dependencies:
     sdk: flutter
   build_runner: ^1.0.0
   json_serializable: ^2.0.0
+  mockito: ^4.0.0
 
 # The following section is specific to Flutter.
 flutter:

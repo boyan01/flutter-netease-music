@@ -40,7 +40,6 @@ class MusicVideoPlayerPage extends StatelessWidget {
               context: context,
               removeTop: true,
               child: Loader(
-                  resultVerify: neteaseRepository.responseVerify,
                   loadTask: () => neteaseRepository.mvDetail(mvId),
                   builder: (context, result) {
                     return _MvDetailPage(result: result);

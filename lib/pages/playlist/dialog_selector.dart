@@ -143,8 +143,7 @@ class PlaylistSelectorDialog extends StatelessWidget {
     final userId = UserAccount.of(context).userId;
     return Loader<List<PlaylistDetail>>(
       loadTask: () => neteaseRepository.userPlaylist(userId),
-      resultVerify: simpleLoaderResultVerify((v) => v != null),
-      failedWidgetBuilder: (context, result, msg) {
+      errorBuilder: (context, result) {
         return _buildDialog(
             context,
             Center(
@@ -153,7 +152,7 @@ class PlaylistSelectorDialog extends StatelessWidget {
                 children: <Widget>[
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Text(msg ?? "加载失败"),
+                    child: Text(result.error.toString() ?? "加载失败"),
                   ),
                   SizedBox(height: 16),
                   RaisedButton(
