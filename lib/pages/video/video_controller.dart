@@ -101,31 +101,30 @@ class _AnimatedMvControllerState extends State<AnimatedMvController>
   Widget build(BuildContext context) {
     return Material(
       color: Colors.transparent,
-      child: ClipRect(
-        child: GestureDetector(
-          behavior: HitTestBehavior.translucent,
-          onTapDown: (_) {
-            _hideDelay();
-          },
-          onDoubleTap: () {
-            final controller =
-                VideoPlayerModel.of(context).videoPlayerController;
-            final value = controller.value;
-            if (value.initialized) {
-              if (value.isPlaying) {
-                controller.pause();
-              } else {
-                controller.play();
-              }
+      child: GestureDetector(
+        behavior: HitTestBehavior.translucent,
+        onTapDown: (_) {
+          _hideDelay();
+        },
+        onDoubleTap: () {
+          final controller = VideoPlayerModel.of(context).videoPlayerController;
+          final value = controller.value;
+          if (value.initialized) {
+            if (value.isPlaying) {
+              controller.pause();
+            } else {
+              controller.play();
             }
-          },
-          onTap: () {
-            if (_show) {
-              _setUiVisibility(false);
-            } else if (_hide) {
-              _setUiVisibility(true);
-            }
-          },
+          }
+        },
+        onTap: () {
+          if (_show) {
+            _setUiVisibility(false);
+          } else if (_hide) {
+            _setUiVisibility(true);
+          }
+        },
+        child: ClipRect(
           child: Stack(
             children: <Widget>[
               Column(
