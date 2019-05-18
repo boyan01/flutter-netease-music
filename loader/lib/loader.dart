@@ -105,9 +105,10 @@ class LoaderState<T> extends State<Loader> {
     super.initState();
     if (widget.initialData != null) {
       scheduleMicrotask(() async {
-        final initialData =
-            Future.value(Result.value(await widget.initialData));
-        await _loadData(initialData, force: true);
+        final data = await widget.initialData;
+        if (data != null) {
+          await _loadData(Future.value(Result.value(data)), force: true);
+        }
         await refresh();
       });
     } else {
