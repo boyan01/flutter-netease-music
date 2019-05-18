@@ -63,12 +63,17 @@ class NeteaseRequestService {
 
   Future<Dio> _dio;
 
-  Future<PersistCookieJar> _cookieJar;
+  Future<CookieJar> _cookieJar;
 
   NeteaseRequestService._internal() {
     _cookieJar = () async {
-      var path = (await getApplicationDocumentsDirectory()).path + "/.cookies/";
-      return PersistCookieJar(dir: path);
+      String path;
+      try {
+        path = (await getApplicationDocumentsDirectory()).path;
+      } catch (e) {
+        path = '.';
+      }
+      return PersistCookieJar(dir: path + '/.cookies/');
     }();
     _dio = () async {
       final dio = Dio(BaseOptions(
@@ -143,7 +148,7 @@ class NeteaseRequestService {
   void clearCookie() {
     //删除cookie
     _cookieJar.then((jar) {
-      jar.delete(Uri.parse(_BASE_URL));
+      if (jar is PersistCookieJar) jar.delete(Uri.parse(_BASE_URL));
     });
   }
 }
