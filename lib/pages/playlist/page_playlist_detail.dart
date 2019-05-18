@@ -385,8 +385,7 @@ class DetailHeader extends StatelessWidget {
           color: Colors.black.withOpacity(0.2),
           child: Container(
             padding: EdgeInsets.only(
-                top: MediaQuery.of(context).padding.top + kToolbarHeight,
-                bottom: 50),
+                top: MediaQuery.of(context).padding.top + kToolbarHeight),
             child: Column(
               children: <Widget>[
                 content,

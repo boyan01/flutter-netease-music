@@ -14,6 +14,13 @@ class FlexibleDetailBar extends StatelessWidget {
   ///[t] 0.0 -> Expanded  1.0 -> Collapsed to toolbar
   final Widget Function(BuildContext context, double t) builder;
 
+  static double percentage(BuildContext context) {
+    _FlexibleDetail value =
+        context.inheritFromWidgetOfExactType(_FlexibleDetail);
+    assert(value != null, 'ooh , can not find');
+    return value.t;
+  }
+
   const FlexibleDetailBar({
     Key key,
     @required this.content,
@@ -46,6 +53,12 @@ class FlexibleDetailBar extends StatelessWidget {
       child: background,
     ));
 
+    //为content 添加 底部的 padding
+    double bottomPadding = 0;
+    SliverAppBar sliverBar = context.ancestorWidgetOfExactType(SliverAppBar);
+    if (sliverBar != null && sliverBar.bottom != null) {
+      bottomPadding = sliverBar.bottom.preferredSize.height;
+    }
     children.add(Positioned(
       top: settings.currentExtent - settings.maxExtent,
       left: 0,
@@ -53,7 +66,10 @@ class FlexibleDetailBar extends StatelessWidget {
       height: settings.maxExtent,
       child: Opacity(
         opacity: 1 - t,
-        child: content,
+        child: Padding(
+          padding: EdgeInsets.only(bottom: bottomPadding),
+          child: content,
+        ),
       ),
     ));
 
@@ -61,6 +77,21 @@ class FlexibleDetailBar extends StatelessWidget {
       children.add(Column(children: <Widget>[builder(context, t)]));
     }
 
-    return ClipRect(child: Stack(children: children, fit: StackFit.expand));
+    return _FlexibleDetail(t,
+        child:
+            ClipRect(child: Stack(children: children, fit: StackFit.expand)));
+  }
+}
+
+class _FlexibleDetail extends InheritedWidget {
+  ///0 : Expanded
+  ///1 : Collapsed
+  final double t;
+
+  _FlexibleDetail(this.t, {Widget child}) : super(child: child);
+
+  @override
+  bool updateShouldNotify(_FlexibleDetail oldWidget) {
+    return t != oldWidget.t;
   }
 }
