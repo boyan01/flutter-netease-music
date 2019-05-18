@@ -457,17 +457,20 @@ class _CloudLyricState extends State<_CloudLyric> {
               1
             ]);
           },
-          child: Lyric(
-            lyric: playingLyric.lyric,
-            lyricLineStyle: normalStyle,
-            highlight: style.color,
-            position: position,
-            onTap: widget.onTap,
-            size: Size(
-                constraints.maxWidth,
-                constraints.maxHeight == double.infinity
-                    ? 0
-                    : constraints.maxHeight),
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20),
+            child: Lyric(
+              lyric: playingLyric.lyric,
+              lyricLineStyle: normalStyle,
+              highlight: style.color,
+              position: position,
+              onTap: widget.onTap,
+              size: Size(
+                  constraints.maxWidth,
+                  constraints.maxHeight == double.infinity
+                      ? 0
+                      : constraints.maxHeight),
+            ),
           ),
         );
       });
