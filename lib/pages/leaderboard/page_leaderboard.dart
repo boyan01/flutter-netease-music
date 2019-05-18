@@ -1,56 +1,23 @@
-import 'package:async/async.dart';
 import 'package:flutter/material.dart';
 import 'package:quiet/pages/playlist/page_playlist_detail.dart';
+import 'package:quiet/part/part.dart';
 import 'package:quiet/repository/netease.dart';
 
 ///各个排行榜数据
-class LeaderboardPage extends StatefulWidget {
-  @override
-  State<StatefulWidget> createState() => _LeaderboardPageState();
-}
-
-class _LeaderboardPageState extends State<LeaderboardPage> {
-  List<Map> data;
-
-  CancelableOperation task;
-
-  @override
-  void initState() {
-    super.initState();
-    task = CancelableOperation.fromFuture(neteaseRepository.topListDetail())
-      ..value.then((result) {
-        if (result["code"] == 200) {
-          setState(() {
-            data = (result["list"] as List).cast();
-          });
-        } else {
-          debugPrint("#topListDetail falied $result");
-        }
-      });
-  }
-
-  @override
-  void dispose() {
-    task.cancel();
-    super.dispose();
-  }
-
+class LeaderboardPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    Widget body;
-    if (data == null) {
-      body = Center(
-        child: CircularProgressIndicator(),
-      );
-    } else {
-      body = _Leaderboard(data);
-    }
     return Scaffold(
       appBar: AppBar(
         leading: BackButton(),
         title: const Text("排行榜"),
       ),
-      body: body,
+      body: Loader<Map>(
+        loadTask: () => neteaseRepository.topListDetail(),
+        builder: (context, result) {
+          return _Leaderboard((result['list'] as List).cast());
+        },
+      ),
     );
   }
 }
