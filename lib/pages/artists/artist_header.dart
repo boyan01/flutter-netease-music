@@ -1,0 +1,118 @@
+import 'package:overlay_support/overlay_support.dart';
+import 'package:quiet/material/flexible_app_bar.dart';
+import 'package:quiet/material/tab_indicator.dart';
+import 'package:quiet/repository/netease.dart';
+
+import 'artist.model.dart';
+import 'package:flutter/material.dart';
+
+class ArtistHeader extends StatelessWidget {
+  final Artist artist;
+
+  const ArtistHeader({Key key, @required this.artist}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SliverAppBar(
+      pinned: true,
+      expandedHeight: 330,
+      flexibleSpace: _ArtistFlexHeader(artist: artist),
+      elevation: 0,
+      forceElevated: false,
+      bottom: _TabBar(artist: artist),
+      actions: <Widget>[
+        IconButton(
+            icon: Icon(Icons.share,
+                color: Theme.of(context).primaryIconTheme.color),
+            onPressed: null)
+      ],
+    );
+  }
+}
+
+class _TabBar extends StatelessWidget implements PreferredSizeWidget {
+  final Artist artist;
+
+  const _TabBar({Key key, @required this.artist}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ClipRRect(
+      borderRadius: BorderRadius.vertical(top: Radius.circular(15)),
+      child: Material(
+        color: Theme.of(context).scaffoldBackgroundColor,
+        child: TabBar(
+            indicator:
+                PrimaryTabIndicator(color: Theme.of(context).primaryColor),
+            indicatorSize: TabBarIndicatorSize.label,
+            labelColor: Colors.black87,
+            tabs: [
+              Tab(text: "热门单曲"),
+              Tab(text: "专辑${artist.albumSize}"),
+              Tab(text: "视频${artist.mvSize}"),
+              Tab(text: "艺人信息"),
+            ]),
+      ),
+    );
+  }
+
+  @override
+  Size get preferredSize => Size.fromHeight(50);
+}
+
+class _ArtistFlexHeader extends StatelessWidget {
+  final Artist artist;
+
+  const _ArtistFlexHeader({Key key, @required this.artist}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return DefaultTextStyle(
+      style: Theme.of(context).primaryTextTheme.body1,
+      maxLines: 1,
+      child: FlexibleDetailBar(
+        background: Builder(builder: (context) {
+          var t = FlexibleDetailBar.percentage(context);
+          t = Curves.ease.transform(t) / 2 + 0.2;
+          return Container(
+            foregroundDecoration:
+                BoxDecoration(color: Colors.black.withOpacity(t)),
+            child: Image(
+                image: NeteaseImage(artist.picUrl),
+                height: 300,
+                fit: BoxFit.cover),
+          );
+        }),
+        content: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+          child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Spacer(),
+                Text(
+                    '${artist.name}' +
+                        (artist.alias.isEmpty ? '' : '(${artist.alias[0]})'),
+                    style: TextStyle(fontSize: 20)),
+                Text('歌曲数量:${artist.musicSize}'),
+              ]),
+        ),
+        builder: (context, t) {
+          return AppBar(
+            title: Text(t > 0.5 ? artist.name : ''),
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            titleSpacing: 0,
+            actions: <Widget>[
+              IconButton(
+                  icon: Icon(Icons.share),
+                  tooltip: "分享",
+                  onPressed: () {
+                    toast(context, '分享');
+                  })
+            ],
+          );
+        },
+      ),
+    );
+  }
+}
