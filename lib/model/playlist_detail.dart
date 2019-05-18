@@ -39,7 +39,8 @@ class PlaylistDetail {
 
   int playCount;
 
-  bool get loaded => musicList != null && musicList.length == trackCount;
+  bool get loaded =>
+      trackCount == 0 || (musicList != null && musicList.length == trackCount);
 
   ///tag fro hero transition
   String get heroTag => "playlist_hero_$id";

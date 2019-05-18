@@ -43,7 +43,7 @@ class PlaylistDetailPage extends StatefulWidget {
 
 class _PlayListDetailState extends State<PlaylistDetailPage> {
   ///build a preview stack for loading or error
-  Widget buildPreview(BuildContext context, Widget content) {
+  Widget _buildPreview(BuildContext context, Widget content) {
     return CustomScrollView(
       slivers: <Widget>[
         SliverAppBar(
@@ -62,6 +62,11 @@ class _PlayListDetailState extends State<PlaylistDetailPage> {
     );
   }
 
+  Widget _buildLoading(BuildContext context) {
+    return _buildPreview(
+        context, Container(height: 200, child: Center(child: Text("加载中..."))));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -70,15 +75,10 @@ class _PlayListDetailState extends State<PlaylistDetailPage> {
             initialData: neteaseLocalData.getPlaylistDetail(widget.playlistId),
             loadTask: () => neteaseRepository.playlistDetail(widget.playlistId),
             loadingBuilder: (context) {
-              return buildPreview(
-                  context,
-                  Container(
-                    height: 200,
-                    child: Center(child: Text("加载中...")),
-                  ));
+              return _buildLoading(context);
             },
             errorBuilder: (context, result) {
-              return buildPreview(
+              return _buildPreview(
                   context,
                   Container(
                     height: 200,
@@ -86,6 +86,7 @@ class _PlayListDetailState extends State<PlaylistDetailPage> {
                   ));
             },
             builder: (context, result) {
+              if (result == null) return _buildLoading(context);
               return _PlaylistBody(result);
             }),
       ),
