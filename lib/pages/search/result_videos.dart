@@ -18,7 +18,7 @@ class _VideosResultSectionState extends State<VideosResultSection>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return Loader<Map<String, dynamic>>(
+    return Loader<Map>(
         loadTask: () =>
             neteaseRepository.search(widget.query, NeteaseSearchType.video),
         builder: (context, result) {

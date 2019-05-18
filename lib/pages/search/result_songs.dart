@@ -22,7 +22,7 @@ class SongsResultSectionState extends State<SongsResultSection>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return Loader<Map<String, dynamic>>(
+    return Loader<Map>(
         loadTask: () =>
             neteaseRepository.search(widget.query, NeteaseSearchType.song),
         builder: (context, result) {

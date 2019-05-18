@@ -17,7 +17,7 @@ class _ArtistsResultSectionState extends State<ArtistsResultSection>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return Loader<Map<String, dynamic>>(
+    return Loader<Map>(
         loadTask: () =>
             neteaseRepository.search(widget.query, NeteaseSearchType.artist),
         builder: (context, result) {
