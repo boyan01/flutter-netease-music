@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:loader/loader.dart';
 import 'package:quiet/repository/netease.dart';
 
+@visibleForTesting
 bool enableCache = true;
 
 ///[T] 一定为 [neteaseLocalData] 所能保存的类型，例如 map, String , int

@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:quiet/component/player/player.dart';
+import 'package:quiet/part/part.dart';
+import 'package:quiet/service/channel_media_player.dart';
 
 ///配置一些通用用于测试的Widget上下文
 class TestContext extends StatelessWidget {
@@ -9,7 +12,13 @@ class TestContext extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: Material(child: child),
+      home: Material(
+          child: ScopedModel<UserAccount>(
+            model: UserAccount(),
+            child: PlayerState(
+                value: PlayerControllerState.uninitialized(),
+                child: DisableBottomController(child: child)),
+          )),
     );
   }
 }

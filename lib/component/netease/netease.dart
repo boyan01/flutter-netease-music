@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:quiet/pages/collection/api.dart';
 import 'package:quiet/part/part.dart';
 import 'package:quiet/repository/netease.dart';
 import 'package:scoped_model/scoped_model.dart';
@@ -40,9 +41,12 @@ class NeteaseState extends State<Netease> {
       model: account,
       child: ScopedModel<LikedSongList>(
         model: LikedSongList(account),
-        child: ScopedModel<Counter>(
-          model: counter,
-          child: widget.child,
+        child: ScopedModel<MyCollectionApi>(
+          model: MyCollectionApi(),
+          child: ScopedModel<Counter>(
+            model: counter,
+            child: widget.child,
+          ),
         ),
       ),
     );
