@@ -2,7 +2,7 @@
 [![Build Status](https://travis-ci.com/boyan01/flutter-netease-music.svg?branch=master)](https://travis-ci.com/boyan01/flutter-netease-music)
 [![codecov](https://codecov.io/gh/boyan01/flutter-netease-music/branch/master/graph/badge.svg)](https://codecov.io/gh/boyan01/flutter-netease-music)
 
-仿网易云音乐，一边学习一边开发。希望能多点**star**，给予动力完成此项目。
+仿网易云音乐。点颗**star**，为完成此项目添加动力。
 
 netease music player. working in progress！
 
@@ -25,13 +25,12 @@ all API information comes from this project: [NeteaseCloudMusicApi](https://gith
  flutter run --profile
  ```
 
-in addtion, this project Used api not in stable version. so need [switch flutter channel](https://flutter.dev/docs/development/tools/sdk/upgrading#switching-flutter-channels) to master first.
+**NOTE**, this project used api not in stable version. so require **master channel**.[switch flutter channel](https://flutter.dev/docs/development/tools/sdk/upgrading#switching-flutter-channels).
 
 # interaction
-
-| ![playing_page](./_preview/playing_Interaction.gif) | ![playing_page](https://boyan01.github.io/quiet/interation_playlist.gif) |
-| :-------------------------------------------------: | :-------------------------------------: |
-|                                                     |                                         |
+| playing | playlist  | ios |
+|------|------|------|
+|<img src="./_preview/playing_Interaction.gif" width="200">| <img src="https://boyan01.github.io/quiet/interation_playlist.gif" width="200"> |   <img src="https://boyan01.github.io/quiet/ios_playlist_detail.jpg" width="200"> |
 
 
 # Preview
