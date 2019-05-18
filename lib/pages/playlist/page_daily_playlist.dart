@@ -90,7 +90,6 @@ class _HeaderContent extends StatelessWidget {
             left: 16,
             right: 16,
             top: MediaQuery.of(context).padding.top + kToolbarHeight,
-            bottom: 50, //music header
           ),
           child: Column(
             mainAxisSize: MainAxisSize.max,
