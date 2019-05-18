@@ -17,7 +17,7 @@ class DailyPlaylistPage extends StatelessWidget {
       builder: (context) => Scaffold(
             resizeToAvoidBottomInset: false,
             body: BoxWithBottomPlayerController(
-              Loader<Map<String, Object>>(
+              Loader<Map>(
                   loadTask: () => neteaseRepository.recommendSongs(),
                   builder: (context, result) {
                     final list = (result["recommend"] as List)
