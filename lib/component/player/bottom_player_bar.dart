@@ -7,6 +7,18 @@ import 'package:quiet/pages/page_playing_list.dart';
 import 'package:quiet/part/part.dart';
 import 'package:quiet/repository/netease_image.dart';
 
+@visibleForTesting
+class DisableBottomController extends StatelessWidget {
+  final Widget child;
+
+  const DisableBottomController({Key key, this.child}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return child;
+  }
+}
+
 class BoxWithBottomPlayerController extends StatelessWidget {
   BoxWithBottomPlayerController(this.child);
 
@@ -14,6 +26,9 @@ class BoxWithBottomPlayerController extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (context.ancestorWidgetOfExactType(DisableBottomController) != null) {
+      return child;
+    }
     //hide bottom player controller when view inserts
     //bottom too height (such as typing with soft keyboard)
     ///fixme [Scaffold#resizeToAvoidBottomInset] 影响了这个判断
