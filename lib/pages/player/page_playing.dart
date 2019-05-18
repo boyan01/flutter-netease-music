@@ -440,11 +440,26 @@ class _CloudLyricState extends State<_CloudLyric> {
 
     if (playingLyric.hasLyric) {
       return LayoutBuilder(builder: (context, constraints) {
-        return Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        final normalStyle = style.copyWith(color: style.color.withOpacity(0.7));
+        //歌词顶部与尾部半透明显示
+        return ShaderMask(
+          shaderCallback: (rect) {
+            return ui.Gradient.linear(Offset(rect.width / 2, 0),
+                Offset(rect.width / 2, constraints.maxHeight), [
+              const Color(0x00FFFFFF),
+              style.color,
+              style.color,
+              const Color(0x00FFFFFF),
+            ], [
+              0.0,
+              0.15,
+              0.85,
+              1
+            ]);
+          },
           child: Lyric(
             lyric: playingLyric.lyric,
-            lyricLineStyle: style.copyWith(color: style.color.withOpacity(0.7)),
+            lyricLineStyle: normalStyle,
             highlight: style.color,
             position: position,
             onTap: widget.onTap,
