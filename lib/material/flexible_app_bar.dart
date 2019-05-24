@@ -95,3 +95,23 @@ class _FlexibleDetail extends InheritedWidget {
     return t != oldWidget.t;
   }
 }
+
+///
+/// 用在 [FlexibleDetailBar.background]
+/// child上下滑动的时候会覆盖上黑色阴影
+///
+class FlexShadowBackground extends StatelessWidget {
+  final Widget child;
+
+  const FlexShadowBackground({Key key, this.child}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    var t = FlexibleDetailBar.percentage(context);
+    t = Curves.ease.transform(t) / 2 + 0.2;
+    return Container(
+      foregroundDecoration: BoxDecoration(color: Colors.black.withOpacity(t)),
+      child: child,
+    );
+  }
+}
