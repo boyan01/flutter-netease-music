@@ -27,6 +27,11 @@ all API information comes from this project: [NeteaseCloudMusicApi](https://gith
 
 **NOTE**, this project used api not in stable version. so require **master channel**.[switch flutter channel](https://flutter.dev/docs/development/tools/sdk/upgrading#switching-flutter-channels).
 
+# 基本组件依赖
+
+* 页面加载：[**loader**](https://github.com/boyan01/loader)
+* Toast及应用内通知： [**overlay_support**](https://github.com/boyan01/overlay_support)
+
 # interaction
 | playing | playlist  | ios |
 |------|------|------|
