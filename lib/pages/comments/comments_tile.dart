@@ -218,7 +218,7 @@ class _ItemCommentState extends State<_ItemComment> {
                                   UserDetailPage(userId: user.userId)));
                     },
                     child: Image(
-                      image: NeteaseImage(user.avatarUrl),
+                      image: CachedImage(user.avatarUrl),
                       width: 36,
                       height: 36,
                     ),
