@@ -48,18 +48,11 @@ class _ArtistFlexHeader extends StatelessWidget {
       style: Theme.of(context).primaryTextTheme.body1,
       maxLines: 1,
       child: FlexibleDetailBar(
-        background: Builder(builder: (context) {
-          var t = FlexibleDetailBar.percentage(context);
-          t = Curves.ease.transform(t) / 2 + 0.2;
-          return Container(
-            foregroundDecoration:
-                BoxDecoration(color: Colors.black.withOpacity(t)),
+        background: FlexShadowBackground(
             child: Image(
                 image: NeteaseImage(artist.picUrl),
                 height: 300,
-                fit: BoxFit.cover),
-          );
-        }),
+                fit: BoxFit.cover)),
         content: Padding(
           padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
           child: Column(
