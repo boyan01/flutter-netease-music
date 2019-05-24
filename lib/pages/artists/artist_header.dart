@@ -1,6 +1,6 @@
 import 'package:overlay_support/overlay_support.dart';
 import 'package:quiet/material/flexible_app_bar.dart';
-import 'package:quiet/material/tab_indicator.dart';
+import 'package:quiet/material/tabs.dart';
 import 'package:quiet/repository/netease.dart';
 
 import 'artist.model.dart';

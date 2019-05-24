@@ -396,6 +396,12 @@ class NeteaseRepository {
         {'uid': uid, 'type': type});
   }
 
+  ///获取用户详情
+  Future<Result<Map>> getUserDetail(int uid) {
+    assert(uid != null);
+    return doRequest('https://music.163.com/weapi/v1/user/detail/$uid', {});
+  }
+
   Future<Result<Map>> doRequest(String path, Map data,
       {Crypto crypto = Crypto.we,
       Options options,
