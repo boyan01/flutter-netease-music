@@ -12,7 +12,7 @@ class UserDetailPage extends StatelessWidget {
   ///用户ID
   final int userId;
 
-  const UserDetailPage({Key key, this.userId}) : super(key: key);
+  const UserDetailPage({Key key,@required this.userId}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
