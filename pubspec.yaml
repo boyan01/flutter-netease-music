@@ -26,7 +26,8 @@ dependencies:
   sembast: ^1.13.2
   scoped_model: ^1.0.1
   loader:
-    path: loader/
+    git:
+      url: git://github.com/boyan01/loader.git
   encrypt: ^3.0.0
 
 dev_dependencies:
