@@ -1,10 +1,10 @@
+import 'package:flutter/material.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:quiet/material/flexible_app_bar.dart';
 import 'package:quiet/material/tabs.dart';
 import 'package:quiet/repository/netease.dart';
 
 import 'artist.model.dart';
-import 'package:flutter/material.dart';
 
 class ArtistHeader extends StatelessWidget {
   final Artist artist;
@@ -19,7 +19,14 @@ class ArtistHeader extends StatelessWidget {
       flexibleSpace: _ArtistFlexHeader(artist: artist),
       elevation: 0,
       forceElevated: false,
-      bottom: _TabBar(artist: artist),
+      bottom: RoundedTabBar(
+        tabs: <Widget>[
+          Tab(text: "热门单曲"),
+          Tab(text: "专辑${artist.albumSize}"),
+          Tab(text: "视频${artist.mvSize}"),
+          Tab(text: "艺人信息"),
+        ],
+      ),
       actions: <Widget>[
         IconButton(
             icon: Icon(Icons.share,
@@ -28,36 +35,6 @@ class ArtistHeader extends StatelessWidget {
       ],
     );
   }
-}
-
-class _TabBar extends StatelessWidget implements PreferredSizeWidget {
-  final Artist artist;
-
-  const _TabBar({Key key, @required this.artist}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return ClipRRect(
-      borderRadius: BorderRadius.vertical(top: Radius.circular(15)),
-      child: Material(
-        color: Theme.of(context).scaffoldBackgroundColor,
-        child: TabBar(
-            indicator:
-                PrimaryTabIndicator(color: Theme.of(context).primaryColor),
-            indicatorSize: TabBarIndicatorSize.label,
-            labelColor: Colors.black87,
-            tabs: [
-              Tab(text: "热门单曲"),
-              Tab(text: "专辑${artist.albumSize}"),
-              Tab(text: "视频${artist.mvSize}"),
-              Tab(text: "艺人信息"),
-            ]),
-      ),
-    );
-  }
-
-  @override
-  Size get preferredSize => Size.fromHeight(50);
 }
 
 class _ArtistFlexHeader extends StatelessWidget {
