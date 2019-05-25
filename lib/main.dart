@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:quiet/material/app.dart';
 import 'package:quiet/repository/netease.dart';
@@ -7,6 +8,8 @@ import 'component/netease/netease.dart';
 import 'part/part.dart';
 
 void main() {
+  debugDefaultTargetPlatformOverride = TargetPlatform.android;
+
   final settings = Settings();
   neteaseRepository = NeteaseRepository(settings);
   runApp(MyApp(setting: settings));
