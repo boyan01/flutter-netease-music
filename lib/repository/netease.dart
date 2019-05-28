@@ -1,24 +1,20 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:io';
 
-import 'package:crypto/crypto.dart';
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:quiet/model/playlist_detail.dart';
 import 'package:quiet/pages/comments/page_comment.dart';
 import 'package:quiet/part/part.dart';
 
-import 'netease_local_data.dart';
-import 'network/netease_request.dart';
+import 'local_cache_data.dart';
 
 export 'package:async/async.dart' show Result;
 export 'package:async/async.dart' show ValueResult;
 export 'package:async/async.dart' show ErrorResult;
 
-export 'netease_image.dart';
-export 'netease_local_data.dart';
+export 'cached_image.dart';
+export 'local_cache_data.dart';
 
 NeteaseRepository neteaseRepository = NeteaseRepository._private();
 
@@ -51,46 +47,36 @@ Result<R> _map<T, R>(Result<T> source, R f(T t)) {
   return Result.value(f(source.asValue.value));
 }
 
+const BASE_DOMAIN = 'http://127.0.0.1:3000/';
+
 class NeteaseRepository {
   NeteaseRepository._private();
 
   ///使用手机号码登录
   Future<Result<Map>> login(String phone, String password) async {
-    var request = {
-      "phone": phone,
-      "password": md5.convert(utf8.encode(password)).toString()
-    };
-    var result = await doRequest("/weapi/login/cellphone", request,
-        options: Options(headers: {"User-Agent": chooseUserAgent(ua: "pc")}));
-    return result;
+    return await doRequest(
+        "/login/cellphone", {"phone": phone, "password": password});
   }
 
   ///刷新登陆状态
   ///返回结果：true 正常登陆状态
   ///         false 需要重新登陆
   Future<bool> refreshLogin() async {
-    final result = await NeteaseRequestService().doRequest(
-        'https://music.163.com/weapi/login/token/refresh', {},
-        options: Options(headers: {"User-Agent": chooseUserAgent(ua: "pc")}));
-    if (result['code'] == _CODE_SUCCESS) {
-      return true;
-    } else if (result['code'] == _CODE_NEED_LOGIN) {
-      return false;
-    }
-    throw '服务器错误';
+    final result = await doRequest('/login/refresh');
+    return result.isValue;
   }
 
   ///登出,删除本地cookie信息
   Future<void> logout() async {
-    NeteaseRequestService().clearCookie();
+    //TODO
   }
 
   ///根据用户ID获取歌单
   ///PlayListDetail 中的 tracks 都是空数据
   Future<Result<List<PlaylistDetail>>> userPlaylist(int userId,
       [int offset = 0, int limit = 1000]) async {
-    final response = await doRequest("/weapi/user/playlist",
-        {"offset": offset, "uid": userId, "limit": limit, "csrf_token": ""});
+    final response = await doRequest(
+        "/user/playlist", {"offset": offset, "uid": userId, "limit": limit});
 
     return _map(response, (Map result) {
       final list = (result["playlist"] as List)
@@ -103,22 +89,20 @@ class NeteaseRepository {
   }
 
   ///create new playlist by [name]
-  Future<Result<PlaylistDetail>> createPlaylist(String name) async {
+  Future<Result<PlaylistDetail>> createPlaylist(String name,
+      {bool privacy = false}) async {
     final response = await doRequest(
-        "https://music.163.com/weapi/playlist/create", {"name": name},
-        options: Options(headers: {"User-Agent": chooseUserAgent(ua: "pc")}));
+        "/playlist/create", {"name": name, 'privacy': privacy ? 10 : null});
     return _map(response, (result) {
       return PlaylistDetail.fromJson(result["playlist"]);
     });
   }
 
   ///根据歌单id获取歌单详情，包括歌曲
-  Future<Result<PlaylistDetail>> playlistDetail(int id) async {
-    final response = await doRequest(
-        "https://music.163.com/weapi/v3/playlist/detail",
-        {"id": "$id", "n": 100000, "s": 8},
-        crypto: Crypto.linux);
-
+  ///
+  /// [s] 歌单最近的 s 个收藏者
+  Future<Result<PlaylistDetail>> playlistDetail(int id, {int s = 5}) async {
+    final response = await doRequest("/playlist/detail", {"id": "$id", "s": s});
     return _map(response, (t) {
       final result = PlaylistDetail.fromJson(t["playlist"]);
       neteaseLocalData.updatePlaylistDetail(result);
@@ -129,40 +113,35 @@ class NeteaseRepository {
   ///id 歌单id
   ///return true if action success
   Future<bool> playlistSubscribe(int id, bool subscribe) async {
-    String action = subscribe ? "subscribe" : "unsubscribe";
     final response = await doRequest(
-        "https://music.163.com/weapi/playlist/$action", {"id": id});
+        "/playlist/subscribe", {"id": id, 't': subscribe ? 1 : 2});
     return response.isValue;
   }
 
   ///根据专辑详细信息
   Future<Result<Map>> albumDetail(int id) async {
-    return doRequest("https://music.163.com/weapi/v1/album/$id", {});
+    return doRequest("/album", {'id': id});
   }
 
   ///推荐歌单
   Future<Result<Map>> personalizedPlaylist({int limit = 30, int offset = 0}) {
-    return doRequest("/weapi/personalized/playlist",
+    return doRequest("/personalized",
         {"limit": limit, "offset": offset, "total": true, "n": 1000});
   }
 
   /// 推荐的新歌（10首）
   Future<Result<Map>> personalizedNewSong() {
-    return doRequest("/weapi/personalized/newsong", {"type": "recommend"});
+    return doRequest("/personalized/newsong");
   }
 
   /// 榜单摘要
   Future<Result<Map>> topListDetail() async {
-    return doRequest("/weapi/toplist/detail", {
-      "offset": 0,
-      "total": true,
-      "limit": 20,
-    });
+    return doRequest("/toplist/detail");
   }
 
-  ///推荐歌曲
+  ///推荐歌曲，需要登陆
   Future<Result<Map>> recommendSongs() async {
-    return doRequest("/weapi/v1/discovery/recommend/songs", {});
+    return doRequest("recommend/songs");
   }
 
   ///根据音乐id获取歌词
@@ -174,9 +153,7 @@ class NeteaseRepository {
     if (cached != null) {
       return cached;
     }
-    var result = await doRequest(
-        'https://music.163.com/weapi/song/lyric?lv=-1&kv=-1&tv=-1', {"id": id},
-        crypto: Crypto.linux);
+    var result = await doRequest('/lyric', {"id": id});
     if (result.isError) {
       return Future.error(result.asError.error);
     }
@@ -192,10 +169,7 @@ class NeteaseRepository {
 
   ///获取搜索热词
   Future<Result<List<String>>> searchHotWords() async {
-    var result = await doRequest(
-        "https://music.163.com/weapi/search/hot", {"type": 1111},
-        options:
-            Options(headers: {"User-Agent": chooseUserAgent(ua: "mobile")}));
+    var result = await doRequest("/search/hot", {"type": 1111});
     return _map(result, (t) {
       List hots = (t["result"] as Map)["hots"];
       return hots.cast<Map<String, dynamic>>().map((map) {
@@ -270,36 +244,26 @@ class NeteaseRepository {
 
   ///update playlist name and description
   Future<bool> updatePlaylist(PlaylistDetail playlist) async {
-    final response = await doRequest(
-        "https://music.163.com/weapi/batch",
-        {
-          "/api/playlist/desc/update": json
-              .encode({"id": playlist.id, "desc": playlist.description ?? ""}),
-//          "/api/playlist/tags/update":
-//              json.encode({"id": playlist.id, "tags": playlist.tags ?? ""}),
-          "/api/playlist/update/name":
-              json.encode({"id": playlist.id, "name": playlist.name}),
-        },
-        options: Options(headers: {"User-Agent": chooseUserAgent(ua: "pc")}));
-    debugPrint("response :$response");
-
+    final response = await doRequest("/playlist/update", {
+      'id': playlist.id,
+      'name': playlist.name,
+      'desc': playlist.description,
+    });
     return _map(response, (t) {
-      bool success = t["/api/playlist/desc/update"]["code"] == 200 &&
-//          t["/api/playlist/tags/update"]["code"] == 200 &&
-          t["/api/playlist/update/name"]["code"] == 200;
-      return success;
+      return true;
     }).isValue;
   }
 
   ///获取歌手信息和单曲
   Future<Result<Map>> artistDetail(int artistId) async {
-    return doRequest("https://music.163.com/weapi/v1/artist/$artistId", {});
+    return doRequest("/artists", {'id': artistId});
   }
 
   ///获取歌手的专辑列表
   Future<Result<Map>> artistAlbums(int artistId,
       {int limit = 10, int offset = 0}) async {
-    return doRequest("https://music.163.com/weapi/artist/albums/$artistId", {
+    return doRequest("/artist/album", {
+      'id': artistId,
       "limit": limit,
       "offset": offset,
       "total": true,
@@ -309,42 +273,29 @@ class NeteaseRepository {
   ///获取歌手的MV列表
   Future<Result<Map>> artistMvs(int artistId,
       {int limit = 20, int offset = 0}) async {
-    return doRequest("https://music.163.com/weapi/artist/mvs", {
-      "artistId": artistId,
-      "limit": limit,
-      "offset": offset,
-      "total": true
-    });
+    return doRequest("/artist/mv", {"id": artistId});
   }
 
   ///获取歌手介绍
   Future<Result<Map>> artistDesc(int artistId) async {
-    return doRequest(
-        "https://music.163.com/weapi/artist/introduction", {"id": artistId});
+    return doRequest("/artist/desc", {"id": artistId});
   }
 
   ///get comments
   Future<Result<Map>> getComments(CommentThreadId commentThread,
-      {int limit = 20, int offset = 0}) {
-    return doRequest(
-        "https://music.163.com/weapi/v1/resource/comments/${commentThread.threadId}",
-        {"rid": commentThread.id, "limit": limit, "offset": offset},
-        cookies: [Cookie("os", "pc")]);
+      {int limit = 20, int offset = 0}) async {
+    return Result.error('TODO');
   }
 
   ///给歌曲加红心
   Future<bool> like(int musicId, bool like) async {
-    final response = await doRequest(
-        "https://music.163.com/weapi/radio/like?alg=itembased&trackId=$musicId&like=$like&time=25",
-        {"trackId": musicId, "like": like});
-
+    final response = await doRequest("/like", {"id": musicId, "like": like});
     return response.isValue;
   }
 
   ///获取用户红心歌曲id列表
   Future<Result<List<int>>> likedList(int userId) async {
-    final response = await doRequest(
-        "https://music.163.com/weapi/song/like/get", {"uid": userId});
+    final response = await doRequest("/likelist", {"uid": userId});
     return _map(response, (t) {
       return (t["ids"] as List).cast();
     });
@@ -352,14 +303,13 @@ class NeteaseRepository {
 
   ///获取用户信息 , 歌单，收藏，mv, dj 数量
   FutureOr<Result<Map>> subCount() async {
-    return await doRequest('https://music.163.com/weapi/subcount', {});
+    return await doRequest('/user/subcount');
   }
 
   ///获取用户创建的电台
   Future<Result<List<Map>>> userDj(int userId) async {
-    final response = await doRequest(
-        'https://music.163.com/weapi/dj/program/$userId',
-        {'limit': 30, 'offset': 0});
+    final response =
+        await doRequest('/user/dj', {'uid': userId, 'limit': 30, 'offset': 0});
     return _map(response, (t) {
       return (t['programs'] as List).cast();
     });
@@ -367,24 +317,20 @@ class NeteaseRepository {
 
   ///登陆后调用此接口 , 可获取订阅的电台列表
   Future<Result<List<Map>>> djSubList() async {
-    final response = await doRequest(
-        'https://music.163.com/weapi/djradio/get/subed',
-        {'total': true, 'offset': 0, 'limit': 30});
-    return _map(response, (t) {
+    return _map(await doRequest('/dj/sublist'), (t) {
       return (t['djRadios'] as List).cast();
     });
   }
 
   ///获取对应 MV 数据 , 数据包含 mv 名字 , 歌手 , 发布时间 , mv 视频地址等数据
   Future<Result<Map>> mvDetail(int mvId) {
-    return doRequest('https://music.163.com/weapi/mv/detail', {'id': mvId});
+    return doRequest('/mv/detail', {'mvid': mvId});
   }
 
   ///调用此接口,可收藏 MV
   Future<bool> mvSubscribe(int mvId, bool subscribe) async {
-    final action = subscribe ? 'sub' : 'unsub';
-    final result = await doRequest('https://music.163.com/weapi/mv/$action',
-        {'mvId': mvId, 'mvIds': '["$mvId"]'});
+    final result =
+        await doRequest('/mv/sub', {'id': mvId, 't': subscribe ? '1' : '0'});
     return result.isValue;
   }
 
@@ -392,23 +338,22 @@ class NeteaseRepository {
   ///type : 0 all , 1 this week
   Future<Result<Map>> getRecord(int uid, int type) {
     assert(type == 0 || type == 1);
-    return doRequest('https://music.163.com/weapi/v1/play/record',
-        {'uid': uid, 'type': type});
+    return doRequest('/user/record', {'uid': uid, 'type': type});
   }
 
   ///获取用户详情
   Future<Result<Map>> getUserDetail(int uid) {
     assert(uid != null);
-    return doRequest('https://music.163.com/weapi/v1/user/detail/$uid', {});
+    return doRequest('/user/detail', {'uid': uid});
   }
 
-  Future<Result<Map>> doRequest(String path, Map data,
-      {Crypto crypto = Crypto.we,
-      Options options,
-      List<Cookie> cookies = const []}) async {
+  ///[path] request path
+  ///[data] parameter
+  Future<Result<Map>> doRequest(String path, [Map data]) async {
     try {
-      final map = await NeteaseRequestService().doRequest(path, data,
-          crypto: crypto, options: options, cookies: cookies);
+      final dio = Dio(BaseOptions(baseUrl: BASE_DOMAIN));
+      final result = await dio.request<Map>(path, data: data);
+      final map = result.data;
       if (map == null) {
         return Result.error('请求失败了');
       } else if (map['code'] == _CODE_NEED_LOGIN) {

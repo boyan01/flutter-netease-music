@@ -47,7 +47,7 @@ class Counter extends Model {
 
   final UserAccount account;
   final NeteaseRepository repository;
-  final NeteaseLocalData cache;
+  final LocalData cache;
 
   Counter(this.account, this.repository, this.cache) {
     void _onAccountStateChanged() {

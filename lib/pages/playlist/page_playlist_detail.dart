@@ -340,7 +340,7 @@ class PlayListHeaderBackground extends StatelessWidget {
     return Stack(
       fit: StackFit.expand,
       children: <Widget>[
-        Image(image: NeteaseImage(imageUrl), fit: BoxFit.cover),
+        Image(image: CachedImage(imageUrl), fit: BoxFit.cover),
         BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 24, sigmaY: 24),
           child: Container(color: Colors.black.withOpacity(0.1)),
@@ -502,7 +502,7 @@ class _PlaylistDetailHeader extends StatelessWidget {
                         tag: playlist.heroTag,
                         child: Image(
                             fit: BoxFit.cover,
-                            image: NeteaseImage(playlist.coverUrl)),
+                            image: CachedImage(playlist.coverUrl)),
                       ),
                       Container(
                         padding: EdgeInsets.all(4),
@@ -566,7 +566,7 @@ class _PlaylistDetailHeader extends StatelessWidget {
                               width: 24,
                               child: ClipOval(
                                 child: Image(
-                                    image: NeteaseImage(creator["avatarUrl"])),
+                                    image: CachedImage(creator["avatarUrl"])),
                               ),
                             ),
                             Padding(padding: EdgeInsets.only(left: 4)),

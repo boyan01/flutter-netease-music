@@ -9,7 +9,7 @@ import 'package:quiet/pages/page_playlist_edit.dart';
 import 'package:quiet/pages/record/page_record.dart';
 import 'package:quiet/part/part.dart';
 import 'package:quiet/repository/netease.dart';
-import 'package:quiet/repository/netease_image.dart';
+import 'package:quiet/repository/cached_image.dart';
 
 ///the first page display in page_main
 class MainPlaylistPage extends StatefulWidget {
@@ -336,7 +336,7 @@ class _ItemPlaylist extends StatelessWidget {
                   borderRadius: BorderRadius.all(Radius.circular(4)),
                   child: FadeInImage(
                     placeholder: AssetImage("assets/playlist_playlist.9.png"),
-                    image: NeteaseImage(playlist.coverUrl),
+                    image: CachedImage(playlist.coverUrl),
                     fadeInDuration: Duration.zero,
                     fadeOutDuration: Duration.zero,
                     fit: BoxFit.cover,

@@ -365,7 +365,7 @@ class _RotationCoverImageState extends State<_RotationCoverImage>
     if (widget.music == null || widget.music.album.coverImageUrl == null) {
       image = AssetImage("assets/playing_page_disc.png");
     } else {
-      image = NeteaseImage(widget.music.album.coverImageUrl);
+      image = CachedImage(widget.music.album.coverImageUrl);
     }
     return Transform.rotate(
       angle: rotation,

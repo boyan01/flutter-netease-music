@@ -132,7 +132,7 @@ class _AlbumDetailHeader extends StatelessWidget {
                     borderRadius: BorderRadius.all(Radius.circular(3)),
                     child: Image(
                         fit: BoxFit.cover,
-                        image: NeteaseImage(album["picUrl"])),
+                        image: CachedImage(album["picUrl"])),
                   ),
                 ),
               ),
