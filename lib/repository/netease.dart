@@ -198,8 +198,12 @@ class NeteaseRepository {
   ///search by keyword
   Future<Result<Map>> search(String keyword, NeteaseSearchType type,
       {int limit = 20, int offset = 0}) {
-    return doRequest("https://music.163.com/weapi/search/get",
-        {"s": keyword, "type": type.type, "limit": limit, "offset": offset});
+    return doRequest("/search", {
+      "keywords": keyword,
+      "type": type.type,
+      "limit": limit,
+      "offset": offset
+    });
   }
 
   ///搜索建议
