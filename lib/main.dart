@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:quiet/material/app.dart';
+import 'package:quiet/repository/netease.dart';
 
 import 'component/netease/netease.dart';
 import 'component/global/settings.dart';
 import 'part/part.dart';
 
-void main() => runApp(MyApp(setting: Settings()));
+void main() {
+  final settings = Settings();
+  neteaseRepository = NeteaseRepository(settings);
+  runApp(MyApp(setting: settings));
+}
 
 class MyApp extends StatelessWidget {
   final Settings setting;

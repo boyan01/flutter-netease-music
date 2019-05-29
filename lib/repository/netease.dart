@@ -1,8 +1,10 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio/dio.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:quiet/component/global/settings.dart';
 import 'package:quiet/model/playlist_detail.dart';
 import 'package:quiet/pages/comments/page_comment.dart';
 import 'package:quiet/part/part.dart';
@@ -16,7 +18,7 @@ export 'package:async/async.dart' show ErrorResult;
 export 'cached_image.dart';
 export 'local_cache_data.dart';
 
-NeteaseRepository neteaseRepository = NeteaseRepository._private();
+NeteaseRepository neteaseRepository;
 
 ///enum for [NeteaseRepository.search] param type
 class NeteaseSearchType {
@@ -47,10 +49,22 @@ Result<R> _map<T, R>(Result<T> source, R f(T t)) {
   return Result.value(f(source.asValue.value));
 }
 
-const _default_domain = 'http://127.0.0.1:3000/';
-
 class NeteaseRepository {
-  NeteaseRepository._private();
+  NeteaseRepository(this.setting) {
+    _cookieJar = () async {
+      String path;
+      try {
+        path = (await getApplicationDocumentsDirectory()).path;
+      } catch (e) {
+        path = '.';
+      }
+      return PersistCookieJar(dir: path + '/.cookies/');
+    }();
+  }
+
+  final Settings setting;
+
+  Future<CookieJar> _cookieJar;
 
   ///使用手机号码登录
   Future<Result<Map>> login(String phone, String password) async {
@@ -68,7 +82,10 @@ class NeteaseRepository {
 
   ///登出,删除本地cookie信息
   Future<void> logout() async {
-    //TODO
+    //删除cookie
+    _cookieJar.then((jar) {
+      if (jar is PersistCookieJar) jar.deleteAll();
+    });
   }
 
   ///根据用户ID获取歌单
@@ -351,7 +368,8 @@ class NeteaseRepository {
   ///[data] parameter
   Future<Result<Map>> doRequest(String path, [Map data]) async {
     try {
-      final dio = Dio(BaseOptions(baseUrl: _default_domain));
+      final dio = Dio(BaseOptions(baseUrl: setting.host))
+        ..interceptors.add(CookieManager(await _cookieJar));
       final result = await dio.get<Map>(path, queryParameters: data?.cast());
       final map = result.data;
       if (map == null) {
