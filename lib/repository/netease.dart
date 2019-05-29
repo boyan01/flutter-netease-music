@@ -47,7 +47,7 @@ Result<R> _map<T, R>(Result<T> source, R f(T t)) {
   return Result.value(f(source.asValue.value));
 }
 
-const BASE_DOMAIN = 'http://127.0.0.1:3000/';
+const _default_domain = 'http://127.0.0.1:3000/';
 
 class NeteaseRepository {
   NeteaseRepository._private();
@@ -351,8 +351,8 @@ class NeteaseRepository {
   ///[data] parameter
   Future<Result<Map>> doRequest(String path, [Map data]) async {
     try {
-      final dio = Dio(BaseOptions(baseUrl: BASE_DOMAIN));
-      final result = await dio.request<Map>(path, data: data);
+      final dio = Dio(BaseOptions(baseUrl: _default_domain));
+      final result = await dio.get<Map>(path, queryParameters: data?.cast());
       final map = result.data;
       if (map == null) {
         return Result.error('请求失败了');

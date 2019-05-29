@@ -2,29 +2,31 @@ import 'package:flutter/material.dart';
 import 'package:quiet/material/app.dart';
 
 import 'component/netease/netease.dart';
-import 'component/theme/theme.dart';
+import 'component/global/settings.dart';
 import 'part/part.dart';
 
-void main() => runApp(MyApp());
+void main() => runApp(MyApp(setting: Settings()));
 
 class MyApp extends StatelessWidget {
-  final QuietTheme _theme = QuietTheme();
+  final Settings setting;
+
+  const MyApp({Key key, @required this.setting}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Netease(
       child: Quiet(
         child: CopyRightOverlay(
-          child: ScopedModel<QuietTheme>(
-            model: _theme,
-            child: ScopedModelDescendant<QuietTheme>(
-                builder: (context, child, manager) {
+          child: ScopedModel<Settings>(
+            model: setting,
+            child: ScopedModelDescendant<Settings>(
+                builder: (context, child, settings) {
               return MaterialApp(
                 initialRoute: "/",
                 routes: routes,
                 title: 'Quiet',
                 theme: ThemeData(
-                  primaryColor: manager.current,
+                  primaryColor: settings.theme,
                   textTheme: TextTheme(
                     body1: TextStyle(shadows: [
                       Shadow(
