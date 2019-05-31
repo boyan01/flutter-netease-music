@@ -72,7 +72,7 @@ class ArtistTile extends StatelessWidget {
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(4),
                   child: Image(
-                    image: NeteaseImage(map["img1v1Url"]),
+                    image: CachedImage(map["img1v1Url"]),
                     fit: BoxFit.cover,
                   ),
                 ),

@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:quiet/component/theme/theme.dart';
+import 'package:quiet/component/global/settings.dart';
 
 class ThemePicker extends StatelessWidget {
   ///show theme picker dialog
@@ -11,21 +11,21 @@ class ThemePicker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = QuietTheme.of(context);
+    final setting = Settings.of(context);
 
     return SimpleDialog(
       title: Text('选择主题颜色'),
-      children: theme.all.map((color) {
+      children: themeSwatchList.map((color) {
         return Material(
           color: color,
           child: InkWell(
             onTap: () {
-              theme.setTheme(theme.all.indexOf(color));
+              setting.theme = color;
               Navigator.pop(context);
             },
             child: Container(
               height: 56,
-              child: color != theme.current
+              child: color != setting.theme
                   ? null
                   : Row(
                       children: <Widget>[

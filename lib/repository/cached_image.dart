@@ -12,16 +12,16 @@ import 'package:quiet/component/cache/key_value_cache.dart';
 const _defaultImageSize = const Size.fromHeight(200);
 
 ///image provider for netease image
-class NeteaseImage extends ImageProvider<NeteaseImage> implements CacheKey {
+class CachedImage extends ImageProvider<CachedImage> implements CacheKey {
   /// Creates an object that fetches the image at the given URL.
   ///
   /// The arguments must not be null.
-  const NeteaseImage(this.url, {this.scale = 1.0, this.headers})
+  const CachedImage(this.url, {this.scale = 1.0, this.headers})
       : assert(url != null),
         assert(scale != null),
         this._size = null;
 
-  const NeteaseImage._internal(this.url, this._size,
+  const CachedImage._internal(this.url, this._size,
       {this.scale = 1.0, this.headers});
 
   /// The URL from which the image will be fetched.
@@ -52,7 +52,7 @@ class NeteaseImage extends ImageProvider<NeteaseImage> implements CacheKey {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is NeteaseImage &&
+      other is CachedImage &&
           runtimeType == other.runtimeType &&
           id == other.id &&
           scale == other.scale &&
@@ -62,14 +62,14 @@ class NeteaseImage extends ImageProvider<NeteaseImage> implements CacheKey {
   int get hashCode => hashValues(id, scale, _size);
 
   @override
-  ImageStreamCompleter load(NeteaseImage key) {
+  ImageStreamCompleter load(CachedImage key) {
     return MultiFrameImageStreamCompleter(
         codec: _loadAsync(key), scale: key.scale);
   }
 
   static final HttpClient _httpClient = HttpClient();
 
-  Future<ui.Codec> _loadAsync(NeteaseImage key) async {
+  Future<ui.Codec> _loadAsync(CachedImage key) async {
     var cache = await _imageCache();
 
     var image = await cache.get(key);
@@ -100,8 +100,8 @@ class NeteaseImage extends ImageProvider<NeteaseImage> implements CacheKey {
   }
 
   @override
-  Future<NeteaseImage> obtainKey(ImageConfiguration configuration) {
-    return SynchronousFuture<NeteaseImage>(NeteaseImage._internal(
+  Future<CachedImage> obtainKey(ImageConfiguration configuration) {
+    return SynchronousFuture<CachedImage>(CachedImage._internal(
         url,
         (configuration.size ?? _defaultImageSize) *
             configuration.devicePixelRatio,

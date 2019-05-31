@@ -64,7 +64,7 @@ class _ItemTitle extends StatelessWidget {
                   borderRadius: BorderRadius.all(Radius.circular(3)),
                   child: Image(
                     fit: BoxFit.cover,
-                    image: NeteaseImage(payload.coverImage),
+                    image: CachedImage(payload.coverImage),
                     width: 60,
                     height: 60,
                   ),
@@ -210,7 +210,7 @@ class _ItemCommentState extends State<_ItemComment> {
                 children: <Widget>[
                   ClipOval(
                       child: Image(
-                    image: NeteaseImage(user.avatarUrl),
+                    image: CachedImage(user.avatarUrl),
                     width: 36,
                     height: 36,
                   )),

@@ -137,7 +137,7 @@ class _AppDrawerHeader extends StatelessWidget {
           }
         },
         child: CircleAvatar(
-          backgroundImage: NeteaseImage(profile["avatarUrl"]),
+          backgroundImage: CachedImage(profile["avatarUrl"]),
         ),
       ),
       accountName: Text(profile["nickname"]),

@@ -105,7 +105,7 @@ class _ItemLeaderBoard2 extends StatelessWidget {
                 borderRadius: BorderRadius.circular(3),
                 child: Stack(
                   children: <Widget>[
-                    Image(image: NeteaseImage(row["coverImgUrl"])),
+                    Image(image: CachedImage(row["coverImgUrl"])),
                     Align(
                       alignment: Alignment.bottomCenter,
                       child: Container(
@@ -171,7 +171,7 @@ class _ItemLeaderboard1 extends StatelessWidget {
                 borderRadius: BorderRadius.circular(3),
                 child: Stack(
                   children: <Widget>[
-                    Image(image: NeteaseImage(row["coverImgUrl"])),
+                    Image(image: CachedImage(row["coverImgUrl"])),
                     Align(
                       alignment: Alignment.bottomCenter,
                       child: Container(

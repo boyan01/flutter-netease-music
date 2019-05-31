@@ -42,7 +42,7 @@ class _PlaylistEditPageState extends State<PlaylistEditPage> {
                   children: <Widget>[
                     Expanded(child: Text("更换封面", style: style)),
                     Image(
-                        image: NeteaseImage(widget.playlist.coverUrl),
+                        image: CachedImage(widget.playlist.coverUrl),
                         height: 56,
                         width: 56)
                   ],
