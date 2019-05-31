@@ -52,7 +52,7 @@ class MusicList extends StatelessWidget {
               width: 40,
               height: 40,
               fit: BoxFit.cover,
-              image: NeteaseImage(music.album.coverImageUrl),
+              image: CachedImage(music.album.coverImageUrl),
               placeholder: AssetImage("assets/playlist_playlist.9.png"),
             ),
           ),

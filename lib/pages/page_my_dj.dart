@@ -51,7 +51,7 @@ class DjTile extends StatelessWidget {
                 size: const Size(64, 64),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(4),
-                  child: Image(image: NeteaseImage(data['picUrl'])),
+                  child: Image(image: CachedImage(data['picUrl'])),
                 ),
               ),
               SizedBox(width: 4),

@@ -494,7 +494,7 @@ class _BlurBackground extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         image: DecorationImage(
-          image: NeteaseImage(music.album.coverImageUrl),
+          image: CachedImage(music.album.coverImageUrl),
           fit: BoxFit.cover,
         ),
       ),
