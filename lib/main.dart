@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:quiet/material/app.dart';
 import 'package:quiet/repository/netease.dart';
 
-import 'component/netease/netease.dart';
 import 'component/global/settings.dart';
+import 'component/netease/netease.dart';
 import 'part/part.dart';
 
 void main() {

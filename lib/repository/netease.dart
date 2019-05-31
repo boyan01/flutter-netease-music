@@ -305,7 +305,8 @@ class NeteaseRepository {
   ///get comments
   Future<Result<Map>> getComments(CommentThreadId commentThread,
       {int limit = 20, int offset = 0}) async {
-    return Result.error('TODO');
+    return doRequest('/comment/${commentThread.typePath}',
+        {'id': commentThread.id, 'limit': limit, 'offset': offset});
   }
 
   ///给歌曲加红心
