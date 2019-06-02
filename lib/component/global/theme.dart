@@ -1,7 +1,7 @@
-
 part of 'settings.dart';
 
-const swatchNeteaseRed = const MaterialColor(0xFFdd4237, {
+//网易红调色板
+const _swatchNeteaseRed = const MaterialColor(0xFFdd4237, {
   900: const Color(0xFFae2a20),
   800: const Color(0xFFbe332a),
   700: const Color(0xFFcb3931),
@@ -14,10 +14,20 @@ const swatchNeteaseRed = const MaterialColor(0xFFdd4237, {
   50: const Color(0xFFfeebee),
 });
 
-const themeSwatchList = const [
-  swatchNeteaseRed,
-  Colors.blue,
-  Colors.green,
-  Colors.amber,
-  Colors.teal
+//app主题
+final quietThemes = [
+  _buildTheme(_swatchNeteaseRed),
+  _buildTheme(Colors.blue),
+  _buildTheme(Colors.green),
+  _buildTheme(Colors.amber),
+  _buildTheme(Colors.teal),
+  ThemeData.dark(),
 ];
+
+ThemeData _buildTheme(Color primaryColor) {
+  return ThemeData(
+    primaryColor: primaryColor,
+    dividerColor: Color(0xfff5f5f5),
+    iconTheme: IconThemeData(color: Color(0xFFb3b3b3)),
+  );
+}

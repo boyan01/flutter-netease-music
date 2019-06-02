@@ -21,13 +21,13 @@ class Settings extends Model {
   bool get initialized => _preferences != null;
   SharedPreferences _preferences;
 
-  MaterialColor _theme;
+  ThemeData _theme;
 
-  MaterialColor get theme => _theme ?? swatchNeteaseRed;
+  ThemeData get theme => _theme ?? quietThemes.first;
 
-  set theme(MaterialColor theme) {
+  set theme(ThemeData theme) {
     _theme = theme;
-    final index = themeSwatchList.indexOf(theme);
+    final index = quietThemes.indexOf(theme);
     _preferences.setInt(_key_theme, index);
     notifyListeners();
   }
@@ -46,7 +46,7 @@ class Settings extends Model {
   Settings() {
     scheduleMicrotask(() async {
       _preferences = await SharedPreferences.getInstance();
-      _theme = themeSwatchList[_preferences.getInt(_key_theme) ?? 0];
+      _theme = quietThemes[_preferences.getInt(_key_theme) ?? 0];
       _host = _preferences.getString(_key_host);
     });
   }

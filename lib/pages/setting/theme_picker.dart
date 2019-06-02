@@ -15,17 +15,17 @@ class ThemePicker extends StatelessWidget {
 
     return SimpleDialog(
       title: Text('选择主题颜色'),
-      children: themeSwatchList.map((color) {
+      children: quietThemes.map((theme) {
         return Material(
-          color: color,
+          color: theme.primaryColor,
           child: InkWell(
             onTap: () {
-              setting.theme = color;
+              setting.theme = theme;
               Navigator.pop(context);
             },
             child: Container(
               height: 56,
-              child: color != setting.theme
+              child: theme != setting.theme
                   ? null
                   : Row(
                       children: <Widget>[
