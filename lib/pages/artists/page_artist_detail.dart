@@ -249,7 +249,7 @@ class _PageMVsState extends State<_PageMVs> with AutomaticKeepAliveClientMixin {
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(3),
                           child: Image(
-                            image: NeteaseImage(mv["imgurl16v9"]),
+                            image: CachedImage(mv["imgurl16v9"]),
                             fit: BoxFit.cover,
                           ),
                         ),
@@ -356,7 +356,7 @@ class _PageArtistIntroductionState extends State<_PageArtistIntroduction>
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(3),
                   child: Image(
-                    image: NeteaseImage(topic["rectanglePicUrl"]),
+                    image: CachedImage(topic["rectanglePicUrl"]),
                     fit: BoxFit.cover,
                   ),
                 ),

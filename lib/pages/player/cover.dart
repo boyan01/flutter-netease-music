@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:quiet/component/player/player.dart';
 import 'package:quiet/model/model.dart';
-import 'package:quiet/repository/netease_image.dart';
+import 'package:quiet/repository/cached_image.dart';
 
 ///播放页面歌曲封面
 class AlbumCover extends StatefulWidget {
@@ -365,7 +365,7 @@ class _RotationCoverImageState extends State<_RotationCoverImage>
     if (widget.music == null || widget.music.album.coverImageUrl == null) {
       image = AssetImage("assets/playing_page_disc.png");
     } else {
-      image = NeteaseImage(widget.music.album.coverImageUrl);
+      image = CachedImage(widget.music.album.coverImageUrl);
     }
     return Transform.rotate(
       angle: rotation,

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:quiet/component/route.dart';
-import 'package:quiet/repository/netease_image.dart';
+import 'package:quiet/repository/cached_image.dart';
 
 class AlbumTile extends StatelessWidget {
   const AlbumTile({Key key, @required this.album, this.subtitle})
@@ -39,7 +39,7 @@ class AlbumTile extends StatelessWidget {
                 child: AspectRatio(
                   aspectRatio: 1,
                   child: Image(
-                      image: NeteaseImage(album["picUrl"]), fit: BoxFit.cover),
+                      image: CachedImage(album["picUrl"]), fit: BoxFit.cover),
                 ),
               ),
             ),

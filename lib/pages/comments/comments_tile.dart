@@ -64,7 +64,7 @@ class _ItemTitle extends StatelessWidget {
                   borderRadius: BorderRadius.all(Radius.circular(3)),
                   child: Image(
                     fit: BoxFit.cover,
-                    image: NeteaseImage(payload.coverImage),
+                    image: CachedImage(payload.coverImage),
                     width: 60,
                     height: 60,
                   ),

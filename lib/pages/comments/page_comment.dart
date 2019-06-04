@@ -135,6 +135,24 @@ class CommentThreadId {
 
   final CommentThreadPayload payload;
 
+  String get typePath {
+    switch (type) {
+      case CommentType.song:
+        return 'music';
+      case CommentType.mv:
+        return 'mv';
+      case CommentType.playlist:
+        return 'playlist';
+      case CommentType.album:
+        return 'album';
+      case CommentType.dj:
+        return 'dj';
+      case CommentType.video:
+        return 'video';
+    }
+    throw '非法$type';
+  }
+
   String get threadId {
     String prefix;
     switch (type) {

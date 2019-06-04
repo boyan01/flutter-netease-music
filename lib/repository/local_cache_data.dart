@@ -5,9 +5,9 @@ import 'package:flutter/foundation.dart';
 
 import 'database.dart';
 
-NeteaseLocalData neteaseLocalData = NeteaseLocalData._();
+LocalData neteaseLocalData = LocalData._();
 
-class NeteaseLocalData {
+class LocalData {
   ///netData 类型必须是可以放入 [store] 中的类型
   static Stream<T> withData<T>(String key, Future<T> netData,
       {void onNetError(dynamic e)}) async* {
@@ -29,7 +29,7 @@ class NeteaseLocalData {
     }
   }
 
-  NeteaseLocalData._();
+  LocalData._();
 
   Store _store;
 

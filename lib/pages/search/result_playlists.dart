@@ -58,7 +58,7 @@ class _PlaylistResultSectionState extends State<PlaylistResultSection>
                             child: AspectRatio(
                               aspectRatio: 1,
                               child: Image(
-                                  image: NeteaseImage(item["coverImgUrl"]),
+                                  image: CachedImage(item["coverImgUrl"]),
                                   fit: BoxFit.cover),
                             ),
                           ),

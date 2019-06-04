@@ -50,7 +50,7 @@ class _ArtistFlexHeader extends StatelessWidget {
       child: FlexibleDetailBar(
         background: FlexShadowBackground(
             child: Image(
-                image: NeteaseImage(artist.picUrl),
+                image: CachedImage(artist.picUrl),
                 height: 300,
                 fit: BoxFit.cover)),
         content: Padding(
