@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:quiet/component/global/settings.dart';
 import 'package:quiet/material/app.dart';
 
 import 'material.dart';
 import 'theme_picker.dart';
+
+part 'settings_network.dart';
 
 ///App 设置页面
 class SettingPage extends StatelessWidget {
@@ -25,6 +28,12 @@ class SettingPage extends StatelessWidget {
                   onTap: () => ThemePicker.show(context),
                 ),
                 _CopyRightCheckBox(),
+              ],
+            ),
+            SettingGroup(
+              title: '网络',
+              children: <Widget>[
+                HostSetting(),
               ],
             )
           ],

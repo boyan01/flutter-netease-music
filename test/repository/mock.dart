@@ -5,7 +5,7 @@ import 'package:mockito/mockito.dart';
 
 class MockNeteaseRepository extends Mock implements NeteaseRepository {}
 
-class MockNeteaseLocalData extends Mock implements NeteaseLocalData {}
+class MockNeteaseLocalData extends Mock implements LocalData {}
 
 class MockLoginState extends Mock implements UserAccount {}
 

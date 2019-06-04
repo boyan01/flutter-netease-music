@@ -5,7 +5,7 @@ import 'package:quiet/component/utils/utils.dart';
 import 'package:quiet/material/playing_indicator.dart';
 import 'package:quiet/pages/page_playing_list.dart';
 import 'package:quiet/part/part.dart';
-import 'package:quiet/repository/netease_image.dart';
+import 'package:quiet/repository/cached_image.dart';
 
 @visibleForTesting
 class DisableBottomController extends StatelessWidget {
@@ -98,7 +98,7 @@ class BottomControllerBar extends StatelessWidget {
                           ? Container(color: Colors.grey)
                           : Image(
                               fit: BoxFit.cover,
-                              image: NeteaseImage(music.album.coverImageUrl),
+                              image: CachedImage(music.album.coverImageUrl),
                             ),
                     ),
                   ),

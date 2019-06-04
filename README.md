@@ -8,7 +8,8 @@ netease music player. working in progress！
 
 ---
 
-all API information comes from this project: [NeteaseCloudMusicApi](https://github.com/Binaryify/NeteaseCloudMusicApi) 
+**运行项目需要API提供支持，需在本地或者远程搭建此API服务 [NeteaseCloudMusicApi](https://github.com/Binaryify/NeteaseCloudMusicApi) 
+同时在设置中修改对应的 host**
 
 ---
 
