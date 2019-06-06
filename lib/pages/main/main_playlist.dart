@@ -337,8 +337,6 @@ class _ItemPlaylist extends StatelessWidget {
                   child: FadeInImage(
                     placeholder: AssetImage("assets/playlist_playlist.9.png"),
                     image: CachedImage(playlist.coverUrl),
-                    fadeInDuration: Duration.zero,
-                    fadeOutDuration: Duration.zero,
                     fit: BoxFit.cover,
                     height: 50,
                     width: 50,
