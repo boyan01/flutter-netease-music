@@ -29,6 +29,10 @@ dependencies:
     git:
       url: git://github.com/boyan01/loader.git
   encrypt: ^3.0.0
+  netease_music_api:
+    git:
+      url: git://github.com/ziming1/NeteaseCloudMusicApi.git
+      refs: tags/v1.0
 
 dev_dependencies:
   flutter_test:
