@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:quiet/model/playlist_detail.dart';
 import 'package:quiet/pages/comments/page_comment.dart';
@@ -48,20 +49,43 @@ Result<R> _map<T, R>(Result<T> source, R f(T t)) {
   return Result.value(f(source.asValue.value));
 }
 
+class MyCookieManager extends CookieManager {
+  MyCookieManager(CookieJar cookieJar) : super(cookieJar);
+
+  @override
+  onRequest(RequestOptions options) {
+    var cookies = cookieJar.loadForRequest(Uri.parse('http://music.163.com'));
+    cookies.removeWhere((cookie) =>
+        cookie.value == CookieManager.invalidCookieValue &&
+        cookie.expires.isBefore(DateTime.now()));
+    cookies.addAll(options.cookies);
+    String cookie = CookieManager.getCookies(cookies);
+    if (cookie.isNotEmpty) options.headers[HttpHeaders.cookieHeader] = cookie;
+  }
+}
+
 class NeteaseRepository {
   NeteaseRepository() {
-    _cookieJar = () async {
+    _dio = () async {
       String path;
       try {
         path = (await getApplicationDocumentsDirectory()).path;
       } catch (e) {
+        debugPrint("error: can not get cookie directory");
         path = '.';
       }
-      return PersistCookieJar(dir: path + '/.cookies/');
+      _cookieJar = PersistCookieJar(dir: path + '/.cookies/');
+      final dio = Dio(BaseOptions(baseUrl: 'http://127.0.0.1:3000'));
+      dio.interceptors..add(MyCookieManager(_cookieJar))
+//        ..add(LogInterceptor(requestHeader: false))
+          ;
+      return dio;
     }();
   }
 
-  Future<CookieJar> _cookieJar;
+  Future<Dio> _dio;
+
+  PersistCookieJar _cookieJar;
 
   ///使用手机号码登录
   Future<Result<Map>> login(String phone, String password) async {
@@ -79,10 +103,9 @@ class NeteaseRepository {
 
   ///登出,删除本地cookie信息
   Future<void> logout() async {
+    await _dio;
     //删除cookie
-    _cookieJar.then((jar) {
-      if (jar is PersistCookieJar) jar.deleteAll();
-    });
+    _cookieJar?.deleteAll();
   }
 
   ///根据用户ID获取歌单
@@ -155,7 +178,7 @@ class NeteaseRepository {
 
   ///推荐歌曲，需要登陆
   Future<Result<Map>> recommendSongs() async {
-    return doRequest("recommend/songs");
+    return doRequest("/recommend/songs");
   }
 
   ///根据音乐id获取歌词
@@ -370,8 +393,7 @@ class NeteaseRepository {
   ///[data] parameter
   Future<Result<Map>> doRequest(String path, [Map data]) async {
     try {
-      final dio = Dio(BaseOptions(baseUrl: 'http://127.0.0.1:3000'))
-        ..interceptors.add(CookieManager(await _cookieJar));
+      final dio = await _dio;
       final result = await dio.get<Map>(path, queryParameters: data?.cast());
       final map = result.data;
       if (map == null) {
