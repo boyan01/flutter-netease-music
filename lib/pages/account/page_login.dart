@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:overlay_support/overlay_support.dart';
-import 'package:quiet/component/global/settings.dart';
 import 'package:quiet/part/part.dart';
 
 class LoginPage extends StatefulWidget {
@@ -95,7 +94,7 @@ class _LoginState extends State<LoginPage> {
   void _onLogin() async {
     if (_formState.currentState.validate()) {
       bool confirm = await showConfirmDialog(context,
-          Text('即将与${Settings.of(context).host}明文通信您的账号和密码，如确保网络环境可靠再进行登录操作'));
+          Text('即将与 http://127.0.0.1:3000 明文通信你的账号和密码\n务必确保网络环境可靠再进行登录操作！'));
       if (confirm != true) return;
       var result = await showLoaderOverlay(
           context,

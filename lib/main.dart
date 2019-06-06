@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:netease_music_api/netease_cloud_music.dart';
 import 'package:quiet/material/app.dart';
 import 'package:quiet/repository/netease.dart';
 
@@ -9,9 +10,9 @@ import 'part/part.dart';
 
 void main() {
   debugDefaultTargetPlatformOverride = TargetPlatform.android;
-
+  startServer();
   final settings = Settings();
-  neteaseRepository = NeteaseRepository(settings);
+  neteaseRepository = NeteaseRepository();
   runApp(MyApp(setting: settings));
 }
 
