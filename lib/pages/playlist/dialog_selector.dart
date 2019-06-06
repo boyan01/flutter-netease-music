@@ -205,8 +205,6 @@ class PlaylistSelectorDialog extends StatelessWidget {
                 FadeInImage(
                   image: CachedImage(p.coverUrl),
                   placeholder: AssetImage("assets/playlist_playlist.9.png"),
-                  fadeInDuration: Duration.zero,
-                  fadeOutDuration: Duration.zero,
                   fit: BoxFit.cover,
                 ),
                 Text(p.name),

@@ -180,8 +180,6 @@ class _SectionPlaylist extends StatelessWidget {
                 child: FadeInImage(
                   placeholder: AssetImage("assets/playlist_playlist.9.png"),
                   image: CachedImage(playlist["picUrl"]),
-                  fadeInDuration: Duration.zero,
-                  fadeOutDuration: Duration.zero,
                   fit: BoxFit.cover,
                 ),
               ),
