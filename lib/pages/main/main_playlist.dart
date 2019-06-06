@@ -168,7 +168,8 @@ class _PinnedHeader extends StatelessWidget {
 
 class _ExpansionPlaylistGroup extends StatefulWidget {
   _ExpansionPlaylistGroup(this.title, this.children,
-      {this.onMoreClick, this.onAddClick});
+      {this.onMoreClick, this.onAddClick})
+      : assert(children != null);
 
   _ExpansionPlaylistGroup.fromPlaylist(String title, List<PlaylistDetail> list,
       {@required VoidCallback onMoreClick, VoidCallback onAddClick})
