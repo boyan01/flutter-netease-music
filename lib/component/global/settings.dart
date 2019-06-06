@@ -10,8 +10,6 @@ const _prefix = 'quiet:settings:';
 
 const _key_theme = "$_prefix:theme";
 
-const _key_host = "$_prefix:host";
-
 class Settings extends Model {
   ///获取全局设置的实例
   static Settings of(BuildContext context, {bool rebuildOnChange = true}) {
@@ -32,22 +30,10 @@ class Settings extends Model {
     notifyListeners();
   }
 
-  String _host;
-
-  String get host =>
-      _host?.isNotEmpty == true ? _host : "http://127.0.0.1:3000/";
-
-  set host(String host) {
-    _host = host;
-    _preferences.setString(_key_host, host);
-    notifyListeners();
-  }
-
   Settings() {
     scheduleMicrotask(() async {
       _preferences = await SharedPreferences.getInstance();
       _theme = quietThemes[_preferences.getInt(_key_theme) ?? 0];
-      _host = _preferences.getString(_key_host);
     });
   }
 }

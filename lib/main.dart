@@ -1,18 +1,18 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:netease_music_api/netease_cloud_music.dart';
 import 'package:quiet/material/app.dart';
 import 'package:quiet/repository/netease.dart';
 
 import 'component/global/settings.dart';
 import 'component/netease/netease.dart';
 import 'part/part.dart';
-import 'package:netease_music_api/netease_cloud_music.dart';
 
 void main() {
   debugDefaultTargetPlatformOverride = TargetPlatform.android;
-  startServer(address: '127.0.0.1', port: 3000);
+  startServer();
   final settings = Settings();
-  neteaseRepository = NeteaseRepository(settings);
+  neteaseRepository = NeteaseRepository();
   runApp(MyApp(setting: settings));
 }
 
