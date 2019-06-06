@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio/dio.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:quiet/component/global/settings.dart';
 import 'package:quiet/model/playlist_detail.dart';
 import 'package:quiet/pages/comments/page_comment.dart';
 import 'package:quiet/part/part.dart';
@@ -50,7 +49,7 @@ Result<R> _map<T, R>(Result<T> source, R f(T t)) {
 }
 
 class NeteaseRepository {
-  NeteaseRepository(this.setting) {
+  NeteaseRepository() {
     _cookieJar = () async {
       String path;
       try {
@@ -61,8 +60,6 @@ class NeteaseRepository {
       return PersistCookieJar(dir: path + '/.cookies/');
     }();
   }
-
-  final Settings setting;
 
   Future<CookieJar> _cookieJar;
 
@@ -373,7 +370,7 @@ class NeteaseRepository {
   ///[data] parameter
   Future<Result<Map>> doRequest(String path, [Map data]) async {
     try {
-      final dio = Dio(BaseOptions(baseUrl: setting.host))
+      final dio = Dio(BaseOptions(baseUrl: 'http://127.0.0.1:3000'))
         ..interceptors.add(CookieManager(await _cookieJar));
       final result = await dio.get<Map>(path, queryParameters: data?.cast());
       final map = result.data;
