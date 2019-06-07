@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:quiet/material/flexible_app_bar.dart';
+import 'package:quiet/material/images.dart';
 import 'package:quiet/material/tabs.dart';
 import 'package:quiet/part/part.dart';
 import 'package:quiet/repository/netease.dart';
@@ -12,7 +13,7 @@ class UserDetailPage extends StatelessWidget {
   ///用户ID
   final int userId;
 
-  const UserDetailPage({Key key,@required this.userId}) : super(key: key);
+  const UserDetailPage({Key key, @required this.userId}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -61,15 +62,66 @@ class _UserDetailAppBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return SliverAppBar(
       pinned: true,
+      leading: Container(),
       expandedHeight: 330,
       flexibleSpace: FlexibleDetailBar(
         background: FlexShadowBackground(
           child: Image(
               height: 300,
               width: 300,
-              image: NeteaseImage(user.profile.backgroundUrl)),
+              fit: BoxFit.cover,
+              image: CachedImage(user.profile.backgroundUrl)),
         ),
-        content: Column(children: <Widget>[]),
+        content: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20),
+          child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Spacer(),
+                Row(
+                  children: <Widget>[
+                    RoundedImage(user.profile.avatarUrl, size: 60),
+                  ],
+                ),
+                SizedBox(height: 10),
+                Text(user.profile.nickname,
+                    style:
+                        TextStyle(fontSize: 17, fontWeight: FontWeight.w400)),
+                SizedBox(height: 6),
+                Row(children: <Widget>[
+                  InkWell(
+                      child: Text('关注:${user.profile.follows}'),
+                      onTap: () {
+                        toast(context, '关注');
+                      }),
+                  VerticalDivider(),
+                  InkWell(
+                    child: Text('粉丝:${user.profile.followeds}'),
+                    onTap: () {
+                      toast(context, '粉丝');
+                    },
+                  ),
+                ]),
+                SizedBox(height: 16),
+              ]),
+        ),
+        builder: (context, t) {
+          return AppBar(
+            title: Text(t > 0.5 ? user.profile.nickname : ''),
+            titleSpacing: 0,
+            elevation: 0,
+            backgroundColor: Colors.transparent,
+            actions: <Widget>[
+              IconButton(
+                  icon: Icon(Icons.more_vert,
+                      color: Theme.of(context).primaryIconTheme.color),
+                  onPressed: () {
+                    //TODO
+                    toast(context, 'todo');
+                  })
+            ],
+          );
+        },
       ),
       elevation: 0,
       forceElevated: false,
@@ -80,15 +132,6 @@ class _UserDetailAppBar extends StatelessWidget {
           Tab(text: '关于TA'),
         ],
       ),
-      actions: <Widget>[
-        IconButton(
-            icon: Icon(Icons.more_vert,
-                color: Theme.of(context).primaryIconTheme.color),
-            onPressed: () {
-              //TODO
-              toast(context, 'todo');
-            })
-      ],
     );
   }
 }

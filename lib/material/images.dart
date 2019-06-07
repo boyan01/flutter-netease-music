@@ -18,7 +18,7 @@ class RoundedImage extends StatelessWidget {
       child: Image(
         height: size,
         width: size,
-        image: NeteaseImage(url),
+        image: CachedImage(url),
       ),
     ));
   }
