@@ -23,23 +23,23 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Netease(
-      child: Quiet(
-        child: CopyRightOverlay(
-          child: ScopedModel<Settings>(
-            model: setting,
-            child: ScopedModelDescendant<Settings>(
-                builder: (context, child, setting) {
-              return MaterialApp(
+    return ScopedModel<Settings>(
+      model: setting,
+      child:
+          ScopedModelDescendant<Settings>(builder: (context, child, setting) {
+        return Netease(
+          child: Quiet(
+            child: CopyRightOverlay(
+              child: MaterialApp(
                 initialRoute: "/",
                 routes: routes,
                 title: 'Quiet',
                 theme: setting.theme,
-              );
-            }),
+              ),
+            ),
           ),
-        ),
-      ),
+        );
+      }),
     );
   }
 }

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:quiet/material/app.dart';
+import 'package:quiet/component/global/settings.dart';
 
 import 'material.dart';
 import 'theme_picker.dart';
@@ -34,29 +34,13 @@ class SettingPage extends StatelessWidget {
   }
 }
 
-class _CopyRightCheckBox extends StatefulWidget {
-  @override
-  __CopyRightCheckBoxState createState() => __CopyRightCheckBoxState();
-}
-
-class __CopyRightCheckBoxState extends State<_CopyRightCheckBox> {
-  bool _dismiss = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _dismiss = CopyRightOverlay.isShouldDismiss(context);
-  }
-
+class _CopyRightCheckBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CheckboxListTile(
-      value: _dismiss,
+      value: Settings.of(context).showCopyrightOverlay,
       onChanged: (value) {
-        setState(() {
-          _dismiss = value;
-        });
-        CopyRightOverlay.setDismiss(context, value);
+        Settings.of(context).showCopyrightOverlay = value;
       },
       title: Text('隐藏版权浮层'),
     );
