@@ -111,7 +111,7 @@ class _PinnedHeader extends StatelessWidget {
             child: ListTile(
               leading: Icon(
                 Icons.schedule,
-                color: Theme.of(context).primaryColor,
+                color: Theme.of(context).iconTheme.color,
               ),
               title: Text('播放记录'),
               onTap: () {
@@ -131,7 +131,7 @@ class _PinnedHeader extends StatelessWidget {
             child: ListTile(
               leading: Icon(
                 Icons.cast,
-                color: Theme.of(context).primaryColor,
+                color: Theme.of(context).iconTheme.color,
               ),
               title: Text.rich(TextSpan(children: [
                 TextSpan(text: '我的电台 '),
@@ -147,7 +147,7 @@ class _PinnedHeader extends StatelessWidget {
         ListTile(
           leading: Icon(
             Icons.library_music,
-            color: Theme.of(context).primaryColor,
+            color: Theme.of(context).iconTheme.color,
           ),
           title: Text.rich(TextSpan(children: [
             TextSpan(text: '我的收藏 '),
@@ -160,7 +160,7 @@ class _PinnedHeader extends StatelessWidget {
             Navigator.pushNamed(context, ROUTE_MY_COLLECTION);
           },
         ),
-        Container(height: 8, color: Color(0xfff5f5f5))
+        Container(height: 8, color: Theme.of(context).dividerColor)
       ]..removeWhere((v) => v == null),
     );
   }
