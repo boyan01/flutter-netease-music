@@ -10,6 +10,8 @@ const _prefix = 'quiet:settings:';
 
 const _key_theme = "$_prefix:theme";
 
+const _key_copyright = "$_prefix:copyright";
+
 class Settings extends Model {
   ///获取全局设置的实例
   static Settings of(BuildContext context, {bool rebuildOnChange = true}) {
@@ -30,10 +32,22 @@ class Settings extends Model {
     notifyListeners();
   }
 
+  bool _showCopyrightOverlay;
+
+  bool get showCopyrightOverlay => _showCopyrightOverlay ?? true;
+
+  set showCopyrightOverlay(bool show) {
+    _showCopyrightOverlay = show;
+    _preferences.setBool(_key_copyright, show);
+    notifyListeners();
+  }
+
   Settings() {
     scheduleMicrotask(() async {
       _preferences = await SharedPreferences.getInstance();
       _theme = quietThemes[_preferences.getInt(_key_theme) ?? 0];
+      _showCopyrightOverlay = _preferences.get(_key_copyright);
+      notifyListeners();
     });
   }
 }
