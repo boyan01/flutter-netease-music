@@ -14,7 +14,6 @@ class SettingPage extends StatelessWidget {
         titleSpacing: 0,
       ),
       body: Container(
-        color: const Color.fromARGB(255, 243, 243, 243),
         child: ListView(
           children: <Widget>[
             SettingGroup(
