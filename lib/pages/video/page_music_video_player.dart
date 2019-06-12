@@ -106,16 +106,17 @@ class _MvDetailPageState extends State<_MvDetailPage> {
               builder: (context, child, model) {
                 List data = [];
                 data.addAll(MusicVideoFloor.values);
-                data.addAll(model.getCommentList());
+                data.addAll(model.items);
 
                 return NotificationListener<ScrollEndNotification>(
                   onNotification: (notification) {
-                    model.autoLoad(notification: notification);
+                    model.loadMore(notification: notification);
+                    return false;
                   },
                   child: ListView.builder(
                       itemCount: data.length,
-                      itemBuilder: CommentListBuilder(data,
-                          defaultBuilder: (context, index) {
+                      itemBuilder:
+                          model.createBuilder(data, builder: (context, index) {
                         final item = data[index];
                         switch (item) {
                           case MusicVideoFloor.title:
@@ -127,7 +128,7 @@ class _MvDetailPageState extends State<_MvDetailPage> {
                         }
                         assert(false, "error to build($index) for $item ");
                         return Container();
-                      }).builder),
+                      })),
                 );
               },
             )),

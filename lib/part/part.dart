@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:overlay_support/overlay_support.dart';
 
+export 'package:loader/loader.dart';
 export 'package:quiet/component/cache/cache.dart';
 export 'package:quiet/component/player/player.dart';
 export 'package:quiet/component/route.dart';
@@ -14,9 +15,6 @@ export 'package:quiet/model/model.dart';
 export 'package:quiet/pages/account/account.dart';
 export 'package:scoped_model/scoped_model.dart';
 
-export 'package:loader/loader.dart';
-
 void notImplemented(BuildContext context) {
-  showSimpleNotification(context, Text("页面未完成"),
-      background: Color(0xFFd2dd37), foreground: Colors.black);
+  toast(context,'页面未完成');
 }
