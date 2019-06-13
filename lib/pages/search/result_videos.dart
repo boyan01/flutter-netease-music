@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:loader/loader.dart';
 import 'package:quiet/component/utils/utils.dart';
 import 'package:quiet/part/part.dart';
 import 'package:quiet/repository/netease.dart';
@@ -18,26 +19,15 @@ class _VideosResultSectionState extends State<VideosResultSection>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return Loader<Map>(
-        loadTask: () =>
-            neteaseRepository.search(widget.query, NeteaseSearchType.video),
-        builder: (context, result) {
-          return AutoLoadMoreList(
-              loadMore: (offset) async {
-                final result = await neteaseRepository.search(
-                    widget.query, NeteaseSearchType.video,
-                    offset: offset);
-                if (result.isValue) {
-                  return result.asValue.value["result"]["videos"];
-                }
-                return null;
-              },
-              totalCount: result["result"]["videoCount"],
-              initialList: result["result"]["videos"],
-              builder: (context, item) {
-                return VideoTile(map: item);
-              });
-        });
+    return AutoLoadMoreList(loadMore: (offset) async {
+      final result = await neteaseRepository
+          .search(widget.query, NeteaseSearchType.video, offset: offset);
+      return LoadMoreResult.map<Map, List>(result, (value) {
+        return value["result"]["videos"];
+      });
+    }, builder: (context, item) {
+      return VideoTile(map: item);
+    });
   }
 
   @override
