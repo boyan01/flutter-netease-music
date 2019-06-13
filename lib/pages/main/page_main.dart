@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:quiet/pages/account/page_user_detail.dart';
 import 'package:quiet/pages/main/main_cloud.dart';
 import 'package:quiet/pages/main/main_playlist.dart';
 import 'package:quiet/pages/search/page_search.dart';
@@ -132,9 +133,11 @@ class _AppDrawerHeader extends StatelessWidget {
     return UserAccountsDrawerHeader(
       currentAccountPicture: InkResponse(
         onTap: () {
-          if (UserAccount.of(context).isLogin) {
-            debugPrint("work in process...");
-          }
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) =>
+                      UserDetailPage(userId: UserAccount.of(context).userId)));
         },
         child: CircleAvatar(
           backgroundImage: CachedImage(profile["avatarUrl"]),

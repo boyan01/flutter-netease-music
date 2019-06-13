@@ -30,14 +30,14 @@ class CommentPage extends StatelessWidget {
           body: ScopedModelDescendant<CommentList>(
             builder: (context, child, model) {
               return NotificationListener<ScrollEndNotification>(
-                onNotification: (notification) {
-                  model.autoLoad(notification: notification);
-                },
-                child: ListView.builder(
-                    itemCount: model.getCommentList().length,
-                    itemBuilder:
-                        CommentListBuilder(model.getCommentList()).builder),
-              );
+                  onNotification: (notification) {
+                    model.loadMore(notification: notification);
+                    return false;
+                  },
+                  child: ListView.builder(
+                    itemCount: model.size,
+                    itemBuilder: model.obtainBuilder(),
+                  ));
             },
           ),
         ));

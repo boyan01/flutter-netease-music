@@ -17,26 +17,16 @@ class _ArtistsResultSectionState extends State<ArtistsResultSection>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return Loader<Map>(
-        loadTask: () =>
-            neteaseRepository.search(widget.query, NeteaseSearchType.artist),
-        builder: (context, result) {
-          return AutoLoadMoreList(
-              loadMore: (offset) async {
-                final result = await neteaseRepository.search(
-                    widget.query, NeteaseSearchType.artist,
-                    offset: offset);
-                if (result.isValue) {
-                  return result.asValue.value["result"]["artists"];
-                }
-                return null;
-              },
-              totalCount: result["result"]["artistCount"],
-              initialList: result["result"]["artists"],
-              builder: (context, item) {
-                return ArtistTile(map: item as Map);
-              });
-        });
+    return AutoLoadMoreList(loadMore: (offset) async {
+      final result = await neteaseRepository
+          .search(widget.query, NeteaseSearchType.artist, offset: offset);
+      if (result.isValue) {
+        return Result.value(result.asValue.value["result"]["artists"] as List);
+      }
+      return result as Result<List>;
+    }, builder: (context, item) {
+      return ArtistTile(map: item as Map);
+    });
   }
 
   @override
