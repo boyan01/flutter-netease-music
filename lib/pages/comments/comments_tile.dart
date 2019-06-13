@@ -209,10 +209,19 @@ class _ItemCommentState extends State<_ItemComment> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   ClipOval(
-                      child: Image(
-                    image: CachedImage(user.avatarUrl),
-                    width: 36,
-                    height: 36,
+                      child: InkResponse(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  UserDetailPage(userId: user.userId)));
+                    },
+                    child: Image(
+                      image: CachedImage(user.avatarUrl),
+                      width: 36,
+                      height: 36,
+                    ),
                   )),
                   Padding(padding: EdgeInsets.only(left: 10)),
                   Expanded(

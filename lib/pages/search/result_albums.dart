@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:loader/loader.dart';
 import 'package:quiet/part/part.dart';
 import 'package:quiet/repository/netease.dart';
 
@@ -20,44 +21,32 @@ class _AlbumsResultSectionState extends State<AlbumsResultSection>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return Loader<Map>(
-        loadTask: () =>
-            neteaseRepository.search(widget.query, NeteaseSearchType.album),
-        builder: (context, result) {
-          return AutoLoadMoreList(
-              loadMore: (offset) async {
-                final result = await neteaseRepository.search(
-                    widget.query, NeteaseSearchType.album,
-                    offset: offset);
-                if (result.isValue) {
-                  return result.asValue.value["result"]["albums"];
-                }
-                return null;
-              },
-              totalCount: result["result"]["albumCount"],
-              initialList: result["result"]["albums"],
-              builder: (context, album) {
-                return AlbumTile(
-                  album: album,
-                  subtitle: (album) {
-                    String subTitle = (album["artists"] as List)
-                        .cast<Map>()
-                        .map((ar) => ar["name"])
-                        .toList()
-                        .join("/");
-                    if (album["containedSong"] == null ||
-                        (album["containedSong"] as String).isEmpty) {
-                      String publishTime = DateFormat("y.M.d").format(
-                          DateTime.fromMillisecondsSinceEpoch(
-                              album["publishTime"]));
-                      subTitle = subTitle + " $publishTime";
-                    } else {
-                      subTitle = subTitle + " 包含单曲: ${album["containedSong"]}";
-                    }
-                    return subTitle;
-                  },
-                );
-              });
-        });
+    return AutoLoadMoreList<Map>(loadMore: (offset) async {
+      final result = await neteaseRepository
+          .search(widget.query, NeteaseSearchType.album, offset: offset);
+      if (result.isError) return result as Result<List>;
+      final list = result.asValue.value["result"]["albums"] as List;
+      return LoadMoreResult(list?.cast<Map>() ?? const []);
+    }, builder: (context, album) {
+      return AlbumTile(
+        album: album,
+        subtitle: (album) {
+          String subTitle = (album["artists"] as List)
+              .cast<Map>()
+              .map((ar) => ar["name"])
+              .toList()
+              .join("/");
+          if (album["containedSong"] == null ||
+              (album["containedSong"] as String).isEmpty) {
+            String publishTime = DateFormat("y.M.d").format(
+                DateTime.fromMillisecondsSinceEpoch(album["publishTime"]));
+            subTitle = subTitle + " $publishTime";
+          } else {
+            subTitle = subTitle + " 包含单曲: ${album["containedSong"]}";
+          }
+          return subTitle;
+        },
+      );
+    });
   }
 }

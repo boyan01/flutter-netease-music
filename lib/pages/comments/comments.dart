@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:quiet/component/utils/utils.dart';
 import 'package:quiet/model/playlist_detail.dart';
+import 'package:quiet/pages/account/page_user_detail.dart';
 import 'package:quiet/pages/comments/page_comment.dart';
 import 'package:quiet/part/part.dart';
 import 'package:quiet/repository/netease.dart';
@@ -16,144 +17,73 @@ import 'user.dart';
 
 part 'comments_tile.dart';
 
-class CommentList extends Model {
+class CommentList extends Model with AutoLoadMoreMixin {
   static const _TYPE_HEADER = 0;
-  static const _TYPE_COMMENT = 1;
   static const _TYPE_LOAD_MORE = 2;
   static const _TYPE_MORE_HOT = 3;
   static const _TYPE_EMPTY = 4;
   static const _TYPE_TITLE = 5;
-  static const _TYPE_INIT = 6;
 
   CommentList(this.threadId) {
-    autoLoad();
+    loadMore();
   }
 
   final CommentThreadId threadId;
 
-  ///has more hot comments
-  bool moreHot = false;
-
-  bool _more = true;
-
-  ///has more comments
-  bool get hasMore => _more;
-
-  ///the hot comments list
-  final List<Comment> hotComments = [];
-
-  final List<Comment> comments = [];
-
-  ///the total count of comments
   int total = 0;
 
-  CancelableOperation _autoLoadOperation;
+  @override
+  Future<Result<List>> loadData(int offset) async {
+    final result =
+        await neteaseRepository.getComments(threadId, offset: offset);
+    if (result.isError) return result.asError;
+    final value = result.asValue.value;
 
-  ///the items show in list
-  ///int : the item type of this item
-  ///dynamic: the item data object for this item
-  final List<Pair<int, dynamic>> items = [];
+    final comments =
+        (value['comments'] as List).map((e) => Comment.fromJsonMap(e)).toList();
 
-  ///flag to check if need rebuild [items] in [getCommentList]
-  bool _isItemsDirty = true;
+    if (offset == 0 /*maybe should check initial offset*/) {
+      final list = [];
 
-  List getCommentList() {
-    if (!_isItemsDirty) {
-      return items;
-    }
-
-    _isItemsDirty = false;
-    items.clear();
-
-    //initialization
-    if (hasMore && comments.isEmpty) {
-      items.add(Pair(_TYPE_INIT, null));
-      return items;
-    }
-
-    if (threadId.payload != null) {
-      items.add(Pair(_TYPE_TITLE, threadId));
-    }
-    if (hotComments.isNotEmpty) {
-      items.add(Pair(_TYPE_HEADER, "热门评论")); //hot comment header
-      for (var comment in hotComments) {
-        items.add(Pair(_TYPE_COMMENT, comment));
+      //top addition bar
+      if (threadId.payload != null) {
+        list.add(Pair(_TYPE_TITLE, threadId));
       }
-      if (moreHot) {
-        items.add(Pair(_TYPE_MORE_HOT, null));
+
+      //hot comment
+      final hotComments =
+          (value["hotComments"] as List).map((e) => Comment.fromJsonMap(e));
+      if (hotComments.isNotEmpty) {
+        list.add(Pair(_TYPE_HEADER, "热门评论")); //hot comment header
+        list.addAll(hotComments);
       }
+
+      if (value['moreHot'] == true) {
+        list.add(Pair(_TYPE_MORE_HOT, null));
+      }
+
+      total = value['total'];
+      list.add(Pair(_TYPE_HEADER, "最新评论($total)")); //latest comment header
+      list.addAll(comments);
+
+      return LoadMoreResult(list,
+          loaded: comments.length, hasMore: value['more']);
     }
-    items.add(Pair(_TYPE_HEADER, "最新评论($total)")); //latest comment header
-    for (var comment in comments) {
-      items.add(Pair(_TYPE_COMMENT, comment));
-    }
-    if (hasMore) {
-      //need to load more comments
-      //so we add a loading bar on the bottom
-      items.add(Pair(_TYPE_LOAD_MORE, null));
-    }
-    if (total == 0) {
-      //have not comments
-      items.add(Pair(_TYPE_EMPTY, null));
-    }
-    return items;
+    return LoadMoreResult(comments,
+        loaded: comments.length, hasMore: value['more']);
   }
 
-  void autoLoad({ScrollEndNotification notification}) {
-    bool needLoad = notification == null;
-    if (!needLoad &&
-        (!_more ||
-            notification.metrics.extentAfter > 500 ||
-            _autoLoadOperation != null)) {
-      return;
+  @override
+  Widget buildItem(BuildContext context, List data, int index) {
+    final item = data[index];
+    if (item is Comment) {
+      return _ItemComment(comment: item);
     }
 
-    _autoLoadOperation = CancelableOperation<Result<Map>>.fromFuture(
-        neteaseRepository.getComments(threadId, offset: comments.length))
-      ..value.then((r) {
-        if (r is ValueResult) {
-          final result = r.asValue.value;
-          _more = result["more"];
-          if (comments.isEmpty) {
-            total = result['total'];
-            moreHot = result['moreHot'];
-            hotComments.clear();
-            hotComments.addAll((result["hotComments"] as List)
-                .map((e) => Comment.fromJsonMap(e)));
-          }
-          comments.addAll(
-              (result["comments"] as List).map((e) => Comment.fromJsonMap(e)));
-          _isItemsDirty = true;
-          notifyListeners();
-        } else {
-          //error handle
-        }
-      }).whenComplete(() {
-        _autoLoadOperation = null;
-      });
-  }
-
-  static IndexedWidgetBuilder builder = (BuildContext context, int index) {};
-}
-
-class CommentListBuilder {
-  ///list data
-  final List list;
-
-  final IndexedWidgetBuilder defaultBuilder;
-
-  CommentListBuilder(this.list, {this.defaultBuilder}) : assert(list != null);
-
-  Widget builder(BuildContext context, int index) {
-    final item = list[index];
     if (item is Pair<int, dynamic>) {
       switch (item.first) {
-        case CommentList._TYPE_COMMENT:
-          return _ItemComment(comment: item.last);
         case CommentList._TYPE_HEADER:
-          return _ItemHeader(
-            title: item.last,
-          );
+          return _ItemHeader(title: item.last);
         case CommentList._TYPE_MORE_HOT:
           return _ItemMoreHot();
         case CommentList._TYPE_LOAD_MORE:
@@ -170,51 +100,13 @@ class CommentListBuilder {
           );
         case CommentList._TYPE_TITLE:
           return _ItemTitle(commentThreadId: item.last);
-        case CommentList._TYPE_INIT:
-          return Loader.buildSimpleLoadingWidget(context);
       }
     }
-
-    assert(defaultBuilder != null);
-    return defaultBuilder(context, index);
+    return super.buildItem(context, data, index);
   }
 }
 
-mixin AutoLoadMoreModel<T> on Model {
-  bool _more;
 
-  ///has more comments
-  bool get hasMore => _more;
-
-  CancelableOperation _autoLoadOperation;
-
-  ///get more data
-  ///empty indicator null data
-  @protected
-  Future<Result<List<T>>> getMore();
-
-  @protected
-  void onMoreDataLoaded(List<T> list);
-
-  void loadMore({ScrollEndNotification notification}) {
-    final notNeedLoad = notification != null &&
-        (!_more ||
-            notification.metrics.extentAfter > 500 ||
-            _autoLoadOperation != null);
-    if (notNeedLoad) {
-      return;
-    }
-
-    _autoLoadOperation =
-        CancelableOperation<Result<List<T>>>.fromFuture(getMore())
-          ..value.then((result) {
-            onMoreDataLoaded(result.asValue.value);
-            notifyListeners();
-          }).whenComplete(() {
-            _autoLoadOperation = null;
-          });
-  }
-}
 
 class Comment {
   User user;

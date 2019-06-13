@@ -181,15 +181,13 @@ class _PageAlbumsState extends State<_PageAlbums>
     return Loader<Map>(
         loadTask: () => neteaseRepository.artistAlbums(widget.artistId),
         builder: (context, result) {
-          List<Map> albums = (result["hotAlbums"] as List).cast();
           return AutoLoadMoreList<Map>(
-            totalCount: result["artist"]["albumSize"],
             loadMore: (offset) async {
               final result = await neteaseRepository
                   .artistAlbums(widget.artistId, offset: offset);
-              return (result.asValue.value["hotAlbums"] as List).cast();
+              return ValueResult(
+                  (result.asValue.value["hotAlbums"] as List).cast());
             },
-            initialList: albums,
             builder: (context, album) {
               return AlbumTile(album: album);
             },
@@ -222,58 +220,52 @@ class _PageMVsState extends State<_PageMVs> with AutomaticKeepAliveClientMixin {
     return Loader<Map>(
       loadTask: () => neteaseRepository.artistMvs(widget.artistId),
       builder: (context, result) {
-        final List<Map> mvs = (result["mvs"] as List).cast();
-
-        return AutoLoadMoreList(
-            loadMore: (offset) async {
-              final result = await neteaseRepository.artistMvs(widget.artistId,
-                  offset: offset);
-              return (result.asValue.value["mvs"] as List).cast();
+        return AutoLoadMoreList(loadMore: (offset) async {
+          final result = await neteaseRepository.artistMvs(widget.artistId,
+              offset: offset);
+          return ValueResult((result.asValue.value["mvs"] as List).cast());
+        }, builder: (context, mv) {
+          return InkWell(
+            onTap: () {
+              debugPrint("on tap : ${mv["id"]}");
             },
-            totalCount: widget.mvCount,
-            initialList: mvs,
-            builder: (context, mv) {
-              return InkWell(
-                onTap: () {
-                  debugPrint("on tap : ${mv["id"]}");
-                },
-                child: Container(
-                  height: 72,
-                  child: Row(
-                    children: <Widget>[
-                      SizedBox(width: 8),
-                      Container(
-                        height: 72,
-                        width: 72 * 1.6,
-                        padding: EdgeInsets.all(4),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(3),
-                          child: Image(
-                            image: CachedImage(mv["imgurl16v9"]),
-                            fit: BoxFit.cover,
-                          ),
-                        ),
+            child: Container(
+              height: 72,
+              child: Row(
+                children: <Widget>[
+                  SizedBox(width: 8),
+                  Container(
+                    height: 72,
+                    width: 72 * 1.6,
+                    padding: EdgeInsets.all(4),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(3),
+                      child: Image(
+                        image: CachedImage(mv["imgurl16v9"]),
+                        fit: BoxFit.cover,
                       ),
-                      SizedBox(width: 8),
-                      Expanded(
-                          child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Spacer(),
-                          Text(mv["name"],
-                              maxLines: 1, overflow: TextOverflow.ellipsis),
-                          SizedBox(height: 4),
-                          Text(mv["publishTime"],
-                              style: Theme.of(context).textTheme.caption),
-                          Spacer(),
-                          Divider(height: 0)
-                        ],
-                      ))
-                    ],
+                    ),
                   ),
-                ),
-              );
-            });
+                  SizedBox(width: 8),
+                  Expanded(
+                      child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Spacer(),
+                      Text(mv["name"],
+                          maxLines: 1, overflow: TextOverflow.ellipsis),
+                      SizedBox(height: 4),
+                      Text(mv["publishTime"],
+                          style: Theme.of(context).textTheme.caption),
+                      Spacer(),
+                      Divider(height: 0)
+                    ],
+                  ))
+                ],
+              ),
+            ),
+          );
+        });
       },
     );
   }

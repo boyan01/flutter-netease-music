@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:quiet/component/utils/utils.dart';
 import 'package:quiet/model/playlist_detail.dart';
+import 'package:quiet/pages/account/page_user_detail.dart';
 import 'package:quiet/pages/comments/page_comment.dart';
 import 'package:quiet/part/part.dart';
 import 'package:quiet/repository/netease.dart';
@@ -555,7 +556,12 @@ class _PlaylistDetailHeader extends StatelessWidget {
                     ),
                     SizedBox(height: 10),
                     InkWell(
-                      onTap: () => {},
+                      onTap: () {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) {
+                          return UserDetailPage(userId: creator['userId']);
+                        }));
+                      },
                       child: Padding(
                         padding: const EdgeInsets.only(top: 4, bottom: 4),
                         child: Row(
