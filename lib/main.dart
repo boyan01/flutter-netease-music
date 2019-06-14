@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:netease_music_api/netease_cloud_music.dart';
 import 'package:quiet/material/app.dart';
 import 'package:quiet/repository/netease.dart';
+import 'package:scoped_model/scoped_model.dart';
 
 import 'component/global/settings.dart';
 import 'component/netease/netease.dart';
-import 'part/part.dart';
+import 'component/player/player.dart';
+import 'component/route.dart';
 
 void main() {
   debugDefaultTargetPlatformOverride = TargetPlatform.android;
@@ -31,8 +33,8 @@ class MyApp extends StatelessWidget {
           child: Quiet(
             child: CopyRightOverlay(
               child: MaterialApp(
-                initialRoute: "/",
                 routes: routes,
+                onGenerateRoute: routeFactory,
                 title: 'Quiet',
                 theme: setting.theme,
               ),

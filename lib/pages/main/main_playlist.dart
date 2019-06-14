@@ -96,16 +96,15 @@ class _PinnedHeader extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
-        UserAccount.of(context).isLogin
-            ? null
-            : DividerWrapper(
-                child: ListTile(
-                    title: Text("当前未登录，点击登录!"),
-                    trailing: Icon(Icons.chevron_right),
-                    onTap: () {
-                      Navigator.pushNamed(context, "/login");
-                    }),
-              ),
+        if (!UserAccount.of(context).isLogin)
+          DividerWrapper(
+            child: ListTile(
+                title: Text("当前未登录，点击登录!"),
+                trailing: Icon(Icons.chevron_right),
+                onTap: () {
+                  Navigator.pushNamed(context, "/login");
+                }),
+          ),
         DividerWrapper(
             indent: 16,
             child: ListTile(
