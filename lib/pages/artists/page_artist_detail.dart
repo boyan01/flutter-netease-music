@@ -175,24 +175,21 @@ class _PageAlbums extends StatefulWidget {
 
 class _PageAlbumsState extends State<_PageAlbums>
     with AutomaticKeepAliveClientMixin {
+  Future<Result<List<Map>>> _delegate(offset) async {
+    final result =
+        await neteaseRepository.artistAlbums(widget.artistId, offset: offset);
+    return ValueResult((result.asValue.value["hotAlbums"] as List).cast());
+  }
+
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return Loader<Map>(
-        loadTask: () => neteaseRepository.artistAlbums(widget.artistId),
-        builder: (context, result) {
-          return AutoLoadMoreList<Map>(
-            loadMore: (offset) async {
-              final result = await neteaseRepository
-                  .artistAlbums(widget.artistId, offset: offset);
-              return ValueResult(
-                  (result.asValue.value["hotAlbums"] as List).cast());
-            },
-            builder: (context, album) {
-              return AlbumTile(album: album);
-            },
-          );
-        });
+    return AutoLoadMoreList<Map>(
+      loadMore: _delegate,
+      builder: (context, album) {
+        return AlbumTile(album: album);
+      },
+    );
   }
 
   @override
@@ -214,20 +211,21 @@ class _PageMVs extends StatefulWidget {
 }
 
 class _PageMVsState extends State<_PageMVs> with AutomaticKeepAliveClientMixin {
+  Future<Result<List<Map>>> _loadMv(int offset) async {
+    final result =
+        await neteaseRepository.artistMvs(widget.artistId, offset: offset);
+    return ValueResult((result.asValue.value["mvs"] as List).cast());
+  }
+
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return Loader<Map>(
-      loadTask: () => neteaseRepository.artistMvs(widget.artistId),
-      builder: (context, result) {
-        return AutoLoadMoreList(loadMore: (offset) async {
-          final result = await neteaseRepository.artistMvs(widget.artistId,
-              offset: offset);
-          return ValueResult((result.asValue.value["mvs"] as List).cast());
-        }, builder: (context, mv) {
+    return AutoLoadMoreList<Map>(
+        loadMore: _loadMv,
+        builder: (context, mv) {
           return InkWell(
             onTap: () {
-              debugPrint("on tap : ${mv["id"]}");
+              Navigator.pushNamed(context, '/mv', arguments: mv['id']);
             },
             child: Container(
               height: 72,
@@ -266,8 +264,6 @@ class _PageMVsState extends State<_PageMVs> with AutomaticKeepAliveClientMixin {
             ),
           );
         });
-      },
-    );
   }
 
   @override
