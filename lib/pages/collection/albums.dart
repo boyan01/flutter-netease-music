@@ -6,7 +6,7 @@ import 'api.dart';
 class CollectionAlbums extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return NeteaseLoader<Map>(
+    return CachedLoader<Map>(
       cacheKey: 'album_sublist',
       loadTask: MyCollectionApi.of(context).getAlbums,
       builder: (context, result) {
