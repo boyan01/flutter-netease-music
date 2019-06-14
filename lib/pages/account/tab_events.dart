@@ -13,6 +13,9 @@ class _TabEventsState extends State<TabEvents>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return Container();
+    return SizedBox(
+      height: 200,
+      child: Center(child: Text('TODO')),
+    );
   }
 }

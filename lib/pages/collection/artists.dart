@@ -8,7 +8,7 @@ import 'api.dart';
 class CollectionArtists extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return NeteaseLoader<Map>(
+    return CachedLoader<Map>(
         loadTask: MyCollectionApi.of(context).getArtists,
         builder: (context, result) {
           final data = result['data'] as List;

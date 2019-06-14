@@ -7,12 +7,40 @@ import 'package:quiet/repository/cached_image.dart';
 
 ///歌单列表元素
 class PlaylistTile extends StatelessWidget {
-  const PlaylistTile({Key key, @required this.playlist}) : super(key: key);
+  const PlaylistTile({
+    Key key,
+    @required this.playlist,
+    this.enableMore = true,
+    this.enableHero = true,
+  }) : super(key: key);
 
   final PlaylistDetail playlist;
 
+  final bool enableMore;
+
+  final bool enableHero;
+
   @override
   Widget build(BuildContext context) {
+    Widget cover = Container(
+      child: ClipRRect(
+        borderRadius: BorderRadius.all(Radius.circular(4)),
+        child: FadeInImage(
+          placeholder: AssetImage("assets/playlist_playlist.9.png"),
+          image: CachedImage(playlist.coverUrl),
+          fit: BoxFit.cover,
+          height: 50,
+          width: 50,
+        ),
+      ),
+    );
+    if (enableHero) {
+      cover = Hero(
+        tag: playlist.heroTag,
+        child: cover,
+      );
+    }
+
     return InkWell(
       onTap: () {
         Navigator.push(
@@ -26,21 +54,7 @@ class PlaylistTile extends StatelessWidget {
         child: Row(
           children: <Widget>[
             Padding(padding: EdgeInsets.only(left: 16)),
-            Hero(
-              tag: playlist.heroTag,
-              child: Container(
-                child: ClipRRect(
-                  borderRadius: BorderRadius.all(Radius.circular(4)),
-                  child: FadeInImage(
-                    placeholder: AssetImage("assets/playlist_playlist.9.png"),
-                    image: CachedImage(playlist.coverUrl),
-                    fit: BoxFit.cover,
-                    height: 50,
-                    width: 50,
-                  ),
-                ),
-              ),
-            ),
+            cover,
             Padding(padding: EdgeInsets.only(left: 10)),
             Expanded(
               child: Column(
@@ -60,30 +74,32 @@ class PlaylistTile extends StatelessWidget {
                 ],
               ),
             ),
-            PopupMenuButton<PlaylistOp>(
-              itemBuilder: (context) {
-                return [
-                  PopupMenuItem(child: Text("分享"), value: PlaylistOp.share),
-                  PopupMenuItem(child: Text("编辑歌单信息"), value: PlaylistOp.edit),
-                  PopupMenuItem(child: Text("删除"), value: PlaylistOp.delete),
-                ];
-              },
-              onSelected: (op) {
-                switch (op) {
-                  case PlaylistOp.delete:
-                  case PlaylistOp.share:
-                    notImplemented(context);
-                    break;
-                  case PlaylistOp.edit:
-                    Navigator.of(context)
-                        .push(MaterialPageRoute(builder: (context) {
-                      return PlaylistEditPage(playlist);
-                    }));
-                    break;
-                }
-              },
-              icon: Icon(Icons.more_vert),
-            ),
+            if (enableMore)
+              PopupMenuButton<PlaylistOp>(
+                itemBuilder: (context) {
+                  return [
+                    PopupMenuItem(child: Text("分享"), value: PlaylistOp.share),
+                    PopupMenuItem(
+                        child: Text("编辑歌单信息"), value: PlaylistOp.edit),
+                    PopupMenuItem(child: Text("删除"), value: PlaylistOp.delete),
+                  ];
+                },
+                onSelected: (op) {
+                  switch (op) {
+                    case PlaylistOp.delete:
+                    case PlaylistOp.share:
+                      notImplemented(context);
+                      break;
+                    case PlaylistOp.edit:
+                      Navigator.of(context)
+                          .push(MaterialPageRoute(builder: (context) {
+                        return PlaylistEditPage(playlist);
+                      }));
+                      break;
+                  }
+                },
+                icon: Icon(Icons.more_vert),
+              ),
           ],
         ),
       ),

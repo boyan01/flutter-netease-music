@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:overlay_support/overlay_support.dart';
+import 'package:quiet/component/netease/netease.dart';
 import 'package:quiet/material/flexible_app_bar.dart';
 import 'package:quiet/material/images.dart';
 import 'package:quiet/material/tabs.dart';
+import 'package:quiet/model/playlist_detail.dart';
+import 'package:quiet/pages/main/playlist_tile.dart';
 import 'package:quiet/part/part.dart';
 import 'package:quiet/repository/netease.dart';
 
@@ -47,13 +50,24 @@ class _DetailPage extends StatelessWidget {
             length: 3,
             child: NestedScrollView(
               headerSliverBuilder: (context, _) {
-                return [_UserDetailAppBar(user)];
+                return [
+                  SliverOverlapAbsorber(
+                      handle: NestedScrollView.sliverOverlapAbsorberHandleFor(
+                          context),
+                      child: _UserDetailAppBar(user))
+                ];
               },
-              body: TabBarView(children: <Widget>[
-                TabMusic(),
-                TabEvents(),
-                TabAbout(),
-              ]),
+              body: SafeArea(
+                child: Padding(
+                  padding: const EdgeInsets.only(
+                      top: kToolbarHeight + kTextTabBarHeight),
+                  child: TabBarView(children: <Widget>[
+                    TabMusic(user.profile),
+                    TabEvents(),
+                    TabAbout(user),
+                  ]),
+                ),
+              ),
             ))));
   }
 }
