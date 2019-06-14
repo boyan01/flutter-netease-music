@@ -59,7 +59,7 @@ class _PlayListDetailState extends State<PlaylistDetailPage> {
               : MusicListHeader(widget.playlist.trackCount),
         ),
         SliverList(delegate: SliverChildListDelegate([content]))
-      ]..removeWhere((v) => v == null),
+      ],
     );
   }
 
@@ -339,12 +339,19 @@ class PlayListHeaderBackground extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Stack(
-      fit: StackFit.expand,
+      fit: StackFit.passthrough,
       children: <Widget>[
-        Image(image: CachedImage(imageUrl), fit: BoxFit.cover),
+        Opacity(
+          opacity: 1,
+          child: Image(
+              image: CachedImage(imageUrl),
+              fit: BoxFit.cover,
+              width: 120,
+              height: 1),
+        ),
         BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 24, sigmaY: 24),
-          child: Container(color: Colors.black.withOpacity(0.1)),
+          child: Container(color: Colors.black.withOpacity(0.3)),
         )
       ],
     );
@@ -383,7 +390,7 @@ class DetailHeader extends StatelessWidget {
       children: <Widget>[
         background,
         Material(
-          color: Colors.black.withOpacity(0.2),
+          color: Colors.transparent,
           child: Container(
             padding: EdgeInsets.only(
                 top: MediaQuery.of(context).padding.top + kToolbarHeight),
