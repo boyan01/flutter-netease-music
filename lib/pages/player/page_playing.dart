@@ -475,16 +475,17 @@ class _BlurBackground extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        image: DecorationImage(
+    return Stack(
+      fit: StackFit.expand,
+      children: <Widget>[
+        Image(
           image: CachedImage(music.album.coverImageUrl),
           fit: BoxFit.cover,
+          height: 15,
+          width: 15,
         ),
-      ),
-      child: Container(
-        child: BackdropFilter(
-          filter: ui.ImageFilter.blur(sigmaY: 20, sigmaX: 20),
+        BackdropFilter(
+          filter: ui.ImageFilter.blur(sigmaY: 14, sigmaX: 24),
           child: Container(
             decoration: BoxDecoration(
                 gradient: LinearGradient(
@@ -499,7 +500,7 @@ class _BlurBackground extends StatelessWidget {
             )),
           ),
         ),
-      ),
+      ],
     );
   }
 }
