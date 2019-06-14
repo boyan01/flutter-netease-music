@@ -9,7 +9,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:quiet/component/cache/key_value_cache.dart';
 
 ///default image size in dimens
-const _defaultImageSize = const Size.fromHeight(200);
+const _defaultImageSize = const Size.fromWidth(200);
 
 ///image provider for netease image
 class CachedImage extends ImageProvider<CachedImage> implements CacheKey {
@@ -64,7 +64,18 @@ class CachedImage extends ImageProvider<CachedImage> implements CacheKey {
   @override
   ImageStreamCompleter load(CachedImage key) {
     return MultiFrameImageStreamCompleter(
-        codec: _loadAsync(key), scale: key.scale);
+        codec: _loadAsync(key)
+//          ..then((value) {
+//            value.getNextFrame().then((image) {
+//              debugPrint(
+//                  "load ${key.toString()} : ${image.image.width} * ${image.image.height}");
+//              debugPrint(
+//                  "cached image count =  ${PaintingBinding.instance.imageCache.currentSize}, "
+//                  "total size ${PaintingBinding.instance.imageCache.currentSizeBytes / 1024} KB");
+//            });
+//          })
+        ,
+        scale: key.scale);
   }
 
   static final HttpClient _httpClient = HttpClient();

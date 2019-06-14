@@ -7,6 +7,7 @@ import 'package:quiet/pages/page_my_dj.dart';
 import 'package:quiet/pages/player/page_playing.dart';
 import 'package:quiet/pages/playlist/page_daily_playlist.dart';
 import 'package:quiet/pages/setting/page_setting.dart';
+import 'package:quiet/pages/video/page_music_video_player.dart';
 
 export 'package:quiet/pages/account/page_login.dart';
 export 'package:quiet/pages/collection/page_collections.dart';
@@ -19,7 +20,7 @@ export 'package:quiet/pages/playlist/page_playlist_detail.dart';
 export 'package:quiet/pages/setting/page_setting.dart';
 export 'package:quiet/pages/video/page_music_video_player.dart';
 
-const ROUTE_MAIN = "/";
+const ROUTE_MAIN = Navigator.defaultRouteName;
 
 const ROUTE_LOGIN = "/login";
 
@@ -48,3 +49,18 @@ final Map<String, WidgetBuilder> routes = {
   ROUTE_MY_COLLECTION: (context) => MyCollectionPage(),
   ROUTE_SETTING: (context) => SettingPage(),
 };
+
+Route<dynamic> routeFactory(RouteSettings settings) {
+  WidgetBuilder builder;
+  switch (settings.name) {
+    case "/mv":
+      builder = (context) => MusicVideoPlayerPage(settings.arguments);
+      break;
+  }
+
+  if (builder != null)
+    return MaterialPageRoute(builder: builder, settings: settings);
+
+  assert(false, 'ERROR: can not generate Route for ${settings.name}');
+  return null;
+}

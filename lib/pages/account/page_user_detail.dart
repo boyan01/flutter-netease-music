@@ -8,6 +8,12 @@ import 'package:quiet/repository/netease.dart';
 
 import 'user_detail_bean.dart';
 
+part 'tab_music.dart';
+
+part 'tab_events.dart';
+
+part 'tab_about.dart';
+
 ///用户详情页
 class UserDetailPage extends StatelessWidget {
   ///用户ID
@@ -44,9 +50,9 @@ class _DetailPage extends StatelessWidget {
                 return [_UserDetailAppBar(user)];
               },
               body: TabBarView(children: <Widget>[
-                Container(),
-                Container(),
-                Container(),
+                TabMusic(),
+                TabEvents(),
+                TabAbout(),
               ]),
             ))));
   }
