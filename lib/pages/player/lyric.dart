@@ -6,15 +6,16 @@ import 'package:flutter/material.dart';
 import 'package:quiet/component/utils/utils.dart';
 
 class Lyric extends StatefulWidget {
-  Lyric(
-      {@required this.lyric,
-      this.lyricLineStyle,
-      this.position,
-      this.textAlign = TextAlign.center,
-      this.highlight = Colors.red,
-      @required this.size,
-      this.onTap})
-      : assert(lyric.size > 0);
+  Lyric({
+    @required this.lyric,
+    this.lyricLineStyle,
+    this.position,
+    this.textAlign = TextAlign.center,
+    this.highlight = Colors.red,
+    @required this.size,
+    this.onTap,
+    @required this.playing,
+  }) : assert(lyric.size > 0);
 
   final TextStyle lyricLineStyle;
 
@@ -30,6 +31,9 @@ class Lyric extends StatefulWidget {
 
   final VoidCallback onTap;
 
+  ///播放器是否处于播放状态
+  final bool playing;
+
   @override
   State<StatefulWidget> createState() => LyricState();
 }
@@ -41,11 +45,18 @@ class LyricState extends State<Lyric> with TickerProviderStateMixin {
 
   AnimationController _lineController;
 
+  //歌词色彩渐变动画
+  AnimationController _gradientController;
+
   @override
   void initState() {
     super.initState();
-    lyricPainter = LyricPainter(widget.lyricLineStyle, widget.lyric,
-        textAlign: widget.textAlign, highlight: widget.highlight);
+    lyricPainter = LyricPainter(
+      widget.lyricLineStyle,
+      widget.lyric,
+      textAlign: widget.textAlign,
+      highlight: widget.highlight,
+    );
     widget.position?.addListener(_scrollToCurrentPosition);
     _scrollToCurrentPosition();
   }
@@ -54,14 +65,26 @@ class LyricState extends State<Lyric> with TickerProviderStateMixin {
   void didUpdateWidget(Lyric oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.lyric != oldWidget.lyric) {
-      lyricPainter = LyricPainter(widget.lyricLineStyle, widget.lyric,
-          textAlign: widget.textAlign, highlight: widget.highlight);
+      lyricPainter = LyricPainter(
+        widget.lyricLineStyle,
+        widget.lyric,
+        textAlign: widget.textAlign,
+        highlight: widget.highlight,
+      );
     }
     if (widget.position != oldWidget.position) {
       oldWidget.position?.removeListener(_scrollToCurrentPosition);
       widget.position?.addListener(_scrollToCurrentPosition);
     }
     _scrollToCurrentPosition();
+
+    if (widget.playing != oldWidget.playing) {
+      if (!widget.playing) {
+        _gradientController?.stop();
+      } else {
+        _gradientController?.forward();
+      }
+    }
   }
 
   //scroll lyric to current playing position
@@ -78,10 +101,7 @@ class LyricState extends State<Lyric> with TickerProviderStateMixin {
 
     int milliseconds = widget.position.value;
 
-    lyricPainter.playingPosition = milliseconds;
-
-    int line = widget.lyric
-        .findLineByTimeStamp(milliseconds, lyricPainter.currentLine);
+    int line = widget.lyric.findLineByTimeStamp(milliseconds, lyricPainter.currentLine);
 
     if (lyricPainter.currentLine != line && !dragging) {
       double offset = lyricPainter.computeScrollTo(line);
@@ -99,11 +119,10 @@ class LyricState extends State<Lyric> with TickerProviderStateMixin {
               _lineController = null;
             }
           });
-        Animation<double> animation = Tween<double>(
-                begin: lyricPainter.offsetScroll,
-                end: lyricPainter.offsetScroll + offset)
-            .chain(CurveTween(curve: Curves.easeInOut))
-            .animate(_lineController);
+        Animation<double> animation =
+            Tween<double>(begin: lyricPainter.offsetScroll, end: lyricPainter.offsetScroll + offset)
+                .chain(CurveTween(curve: Curves.easeInOut))
+                .animate(_lineController);
         animation.addListener(() {
           lyricPainter.offsetScroll = animation.value;
         });
@@ -111,6 +130,18 @@ class LyricState extends State<Lyric> with TickerProviderStateMixin {
       } else {
         lyricPainter.offsetScroll += offset;
       }
+
+      _gradientController?.dispose();
+      final entry = widget.lyric[line];
+      final startPercent = (milliseconds - entry.position) / entry.duration;
+      _gradientController = AnimationController(
+        vsync: this,
+        duration: Duration(milliseconds: (entry.duration * (1 - startPercent)).toInt()),
+      );
+      _gradientController.addListener(() {
+        lyricPainter.lineGradientPercent = _gradientController.value;
+      });
+      _gradientController.forward(from: startPercent);
     }
     lyricPainter.currentLine = line;
   }
@@ -126,6 +157,8 @@ class LyricState extends State<Lyric> with TickerProviderStateMixin {
     _flingController = null;
     _lineController?.dispose();
     _lineController = null;
+    _gradientController?.dispose();
+    _gradientController = null;
     super.dispose();
   }
 
@@ -161,7 +194,9 @@ class LyricState extends State<Lyric> with TickerProviderStateMixin {
         },
         onVerticalDragEnd: (details) {
           _flingController = AnimationController.unbounded(
-              vsync: this, duration: const Duration(milliseconds: 300))
+            vsync: this,
+            duration: const Duration(milliseconds: 300),
+          )
             ..addListener(() {
               double value = _flingController.value;
 
@@ -175,16 +210,14 @@ class LyricState extends State<Lyric> with TickerProviderStateMixin {
               lyricPainter.repaint();
             })
             ..addStatusListener((status) {
-              if (status == AnimationStatus.completed ||
-                  status == AnimationStatus.dismissed) {
+              if (status == AnimationStatus.completed || status == AnimationStatus.dismissed) {
                 dragging = false;
                 _flingController.dispose();
                 _flingController = null;
               }
             })
-            ..animateWith(ClampingScrollSimulation(
-                position: lyricPainter.offsetScroll,
-                velocity: details.primaryVelocity));
+            ..animateWith(
+                ClampingScrollSimulation(position: lyricPainter.offsetScroll, velocity: details.primaryVelocity));
         },
         child: CustomPaint(
           size: widget.size,
@@ -203,11 +236,16 @@ class LyricPainter extends ChangeNotifier implements CustomPainter {
 
   double get offsetScroll => _offsetScroll;
 
-  int _playingPosition = -1;
+  double _lineGradientPercent = -1;
+
+  double get lineGradientPercent {
+    if (_lineGradientPercent == -1) return 1.0;
+    return _lineGradientPercent.clamp(0.0, 1.0);
+  }
 
   ///音乐播放时间,毫秒
-  set playingPosition(int position) {
-    _playingPosition = position;
+  set lineGradientPercent(double percent) {
+    _lineGradientPercent = percent;
     repaint();
   }
 
@@ -223,19 +261,16 @@ class LyricPainter extends ChangeNotifier implements CustomPainter {
   TextStyle styleHighlight;
 
   ///param lyric must not be null
-  LyricPainter(TextStyle style, this.lyric,
-      {this.textAlign = TextAlign.center, Color highlight = Colors.red}) {
+  LyricPainter(TextStyle style, this.lyric, {this.textAlign = TextAlign.center, Color highlight = Colors.red}) {
     assert(lyric != null);
     lyricPainters = [];
     for (int i = 0; i < lyric.size; i++) {
-      var painter = TextPainter(
-          text: TextSpan(style: style, text: lyric[i].line),
-          textAlign: textAlign);
+      var painter = TextPainter(text: TextSpan(style: style, text: lyric[i].line), textAlign: textAlign);
       painter.textDirection = TextDirection.ltr;
 //      painter.layout();//layout first, to get the height
       lyricPainters.add(painter);
     }
-    styleHighlight = style.copyWith(color: Colors.red);
+    styleHighlight = style.copyWith(color: highlight);
   }
 
   void repaint() {
@@ -264,27 +299,50 @@ class LyricPainter extends ChangeNotifier implements CustomPainter {
         //for current highlight line, draw background text first
         drawLine(canvas, painter, dy, size);
 
-        final highlightEntry = lyric[line];
-
-        double percent = _playingPosition < 0
-            ? 1
-            : ((_playingPosition - highlightEntry.position) /
-                highlightEntry.duration.toDouble());
-        final highlightPainter = TextPainter(
-            text: TextSpan(text: painter.text.text, style: styleHighlight),
-            textAlign: textAlign);
+        final highlightPainter =
+            TextPainter(text: TextSpan(text: painter.text.text, style: styleHighlight), textAlign: textAlign);
         highlightPainter.textDirection = TextDirection.ltr;
+
+        highlightPainter.layout();
+
+        double lineWidth = highlightPainter.width;
+        double gradientWidth = highlightPainter.width * lineGradientPercent;
+        final double lineHeight = highlightPainter.height;
+
         highlightPainter.layout(maxWidth: size.width);
 
-        canvas.save();
-        double dx = 0;
-        if (textAlign == TextAlign.center) {
-          dx = (size.width - highlightPainter.width) / 2;
+        final toClip = Path();
+        double lineDy = 0;
+        while (gradientWidth > 0) {
+          double dx = 0;
+          if (lineWidth < size.width) {
+            dx = (size.width - lineWidth) / 2;
+          }
+          toClip.addRect(Rect.fromLTWH(
+            0,
+            dy + lineDy,
+            dx + gradientWidth,
+            lineHeight,
+          ));
+          lineWidth -= highlightPainter.width;
+          gradientWidth -= highlightPainter.width;
+          lineDy += lineHeight;
         }
-        canvas.clipRect(Rect.fromLTWH(
-            dx, dy, highlightPainter.width * percent, highlightPainter.height));
+
+        canvas.save();
+        canvas.clipPath(toClip);
+
         drawLine(canvas, highlightPainter, dy, size);
         canvas.restore();
+
+//        assert(() {
+//          final painter = Paint()
+//            ..color = Colors.black
+//            ..style = PaintingStyle.stroke
+//            ..strokeWidth = 1;
+//          canvas.drawPath(toClip, painter);
+//          return true;
+//        }());
       } else {
         drawLine(canvas, painter, dy, size);
       }
@@ -293,8 +351,7 @@ class LyricPainter extends ChangeNotifier implements CustomPainter {
   }
 
   ///draw a lyric line
-  void drawLine(
-      ui.Canvas canvas, TextPainter painter, double dy, ui.Size size) {
+  void drawLine(ui.Canvas canvas, TextPainter painter, double dy, ui.Size size) {
     if (dy > size.height || dy < 0 - painter.height) {
       return;
     }
@@ -347,8 +404,7 @@ class LyricPainter extends ChangeNotifier implements CustomPainter {
   get semanticsBuilder => null;
 
   @override
-  bool shouldRebuildSemantics(CustomPainter oldDelegate) =>
-      shouldRepaint(oldDelegate);
+  bool shouldRebuildSemantics(CustomPainter oldDelegate) => shouldRepaint(oldDelegate);
 }
 
 class LyricContent {
@@ -447,15 +503,12 @@ class LyricEntry {
     final int indexOfPoint = stamp.indexOf(".");
 
     final int minute = int.parse(stamp.substring(1, indexOfColon));
-    final int second =
-        int.parse(stamp.substring(indexOfColon + 1, indexOfPoint));
+    final int second = int.parse(stamp.substring(indexOfColon + 1, indexOfPoint));
     int millisecond;
     if (stamp.length - indexOfPoint == 2) {
-      millisecond =
-          int.parse(stamp.substring(indexOfPoint + 1, stamp.length)) * 10;
+      millisecond = int.parse(stamp.substring(indexOfPoint + 1, stamp.length)) * 10;
     } else {
-      millisecond =
-          int.parse(stamp.substring(indexOfPoint + 1, stamp.length - 1));
+      millisecond = int.parse(stamp.substring(indexOfPoint + 1, stamp.length - 1));
     }
     return ((((minute * 60) + second) * 1000) + millisecond);
   }
@@ -478,8 +531,7 @@ class LyricEntry {
     }
   }
 
-  LyricEntry(this.line, this.position, this.duration)
-      : this.timeStamp = getTimeStamp(position);
+  LyricEntry(this.line, this.position, this.duration) : this.timeStamp = getTimeStamp(position);
 
   final String timeStamp;
   final String line;
@@ -497,10 +549,7 @@ class LyricEntry {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is LyricEntry &&
-          runtimeType == other.runtimeType &&
-          line == other.line &&
-          timeStamp == other.timeStamp;
+      other is LyricEntry && runtimeType == other.runtimeType && line == other.line && timeStamp == other.timeStamp;
 
   @override
   int get hashCode => line.hashCode ^ timeStamp.hashCode;
