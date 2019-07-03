@@ -78,6 +78,8 @@ class LyricState extends State<Lyric> with TickerProviderStateMixin {
 
     int milliseconds = widget.position.value;
 
+    lyricPainter.playingPosition = milliseconds;
+
     int line = widget.lyric
         .findLineByTimeStamp(milliseconds, lyricPainter.currentLine);
 
@@ -201,6 +203,14 @@ class LyricPainter extends ChangeNotifier implements CustomPainter {
 
   double get offsetScroll => _offsetScroll;
 
+  int _playingPosition = -1;
+
+  ///音乐播放时间,毫秒
+  set playingPosition(int position) {
+    _playingPosition = position;
+    repaint();
+  }
+
   set offsetScroll(double value) {
     _offsetScroll = value.clamp(-height, 0.0);
     repaint();
@@ -225,7 +235,7 @@ class LyricPainter extends ChangeNotifier implements CustomPainter {
 //      painter.layout();//layout first, to get the height
       lyricPainters.add(painter);
     }
-    styleHighlight = style.copyWith(color: highlight);
+    styleHighlight = style.copyWith(color: Colors.red);
   }
 
   void repaint() {
@@ -251,13 +261,33 @@ class LyricPainter extends ChangeNotifier implements CustomPainter {
       TextPainter painter = lyricPainters[line];
 
       if (line == currentLine) {
-        painter = TextPainter(
+        //for current highlight line, draw background text first
+        drawLine(canvas, painter, dy, size);
+
+        final highlightEntry = lyric[line];
+
+        double percent = _playingPosition < 0
+            ? 1
+            : ((_playingPosition - highlightEntry.position) /
+                highlightEntry.duration.toDouble());
+        final highlightPainter = TextPainter(
             text: TextSpan(text: painter.text.text, style: styleHighlight),
             textAlign: textAlign);
-        painter.textDirection = TextDirection.ltr;
-        painter.layout(maxWidth: size.width);
+        highlightPainter.textDirection = TextDirection.ltr;
+        highlightPainter.layout(maxWidth: size.width);
+
+        canvas.save();
+        double dx = 0;
+        if (textAlign == TextAlign.center) {
+          dx = (size.width - highlightPainter.width) / 2;
+        }
+        canvas.clipRect(Rect.fromLTWH(
+            dx, dy, highlightPainter.width * percent, highlightPainter.height));
+        drawLine(canvas, highlightPainter, dy, size);
+        canvas.restore();
+      } else {
+        drawLine(canvas, painter, dy, size);
       }
-      drawLine(canvas, painter, dy, size);
       dy += painter.height;
     }
   }
@@ -325,16 +355,24 @@ class LyricContent {
   ///splitter lyric content to line
   static const LineSplitter _SPLITTER = const LineSplitter();
 
+  //默认歌词持续时间
+  static const int _default_line_duration = 5 * 1000;
+
   LyricContent.from(String text) {
     List<String> lines = _SPLITTER.convert(text);
     Map map = <int, String>{};
     lines.forEach((l) => LyricEntry.inflate(l, map));
 
     List<int> keys = map.keys.toList()..sort();
-    keys.forEach((key) {
+    for (var i = 0; i < keys.length; i++) {
+      final key = keys[i];
       _durations.add(key);
-      _lyricEntries.add(LyricEntry(map[key], getTimeStamp(key)));
-    });
+      int duration = _default_line_duration;
+      if (i + 1 < keys.length) {
+        duration = keys[i + 1] - key;
+      }
+      _lyricEntries.add(LyricEntry(map[key], key, duration));
+    }
   }
 
   List<int> _durations = [];
@@ -440,10 +478,16 @@ class LyricEntry {
     }
   }
 
-  LyricEntry(this.line, this.timeStamp);
+  LyricEntry(this.line, this.position, this.duration)
+      : this.timeStamp = getTimeStamp(position);
 
   final String timeStamp;
   final String line;
+
+  final int position;
+
+  ///the duration of this line
+  final int duration;
 
   @override
   String toString() {
