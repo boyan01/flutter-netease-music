@@ -28,7 +28,7 @@
 ## 交互效果
 | playing | playlist | lyric |
 |------|-----|----|
-|![playing](https://boyan01.github.io/quiet/play_interaction.gif)| ![playlist](https://boyan01.github.io/quiet/interation_playlist.gif) | ![lyric](https://boyan01.github.io/quiet/lyric.gif) |
+|![playing](https://raw.githubusercontent.com/boyan01/boyan01.github.io/master/quiet/play_interaction.gif)| ![playlist](https://boyan01.github.io/quiet/interation_playlist.gif) | ![lyric](https://boyan01.github.io/quiet/lyric.gif) |
 
 
 ## 图片预览
