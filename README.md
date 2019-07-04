@@ -26,9 +26,9 @@
 * Toast及应用内通知： [**overlay_support**](https://github.com/boyan01/overlay_support)
 
 ## 交互效果
-| playing | playlist |
-|------|-----|
-|![](https://boyan01.github.io/quiet/play_interaction.gif)| ![](https://boyan01.github.io/quiet/interation_playlist.gif) |
+| playing | playlist | lyric |
+|------|-----|----|
+|![playing](https://boyan01.github.io/quiet/play_interaction.gif)| ![playlist](https://boyan01.github.io/quiet/interation_playlist.gif) | ![lyric](https://boyan01.github.io/quiet/lyric.gif) |
 
 
 ## 图片预览
