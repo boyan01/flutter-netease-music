@@ -26,16 +26,16 @@
 * Toast及应用内通知： [**overlay_support**](https://github.com/boyan01/overlay_support)
 
 ## 交互效果
-| playing | playlist  | ios |
-|------|------|------|
-|<img src="./_preview/playing_Interaction.gif" width="200">| <img src="https://boyan01.github.io/quiet/interation_playlist.gif" width="200"> |   <img src="https://boyan01.github.io/quiet/ios_playlist_detail.jpg" width="200"> |
+| playing | playlist |
+|------|-----|
+|![](https://boyan01.github.io/quiet/play_interaction.gif)| ![](https://boyan01.github.io/quiet/interation_playlist.gif) |
 
 
 ## 图片预览
 
-| ![main_playlist](https://boyan01.github.io/quiet/main_playlist.png) |        ![main_cloud](./_preview/main_cloud.jpg)        | ![playlist_detail](https://boyan01.github.io/quiet/playlist_detail.png) |        ![artist_detail](./_preview/artist_detail.jpg)        |
-| :----------------------------------------------------------: | :----------------------------------------------------: | :----------------------------------------------------------: | :----------------------------------------------------------: |
-|         ![page_comment](./_preview/page_comment.jpg)         |           ![playing](./_preview/playing.jpg)           |               ![search](./_preview/search.jpg)               |        ![search_result](./_preview/search_result.jpg)        |
-|      ![music_selection](./_preview/music_selection.jpg)      | ![playlist_selector](./_preview/playlist_selector.jpg) | ![music video](https://boyan01.github.io/quiet/music_video.png) | ![每日推荐](https://boyan01.github.io/quiet/daily_playlist.png) |
-
+| ![main_playlist](https://boyan01.github.io/quiet/main_playlist.png) | ![main_cloud](https://boyan01.github.io/quiet/main_playlist_dark.png) | ![main_cloud](https://boyan01.github.io/quiet/main_cloud.jpg) | ![artist_detail](https://boyan01.github.io/quiet/artist_detail.jpg) |
+| :----------------------------------------------------------: | :----------------------------------------------------------: | :----------------------------------------------------------: | :----------------------------------------------------------: |
+| ![playlist_detail](https://boyan01.github.io/quiet/playlist_detail.png) | ![page_comment](https://boyan01.github.io/quiet/page_comment.png) |   ![playing](https://boyan01.github.io/quiet/playing.png)    |    ![search](https://boyan01.github.io/quiet/search.jpg)     |
+| ![music_selection](https://boyan01.github.io/quiet/music_selection.png) | ![playlist_selector](https://boyan01.github.io/quiet/playlist_selector.jpg) | ![music video](https://boyan01.github.io/quiet/music_video.png) | ![每日推荐](https://boyan01.github.io/quiet/daily_playlist.png) |
+| ![ios](https://boyan01.github.io/quiet/ios_playlist_detail.jpg) |   ![ios](https://boyan01.github.io/quiet/user_detail.png)    |                                                              |                                                              |
 
