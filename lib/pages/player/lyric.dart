@@ -5,6 +5,8 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:quiet/component/utils/utils.dart';
 
+const _enable_paint_debug = false;
+
 class Lyric extends StatefulWidget {
   Lyric({
     @required this.lyric,
@@ -232,6 +234,8 @@ class LyricPainter extends ChangeNotifier implements CustomPainter {
   LyricContent lyric;
   List<TextPainter> lyricPainters;
 
+  TextPainter _highlightPainter = TextPainter(textDirection: TextDirection.ltr);
+
   double _offsetScroll = 0;
 
   double get offsetScroll => _offsetScroll;
@@ -258,7 +262,7 @@ class LyricPainter extends ChangeNotifier implements CustomPainter {
 
   TextAlign textAlign;
 
-  TextStyle styleHighlight;
+  TextStyle _styleHighlight;
 
   ///param lyric must not be null
   LyricPainter(TextStyle style, this.lyric, {this.textAlign = TextAlign.center, Color highlight = Colors.red}) {
@@ -270,7 +274,7 @@ class LyricPainter extends ChangeNotifier implements CustomPainter {
 //      painter.layout();//layout first, to get the height
       lyricPainters.add(painter);
     }
-    styleHighlight = style.copyWith(color: highlight);
+    _styleHighlight = style.copyWith(color: highlight);
   }
 
   void repaint() {
@@ -280,74 +284,76 @@ class LyricPainter extends ChangeNotifier implements CustomPainter {
   double get height => _height;
   double _height = -1;
 
-  Paint debugPaint = Paint();
-
   @override
   void paint(ui.Canvas canvas, ui.Size size) {
     _layoutPainterList(size);
     canvas.clipRect(Rect.fromLTWH(0, 0, size.width, size.height));
 
-//    canvas.drawLine(Offset(0, size.height / 2),
-//        Offset(size.width, size.height / 2), debugPaint);
-
+    //当offsetScroll为0时,第一行绘制在正中央
     double dy = offsetScroll + size.height / 2 - lyricPainters[0].height / 2;
 
     for (int line = 0; line < lyricPainters.length; line++) {
       TextPainter painter = lyricPainters[line];
 
       if (line == currentLine) {
-        //for current highlight line, draw background text first
-        drawLine(canvas, painter, dy, size);
-
-        final highlightPainter =
-            TextPainter(text: TextSpan(text: painter.text.text, style: styleHighlight), textAlign: textAlign);
-        highlightPainter.textDirection = TextDirection.ltr;
-
-        highlightPainter.layout();
-
-        double lineWidth = highlightPainter.width;
-        double gradientWidth = highlightPainter.width * lineGradientPercent;
-        final double lineHeight = highlightPainter.height;
-
-        highlightPainter.layout(maxWidth: size.width);
-
-        final toClip = Path();
-        double lineDy = 0;
-        while (gradientWidth > 0) {
-          double dx = 0;
-          if (lineWidth < size.width) {
-            dx = (size.width - lineWidth) / 2;
-          }
-          toClip.addRect(Rect.fromLTWH(
-            0,
-            dy + lineDy,
-            dx + gradientWidth,
-            lineHeight,
-          ));
-          lineWidth -= highlightPainter.width;
-          gradientWidth -= highlightPainter.width;
-          lineDy += lineHeight;
-        }
-
-        canvas.save();
-        canvas.clipPath(toClip);
-
-        drawLine(canvas, highlightPainter, dy, size);
-        canvas.restore();
-
-//        assert(() {
-//          final painter = Paint()
-//            ..color = Colors.black
-//            ..style = PaintingStyle.stroke
-//            ..strokeWidth = 1;
-//          canvas.drawPath(toClip, painter);
-//          return true;
-//        }());
+        _paintCurrentLine(canvas, painter, dy, size);
       } else {
         drawLine(canvas, painter, dy, size);
       }
       dy += painter.height;
     }
+  }
+
+  //绘制当前播放中的歌词
+  void _paintCurrentLine(ui.Canvas canvas, TextPainter painter, double dy, ui.Size size) {
+    if (dy > size.height || dy < 0 - painter.height) {
+      return;
+    }
+
+    //for current highlight line, draw background text first
+    drawLine(canvas, painter, dy, size);
+
+    _highlightPainter
+      ..text = TextSpan(text: (painter.text as TextSpan).text, style: _styleHighlight)
+      ..textAlign = textAlign;
+
+    _highlightPainter.layout(); //layout with unbound width
+
+    double lineWidth = _highlightPainter.width;
+    double gradientWidth = _highlightPainter.width * lineGradientPercent;
+    final double lineHeight = _highlightPainter.height;
+
+    _highlightPainter.layout(maxWidth: size.width);
+
+    final highlightRegion = Path();
+    double lineDy = 0;
+    while (gradientWidth > 0) {
+      double dx = 0;
+      if (lineWidth < size.width) {
+        dx = (size.width - lineWidth) / 2;
+      }
+      highlightRegion.addRect(Rect.fromLTWH(0, dy + lineDy, dx + gradientWidth, lineHeight));
+      lineWidth -= _highlightPainter.width;
+      gradientWidth -= _highlightPainter.width;
+      lineDy += lineHeight;
+    }
+
+    canvas.save();
+    canvas.clipPath(highlightRegion);
+
+    drawLine(canvas, _highlightPainter, dy, size);
+    canvas.restore();
+
+    assert(() {
+      if (_enable_paint_debug) {
+        final painter = Paint()
+          ..color = Colors.black
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 1;
+        canvas.drawPath(highlightRegion, painter);
+      }
+      return true;
+    }());
   }
 
   ///draw a lyric line
@@ -356,15 +362,17 @@ class LyricPainter extends ChangeNotifier implements CustomPainter {
       return;
     }
     canvas.save();
-
-    double dx = 0;
-    if (textAlign == TextAlign.center) {
-      dx = (size.width - painter.width) / 2;
-    }
-    canvas.translate(dx, dy);
+    canvas.translate(_calculateAlignOffset(painter, size), dy);
 
     painter.paint(canvas, Offset.zero);
     canvas.restore();
+  }
+
+  double _calculateAlignOffset(TextPainter painter, ui.Size size) {
+    if (textAlign == TextAlign.center) {
+      return (size.width - painter.width) / 2;
+    }
+    return 0;
   }
 
   @override
