@@ -13,9 +13,8 @@
 
 ## How to start
 
-  1. install [Flutter](https://flutter.io/docs/get-started/install)
-  2. check flutter branch to **dev**, ([how to switch flutter channel](https://flutter.dev/docs/development/tools/sdk/upgrading#switching-flutter-channels))
-  3. run in Command Line
+  1. 安装 [Flutter](https://flutter.io/docs/get-started/install) （**注意安装最新的stable版本**）
+  2. 在命令行输入下面命令以 profile 模式运行（更快的运行效率）
  ```bash
  flutter run --profile
  ```
