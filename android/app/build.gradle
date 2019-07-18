@@ -39,7 +39,7 @@ android {
     defaultConfig {
         applicationId "tech.soit.quiet"
         minSdkVersion 16
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         targetSdkVersion 28
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
@@ -62,21 +62,22 @@ flutter {
 }
 
 dependencies {
-    def lifecycle_version = "1.1.1"
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation "com.android.support:support-compat:28.0.0"
-    implementation "com.android.support:support-media-compat:28.0.0"
+    implementation 'androidx.core:core:1.0.2'
+    implementation 'androidx.media:media:1.0.1'
+    implementation 'androidx.core:core-ktx:1.0.2'
+    implementation "com.google.android.exoplayer:extension-mediasession:2.9.1"
 
     //exo player
-    implementation 'com.google.android.exoplayer:exoplayer-core:2.9.1'
+    implementation 'com.google.android.exoplayer:exoplayer-core:2.10.1'
 
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutine_version"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutine_version"
 
-    implementation "android.arch.lifecycle:livedata:$lifecycle_version"
+    implementation 'androidx.lifecycle:lifecycle-livedata:2.0.0'
 
     testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'com.android.support.test:runner:1.0.2'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 }

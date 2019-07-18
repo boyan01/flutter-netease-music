@@ -18,11 +18,11 @@ dependencies:
   cupertino_icons: ^0.1.2
   json_annotation: ^2.0.0
   dio: ^2.1.10
-  path_provider: ^0.4.1
-  shared_preferences: ^0.4.3
-  video_player: ^0.8.0
-  url_launcher: ^4.1.0+1
-  intl: ^0.15.7
+  path_provider: ^1.1.2
+  shared_preferences: ^0.5.3+4
+  video_player: ^0.10.1+4
+  url_launcher: ^5.1.0
+  intl: ^0.15.8
   sembast: ^1.13.2
   scoped_model: ^1.0.1
   loader:
