@@ -72,9 +72,7 @@ class _MvDetailPageState extends State<_MvDetailPage> {
   @override
   void initState() {
     super.initState();
-    _model = VideoPlayerModel(
-        MusicVideoDetail.fromJsonMap(widget.result['data']),
-        subscribed: widget.result['subed']);
+    _model = VideoPlayerModel(MusicVideoDetail.fromJsonMap(widget.result['data']), subscribed: widget.result['subed']);
     _model.videoPlayerController.play();
     if (quiet.value.isPlaying) {
       quiet.pause();
@@ -115,8 +113,7 @@ class _MvDetailPageState extends State<_MvDetailPage> {
                   },
                   child: ListView.builder(
                       itemCount: data.length,
-                      itemBuilder:
-                          model.createBuilder(data, builder: (context, index) {
+                      itemBuilder: model.createBuilder(data, builder: (context, index) {
                         final item = data[index];
                         switch (item) {
                           case MusicVideoFloor.title:
@@ -157,9 +154,7 @@ class _SimpleMusicVideo extends StatelessWidget {
           child: Stack(children: <Widget>[
             Center(
                 child: AspectRatio(
-                    aspectRatio: model.playerValue.initialized
-                        ? model.playerValue.aspectRatio
-                        : 16 / 10,
+                    aspectRatio: model.playerValue.initialized ? model.playerValue.aspectRatio : 16 / 10,
                     child: VideoPlayer(model.videoPlayerController))),
             _SimpleVideoController(),
           ]),
@@ -181,19 +176,12 @@ class _SimpleVideoController extends StatelessWidget {
         showBottomIndicator: true,
         top: Container(
           decoration: const BoxDecoration(
-              gradient: const LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                Colors.black38,
-                Colors.black26,
-                Colors.transparent,
-              ])),
-          child: AppBar(
-              elevation: 0,
-              titleSpacing: 0,
-              backgroundColor: Colors.transparent,
-              title: Text(data.name)),
+              gradient: const LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [
+            Colors.black38,
+            Colors.black26,
+            Colors.transparent,
+          ])),
+          child: AppBar(elevation: 0, titleSpacing: 0, backgroundColor: Colors.transparent, title: Text(data.name)),
         ),
         bottom: _buildBottom(context),
         center: MvPlayPauseButton());
@@ -206,26 +194,19 @@ class _SimpleVideoController extends StatelessWidget {
     final duration = value.duration?.inMilliseconds ?? 0;
     return Container(
       decoration: const BoxDecoration(
-          gradient: const LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [
-            Colors.transparent,
-            Colors.black26,
-            Colors.black38,
-          ])),
+          gradient: const LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [
+        Colors.transparent,
+        Colors.black26,
+        Colors.black38,
+      ])),
       child: Row(
         children: <Widget>[
           SizedBox(width: 8),
           Text.rich(
             TextSpan(children: <TextSpan>[
-              TextSpan(
-                  text: getTimeStamp(position),
-                  style: TextStyle(color: Colors.white)),
+              TextSpan(text: getTimeStamp(position), style: TextStyle(color: Colors.white)),
               TextSpan(text: ' / ', style: TextStyle(color: Colors.white70)),
-              TextSpan(
-                  text: getTimeStamp(duration),
-                  style: TextStyle(color: Colors.white70)),
+              TextSpan(text: getTimeStamp(duration), style: TextStyle(color: Colors.white70)),
             ]),
             style: TextStyle(fontSize: 13),
           ),
@@ -240,14 +221,11 @@ class _SimpleVideoController extends StatelessWidget {
                   })),
           InkWell(
               splashColor: Colors.white,
-              child: Padding(
-                  padding: const EdgeInsets.all(8),
-                  child: Icon(Icons.fullscreen, color: Colors.white)),
+              child: Padding(padding: const EdgeInsets.all(8), child: Icon(Icons.fullscreen, color: Colors.white)),
               onTap: () async {
                 final route = MaterialPageRoute(
                     builder: (_) => ScopedModel<VideoPlayerModel>(
-                        model: ScopedModel.of<VideoPlayerModel>(context),
-                        child: FullScreenMvPlayer()));
+                        model: ScopedModel.of<VideoPlayerModel>(context), child: FullScreenMvPlayer()));
                 SystemChrome.setPreferredOrientations(const [
                   DeviceOrientation.landscapeLeft,
                   DeviceOrientation.landscapeRight,
@@ -275,8 +253,7 @@ class MvPlayPauseButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = VideoPlayerModel.of(context).videoPlayerController;
 
-    final reachEnd = controller.value.initialized &&
-        controller.value.position >= controller.value.duration;
+    final reachEnd = controller.value.initialized && controller.value.position >= controller.value.duration;
     final isPlaying = controller.value.isPlaying && !reachEnd;
 
     return Center(
@@ -286,8 +263,7 @@ class MvPlayPauseButton extends StatelessWidget {
             color: Colors.black26,
             child: Padding(
               padding: const EdgeInsets.all(10),
-              child: Icon(isPlaying ? Icons.pause : Icons.play_arrow,
-                  color: Colors.white, size: 56),
+              child: Icon(isPlaying ? Icons.pause : Icons.play_arrow, color: Colors.white, size: 56),
             ),
           ),
         ),
@@ -349,18 +325,14 @@ class _InformationSectionState extends State<_InformationSection> {
                   children: <Widget>[
                     Text(
                       data.name,
-                      style: Theme.of(context)
-                          .textTheme
-                          .title
-                          .copyWith(fontWeight: FontWeight.bold),
+                      style: Theme.of(context).textTheme.title.copyWith(fontWeight: FontWeight.bold),
                     ),
                     DefaultTextStyle(
                       style: TextStyle(color: Colors.grey),
                       child: Row(
                         children: <Widget>[
                           Text('发布: ${data.publishTime}'),
-                          VerticalDivider(
-                              color: Theme.of(context).dividerColor),
+                          VerticalDivider(color: Theme.of(context).dividerColor),
                           Text('播放: ${getFormattedNumber(data.playCount)}')
                         ],
                       ),
@@ -371,8 +343,7 @@ class _InformationSectionState extends State<_InformationSection> {
               Visibility(
                 visible: data.desc != null,
                 child: IconButton(
-                  icon: Icon(
-                      _expanded ? Icons.arrow_drop_up : Icons.arrow_drop_down),
+                  icon: Icon(_expanded ? Icons.arrow_drop_up : Icons.arrow_drop_down),
                   onPressed: () {
                     setState(() {
                       _expanded = !_expanded;
@@ -510,7 +481,7 @@ class _ArtistSection extends StatelessWidget {
               padding: EdgeInsets.all(0),
               child: RaisedButtonWithIcon(
                 onPressed: () {
-                  toast(context, '收藏');
+                  toast('收藏');
                 },
                 materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                 textColor: Theme.of(context).primaryTextTheme.body1.color,
@@ -518,8 +489,7 @@ class _ArtistSection extends StatelessWidget {
                 label: Text('收藏', style: TextStyle(fontSize: 12)),
                 color: Theme.of(context).primaryColor,
                 labelSpacing: 4,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(20))),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(20))),
               ),
             )
           ],

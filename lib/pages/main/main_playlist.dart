@@ -17,8 +17,7 @@ class MainPlaylistPage extends StatefulWidget {
   createState() => _MainPlaylistState();
 }
 
-class _MainPlaylistState extends State<MainPlaylistPage>
-    with AutomaticKeepAliveClientMixin {
+class _MainPlaylistState extends State<MainPlaylistPage> with AutomaticKeepAliveClientMixin {
   GlobalKey<RefreshIndicatorState> _indicatorKey = GlobalKey();
 
   GlobalKey<LoaderState> _loaderKey = GlobalKey();
@@ -36,9 +35,9 @@ class _MainPlaylistState extends State<MainPlaylistPage>
       widget = RefreshIndicator(
         key: _indicatorKey,
         onRefresh: () => Future.wait([
-              _loaderKey.currentState.refresh(),
-              Counter.refresh(context),
-            ]),
+          _loaderKey.currentState.refresh(),
+          Counter.refresh(context),
+        ]),
         child: Loader(
             key: _loaderKey,
             initialData: neteaseLocalData.getUserPlaylist(userId),
@@ -56,27 +55,25 @@ class _MainPlaylistState extends State<MainPlaylistPage>
               ]);
             },
             builder: (context, result) {
-              final created =
-                  result.where((p) => p.creator["userId"] == userId).toList();
-              final subscribed =
-                  result.where((p) => p.creator["userId"] != userId).toList();
+              final created = result.where((p) => p.creator["userId"] == userId).toList();
+              final subscribed = result.where((p) => p.creator["userId"] != userId).toList();
               return ListView(children: [
                 _PinnedHeader(),
                 _ExpansionPlaylistGroup.fromPlaylist(
                   "创建的歌单",
                   created,
                   onAddClick: () {
-                    toast(context, 'add: todo');
+                    toast('add: todo');
                   },
                   onMoreClick: () {
-                    toast(context, 'more: todo');
+                    toast('more: todo');
                   },
                 ),
                 _ExpansionPlaylistGroup.fromPlaylist(
                   "收藏的歌单",
                   subscribed,
                   onMoreClick: () {
-                    toast(context, 'more: todo');
+                    toast('more: todo');
                   },
                 )
               ]);
@@ -116,9 +113,7 @@ class _PinnedHeader extends StatelessWidget {
               onTap: () {
                 if (UserAccount.of(context, rebuildOnChange: false).isLogin) {
                   Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    return RecordPage(
-                        uid: UserAccount.of(context, rebuildOnChange: false)
-                            .userId);
+                    return RecordPage(uid: UserAccount.of(context, rebuildOnChange: false).userId);
                   }));
                 } else {
                   //todo show login dialog
@@ -136,8 +131,7 @@ class _PinnedHeader extends StatelessWidget {
                 TextSpan(text: '我的电台 '),
                 TextSpan(
                     style: const TextStyle(fontSize: 13, color: Colors.grey),
-                    text:
-                        '(${Counter.of(context).djRadioCount + Counter.of(context).createDjRadioCount})'),
+                    text: '(${Counter.of(context).djRadioCount + Counter.of(context).createDjRadioCount})'),
               ])),
               onTap: () {
                 Navigator.pushNamed(context, ROUTE_MY_DJ);
@@ -152,8 +146,7 @@ class _PinnedHeader extends StatelessWidget {
             TextSpan(text: '我的收藏 '),
             TextSpan(
                 style: const TextStyle(fontSize: 13, color: Colors.grey),
-                text:
-                    '(${Counter.of(context).mvCount + Counter.of(context).artistCount})'),
+                text: '(${Counter.of(context).mvCount + Counter.of(context).artistCount})'),
           ])),
           onTap: () {
             Navigator.pushNamed(context, ROUTE_MY_COLLECTION);
@@ -166,9 +159,7 @@ class _PinnedHeader extends StatelessWidget {
 }
 
 class _ExpansionPlaylistGroup extends StatefulWidget {
-  _ExpansionPlaylistGroup(this.title, this.children,
-      {this.onMoreClick, this.onAddClick})
-      : assert(children != null);
+  _ExpansionPlaylistGroup(this.title, this.children, {this.onMoreClick, this.onAddClick}) : assert(children != null);
 
   _ExpansionPlaylistGroup.fromPlaylist(String title, List<PlaylistDetail> list,
       {@required VoidCallback onMoreClick, VoidCallback onAddClick})
@@ -189,12 +180,9 @@ class _ExpansionPlaylistGroup extends StatefulWidget {
   _ExpansionPlaylistGroupState createState() => _ExpansionPlaylistGroupState();
 }
 
-class _ExpansionPlaylistGroupState extends State<_ExpansionPlaylistGroup>
-    with SingleTickerProviderStateMixin {
-  static final Animatable<double> _easeInTween =
-      CurveTween(curve: Curves.easeIn);
-  static final Animatable<double> _quarterTween =
-      Tween<double>(begin: 0.0, end: 0.25);
+class _ExpansionPlaylistGroupState extends State<_ExpansionPlaylistGroup> with SingleTickerProviderStateMixin {
+  static final Animatable<double> _easeInTween = CurveTween(curve: Curves.easeIn);
+  static final Animatable<double> _quarterTween = Tween<double>(begin: 0.0, end: 0.25);
 
   AnimationController _controller;
 
@@ -206,8 +194,7 @@ class _ExpansionPlaylistGroupState extends State<_ExpansionPlaylistGroup>
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 300));
+    _controller = AnimationController(vsync: this, duration: const Duration(milliseconds: 300));
     _iconTurns = _controller.drive(_quarterTween.chain(_easeInTween));
     _heightFactor = _controller.drive(_easeInTween);
 
@@ -270,10 +257,7 @@ class _ExpansionPlaylistGroupState extends State<_ExpansionPlaylistGroup>
                 )),
             SizedBox(width: 4),
             Text('${widget.title}',
-                style: Theme.of(context)
-                    .textTheme
-                    .title
-                    .copyWith(fontWeight: FontWeight.bold, fontSize: 16)),
+                style: Theme.of(context).textTheme.title.copyWith(fontWeight: FontWeight.bold, fontSize: 16)),
             SizedBox(width: 4),
             Text(
               '(${widget.children.length})',
@@ -283,14 +267,8 @@ class _ExpansionPlaylistGroupState extends State<_ExpansionPlaylistGroup>
             widget.onAddClick == null
                 ? Container()
                 : IconButton2(
-                    iconSize: 24,
-                    padding: EdgeInsets.all(4),
-                    icon: Icon(Icons.add),
-                    onPressed: widget.onAddClick),
-            IconButton2(
-                padding: EdgeInsets.all(4),
-                icon: Icon(Icons.more_vert),
-                onPressed: widget.onMoreClick),
+                    iconSize: 24, padding: EdgeInsets.all(4), icon: Icon(Icons.add), onPressed: widget.onAddClick),
+            IconButton2(padding: EdgeInsets.all(4), icon: Icon(Icons.more_vert), onPressed: widget.onMoreClick),
             SizedBox(width: 8),
           ],
         ),

@@ -28,10 +28,7 @@ class ArtistHeader extends StatelessWidget {
         ],
       ),
       actions: <Widget>[
-        IconButton(
-            icon: Icon(Icons.share,
-                color: Theme.of(context).primaryIconTheme.color),
-            onPressed: null)
+        IconButton(icon: Icon(Icons.share, color: Theme.of(context).primaryIconTheme.color), onPressed: null)
       ],
     );
   }
@@ -48,23 +45,16 @@ class _ArtistFlexHeader extends StatelessWidget {
       style: Theme.of(context).primaryTextTheme.body1,
       maxLines: 1,
       child: FlexibleDetailBar(
-        background: FlexShadowBackground(
-            child: Image(
-                image: CachedImage(artist.picUrl),
-                height: 300,
-                fit: BoxFit.cover)),
+        background:
+            FlexShadowBackground(child: Image(image: CachedImage(artist.picUrl), height: 300, fit: BoxFit.cover)),
         content: Padding(
           padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
-          child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Spacer(),
-                Text(
-                    '${artist.name}' +
-                        (artist.alias.isEmpty ? '' : '(${artist.alias[0]})'),
-                    style: TextStyle(fontSize: 20)),
-                Text('歌曲数量:${artist.musicSize}'),
-              ]),
+          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
+            Spacer(),
+            Text('${artist.name}' + (artist.alias.isEmpty ? '' : '(${artist.alias[0]})'),
+                style: TextStyle(fontSize: 20)),
+            Text('歌曲数量:${artist.musicSize}'),
+          ]),
         ),
         builder: (context, t) {
           return AppBar(
@@ -77,7 +67,7 @@ class _ArtistFlexHeader extends StatelessWidget {
                   icon: Icon(Icons.share),
                   tooltip: "分享",
                   onPressed: () {
-                    toast(context, '分享');
+                    toast('分享');
                   })
             ],
           );

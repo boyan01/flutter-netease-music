@@ -26,12 +26,8 @@ class PlayingListDialogState extends State<PlayingListDialog> {
 
   @override
   Widget build(BuildContext context) {
-    List<Music> playingList =
-        PlayerState.of(context, aspect: PlayerStateAspect.playlist)
-            .value
-            .playingList;
-    Music music =
-        PlayerState.of(context, aspect: PlayerStateAspect.music).value.current;
+    List<Music> playingList = PlayerState.of(context, aspect: PlayerStateAspect.playlist).value.playingList;
+    Music music = PlayerState.of(context, aspect: PlayerStateAspect.music).value.current;
 
     return Container(
       height: MediaQuery.of(context).size.height / 2,
@@ -99,17 +95,15 @@ class _Header extends StatelessWidget {
                   if (ids.isEmpty) {
                     return;
                   }
-                  final succeed =
-                      await PlaylistSelectorDialog.addSongs(context, ids);
+                  final succeed = await PlaylistSelectorDialog.addSongs(context, ids);
                   if (succeed == null) {
                     return;
                   }
                   if (succeed) {
-                    showSimpleNotification(context, Text("添加到收藏成功"));
+                    showSimpleNotification(Text("添加到收藏成功"));
                   } else {
-                    showSimpleNotification(context, Text("添加到收藏失败"),
-                        leading: Icon(Icons.error),
-                        background: Theme.of(context).errorColor);
+                    showSimpleNotification(Text("添加到收藏失败"),
+                        leading: Icon(Icons.error), background: Theme.of(context).errorColor);
                   }
                 },
                 icon: Icon(Icons.add_box),
@@ -165,10 +159,8 @@ class _MusicTile extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.only(left: 8),
         height: _HEIGHT_MUSIC_TILE,
-        decoration: BoxDecoration(
-            border: Border(
-                bottom: BorderSide(
-                    color: Theme.of(context).dividerColor, width: 0.3))),
+        decoration:
+            BoxDecoration(border: Border(bottom: BorderSide(color: Theme.of(context).dividerColor, width: 0.3))),
         child: Row(
           children: <Widget>[
             leading,

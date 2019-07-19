@@ -16,16 +16,14 @@ class MusicList extends StatelessWidget {
     return list;
   }
 
-  static final Widget Function(BuildContext context, Music music)
-      defaultTrailingBuilder = (context, music) {
+  static final Widget Function(BuildContext context, Music music) defaultTrailingBuilder = (context, music) {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[IconMV(music), _IconMore(music)],
     );
   };
 
-  static final Widget Function(BuildContext context, Music music)
-      indexedLeadingBuilder = (context, music) {
+  static final Widget Function(BuildContext context, Music music) indexedLeadingBuilder = (context, music) {
     int index = MusicList.of(context).musics.indexOf(music) + 1;
     return _buildPlayingLeading(context, music) ??
         Container(
@@ -41,8 +39,7 @@ class MusicList extends StatelessWidget {
         );
   };
 
-  static final Widget Function(BuildContext context, Music music)
-      coverLeadingBuilder = (context, music) {
+  static final Widget Function(BuildContext context, Music music) coverLeadingBuilder = (context, music) {
     return _buildPlayingLeading(context, music) ??
         Container(
           margin: const EdgeInsets.only(left: 8, right: 8),
@@ -75,12 +72,9 @@ class MusicList extends StatelessWidget {
     return null;
   }
 
-  static final void Function(BuildContext context, Music muisc) defaultOnTap =
-      (context, music) {
+  static final void Function(BuildContext context, Music muisc) defaultOnTap = (context, music) {
     final list = MusicList.of(context);
-    if (quiet.value.token == list.token &&
-        quiet.value.isPlaying &&
-        quiet.value.current == music) {
+    if (quiet.value.token == list.token && quiet.value.isPlaying && quiet.value.current == music) {
       //open playing page
       Navigator.pushNamed(context, ROUTE_PAYING);
     } else {
@@ -272,8 +266,7 @@ class IconMV extends StatelessWidget {
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(
-                builder: (context) => MusicVideoPlayerPage(music.mvId)),
+            MaterialPageRoute(builder: (context) => MusicVideoPlayerPage(music.mvId)),
           );
         });
   }
@@ -316,8 +309,7 @@ class _IconMore extends StatelessWidget {
     ];
 
     items.add(PopupMenuItem(
-        child: Text("歌手: ${music.artist.map((a) => a.name).join('/')}",
-            maxLines: 1),
+        child: Text("歌手: ${music.artist.map((a) => a.name).join('/')}", maxLines: 1),
         //如果所有artist的id为0，那么disable这个item
         enabled: music.artist.fold(0, (c, ar) => c + ar.id) != 0,
         value: _MusicAction.artists));
@@ -345,8 +337,7 @@ class _IconMore extends StatelessWidget {
       case _MusicAction.comment:
         Navigator.push(context, MaterialPageRoute(builder: (context) {
           return CommentPage(
-            threadId: CommentThreadId(music.id, CommentType.song,
-                payload: CommentThreadPayload.music(music)),
+            threadId: CommentThreadId(music.id, CommentType.song, payload: CommentThreadPayload.music(music)),
           );
         }));
         break;
@@ -360,19 +351,17 @@ class _IconMore extends StatelessWidget {
               return PlaylistSelectorDialog();
             });
         if (id != null) {
-          bool succeed = await neteaseRepository
-              .playlistTracksEdit(PlaylistOperation.add, id, [music.id]);
+          bool succeed = await neteaseRepository.playlistTracksEdit(PlaylistOperation.add, id, [music.id]);
           var scaffold = Scaffold.of(context);
           if (scaffold == null) {
             //not notify when scaffold is empty
             return;
           }
           if (succeed) {
-            showSimpleNotification(context, Text("已添加到收藏"));
+            showSimpleNotification(Text("已添加到收藏"));
           } else {
-            showSimpleNotification(context, Text("收藏歌曲失败!"),
-                leading: Icon(Icons.error),
-                background: Theme.of(context).errorColor);
+            showSimpleNotification(Text("收藏歌曲失败!"),
+                leading: Icon(Icons.error), background: Theme.of(context).errorColor);
           }
         }
         break;

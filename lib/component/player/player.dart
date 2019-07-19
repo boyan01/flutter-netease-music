@@ -40,10 +40,7 @@ class MusicPlayer implements ValueNotifier<PlayerControllerState> {
       try {
         current = Music.fromMap(json.decode(preference.get(_PREF_KEY_PLAYING)));
         token = preference.get(_PREF_KEY_TOKEN);
-        playingList = (json.decode(preference.get(_PREF_KEY_PLAYLIST)) as List)
-            .cast<Map>()
-            .map(Music.fromMap)
-            .toList();
+        playingList = (json.decode(preference.get(_PREF_KEY_PLAYLIST)) as List).cast<Map>().map(Music.fromMap).toList();
         playMode = PlayMode.values[preference.getInt(_PREF_KEY_PLAY_MODE) ?? 0];
       } catch (e) {
         debugPrint(e.toString());
@@ -57,13 +54,11 @@ class MusicPlayer implements ValueNotifier<PlayerControllerState> {
       //save player info to SharedPreference
       addListener(() {
         if (current != value.current) {
-          preference.setString(_PREF_KEY_PLAYING,
-              json.encode(value.current, toEncodable: (e) => e.toMap()));
+          preference.setString(_PREF_KEY_PLAYING, json.encode(value.current, toEncodable: (e) => e.toMap()));
           current = value.current;
         }
         if (playingList != value.playingList) {
-          preference.setString(_PREF_KEY_PLAYLIST,
-              json.encode(value.playingList, toEncodable: (e) => e.toMap()));
+          preference.setString(_PREF_KEY_PLAYLIST, json.encode(value.playingList, toEncodable: (e) => e.toMap()));
           playingList = value.playingList;
         }
         if (playMode != value.playMode) {
@@ -75,8 +70,7 @@ class MusicPlayer implements ValueNotifier<PlayerControllerState> {
           token = value.token;
         }
       });
-      _controller.init(
-          playingList, current, token, playMode ?? PlayMode.sequence);
+      _controller.init(playingList, current, token, playMode ?? PlayMode.sequence);
     }();
   }
 
@@ -138,12 +132,10 @@ class MusicPlayer implements ValueNotifier<PlayerControllerState> {
   Future<void> _performPlay(Music music) async {
     assert(music != null);
 
-    if (value.current == music &&
-        _controller.value.playbackState != PlaybackState.none) {
+    if (value.current == music && _controller.value.playbackState != PlaybackState.none) {
       return await _controller.setPlayWhenReady(true);
     }
-    assert(
-        music.url != null && music.url.isNotEmpty, "music url can not be null");
+    assert(music.url != null && music.url.isNotEmpty, "music url can not be null");
     return await _controller.playWith(music);
   }
 
@@ -233,10 +225,8 @@ class _QuietState extends State<Quiet> {
     setState(() {
       value = quiet.value;
       if (value.hasError) {
-        showSimpleNotification(
-            context, Text("播放歌曲${value.current?.title ?? ""}失败!"),
-            leading: Icon(Icons.error),
-            background: Theme.of(context).errorColor);
+        showSimpleNotification(Text("播放歌曲${value.current?.title ?? ""}失败!"),
+            leading: Icon(Icons.error), background: Theme.of(context).errorColor);
       }
     });
   }
@@ -269,8 +259,7 @@ class _QuietState extends State<Quiet> {
 }
 
 class PlayerState extends InheritedModel<PlayerStateAspect> {
-  PlayerState({@required Widget child, @required this.value})
-      : super(child: child);
+  PlayerState({@required Widget child, @required this.value}) : super(child: child);
 
   ///get current playing music
   final PlayerControllerState value;
@@ -285,28 +274,22 @@ class PlayerState extends InheritedModel<PlayerStateAspect> {
   }
 
   @override
-  bool updateShouldNotifyDependent(
-      PlayerState oldWidget, Set<PlayerStateAspect> dependencies) {
-    if (dependencies.contains(PlayerStateAspect.position) &&
-        (value.position != oldWidget.value.position)) {
+  bool updateShouldNotifyDependent(PlayerState oldWidget, Set<PlayerStateAspect> dependencies) {
+    if (dependencies.contains(PlayerStateAspect.position) && (value.position != oldWidget.value.position)) {
       return true;
     }
     if (dependencies.contains(PlayerStateAspect.playbackState) &&
         ((value.playbackState != oldWidget.value.playbackState) ||
-            (value.playWhenReady != oldWidget.value.playWhenReady ||
-                value.hasError != oldWidget.value.hasError))) {
+            (value.playWhenReady != oldWidget.value.playWhenReady || value.hasError != oldWidget.value.hasError))) {
       return true;
     }
-    if (dependencies.contains(PlayerStateAspect.playlist) &&
-        (value.playingList != oldWidget.value.playingList)) {
+    if (dependencies.contains(PlayerStateAspect.playlist) && (value.playingList != oldWidget.value.playingList)) {
       return true;
     }
-    if (dependencies.contains(PlayerStateAspect.music) &&
-        (value.current != oldWidget.value.current)) {
+    if (dependencies.contains(PlayerStateAspect.music) && (value.current != oldWidget.value.current)) {
       return true;
     }
-    if (dependencies.contains(PlayerStateAspect.playMode) &&
-        (value.playMode) != oldWidget.value.playMode) {
+    if (dependencies.contains(PlayerStateAspect.playMode) && (value.playMode) != oldWidget.value.playMode) {
       return true;
     }
     return false;

@@ -12,8 +12,7 @@ class RecordPage extends StatelessWidget {
   ///could be null
   final String username;
 
-  const RecordPage({Key key, @required this.uid, this.username})
-      : super(key: key);
+  const RecordPage({Key key, @required this.uid, this.username}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -50,8 +49,7 @@ class _RecordSection extends StatefulWidget {
   _RecordSectionState createState() => _RecordSectionState();
 }
 
-class _RecordSectionState extends State<_RecordSection>
-    with AutomaticKeepAliveClientMixin {
+class _RecordSectionState extends State<_RecordSection> with AutomaticKeepAliveClientMixin {
   static const _keys = ['allData', 'weekData'];
 
   @override
@@ -65,9 +63,7 @@ class _RecordSectionState extends State<_RecordSection>
       builder: (context, result) {
         debugPrint('Record(${widget.type}) result : $result');
         List data = result[_keys[widget.type]];
-        return _RecordMusicList(
-            type: widget.type,
-            recordList: data.cast<Map>().map(_RecordMusic.fromJson).toList());
+        return _RecordMusicList(type: widget.type, recordList: data.cast<Map>().map(_RecordMusic.fromJson).toList());
       },
     );
   }
@@ -81,8 +77,7 @@ class _RecordMusic {
   Music music;
 
   static _RecordMusic fromJson(Map map) {
-    return _RecordMusic(
-        map['score'], map['playCount'], mapJsonToMusic(map['song']['song']));
+    return _RecordMusic(map['score'], map['playCount'], mapJsonToMusic(map['song']['song']));
   }
 }
 
@@ -112,7 +107,7 @@ class _RecordMusicList extends StatelessWidget {
       token: 'play_record_$type',
       leadingBuilder: MusicList.indexedLeadingBuilder,
       onMusicTap: (context, music) {
-        toast(context, "can not play music from record page");
+        toast("can not play music from record page");
       },
       trailingBuilder: (context, music) {
         return Container(

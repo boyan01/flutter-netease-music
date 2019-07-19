@@ -17,9 +17,10 @@ class PlaylistEditPage extends StatefulWidget {
 class _PlaylistEditPageState extends State<PlaylistEditPage> {
   @override
   Widget build(BuildContext context) {
-    final style = Theme.of(context).textTheme.body1.copyWith(
-        fontSize: 15,
-        shadows: [Shadow(offset: Offset(0.3, 0.3), color: Colors.black87)]);
+    final style = Theme.of(context)
+        .textTheme
+        .body1
+        .copyWith(fontSize: 15, shadows: [Shadow(offset: Offset(0.3, 0.3), color: Colors.black87)]);
 
     return Scaffold(
       appBar: AppBar(
@@ -32,8 +33,7 @@ class _PlaylistEditPageState extends State<PlaylistEditPage> {
             SizedBox(height: 8),
             InkWell(
               onTap: () {
-                showSimpleNotification(context, Text("Not implemented"),
-                    background: Theme.of(context).errorColor);
+                showSimpleNotification(Text("Not implemented"), background: Theme.of(context).errorColor);
               },
               child: Container(
                 height: 72,
@@ -41,10 +41,7 @@ class _PlaylistEditPageState extends State<PlaylistEditPage> {
                 child: Row(
                   children: <Widget>[
                     Expanded(child: Text("更换封面", style: style)),
-                    Image(
-                        image: CachedImage(widget.playlist.coverUrl),
-                        height: 56,
-                        width: 56)
+                    Image(image: CachedImage(widget.playlist.coverUrl), height: 56, width: 56)
                   ],
                 ),
               ),
@@ -52,8 +49,7 @@ class _PlaylistEditPageState extends State<PlaylistEditPage> {
             Divider(height: 0, indent: 8),
             InkWell(
               onTap: () {
-                Navigator.of(context)
-                    .push(MaterialPageRoute(builder: (context) {
+                Navigator.of(context).push(MaterialPageRoute(builder: (context) {
                   return _PlaylistNameEditPage(widget.playlist);
                 }));
               },
@@ -61,18 +57,14 @@ class _PlaylistEditPageState extends State<PlaylistEditPage> {
                 height: 56,
                 padding: EdgeInsets.symmetric(horizontal: 8),
                 child: Row(
-                  children: <Widget>[
-                    Expanded(child: Text("名称", style: style)),
-                    Text(widget.playlist.name)
-                  ],
+                  children: <Widget>[Expanded(child: Text("名称", style: style)), Text(widget.playlist.name)],
                 ),
               ),
             ),
             Divider(height: 0, indent: 8),
             InkWell(
               onTap: () {
-                showSimpleNotification(context, Text("Not implemented"),
-                    background: Theme.of(context).errorColor);
+                showSimpleNotification(Text("Not implemented"), background: Theme.of(context).errorColor);
               },
               child: Container(
                 height: 56,
@@ -88,17 +80,13 @@ class _PlaylistEditPageState extends State<PlaylistEditPage> {
             Divider(height: 0, indent: 8),
             InkWell(
               onTap: () {
-                showSimpleNotification(context, Text("Not implemented"),
-                    background: Theme.of(context).errorColor);
+                showSimpleNotification(Text("Not implemented"), background: Theme.of(context).errorColor);
               },
               child: Container(
                 height: 56,
                 padding: EdgeInsets.symmetric(horizontal: 8),
                 child: Row(
-                  children: <Widget>[
-                    Expanded(child: Text("描述", style: style)),
-                    Text(widget.playlist.name)
-                  ],
+                  children: <Widget>[Expanded(child: Text("描述", style: style)), Text(widget.playlist.name)],
                 ),
               ),
             ),
@@ -153,8 +141,7 @@ class _PlaylistNameEditPageState extends State<_PlaylistNameEditPage> {
                 final name = widget.playlist.name;
                 widget.playlist.name = _controller.text;
                 try {
-                  bool succeed = await showLoaderOverlay(context,
-                      neteaseRepository.updatePlaylist(widget.playlist));
+                  bool succeed = await showLoaderOverlay(context, neteaseRepository.updatePlaylist(widget.playlist));
                   if (succeed) {
                     Navigator.pop(context, true);
                   } else {
