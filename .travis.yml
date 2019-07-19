@@ -1,6 +1,8 @@
 os:
   - linux
 sudo: true
+git:
+  submodules: true
 addons:
   apt:
     sources:
