@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -18,8 +16,7 @@ class Settings extends Model {
     return ScopedModel.of(context, rebuildOnChange: rebuildOnChange);
   }
 
-  bool get initialized => _preferences != null;
-  SharedPreferences _preferences;
+  final SharedPreferences _preferences;
 
   ThemeData _theme;
 
@@ -42,12 +39,8 @@ class Settings extends Model {
     notifyListeners();
   }
 
-  Settings() {
-    scheduleMicrotask(() async {
-      _preferences = await SharedPreferences.getInstance();
-      _theme = quietThemes[_preferences.getInt(_key_theme) ?? 0];
-      _showCopyrightOverlay = _preferences.get(_key_copyright);
-      notifyListeners();
-    });
+  Settings(this._preferences) {
+    _theme = quietThemes[_preferences.getInt(_key_theme) ?? 0];
+    _showCopyrightOverlay = _preferences.get(_key_copyright);
   }
 }

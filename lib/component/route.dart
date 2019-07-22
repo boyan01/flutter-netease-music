@@ -8,6 +8,7 @@ import 'package:quiet/pages/player/page_playing.dart';
 import 'package:quiet/pages/playlist/page_daily_playlist.dart';
 import 'package:quiet/pages/setting/page_setting.dart';
 import 'package:quiet/pages/video/page_music_video_player.dart';
+import 'package:quiet/pages/welcome/page_welcome.dart';
 
 export 'package:quiet/pages/account/page_login.dart';
 export 'package:quiet/pages/collection/page_collections.dart';
@@ -38,6 +39,8 @@ const ROUTE_MY_COLLECTION = '/my_collection';
 
 const ROUTE_SETTING = '/setting';
 
+const pageWelcome = '/welcome';
+
 ///app routers
 final Map<String, WidgetBuilder> routes = {
   ROUTE_MAIN: (context) => MainPage(),
@@ -48,6 +51,7 @@ final Map<String, WidgetBuilder> routes = {
   ROUTE_MY_DJ: (context) => MyDjPage(),
   ROUTE_MY_COLLECTION: (context) => MyCollectionPage(),
   ROUTE_SETTING: (context) => SettingPage(),
+  pageWelcome: (context) => PageWelcome(),
 };
 
 Route<dynamic> routeFactory(RouteSettings settings) {
@@ -58,8 +62,7 @@ Route<dynamic> routeFactory(RouteSettings settings) {
       break;
   }
 
-  if (builder != null)
-    return MaterialPageRoute(builder: builder, settings: settings);
+  if (builder != null) return MaterialPageRoute(builder: builder, settings: settings);
 
   assert(false, 'ERROR: can not generate Route for ${settings.name}');
   return null;
