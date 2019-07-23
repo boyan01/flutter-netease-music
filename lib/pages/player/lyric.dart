@@ -214,7 +214,7 @@ class LyricState extends State<Lyric> with TickerProviderStateMixin {
             ..addStatusListener((status) {
               if (status == AnimationStatus.completed || status == AnimationStatus.dismissed) {
                 dragging = false;
-                _flingController.dispose();
+                _flingController?.dispose();
                 _flingController = null;
               }
             })
