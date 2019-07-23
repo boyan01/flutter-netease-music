@@ -42,12 +42,12 @@ class UserAccount extends Model {
       debugPrint('persistence user :${_user['account']['id']}');
 
       //访问api，刷新登陆状态
-      neteaseRepository.refreshLogin()?.then((needLogin) {
+      neteaseRepository.refreshLogin().then((needLogin) {
         if (needLogin) {
           logout();
         }
-      }, onError: () {
-        debugPrint("refresh login status failed");
+      }, onError: (e) {
+        debugPrint("refresh login status failed \n $e");
       });
     }
   }
