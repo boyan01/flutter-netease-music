@@ -28,7 +28,7 @@ class PageNeedLogin extends StatelessWidget {
                     style: TextStyle(color: Theme.of(context).errorColor),
                   )),
               RaisedButton(
-                onPressed: () => Navigator.pushNamed(context, ROUTE_LOGIN),
+                onPressed: () => Navigator.pushNamed(context, pageLogin),
                 child: Text('前往登陆页面'),
               )
             ],

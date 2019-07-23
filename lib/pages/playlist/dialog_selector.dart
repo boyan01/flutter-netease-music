@@ -132,7 +132,7 @@ class PlaylistSelectorDialog extends StatelessWidget {
                 RaisedButton(
                     color: Theme.of(context).primaryColor,
                     onPressed: () {
-                      Navigator.of(context).pushNamed(ROUTE_LOGIN);
+                      Navigator.of(context).pushNamed(pageLogin);
                     },
                     child: Text("点击前往登陆页面")),
                 SizedBox(height: 32),

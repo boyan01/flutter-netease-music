@@ -194,7 +194,7 @@ class _AppDrawerHeader extends StatelessWidget {
                         borderRadius: BorderRadius.circular(20)),
                     padding: EdgeInsets.symmetric(horizontal: 40),
                     onPressed: () {
-                      Navigator.pushNamed(context, ROUTE_LOGIN);
+                      Navigator.pushNamed(context, pageLogin);
                     },
                     textColor: Theme.of(context).primaryTextTheme.body1.color,
                     child: Text("立即登陆"))

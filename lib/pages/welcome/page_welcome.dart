@@ -33,9 +33,12 @@ class _PageWelcomeState extends State<PageWelcome> {
                   _LeadingLayout(),
                   _Button(
                     text: "手机号登录",
-                    onTap: () {
+                    onTap: () async {
                       if (model.accept) {
-                        Navigator.pushNamed(context, ROUTE_LOGIN);
+                        final result = await Navigator.pushNamed(context, pageLogin);
+                        if (result == true) {
+                          _navigateToMain(context);
+                        }
                       }
                     },
                   ),
@@ -45,8 +48,7 @@ class _PageWelcomeState extends State<PageWelcome> {
                       onTap: () {
                         if (model.accept) {
                           Settings.of(context, rebuildOnChange: false).setSkipWelcomePage();
-                          //remove the all pages
-                          Navigator.pushNamedAndRemoveUntil(context, pageMain, (route) => false);
+                          _navigateToMain(context);
                         }
                       }),
                   _LoginLayout(),
@@ -58,6 +60,11 @@ class _PageWelcomeState extends State<PageWelcome> {
         ),
       ),
     );
+  }
+
+  void _navigateToMain(BuildContext context) {
+    //remove the all pages
+    Navigator.pushNamedAndRemoveUntil(context, pageMain, (route) => false);
   }
 }
 

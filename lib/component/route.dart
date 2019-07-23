@@ -23,7 +23,8 @@ export 'package:quiet/pages/video/page_music_video_player.dart';
 
 const pageMain = Navigator.defaultRouteName;
 
-const ROUTE_LOGIN = "/login";
+///popup with [true] if login succeed
+const pageLogin = "/login";
 
 const ROUTE_PLAYLIST_DETAIL = "/playlist/detail";
 
@@ -44,7 +45,7 @@ const pageWelcome = '/welcome';
 ///app routers
 final Map<String, WidgetBuilder> routes = {
   pageMain: (context) => MainPage(),
-  ROUTE_LOGIN: (context) => LoginPage(),
+  pageLogin: (context) => LoginPage(),
   ROUTE_PAYING: (context) => PlayingPage(),
   ROUTE_LEADERBOARD: (context) => LeaderboardPage(),
   ROUTE_DAILY: (context) => DailyPlaylistPage(),

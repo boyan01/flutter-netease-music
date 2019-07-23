@@ -98,7 +98,7 @@ class _LoginState extends State<LoginPage> {
       var result = await showLoaderOverlay(context,
           UserAccount.of(context, rebuildOnChange: false).login(_phoneController.text, _passwordController.text));
       if (!result.isError) {
-        Navigator.pop(context); //login succeed
+        Navigator.pop(context, true); //login succeed
       } else {
         showSimpleNotification(Text(result.asError.error.toString()));
       }
