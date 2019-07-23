@@ -2,7 +2,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:netease_music_api/netease_cloud_music.dart';
 import 'package:overlay_support/overlay_support.dart';
+import 'package:quiet/component/route.dart';
 import 'package:quiet/material/app.dart';
+import 'package:quiet/pages/account/account.dart';
 import 'package:quiet/pages/splash/page_splash.dart';
 import 'package:quiet/repository/netease.dart';
 import 'package:scoped_model/scoped_model.dart';
@@ -11,7 +13,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'component/global/settings.dart';
 import 'component/netease/netease.dart';
 import 'component/player/player.dart';
-import 'component/route.dart';
 
 void main() {
   debugDefaultTargetPlatformOverride = TargetPlatform.android;
@@ -20,10 +21,11 @@ void main() {
     futures: [
       startServer(),
       SharedPreferences.getInstance(),
+      UserAccount.getPersistenceUser(),
     ],
     builder: (context, data) {
       final setting = Settings(data[1]);
-      return MyApp(setting: setting);
+      return MyApp(setting: setting, user: data[2]);
     },
   ));
 }
@@ -31,7 +33,9 @@ void main() {
 class MyApp extends StatelessWidget {
   final Settings setting;
 
-  const MyApp({Key key, @required this.setting}) : super(key: key);
+  final Map user;
+
+  const MyApp({Key key, @required this.setting, @required this.user}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -39,6 +43,7 @@ class MyApp extends StatelessWidget {
       model: setting,
       child: ScopedModelDescendant<Settings>(builder: (context, child, setting) {
         return Netease(
+          user: user,
           child: Quiet(
             child: CopyRightOverlay(
               child: OverlaySupport(
@@ -47,6 +52,7 @@ class MyApp extends StatelessWidget {
                   onGenerateRoute: routeFactory,
                   title: 'Quiet',
                   theme: setting.theme,
+                  initialRoute: getInitialRoute(),
                 ),
               ),
             ),
@@ -54,5 +60,13 @@ class MyApp extends StatelessWidget {
         );
       }),
     );
+  }
+
+  String getInitialRoute() {
+    bool login = user != null;
+    if (!login && !setting.skipWelcomePage) {
+      return pageWelcome;
+    }
+    return pageMain;
   }
 }

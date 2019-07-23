@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:overlay_support/overlay_support.dart';
+import 'package:quiet/component/global/settings.dart';
 import 'package:quiet/component/route.dart';
 import 'package:scoped_model/scoped_model.dart';
 
@@ -43,7 +44,9 @@ class _PageWelcomeState extends State<PageWelcome> {
                       primary: false,
                       onTap: () {
                         if (model.accept) {
-                          Navigator.pushNamed(context, ROUTE_MAIN);
+                          Settings.of(context, rebuildOnChange: false).setSkipWelcomePage();
+                          //remove the all pages
+                          Navigator.pushNamedAndRemoveUntil(context, pageMain, (route) => false);
                         }
                       }),
                   _LoginLayout(),
@@ -93,7 +96,11 @@ class _LeadingLayout extends StatelessWidget {
     return Expanded(
       child: Align(
         alignment: Alignment(0, 1 - 2 * 0.618),
-        child: Container(width: 48, height: 48, color: Colors.white),
+        child: Container(
+          width: 48,
+          height: 48,
+          decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.white),
+        ),
       ),
     );
   }
@@ -169,7 +176,7 @@ class _LicenseModel extends Model {
 
   bool get accept {
     if (!_accept) {
-      toast('请先同意XXXXX');
+      toast('请先同意"用户协议"和"隐私政策"');
     }
     return _accept;
   }
@@ -219,14 +226,22 @@ class _LicenseAndPolicyState extends State<_LicenseAndPolicy> {
         style: Theme.of(context).primaryTextTheme.caption,
         child: Row(
           mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            Checkbox(
-                materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                value: _LicenseModel.of(context, rebuildOnChange: true)._accept,
-                activeColor: color,
-                onChanged: (value) {
-                  _LicenseModel.of(context).check(value);
-                }),
+            Theme(
+              data: ThemeData(unselectedWidgetColor: color),
+              child: Transform.scale(
+                scale: .7,
+                alignment: Alignment.centerRight,
+                child: Checkbox(
+                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    value: _LicenseModel.of(context, rebuildOnChange: true)._accept,
+                    activeColor: color,
+                    onChanged: (value) {
+                      _LicenseModel.of(context).check(value);
+                    }),
+              ),
+            ),
             Text.rich(TextSpan(children: [
               TextSpan(text: '同意'),
               TextSpan(

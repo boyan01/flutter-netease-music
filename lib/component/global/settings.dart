@@ -10,6 +10,8 @@ const _key_theme = "$_prefix:theme";
 
 const _key_copyright = "$_prefix:copyright";
 
+const _key_skip_welcome_page = '$_prefix:skipWelcomePage';
+
 class Settings extends Model {
   ///获取全局设置的实例
   static Settings of(BuildContext context, {bool rebuildOnChange = true}) {
@@ -39,8 +41,19 @@ class Settings extends Model {
     notifyListeners();
   }
 
+  bool _skipWelcomePage;
+
+  bool get skipWelcomePage => _skipWelcomePage ?? false;
+
+  void setSkipWelcomePage() {
+    _skipWelcomePage = true;
+    _preferences.setBool(_key_skip_welcome_page, true);
+    notifyListeners();
+  }
+
   Settings(this._preferences) {
     _theme = quietThemes[_preferences.getInt(_key_theme) ?? 0];
     _showCopyrightOverlay = _preferences.get(_key_copyright);
+    _skipWelcomePage = _preferences.get(_key_skip_welcome_page) ?? false;
   }
 }

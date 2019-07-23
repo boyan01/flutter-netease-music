@@ -14,7 +14,9 @@ export 'netease_loader.dart';
 class Netease extends StatefulWidget {
   final Widget child;
 
-  const Netease({Key key, @required this.child}) : super(key: key);
+  final Map user;
+
+  const Netease({Key key, @required this.child, @required this.user}) : super(key: key);
 
   @override
   NeteaseState createState() => NeteaseState();
@@ -25,13 +27,14 @@ class Netease extends StatefulWidget {
 }
 
 class NeteaseState extends State<Netease> {
-  final UserAccount account = UserAccount();
+  UserAccount account;
 
   Counter counter;
 
   @override
   void initState() {
     super.initState();
+    account = UserAccount(widget.user);
     counter = Counter(account, neteaseRepository, neteaseLocalData);
   }
 

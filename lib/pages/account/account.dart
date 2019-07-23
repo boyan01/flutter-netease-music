@@ -6,12 +6,16 @@ import 'package:scoped_model/scoped_model.dart';
 
 ///登录状态
 class UserAccount extends Model {
+  ///get user info from persistence data
+  static Future<Map> getPersistenceUser() async {
+    return await neteaseLocalData[persistenceKey];
+  }
+
   static const persistenceKey = 'neteaseLoginUser';
 
   ///根据BuildContext获取 [UserAccount]
   static UserAccount of(BuildContext context, {bool rebuildOnChange = true}) {
-    return ScopedModel.of<UserAccount>(context,
-        rebuildOnChange: rebuildOnChange);
+    return ScopedModel.of<UserAccount>(context, rebuildOnChange: rebuildOnChange);
   }
 
   Future<Result<Map>> login(String phone, String password) async {
@@ -32,24 +36,20 @@ class UserAccount extends Model {
     neteaseRepository.logout();
   }
 
-  UserAccount() {
-    scheduleMicrotask(() async {
-      final login = await neteaseLocalData[persistenceKey];
-      if (login != null) {
-        _user = login;
-        debugPrint('persistence user :${_user['account']['id']}');
-        notifyListeners();
-        //访问api，刷新登陆状态
-        bool needLogin = false;
-        try {
-          needLogin = !await neteaseRepository.refreshLogin();
-        } catch (e) {}
+  UserAccount(Map user) {
+    if (user != null) {
+      _user = user;
+      debugPrint('persistence user :${_user['account']['id']}');
+
+      //访问api，刷新登陆状态
+      neteaseRepository.refreshLogin()?.then((needLogin) {
         if (needLogin) {
-          _user = null;
-          notifyListeners();
+          logout();
         }
-      }
-    });
+      }, onError: () {
+        debugPrint("refresh login status failed");
+      });
+    }
   }
 
   Map _user;
