@@ -79,8 +79,7 @@ class PlayerControllerState {
 
   bool get hasError => errorMsg != _ERROR_NONE;
 
-  bool get isPlaying =>
-      (playbackState == PlaybackState.ready) && playWhenReady && !hasError;
+  bool get isPlaying => (playbackState == PlaybackState.ready) && playWhenReady && !hasError;
 
   PlayerControllerState clearError() {
     if (!hasError) {
@@ -136,7 +135,7 @@ class PlayerController extends ValueNotifier<PlayerControllerState> {
   }
 
   void _init() {
-    _channel.setMethodCallHandler((method) {
+    _channel.setMethodCallHandler((method) async {
       switch (method.method) {
         case "onPlayerStateChanged":
           PlaybackState newState;
@@ -155,15 +154,11 @@ class PlayerController extends ValueNotifier<PlayerControllerState> {
               newState = PlaybackState.ended;
               break;
           }
-          value = value
-              .copyWith(playbackState: newState, playWhenReady: playWhenReady)
-              .clearError();
+          value = value.copyWith(playbackState: newState, playWhenReady: playWhenReady).clearError();
           break;
         case "onPlayerError":
           value = value.copyWith(
-              errorMsg: method.arguments["message"],
-              playWhenReady: false,
-              playbackState: PlaybackState.none);
+              errorMsg: method.arguments["message"], playWhenReady: false, playbackState: PlaybackState.none);
           debugPrint("on player error : ${method.arguments}");
           break;
         case "onMusicChanged":
@@ -172,9 +167,7 @@ class PlayerController extends ValueNotifier<PlayerControllerState> {
         case "onPlaylistUpdated":
           var map = method.arguments as Map;
           value = value.copyWith(
-              playingList:
-                  (map["list"] as List).cast<Map>().map(Music.fromMap).toList(),
-              token: map["token"]);
+              playingList: (map["list"] as List).cast<Map>().map(Music.fromMap).toList(), token: map["token"]);
           break;
         case "onPositionChanged":
           value = value.copyWith(
@@ -182,8 +175,7 @@ class PlayerController extends ValueNotifier<PlayerControllerState> {
               duration: Duration(milliseconds: method.arguments["duration"]));
           break;
         case "onPlayModeChanged":
-          value =
-              value.copyWith(playMode: PlayMode.values[method.arguments % 3]);
+          value = value.copyWith(playMode: PlayMode.values[method.arguments % 3]);
           break;
       }
     });
@@ -212,8 +204,7 @@ class PlayerController extends ValueNotifier<PlayerControllerState> {
   ///do init to player
   ///if player is running , will do nothing
   ///maybe should move load and restore preference logic to player service
-  Future<void> init(
-      List<Music> list, Music music, String token, PlayMode playMode) {
+  Future<void> init(List<Music> list, Music music, String token, PlayMode playMode) {
     return _channel.invokeMethod("init", {
       "list": list == null ? null : list.map((m) => m.toMap()).toList(),
       "music": music?.toMap(),
