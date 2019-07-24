@@ -12,9 +12,13 @@
 
 
 ## How to start
-
-  1. 安装 [Flutter](https://flutter.io/docs/get-started/install) （**注意安装最新的stable版本**）
-  2. 在命令行输入下面命令以 profile 模式运行（更快的运行效率）
+  1. clone 项目
+  ```bash
+  git clone https://github.com/boyan01/flutter-netease-music.git 
+  git submodule update --init --recursive
+  ```
+  2. 安装 [Flutter](https://flutter.io/docs/get-started/install) （**注意安装最新的stable版本**）
+  3. 在命令行输入下面命令以 profile 模式运行（更快的运行效率）
  ```bash
  flutter run --profile
  ```
