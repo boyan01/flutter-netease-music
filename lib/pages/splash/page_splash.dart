@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:quiet/component/global/settings.dart';
 
 ///used to build application widget
 ///[data] the data initial in [PageSplash]
@@ -39,7 +38,7 @@ class _PageSplashState extends State<PageSplash> {
   @override
   Widget build(BuildContext context) {
     if (_data == null) {
-      return Container(color: quietThemes.first.primaryColor);
+      return Container(color: const Color(0xFFd92e29));
     }
     return widget.builder(context, _data);
   }

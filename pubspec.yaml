@@ -18,7 +18,7 @@ dependencies:
   cupertino_icons: ^0.1.2
   json_annotation: ^2.0.0
   dio: ^2.1.10
-  path_provider: ^1.1.2
+  path_provider: ^1.2.0
   shared_preferences: ^0.5.3+4
   video_player: ^0.10.1+4
   url_launcher: ^5.1.0
