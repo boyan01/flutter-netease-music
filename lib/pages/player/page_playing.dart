@@ -483,6 +483,7 @@ class _BlurBackground extends StatelessWidget {
           fit: BoxFit.cover,
           height: 15,
           width: 15,
+          gaplessPlayback: true,
         ),
         BackdropFilter(
           filter: ui.ImageFilter.blur(sigmaY: 14, sigmaX: 24),
