@@ -37,7 +37,7 @@ class _LoginState extends State<LoginPage> {
         ),
         body: Form(
           key: _formState,
-          autovalidate: true,
+          autovalidate: false,
           child: SingleChildScrollView(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: Column(
