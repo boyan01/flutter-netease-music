@@ -29,14 +29,17 @@ class BoxWithBottomPlayerController extends StatelessWidget {
     if (context.ancestorWidgetOfExactType(DisableBottomController) != null) {
       return child;
     }
+
+    //fixme 可能会有问题
+    final media = MediaQueryData.fromWindow(WidgetsBinding.instance.window);
+
     //hide bottom player controller when view inserts
     //bottom too height (such as typing with soft keyboard)
-    ///fixme [Scaffold#resizeToAvoidBottomInset] 影响了这个判断
-    bool hide = isSoftKeyboardDisplay(MediaQuery.of(context));
+    bool hide = isSoftKeyboardDisplay(media);
     return Column(
       children: <Widget>[
         Expanded(child: child),
-        hide ? Container() : BottomControllerBar(),
+        hide ? Container() : BottomControllerBar(bottomPadding: media.viewPadding.bottom),
       ],
     );
   }
@@ -44,6 +47,10 @@ class BoxWithBottomPlayerController extends StatelessWidget {
 
 ///底部当前音乐播放控制栏
 class BottomControllerBar extends StatelessWidget {
+  final double bottomPadding;
+
+  const BottomControllerBar({Key key, this.bottomPadding = 0}) : super(key: key);
+
   Widget _buildSubtitle(BuildContext context, Music music) {
     final playingLyric = PlayingLyric.of(context);
     if (!playingLyric.hasLyric) {
@@ -51,11 +58,9 @@ class BottomControllerBar extends StatelessWidget {
     }
     final line = playingLyric.lyric
         .getLineByTimeStamp(
-            PlayerState.of(context, aspect: PlayerStateAspect.position)
-                .value
-                .position
-                .inMilliseconds,
-            0)
+          PlayerState.of(context, aspect: PlayerStateAspect.position).value.position.inMilliseconds,
+          0,
+        )
         ?.line;
     if (line == null || line.isEmpty) {
       return Text(music.subTitle);
@@ -65,8 +70,7 @@ class BottomControllerBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var music =
-        PlayerState.of(context, aspect: PlayerStateAspect.music).value.current;
+    var music = PlayerState.of(context, aspect: PlayerStateAspect.music).value.current;
     if (music == null) {
       return Container();
     }
@@ -79,11 +83,11 @@ class BottomControllerBar extends StatelessWidget {
       child: Card(
         margin: const EdgeInsets.all(0),
         shape: const RoundedRectangleBorder(
-            borderRadius: const BorderRadius.only(
-                topLeft: const Radius.circular(4.0),
-                topRight: const Radius.circular(4.0))),
+            borderRadius:
+                const BorderRadius.only(topLeft: const Radius.circular(4.0), topRight: const Radius.circular(4.0))),
         child: Container(
-          height: 56,
+          height: 56 + bottomPadding,
+          padding: EdgeInsets.only(bottom: bottomPadding),
           child: Row(
             children: <Widget>[
               Hero(

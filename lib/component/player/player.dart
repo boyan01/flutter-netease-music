@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -74,7 +75,14 @@ class MusicPlayer implements ValueNotifier<PlayerControllerState> {
     }();
   }
 
-  PlayerController get _controller => quietPlayerController;
+  PlayerController get _controller {
+    if (Platform.isAndroid) {
+      //目前播放音乐支持Android平台
+      return PlayerController();
+    } else {
+      return FakePlayerController();
+    }
+  }
 
   ///play a single song
   Future<void> play({Music music}) async {

@@ -6,8 +6,6 @@ import 'package:quiet/model/model.dart';
 
 const MethodChannel _channel = MethodChannel("tech.soit.quiet/player");
 
-PlayerController quietPlayerController = PlayerController._();
-
 class DurationRange {
   DurationRange(this.start, this.end);
 
@@ -134,6 +132,13 @@ class PlayerController extends ValueNotifier<PlayerControllerState> {
     _init();
   }
 
+  static PlayerController _instance;
+
+  factory PlayerController() {
+    if (_instance == null) _instance = PlayerController._();
+    return _instance;
+  }
+
   void _init() {
     _channel.setMethodCallHandler((method) async {
       switch (method.method) {
@@ -258,5 +263,98 @@ class PlayerController extends ValueNotifier<PlayerControllerState> {
   Future<void> dispose() {
     value = PlayerControllerState.uninitialized();
     return _channel.invokeMethod("quiet");
+  }
+}
+
+class FakePlayerController extends ValueNotifier<PlayerControllerState> implements PlayerController {
+  FakePlayerController._private() : super(PlayerControllerState.uninitialized());
+
+  static FakePlayerController _instance;
+
+  factory FakePlayerController() {
+    if (_instance == null) {
+      _instance = FakePlayerController._private();
+    }
+    return _instance;
+  }
+
+  @override
+  void _init() {
+    //do nothing
+  }
+
+  @override
+  Future<Music> getNext() async {
+    if (value.playingList.isEmpty) {
+      return null;
+    }
+    var index = value.playingList.indexOf(value.current) + 1;
+    if (index == value.playingList.length) index = 0;
+    return value.playingList[index];
+  }
+
+  @override
+  Future<Music> getPrevious() async {
+    if (value.playingList.isEmpty) {
+      return null;
+    }
+    var index = value.playingList.indexOf(value.current) - 1;
+    if (index <= -1) index = value.playingList.length - 1;
+    return value.playingList[index];
+  }
+
+  @override
+  Future<void> init(List<Music> list, Music music, String token, PlayMode playMode) async {
+    value = value.copyWith(playingList: list, current: music, token: token, playMode: playMode);
+  }
+
+  @override
+  Future<void> playNext() async {
+    playWith(await getNext());
+  }
+
+  @override
+  Future<void> playPrevious() async {
+    playWith(await getPrevious());
+  }
+
+  @override
+  Future<void> playWith(Music music) async {
+    value = value.copyWith(current: music);
+  }
+
+  @override
+  Future<Duration> get position => Future.value(Duration.zero);
+
+  @override
+  Future<void> seekTo(int position) async {
+    //do nothing
+  }
+
+  @override
+  Future<void> setPlayMode(PlayMode playMode) async {
+    value = value.copyWith(playMode: playMode);
+  }
+
+  @override
+  Future<void> setPlayWhenReady(bool playWhenReady) async {
+    //do nothing
+  }
+
+  @override
+  Future<void> setVolume(double volume) async {
+    //do nothing
+  }
+
+  @override
+  Future<void> updatePlaylist(List<Music> musics, String token) async {
+    value = value.copyWith(playingList: musics, token: token);
+  }
+
+  @override
+  // ignore: must_call_super
+  Future<void> dispose() {
+    value = PlayerControllerState.uninitialized();
+    return Future.value();
   }
 }

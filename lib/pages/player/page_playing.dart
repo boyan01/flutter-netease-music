@@ -66,6 +66,7 @@ class _PlayingPageState extends State<PlayingPage> {
                 Padding(padding: EdgeInsets.only(top: 10)),
                 _DurationProgressBar(),
                 _ControllerBar(),
+                SizedBox(height: MediaQuery.of(context).padding.bottom),
               ],
             ),
           ),
@@ -513,62 +514,67 @@ class _PlayingTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AppBar(
-      elevation: 0,
-      leading: IconButton(
-          tooltip: '返回上一层',
-          icon: Icon(
-            Icons.arrow_back,
-            color: Theme.of(context).primaryIconTheme.color,
-          ),
-          onPressed: () => Navigator.pop(context)),
-      titleSpacing: 0,
-      title: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          Text(
-            music.title,
-            style: TextStyle(fontSize: 17),
-          ),
-          InkWell(
-            onTap: () {
-              launchArtistDetailPage(context, music.artist);
-            },
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                Container(
-                  constraints: BoxConstraints(maxWidth: 200),
-                  child: Text(
-                    music.artist.map((a) => a.name).join('/'),
-                    style: Theme.of(context).primaryTextTheme.body1.copyWith(fontSize: 13),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
+    return SafeArea(
+      top: true,
+      bottom: false,
+      child: AppBar(
+        elevation: 0,
+        primary: false,
+        leading: IconButton(
+            tooltip: '返回上一层',
+            icon: Icon(
+              Icons.arrow_back,
+              color: Theme.of(context).primaryIconTheme.color,
+            ),
+            onPressed: () => Navigator.pop(context)),
+        titleSpacing: 0,
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Text(
+              music.title,
+              style: TextStyle(fontSize: 17),
+            ),
+            InkWell(
+              onTap: () {
+                launchArtistDetailPage(context, music.artist);
+              },
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Container(
+                    constraints: BoxConstraints(maxWidth: 200),
+                    child: Text(
+                      music.artist.map((a) => a.name).join('/'),
+                      style: Theme.of(context).primaryTextTheme.body1.copyWith(fontSize: 13),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ),
+                  Icon(Icons.chevron_right, size: 17),
+                ],
+              ),
+            )
+          ],
+        ),
+        backgroundColor: Colors.transparent,
+        actions: <Widget>[
+          PopupMenuButton(
+            itemBuilder: (context) {
+              return [
+                PopupMenuItem(
+                  child: Text("下载"),
                 ),
-                Icon(Icons.chevron_right, size: 17),
-              ],
+              ];
+            },
+            icon: Icon(
+              Icons.more_vert,
+              color: Theme.of(context).primaryIconTheme.color,
             ),
           )
         ],
       ),
-      backgroundColor: Colors.transparent,
-      actions: <Widget>[
-        PopupMenuButton(
-          itemBuilder: (context) {
-            return [
-              PopupMenuItem(
-                child: Text("下载"),
-              ),
-            ];
-          },
-          icon: Icon(
-            Icons.more_vert,
-            color: Theme.of(context).primaryIconTheme.color,
-          ),
-        )
-      ],
     );
   }
 }
