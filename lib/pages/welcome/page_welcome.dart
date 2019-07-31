@@ -25,7 +25,8 @@ class _PageWelcomeState extends State<PageWelcome> {
         child: ScopedModelDescendant<_LicenseModel>(
           builder: (context, child, model) {
             return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 50),
+              padding: const EdgeInsets.symmetric(horizontal: 50) +
+                  EdgeInsets.only(bottom: MediaQuery.of(context).viewPadding.bottom),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 mainAxisSize: MainAxisSize.max,
