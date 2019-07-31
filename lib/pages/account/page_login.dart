@@ -92,9 +92,6 @@ class _LoginState extends State<LoginPage> {
 
   void _onLogin() async {
     if (_formState.currentState.validate()) {
-      bool confirm =
-          await showConfirmDialog(context, Text('即将与 http://127.0.0.1:3000 明文通信你的账号和密码\n务必确保网络环境可靠再进行登录操作！'));
-      if (confirm != true) return;
       var result = await showLoaderOverlay(context,
           UserAccount.of(context, rebuildOnChange: false).login(_phoneController.text, _passwordController.text));
       if (!result.isError) {

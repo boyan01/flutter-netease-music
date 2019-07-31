@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:netease_music_api/netease_cloud_music.dart';
+import 'package:netease_music_api/netease_cloud_music.dart' as api;
 import 'package:overlay_support/overlay_support.dart';
 import 'package:quiet/component/route.dart';
 import 'package:quiet/material/app.dart';
@@ -13,13 +13,15 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'component/global/settings.dart';
 import 'component/netease/netease.dart';
 import 'component/player/player.dart';
+import 'component/utils/crypto.dart';
 
 void main() {
   debugDefaultTargetPlatformOverride = TargetPlatform.android;
   neteaseRepository = NeteaseRepository();
+  api.debugPrint = debugPrint;
   runApp(PageSplash(
     futures: [
-      startServer(),
+      api.startServer(decryptor: NeteaseCloudApiCrypto().decrypt),
       SharedPreferences.getInstance(),
       UserAccount.getPersistenceUser(),
     ],
