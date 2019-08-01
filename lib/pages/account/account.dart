@@ -8,10 +8,10 @@ import 'package:scoped_model/scoped_model.dart';
 class UserAccount extends Model {
   ///get user info from persistence data
   static Future<Map> getPersistenceUser() async {
-    return await neteaseLocalData[persistenceKey];
+    return await neteaseLocalData[_persistenceKey];
   }
 
-  static const persistenceKey = 'neteaseLoginUser';
+  static const _persistenceKey = 'neteaseLoginUser';
 
   ///根据BuildContext获取 [UserAccount]
   static UserAccount of(BuildContext context, {bool rebuildOnChange = true}) {
@@ -22,7 +22,7 @@ class UserAccount extends Model {
     final result = await neteaseRepository.login(phone, password);
     if (result.isValue) {
       final json = result.asValue.value;
-      neteaseLocalData[persistenceKey] = json;
+      neteaseLocalData[_persistenceKey] = json;
       _user = json;
       notifyListeners();
     }
@@ -32,7 +32,7 @@ class UserAccount extends Model {
   void logout() {
     _user = null;
     notifyListeners();
-    neteaseLocalData[persistenceKey] = null;
+    neteaseLocalData[_persistenceKey] = null;
     neteaseRepository.logout();
   }
 
@@ -42,8 +42,8 @@ class UserAccount extends Model {
       debugPrint('persistence user :${_user['account']['id']}');
 
       //访问api，刷新登陆状态
-      neteaseRepository.refreshLogin().then((needLogin) {
-        if (needLogin) {
+      neteaseRepository.refreshLogin().then((login) {
+        if (!login) {
           logout();
         }
       }, onError: (e) {
