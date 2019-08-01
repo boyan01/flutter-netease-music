@@ -40,7 +40,7 @@ const ROUTE_MY_COLLECTION = '/my_collection';
 
 const ROUTE_SETTING = '/setting';
 
-const pageWelcome = '/welcome';
+const pageWelcome = 'welcome';
 
 ///app routers
 final Map<String, WidgetBuilder> routes = {
