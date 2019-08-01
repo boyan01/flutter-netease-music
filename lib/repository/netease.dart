@@ -362,7 +362,7 @@ class NeteaseRepository {
 
   ///[path] request path
   ///[data] parameter
-  Future<Result<Map>> doRequest(String path, [Map data]) async {
+  Future<Result<Map>> doRequest(String path, [Map data = const {}]) async {
     try {
       final dio = await _dio;
       final result = await dio.get<Map>(path, queryParameters: NeteaseCloudApiCrypto().encrypt(data)?.cast());
