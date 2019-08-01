@@ -9,8 +9,7 @@ LocalData neteaseLocalData = LocalData._();
 
 class LocalData {
   ///netData 类型必须是可以放入 [store] 中的类型
-  static Stream<T> withData<T>(String key, Future<T> netData,
-      {void onNetError(dynamic e)}) async* {
+  static Stream<T> withData<T>(String key, Future<T> netData, {void onNetError(dynamic e)}) async* {
     final data = neteaseLocalData[key];
     if (data != null) {
       final cached = await data;
@@ -67,10 +66,7 @@ class LocalData {
     if (data == null) {
       return null;
     }
-    final result = (data as List)
-        .cast<Map>()
-        .map((m) => PlaylistDetail.fromMap(m))
-        .toList();
+    final result = (data as List).cast<Map>().map((m) => PlaylistDetail.fromMap(m)).toList();
     return result;
   }
 
@@ -83,8 +79,8 @@ class LocalData {
     return PlaylistDetail.fromMap(data);
   }
 
+  //TODO 添加分页加载逻辑
   Future updatePlaylistDetail(PlaylistDetail playlistDetail) {
-    assert(playlistDetail.loaded);
     return _put(playlistDetail.toMap(), 'playlist_detail_${playlistDetail.id}');
   }
 }
