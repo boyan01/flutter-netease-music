@@ -77,7 +77,11 @@ class _RecordMusic {
   Music music;
 
   static _RecordMusic fromJson(Map map) {
-    return _RecordMusic(map['score'], map['playCount'], mapJsonToMusic(map['song']['song']));
+    return _RecordMusic(
+      map['score'],
+      map['playCount'],
+      mapJsonToMusic(map['song'], albumKey: 'al', artistKey: 'ar'),
+    );
   }
 }
 
