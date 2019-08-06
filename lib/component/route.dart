@@ -1,19 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:quiet/pages/account/page_login.dart';
 import 'package:quiet/pages/collection/page_collections.dart';
-import 'package:quiet/pages/main/page_main.dart';
 import 'package:quiet/pages/leaderboard/page_leaderboard.dart';
+import 'package:quiet/pages/main/page_main.dart';
 import 'package:quiet/pages/page_my_dj.dart';
 import 'package:quiet/pages/player/page_playing.dart';
 import 'package:quiet/pages/playlist/page_daily_playlist.dart';
 import 'package:quiet/pages/setting/page_setting.dart';
 import 'package:quiet/pages/video/page_music_video_player.dart';
+import 'package:quiet/pages/welcome/login_sub_navigation.dart';
 import 'package:quiet/pages/welcome/page_welcome.dart';
 
-export 'package:quiet/pages/account/page_login.dart';
 export 'package:quiet/pages/collection/page_collections.dart';
-export 'package:quiet/pages/main/page_main.dart';
 export 'package:quiet/pages/leaderboard/page_leaderboard.dart';
+export 'package:quiet/pages/main/page_main.dart';
 export 'package:quiet/pages/player/page_playing.dart';
 export 'package:quiet/pages/playlist/page_album_detail.dart';
 export 'package:quiet/pages/playlist/page_daily_playlist.dart';
@@ -45,7 +44,7 @@ const pageWelcome = 'welcome';
 ///app routers
 final Map<String, WidgetBuilder> routes = {
   pageMain: (context) => MainPage(),
-  pageLogin: (context) => LoginPage(),
+  pageLogin: (context) => LoginNavigator(),
   ROUTE_PAYING: (context) => PlayingPage(),
   ROUTE_LEADERBOARD: (context) => LeaderboardPage(),
   ROUTE_DAILY: (context) => DailyPlaylistPage(),

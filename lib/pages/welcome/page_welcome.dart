@@ -32,7 +32,7 @@ class _PageWelcomeState extends State<PageWelcome> {
                 mainAxisSize: MainAxisSize.max,
                 children: <Widget>[
                   _LeadingLayout(),
-                  _Button(
+                  StretchButton(
                     text: "手机号登录",
                     onTap: () async {
                       if (model.accept) {
@@ -43,7 +43,7 @@ class _PageWelcomeState extends State<PageWelcome> {
                       }
                     },
                   ),
-                  _Button(
+                  StretchButton(
                       text: "立即体验",
                       primary: false,
                       onTap: () {
@@ -69,14 +69,19 @@ class _PageWelcomeState extends State<PageWelcome> {
   }
 }
 
-class _Button extends StatelessWidget {
+class StretchButton extends StatelessWidget {
   final VoidCallback onTap;
 
   final String text;
 
   final bool primary;
 
-  const _Button({Key key, @required this.onTap, @required this.text, this.primary = true}) : super(key: key);
+  const StretchButton({
+    Key key,
+    @required this.onTap,
+    @required this.text,
+    this.primary = true,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
