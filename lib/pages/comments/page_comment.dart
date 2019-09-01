@@ -187,7 +187,7 @@ class CommentThreadPayload {
 
   CommentThreadPayload.music(Music music)
       : this.obj = music,
-        coverImage = music.album.coverImageUrl,
+        coverImage = music.description.iconUri?.toString(),
         title = music.title,
         subtitle = music.subTitle;
 

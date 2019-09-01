@@ -3,8 +3,8 @@ import 'package:mockito/mockito.dart';
 import 'package:quiet/component/netease/counter.dart';
 import 'package:quiet/component/netease/netease.dart';
 import 'package:quiet/component/player/player.dart';
+import 'package:quiet/component/player/player_state.dart';
 import 'package:quiet/pages/account/account.dart';
-import 'package:quiet/service/channel_media_player.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 import 'repository/mock.dart';
@@ -33,8 +33,9 @@ class TestContext extends StatelessWidget {
           child: ScopedModel<LikedSongList>(
             model: likedSong,
             child: PlayerState(
-                value: PlayerControllerState.uninitialized(),
-                child: DisableBottomController(child: child)),
+              state: PlayerControllerState.uninitialized(),
+              child: DisableBottomController(child: child),
+            ),
           ),
         ),
       )),

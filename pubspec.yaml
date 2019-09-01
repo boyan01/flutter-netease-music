@@ -31,6 +31,8 @@ dependencies:
   netease_music_api:
     path: cloud_music_api/
   overlay_support: ^1.0.1
+  music_player:
+    path: music_service/
 
 dev_dependencies:
   flutter_test:

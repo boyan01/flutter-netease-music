@@ -1,1 +1,0 @@
-the plugin interact with Flutter framework

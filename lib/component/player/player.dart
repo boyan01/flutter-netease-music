@@ -1,14 +1,14 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:meta/meta.dart';
+import 'package:music_player/music_player.dart' as player;
 import 'package:overlay_support/overlay_support.dart';
 import 'package:quiet/component/player/lryic.dart';
+import 'package:quiet/component/player/player_state.dart';
 import 'package:quiet/model/model.dart';
-import 'package:quiet/service/channel_media_player.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -29,74 +29,86 @@ const String _PREF_KEY_TOKEN = "quiet_player_token";
 ///key which save playing mode to local preference
 const String _PREF_KEY_PLAY_MODE = "quiet_player_play_mode";
 
-class MusicPlayer implements ValueNotifier<PlayerControllerState> {
-  MusicPlayer._private() : super() {
-    () async {
-      //load former player information from SharedPreference
-      var preference = await SharedPreferences.getInstance();
-      Music current;
-      List<Music> playingList;
-      String token;
-      PlayMode playMode;
-      try {
-        current = Music.fromMap(json.decode(preference.get(_PREF_KEY_PLAYING)));
-        token = preference.get(_PREF_KEY_TOKEN);
-        playingList = (json.decode(preference.get(_PREF_KEY_PLAYLIST)) as List).cast<Map>().map(Music.fromMap).toList();
-        playMode = PlayMode.values[preference.getInt(_PREF_KEY_PLAY_MODE) ?? 0];
-      } catch (e) {
-        debugPrint(e.toString());
-      }
+class MusicPlayer extends player.MusicPlayer {
+  MusicPlayer._private() : super();
 
-      debugPrint("loaded : $current");
+  @override
+  void onMetadataChanged(player.MediaMetadata metadata) {
+    super.onMetadataChanged(metadata);
+    SharedPreferences.getInstance().then((preference) {
+      preference.setString(_PREF_KEY_PLAYING, metadata?.mediaId);
+    });
+  }
+
+  @override
+  void notifyListeners() {
+    compatValue = PlayerControllerState(value);
+    super.notifyListeners();
+  }
+
+  @override
+  void onQueueTitleChanged(String title) {
+    super.onQueueTitleChanged(title);
+    SharedPreferences.getInstance().then((preference) {
+      preference.setString(_PREF_KEY_TOKEN, title);
+    });
+  }
+
+  @override
+  void onShuffleModeChanged(int shuffleMode) {
+    super.onShuffleModeChanged(shuffleMode);
+    _persistPlayMode();
+  }
+
+  @override
+  void onRepeatModeChanged(int repeatMode) {
+    super.onRepeatModeChanged(repeatMode);
+    _persistPlayMode();
+  }
+
+  void _persistPlayMode() {
+    SharedPreferences.getInstance().then((preference) {
+      preference.setInt(_PREF_KEY_PLAY_MODE, compatValue.playMode.index);
+    });
+  }
+
+  void onSessionReady() {
+    super.onSessionReady();
+
+    //load former player information from SharedPreference
+    Future.microtask(() async {
+      var preference = await SharedPreferences.getInstance();
+      final playingMediaId = preference.getString(_PREF_KEY_PLAYING);
+      final token = preference.getString(_PREF_KEY_TOKEN);
+      final playingList = (json.decode(preference.get(_PREF_KEY_PLAYLIST)) as List)
+          .cast<Map>()
+          .map((e) => player.MediaMetadata.fromMap(e))
+          .toList();
+      final playMode = PlayMode.values[preference.getInt(_PREF_KEY_PLAY_MODE) ?? 0];
+      transportControls.prepareFromMediaId(playingMediaId, playingList, token);
+      setPlayMode(playMode);
+      debugPrint("loaded : $playingMediaId");
       debugPrint("loaded : $playingList");
       debugPrint("loaded : $token");
       debugPrint("loaded : $playMode");
-
-      //save player info to SharedPreference
-      addListener(() {
-        if (current != value.current) {
-          preference.setString(_PREF_KEY_PLAYING, json.encode(value.current, toEncodable: (e) => e.toMap()));
-          current = value.current;
-        }
-        if (playingList != value.playingList) {
-          preference.setString(_PREF_KEY_PLAYLIST, json.encode(value.playingList, toEncodable: (e) => e.toMap()));
-          playingList = value.playingList;
-        }
-        if (playMode != value.playMode) {
-          preference.setInt(_PREF_KEY_PLAY_MODE, value.playMode.index);
-          playMode = value.playMode;
-        }
-        if (token != value.token) {
-          preference.setString(_PREF_KEY_TOKEN, value.token);
-          token = value.token;
-        }
-      });
-      _controller.init(playingList, current, token, playMode ?? PlayMode.sequence);
-    }();
-  }
-
-  PlayerController get _controller {
-    if (Platform.isAndroid) {
-      //目前播放音乐支持Android平台
-      return PlayerController();
-    } else {
-      return FakePlayerController();
-    }
+    }).catchError((e) {
+      debugPrint(e.toString());
+    });
   }
 
   ///play a single song
   Future<void> play({Music music}) async {
-    music = music ?? value.current;
+    music = music ?? compatValue.current;
     if (music == null) {
       //null music, null current playing, this is an error state
       return;
     }
-    if (!value.playingList.contains(music)) {
+    if (!compatValue.playingList.contains(music)) {
       //playing list do not contain music
       //so we insert this music to next of current playing
       await insertToNext(music);
     }
-    await _performPlay(music);
+    transportControls.playFromMediaId(music.metadata.mediaId, const [], null);
   }
 
   ///insert a music to [value.current] next position
@@ -105,21 +117,13 @@ class MusicPlayer implements ValueNotifier<PlayerControllerState> {
   }
 
   Future<void> insertToNext2(List<Music> list) async {
-    final playingList = List.of(value.playingList);
-    playingList.removeWhere((m) => list.contains(m));
-
-    final index = playingList.indexOf(value.current) + 1;
-    playingList.insertAll(index, list);
-    await _controller.updatePlaylist(playingList, value.token);
+    //TODO
+    debugPrint("TODO");
   }
 
   Future<void> removeFromPlayingList(Music music) async {
-    if (!value.playingList.contains(music)) {
-      return;
-    }
-    final list = List.of(value.playingList);
-    list.remove(music);
-    await _controller.updatePlaylist(list, value.token);
+    //TODO
+    debugPrint("TODO");
   }
 
   Future<void> playWithList(Music music, List<Music> list, String token) async {
@@ -129,92 +133,72 @@ class MusicPlayer implements ValueNotifier<PlayerControllerState> {
     if (list.isEmpty) {
       return;
     }
-    if (music == null) {
-      music = list.first;
-    }
-    await _controller.updatePlaylist(list, token);
-    await _controller.playWith(music);
+    music ??= list.first;
+    transportControls.playFromMediaId(music.metadata.mediaId, list.map((l) => l.metadata).toList(), token);
   }
 
-  //perform to play music
-  Future<void> _performPlay(Music music) async {
-    assert(music != null);
-
-    if (value.current == music && _controller.value.playbackState != PlaybackState.none) {
-      return await _controller.setPlayWhenReady(true);
-    }
-    assert(music.url != null && music.url.isNotEmpty, "music url can not be null");
-    return await _controller.playWith(music);
-  }
-
-  Future<void> pause() {
-    return _controller.setPlayWhenReady(false);
+  Future<void> pause() async {
+    transportControls.pause();
   }
 
   void quiet() {
-    _controller.dispose();
+    dispose();
   }
 
   Future<void> playNext() async {
-    await _controller.playNext();
+    transportControls.skipToNext();
+    transportControls.play();
   }
 
   Future<void> playPrevious() async {
-    await _controller.playPrevious();
+    transportControls.skipToPrevious();
+    transportControls.play();
   }
 
   ///might be null
-  Future<Music> getNext() {
-    return _controller.getNext();
+  Future<Music> getNext() async {
+    //TODO
+    return null;
   }
 
   ///might be null
-  Future<Music> getPrevious() {
-    return _controller.getPrevious();
+  Future<Music> getPrevious() async {
+    //TODO
+    return null;
   }
 
-  ///seek to position in milliseconds
-  Future<void> seekTo(int position) {
-    return _controller.seekTo(position);
-  }
-
-  Future<void> setVolume(double volume) {
-    return _controller.setVolume(volume);
+  /// Seek to position in milliseconds
+  void seekTo(int position) {
+    transportControls.seekTo(position);
   }
 
   ///change playlist play mode
   ///[PlayMode]
-  Future<void> changePlayMode() {
-    PlayMode next = PlayMode.values[(value.playMode.index + 1) % 3];
-    return _controller.setPlayMode(next);
+  void changePlayMode() {
+    PlayMode next = PlayMode.values[(compatValue.playMode.index + 1) % 3];
+    setPlayMode(next);
   }
 
-  @override
-  PlayerControllerState get value => _controller.value;
-
-  @override
-  void addListener(VoidCallback listener) {
-    _controller.addListener(listener);
+  void setPlayMode(PlayMode playMode) {
+    int shuffleMode = player.PlaybackState.SHUFFLE_MODE_NONE;
+    int repeatMode = player.PlaybackState.REPEAT_MODE_NONE;
+    switch (playMode) {
+      case PlayMode.shuffle:
+        repeatMode = player.PlaybackState.REPEAT_MODE_ALL;
+        shuffleMode = player.PlaybackState.SHUFFLE_MODE_ALL;
+        break;
+      case PlayMode.single:
+        repeatMode = player.PlaybackState.REPEAT_MODE_ONE;
+        break;
+      case PlayMode.sequence:
+        repeatMode = player.PlaybackState.REPEAT_MODE_ALL;
+        break;
+    }
+    transportControls.setRepeatMode(repeatMode);
+    transportControls.setShuffleMode(shuffleMode);
   }
 
-  @override
-  void removeListener(VoidCallback listener) {
-    _controller.removeListener(listener);
-  }
-
-  @override
-  void dispose() => _controller.dispose();
-
-  @override
-  bool get hasListeners => _controller.hasListeners;
-
-  @override
-  void notifyListeners() {
-    _controller.notifyListeners();
-  }
-
-  @override
-  set value(PlayerControllerState newValue) => throw "Unsupported operation";
+  PlayerControllerState compatValue = PlayerControllerState.uninitialized();
 }
 
 class Quiet extends StatefulWidget {
@@ -231,7 +215,7 @@ class _QuietState extends State<Quiet> {
 
   void _onPlayerChange() {
     setState(() {
-      value = quiet.value;
+      value = quiet.compatValue;
       if (value.hasError) {
         showSimpleNotification(Text("播放歌曲${value.current?.title ?? ""}失败!"),
             leading: Icon(Icons.error), background: Theme.of(context).errorColor);
@@ -241,7 +225,7 @@ class _QuietState extends State<Quiet> {
 
   @override
   void initState() {
-    value = quiet.value;
+    value = quiet.compatValue;
     quiet.addListener(_onPlayerChange);
     super.initState();
   }
@@ -250,6 +234,7 @@ class _QuietState extends State<Quiet> {
   void dispose() {
     super.dispose();
     quiet.removeListener(_onPlayerChange);
+    quiet.dispose();
   }
 
   final _playingLyric = PlayingLyric(quiet);
@@ -260,63 +245,29 @@ class _QuietState extends State<Quiet> {
       model: _playingLyric,
       child: PlayerState(
         child: widget.child,
-        value: value,
+        state: value,
       ),
     );
   }
 }
 
-class PlayerState extends InheritedModel<PlayerStateAspect> {
-  PlayerState({@required Widget child, @required this.value}) : super(child: child);
+class PlayerState extends InheritedWidget {
+  final PlayerControllerState state;
 
-  ///get current playing music
-  final PlayerControllerState value;
+  const PlayerState({
+    Key key,
+    @required this.state,
+    @required Widget child,
+  })  : assert(child != null),
+        super(key: key, child: child);
 
-  static PlayerState of(BuildContext context, {PlayerStateAspect aspect}) {
-    return context.inheritFromWidgetOfExactType(PlayerState, aspect: aspect);
+  static PlayerControllerState of(BuildContext context) {
+    final widget = context.inheritFromWidgetOfExactType(PlayerState) as PlayerState;
+    return widget.state;
   }
 
   @override
-  bool updateShouldNotify(PlayerState oldWidget) {
-    return value != oldWidget.value;
+  bool updateShouldNotify(PlayerState old) {
+    return old.state != state;
   }
-
-  @override
-  bool updateShouldNotifyDependent(PlayerState oldWidget, Set<PlayerStateAspect> dependencies) {
-    if (dependencies.contains(PlayerStateAspect.position) && (value.position != oldWidget.value.position)) {
-      return true;
-    }
-    if (dependencies.contains(PlayerStateAspect.playbackState) &&
-        ((value.playbackState != oldWidget.value.playbackState) ||
-            (value.playWhenReady != oldWidget.value.playWhenReady || value.hasError != oldWidget.value.hasError))) {
-      return true;
-    }
-    if (dependencies.contains(PlayerStateAspect.playlist) && (value.playingList != oldWidget.value.playingList)) {
-      return true;
-    }
-    if (dependencies.contains(PlayerStateAspect.music) && (value.current != oldWidget.value.current)) {
-      return true;
-    }
-    if (dependencies.contains(PlayerStateAspect.playMode) && (value.playMode) != oldWidget.value.playMode) {
-      return true;
-    }
-    return false;
-  }
-}
-
-enum PlayerStateAspect {
-  ///the position of playing
-  position,
-
-  ///the playing state
-  playbackState,
-
-  ///the current playing
-  music,
-
-  ///the current playing playlist
-  playlist,
-
-  ///the play mode of playlist
-  playMode,
 }

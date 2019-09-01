@@ -3,6 +3,7 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:quiet/component/netease/netease.dart';
+import 'package:quiet/component/player/player_state.dart';
 import 'package:quiet/component/utils/utils.dart';
 import 'package:quiet/material/playing_indicator.dart';
 import 'package:quiet/pages/artists/page_artist_detail.dart';
@@ -10,7 +11,6 @@ import 'package:quiet/pages/comments/page_comment.dart';
 import 'package:quiet/pages/page_playing_list.dart';
 import 'package:quiet/part/part.dart';
 import 'package:quiet/repository/netease.dart';
-import 'package:quiet/service/channel_media_player.dart';
 
 import 'cover.dart';
 import 'lyric.dart';
@@ -29,13 +29,13 @@ class _PlayingPageState extends State<PlayingPage> {
   @override
   void initState() {
     super.initState();
-    _music = quiet.value.current;
+    _music = quiet.compatValue.current;
     quiet.addListener(_onPlayerStateChanged);
   }
 
   void _onPlayerStateChanged() {
-    if (_music != quiet.value.current) {
-      _music = quiet.value.current;
+    if (_music != quiet.compatValue.current) {
+      _music = quiet.compatValue.current;
       if (_music == null) {
         Navigator.pop(context);
       } else {
@@ -80,7 +80,7 @@ class _PlayingPageState extends State<PlayingPage> {
 /// pause,play,play next,play previous...
 class _ControllerBar extends StatelessWidget {
   Widget getPlayModeIcon(context, Color color) {
-    var playMode = PlayerState.of(context, aspect: PlayerStateAspect.playMode).value.playMode;
+    var playMode = PlayerState.of(context).playMode;
     switch (playMode) {
       case PlayMode.single:
         return Icon(
@@ -193,12 +193,12 @@ class _DurationProgressBar extends StatefulWidget {
 class _DurationProgressBarState extends State<_DurationProgressBar> {
   bool isUserTracking = false;
 
-  double trackingPosition = 0;
+  double trackingPosition = 0.0;
 
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context).primaryTextTheme;
-    var state = PlayerState.of(context).value;
+    var state = PlayerState.of(context);
 
     Widget progressIndicator;
 
@@ -212,22 +212,16 @@ class _DurationProgressBarState extends State<_DurationProgressBar> {
       durationText = getTimeStamp(duration);
       positionText = getTimeStamp(position);
 
-      int maxBuffering = 0;
-      for (DurationRange range in state.buffered) {
-        final int end = range.end.inMilliseconds;
-        if (end > maxBuffering) {
-          maxBuffering = end;
-        }
-      }
+      int maxBuffering = state.state.playbackState.bufferedPosition;
 
       progressIndicator = Stack(
         fit: StackFit.passthrough,
         children: <Widget>[
-//          LinearProgressIndicator(
-//            value: maxBuffering / duration,
-//            valueColor: AlwaysStoppedAnimation<Color>(Colors.white70),
-//            backgroundColor: Colors.white12,
-//          ),
+          LinearProgressIndicator(
+            value: maxBuffering / duration,
+            valueColor: AlwaysStoppedAnimation<Color>(Colors.white70),
+            backgroundColor: Colors.white12,
+          ),
           Slider(
             value: position.toDouble().clamp(0.0, duration.toDouble()),
             min: 0.0,
@@ -248,7 +242,7 @@ class _DurationProgressBarState extends State<_DurationProgressBar> {
             onChangeEnd: (value) async {
               isUserTracking = false;
               quiet.seekTo(value.round());
-              if (!quiet.value.playWhenReady) {
+              if (!quiet.compatValue.playWhenReady) {
                 quiet.play();
               }
             },
@@ -282,7 +276,7 @@ class _OperationBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final iconColor = Theme.of(context).primaryIconTheme.color;
 
-    final music = quiet.value.current;
+    final music = quiet.compatValue.current;
     final liked = LikedSongList.contain(context, music);
 
     return Row(
@@ -412,7 +406,7 @@ class _CloudLyricState extends State<_CloudLyric> {
   }
 
   void _onMusicStateChanged() {
-    position.value = quiet.value.position.inMilliseconds;
+    position.value = quiet.compatValue.position.inMilliseconds;
   }
 
   @override
@@ -454,7 +448,7 @@ class _CloudLyricState extends State<_CloudLyric> {
               position: position,
               onTap: widget.onTap,
               size: Size(constraints.maxWidth, constraints.maxHeight == double.infinity ? 0 : constraints.maxHeight),
-              playing: PlayerState.of(context, aspect: PlayerStateAspect.playbackState).value.isPlaying,
+              playing: PlayerState.of(context).isPlaying,
             ),
           ),
         );
@@ -480,7 +474,7 @@ class _BlurBackground extends StatelessWidget {
       fit: StackFit.expand,
       children: <Widget>[
         Image(
-          image: CachedImage(music.album.coverImageUrl),
+          image: CachedImage(music.description.iconUri.toString()),
           fit: BoxFit.cover,
           height: 15,
           width: 15,

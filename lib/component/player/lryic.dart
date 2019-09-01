@@ -9,7 +9,7 @@ import 'package:scoped_model/scoped_model.dart';
 class PlayingLyric extends Model {
   PlayingLyric(MusicPlayer player) {
     player.addListener(() {
-      _shouldLoadLyric(player.value.current);
+      _shouldLoadLyric(player.compatValue.current);
     });
   }
 

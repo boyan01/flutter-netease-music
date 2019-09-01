@@ -17,8 +17,7 @@ class PlayingIndicator extends StatefulWidget {
   ///show when player is buffering
   final Widget buffering;
 
-  const PlayingIndicator({Key key, this.playing, this.pausing, this.buffering})
-      : super(key: key);
+  const PlayingIndicator({Key key, this.playing, this.pausing, this.buffering}) : super(key: key);
 
   @override
   _PlayingIndicatorState createState() => _PlayingIndicatorState();
@@ -44,16 +43,14 @@ class _PlayingIndicatorState extends State<PlayingIndicator> {
   }
 
   ///get current player state index
-  int get playerState => quiet.value.isBuffering
-      ? _INDEX_BUFFERING
-      : quiet.value.isPlaying ? _INDEX_PLAYING : _INDEX_PAUSING;
+  int get playerState =>
+      quiet.compatValue.isBuffering ? _INDEX_BUFFERING : quiet.compatValue.isPlaying ? _INDEX_PLAYING : _INDEX_PAUSING;
 
   void _onMusicStateChanged() {
     final target = playerState;
     if (target == _index) return;
 
-    final action =
-        CancelableOperation.fromFuture(Future.delayed(_durationDelay));
+    final action = CancelableOperation.fromFuture(Future.delayed(_durationDelay));
     _changeStateOperations.add(action);
     action.value.whenComplete(() {
       if (target == playerState) _changeState(target);

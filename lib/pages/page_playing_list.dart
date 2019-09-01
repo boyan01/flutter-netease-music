@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:quiet/pages/playlist/dialog_selector.dart';
 import 'package:quiet/part/part.dart';
-import 'package:quiet/service/channel_media_player.dart';
+import 'package:quiet/component/player/player_state.dart';
 
 class PlayingListDialog extends StatefulWidget {
   @override
@@ -17,8 +17,8 @@ class PlayingListDialogState extends State<PlayingListDialog> {
   @override
   void initState() {
     super.initState();
-    final playingList = quiet.value.playingList;
-    final music = quiet.value.current;
+    final playingList = quiet.compatValue.playingList;
+    final music = quiet.compatValue.current;
     assert(music != null, '展示播放列表时，当前音乐不能为空！');
     double offset = playingList.indexOf(music) * _HEIGHT_MUSIC_TILE;
     _controller = ScrollController(initialScrollOffset: offset);
@@ -26,8 +26,8 @@ class PlayingListDialogState extends State<PlayingListDialog> {
 
   @override
   Widget build(BuildContext context) {
-    List<Music> playingList = PlayerState.of(context, aspect: PlayerStateAspect.playlist).value.playingList;
-    Music music = PlayerState.of(context, aspect: PlayerStateAspect.music).value.current;
+    List<Music> playingList = PlayerState.of(context).playingList;
+    Music music = PlayerState.of(context).current;
 
     return Container(
       height: MediaQuery.of(context).size.height / 2,
@@ -57,9 +57,9 @@ class _Header extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final state = PlayerState.of(context, aspect: PlayerStateAspect.playMode);
-    final playMode = state.value.playMode;
-    final count = state.value.playingList.length;
+    final state = PlayerState.of(context);
+    final playMode = state.playMode;
+    final count = state.playingList.length;
     IconData icon;
     String name;
     switch (playMode) {
@@ -91,7 +91,7 @@ class _Header extends StatelessWidget {
             Spacer(),
             FlatButton.icon(
                 onPressed: () async {
-                  final ids = quiet.value.playingList.map((m) => m.id).toList();
+                  final ids = quiet.compatValue.playingList.map((m) => m.id).toList();
                   if (ids.isEmpty) {
                     return;
                   }

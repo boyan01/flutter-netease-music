@@ -52,8 +52,8 @@ class _AlbumCoverState extends State<AlbumCover> with TickerProviderStateMixin {
   void initState() {
     super.initState();
 
-    bool attachToCover = quiet.value.playWhenReady &&
-        (quiet.value.isPlaying || quiet.value.isBuffering);
+    bool attachToCover = quiet.compatValue.playWhenReady &&
+        (quiet.compatValue.isPlaying || quiet.compatValue.isBuffering);
     _needleController = AnimationController(
         /*preset need position*/
         value: attachToCover ? 1.0 : 0.0,
@@ -117,7 +117,7 @@ class _AlbumCoverState extends State<AlbumCover> with TickerProviderStateMixin {
   }
 
   void _onMusicStateChanged() {
-    var state = quiet.value;
+    var state = quiet.compatValue;
 
     //handle album cover animation
     var _isPlaying = state.isPlaying;
@@ -362,10 +362,10 @@ class _RotationCoverImageState extends State<_RotationCoverImage>
   @override
   Widget build(BuildContext context) {
     ImageProvider image;
-    if (widget.music == null || widget.music.album.coverImageUrl == null) {
+    if (widget.music == null || widget.music.description.iconUri == null) {
       image = AssetImage("assets/playing_page_disc.png");
     } else {
-      image = CachedImage(widget.music.album.coverImageUrl);
+      image = CachedImage(widget.music.description.iconUri.toString());
     }
     return Transform.rotate(
       angle: rotation,

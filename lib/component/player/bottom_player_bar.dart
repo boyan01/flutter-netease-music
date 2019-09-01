@@ -58,7 +58,7 @@ class BottomControllerBar extends StatelessWidget {
     }
     final line = playingLyric.lyric
         .getLineByTimeStamp(
-          PlayerState.of(context, aspect: PlayerStateAspect.position).value.position.inMilliseconds,
+          PlayerState.of(context).position.inMilliseconds,
           0,
         )
         ?.line;
@@ -70,7 +70,7 @@ class BottomControllerBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var music = PlayerState.of(context, aspect: PlayerStateAspect.music).value.current;
+    var music = PlayerState.of(context).current;
     if (music == null) {
       return Container();
     }
@@ -98,11 +98,11 @@ class BottomControllerBar extends StatelessWidget {
                     aspectRatio: 1,
                     child: ClipRRect(
                       borderRadius: BorderRadius.all(Radius.circular(3)),
-                      child: music.album.coverImageUrl == null
+                      child: music.description.iconUri == null
                           ? Container(color: Colors.grey)
                           : Image(
                               fit: BoxFit.cover,
-                              image: CachedImage(music.album.coverImageUrl),
+                              image: CachedImage(music.description.iconUri.toString()),
                             ),
                     ),
                   ),

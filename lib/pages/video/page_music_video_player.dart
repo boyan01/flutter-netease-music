@@ -74,7 +74,7 @@ class _MvDetailPageState extends State<_MvDetailPage> {
     super.initState();
     _model = VideoPlayerModel(MusicVideoDetail.fromJsonMap(widget.result['data']), subscribed: widget.result['subed']);
     _model.videoPlayerController.play();
-    if (quiet.value.isPlaying) {
+    if (quiet.compatValue.isPlaying) {
       quiet.pause();
       _pausedPlayingMusic = true;
     }
