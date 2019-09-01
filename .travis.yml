@@ -9,7 +9,6 @@ addons:
       - ubuntu-toolchain-r-test
     packages:
       - libstdc++6
-      - fonts-droid
 before_script:
   - git clone -b dev https://github.com/flutter/flutter.git
   - ./flutter/bin/flutter doctor
