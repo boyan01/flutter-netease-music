@@ -83,3 +83,53 @@ class _PlayingIndicatorState extends State<PlayingIndicator> {
     );
   }
 }
+
+/// 监听播放器播放进度的 Widget
+class ProgressTrackContainer extends StatefulWidget {
+  final WidgetBuilder builder;
+
+  const ProgressTrackContainer({Key key, @required this.builder}) : super(key: key);
+
+  @override
+  _ProgressTrackContainerState createState() => _ProgressTrackContainerState();
+}
+
+class _ProgressTrackContainerState extends State<ProgressTrackContainer> {
+  @override
+  void initState() {
+    super.initState();
+    quiet.addListener(_onStateChanged);
+    _onStateChanged();
+  }
+
+  bool _tracking = false;
+
+  Timer _timer;
+
+  void _onStateChanged() {
+    final needTrack = quiet.compatValue.isPlaying;
+    if (_tracking == needTrack) return;
+    if (_tracking) {
+      _tracking = false;
+      _timer?.cancel();
+    } else {
+      _tracking = true;
+      _timer?.cancel();
+      _timer = Timer.periodic(const Duration(milliseconds: 50), (timer) {
+        setState(() {});
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    quiet.removeListener(_onStateChanged);
+    _timer?.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return widget.builder(context);
+  }
+}

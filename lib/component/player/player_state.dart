@@ -1,10 +1,10 @@
+import 'package:flutter/cupertino.dart';
 import 'package:music_player/music_player.dart';
 import 'package:quiet/model/model.dart';
 
 class PlayerControllerState {
   PlayerControllerState(this.state)
       : duration = Duration(milliseconds: state.metadata?.duration ?? 0),
-        position = Duration(milliseconds: state.playbackState.position),
         playWhenReady = true,
         current = state.metadata == null ? null : _Music(state.metadata),
         playingList = state.queue.map((q) => _Music.fromDescription(q.description)).toList();
@@ -14,7 +14,11 @@ class PlayerControllerState {
   final MusicPlayerState state;
 
   final Duration duration;
-  final Duration position;
+
+  Duration get position {
+    int diff = DateTime.now().millisecondsSinceEpoch - state.playbackState.lastPositionUpdateTime;
+    return Duration(milliseconds: state.playbackState.position + diff);
+  }
 
   ///whether playback should proceed when isReady become true
   final bool playWhenReady;

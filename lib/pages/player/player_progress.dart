@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:quiet/component/utils/utils.dart';
+import 'package:quiet/material/playing_indicator.dart';
 import 'package:quiet/part/part.dart';
 
-/// A seek bar for current position
-/// TODO
+/// A seek bar for current position.
 class DurationProgressBar extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => DurationProgressBarState();
@@ -12,10 +12,14 @@ class DurationProgressBar extends StatefulWidget {
 class DurationProgressBarState extends State<DurationProgressBar> {
   bool isUserTracking = false;
 
-  double trackingPosition = 0;
+  double trackingPosition = 0.0;
 
   @override
   Widget build(BuildContext context) {
+    return ProgressTrackContainer(builder: _buildBar);
+  }
+
+  Widget _buildBar(BuildContext context) {
     var theme = Theme.of(context).primaryTextTheme;
     var state = PlayerState.of(context);
 
@@ -31,16 +35,17 @@ class DurationProgressBarState extends State<DurationProgressBar> {
       durationText = getTimeStamp(duration);
       positionText = getTimeStamp(position);
 
-      int maxBuffering = state.state.playbackState.bufferedPosition;
+      //TODO add buffer progress
+//      int maxBuffering = state.state.playbackState.bufferedPosition;
 
       progressIndicator = Stack(
         fit: StackFit.passthrough,
         children: <Widget>[
-          LinearProgressIndicator(
-            value: maxBuffering / duration,
-            valueColor: AlwaysStoppedAnimation<Color>(Colors.white70),
-            backgroundColor: Colors.white12,
-          ),
+//          LinearProgressIndicator(
+//            value: maxBuffering / duration,
+//            valueColor: AlwaysStoppedAnimation<Color>(Colors.white70),
+//            backgroundColor: Colors.white12,
+//          ),
           Slider(
             value: position.toDouble().clamp(0.0, duration.toDouble()),
             min: 0.0,

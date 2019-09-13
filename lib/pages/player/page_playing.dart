@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:quiet/component/netease/netease.dart';
 import 'package:quiet/component/player/player_state.dart';
-import 'package:quiet/component/utils/utils.dart';
 import 'package:quiet/material/playing_indicator.dart';
 import 'package:quiet/pages/artists/page_artist_detail.dart';
 import 'package:quiet/pages/comments/page_comment.dart';
@@ -14,6 +13,7 @@ import 'package:quiet/repository/netease.dart';
 
 import 'cover.dart';
 import 'lyric.dart';
+import 'player_progress.dart';
 
 ///歌曲播放页面
 class PlayingPage extends StatefulWidget {
@@ -63,8 +63,8 @@ class _PlayingPageState extends State<PlayingPage> {
                 _PlayingTitle(music: _music),
                 _CenterSection(music: _music),
                 _OperationBar(),
-                Padding(padding: EdgeInsets.only(top: 10)),
-                _DurationProgressBar(),
+                const SizedBox(height: 10),
+                DurationProgressBar(),
                 _ControllerBar(),
                 SizedBox(height: MediaQuery.of(context).padding.bottom),
               ],
@@ -184,93 +184,6 @@ class _ControllerBar extends StatelessWidget {
   }
 }
 
-///a seek bar for current position
-class _DurationProgressBar extends StatefulWidget {
-  @override
-  State<StatefulWidget> createState() => _DurationProgressBarState();
-}
-
-class _DurationProgressBarState extends State<_DurationProgressBar> {
-  bool isUserTracking = false;
-
-  double trackingPosition = 0.0;
-
-  @override
-  Widget build(BuildContext context) {
-    var theme = Theme.of(context).primaryTextTheme;
-    var state = PlayerState.of(context);
-
-    Widget progressIndicator;
-
-    String durationText;
-    String positionText;
-
-    if (state.initialized) {
-      var duration = state.duration.inMilliseconds;
-      var position = isUserTracking ? trackingPosition.round() : state.position.inMilliseconds;
-
-      durationText = getTimeStamp(duration);
-      positionText = getTimeStamp(position);
-
-      int maxBuffering = state.state.playbackState.bufferedPosition;
-
-      progressIndicator = Stack(
-        fit: StackFit.passthrough,
-        children: <Widget>[
-          LinearProgressIndicator(
-            value: maxBuffering / duration,
-            valueColor: AlwaysStoppedAnimation<Color>(Colors.white70),
-            backgroundColor: Colors.white12,
-          ),
-          Slider(
-            value: position.toDouble().clamp(0.0, duration.toDouble()),
-            min: 0.0,
-            activeColor: theme.body1.color.withOpacity(0.75),
-            inactiveColor: theme.caption.color.withOpacity(0.3),
-            max: duration.toDouble(),
-            onChangeStart: (value) {
-              setState(() {
-                isUserTracking = true;
-                trackingPosition = value;
-              });
-            },
-            onChanged: (value) {
-              setState(() {
-                trackingPosition = value;
-              });
-            },
-            onChangeEnd: (value) async {
-              isUserTracking = false;
-              quiet.seekTo(value.round());
-              if (!quiet.compatValue.playWhenReady) {
-                quiet.play();
-              }
-            },
-          ),
-        ],
-      );
-    } else {
-      //a disable slider if media is not available
-      progressIndicator = Slider(value: 0, onChanged: (_) => {});
-    }
-
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: 4, horizontal: 16),
-      child: Row(
-        children: <Widget>[
-          Text(positionText ?? "00:00", style: theme.body1),
-          Padding(padding: EdgeInsets.only(left: 4)),
-          Expanded(
-            child: progressIndicator,
-          ),
-          Padding(padding: EdgeInsets.only(left: 4)),
-          Text(durationText ?? "00:00", style: theme.body1),
-        ],
-      ),
-    );
-  }
-}
-
 class _OperationBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -384,7 +297,7 @@ class _CenterSectionState extends State<_CenterSection> {
   }
 }
 
-class _CloudLyric extends StatefulWidget {
+class _CloudLyric extends StatelessWidget {
   final VoidCallback onTap;
 
   final Music music;
@@ -392,32 +305,11 @@ class _CloudLyric extends StatefulWidget {
   const _CloudLyric({Key key, this.onTap, @required this.music}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _CloudLyricState();
-}
-
-class _CloudLyricState extends State<_CloudLyric> {
-  ValueNotifier<int> position = ValueNotifier(0);
-
-  @override
-  void initState() {
-    super.initState();
-    quiet.addListener(_onMusicStateChanged);
-    _onMusicStateChanged();
-  }
-
-  void _onMusicStateChanged() {
-    position.value = quiet.compatValue.position.inMilliseconds;
-  }
-
-  @override
-  void dispose() {
-    quiet.removeListener(_onMusicStateChanged);
-    position.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
+    return ProgressTrackContainer(builder: _buildLyric);
+  }
+
+  Widget _buildLyric(BuildContext context) {
     TextStyle style = Theme.of(context).textTheme.body1.copyWith(height: 1.5, fontSize: 16, color: Colors.white);
     final playingLyric = PlayingLyric.of(context);
 
@@ -445,8 +337,8 @@ class _CloudLyricState extends State<_CloudLyric> {
               lyric: playingLyric.lyric,
               lyricLineStyle: normalStyle,
               highlight: style.color,
-              position: position,
-              onTap: widget.onTap,
+              position: quiet.compatValue.position.inMilliseconds,
+              onTap: onTap,
               size: Size(constraints.maxWidth, constraints.maxHeight == double.infinity ? 0 : constraints.maxHeight),
               playing: PlayerState.of(context).isPlaying,
             ),
