@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:music_player/music_player.dart';
 import 'package:quiet/model/model.dart';
 

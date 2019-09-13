@@ -98,6 +98,10 @@ class MusicPlayer extends player.MusicPlayer {
 
   ///play a single song
   Future<void> play({Music music}) async {
+    if (value.playbackState.state == player.PlaybackState.STATE_PAUSED) {
+      transportControls.play();
+      return;
+    }
     music = music ?? compatValue.current;
     if (music == null) {
       //null music, null current playing, this is an error state
