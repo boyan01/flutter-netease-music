@@ -138,7 +138,11 @@ class LyricState extends State<Lyric> with TickerProviderStateMixin {
       _gradientController.addListener(() {
         lyricPainter.lineGradientPercent = _gradientController.value;
       });
-      _gradientController.forward(from: startPercent);
+      if (widget.playing) {
+        _gradientController.forward(from: startPercent);
+      } else {
+        _gradientController.value = startPercent;
+      }
     }
     lyricPainter.currentLine = line;
   }
