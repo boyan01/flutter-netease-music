@@ -1,11 +1,9 @@
-package tech.soit.quiet
+package tech.soit.quiet.app
 
 import android.content.Intent
 import android.os.Bundle
 import io.flutter.app.FlutterActivity
 import io.flutter.plugins.GeneratedPluginRegistrant
-import tech.soit.quiet.plugin.PluginRegistrant
-import tech.soit.quiet.service.QuietPlayerChannel
 
 class MainActivity : FlutterActivity() {
 
@@ -18,19 +16,10 @@ class MainActivity : FlutterActivity() {
 
     }
 
-    private lateinit var playerChannel: QuietPlayerChannel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         GeneratedPluginRegistrant.registerWith(this)
-        PluginRegistrant.registerWith(this)
-        playerChannel = QuietPlayerChannel.registerWith(registrarFor("tech.soit.quiet.service.QuietPlayerChannel"))
-        route(intent)
-    }
-
-    override fun onDestroy() {
-        playerChannel.destroy()
-        super.onDestroy()
     }
 
     override fun onNewIntent(intent: Intent) {

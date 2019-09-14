@@ -1,6 +1,7 @@
+import 'package:music_player/music_player.dart';
+
 class Music {
-  Music({this.id, this.title, this.url, this.album, this.artist, int mvId})
-      : this.mvId = mvId ?? 0;
+  Music({this.id, this.title, this.url, this.album, this.artist, int mvId}) : this.mvId = mvId ?? 0;
 
   int id;
 
@@ -15,6 +16,26 @@ class Music {
   ///歌曲mv id,当其为0时,表示没有mv
   int mvId;
 
+  MediaMetadata _metadata;
+
+  MediaDescription get description => metadata.getDescription();
+
+  MediaMetadata get metadata {
+    if (_metadata != null) return _metadata;
+    _metadata = MediaMetadata(
+      mediaId: id.toString(),
+      title: title,
+      artist: artist.map((ar) => ar.name).join('/'),
+      album: album.name,
+      //TODO resize bitmap size
+      albumArtUri: album.coverImageUrl,
+      mediaUri: url,
+      displayTitle: title,
+      displaySubtitle: subTitle,
+    );
+    return _metadata;
+  }
+
   String get subTitle {
     var ar = artist.map((a) => a.name).join('/');
     var al = album.name;
@@ -23,8 +44,7 @@ class Music {
 
   @override
   bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is Music && runtimeType == other.runtimeType && id == other.id;
+      identical(this, other) || other is Music && runtimeType == other.runtimeType && id == other.id;
 
   @override
   int get hashCode => id.hashCode;
@@ -44,8 +64,7 @@ class Music {
         url: map["url"],
         album: Album.fromMap(map["album"]),
         mvId: map['mvId'] ?? 0,
-        artist:
-            (map["artist"] as List).cast<Map>().map(Artist.fromMap).toList());
+        artist: (map["artist"] as List).cast<Map>().map(Artist.fromMap).toList());
   }
 
   Map toMap() {
@@ -73,10 +92,7 @@ class Album {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is Album &&
-          runtimeType == other.runtimeType &&
-          name == other.name &&
-          id == other.id;
+      other is Album && runtimeType == other.runtimeType && name == other.name && id == other.id;
 
   @override
   int get hashCode => name.hashCode ^ id.hashCode;
@@ -87,8 +103,7 @@ class Album {
   }
 
   static Album fromMap(Map map) {
-    return Album(
-        id: map["id"], name: map["name"], coverImageUrl: map["coverImageUrl"]);
+    return Album(id: map["id"], name: map["name"], coverImageUrl: map["coverImageUrl"]);
   }
 
   Map toMap() {

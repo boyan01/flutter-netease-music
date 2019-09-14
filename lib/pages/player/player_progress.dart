@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:quiet/component/utils/utils.dart';
+import 'package:quiet/material/playing_indicator.dart';
 import 'package:quiet/part/part.dart';
-import 'package:quiet/service/channel_media_player.dart';
 
-///a seek bar for current position
+/// A seek bar for current position.
 class DurationProgressBar extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => DurationProgressBarState();
@@ -12,12 +12,16 @@ class DurationProgressBar extends StatefulWidget {
 class DurationProgressBarState extends State<DurationProgressBar> {
   bool isUserTracking = false;
 
-  double trackingPosition = 0;
+  double trackingPosition = 0.0;
 
   @override
   Widget build(BuildContext context) {
+    return ProgressTrackContainer(builder: _buildBar);
+  }
+
+  Widget _buildBar(BuildContext context) {
     var theme = Theme.of(context).primaryTextTheme;
-    var state = PlayerState.of(context).value;
+    var state = PlayerState.of(context);
 
     Widget progressIndicator;
 
@@ -26,20 +30,13 @@ class DurationProgressBarState extends State<DurationProgressBar> {
 
     if (state.initialized) {
       var duration = state.duration.inMilliseconds;
-      var position = isUserTracking
-          ? trackingPosition.round()
-          : state.position.inMilliseconds;
+      var position = isUserTracking ? trackingPosition.round() : state.position.inMilliseconds;
 
       durationText = getTimeStamp(duration);
       positionText = getTimeStamp(position);
 
-      int maxBuffering = 0;
-      for (DurationRange range in state.buffered) {
-        final int end = range.end.inMilliseconds;
-        if (end > maxBuffering) {
-          maxBuffering = end;
-        }
-      }
+      //TODO add buffer progress
+//      int maxBuffering = state.state.playbackState.bufferedPosition;
 
       progressIndicator = Stack(
         fit: StackFit.passthrough,
@@ -69,7 +66,7 @@ class DurationProgressBarState extends State<DurationProgressBar> {
             onChangeEnd: (value) async {
               isUserTracking = false;
               quiet.seekTo(value.round());
-              if (!quiet.value.playWhenReady) {
+              if (!quiet.compatValue.playWhenReady) {
                 quiet.play();
               }
             },

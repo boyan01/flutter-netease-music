@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:music_player/music_player.dart';
 import 'package:netease_music_api/netease_cloud_music.dart' as api;
 import 'package:overlay_support/overlay_support.dart';
 import 'package:quiet/component/route.dart';
@@ -17,6 +18,7 @@ import 'component/utils/crypto.dart';
 
 void main() {
   debugDefaultTargetPlatformOverride = TargetPlatform.android;
+  WidgetsFlutterBinding.ensureInitialized();
   neteaseRepository = NeteaseRepository();
   api.debugPrint = debugPrint;
   runApp(PageSplash(
@@ -30,6 +32,10 @@ void main() {
       return MyApp(setting: setting, user: data[2]);
     },
   ));
+}
+
+void playerBackgroundService() {
+  runBackgroundService();
 }
 
 class MyApp extends StatelessWidget {

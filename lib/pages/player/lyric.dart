@@ -25,7 +25,7 @@ class Lyric extends StatefulWidget {
 
   final TextAlign textAlign;
 
-  final ValueNotifier<int> position;
+  final int position;
 
   final Color highlight;
 
@@ -59,8 +59,7 @@ class LyricState extends State<Lyric> with TickerProviderStateMixin {
       textAlign: widget.textAlign,
       highlight: widget.highlight,
     );
-    widget.position?.addListener(_scrollToCurrentPosition);
-    _scrollToCurrentPosition();
+    _scrollToCurrentPosition(widget.position);
   }
 
   @override
@@ -75,10 +74,8 @@ class LyricState extends State<Lyric> with TickerProviderStateMixin {
       );
     }
     if (widget.position != oldWidget.position) {
-      oldWidget.position?.removeListener(_scrollToCurrentPosition);
-      widget.position?.addListener(_scrollToCurrentPosition);
+      _scrollToCurrentPosition(widget.position);
     }
-    _scrollToCurrentPosition();
 
     if (widget.playing != oldWidget.playing) {
       if (!widget.playing) {
@@ -90,18 +87,16 @@ class LyricState extends State<Lyric> with TickerProviderStateMixin {
   }
 
   //scroll lyric to current playing position
-  void _scrollToCurrentPosition({bool animate = true}) {
+  void _scrollToCurrentPosition(int milliseconds, {bool animate = true}) {
     if (lyricPainter.height == -1) {
       WidgetsBinding.instance.addPostFrameCallback((d) {
 //        debugPrint("try to init scroll to position ${widget.position.value},"
 //            "but lyricPainter is unavaiable, so scroll(without animate) on next frame $d");
         //TODO maybe cause bad performance
-        if (mounted) _scrollToCurrentPosition(animate: false);
+        if (mounted) _scrollToCurrentPosition(milliseconds, animate: false);
       });
       return;
     }
-
-    int milliseconds = widget.position.value;
 
     int line = widget.lyric.findLineByTimeStamp(milliseconds, lyricPainter.currentLine);
 
@@ -143,7 +138,11 @@ class LyricState extends State<Lyric> with TickerProviderStateMixin {
       _gradientController.addListener(() {
         lyricPainter.lineGradientPercent = _gradientController.value;
       });
-      _gradientController.forward(from: startPercent);
+      if (widget.playing) {
+        _gradientController.forward(from: startPercent);
+      } else {
+        _gradientController.value = startPercent;
+      }
     }
     lyricPainter.currentLine = line;
   }
@@ -154,7 +153,6 @@ class LyricState extends State<Lyric> with TickerProviderStateMixin {
 
   @override
   void dispose() {
-    widget.position?.removeListener(_scrollToCurrentPosition);
     _flingController?.dispose();
     _flingController = null;
     _lineController?.dispose();

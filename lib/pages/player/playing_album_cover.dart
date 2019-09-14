@@ -52,8 +52,8 @@ class _AlbumCoverState extends State<AlbumCover> with TickerProviderStateMixin {
   void initState() {
     super.initState();
 
-    bool attachToCover = quiet.value.playWhenReady &&
-        (quiet.value.isPlaying || quiet.value.isBuffering);
+    bool attachToCover = quiet.compatValue.playWhenReady &&
+        (quiet.compatValue.isPlaying || quiet.compatValue.isBuffering);
     _needleController = AnimationController(
         /*preset need position*/
         value: attachToCover ? 1.0 : 0.0,
@@ -117,7 +117,7 @@ class _AlbumCoverState extends State<AlbumCover> with TickerProviderStateMixin {
   }
 
   void _onMusicStateChanged() {
-    var state = quiet.value;
+    var state = quiet.compatValue;
 
     //handle album cover animation
     var _isPlaying = state.isPlaying;

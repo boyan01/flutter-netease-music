@@ -17,8 +17,7 @@ class PlayingIndicator extends StatefulWidget {
   ///show when player is buffering
   final Widget buffering;
 
-  const PlayingIndicator({Key key, this.playing, this.pausing, this.buffering})
-      : super(key: key);
+  const PlayingIndicator({Key key, this.playing, this.pausing, this.buffering}) : super(key: key);
 
   @override
   _PlayingIndicatorState createState() => _PlayingIndicatorState();
@@ -44,16 +43,14 @@ class _PlayingIndicatorState extends State<PlayingIndicator> {
   }
 
   ///get current player state index
-  int get playerState => quiet.value.isBuffering
-      ? _INDEX_BUFFERING
-      : quiet.value.isPlaying ? _INDEX_PLAYING : _INDEX_PAUSING;
+  int get playerState =>
+      quiet.compatValue.isBuffering ? _INDEX_BUFFERING : quiet.compatValue.isPlaying ? _INDEX_PLAYING : _INDEX_PAUSING;
 
   void _onMusicStateChanged() {
     final target = playerState;
     if (target == _index) return;
 
-    final action =
-        CancelableOperation.fromFuture(Future.delayed(_durationDelay));
+    final action = CancelableOperation.fromFuture(Future.delayed(_durationDelay));
     _changeStateOperations.add(action);
     action.value.whenComplete(() {
       if (target == playerState) _changeState(target);
@@ -84,5 +81,55 @@ class _PlayingIndicatorState extends State<PlayingIndicator> {
       alignment: Alignment.center,
       children: <Widget>[widget.pausing, widget.playing, widget.buffering],
     );
+  }
+}
+
+/// 监听播放器播放进度的 Widget
+class ProgressTrackContainer extends StatefulWidget {
+  final WidgetBuilder builder;
+
+  const ProgressTrackContainer({Key key, @required this.builder}) : super(key: key);
+
+  @override
+  _ProgressTrackContainerState createState() => _ProgressTrackContainerState();
+}
+
+class _ProgressTrackContainerState extends State<ProgressTrackContainer> {
+  @override
+  void initState() {
+    super.initState();
+    quiet.addListener(_onStateChanged);
+    _onStateChanged();
+  }
+
+  bool _tracking = false;
+
+  Timer _timer;
+
+  void _onStateChanged() {
+    final needTrack = quiet.compatValue.isPlaying;
+    if (_tracking == needTrack) return;
+    if (_tracking) {
+      _tracking = false;
+      _timer?.cancel();
+    } else {
+      _tracking = true;
+      _timer?.cancel();
+      _timer = Timer.periodic(const Duration(milliseconds: 50), (timer) {
+        setState(() {});
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    quiet.removeListener(_onStateChanged);
+    _timer?.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return widget.builder(context);
   }
 }

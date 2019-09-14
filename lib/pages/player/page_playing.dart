@@ -3,17 +3,17 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:quiet/component/netease/netease.dart';
-import 'package:quiet/component/utils/utils.dart';
+import 'package:quiet/component/player/player_state.dart';
 import 'package:quiet/material/playing_indicator.dart';
 import 'package:quiet/pages/artists/page_artist_detail.dart';
 import 'package:quiet/pages/comments/page_comment.dart';
 import 'package:quiet/pages/page_playing_list.dart';
 import 'package:quiet/part/part.dart';
 import 'package:quiet/repository/netease.dart';
-import 'package:quiet/service/channel_media_player.dart';
 
 import 'cover.dart';
 import 'lyric.dart';
+import 'player_progress.dart';
 
 ///歌曲播放页面
 class PlayingPage extends StatefulWidget {
@@ -29,13 +29,13 @@ class _PlayingPageState extends State<PlayingPage> {
   @override
   void initState() {
     super.initState();
-    _music = quiet.value.current;
+    _music = quiet.compatValue.current;
     quiet.addListener(_onPlayerStateChanged);
   }
 
   void _onPlayerStateChanged() {
-    if (_music != quiet.value.current) {
-      _music = quiet.value.current;
+    if (_music != quiet.compatValue.current) {
+      _music = quiet.compatValue.current;
       if (_music == null) {
         Navigator.pop(context);
       } else {
@@ -63,8 +63,8 @@ class _PlayingPageState extends State<PlayingPage> {
                 _PlayingTitle(music: _music),
                 _CenterSection(music: _music),
                 _OperationBar(),
-                Padding(padding: EdgeInsets.only(top: 10)),
-                _DurationProgressBar(),
+                const SizedBox(height: 10),
+                DurationProgressBar(),
                 _ControllerBar(),
                 SizedBox(height: MediaQuery.of(context).padding.bottom),
               ],
@@ -80,7 +80,7 @@ class _PlayingPageState extends State<PlayingPage> {
 /// pause,play,play next,play previous...
 class _ControllerBar extends StatelessWidget {
   Widget getPlayModeIcon(context, Color color) {
-    var playMode = PlayerState.of(context, aspect: PlayerStateAspect.playMode).value.playMode;
+    var playMode = PlayerState.of(context).playMode;
     switch (playMode) {
       case PlayMode.single:
         return Icon(
@@ -184,105 +184,12 @@ class _ControllerBar extends StatelessWidget {
   }
 }
 
-///a seek bar for current position
-class _DurationProgressBar extends StatefulWidget {
-  @override
-  State<StatefulWidget> createState() => _DurationProgressBarState();
-}
-
-class _DurationProgressBarState extends State<_DurationProgressBar> {
-  bool isUserTracking = false;
-
-  double trackingPosition = 0;
-
-  @override
-  Widget build(BuildContext context) {
-    var theme = Theme.of(context).primaryTextTheme;
-    var state = PlayerState.of(context).value;
-
-    Widget progressIndicator;
-
-    String durationText;
-    String positionText;
-
-    if (state.initialized) {
-      var duration = state.duration.inMilliseconds;
-      var position = isUserTracking ? trackingPosition.round() : state.position.inMilliseconds;
-
-      durationText = getTimeStamp(duration);
-      positionText = getTimeStamp(position);
-
-      int maxBuffering = 0;
-      for (DurationRange range in state.buffered) {
-        final int end = range.end.inMilliseconds;
-        if (end > maxBuffering) {
-          maxBuffering = end;
-        }
-      }
-
-      progressIndicator = Stack(
-        fit: StackFit.passthrough,
-        children: <Widget>[
-//          LinearProgressIndicator(
-//            value: maxBuffering / duration,
-//            valueColor: AlwaysStoppedAnimation<Color>(Colors.white70),
-//            backgroundColor: Colors.white12,
-//          ),
-          Slider(
-            value: position.toDouble().clamp(0.0, duration.toDouble()),
-            min: 0.0,
-            activeColor: theme.body1.color.withOpacity(0.75),
-            inactiveColor: theme.caption.color.withOpacity(0.3),
-            max: duration.toDouble(),
-            onChangeStart: (value) {
-              setState(() {
-                isUserTracking = true;
-                trackingPosition = value;
-              });
-            },
-            onChanged: (value) {
-              setState(() {
-                trackingPosition = value;
-              });
-            },
-            onChangeEnd: (value) async {
-              isUserTracking = false;
-              quiet.seekTo(value.round());
-              if (!quiet.value.playWhenReady) {
-                quiet.play();
-              }
-            },
-          ),
-        ],
-      );
-    } else {
-      //a disable slider if media is not available
-      progressIndicator = Slider(value: 0, onChanged: (_) => {});
-    }
-
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: 4, horizontal: 16),
-      child: Row(
-        children: <Widget>[
-          Text(positionText ?? "00:00", style: theme.body1),
-          Padding(padding: EdgeInsets.only(left: 4)),
-          Expanded(
-            child: progressIndicator,
-          ),
-          Padding(padding: EdgeInsets.only(left: 4)),
-          Text(durationText ?? "00:00", style: theme.body1),
-        ],
-      ),
-    );
-  }
-}
-
 class _OperationBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final iconColor = Theme.of(context).primaryIconTheme.color;
 
-    final music = quiet.value.current;
+    final music = quiet.compatValue.current;
     final liked = LikedSongList.contain(context, music);
 
     return Row(
@@ -390,7 +297,7 @@ class _CenterSectionState extends State<_CenterSection> {
   }
 }
 
-class _CloudLyric extends StatefulWidget {
+class _CloudLyric extends StatelessWidget {
   final VoidCallback onTap;
 
   final Music music;
@@ -398,32 +305,11 @@ class _CloudLyric extends StatefulWidget {
   const _CloudLyric({Key key, this.onTap, @required this.music}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _CloudLyricState();
-}
-
-class _CloudLyricState extends State<_CloudLyric> {
-  ValueNotifier<int> position = ValueNotifier(0);
-
-  @override
-  void initState() {
-    super.initState();
-    quiet.addListener(_onMusicStateChanged);
-    _onMusicStateChanged();
-  }
-
-  void _onMusicStateChanged() {
-    position.value = quiet.value.position.inMilliseconds;
-  }
-
-  @override
-  void dispose() {
-    quiet.removeListener(_onMusicStateChanged);
-    position.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
+    return ProgressTrackContainer(builder: _buildLyric);
+  }
+
+  Widget _buildLyric(BuildContext context) {
     TextStyle style = Theme.of(context).textTheme.body1.copyWith(height: 1.5, fontSize: 16, color: Colors.white);
     final playingLyric = PlayingLyric.of(context);
 
@@ -451,10 +337,10 @@ class _CloudLyricState extends State<_CloudLyric> {
               lyric: playingLyric.lyric,
               lyricLineStyle: normalStyle,
               highlight: style.color,
-              position: position,
-              onTap: widget.onTap,
+              position: quiet.compatValue.position.inMilliseconds,
+              onTap: onTap,
               size: Size(constraints.maxWidth, constraints.maxHeight == double.infinity ? 0 : constraints.maxHeight),
-              playing: PlayerState.of(context, aspect: PlayerStateAspect.playbackState).value.isPlaying,
+              playing: PlayerState.of(context).isPlaying,
             ),
           ),
         );
@@ -480,7 +366,7 @@ class _BlurBackground extends StatelessWidget {
       fit: StackFit.expand,
       children: <Widget>[
         Image(
-          image: CachedImage(music.album.coverImageUrl),
+          image: CachedImage(music.description.iconUri.toString()),
           fit: BoxFit.cover,
           height: 15,
           width: 15,

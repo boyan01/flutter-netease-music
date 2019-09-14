@@ -49,7 +49,7 @@ class MusicList extends StatelessWidget {
               width: 40,
               height: 40,
               fit: BoxFit.cover,
-              image: CachedImage(music.album.coverImageUrl),
+              image: CachedImage(music.description.iconUri?.toString() ?? ""),
               placeholder: AssetImage("assets/playlist_playlist.9.png"),
             ),
           ),
@@ -58,8 +58,7 @@ class MusicList extends StatelessWidget {
 
   //return null if current music is not be playing
   static Widget _buildPlayingLeading(BuildContext context, Music music) {
-    if (MusicList.of(context).token == PlayerState.of(context).value.token &&
-        music == PlayerState.of(context).value.current) {
+    if (MusicList.of(context).token == PlayerState.of(context).token && music == PlayerState.of(context).current) {
       return Container(
         margin: const EdgeInsets.only(left: 8, right: 8),
         width: 40,
@@ -74,7 +73,7 @@ class MusicList extends StatelessWidget {
 
   static final void Function(BuildContext context, Music muisc) defaultOnTap = (context, music) {
     final list = MusicList.of(context);
-    if (quiet.value.token == list.token && quiet.value.isPlaying && quiet.value.current == music) {
+    if (quiet.compatValue.token == list.token && quiet.compatValue.isPlaying && quiet.compatValue.current == music) {
       //open playing page
       Navigator.pushNamed(context, ROUTE_PAYING);
     } else {
@@ -207,7 +206,7 @@ class MusicListHeader extends StatelessWidget implements PreferredSizeWidget {
         child: InkWell(
           onTap: () {
             final list = MusicList.of(context);
-            if (quiet.value.token == list.token && quiet.value.isPlaying) {
+            if (quiet.compatValue.token == list.token && quiet.compatValue.isPlaying) {
               //open playing page
               Navigator.pushNamed(context, ROUTE_PAYING);
             } else {
