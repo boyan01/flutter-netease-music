@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio/dio.dart';
+import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:quiet/component/utils/crypto.dart';
@@ -54,11 +55,9 @@ class MyCookieManager extends CookieManager {
   MyCookieManager(CookieJar cookieJar) : super(cookieJar);
 
   @override
-  onRequest(RequestOptions options) {
+  Future onRequest(RequestOptions options) async {
     var cookies = cookieJar.loadForRequest(Uri.parse('http://music.163.com'));
-    cookies.removeWhere(
-        (cookie) => cookie.value == CookieManager.invalidCookieValue && cookie.expires.isBefore(DateTime.now()));
-    cookies.addAll(options.cookies);
+    cookies.removeWhere((cookie) => cookie.expires?.isBefore(DateTime.now()) == true);
     String cookie = CookieManager.getCookies(cookies);
     if (cookie.isNotEmpty) options.headers[HttpHeaders.cookieHeader] = cookie;
   }
