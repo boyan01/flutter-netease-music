@@ -1,5 +1,8 @@
 import 'dart:async';
+import 'dart:convert';
 
+import 'package:flutter/services.dart';
+import 'package:quiet/model/region_flag.dart';
 import 'package:quiet/repository/netease.dart';
 
 ///
@@ -8,14 +11,23 @@ import 'package:quiet/repository/netease.dart';
 ///
 class WelcomeRepository {
   ///检测手机号是否已存在
-  static Future<Result<PhoneCheckResult>> checkPhoneExist(String phone) async {
+  static Future<Result<PhoneCheckResult>> checkPhoneExist(String phone, String countryCode) async {
     final result = await neteaseRepository.doRequest(
       '/cellphone/existence/check',
-      {'phone': phone},
+      {'phone': phone, 'countrycode': countryCode},
     );
     if (result.isError) return result.asError;
     final value = PhoneCheckResult.fromJsonMap(result.asValue.value);
     return Result.value(value);
+  }
+
+  static Future<List<RegionFlag>> getRegions() async {
+    final jsonStr = await rootBundle.loadString("assets/emoji-flags.json", cache: false);
+    final flags = json.decode(jsonStr) as List;
+    final result = flags.cast<Map>().map((map) => RegionFlag.fromMap(map)).where((flag) {
+      return flag.dialCode != null;
+    }).toList();
+    return result;
   }
 }
 
