@@ -366,8 +366,6 @@ class NeteaseRepository {
     try {
       final dio = await _dio;
       final result = await dio.get<String>(path, queryParameters: NeteaseCloudApiCrypto().encrypt(data).cast());
-      print(result);
-      print(data);
       final map = json.decode(result.data);
       if (map == null) {
         return Result.error('请求失败了');
