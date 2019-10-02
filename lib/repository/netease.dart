@@ -240,7 +240,7 @@ class NeteaseRepository {
     return result.isValue && result.asValue.value["data"][0]["code"] == 200;
   }
 
-  Future<Result<String>> getPlayUrl(int id, [int br = 999000]) async {
+  Future<Result<String>> getPlayUrl(int id, [int br = 320000]) async {
     final result = await doRequest("/song/url", {"id": id, "br": br});
     debugPrint("play uri : ${result.asValue.value}");
     return _map(result, (result) {
