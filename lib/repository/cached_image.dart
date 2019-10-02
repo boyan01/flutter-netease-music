@@ -21,8 +21,7 @@ class CachedImage extends ImageProvider<CachedImage> implements CacheKey {
         assert(scale != null),
         this._size = null;
 
-  const CachedImage._internal(this.url, this._size,
-      {this.scale = 1.0, this.headers});
+  const CachedImage._internal(this.url, this._size, {this.scale = 1.0, this.headers});
 
   /// The URL from which the image will be fetched.
   final String url;
@@ -34,13 +33,9 @@ class CachedImage extends ImageProvider<CachedImage> implements CacheKey {
   /// might be null
   final Size _size;
 
-  int get height => _size == null || _size.height == double.infinity
-      ? -1
-      : _size.height.toInt();
+  int get height => _size == null || _size.height == double.infinity ? -1 : _size.height.toInt();
 
-  int get width => _size == null || _size.width == double.infinity
-      ? -1
-      : _size.width.toInt();
+  int get width => _size == null || _size.width == double.infinity ? -1 : _size.width.toInt();
 
   /// The HTTP headers that will be used with [HttpClient.get] to fetch image from network.
   final Map<String, String> headers;
@@ -63,30 +58,16 @@ class CachedImage extends ImageProvider<CachedImage> implements CacheKey {
 
   @override
   ImageStreamCompleter load(CachedImage key) {
-    return MultiFrameImageStreamCompleter(
-        codec: _loadAsync(key)
-//          ..then((value) {
-//            value.getNextFrame().then((image) {
-//              debugPrint(
-//                  "load ${key.toString()} : ${image.image.width} * ${image.image.height}");
-//              debugPrint(
-//                  "cached image count =  ${PaintingBinding.instance.imageCache.currentSize}, "
-//                  "total size ${PaintingBinding.instance.imageCache.currentSizeBytes / 1024} KB");
-//            });
-//          })
-        ,
-        scale: key.scale);
+    return MultiFrameImageStreamCompleter(codec: _loadAsync(key), scale: key.scale);
   }
 
   static final HttpClient _httpClient = HttpClient();
 
   Future<ui.Codec> _loadAsync(CachedImage key) async {
-    var cache = await _imageCache();
-
+    final cache = await _imageCache();
     var image = await cache.get(key);
     if (image != null) {
-      return await ui.instantiateImageCodec(Uint8List.fromList(image),
-          targetWidth: key.width, targetHeight: -1);
+      return await ui.instantiateImageCodec(Uint8List.fromList(image), targetWidth: key.width, targetHeight: -1);
     }
     //request network source
     final Uri resolved = Uri.base.resolve(key.url);
@@ -96,28 +77,22 @@ class CachedImage extends ImageProvider<CachedImage> implements CacheKey {
     });
     final HttpClientResponse response = await request.close();
     if (response.statusCode != HttpStatus.ok)
-      throw Exception(
-          'HTTP request failed, statusCode: ${response?.statusCode}, $resolved');
+      throw Exception('HTTP request failed, statusCode: ${response?.statusCode}, $resolved');
 
     final Uint8List bytes = await consolidateHttpClientResponseBytes(response);
-    if (bytes.lengthInBytes == 0)
-      throw Exception('NetworkImage is an empty file: $resolved');
+    if (bytes.lengthInBytes == 0) throw Exception('NetworkImage is an empty file: $resolved');
 
     //save image to cache
     await cache.update(key, bytes);
 
-    return await ui.instantiateImageCodec(Uint8List.fromList(bytes),
-        targetWidth: key.width, targetHeight: -1);
+    return await ui.instantiateImageCodec(Uint8List.fromList(bytes), targetWidth: key.width, targetHeight: -1);
   }
 
   @override
   Future<CachedImage> obtainKey(ImageConfiguration configuration) {
     return SynchronousFuture<CachedImage>(CachedImage._internal(
-        url,
-        (configuration.size ?? _defaultImageSize) *
-            configuration.devicePixelRatio,
-        scale: scale,
-        headers: headers));
+        url, (configuration.size ?? _defaultImageSize) * configuration.devicePixelRatio,
+        scale: scale, headers: headers));
   }
 
   @override
