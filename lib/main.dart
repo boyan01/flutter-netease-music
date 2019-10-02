@@ -37,8 +37,13 @@ void main() {
 
 /// this method will be invoked by native (Android/iOS)
 void playerBackgroundService() {
+  WidgetsFlutterBinding.ensureInitialized();
+  neteaseRepository = NeteaseRepository(3001);
+  // fixme don't use socket!!
+  api.startServer(port: 3001, decryptor: NeteaseCloudApiCrypto().decrypt);
   runBackgroundService(
     imageLoadInterceptor: BackgroundInterceptors.loadImageInterceptor,
+    playUriInterceptor: BackgroundInterceptors.playUriInterceptor,
   );
 }
 

@@ -49,7 +49,11 @@ const _CODE_NEED_LOGIN = 301;
 ///map a result to any other
 Result<R> _map<T, R>(Result<T> source, R f(T t)) {
   if (source.isError) return source.asError;
-  return Result.value(f(source.asValue.value));
+  try {
+    return Result.value(f(source.asValue.value));
+  } catch (e, s) {
+    return Result.error(e, s);
+  }
 }
 
 class MyCookieManager extends CookieManager {
@@ -65,7 +69,7 @@ class MyCookieManager extends CookieManager {
 }
 
 class NeteaseRepository {
-  NeteaseRepository() {
+  NeteaseRepository([int port = 3000]) {
     _dio = () async {
       String path;
       try {
@@ -75,7 +79,7 @@ class NeteaseRepository {
         path = '.';
       }
       _cookieJar = PersistCookieJar(dir: path + '/.cookies/');
-      final dio = Dio(BaseOptions(baseUrl: 'http://localhost:3000'));
+      final dio = Dio(BaseOptions(baseUrl: 'http://localhost:$port'));
       dio.interceptors..add(MyCookieManager(_cookieJar))
 //        ..add(LogInterceptor(requestHeader: false))
           ;
@@ -234,6 +238,18 @@ class NeteaseRepository {
   Future<bool> checkMusic(int id) async {
     var result = await doRequest("https://music.163.com/weapi/song/enhance/player/url", {"ids": "[$id]", "br": 999000});
     return result.isValue && result.asValue.value["data"][0]["code"] == 200;
+  }
+
+  Future<Result<String>> getPlayUrl(int id, [int br = 999000]) async {
+    final result = await doRequest("/song/url", {"id": id, "br": br});
+    debugPrint("play uri : ${result.asValue.value}");
+    return _map(result, (result) {
+      final data = result['data'] as List;
+      if (data.isEmpty) {
+        throw "无法获取播放地址";
+      }
+      return data.first['url'];
+    });
   }
 
   ///fetch music detail from id
