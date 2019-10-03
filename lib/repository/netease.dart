@@ -242,7 +242,6 @@ class NeteaseRepository {
 
   Future<Result<String>> getPlayUrl(int id, [int br = 320000]) async {
     final result = await doRequest("/song/url", {"id": id, "br": br});
-    debugPrint("play uri : ${result.asValue.value}");
     return _map(result, (result) {
       final data = result['data'] as List;
       if (data.isEmpty) {
