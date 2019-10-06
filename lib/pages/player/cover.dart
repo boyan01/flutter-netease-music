@@ -63,7 +63,7 @@ class _AlbumCoverState extends State<AlbumCover> with TickerProviderStateMixin {
     _needleAnimation =
         Tween<double>(begin: -1 / 12, end: 0).chain(CurveTween(curve: Curves.easeInOut)).animate(_needleController);
 
-    quiet.addListener(_onMusicStateChanged);
+    quiet.addListener(_checkNeedleAndCoverStatus);
     _current = widget.music;
     scheduleMicrotask(() async {
       _previous = await quiet.getPrevious();
@@ -72,7 +72,7 @@ class _AlbumCoverState extends State<AlbumCover> with TickerProviderStateMixin {
         setState(() {});
       }
     });
-    _onMusicStateChanged();
+    _checkNeedleAndCoverStatus();
   }
 
   @override
@@ -91,7 +91,6 @@ class _AlbumCoverState extends State<AlbumCover> with TickerProviderStateMixin {
       }
       return;
     }
-    _rotateNeedle(false);
     double offset = 0;
     if (widget.music == _previous) {
       offset = MediaQuery.of(context).size.width;
@@ -112,9 +111,11 @@ class _AlbumCoverState extends State<AlbumCover> with TickerProviderStateMixin {
         }();
       });
     });
+    _checkNeedleAndCoverStatus();
   }
 
-  void _onMusicStateChanged() {
+  // update needle and cover for current player state
+  void _checkNeedleAndCoverStatus() {
     var state = quiet.compatValue;
 
     // needle is should attach to cover
@@ -143,7 +144,7 @@ class _AlbumCoverState extends State<AlbumCover> with TickerProviderStateMixin {
 
   @override
   void dispose() {
-    quiet.removeListener(_onMusicStateChanged);
+    quiet.removeListener(_checkNeedleAndCoverStatus);
     _needleController.dispose();
     _translateController?.dispose();
     _translateController = null;
@@ -181,7 +182,7 @@ class _AlbumCoverState extends State<AlbumCover> with TickerProviderStateMixin {
         GestureDetector(
           onHorizontalDragStart: (detail) {
             _beDragging = true;
-            _rotateNeedle(false);
+            _checkNeedleAndCoverStatus();
           },
           onHorizontalDragUpdate: (detail) {
             if (_beDragging) {
@@ -220,7 +221,9 @@ class _AlbumCoverState extends State<AlbumCover> with TickerProviderStateMixin {
               });
             } else {
               //animate [_coverTranslateX] to 0
-              _animateCoverTranslateTo(0);
+              _animateCoverTranslateTo(0, onCompleted: () {
+                _checkNeedleAndCoverStatus();
+              });
             }
           },
           child: Container(
