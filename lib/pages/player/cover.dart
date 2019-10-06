@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -52,27 +53,26 @@ class _AlbumCoverState extends State<AlbumCover> with TickerProviderStateMixin {
   void initState() {
     super.initState();
 
-    bool attachToCover = quiet.compatValue.playWhenReady &&
-        (quiet.compatValue.isPlaying || quiet.compatValue.isBuffering);
+    _needleAttachCover = quiet.compatValue.isPlaying;
     _needleController = AnimationController(
         /*preset need position*/
-        value: attachToCover ? 1.0 : 0.0,
+        value: _needleAttachCover ? 1.0 : 0.0,
         vsync: this,
         duration: Duration(milliseconds: 500),
         animationBehavior: AnimationBehavior.normal);
-    _needleAnimation = Tween<double>(begin: -1 / 12, end: 0)
-        .chain(CurveTween(curve: Curves.easeInOut))
-        .animate(_needleController);
+    _needleAnimation =
+        Tween<double>(begin: -1 / 12, end: 0).chain(CurveTween(curve: Curves.easeInOut)).animate(_needleController);
 
     quiet.addListener(_onMusicStateChanged);
     _current = widget.music;
-    () async {
+    scheduleMicrotask(() async {
       _previous = await quiet.getPrevious();
       _next = await quiet.getNext();
       if (mounted) {
         setState(() {});
       }
-    }();
+    });
+    _onMusicStateChanged();
   }
 
   @override
@@ -92,26 +92,24 @@ class _AlbumCoverState extends State<AlbumCover> with TickerProviderStateMixin {
       return;
     }
     _rotateNeedle(false);
-    setState(() {
-      double offset = 0;
-      if (widget.music == _previous) {
-        offset = MediaQuery.of(context).size.width;
-      } else if (widget.music == _next) {
-        offset = -MediaQuery.of(context).size.width;
-      }
-      _animateCoverTranslateTo(offset, onCompleted: () {
-        setState(() {
-          _coverTranslateX = 0;
-          _current = widget.music;
-          _previousNextDirty = false;
-          () async {
-            _next = await quiet.getNext();
-            _previous = await quiet.getPrevious();
-            if (mounted) {
-              setState(() {});
-            }
-          }();
-        });
+    double offset = 0;
+    if (widget.music == _previous) {
+      offset = MediaQuery.of(context).size.width;
+    } else if (widget.music == _next) {
+      offset = -MediaQuery.of(context).size.width;
+    }
+    _animateCoverTranslateTo(offset, onCompleted: () {
+      setState(() {
+        _coverTranslateX = 0;
+        _current = widget.music;
+        _previousNextDirty = false;
+        () async {
+          _next = await quiet.getNext();
+          _previous = await quiet.getPrevious();
+          if (mounted) {
+            setState(() {});
+          }
+        }();
       });
     });
   }
@@ -119,17 +117,15 @@ class _AlbumCoverState extends State<AlbumCover> with TickerProviderStateMixin {
   void _onMusicStateChanged() {
     var state = quiet.compatValue;
 
+    // needle is should attach to cover
+    bool attachToCover = state.isPlaying && !_beDragging && _translateController == null;
+    _rotateNeedle(attachToCover);
+
     //handle album cover animation
     var _isPlaying = state.isPlaying;
     setState(() {
       _coverRotating = _isPlaying && _needleAttachCover;
     });
-
-    bool attachToCover = state.playWhenReady &&
-        (state.isPlaying || state.isBuffering) &&
-        !_beDragging &&
-        _translateController == null;
-    _rotateNeedle(attachToCover);
   }
 
   ///rotate needle to (un)attach to cover image
@@ -159,10 +155,8 @@ class _AlbumCoverState extends State<AlbumCover> with TickerProviderStateMixin {
   void _animateCoverTranslateTo(double des, {void onCompleted()}) {
     _translateController?.dispose();
     _translateController = null;
-    _translateController = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 300));
-    final animation =
-        Tween(begin: _coverTranslateX, end: des).animate(_translateController);
+    _translateController = AnimationController(vsync: this, duration: const Duration(milliseconds: 300));
+    final animation = Tween(begin: _coverTranslateX, end: des).animate(_translateController);
     animation.addListener(() {
       setState(() {
         _coverTranslateX = animation.value;
@@ -199,15 +193,12 @@ class _AlbumCoverState extends State<AlbumCover> with TickerProviderStateMixin {
           onHorizontalDragEnd: (detail) {
             _beDragging = false;
 
-            ///滚动速度阈值
-            final vThreshold =
-                1.0 / (0.050 * MediaQuery.of(context).devicePixelRatio);
+            //左右切换封面滚动速度阈值
+            final vThreshold = 1.0 / (0.050 * MediaQuery.of(context).devicePixelRatio);
 
-            final sameDirection =
-                (_coverTranslateX > 0 && detail.primaryVelocity > 0) ||
-                    (_coverTranslateX < 0 && detail.primaryVelocity < 0);
-            if (_coverTranslateX.abs() >
-                    MediaQuery.of(context).size.width / 2 ||
+            final sameDirection = (_coverTranslateX > 0 && detail.primaryVelocity > 0) ||
+                (_coverTranslateX < 0 && detail.primaryVelocity < 0);
+            if (_coverTranslateX.abs() > MediaQuery.of(context).size.width / 2 ||
                 (sameDirection && detail.primaryVelocity.abs() > vThreshold)) {
               var des = MediaQuery.of(context).size.width;
               if (_coverTranslateX < 0) {
@@ -234,8 +225,7 @@ class _AlbumCoverState extends State<AlbumCover> with TickerProviderStateMixin {
           },
           child: Container(
               color: Colors.transparent,
-              padding: const EdgeInsets.only(
-                  left: 64, right: 64, top: HEIGHT_SPACE_ALBUM_TOP),
+              padding: const EdgeInsets.only(left: 64, right: 64, top: HEIGHT_SPACE_ALBUM_TOP),
               child: Stack(
                 children: <Widget>[
                   Transform.scale(
@@ -250,22 +240,15 @@ class _AlbumCoverState extends State<AlbumCover> with TickerProviderStateMixin {
                     ),
                   ),
                   Transform.translate(
-                    offset: Offset(
-                        _coverTranslateX - MediaQuery.of(context).size.width,
-                        0),
-                    child:
-                        _RotationCoverImage(rotating: false, music: _previous),
+                    offset: Offset(_coverTranslateX - MediaQuery.of(context).size.width, 0),
+                    child: _RotationCoverImage(rotating: false, music: _previous),
                   ),
                   Transform.translate(
                     offset: Offset(_coverTranslateX, 0),
-                    child: _RotationCoverImage(
-                        rotating: _coverRotating && !_beDragging,
-                        music: _current),
+                    child: _RotationCoverImage(rotating: _coverRotating && !_beDragging, music: _current),
                   ),
                   Transform.translate(
-                    offset: Offset(
-                        _coverTranslateX + MediaQuery.of(context).size.width,
-                        0),
+                    offset: Offset(_coverTranslateX + MediaQuery.of(context).size.width, 0),
                     child: _RotationCoverImage(rotating: false, music: _next),
                   ),
                 ],
@@ -301,8 +284,7 @@ class _RotationCoverImage extends StatefulWidget {
   final bool rotating;
   final Music music;
 
-  const _RotationCoverImage(
-      {Key key, @required this.rotating, @required this.music})
+  const _RotationCoverImage({Key key, @required this.rotating, @required this.music})
       : assert(rotating != null),
         super(key: key);
 
@@ -310,8 +292,7 @@ class _RotationCoverImage extends StatefulWidget {
   _RotationCoverImageState createState() => _RotationCoverImageState();
 }
 
-class _RotationCoverImageState extends State<_RotationCoverImage>
-    with SingleTickerProviderStateMixin {
+class _RotationCoverImageState extends State<_RotationCoverImage> with SingleTickerProviderStateMixin {
   //album cover rotation
   double rotation = 0;
 
@@ -334,20 +315,18 @@ class _RotationCoverImageState extends State<_RotationCoverImage>
   @override
   void initState() {
     super.initState();
-    controller = AnimationController(
-        vsync: this,
-        duration: Duration(seconds: 20),
-        animationBehavior: AnimationBehavior.normal)
-      ..addListener(() {
-        setState(() {
-          rotation = controller.value * 2 * pi;
-        });
-      })
-      ..addStatusListener((status) {
-        if (status == AnimationStatus.completed && controller.value == 1) {
-          controller.forward(from: 0);
-        }
-      });
+    controller =
+        AnimationController(vsync: this, duration: Duration(seconds: 20), animationBehavior: AnimationBehavior.normal)
+          ..addListener(() {
+            setState(() {
+              rotation = controller.value * 2 * pi;
+            });
+          })
+          ..addStatusListener((status) {
+            if (status == AnimationStatus.completed && controller.value == 1) {
+              controller.forward(from: 0);
+            }
+          });
 //    if (widget.rotating) {
 //      controller.forward(from: controller.value);
 //    }
@@ -377,9 +356,8 @@ class _RotationCoverImageState extends State<_RotationCoverImage>
         child: AspectRatio(
           aspectRatio: 1,
           child: Container(
-            foregroundDecoration: BoxDecoration(
-                image: DecorationImage(
-                    image: AssetImage("assets/playing_page_disc.png"))),
+            foregroundDecoration:
+                BoxDecoration(image: DecorationImage(image: AssetImage("assets/playing_page_disc.png"))),
             padding: EdgeInsets.all(30),
             child: ClipOval(
               child: Image(
