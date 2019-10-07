@@ -35,6 +35,15 @@ class NeteaseCloudApiCrypto {
 
   //加密
   Map encrypt(Map map) {
+    bool debug = false;
+    assert(() {
+      debug = true;
+      return true;
+    }());
+    if (debug) {
+      return map;
+    }
+
     if (map == null) return null;
     return {
       _keyParam: _crypto.encrypt(json.encode(map), iv: _iv).base64,
@@ -42,6 +51,15 @@ class NeteaseCloudApiCrypto {
   }
 
   Map<String, String> decrypt(Map<String, String> map) {
+    bool debug = false;
+    assert(() {
+      debug = true;
+      return true;
+    }());
+    if (debug) {
+      return map;
+    }
+
     if (map == null) return null;
     final String encoded = map[_keyParam];
     if (encoded == null || encoded.isEmpty) return null;

@@ -42,7 +42,7 @@ class PlayerControllerState {
     return PlayMode.sequence;
   }
 
-  bool get initialized => duration != null;
+  bool get initialized => duration != null && duration >= const Duration();
 
   bool get hasError => state.playbackState.state == PlaybackState.STATE_ERROR;
 

@@ -34,7 +34,6 @@ dependencies:
   overlay_support: ^1.0.1
   music_player:
     path: music_service/
-  android_alarm_manager: ^0.4.4
 
 dev_dependencies:
   flutter_test:

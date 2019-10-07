@@ -13,6 +13,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'component/global/settings.dart';
 import 'component/netease/netease.dart';
+import 'component/player/interceptors.dart';
 import 'component/player/player.dart';
 import 'component/utils/crypto.dart';
 
@@ -34,8 +35,16 @@ void main() {
   ));
 }
 
+/// this method will be invoked by native (Android/iOS)
 void playerBackgroundService() {
-  runBackgroundService();
+  WidgetsFlutterBinding.ensureInitialized();
+  neteaseRepository = NeteaseRepository(3001);
+  // fixme don't use socket!!
+  api.startServer(port: 3001, decryptor: NeteaseCloudApiCrypto().decrypt);
+  runBackgroundService(
+    imageLoadInterceptor: BackgroundInterceptors.loadImageInterceptor,
+    playUriInterceptor: BackgroundInterceptors.playUriInterceptor,
+  );
 }
 
 class MyApp extends StatelessWidget {
