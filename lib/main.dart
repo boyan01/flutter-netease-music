@@ -15,7 +15,6 @@ import 'component/global/settings.dart';
 import 'component/netease/netease.dart';
 import 'component/player/interceptors.dart';
 import 'component/player/player.dart';
-import 'component/utils/crypto.dart';
 
 void main() {
   debugDefaultTargetPlatformOverride = TargetPlatform.android;
@@ -24,13 +23,12 @@ void main() {
   api.debugPrint = debugPrint;
   runApp(PageSplash(
     futures: [
-      api.startServer(decryptor: NeteaseCloudApiCrypto().decrypt),
       SharedPreferences.getInstance(),
       UserAccount.getPersistenceUser(),
     ],
     builder: (context, data) {
-      final setting = Settings(data[1]);
-      return MyApp(setting: setting, user: data[2]);
+      final setting = Settings(data[0]);
+      return MyApp(setting: setting, user: data[1]);
     },
   ));
 }
@@ -38,9 +36,8 @@ void main() {
 /// this method will be invoked by native (Android/iOS)
 void playerBackgroundService() {
   WidgetsFlutterBinding.ensureInitialized();
-  neteaseRepository = NeteaseRepository(3001);
-  // fixme don't use socket!!
-  api.startServer(port: 3001, decryptor: NeteaseCloudApiCrypto().decrypt);
+  // 获取播放地址需要使用云音乐 API, 所以需要为此 isolate 初始化一个 repository.
+  neteaseRepository = NeteaseRepository();
   runBackgroundService(
     imageLoadInterceptor: BackgroundInterceptors.loadImageInterceptor,
     playUriInterceptor: BackgroundInterceptors.playUriInterceptor,
