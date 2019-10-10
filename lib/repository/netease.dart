@@ -1,13 +1,10 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:cookie_jar/cookie_jar.dart';
-import 'package:dio/dio.dart';
-import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:netease_music_api/netease_cloud_music.dart' as api;
 import 'package:path_provider/path_provider.dart';
-import 'package:quiet/component/utils/crypto.dart';
 import 'package:quiet/model/playlist_detail.dart';
 import 'package:quiet/pages/comments/page_comment.dart';
 import 'package:quiet/part/part.dart';
@@ -56,40 +53,34 @@ Result<R> _map<T, R>(Result<T> source, R f(T t)) {
   }
 }
 
-class MyCookieManager extends CookieManager {
-  MyCookieManager(CookieJar cookieJar) : super(cookieJar);
-
-  @override
-  Future onRequest(RequestOptions options) async {
-    var cookies = cookieJar.loadForRequest(Uri.parse('http://music.163.com'));
-    cookies.removeWhere((cookie) => cookie.expires?.isBefore(DateTime.now()) == true);
-    String cookie = CookieManager.getCookies(cookies);
-    if (cookie.isNotEmpty) options.headers[HttpHeaders.cookieHeader] = cookie;
-  }
-}
-
 class NeteaseRepository {
-  NeteaseRepository([int port = 3000]) {
-    _dio = () async {
-      String path;
+  NeteaseRepository() {
+    scheduleMicrotask(() async {
+      PersistCookieJar cookieJar;
       try {
-        path = (await getApplicationDocumentsDirectory()).path;
+        final path = (await getApplicationDocumentsDirectory()).path;
+        cookieJar = PersistCookieJar(dir: path + '/.cookies/');
       } catch (e) {
-        debugPrint("error: can not get cookie directory");
-        path = '.';
+        debugPrint("error: can not create persist cookie jar");
       }
-      _cookieJar = PersistCookieJar(dir: path + '/.cookies/');
-      final dio = Dio(BaseOptions(baseUrl: 'http://localhost:$port'));
-      dio.interceptors..add(MyCookieManager(_cookieJar))
-//        ..add(LogInterceptor(requestHeader: false))
-          ;
-      return dio;
-    }();
+      _cookieJar.complete(cookieJar);
+    });
   }
 
-  Future<Dio> _dio;
+  Completer<PersistCookieJar> _cookieJar = Completer();
 
-  PersistCookieJar _cookieJar;
+  Future<List<Cookie>> _loadCookies() async {
+    final jar = await _cookieJar.future;
+    if (jar == null) return const [];
+    final uri = Uri.parse('http://music.163.com');
+    return jar.loadForRequest(uri);
+  }
+
+  void _saveCookies(List<Cookie> cookies) async {
+    final jar = await _cookieJar.future;
+    if (jar == null) return;
+    jar.saveFromResponse(Uri.parse('http://music.163.com'), cookies);
+  }
 
   ///使用手机号码登录
   Future<Result<Map>> login(String phone, String password) async {
@@ -106,9 +97,8 @@ class NeteaseRepository {
 
   ///登出,删除本地cookie信息
   Future<void> logout() async {
-    await _dio;
     //删除cookie
-    _cookieJar?.deleteAll();
+    _cookieJar.future.then((v) => v?.deleteAll());
   }
 
   ///根据用户ID获取歌单
@@ -377,23 +367,27 @@ class NeteaseRepository {
 
   ///[path] request path
   ///[data] parameter
-  Future<Result<Map<String, dynamic>>> doRequest(String path, [Map data = const {}]) async {
+  Future<Result<Map<String, dynamic>>> doRequest(String path, [Map param = const {}]) async {
+    api.Answer result;
     try {
-      final dio = await _dio;
-      final result = await dio.get<String>(path, queryParameters: NeteaseCloudApiCrypto().encrypt(data).cast());
-      final map = json.decode(result.data);
-      if (map == null) {
-        return Result.error('请求失败了');
-      } else if (map['code'] == _CODE_NEED_LOGIN) {
-        return Result.error('需要登陆才能访问哦~');
-      } else if (map['code'] != _CODE_SUCCESS) {
-        return Result.error(map['msg'] ?? '请求失败了~');
-      }
-      return Result.value(map);
-    } catch (e, stackTrace) {
-      debugPrint("request error : $e \n $stackTrace");
-      return Result.error(e, stackTrace);
+      result = await api.cloudMusicApi(path, parameter: param, cookie: await _loadCookies());
+    } catch (e, stacktrace) {
+      debugPrint("request error : $e \n $stacktrace");
+      return Result.error(e, stacktrace);
     }
+    final map = result.body;
+
+    if (result.status == 200) {
+      _saveCookies(result.cookie);
+    }
+    if (map == null) {
+      return Result.error('请求失败了');
+    } else if (map['code'] == _CODE_NEED_LOGIN) {
+      return Result.error('需要登陆才能访问哦~');
+    } else if (map['code'] != _CODE_SUCCESS) {
+      return Result.error(map['msg'] ?? '请求失败了~');
+    }
+    return Result.value(map);
   }
 }
 
