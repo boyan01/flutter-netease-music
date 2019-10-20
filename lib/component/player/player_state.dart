@@ -6,7 +6,7 @@ class PlayerControllerState {
       : duration = Duration(milliseconds: state.metadata?.duration ?? 0),
         playWhenReady = true,
         current = state.metadata == null ? null : _Music(state.metadata),
-        playingList = state.queue.map((q) => _Music.fromDescription(q.description)).toList();
+        playingList = state.queue.map((q) => _Music(q)).toList();
 
   PlayerControllerState.uninitialized() : this(const MusicPlayerState.none());
 
@@ -33,13 +33,7 @@ class PlayerControllerState {
   String get token => state.queueTitle;
 
   PlayMode get playMode {
-    if (state.shuffleMode == PlaybackState.SHUFFLE_MODE_ALL) {
-      return PlayMode.shuffle;
-    }
-    if (state.repeatMode == PlaybackState.REPEAT_MODE_NONE) {
-      return PlayMode.single;
-    }
-    return PlayMode.sequence;
+    return state.playMode;
   }
 
   bool get initialized => duration != null && duration >= const Duration();
@@ -79,16 +73,4 @@ class _Music extends Music {
 
   @override
   int get mvId => 0;
-}
-
-///play mode determine [PlayingList] how to play next song
-enum PlayMode {
-  ///aways play single song
-  single,
-
-  ///play current list sequence
-  sequence,
-
-  ///random to play next song
-  shuffle
 }

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:music_player/music_player.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:quiet/pages/playlist/dialog_selector.dart';
 import 'package:quiet/part/part.dart';
-import 'package:quiet/component/player/player_state.dart';
 
 class PlayingListDialog extends StatefulWidget {
   @override

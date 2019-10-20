@@ -33,6 +33,35 @@ class MusicPlayer extends player.MusicPlayer {
   MusicPlayer._private() : super();
 
   @override
+  void onInit(player.MusicPlayerState state) {
+    super.onInit(state);
+    if (state.queue.isNotEmpty) {
+      return;
+    }
+    //load former player information from SharedPreference
+    Future.microtask(() async {
+      var preference = await SharedPreferences.getInstance();
+      final playingMediaId = preference.getString(_PREF_KEY_PLAYING);
+      final token = preference.getString(_PREF_KEY_TOKEN);
+      final playingList = (json.decode(preference.get(_PREF_KEY_PLAYLIST)) as List)
+          ?.cast<Map>()
+          ?.map((e) => player.MediaMetadata.fromMap(e))
+          ?.toList();
+      final playMode = player.PlayMode.values[preference.getInt(_PREF_KEY_PLAY_MODE) ?? 0];
+      setPlayList(playingList ?? const [], token);
+      transportControls.setPlayMode(playMode);
+      transportControls.prepareFromMediaId(playingMediaId);
+      debugPrint("loaded : $playingMediaId");
+      debugPrint("loaded : $playingList");
+      debugPrint("loaded : $token");
+      debugPrint("loaded : $playMode");
+    }).catchError((e, stacktrace) {
+      debugPrint(e.toString());
+      debugPrint(stacktrace.toString());
+    });
+  }
+
+  @override
   void onMetadataChanged(player.MediaMetadata metadata) {
     super.onMetadataChanged(metadata);
     SharedPreferences.getInstance().then((preference) {
@@ -55,44 +84,23 @@ class MusicPlayer extends player.MusicPlayer {
   }
 
   @override
-  void onShuffleModeChanged(int shuffleMode) {
-    super.onShuffleModeChanged(shuffleMode);
-    _persistPlayMode();
+  Future<void> setPlayList(List<player.MediaMetadata> list, String queueId, {String queueTitle}) async {
+    await super.setPlayList(list, queueId, queueTitle: queueTitle);
+    SharedPreferences.getInstance().then((preference) {
+      preference.setString(_PREF_KEY_PLAYLIST, json.encode(list.map((e) => e.toMap()).toList()));
+      preference.setString(_PREF_KEY_TOKEN, queueId);
+    });
   }
 
   @override
-  void onRepeatModeChanged(int repeatMode) {
-    super.onRepeatModeChanged(repeatMode);
+  void onPlaybackStateChanged(player.PlaybackState playbackState) {
+    super.onPlaybackStateChanged(playbackState);
     _persistPlayMode();
   }
 
   void _persistPlayMode() {
     SharedPreferences.getInstance().then((preference) {
       preference.setInt(_PREF_KEY_PLAY_MODE, compatValue.playMode.index);
-    });
-  }
-
-  void onSessionReady() {
-    super.onSessionReady();
-
-    //load former player information from SharedPreference
-    Future.microtask(() async {
-      var preference = await SharedPreferences.getInstance();
-      final playingMediaId = preference.getString(_PREF_KEY_PLAYING);
-      final token = preference.getString(_PREF_KEY_TOKEN);
-      final playingList = (json.decode(preference.get(_PREF_KEY_PLAYLIST)) as List)
-          .cast<Map>()
-          .map((e) => player.MediaMetadata.fromMap(e))
-          .toList();
-      final playMode = PlayMode.values[preference.getInt(_PREF_KEY_PLAY_MODE) ?? 0];
-      transportControls.prepareFromMediaId(playingMediaId, playingList, token);
-      setPlayMode(playMode);
-      debugPrint("loaded : $playingMediaId");
-      debugPrint("loaded : $playingList");
-      debugPrint("loaded : $token");
-      debugPrint("loaded : $playMode");
-    }).catchError((e) {
-      debugPrint(e.toString());
     });
   }
 
@@ -112,7 +120,7 @@ class MusicPlayer extends player.MusicPlayer {
       //so we insert this music to next of current playing
       await insertToNext(music);
     }
-    transportControls.playFromMediaId(music.metadata.mediaId, const [], null);
+    transportControls.playFromMediaId(music.metadata.mediaId);
   }
 
   ///insert a music to [value.current] next position
@@ -130,7 +138,7 @@ class MusicPlayer extends player.MusicPlayer {
     debugPrint("TODO");
   }
 
-  Future<void> playWithList(Music music, List<Music> list, String token) async {
+  Future<void> playWithList(Music music, List<Music> list, String token, {String queueTitle}) async {
     debugPrint("playWithList ${list.map((m) => m.title).join(",")}");
     debugPrint("playWithList token = $token");
     assert(list != null && token != null);
@@ -138,7 +146,8 @@ class MusicPlayer extends player.MusicPlayer {
       return;
     }
     music ??= list.first;
-    transportControls.playFromMediaId(music.metadata.mediaId, list.map((l) => l.metadata).toList(), token);
+    await setPlayList(list.map((l) => l.metadata).toList(), token, queueTitle: queueTitle);
+    transportControls.playFromMediaId(music.metadata.mediaId);
   }
 
   Future<void> pause() async {
@@ -179,27 +188,8 @@ class MusicPlayer extends player.MusicPlayer {
   ///change playlist play mode
   ///[PlayMode]
   void changePlayMode() {
-    PlayMode next = PlayMode.values[(compatValue.playMode.index + 1) % 3];
-    setPlayMode(next);
-  }
-
-  void setPlayMode(PlayMode playMode) {
-    int shuffleMode = player.PlaybackState.SHUFFLE_MODE_NONE;
-    int repeatMode = player.PlaybackState.REPEAT_MODE_NONE;
-    switch (playMode) {
-      case PlayMode.shuffle:
-        repeatMode = player.PlaybackState.REPEAT_MODE_ALL;
-        shuffleMode = player.PlaybackState.SHUFFLE_MODE_ALL;
-        break;
-      case PlayMode.single:
-        repeatMode = player.PlaybackState.REPEAT_MODE_ONE;
-        break;
-      case PlayMode.sequence:
-        repeatMode = player.PlaybackState.REPEAT_MODE_ALL;
-        break;
-    }
-    transportControls.setRepeatMode(repeatMode);
-    transportControls.setShuffleMode(shuffleMode);
+    player.PlayMode next = player.PlayMode.values[(compatValue.playMode.index + 1) % 3];
+    transportControls.setPlayMode(next);
   }
 
   PlayerControllerState compatValue = PlayerControllerState.uninitialized();
