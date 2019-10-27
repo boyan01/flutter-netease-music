@@ -38,22 +38,23 @@ class _PlayingIndicatorState extends State<PlayingIndicator> {
   @override
   void initState() {
     super.initState();
-    quiet.addListener(_onMusicStateChanged);
-    _index = playerState;
+    context.player.addListener(_onMusicStateChanged);
+    _index = _playerState;
   }
 
   ///get current player state index
-  int get playerState =>
-      quiet.compatValue.isBuffering ? _INDEX_BUFFERING : quiet.compatValue.isPlaying ? _INDEX_PLAYING : _INDEX_PAUSING;
+  int get _playerState => context.player.playbackState.isBuffering
+      ? _INDEX_BUFFERING
+      : context.player.playbackState.isPlaying ? _INDEX_PLAYING : _INDEX_PAUSING;
 
   void _onMusicStateChanged() {
-    final target = playerState;
+    final target = _playerState;
     if (target == _index) return;
 
     final action = CancelableOperation.fromFuture(Future.delayed(_durationDelay));
     _changeStateOperations.add(action);
     action.value.whenComplete(() {
-      if (target == playerState) _changeState(target);
+      if (target == _playerState) _changeState(target);
       _changeStateOperations.remove(action);
     });
   }
@@ -69,7 +70,7 @@ class _PlayingIndicatorState extends State<PlayingIndicator> {
 
   @override
   void dispose() {
-    quiet.removeListener(_onMusicStateChanged);
+    context.player.removeListener(_onMusicStateChanged);
     _changeStateOperations.forEach((o) => o.cancel());
     super.dispose();
   }
@@ -98,7 +99,7 @@ class _ProgressTrackContainerState extends State<ProgressTrackContainer> {
   @override
   void initState() {
     super.initState();
-    quiet.addListener(_onStateChanged);
+    context.player.addListener(_onStateChanged);
     _onStateChanged();
   }
 
@@ -107,7 +108,7 @@ class _ProgressTrackContainerState extends State<ProgressTrackContainer> {
   Timer _timer;
 
   void _onStateChanged() {
-    final needTrack = quiet.compatValue.isPlaying;
+    final needTrack = context.player.playbackState.isPlaying;
     if (_tracking == needTrack) return;
     if (_tracking) {
       _tracking = false;
@@ -123,7 +124,7 @@ class _ProgressTrackContainerState extends State<ProgressTrackContainer> {
 
   @override
   void dispose() {
-    quiet.removeListener(_onStateChanged);
+    context.player.removeListener(_onStateChanged);
     _timer?.cancel();
     super.dispose();
   }

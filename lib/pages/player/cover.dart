@@ -53,7 +53,7 @@ class _AlbumCoverState extends State<AlbumCover> with TickerProviderStateMixin {
   void initState() {
     super.initState();
 
-    _needleAttachCover = quiet.compatValue.isPlaying;
+    _needleAttachCover = context.player.playbackState.isPlaying;
     _needleController = AnimationController(
         /*preset need position*/
         value: _needleAttachCover ? 1.0 : 0.0,
@@ -63,15 +63,16 @@ class _AlbumCoverState extends State<AlbumCover> with TickerProviderStateMixin {
     _needleAnimation =
         Tween<double>(begin: -1 / 12, end: 0).chain(CurveTween(curve: Curves.easeInOut)).animate(_needleController);
 
-    quiet.addListener(_checkNeedleAndCoverStatus);
     _current = widget.music;
     scheduleMicrotask(() async {
-      _previous = await quiet.getPrevious();
-      _next = await quiet.getNext();
+      //TODO handle previous and next null
+      _previous = null;
+      _next = null;
       if (mounted) {
         setState(() {});
       }
     });
+    context.player.addListener(_checkNeedleAndCoverStatus);
     _checkNeedleAndCoverStatus();
   }
 
@@ -82,8 +83,8 @@ class _AlbumCoverState extends State<AlbumCover> with TickerProviderStateMixin {
       if (_previousNextDirty) {
         _previousNextDirty = false;
         () async {
-          _previous = await quiet.getPrevious();
-          _next = await quiet.getNext();
+          _previous = null;
+          _next = null;
           if (mounted) {
             setState(() {});
           }
@@ -103,20 +104,20 @@ class _AlbumCoverState extends State<AlbumCover> with TickerProviderStateMixin {
         _current = widget.music;
         _previousNextDirty = false;
         () async {
-          _next = await quiet.getNext();
-          _previous = await quiet.getPrevious();
+          //TODO
+          _next = await null;
+          _previous = await null;
           if (mounted) {
             setState(() {});
           }
         }();
       });
     });
-    _checkNeedleAndCoverStatus();
   }
 
   // update needle and cover for current player state
   void _checkNeedleAndCoverStatus() {
-    var state = quiet.compatValue;
+    final state = context.player.playbackState;
 
     // needle is should attach to cover
     bool attachToCover = state.isPlaying && !_beDragging && _translateController == null;
@@ -144,7 +145,7 @@ class _AlbumCoverState extends State<AlbumCover> with TickerProviderStateMixin {
 
   @override
   void dispose() {
-    quiet.removeListener(_checkNeedleAndCoverStatus);
+    context.player.removeListener(_checkNeedleAndCoverStatus);
     _needleController.dispose();
     _translateController?.dispose();
     _translateController = null;
@@ -211,10 +212,10 @@ class _AlbumCoverState extends State<AlbumCover> with TickerProviderStateMixin {
                   _coverTranslateX = 0;
                   if (des > 0) {
                     _current = _previous;
-                    quiet.playPrevious();
+                    context.transportControls.skipToPrevious();
                   } else {
                     _current = _next;
-                    quiet.playNext();
+                    context.transportControls.skipToNext();
                   }
                   _previousNextDirty = true;
                 });

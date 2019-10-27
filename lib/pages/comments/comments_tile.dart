@@ -25,7 +25,7 @@ class _ItemTitle extends StatelessWidget {
               }));
             } else if (commentThreadId.type == CommentType.song) {
               Music music = payload.obj;
-              if (quiet.compatValue.current != music) {
+              if (context.playerValue.current != music) {
                 dynamic result = await showDialog(
                     context: context,
                     builder: (context) {
@@ -48,7 +48,9 @@ class _ItemTitle extends StatelessWidget {
                 if (!(result is bool && result)) {
                   return;
                 }
-                await quiet.play(music: music);
+                context
+                  ..player.insertToNext(music.metadata)
+                  ..transportControls.playFromMediaId(music.metadata.mediaId);
               }
               Navigator.push(context, MaterialPageRoute(builder: (context) {
                 return PlayingPage();

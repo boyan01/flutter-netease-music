@@ -17,8 +17,8 @@ class PlayingListDialogState extends State<PlayingListDialog> {
   @override
   void initState() {
     super.initState();
-    final playingList = quiet.compatValue.playingList;
-    final music = quiet.compatValue.current;
+    final playingList = context.player.value.playingList;
+    final music = context.player.value.current;
     assert(music != null, '展示播放列表时，当前音乐不能为空！');
     double offset = playingList.indexOf(music) * _HEIGHT_MUSIC_TILE;
     _controller = ScrollController(initialScrollOffset: offset);
@@ -26,8 +26,8 @@ class PlayingListDialogState extends State<PlayingListDialog> {
 
   @override
   Widget build(BuildContext context) {
-    List<Music> playingList = PlayerState.of(context).playingList;
-    Music music = PlayerState.of(context).current;
+    final playingList = context.playerValue.playingList;
+    final music = context.playerValue.current;
 
     return Container(
       height: MediaQuery.of(context).size.height / 2,
@@ -57,9 +57,8 @@ class _Header extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final state = PlayerState.of(context);
-    final playMode = state.playMode;
-    final count = state.playingList.length;
+    final playMode = context.playbackState.playMode;
+    final count = context.playList.queue.length;
     IconData icon;
     String name;
     switch (playMode) {
@@ -84,14 +83,14 @@ class _Header extends StatelessWidget {
           children: <Widget>[
             FlatButton.icon(
                 onPressed: () {
-                  quiet.changePlayMode();
+                  context.transportControls.setPlayMode(playMode.next);
                 },
                 icon: Icon(icon),
                 label: Text("$name($count)")),
             Spacer(),
             FlatButton.icon(
                 onPressed: () async {
-                  final ids = quiet.compatValue.playingList.map((m) => m.id).toList();
+                  final ids = context.playList.queue.map((m) => int.parse(m.mediaId)).toList();
                   if (ids.isEmpty) {
                     return;
                   }
@@ -112,7 +111,7 @@ class _Header extends StatelessWidget {
                 icon: Icon(Icons.delete_outline),
                 onPressed: () async {
                   Navigator.pop(context);
-                  quiet.quiet();
+                  context.player.setPlayList(PlayList.empty());
                 })
           ],
         ),
@@ -154,7 +153,7 @@ class _MusicTile extends StatelessWidget {
     }
     return InkWell(
       onTap: () {
-        quiet.play(music: music);
+        context.transportControls.playFromMediaId(music.metadata.mediaId);
       },
       child: Container(
         padding: EdgeInsets.only(left: 8),
@@ -178,7 +177,7 @@ class _MusicTile extends StatelessWidget {
             IconButton(
                 icon: Icon(Icons.close),
                 onPressed: () {
-                  quiet.removeFromPlayingList(music);
+                  context.player.removeQueueItem(music.metadata.mediaId);
                 })
           ],
         ),

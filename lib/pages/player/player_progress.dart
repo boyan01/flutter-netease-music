@@ -21,7 +21,7 @@ class DurationProgressBarState extends State<DurationProgressBar> {
 
   Widget _buildBar(BuildContext context) {
     var theme = Theme.of(context).primaryTextTheme;
-    var state = PlayerState.of(context);
+    var state = context.playbackState;
 
     Widget progressIndicator;
 
@@ -29,8 +29,10 @@ class DurationProgressBarState extends State<DurationProgressBar> {
     String positionText;
 
     if (state.initialized) {
-      var duration = state.duration.inMilliseconds;
-      var position = isUserTracking ? trackingPosition.round() : state.position.inMilliseconds;
+      var duration = context.playerValue.metadata.duration ?? 0;
+
+      final playerPosition = state.position + (DateTime.now().millisecondsSinceEpoch - state.lastPositionUpdateTime);
+      var position = isUserTracking ? trackingPosition.round() : playerPosition;
 
       durationText = getTimeStamp(duration);
       positionText = getTimeStamp(position);
@@ -65,10 +67,9 @@ class DurationProgressBarState extends State<DurationProgressBar> {
             },
             onChangeEnd: (value) async {
               isUserTracking = false;
-              quiet.seekTo(value.round());
-              if (!quiet.compatValue.playWhenReady) {
-                quiet.play();
-              }
+              context.transportControls
+                ..seekTo(value.round())
+                ..play();
             },
           ),
         ],

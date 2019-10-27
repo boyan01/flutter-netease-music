@@ -35,84 +35,82 @@ class _MainPageState extends State<MainPage>
 
   @override
   Widget build(BuildContext context) {
-    return Quiet(
-      child: Scaffold(
-        key: _scaffoldKey,
-        drawer: Drawer(
-          child: Column(
-            children: <Widget>[
-              _AppDrawerHeader(),
-              MediaQuery.removePadding(
-                  context: context,
-                  removeTop: true,
-                  child: Expanded(
-                    child: ListTileTheme(
-                      style: ListTileStyle.drawer,
-                      child: ListView(
-                        children: <Widget>[
-                          ListTile(
-                            leading: Icon(Icons.settings),
-                            title: Text("设置"),
-                            onTap: () {
-                              Navigator.pushNamed(context, ROUTE_SETTING);
-                            },
-                          ),
-                          Divider(height: 0, indent: 16),
-                          ListTile(
-                            leading: Icon(Icons.format_quote),
-                            title: Text("Star On GitHub"),
-                            onTap: () {
-                              launch(
-                                  "https://github.com/boyan01/quiet-flutter");
-                            },
-                          ),
-                        ],
-                      ),
+    return Scaffold(
+      key: _scaffoldKey,
+      drawer: Drawer(
+        child: Column(
+          children: <Widget>[
+            _AppDrawerHeader(),
+            MediaQuery.removePadding(
+                context: context,
+                removeTop: true,
+                child: Expanded(
+                  child: ListTileTheme(
+                    style: ListTileStyle.drawer,
+                    child: ListView(
+                      children: <Widget>[
+                        ListTile(
+                          leading: Icon(Icons.settings),
+                          title: Text("设置"),
+                          onTap: () {
+                            Navigator.pushNamed(context, ROUTE_SETTING);
+                          },
+                        ),
+                        Divider(height: 0, indent: 16),
+                        ListTile(
+                          leading: Icon(Icons.format_quote),
+                          title: Text("Star On GitHub"),
+                          onTap: () {
+                            launch(
+                                "https://github.com/boyan01/quiet-flutter");
+                          },
+                        ),
+                      ],
                     ),
-                  ))
+                  ),
+                ))
+          ],
+        ),
+      ),
+      appBar: AppBar(
+        leading: IconButton(
+            icon: AnimatedIcon(
+                icon: AnimatedIcons.menu_arrow,
+                color: Theme.of(context).primaryIconTheme.color,
+                progress: transitionAnimation),
+            onPressed: () {
+              _scaffoldKey.currentState.openDrawer();
+            }),
+        title: Container(
+          height: kToolbarHeight,
+          width: 128,
+          child: TabBar(
+            controller: _tabController,
+            indicator:
+                UnderlineTabIndicator(insets: EdgeInsets.only(bottom: 4)),
+            indicatorSize: TabBarIndicatorSize.label,
+            tabs: <Widget>[
+              Tab(child: Icon(Icons.music_note)),
+              Tab(child: Icon(Icons.cloud)),
             ],
           ),
         ),
-        appBar: AppBar(
-          leading: IconButton(
-              icon: AnimatedIcon(
-                  icon: AnimatedIcons.menu_arrow,
-                  color: Theme.of(context).primaryIconTheme.color,
-                  progress: transitionAnimation),
-              onPressed: () {
-                _scaffoldKey.currentState.openDrawer();
-              }),
-          title: Container(
-            height: kToolbarHeight,
-            width: 128,
-            child: TabBar(
-              controller: _tabController,
-              indicator:
-                  UnderlineTabIndicator(insets: EdgeInsets.only(bottom: 4)),
-              indicatorSize: TabBarIndicatorSize.label,
-              tabs: <Widget>[
-                Tab(child: Icon(Icons.music_note)),
-                Tab(child: Icon(Icons.cloud)),
-              ],
-            ),
-          ),
-          titleSpacing: 0,
-          centerTitle: true,
-          actions: <Widget>[
-            IconButton(
-              onPressed: () {
-                Navigator.push(
-                    context, NeteaseSearchPageRoute(transitionAnimation));
-              },
-              icon: Icon(Icons.search),
-            )
-          ],
-        ),
-        body: BoxWithBottomPlayerController(TabBarView(
-          controller: _tabController,
-          children: <Widget>[MainPlaylistPage(), MainCloudPage()],
-        )),
+        titleSpacing: 0,
+        centerTitle: true,
+        actions: <Widget>[
+          IconButton(
+            onPressed: () {
+              Navigator.push(
+                  context, NeteaseSearchPageRoute(transitionAnimation));
+            },
+            icon: Icon(Icons.search),
+          )
+        ],
       ),
+      body: BoxWithBottomPlayerController(TabBarView(
+        controller: _tabController,
+        children: <Widget>[MainPlaylistPage(), MainCloudPage()],
+      )),
     );
   }
 }

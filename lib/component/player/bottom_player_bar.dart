@@ -56,12 +56,7 @@ class BottomControllerBar extends StatelessWidget {
     if (!playingLyric.hasLyric) {
       return Text(music.subTitle);
     }
-    final line = playingLyric.lyric
-        .getLineByTimeStamp(
-          PlayerState.of(context).position.inMilliseconds,
-          0,
-        )
-        ?.line;
+    final line = playingLyric.lyric.getLineByTimeStamp(context.playbackState.position, 0)?.line;
     if (line == null || line.isEmpty) {
       return Text(music.subTitle);
     }
@@ -70,7 +65,7 @@ class BottomControllerBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var music = PlayerState.of(context).current;
+    final music = context.playerValue.current;
     if (music == null) {
       return Container();
     }
@@ -158,12 +153,12 @@ class _PauseButton extends StatelessWidget {
       playing: IconButton(
           icon: Icon(Icons.pause),
           onPressed: () {
-            quiet.pause();
+            context.transportControls.pause();
           }),
       pausing: IconButton(
           icon: Icon(Icons.play_arrow),
           onPressed: () {
-            quiet.play();
+            context.transportControls.play();
           }),
       buffering: Container(
         height: 24,
