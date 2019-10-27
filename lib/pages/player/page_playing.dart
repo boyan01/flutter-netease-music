@@ -311,7 +311,7 @@ class _CloudLyric extends StatelessWidget {
               lyric: playingLyric.lyric,
               lyricLineStyle: normalStyle,
               highlight: style.color,
-              position: context.playbackState.position,
+              position: context.playbackState.positionWithOffset,
               onTap: onTap,
               size: Size(constraints.maxWidth, constraints.maxHeight == double.infinity ? 0 : constraints.maxHeight),
               playing: context.playbackState.isPlaying,

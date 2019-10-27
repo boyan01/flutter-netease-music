@@ -76,6 +76,9 @@ extension PlaybackStateExt on PlaybackState {
   bool get isBuffering => state == PlaybackState.STATE_BUFFERING;
 
   bool get initialized => state != PlaybackState.STATE_NONE;
+
+  /// Current real position
+  int get positionWithOffset => position + (DateTime.now().millisecondsSinceEpoch - lastPositionUpdateTime);
 }
 
 @visibleForTesting

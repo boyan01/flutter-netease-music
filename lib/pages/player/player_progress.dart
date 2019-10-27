@@ -31,8 +31,7 @@ class DurationProgressBarState extends State<DurationProgressBar> {
     if (state.initialized) {
       var duration = context.playerValue.metadata.duration ?? 0;
 
-      final playerPosition = state.position + (DateTime.now().millisecondsSinceEpoch - state.lastPositionUpdateTime);
-      var position = isUserTracking ? trackingPosition.round() : playerPosition;
+      var position = isUserTracking ? trackingPosition.round() : state.positionWithOffset;
 
       durationText = getTimeStamp(duration);
       positionText = getTimeStamp(position);
