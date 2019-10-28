@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:music_player/music_player.dart';
 import 'package:quiet/component/player/player.dart';
 import 'package:quiet/model/model.dart';
 import 'package:quiet/repository/cached_image.dart';
@@ -49,11 +50,14 @@ class _AlbumCoverState extends State<AlbumCover> with TickerProviderStateMixin {
   ///滑动切换音乐效果下一个封面
   Music _next;
 
+  MusicPlayer _player;
+
   @override
   void initState() {
     super.initState();
 
-    _needleAttachCover = context.player.playbackState.isPlaying;
+    _player = context.player;
+    _needleAttachCover = _player.playbackState.isPlaying;
     _needleController = AnimationController(
         /*preset need position*/
         value: _needleAttachCover ? 1.0 : 0.0,
@@ -72,7 +76,7 @@ class _AlbumCoverState extends State<AlbumCover> with TickerProviderStateMixin {
         setState(() {});
       }
     });
-    context.player.addListener(_checkNeedleAndCoverStatus);
+    _player.addListener(_checkNeedleAndCoverStatus);
     _checkNeedleAndCoverStatus();
   }
 
@@ -117,7 +121,7 @@ class _AlbumCoverState extends State<AlbumCover> with TickerProviderStateMixin {
 
   // update needle and cover for current player state
   void _checkNeedleAndCoverStatus() {
-    final state = context.player.playbackState;
+    final state = _player.playbackState;
 
     // needle is should attach to cover
     bool attachToCover = state.isPlaying && !_beDragging && _translateController == null;
@@ -145,7 +149,7 @@ class _AlbumCoverState extends State<AlbumCover> with TickerProviderStateMixin {
 
   @override
   void dispose() {
-    context.player.removeListener(_checkNeedleAndCoverStatus);
+    _player.removeListener(_checkNeedleAndCoverStatus);
     _needleController.dispose();
     _translateController?.dispose();
     _translateController = null;

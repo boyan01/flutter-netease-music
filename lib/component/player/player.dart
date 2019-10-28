@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:meta/meta.dart';
@@ -8,7 +6,6 @@ import 'package:quiet/component/player/lryic.dart';
 import 'package:quiet/model/model.dart';
 import 'package:quiet/part/part.dart';
 import 'package:scoped_model/scoped_model.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 export 'package:quiet/component/player/bottom_player_bar.dart';
 export 'package:quiet/component/player/lryic.dart';
@@ -41,7 +38,12 @@ extension PlayModeGetNext on PlayMode {
 
 extension QuitPlayerExt on BuildContext {
   MusicPlayer get player {
-    return ScopedModel.of<QuietModel>(this).player;
+    try {
+      return ScopedModel.of<QuietModel>(this).player;
+    } catch (e, stacktrace) {
+      debugPrint(stacktrace.toString());
+      rethrow;
+    }
   }
 
   TransportControls get transportControls => player.transportControls;
