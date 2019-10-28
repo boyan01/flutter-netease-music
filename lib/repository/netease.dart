@@ -370,7 +370,9 @@ class NeteaseRepository {
   Future<Result<Map<String, dynamic>>> doRequest(String path, [Map param = const {}]) async {
     api.Answer result;
     try {
-      result = await api.cloudMusicApi(path, parameter: param, cookie: await _loadCookies());
+      // convert all params to string
+      final Map<String, String> convertedParams = param.map((k, v) => MapEntry(k.toString(), v.toString()));
+      result = await api.cloudMusicApi(path, parameter: convertedParams, cookie: await _loadCookies());
     } catch (e, stacktrace) {
       debugPrint("request error : $e \n $stacktrace");
       return Result.error(e, stacktrace);
