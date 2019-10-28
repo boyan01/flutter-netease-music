@@ -30,7 +30,6 @@ class BoxWithBottomPlayerController extends StatelessWidget {
       return child;
     }
 
-    //fixme 可能会有问题
     final media = MediaQueryData.fromWindow(WidgetsBinding.instance.window);
 
     //hide bottom player controller when view inserts
