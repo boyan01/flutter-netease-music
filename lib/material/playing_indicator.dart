@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:async/async.dart';
 import 'package:flutter/material.dart';
+import 'package:music_player/music_player.dart';
 import 'package:quiet/part/part.dart';
 
 ///
@@ -35,25 +36,28 @@ class _PlayingIndicatorState extends State<PlayingIndicator> {
 
   final _changeStateOperations = <CancelableOperation>[];
 
+  MusicPlayer _player;
+
   @override
   void initState() {
     super.initState();
-    quiet.addListener(_onMusicStateChanged);
-    _index = playerState;
+    _player = context.player..addListener(_onMusicStateChanged);
+    _index = _playerState;
   }
 
   ///get current player state index
-  int get playerState =>
-      quiet.compatValue.isBuffering ? _INDEX_BUFFERING : quiet.compatValue.isPlaying ? _INDEX_PLAYING : _INDEX_PAUSING;
+  int get _playerState => _player.playbackState.isBuffering
+      ? _INDEX_BUFFERING
+      : _player.playbackState.isPlaying ? _INDEX_PLAYING : _INDEX_PAUSING;
 
   void _onMusicStateChanged() {
-    final target = playerState;
+    final target = _playerState;
     if (target == _index) return;
 
     final action = CancelableOperation.fromFuture(Future.delayed(_durationDelay));
     _changeStateOperations.add(action);
     action.value.whenComplete(() {
-      if (target == playerState) _changeState(target);
+      if (target == _playerState) _changeState(target);
       _changeStateOperations.remove(action);
     });
   }
@@ -69,7 +73,7 @@ class _PlayingIndicatorState extends State<PlayingIndicator> {
 
   @override
   void dispose() {
-    quiet.removeListener(_onMusicStateChanged);
+    _player.removeListener(_onMusicStateChanged);
     _changeStateOperations.forEach((o) => o.cancel());
     super.dispose();
   }
@@ -95,10 +99,12 @@ class ProgressTrackContainer extends StatefulWidget {
 }
 
 class _ProgressTrackContainerState extends State<ProgressTrackContainer> {
+  MusicPlayer _player;
+
   @override
   void initState() {
     super.initState();
-    quiet.addListener(_onStateChanged);
+    _player = context.player..addListener(_onStateChanged);
     _onStateChanged();
   }
 
@@ -107,7 +113,7 @@ class _ProgressTrackContainerState extends State<ProgressTrackContainer> {
   Timer _timer;
 
   void _onStateChanged() {
-    final needTrack = quiet.compatValue.isPlaying;
+    final needTrack = context.player.playbackState.isPlaying;
     if (_tracking == needTrack) return;
     if (_tracking) {
       _tracking = false;
@@ -116,6 +122,10 @@ class _ProgressTrackContainerState extends State<ProgressTrackContainer> {
       _tracking = true;
       _timer?.cancel();
       _timer = Timer.periodic(const Duration(milliseconds: 50), (timer) {
+        if (!mounted) {
+          timer.cancel();
+          return;
+        }
         setState(() {});
       });
     }
@@ -123,7 +133,8 @@ class _ProgressTrackContainerState extends State<ProgressTrackContainer> {
 
   @override
   void dispose() {
-    quiet.removeListener(_onStateChanged);
+    _player.removeListener(_onStateChanged);
+    _tracking = false;
     _timer?.cancel();
     super.dispose();
   }

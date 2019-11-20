@@ -17,7 +17,7 @@
   git clone https://github.com/boyan01/flutter-netease-music.git 
   git submodule update --init --recursive
   ```
-  2. 安装 [Flutter](https://flutter.io/docs/get-started/install) （**注意安装最新的stable版本**）
+  2. 安装 [Flutter](https://flutter.io/docs/get-started/install) （**因使用了 dart 2.6.0 的特性，所以注意安装最新的dev版本**）
   3. 在命令行输入下面命令以 profile 模式运行（更快的运行效率）
  ```bash
  flutter run --profile

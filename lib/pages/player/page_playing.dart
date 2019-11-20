@@ -2,8 +2,8 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:music_player/music_player.dart';
 import 'package:quiet/component/netease/netease.dart';
-import 'package:quiet/component/player/player_state.dart';
 import 'package:quiet/material/playing_indicator.dart';
 import 'package:quiet/pages/artists/page_artist_detail.dart';
 import 'package:quiet/pages/comments/page_comment.dart';
@@ -16,52 +16,26 @@ import 'lyric.dart';
 import 'player_progress.dart';
 
 ///歌曲播放页面
-class PlayingPage extends StatefulWidget {
-  @override
-  _PlayingPageState createState() {
-    return new _PlayingPageState();
-  }
-}
-
-class _PlayingPageState extends State<PlayingPage> {
-  Music _music;
-
-  @override
-  void initState() {
-    super.initState();
-    _music = quiet.compatValue.current;
-    quiet.addListener(_onPlayerStateChanged);
-  }
-
-  void _onPlayerStateChanged() {
-    if (_music != quiet.compatValue.current) {
-      _music = quiet.compatValue.current;
-      if (_music == null) {
-        Navigator.pop(context);
-      } else {
-        setState(() {});
-      }
-    }
-  }
-
-  @override
-  void dispose() {
-    quiet.removeListener(_onPlayerStateChanged);
-    super.dispose();
-  }
-
+class PlayingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final current = context.playerValue.current;
+    if (current == null) {
+      WidgetsBinding.instance.scheduleFrameCallback((_) {
+        Navigator.of(context).pop();
+      });
+      return Container();
+    }
     return Scaffold(
       body: Stack(
         children: <Widget>[
-          _BlurBackground(music: _music),
+          _BlurBackground(music: current),
           Material(
             color: Colors.transparent,
             child: Column(
               children: <Widget>[
-                _PlayingTitle(music: _music),
-                _CenterSection(music: _music),
+                _PlayingTitle(music: current),
+                _CenterSection(music: current),
                 _OperationBar(),
                 const SizedBox(height: 10),
                 DurationProgressBar(),
@@ -79,8 +53,8 @@ class _PlayingPageState extends State<PlayingPage> {
 ///player controller
 /// pause,play,play next,play previous...
 class _ControllerBar extends StatelessWidget {
-  Widget getPlayModeIcon(context, Color color) {
-    var playMode = PlayerState.of(context).playMode;
+  Widget getPlayModeIcon(BuildContext context, Color color) {
+    var playMode = context.playbackState.playMode;
     switch (playMode) {
       case PlayMode.single:
         return Icon(
@@ -114,7 +88,7 @@ class _ControllerBar extends StatelessWidget {
             color: color,
           ),
           onPressed: () {
-            quiet.pause();
+            context.transportControls.pause();
           }),
       pausing: IconButton(
           tooltip: "播放",
@@ -124,7 +98,7 @@ class _ControllerBar extends StatelessWidget {
             color: color,
           ),
           onPressed: () {
-            quiet.play();
+            context.transportControls.play();
           }),
       buffering: Container(
         height: 56,
@@ -143,7 +117,7 @@ class _ControllerBar extends StatelessWidget {
           IconButton(
               icon: getPlayModeIcon(context, color),
               onPressed: () {
-                quiet.changePlayMode();
+                context.transportControls.setPlayMode(context.playbackState.playMode.next);
               }),
           IconButton(
               iconSize: 36,
@@ -152,7 +126,7 @@ class _ControllerBar extends StatelessWidget {
                 color: color,
               ),
               onPressed: () {
-                quiet.playPrevious();
+                context.transportControls.skipToPrevious();
               }),
           iconPlayPause,
           IconButton(
@@ -163,7 +137,7 @@ class _ControllerBar extends StatelessWidget {
                 color: color,
               ),
               onPressed: () {
-                quiet.playNext();
+                context.transportControls.skipToNext();
               }),
           IconButton(
               tooltip: "当前播放列表",
@@ -189,7 +163,7 @@ class _OperationBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final iconColor = Theme.of(context).primaryIconTheme.color;
 
-    final music = quiet.compatValue.current;
+    final music = context.playerValue.current;
     final liked = LikedSongList.contain(context, music);
 
     return Row(
@@ -337,10 +311,10 @@ class _CloudLyric extends StatelessWidget {
               lyric: playingLyric.lyric,
               lyricLineStyle: normalStyle,
               highlight: style.color,
-              position: quiet.compatValue.position.inMilliseconds,
+              position: context.playbackState.positionWithOffset,
               onTap: onTap,
               size: Size(constraints.maxWidth, constraints.maxHeight == double.infinity ? 0 : constraints.maxHeight),
-              playing: PlayerState.of(context).isPlaying,
+              playing: context.playbackState.isPlaying,
             ),
           ),
         );

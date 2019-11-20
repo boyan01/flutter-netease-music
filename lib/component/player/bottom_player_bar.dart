@@ -30,7 +30,6 @@ class BoxWithBottomPlayerController extends StatelessWidget {
       return child;
     }
 
-    //fixme 可能会有问题
     final media = MediaQueryData.fromWindow(WidgetsBinding.instance.window);
 
     //hide bottom player controller when view inserts
@@ -51,26 +50,9 @@ class BottomControllerBar extends StatelessWidget {
 
   const BottomControllerBar({Key key, this.bottomPadding = 0}) : super(key: key);
 
-  Widget _buildSubtitle(BuildContext context, Music music) {
-    final playingLyric = PlayingLyric.of(context);
-    if (!playingLyric.hasLyric) {
-      return Text(music.subTitle);
-    }
-    final line = playingLyric.lyric
-        .getLineByTimeStamp(
-          PlayerState.of(context).position.inMilliseconds,
-          0,
-        )
-        ?.line;
-    if (line == null || line.isEmpty) {
-      return Text(music.subTitle);
-    }
-    return Text(line);
-  }
-
   @override
   Widget build(BuildContext context) {
-    var music = PlayerState.of(context).current;
+    final music = context.playerValue.current;
     if (music == null) {
       return Container();
     }
@@ -123,7 +105,7 @@ class BottomControllerBar extends StatelessWidget {
                       ),
                       Padding(padding: const EdgeInsets.only(top: 2)),
                       DefaultTextStyle(
-                        child: _buildSubtitle(context, music),
+                        child: ProgressTrackContainer(builder: (context) => _SubTitleOrLyric(music.subTitle)),
                         maxLines: 1,
                         style: Theme.of(context).textTheme.caption,
                       ),
@@ -151,6 +133,25 @@ class BottomControllerBar extends StatelessWidget {
   }
 }
 
+class _SubTitleOrLyric extends StatelessWidget {
+  final String subtitle;
+
+  const _SubTitleOrLyric(this.subtitle, {Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final playingLyric = PlayingLyric.of(context);
+    if (!playingLyric.hasLyric) {
+      return Text(subtitle);
+    }
+    final line = playingLyric.lyric.getLineByTimeStamp(context.playbackState.positionWithOffset, 0)?.line;
+    if (line == null || line.isEmpty) {
+      return Text(subtitle);
+    }
+    return Text(line);
+  }
+}
+
 class _PauseButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -158,12 +159,12 @@ class _PauseButton extends StatelessWidget {
       playing: IconButton(
           icon: Icon(Icons.pause),
           onPressed: () {
-            quiet.pause();
+            context.transportControls.pause();
           }),
       pausing: IconButton(
           icon: Icon(Icons.play_arrow),
           onPressed: () {
-            quiet.play();
+            context.transportControls.play();
           }),
       buffering: Container(
         height: 24,

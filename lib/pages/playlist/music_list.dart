@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:music_player/music_player.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:quiet/component/route.dart';
 import 'package:quiet/model/model.dart';
@@ -58,7 +59,7 @@ class MusicList extends StatelessWidget {
 
   //return null if current music is not be playing
   static Widget _buildPlayingLeading(BuildContext context, Music music) {
-    if (MusicList.of(context).token == PlayerState.of(context).token && music == PlayerState.of(context).current) {
+    if (MusicList.of(context).token == context.playList.queueId && music == context.playerValue.current) {
       return Container(
         margin: const EdgeInsets.only(left: 8, right: 8),
         width: 40,
@@ -73,17 +74,22 @@ class MusicList extends StatelessWidget {
 
   static final void Function(BuildContext context, Music muisc) defaultOnTap = (context, music) {
     final list = MusicList.of(context);
-    if (quiet.compatValue.token == list.token && quiet.compatValue.isPlaying && quiet.compatValue.current == music) {
+    final player = context.player;
+    final PlayList playList = player.value.playList;
+    if (playList.queueId == list.token && player.playbackState.isPlaying && player.metadata == music) {
       //open playing page
       Navigator.pushNamed(context, ROUTE_PAYING);
     } else {
-      quiet.playWithList(music, list.musics, list.token);
+      context.player.playWithList(PlayList(queue: list.queue, queueId: list.token, queueTitle: list.token),
+          metadata: music.metadata);
     }
   };
 
   final String token;
 
   final List<Music> musics;
+
+  final List<MediaMetadata> queue;
 
   final void Function(BuildContext context, Music muisc) onMusicTap;
 
@@ -107,7 +113,8 @@ class MusicList extends StatelessWidget {
       this.trailingBuilder,
       this.supportAlbumMenu = true,
       this.remove})
-      : super(key: key);
+      : this.queue = musics.map((e) => e.metadata).toList(),
+        super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -206,11 +213,11 @@ class MusicListHeader extends StatelessWidget implements PreferredSizeWidget {
         child: InkWell(
           onTap: () {
             final list = MusicList.of(context);
-            if (quiet.compatValue.token == list.token && quiet.compatValue.isPlaying) {
+            if (context.player.playList.queueId == list.token && context.player.playbackState.isPlaying) {
               //open playing page
               Navigator.pushNamed(context, ROUTE_PAYING);
             } else {
-              quiet.playWithList(null, list.musics, list.token);
+              context.player.playWithList(PlayList(queue: list.queue, queueId: list.token, queueTitle: list.token));
             }
           },
           child: SizedBox.fromSize(
@@ -331,7 +338,7 @@ class _IconMore extends StatelessWidget {
   void _handleMusicAction(BuildContext context, _MusicAction type) async {
     switch (type) {
       case _MusicAction.addToNext:
-        quiet.insertToNext(music);
+        context.player.insertToNext(music.metadata);
         break;
       case _MusicAction.comment:
         Navigator.push(context, MaterialPageRoute(builder: (context) {

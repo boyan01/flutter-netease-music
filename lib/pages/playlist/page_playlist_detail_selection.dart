@@ -90,8 +90,8 @@ class PlaylistSelectionPageState extends State<PlaylistSelectionPage> {
     return Material(
       elevation: 5,
       child: Container(
-        child: ButtonTheme.bar(
-          textTheme: ButtonTextTheme.normal,
+        child: ButtonBarTheme(
+          data: ButtonBarThemeData(buttonTextTheme: ButtonTextTheme.normal),
           child: ButtonBar(
             alignment: MainAxisAlignment.spaceAround,
             children: <Widget>[
@@ -101,7 +101,9 @@ class PlaylistSelectionPageState extends State<PlaylistSelectionPage> {
                   children: <Widget>[Icon(Icons.play_circle_outline), const SizedBox(height: 2.0), Text("下一首播放")],
                 ),
                 onPressed: () async {
-                  await quiet.insertToNext2(selectedList);
+                  await Stream.fromIterable(selectedList).forEach((e) {
+                    context.player.insertToNext(e.metadata);
+                  });
                   showSimpleNotification(Text("已添加${selectedList.length}首歌曲"));
                 },
               ),

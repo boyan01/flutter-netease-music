@@ -1,5 +1,6 @@
 import 'package:async/async.dart';
 import 'package:flutter/material.dart';
+import 'package:music_player/music_player.dart';
 import 'package:quiet/pages/player/lyric.dart';
 import 'package:quiet/part/part.dart';
 import 'package:quiet/repository/netease.dart';
@@ -9,13 +10,12 @@ import 'package:scoped_model/scoped_model.dart';
 class PlayingLyric extends Model {
   PlayingLyric(MusicPlayer player) {
     player.addListener(() {
-      _shouldLoadLyric(player.compatValue.current);
+      _shouldLoadLyric(player.value.current);
     });
   }
 
   static PlayingLyric of(BuildContext context, {rebuildOnChange: true}) {
-    return ScopedModel.of<PlayingLyric>(context,
-        rebuildOnChange: rebuildOnChange);
+    return ScopedModel.of<PlayingLyric>(context, rebuildOnChange: rebuildOnChange);
   }
 
   CancelableOperation _lyricLoader;
@@ -44,8 +44,7 @@ class PlayingLyric extends Model {
       _setLyric();
       return;
     }
-    _lyricLoader = CancelableOperation<String>.fromFuture(
-        neteaseRepository.lyric(music.id))
+    _lyricLoader = CancelableOperation<String>.fromFuture(neteaseRepository.lyric(music.id))
       ..value.then((lyric) {
         _setLyric(lyric: lyric);
       }, onError: (e) {

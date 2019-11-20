@@ -33,7 +33,10 @@ class SongsResultSectionState extends State<SongsResultSection> with AutomaticKe
         }
         final song = await neteaseRepository.getMusicDetail(item.id);
         if (song.isValue) {
-          quiet.play(music: mapJsonToMusic(song.asValue.value, artistKey: "ar", albumKey: "al"));
+          final metadata = mapJsonToMusic(song.asValue.value, artistKey: "ar", albumKey: "al").metadata;
+          context.player
+            ..insertToNext(metadata)
+            ..transportControls.playFromMediaId(metadata.mediaId);
         } else {
           showSimpleNotification(Text("播放歌曲失败!"),
               leading: Icon(Icons.notification_important), background: Theme.of(context).errorColor);
