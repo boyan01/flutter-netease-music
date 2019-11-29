@@ -67,7 +67,7 @@ class CachedImage extends ImageProvider<CachedImage> implements CacheKey {
     final cache = await _imageCache();
     var image = await cache.get(key);
     if (image != null) {
-      return await decode(Uint8List.fromList(image), cacheWidth: key.width, cacheHeight: -1);
+      return await decode(Uint8List.fromList(image), cacheWidth: key.width, cacheHeight: null);
     }
     //request network source
     final Uri resolved = Uri.base.resolve(key.url);
@@ -85,7 +85,7 @@ class CachedImage extends ImageProvider<CachedImage> implements CacheKey {
     //save image to cache
     await cache.update(key, bytes);
 
-    return await decode(Uint8List.fromList(bytes), cacheWidth: key.width, cacheHeight: -1);
+    return await decode(Uint8List.fromList(bytes), cacheWidth: key.width, cacheHeight: null);
   }
 
   @override
