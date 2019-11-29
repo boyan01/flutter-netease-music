@@ -33,7 +33,8 @@ void main() {
   ));
 }
 
-/// this method will be invoked by native (Android/iOS)
+/// The entry of dart background service
+/// NOTE: this method will be invoked by native (Android/iOS)
 void playerBackgroundService() {
   WidgetsFlutterBinding.ensureInitialized();
   // 获取播放地址需要使用云音乐 API, 所以需要为此 isolate 初始化一个 repository.

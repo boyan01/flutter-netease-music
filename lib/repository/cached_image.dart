@@ -57,17 +57,17 @@ class CachedImage extends ImageProvider<CachedImage> implements CacheKey {
   int get hashCode => hashValues(id, scale, _size);
 
   @override
-  ImageStreamCompleter load(CachedImage key) {
-    return MultiFrameImageStreamCompleter(codec: _loadAsync(key), scale: key.scale);
+  ImageStreamCompleter load(CachedImage key, DecoderCallback decode) {
+    return MultiFrameImageStreamCompleter(codec: _loadAsync(key, decode), scale: key.scale);
   }
 
   static final HttpClient _httpClient = HttpClient();
 
-  Future<ui.Codec> _loadAsync(CachedImage key) async {
+  Future<ui.Codec> _loadAsync(CachedImage key, DecoderCallback decode) async {
     final cache = await _imageCache();
     var image = await cache.get(key);
     if (image != null) {
-      return await ui.instantiateImageCodec(Uint8List.fromList(image), targetWidth: key.width, targetHeight: -1);
+      return await decode(Uint8List.fromList(image), cacheWidth: key.width, cacheHeight: -1);
     }
     //request network source
     final Uri resolved = Uri.base.resolve(key.url);
@@ -85,7 +85,7 @@ class CachedImage extends ImageProvider<CachedImage> implements CacheKey {
     //save image to cache
     await cache.update(key, bytes);
 
-    return await ui.instantiateImageCodec(Uint8List.fromList(bytes), targetWidth: key.width, targetHeight: -1);
+    return await decode(Uint8List.fromList(bytes), cacheWidth: key.width, cacheHeight: -1);
   }
 
   @override

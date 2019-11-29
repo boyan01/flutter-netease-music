@@ -12,7 +12,7 @@ import 'dialog_selector.dart';
 
 class MusicList extends StatelessWidget {
   static MusicList of(BuildContext context) {
-    final list = context.ancestorWidgetOfExactType(MusicList);
+    final list = context.findAncestorWidgetOfExactType<MusicList>();
     assert(list != null, 'you can only use [MusicTile] inside MusicList scope');
     return list;
   }
