@@ -22,7 +22,7 @@ class Netease extends StatefulWidget {
   NeteaseState createState() => NeteaseState();
 
   static NeteaseState of(BuildContext context) {
-    return context.ancestorStateOfType(TypeMatcher<NeteaseState>());
+    return context.findAncestorStateOfType<NeteaseState>();
   }
 }
 

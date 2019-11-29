@@ -26,7 +26,7 @@ class BoxWithBottomPlayerController extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (context.ancestorWidgetOfExactType(DisableBottomController) != null) {
+    if (context.findAncestorWidgetOfExactType<DisableBottomController>() != null) {
       return child;
     }
 
