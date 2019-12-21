@@ -58,7 +58,7 @@ class PlayingLyric extends Model {
     if (lyric != null && lyric.isNotEmpty) {
       _lyricContent = LyricContent.from(lyric);
     }
-    if (_lyricContent.size == 0) {
+    if (_lyricContent?.size == 0) {
       _lyricContent = null;
     }
     if (_lyricContent == null) {
