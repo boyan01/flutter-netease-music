@@ -10,7 +10,7 @@ description: a music player
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.6.0-dev.5.0.flutter <3.0.0"
+  sdk: ">=2.7.0 <3.0.0"
 
 dependencies:
   flutter:
@@ -39,7 +39,6 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   build_runner: ^1.0.0
-  json_serializable: ^2.0.0
   mockito: ^4.0.0
 
 # The following section is specific to Flutter.
