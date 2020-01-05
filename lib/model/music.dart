@@ -92,6 +92,13 @@ extension MusicExt on Music {
   }
 }
 
+extension MusicBuilder on MediaMetadata {
+  /// convert metadata to [Music]
+  Music toMusic() {
+    return Music.fromMetadata(this);
+  }
+}
+
 class _MediaMetadataMusic extends Music {
   @override
   final MediaMetadata _metadata;

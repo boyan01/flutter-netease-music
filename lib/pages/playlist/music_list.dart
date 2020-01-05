@@ -195,7 +195,7 @@ class _SimpleMusicTile extends StatelessWidget {
   }
 }
 
-///音乐列表头
+/// The header view of MusicList
 class MusicListHeader extends StatelessWidget implements PreferredSizeWidget {
   MusicListHeader(this.count, {this.tail});
 

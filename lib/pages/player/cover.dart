@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -39,7 +38,7 @@ class _AlbumCoverState extends State<AlbumCover> with TickerProviderStateMixin {
 
   bool _beDragging = false;
 
-  bool _previousNextDirty = false;
+  bool _previousNextDirty = true;
 
   ///滑动切换音乐效果上一个封面
   Music _previous;
@@ -68,32 +67,29 @@ class _AlbumCoverState extends State<AlbumCover> with TickerProviderStateMixin {
         Tween<double>(begin: -1 / 12, end: 0).chain(CurveTween(curve: Curves.easeInOut)).animate(_needleController);
 
     _current = widget.music;
-    scheduleMicrotask(() async {
-      //TODO handle previous and next null
-      _previous = null;
-      _next = null;
-      if (mounted) {
-        setState(() {});
-      }
-    });
+    _invalidatePn();
     _player.addListener(_checkNeedleAndCoverStatus);
     _checkNeedleAndCoverStatus();
+  }
+
+  /// invalidate previous and next music cover...
+  void _invalidatePn() async {
+    if (!_previousNextDirty) {
+      return;
+    }
+    _previousNextDirty = false;
+    _previous = _player.playList.getPrevious(_current.metadata)?.toMusic();
+    _next = _player.playList.getNext(_current.metadata)?.toMusic();
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   @override
   void didUpdateWidget(AlbumCover oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (_current == widget.music) {
-      if (_previousNextDirty) {
-        _previousNextDirty = false;
-        () async {
-          _previous = null;
-          _next = null;
-          if (mounted) {
-            setState(() {});
-          }
-        }();
-      }
+      _invalidatePn();
       return;
     }
     double offset = 0;
@@ -106,15 +102,7 @@ class _AlbumCoverState extends State<AlbumCover> with TickerProviderStateMixin {
       setState(() {
         _coverTranslateX = 0;
         _current = widget.music;
-        _previousNextDirty = false;
-        () async {
-          //TODO
-          _next = await null;
-          _previous = await null;
-          if (mounted) {
-            setState(() {});
-          }
-        }();
+        _invalidatePn();
       });
     });
   }
