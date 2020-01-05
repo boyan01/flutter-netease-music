@@ -323,9 +323,9 @@ class _RotationCoverImageState extends State<_RotationCoverImage> with SingleTic
               controller.forward(from: 0);
             }
           });
-//    if (widget.rotating) {
-//      controller.forward(from: controller.value);
-//    }
+    if (widget.rotating) {
+      controller.forward(from: controller.value);
+    }
   }
 
   @override
