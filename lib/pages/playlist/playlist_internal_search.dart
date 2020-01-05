@@ -76,14 +76,14 @@ class _InternalResultSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MusicList(
+    return MusicTileConfiguration(
       musics: musics,
       onMusicTap: (_, music) {
         context.player
           ..insertToNext(music.metadata)
           ..transportControls.playFromMediaId(music.metadata.mediaId);
       },
-      trailingBuilder: MusicList.defaultTrailingBuilder,
+      trailingBuilder: MusicTileConfiguration.defaultTrailingBuilder,
       child: ListView.builder(
           itemCount: musics.length,
           itemBuilder: (context, index) {

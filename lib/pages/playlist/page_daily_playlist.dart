@@ -24,12 +24,12 @@ class DailyPlaylistPage extends StatelessWidget {
                         .cast<Map>()
                         .map(mapJsonToMusic)
                         .toList();
-                    return MusicList(
+                    return MusicTileConfiguration(
                         token: 'playlist_daily_recommend',
                         musics: list,
-                        trailingBuilder: MusicList.defaultTrailingBuilder,
-                        leadingBuilder: MusicList.coverLeadingBuilder,
-                        onMusicTap: MusicList.defaultOnTap,
+                        trailingBuilder: MusicTileConfiguration.defaultTrailingBuilder,
+                        leadingBuilder: MusicTileConfiguration.coverLeadingBuilder,
+                        onMusicTap: MusicTileConfiguration.defaultOnTap,
                         child: _DailyMusicList());
                   }),
             ),
@@ -63,12 +63,12 @@ class _DailyMusicList extends StatelessWidget {
           flexibleSpace: _HeaderContent(),
           expandedHeight: 232 - MediaQuery.of(context).padding.top,
           pinned: true,
-          bottom: MusicListHeader(MusicList.of(context).musics.length),
+          bottom: MusicListHeader(MusicTileConfiguration.of(context).musics.length),
         ),
         SliverList(
             delegate: SliverChildBuilderDelegate((context, index) {
-          return MusicTile(MusicList.of(context).musics[index]);
-        }, childCount: MusicList.of(context).musics.length)),
+          return MusicTile(MusicTileConfiguration.of(context).musics[index]);
+        }, childCount: MusicTileConfiguration.of(context).musics.length)),
       ],
     );
   }

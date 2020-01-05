@@ -10,9 +10,9 @@ import 'package:quiet/repository/netease.dart';
 
 import 'dialog_selector.dart';
 
-class MusicList extends StatelessWidget {
-  static MusicList of(BuildContext context) {
-    final list = context.findAncestorWidgetOfExactType<MusicList>();
+class MusicTileConfiguration extends StatelessWidget {
+  static MusicTileConfiguration of(BuildContext context) {
+    final list = context.findAncestorWidgetOfExactType<MusicTileConfiguration>();
     assert(list != null, 'you can only use [MusicTile] inside MusicList scope');
     return list;
   }
@@ -25,7 +25,7 @@ class MusicList extends StatelessWidget {
   };
 
   static final Widget Function(BuildContext context, Music music) indexedLeadingBuilder = (context, music) {
-    int index = MusicList.of(context).musics.indexOf(music) + 1;
+    int index = MusicTileConfiguration.of(context).musics.indexOf(music) + 1;
     return _buildPlayingLeading(context, music) ??
         Container(
           margin: const EdgeInsets.only(left: 8, right: 8),
@@ -59,7 +59,7 @@ class MusicList extends StatelessWidget {
 
   //return null if current music is not be playing
   static Widget _buildPlayingLeading(BuildContext context, Music music) {
-    if (MusicList.of(context).token == context.playList.queueId && music == context.playerValue.current) {
+    if (MusicTileConfiguration.of(context).token == context.playList.queueId && music == context.playerValue.current) {
       return Container(
         margin: const EdgeInsets.only(left: 8, right: 8),
         width: 40,
@@ -73,7 +73,7 @@ class MusicList extends StatelessWidget {
   }
 
   static final void Function(BuildContext context, Music muisc) defaultOnTap = (context, music) {
-    final list = MusicList.of(context);
+    final list = MusicTileConfiguration.of(context);
     final player = context.player;
     final PlayList playList = player.value.playList;
     if (playList.queueId == list.token && player.playbackState.isPlaying && player.metadata == music) {
@@ -103,7 +103,7 @@ class MusicList extends StatelessWidget {
 
   final Widget child;
 
-  MusicList(
+  MusicTileConfiguration(
       {Key key,
       this.token,
       @required this.musics,
@@ -122,7 +122,7 @@ class MusicList extends StatelessWidget {
   }
 }
 
-/// song item widget
+/// music item widget
 class MusicTile extends StatelessWidget {
   final Music music;
 
@@ -134,7 +134,7 @@ class MusicTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final list = MusicList.of(context);
+    final list = MusicTileConfiguration.of(context);
     return Container(
       height: 56,
       child: InkWell(
@@ -212,7 +212,7 @@ class MusicListHeader extends StatelessWidget implements PreferredSizeWidget {
         elevation: 0,
         child: InkWell(
           onTap: () {
-            final list = MusicList.of(context);
+            final list = MusicTileConfiguration.of(context);
             if (context.player.playList.queueId == list.token && context.player.playbackState.isPlaying) {
               //open playing page
               Navigator.pushNamed(context, ROUTE_PAYING);
@@ -320,13 +320,13 @@ class _IconMore extends StatelessWidget {
         enabled: music.artist.fold(0, (c, ar) => c + ar.id) != 0,
         value: _MusicAction.artists));
 
-    if (MusicList.of(context).supportAlbumMenu) {
+    if (MusicTileConfiguration.of(context).supportAlbumMenu) {
       items.add(PopupMenuItem(
         child: Text("专辑"),
         value: _MusicAction.album,
       ));
     }
-    if (MusicList.of(context).remove != null) {
+    if (MusicTileConfiguration.of(context).remove != null) {
       items.add(PopupMenuItem(
         child: Text("删除"),
         value: _MusicAction.delete,
@@ -348,7 +348,7 @@ class _IconMore extends StatelessWidget {
         }));
         break;
       case _MusicAction.delete:
-        MusicList.of(context).remove(music);
+        MusicTileConfiguration.of(context).remove(music);
         break;
       case _MusicAction.addToPlaylist:
         final id = await showDialog(

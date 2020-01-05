@@ -140,12 +140,12 @@ class _PageHotSongsState extends State<_PageHotSongs>
         child: Center(child: Text("该歌手无热门曲目")),
       );
     }
-    return MusicList(
+    return MusicTileConfiguration(
       musics: widget.musicList,
       token: 'artist_${widget.artistId}_hot',
-      leadingBuilder: MusicList.indexedLeadingBuilder,
-      trailingBuilder: MusicList.defaultTrailingBuilder,
-      onMusicTap: MusicList.defaultOnTap,
+      leadingBuilder: MusicTileConfiguration.indexedLeadingBuilder,
+      trailingBuilder: MusicTileConfiguration.defaultTrailingBuilder,
+      onMusicTap: MusicTileConfiguration.defaultOnTap,
       child: ListView.builder(
           itemCount: widget.musicList.length + 1,
           itemBuilder: (context, index) {

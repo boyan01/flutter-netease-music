@@ -50,12 +50,12 @@ class _AlbumBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MusicList(
+    return MusicTileConfiguration(
         token: 'album_${album['id']}',
         musics: musicList,
-        onMusicTap: MusicList.defaultOnTap,
-        leadingBuilder: MusicList.indexedLeadingBuilder,
-        trailingBuilder: MusicList.defaultTrailingBuilder,
+        onMusicTap: MusicTileConfiguration.defaultOnTap,
+        leadingBuilder: MusicTileConfiguration.indexedLeadingBuilder,
+        trailingBuilder: MusicTileConfiguration.defaultTrailingBuilder,
         child: BoxWithBottomPlayerController(CustomScrollView(slivers: [
           SliverAppBar(
             automaticallyImplyLeading: false,
