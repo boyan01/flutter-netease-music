@@ -212,12 +212,12 @@ class _SectionNewSongs extends StatelessWidget {
             .cast<Map>()
             .map(_mapJsonToMusic)
             .toList();
-        return MusicList(
+        return MusicTileConfiguration(
           musics: songs,
           token: 'playlist_main_newsong',
-          onMusicTap: MusicList.defaultOnTap,
-          leadingBuilder: MusicList.indexedLeadingBuilder,
-          trailingBuilder: MusicList.defaultTrailingBuilder,
+          onMusicTap: MusicTileConfiguration.defaultOnTap,
+          leadingBuilder: MusicTileConfiguration.indexedLeadingBuilder,
+          trailingBuilder: MusicTileConfiguration.defaultTrailingBuilder,
           child: Column(
             children: songs.map((m) => MusicTile(m)).toList(),
           ),

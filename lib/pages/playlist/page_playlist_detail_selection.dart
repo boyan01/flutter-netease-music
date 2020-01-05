@@ -58,7 +58,7 @@ class PlaylistSelectionPageState extends State<PlaylistSelectionPage> {
           )
         ],
       ),
-      body: MusicList(
+      body: MusicTileConfiguration(
         musics: widget.list,
         onMusicTap: (context, item) {
           setState(() {
@@ -166,7 +166,7 @@ class _SelectionItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () => MusicList.of(context).onMusicTap(context, music),
+      onTap: () => MusicTileConfiguration.of(context).onMusicTap(context, music),
       child: IgnorePointer(
         child: Row(
           children: <Widget>[

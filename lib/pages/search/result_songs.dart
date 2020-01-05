@@ -23,7 +23,7 @@ class SongsResultSectionState extends State<SongsResultSection> with AutomaticKe
   Widget build(BuildContext context) {
     super.build(context);
 
-    return MusicList(
+    return MusicTileConfiguration(
       musics: const [],
       onMusicTap: (context, item) async {
         var playable = await neteaseRepository.checkMusic(item.id);

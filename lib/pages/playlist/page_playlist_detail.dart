@@ -105,7 +105,7 @@ class _PlaylistBody extends StatefulWidget {
 class _PlaylistBodyState extends State<_PlaylistBody> {
   @override
   Widget build(BuildContext context) {
-    return MusicList(
+    return MusicTileConfiguration(
       token: "playlist_${widget.playlist.id}",
       musics: widget.musicList,
       remove: widget.playlist.creator["userId"] != UserAccount.of(context).userId
@@ -120,9 +120,9 @@ class _PlaylistBodyState extends State<_PlaylistBody> {
               }
               toast(result ? '删除成功' : '删除失败');
             },
-      onMusicTap: MusicList.defaultOnTap,
-      leadingBuilder: MusicList.indexedLeadingBuilder,
-      trailingBuilder: MusicList.defaultTrailingBuilder,
+      onMusicTap: MusicTileConfiguration.defaultOnTap,
+      leadingBuilder: MusicTileConfiguration.indexedLeadingBuilder,
+      trailingBuilder: MusicTileConfiguration.defaultTrailingBuilder,
       child: CustomScrollView(
         slivers: <Widget>[
           SliverAppBar(

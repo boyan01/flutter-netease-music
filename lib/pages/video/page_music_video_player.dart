@@ -144,19 +144,24 @@ enum MusicVideoFloor {
 }
 
 class _SimpleMusicVideo extends StatelessWidget {
+  static const double _defaultVideoAspect = 16 / 10;
+
   @override
   Widget build(BuildContext context) {
     final model = VideoPlayerModel.of(context);
+    double aspect;
+    if (model.playerValue.size != null && model.playerValue.size != Size.zero) {
+      aspect = model.playerValue.aspectRatio;
+    } else {
+      aspect = _defaultVideoAspect;
+    }
     return Container(
       child: AspectRatio(
-        aspectRatio: 16 / 10,
+        aspectRatio: _defaultVideoAspect,
         child: Container(
           color: Colors.black,
           child: Stack(children: <Widget>[
-            Center(
-                child: AspectRatio(
-                    aspectRatio: model.playerValue.initialized ? model.playerValue.aspectRatio : 16 / 10,
-                    child: VideoPlayer(model.videoPlayerController))),
+            Center(child: AspectRatio(aspectRatio: aspect, child: VideoPlayer(model.videoPlayerController))),
             _SimpleVideoController(),
           ]),
         ),

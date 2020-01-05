@@ -46,8 +46,7 @@ class Music {
   }
 
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) || other is Music && runtimeType == other.runtimeType && id == other.id;
+  bool operator ==(Object other) => identical(this, other) || other is Music && id == other.id;
 
   @override
   int get hashCode => id.hashCode;
@@ -89,6 +88,13 @@ extension MusicExt on Music {
       "album": album.toMap(),
       "artist": artist.map((e) => e.toMap()).toList()
     };
+  }
+}
+
+extension MusicBuilder on MediaMetadata {
+  /// convert metadata to [Music]
+  Music toMusic() {
+    return Music.fromMetadata(this);
   }
 }
 

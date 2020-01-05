@@ -123,7 +123,7 @@ Future<_ImageCache> _imageCache() async {
 
 ///cache netease image data
 class _ImageCache implements Cache<Uint8List> {
-  _ImageCache(Directory dir) : provider = FileCacheProvider(dir);
+  _ImageCache(Directory dir) : provider = FileCacheProvider(dir, maxSize: 600 * 1024 * 1024 /* 600 Mb*/);
 
   final FileCacheProvider provider;
 
@@ -131,6 +131,7 @@ class _ImageCache implements Cache<Uint8List> {
   Future<Uint8List> get(CacheKey key) async {
     var file = provider.getFile(key);
     if (await file.exists()) {
+      provider.touchFile(file);
       return Uint8List.fromList(await file.readAsBytes());
     }
     return null;
@@ -144,6 +145,10 @@ class _ImageCache implements Cache<Uint8List> {
     }
     file = await file.create();
     await file.writeAsBytes(t);
-    return await file.exists();
+    try {
+      return await file.exists();
+    } finally {
+      provider.checkSize();
+    }
   }
 }

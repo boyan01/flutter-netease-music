@@ -106,13 +106,11 @@ class _RecordMusicList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MusicList(
+    return MusicTileConfiguration(
       musics: musicList,
       token: 'play_record_$type',
-      leadingBuilder: MusicList.indexedLeadingBuilder,
-      onMusicTap: (context, music) {
-        toast("can not play music from record page");
-      },
+      leadingBuilder: MusicTileConfiguration.indexedLeadingBuilder,
+      onMusicTap:MusicTileConfiguration.defaultOnTap,
       trailingBuilder: (context, music) {
         return Container(
           padding: EdgeInsets.symmetric(horizontal: 16),
