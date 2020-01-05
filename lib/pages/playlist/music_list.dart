@@ -76,7 +76,7 @@ class MusicTileConfiguration extends StatelessWidget {
     final list = MusicTileConfiguration.of(context);
     final player = context.player;
     final PlayList playList = player.value.playList;
-    if (playList.queueId == list.token && player.playbackState.isPlaying && player.metadata == music) {
+    if (playList.queueId == list.token && player.playbackState.isPlaying && player.metadata == music.metadata) {
       //open playing page
       Navigator.pushNamed(context, ROUTE_PAYING);
     } else {
