@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:quiet/component/global/settings.dart';
+import 'package:quiet/component/route.dart';
 
 import 'material.dart';
-import 'theme_picker.dart';
+
+export 'setting_theme_page.dart';
 
 ///App 设置页面
 class SettingPage extends StatelessWidget {
@@ -13,21 +15,19 @@ class SettingPage extends StatelessWidget {
         title: Text('设置'),
         titleSpacing: 0,
       ),
-      body: Container(
-        child: ListView(
-          children: <Widget>[
-            SettingGroup(
-              title: '通用',
-              children: <Widget>[
-                ListTile(
-                  title: Text('更换主题'),
-                  onTap: () => ThemePicker.show(context),
-                ),
-                _CopyRightCheckBox(),
-              ],
-            ),
-          ],
-        ),
+      body: ListView(
+        children: <Widget>[
+          SettingGroup(
+            title: '通用',
+            children: <Widget>[
+              ListTile(
+                title: Text('更换主题'),
+                onTap: () => Navigator.pushNamed(context, ROUTE_SETTING_THEME),
+              ),
+              _CopyRightCheckBox(),
+            ],
+          ),
+        ],
       ),
     );
   }

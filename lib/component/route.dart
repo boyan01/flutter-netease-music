@@ -39,6 +39,8 @@ const ROUTE_MY_COLLECTION = '/my_collection';
 
 const ROUTE_SETTING = '/setting';
 
+const ROUTE_SETTING_THEME = '/setting/theme';
+
 const pageWelcome = 'welcome';
 
 ///app routers
@@ -51,6 +53,7 @@ final Map<String, WidgetBuilder> routes = {
   ROUTE_MY_DJ: (context) => MyDjPage(),
   ROUTE_MY_COLLECTION: (context) => MyCollectionPage(),
   ROUTE_SETTING: (context) => SettingPage(),
+  ROUTE_SETTING_THEME: (context) => SettingThemePage(),
   pageWelcome: (context) => PageWelcome(),
 };
 
