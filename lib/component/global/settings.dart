@@ -8,9 +8,15 @@ const _prefix = 'quiet:settings:';
 
 const _key_theme = "$_prefix:theme";
 
+const _key_theme_mode = "$_prefix:themeMode";
+
 const _key_copyright = "$_prefix:copyright";
 
 const _key_skip_welcome_page = '$_prefix:skipWelcomePage';
+
+extension SettingsProvider on BuildContext {
+  Settings get settings => ScopedModel.of(this, rebuildOnChange: true);
+}
 
 class Settings extends Model {
   ///获取全局设置的实例
@@ -28,6 +34,18 @@ class Settings extends Model {
     _theme = theme;
     final index = quietThemes.indexOf(theme);
     _preferences.setInt(_key_theme, index);
+    notifyListeners();
+  }
+
+  ThemeData get darkTheme => quietDarkTheme;
+
+  ThemeMode _themeMode = ThemeMode.system;
+
+  ThemeMode get themeMode => _themeMode;
+
+  set themeMode(ThemeMode themeMode) {
+    _themeMode = themeMode;
+    _preferences.setInt(_key_theme_mode, themeMode.index);
     notifyListeners();
   }
 
@@ -52,7 +70,8 @@ class Settings extends Model {
   }
 
   Settings(this._preferences) {
-    _theme = quietThemes[_preferences.getInt(_key_theme) ?? 0];
+    _themeMode = ThemeMode.values[_preferences.getInt(_key_theme_mode) ?? 0]; /* default is system */
+    _theme = quietThemes[_preferences.getInt(_key_theme) ?? 0]; /* default is NetEase Red */
     _showCopyrightOverlay = _preferences.get(_key_copyright);
     _skipWelcomePage = _preferences.get(_key_skip_welcome_page) ?? false;
   }

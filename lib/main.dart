@@ -68,6 +68,8 @@ class MyApp extends StatelessWidget {
                   onGenerateRoute: routeFactory,
                   title: 'Quiet',
                   theme: setting.theme,
+                  darkTheme: setting.darkTheme,
+                  themeMode: setting.themeMode,
                   initialRoute: getInitialRoute(),
                 ),
               ),

@@ -21,8 +21,9 @@ final quietThemes = [
   _buildTheme(Colors.green),
   _buildTheme(Colors.amber),
   _buildTheme(Colors.teal),
-  ThemeData.dark(),
 ];
+
+final quietDarkTheme = ThemeData.dark();
 
 ThemeData _buildTheme(Color primaryColor) {
   return ThemeData(
