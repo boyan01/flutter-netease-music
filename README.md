@@ -1,5 +1,5 @@
 # Quiet 
-[![Build Status](https://travis-ci.com/boyan01/flutter-netease-music.svg?branch=master)](https://travis-ci.com/boyan01/flutter-netease-music)
+[![CI](https://github.com/boyan01/flutter-netease-music/workflows/CI/badge.svg)](https://github.com/boyan01/flutter-netease-music/actions)
 [![codecov](https://codecov.io/gh/boyan01/flutter-netease-music/branch/master/graph/badge.svg)](https://codecov.io/gh/boyan01/flutter-netease-music)
 
 仿网易云音乐。 
