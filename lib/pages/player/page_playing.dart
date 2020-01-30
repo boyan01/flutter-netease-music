@@ -285,7 +285,7 @@ class _CloudLyric extends StatelessWidget {
   }
 
   Widget _buildLyric(BuildContext context) {
-    TextStyle style = Theme.of(context).textTheme.body1.copyWith(height: 1.5, fontSize: 16, color: Colors.white);
+    TextStyle style = Theme.of(context).textTheme.body1.copyWith(height: 2, fontSize: 16, color: Colors.white);
     final playingLyric = PlayingLyric.of(context);
 
     if (playingLyric.hasLyric) {
