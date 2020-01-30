@@ -136,7 +136,7 @@ class _MusicTile extends StatelessWidget {
     Widget leading;
     Color name, artist;
     if (playing) {
-      Color color = Theme.of(context).primaryColor;
+      Color color = Theme.of(context).primaryColorLight;
       leading = Container(
         margin: EdgeInsets.only(right: 8),
         child: Icon(

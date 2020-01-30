@@ -65,7 +65,7 @@ class MusicTileConfiguration extends StatelessWidget {
         width: 40,
         height: 40,
         child: Center(
-          child: Icon(Icons.volume_up, color: Theme.of(context).primaryColor),
+          child: Icon(Icons.volume_up, color: Theme.of(context).primaryColorLight),
         ),
       );
     }
