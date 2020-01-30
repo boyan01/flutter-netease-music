@@ -42,7 +42,8 @@ class PlayingListDialogState extends State<PlayingListDialog> {
                   var item = playingList[index];
                   return _MusicTile(music: item, playing: item == music);
                 }),
-          )
+          ),
+          SizedBox(height: MediaQuery.of(context).viewInsets.bottom),
         ],
       ),
     );

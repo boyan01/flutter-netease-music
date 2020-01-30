@@ -4,13 +4,11 @@ import 'package:quiet/pages/playlist/music_list.dart';
 import 'package:quiet/part/part.dart';
 
 class PlaylistInternalSearchDelegate extends SearchDelegate {
-  PlaylistInternalSearchDelegate(this.playlist, this.theme) : assert(playlist != null && playlist.musicList != null);
+  PlaylistInternalSearchDelegate(this.playlist) : assert(playlist != null && playlist.musicList != null);
 
   final PlaylistDetail playlist;
 
   List<Music> get list => playlist.musicList;
-
-  final ThemeData theme;
 
   @override
   List<Widget> buildActions(BuildContext context) {
@@ -19,10 +17,7 @@ class PlaylistInternalSearchDelegate extends SearchDelegate {
 
   @override
   ThemeData appBarTheme(BuildContext context) {
-    var theme = this.theme ?? Theme.of(context);
-    return theme.copyWith(
-        textTheme: theme.textTheme.copyWith(title: theme.primaryTextTheme.title),
-        primaryColorBrightness: Brightness.dark);
+    return Theme.of(context);
   }
 
   @override
@@ -32,7 +27,7 @@ class PlaylistInternalSearchDelegate extends SearchDelegate {
 
   @override
   Widget buildResults(BuildContext context) {
-    return Theme(data: theme, child: BoxWithBottomPlayerController(buildSection(context)));
+    return BoxWithBottomPlayerController(buildSection(context));
   }
 
   @override

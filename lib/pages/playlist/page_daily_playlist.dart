@@ -15,25 +15,21 @@ class DailyPlaylistPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return PageNeedLogin(
       builder: (context) => Scaffold(
-            resizeToAvoidBottomInset: false,
-            body: BoxWithBottomPlayerController(
-              Loader<Map>(
-                  loadTask: () => neteaseRepository.recommendSongs(),
-                  builder: (context, result) {
-                    final list = (result["recommend"] as List)
-                        .cast<Map>()
-                        .map(mapJsonToMusic)
-                        .toList();
-                    return MusicTileConfiguration(
-                        token: 'playlist_daily_recommend',
-                        musics: list,
-                        trailingBuilder: MusicTileConfiguration.defaultTrailingBuilder,
-                        leadingBuilder: MusicTileConfiguration.coverLeadingBuilder,
-                        onMusicTap: MusicTileConfiguration.defaultOnTap,
-                        child: _DailyMusicList());
-                  }),
-            ),
-          ),
+        body: BoxWithBottomPlayerController(
+          Loader<Map>(
+              loadTask: () => neteaseRepository.recommendSongs(),
+              builder: (context, result) {
+                final list = (result["recommend"] as List).cast<Map>().map(mapJsonToMusic).toList();
+                return MusicTileConfiguration(
+                    token: 'playlist_daily_recommend',
+                    musics: list,
+                    trailingBuilder: MusicTileConfiguration.defaultTrailingBuilder,
+                    leadingBuilder: MusicTileConfiguration.coverLeadingBuilder,
+                    onMusicTap: MusicTileConfiguration.defaultOnTap,
+                    child: _DailyMusicList());
+              }),
+        ),
+      ),
     );
   }
 }
@@ -56,8 +52,7 @@ class _DailyMusicList extends StatelessWidget {
             IconButton(
                 icon: Icon(Icons.help_outline),
                 onPressed: () {
-                  launch("http://music.163.com/m/topic/19193112",
-                      forceWebView: true);
+                  launch("http://music.163.com/m/topic/19193112", forceWebView: true);
                 })
           ],
           flexibleSpace: _HeaderContent(),
@@ -97,9 +92,7 @@ class _HeaderContent extends StatelessWidget {
             children: <Widget>[
               Spacer(flex: 10),
               Text.rich(TextSpan(children: [
-                TextSpan(
-                    text: date.day.toString().padLeft(2, '0'),
-                    style: TextStyle(fontSize: 23)),
+                TextSpan(text: date.day.toString().padLeft(2, '0'), style: TextStyle(fontSize: 23)),
                 TextSpan(text: ' / '),
                 TextSpan(text: date.month.toString().padLeft(2, '0')),
               ])),

@@ -64,6 +64,7 @@ class _PlayListDetailState extends State<PlaylistDetailPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: BoxWithBottomPlayerController(
         Loader<PlaylistDetail>(
             initialData: neteaseLocalData.getPlaylistDetail(widget.playlistId),
@@ -410,7 +411,7 @@ class _PlaylistDetailHeader extends StatelessWidget {
               icon: Icon(Icons.search),
               tooltip: "歌单内搜索",
               onPressed: () {
-                showSearch(context: context, delegate: PlaylistInternalSearchDelegate(playlist, Theme.of(context)));
+                showSearch(context: context, delegate: PlaylistInternalSearchDelegate(playlist));
               }),
           IconButton(icon: Icon(Icons.more_vert), tooltip: "更多选项", onPressed: () {})
         ],

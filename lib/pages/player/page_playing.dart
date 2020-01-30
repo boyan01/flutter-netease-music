@@ -27,6 +27,7 @@ class PlayingPage extends StatelessWidget {
       return Container();
     }
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Stack(
         children: <Widget>[
           _BlurBackground(music: current),
@@ -40,7 +41,7 @@ class PlayingPage extends StatelessWidget {
                 const SizedBox(height: 10),
                 DurationProgressBar(),
                 _ControllerBar(),
-                SizedBox(height: MediaQuery.of(context).padding.bottom),
+                SizedBox(height: MediaQuery.of(context).viewInsets.bottom),
               ],
             ),
           ),
