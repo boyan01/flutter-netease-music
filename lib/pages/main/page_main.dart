@@ -7,19 +7,19 @@ import 'package:quiet/part/part.dart';
 import 'package:quiet/repository/netease.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+part 'drawer.dart';
+
 class MainPage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => _MainPageState();
 }
 
-class _MainPageState extends State<MainPage>
-    with SingleTickerProviderStateMixin {
+class _MainPageState extends State<MainPage> with SingleTickerProviderStateMixin {
   TabController _tabController;
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  ProxyAnimation transitionAnimation =
-      ProxyAnimation(kAlwaysDismissedAnimation);
+  ProxyAnimation transitionAnimation = ProxyAnimation(kAlwaysDismissedAnimation);
 
   @override
   void initState() {
@@ -37,41 +37,7 @@ class _MainPageState extends State<MainPage>
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      drawer: Drawer(
-        child: Column(
-          children: <Widget>[
-            _AppDrawerHeader(),
-            MediaQuery.removePadding(
-                context: context,
-                removeTop: true,
-                child: Expanded(
-                  child: ListTileTheme(
-                    style: ListTileStyle.drawer,
-                    child: ListView(
-                      children: <Widget>[
-                        ListTile(
-                          leading: Icon(Icons.settings),
-                          title: Text("设置"),
-                          onTap: () {
-                            Navigator.pushNamed(context, ROUTE_SETTING);
-                          },
-                        ),
-                        Divider(height: 0, indent: 16),
-                        ListTile(
-                          leading: Icon(Icons.format_quote),
-                          title: Text("Star On GitHub"),
-                          onTap: () {
-                            launch(
-                                "https://github.com/boyan01/quiet-flutter");
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-                ))
-          ],
-        ),
-      ),
+      drawer: _Drawer(),
       appBar: AppBar(
         leading: IconButton(
             icon: AnimatedIcon(
@@ -86,8 +52,7 @@ class _MainPageState extends State<MainPage>
           width: 128,
           child: TabBar(
             controller: _tabController,
-            indicator:
-                UnderlineTabIndicator(insets: EdgeInsets.only(bottom: 4)),
+            indicator: UnderlineTabIndicator(insets: EdgeInsets.only(bottom: 4)),
             indicatorSize: TabBarIndicatorSize.label,
             tabs: <Widget>[
               Tab(child: Icon(Icons.music_note)),
@@ -100,8 +65,7 @@ class _MainPageState extends State<MainPage>
         actions: <Widget>[
           IconButton(
             onPressed: () {
-              Navigator.push(
-                  context, NeteaseSearchPageRoute(transitionAnimation));
+              Navigator.push(context, NeteaseSearchPageRoute(transitionAnimation));
             },
             icon: Icon(Icons.search),
           )
@@ -132,10 +96,7 @@ class _AppDrawerHeader extends StatelessWidget {
       currentAccountPicture: InkResponse(
         onTap: () {
           Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) =>
-                      UserDetailPage(userId: UserAccount.of(context).userId)));
+              context, MaterialPageRoute(builder: (context) => UserDetailPage(userId: UserAccount.of(context).userId)));
         },
         child: CircleAvatar(
           backgroundImage: CachedImage(profile["avatarUrl"]),
@@ -153,8 +114,7 @@ class _AppDrawerHeader extends StatelessWidget {
             ),
             tooltip: "退出登陆",
             onPressed: () async {
-              if (await showConfirmDialog(context, Text('确认退出登录吗？'),
-                  positiveLabel: '退出登录')) {
+              if (await showConfirmDialog(context, Text('确认退出登录吗？'), positiveLabel: '退出登录')) {
                 UserAccount.of(context, rebuildOnChange: false).logout();
               }
             },
@@ -172,8 +132,7 @@ class _AppDrawerHeader extends StatelessWidget {
       child: Container(
         constraints: BoxConstraints.expand(),
         child: DefaultTextStyle(
-          style:
-              Theme.of(context).primaryTextTheme.caption.copyWith(fontSize: 14),
+          style: Theme.of(context).primaryTextTheme.caption.copyWith(fontSize: 14),
           child: Center(
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -183,12 +142,7 @@ class _AppDrawerHeader extends StatelessWidget {
                 SizedBox(height: 8),
                 FlatButton(
                     shape: RoundedRectangleBorder(
-                        side: BorderSide(
-                            color: Theme.of(context)
-                                .primaryTextTheme
-                                .body1
-                                .color
-                                .withOpacity(0.3)),
+                        side: BorderSide(color: Theme.of(context).primaryTextTheme.body1.color.withOpacity(0.3)),
                         borderRadius: BorderRadius.circular(20)),
                     padding: EdgeInsets.symmetric(horizontal: 40),
                     onPressed: () {
