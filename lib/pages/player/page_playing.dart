@@ -27,6 +27,7 @@ class PlayingPage extends StatelessWidget {
       return Container();
     }
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Stack(
         children: <Widget>[
           _BlurBackground(music: current),
@@ -40,7 +41,7 @@ class PlayingPage extends StatelessWidget {
                 const SizedBox(height: 10),
                 DurationProgressBar(),
                 _ControllerBar(),
-                SizedBox(height: MediaQuery.of(context).padding.bottom),
+                SizedBox(height: MediaQuery.of(context).viewInsets.bottom),
               ],
             ),
           ),
@@ -284,7 +285,7 @@ class _CloudLyric extends StatelessWidget {
   }
 
   Widget _buildLyric(BuildContext context) {
-    TextStyle style = Theme.of(context).textTheme.body1.copyWith(height: 1.5, fontSize: 16, color: Colors.white);
+    TextStyle style = Theme.of(context).textTheme.body1.copyWith(height: 2, fontSize: 16, color: Colors.white);
     final playingLyric = PlayingLyric.of(context);
 
     if (playingLyric.hasLyric) {

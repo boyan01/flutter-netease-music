@@ -30,15 +30,15 @@ class BoxWithBottomPlayerController extends StatelessWidget {
       return child;
     }
 
-    final media = MediaQueryData.fromWindow(WidgetsBinding.instance.window);
-
+    final media = MediaQuery.of(context);
     //hide bottom player controller when view inserts
     //bottom too height (such as typing with soft keyboard)
     bool hide = isSoftKeyboardDisplay(media);
     return Column(
       children: <Widget>[
         Expanded(child: child),
-        hide ? Container() : BottomControllerBar(bottomPadding: media.viewPadding.bottom),
+        if (!hide) BottomControllerBar(),
+        SizedBox(height: media.viewInsets.bottom)
       ],
     );
   }
@@ -46,9 +46,7 @@ class BoxWithBottomPlayerController extends StatelessWidget {
 
 ///底部当前音乐播放控制栏
 class BottomControllerBar extends StatelessWidget {
-  final double bottomPadding;
-
-  const BottomControllerBar({Key key, this.bottomPadding = 0}) : super(key: key);
+  const BottomControllerBar({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -68,8 +66,7 @@ class BottomControllerBar extends StatelessWidget {
             borderRadius:
                 const BorderRadius.only(topLeft: const Radius.circular(4.0), topRight: const Radius.circular(4.0))),
         child: Container(
-          height: 56 + bottomPadding,
-          padding: EdgeInsets.only(bottom: bottomPadding),
+          height: 56,
           child: Row(
             children: <Widget>[
               Hero(
