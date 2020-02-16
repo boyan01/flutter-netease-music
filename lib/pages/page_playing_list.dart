@@ -112,7 +112,8 @@ class _Header extends StatelessWidget {
                 icon: Icon(Icons.delete_outline),
                 onPressed: () async {
                   Navigator.pop(context);
-                  context.player.setPlayList(PlayList.empty());
+                  //FIXME
+//                  context.player.setPlayList(PlayList.empty());
                 })
           ],
         ),
@@ -178,7 +179,7 @@ class _MusicTile extends StatelessWidget {
             IconButton(
                 icon: Icon(Icons.close),
                 onPressed: () {
-                  context.player.removeQueueItem(music.metadata.mediaId);
+                  context.player.removeMusicItem(music.metadata);
                 })
           ],
         ),

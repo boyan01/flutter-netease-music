@@ -50,7 +50,7 @@ class MusicTileConfiguration extends StatelessWidget {
               width: 40,
               height: 40,
               fit: BoxFit.cover,
-              image: CachedImage(music.description.iconUri?.toString() ?? ""),
+              image: CachedImage(music.imageUrl?.toString() ?? ""),
               placeholder: AssetImage("assets/playlist_playlist.9.png"),
             ),
           ),
@@ -75,12 +75,12 @@ class MusicTileConfiguration extends StatelessWidget {
   static final void Function(BuildContext context, Music muisc) defaultOnTap = (context, music) {
     final list = MusicTileConfiguration.of(context);
     final player = context.player;
-    final PlayList playList = player.value.playList;
+    final PlayQueue playList = player.value.queue;
     if (playList.queueId == list.token && player.playbackState.isPlaying && player.metadata == music.metadata) {
       //open playing page
       Navigator.pushNamed(context, ROUTE_PAYING);
     } else {
-      context.player.playWithList(PlayList(queue: list.queue, queueId: list.token, queueTitle: list.token),
+      context.player.playWithQueue(PlayQueue(queue: list.queue, queueId: list.token, queueTitle: list.token),
           metadata: music.metadata);
     }
   };
@@ -89,7 +89,7 @@ class MusicTileConfiguration extends StatelessWidget {
 
   final List<Music> musics;
 
-  final List<MediaMetadata> queue;
+  final List<MusicMetadata> queue;
 
   final void Function(BuildContext context, Music muisc) onMusicTap;
 
@@ -213,11 +213,11 @@ class MusicListHeader extends StatelessWidget implements PreferredSizeWidget {
         child: InkWell(
           onTap: () {
             final list = MusicTileConfiguration.of(context);
-            if (context.player.playList.queueId == list.token && context.player.playbackState.isPlaying) {
+            if (context.player.queue.queueId == list.token && context.player.playbackState.isPlaying) {
               //open playing page
               Navigator.pushNamed(context, ROUTE_PAYING);
             } else {
-              context.player.playWithList(PlayList(queue: list.queue, queueId: list.token, queueTitle: list.token));
+              context.player.playWithQueue(PlayQueue(queue: list.queue, queueId: list.token, queueTitle: list.token));
             }
           },
           child: SizedBox.fromSize(

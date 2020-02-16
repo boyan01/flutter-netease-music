@@ -341,7 +341,7 @@ class _BlurBackground extends StatelessWidget {
       fit: StackFit.expand,
       children: <Widget>[
         Image(
-          image: CachedImage(music.description.iconUri.toString()),
+          image: CachedImage(music.imageUrl.toString()),
           fit: BoxFit.cover,
           height: 15,
           width: 15,

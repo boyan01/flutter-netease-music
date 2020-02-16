@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mockito/mockito.dart';
 import 'package:music_player/music_player.dart';
-import 'package:music_player/src/player/player_channel.dart';
 import 'package:quiet/component/netease/counter.dart';
 import 'package:quiet/component/netease/netease.dart';
 import 'package:quiet/component/player/player.dart';
@@ -45,47 +44,7 @@ class TestContext extends StatelessWidget {
 }
 
 class _TestQuietModel extends Model implements QuietModel {
+  //TODO test
   @override
-  MusicPlayer player = _FakerPlayer();
-}
-
-class _FakerPlayer extends ValueNotifier<MusicPlayerValue> with MediaControllerCallback implements MusicPlayer {
-  _FakerPlayer() : super(MusicPlayerValue.none());
-
-  @override
-  MediaMetadata get metadata => null;
-
-  @override
-  get onServiceConnected => null;
-
-  @override
-  PlayList get playList => PlayList.empty();
-
-  @override
-  Future<void> playWithList(PlayList playList, {MediaMetadata metadata}) {
-    return null;
-  }
-
-  @override
-  PlaybackInfo get playbackInfo => null;
-
-  @override
-  PlaybackState get playbackState => PlaybackState.none();
-
-  @override
-  noSuchMethod(Invocation invocation) {
-    //do nothing.
-  }
-
-  @override
-  TransportControls get transportControls => const _FakeTransportControl();
-}
-
-class _FakeTransportControl implements TransportControls {
-  const _FakeTransportControl();
-
-  @override
-  noSuchMethod(Invocation invocation) {
-    //do nothing.
-  }
+  MusicPlayer player = MusicPlayer();
 }

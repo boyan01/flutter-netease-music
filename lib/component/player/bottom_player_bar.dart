@@ -77,11 +77,11 @@ class BottomControllerBar extends StatelessWidget {
                     aspectRatio: 1,
                     child: ClipRRect(
                       borderRadius: BorderRadius.all(Radius.circular(3)),
-                      child: music.description.iconUri == null
+                      child: music.imageUrl == null
                           ? Container(color: Colors.grey)
                           : Image(
                               fit: BoxFit.cover,
-                              image: CachedImage(music.description.iconUri.toString()),
+                              image: CachedImage(music.imageUrl),
                             ),
                     ),
                   ),
