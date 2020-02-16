@@ -36,6 +36,7 @@ class Music {
       title: title,
       subtitle: subTitle,
       duration: 0,
+      iconUri: imageUrl,
       extras: MusicExt(this).toMap(),
     );
     return _metadata;
