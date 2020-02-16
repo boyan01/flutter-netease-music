@@ -16,8 +16,8 @@ class BackgroundInterceptors {
     return result.asValue.value;
   }
 
-  static Future<Uint8List> loadImageInterceptor(MediaDescription description) async {
-    final ImageStream stream = CachedImage(description.iconUri.toString()).resolve(ImageConfiguration(
+  static Future<Uint8List> loadImageInterceptor(MusicMetadata metadata) async {
+    final ImageStream stream = CachedImage(metadata.iconUri.toString()).resolve(ImageConfiguration(
       size: const Size(150, 150),
       devicePixelRatio: WidgetsBinding.instance.window.devicePixelRatio,
     ));
@@ -31,7 +31,7 @@ class BackgroundInterceptors {
         .then((image) => image.image.toByteData(format: ImageByteFormat.png))
         .then((byte) => byte.buffer.asUint8List())
         .timeout(const Duration(seconds: 10));
-    debugPrint("load image for : ${description.title} ${result.length}");
+    debugPrint("load image for : ${metadata.title} ${result.length}");
     return result;
   }
 }

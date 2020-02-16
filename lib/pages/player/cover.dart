@@ -78,8 +78,9 @@ class _AlbumCoverState extends State<AlbumCover> with TickerProviderStateMixin {
       return;
     }
     _previousNextDirty = false;
-    _previous = _player.playList.getPrevious(_current.metadata)?.toMusic();
-    _next = _player.playList.getNext(_current.metadata)?.toMusic();
+    //TODO fetch previous and next
+    _previous = null;
+    _next = null;
     if (mounted) {
       setState(() {});
     }
@@ -337,10 +338,10 @@ class _RotationCoverImageState extends State<_RotationCoverImage> with SingleTic
   @override
   Widget build(BuildContext context) {
     ImageProvider image;
-    if (widget.music == null || widget.music.description.iconUri == null) {
+    if (widget.music == null || widget.music.imageUrl == null) {
       image = AssetImage("assets/playing_page_disc.png");
     } else {
-      image = CachedImage(widget.music.description.iconUri.toString());
+      image = CachedImage(widget.music.imageUrl.toString());
     }
     return Transform.rotate(
       angle: rotation,
