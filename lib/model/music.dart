@@ -10,7 +10,6 @@ class Music {
     this.album,
     this.artist,
     int mvId,
-    this.imageUrl,
   }) : this.mvId = mvId ?? 0;
 
   final int id;
@@ -26,7 +25,7 @@ class Music {
   ///歌曲mv id,当其为0时,表示没有mv
   final int mvId;
 
-  final String imageUrl;
+  String get imageUrl => album.coverImageUrl;
 
   MusicMetadata _metadata;
 

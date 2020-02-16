@@ -52,7 +52,9 @@ extension QuitPlayerExt on BuildContext {
     return ScopedModel.of<QuietModel>(this, rebuildOnChange: true).player.value;
   }
 
-  PlaybackState get playbackState => playerValue.state;
+  PlaybackState get playbackState => playerValue.playbackState;
+
+  PlayMode get playMode => playerValue.playMode;
 
   PlayQueue get playList => playerValue.queue;
 }

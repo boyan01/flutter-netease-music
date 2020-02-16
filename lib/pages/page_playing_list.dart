@@ -58,7 +58,7 @@ class _Header extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final playMode = context.playbackState.playMode;
+    final playMode = context.playMode;
     final count = context.playList.queue.length;
     IconData icon;
     String name;

@@ -73,14 +73,14 @@ class _AlbumCoverState extends State<AlbumCover> with TickerProviderStateMixin {
   }
 
   /// invalidate previous and next music cover...
+  /// TODO should invalidate on playMode change.
   void _invalidatePn() async {
     if (!_previousNextDirty) {
       return;
     }
     _previousNextDirty = false;
-    //TODO fetch previous and next
-    _previous = null;
-    _next = null;
+    _previous = (await _player.getPreviousMusic(_current.metadata)).toMusic();
+    _next = (await _player.getNextMusic(_current.metadata)).toMusic();
     if (mounted) {
       setState(() {});
     }

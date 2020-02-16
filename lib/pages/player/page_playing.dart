@@ -55,7 +55,7 @@ class PlayingPage extends StatelessWidget {
 /// pause,play,play next,play previous...
 class _ControllerBar extends StatelessWidget {
   Widget getPlayModeIcon(BuildContext context, Color color) {
-    var playMode = context.playbackState.playMode;
+    var playMode = context.playMode;
     switch (playMode) {
       case PlayMode.single:
         return Icon(
@@ -118,7 +118,7 @@ class _ControllerBar extends StatelessWidget {
           IconButton(
               icon: getPlayModeIcon(context, color),
               onPressed: () {
-                context.transportControls.setPlayMode(context.playbackState.playMode.next);
+                context.transportControls.setPlayMode(context.playMode.next);
               }),
           IconButton(
               iconSize: 36,
