@@ -13,7 +13,8 @@ class BackgroundInterceptors {
     if (result.isError) {
       return fallbackUri;
     }
-    return result.asValue.value;
+    /// some devices do not support http request.
+    return result.asValue.value.replaceFirst("http://", "https://");
   }
 
   static Future<Uint8List> loadImageInterceptor(MusicMetadata metadata) async {
