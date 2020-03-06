@@ -37,7 +37,7 @@ class BoxWithBottomPlayerController extends StatelessWidget {
     return Column(
       children: <Widget>[
         Expanded(child: child),
-        if (!hide) BottomControllerBar(),
+        if (!hide) BottomControllerBar(bottomPadding: media.padding.bottom),
         SizedBox(height: media.viewInsets.bottom)
       ],
     );
@@ -46,7 +46,9 @@ class BoxWithBottomPlayerController extends StatelessWidget {
 
 ///底部当前音乐播放控制栏
 class BottomControllerBar extends StatelessWidget {
-  const BottomControllerBar({Key key}) : super(key: key);
+  final double bottomPadding;
+
+  const BottomControllerBar({Key key, this.bottomPadding}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -67,6 +69,7 @@ class BottomControllerBar extends StatelessWidget {
                 const BorderRadius.only(topLeft: const Radius.circular(4.0), topRight: const Radius.circular(4.0))),
         child: Container(
           height: 56,
+          margin: EdgeInsets.only(bottom: bottomPadding),
           child: Row(
             children: <Widget>[
               Hero(
@@ -98,7 +101,7 @@ class BottomControllerBar extends StatelessWidget {
                       Spacer(),
                       Text(
                         music.title,
-                        style: Theme.of(context).textTheme.body1,
+                        style: Theme.of(context).textTheme.bodyText2,
                       ),
                       Padding(padding: const EdgeInsets.only(top: 2)),
                       DefaultTextStyle(
