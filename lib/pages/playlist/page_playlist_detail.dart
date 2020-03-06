@@ -314,14 +314,12 @@ class PlayListHeaderBackground extends StatelessWidget {
     return Stack(
       fit: StackFit.passthrough,
       children: <Widget>[
-        Opacity(
-          opacity: 1,
-          child: Image(image: CachedImage(imageUrl), fit: BoxFit.cover, width: 120, height: 1),
-        ),
+        Image(image: CachedImage(imageUrl), fit: BoxFit.cover, width: 120, height: 1),
         BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 24, sigmaY: 24),
           child: Container(color: Colors.black.withOpacity(0.3)),
-        )
+        ),
+        Container(color: Colors.black.withOpacity(0.3))
       ],
     );
   }
