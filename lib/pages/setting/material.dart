@@ -1,13 +1,12 @@
-/***
- *
- * 一些 setting 用到的 Widget
- *
- **/
+///
+///
+/// 一些 setting 用到的 Widget
+///
+///
 import 'package:flutter/material.dart';
 
 class SettingGroup extends StatelessWidget {
-  const SettingGroup({Key key, @required this.title, @required this.children})
-      : super(key: key);
+  const SettingGroup({Key key, @required this.title, @required this.children}) : super(key: key);
 
   final String title;
   final List<Widget> children;

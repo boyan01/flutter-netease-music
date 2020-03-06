@@ -213,14 +213,14 @@ enum CommentType {
   video
 }
 
-///like or unlike a comment
-///return true when operation succeed
-Future<bool> _like(bool like, int commentId, CommentThreadId commentThread) async {
-  String op = like ? "like" : "unlike";
-  var result = await neteaseRepository.doRequest(
-      "https://music.163.com/weapi/v1/comment/$op", {"threadId": commentThread.threadId, "commentId": commentId});
-  return result.isValue;
-}
+/////like or unlike a comment
+/////return true when operation succeed
+//Future<bool> _like(bool like, int commentId, CommentThreadId commentThread) async {
+//  String op = like ? "like" : "unlike";
+//  var result = await neteaseRepository.doRequest(
+//      "https://music.163.com/weapi/v1/comment/$op", {"threadId": commentThread.threadId, "commentId": commentId});
+//  return result.isValue;
+//}
 
 ///post comment to a comment thread
 Future<Result<Map>> _postComment(String content, CommentThreadId commentThread) async {
@@ -228,9 +228,9 @@ Future<Result<Map>> _postComment(String content, CommentThreadId commentThread) 
       "https://music.163.com/weapi/resource/comments/add", {"content": content, "threadId": commentThread.threadId});
 }
 
-Future<bool> _deleteComment(CommentThreadId commentThread, int commentId) async {
-  var result = await neteaseRepository.doRequest("https://music.163.com/weapi/resource/comments/delete",
-      {"commentId": commentId, "threadId": commentThread.threadId});
-  debugPrint("_deleteComment :$result");
-  return result.isValue;
-}
+//Future<bool> _deleteComment(CommentThreadId commentThread, int commentId) async {
+//  var result = await neteaseRepository.doRequest("https://music.163.com/weapi/resource/comments/delete",
+//      {"commentId": commentId, "threadId": commentThread.threadId});
+//  debugPrint("_deleteComment :$result");
+//  return result.isValue;
+//}

@@ -22,8 +22,7 @@ class FullScreenMvPlayerState extends State<FullScreenMvPlayer> {
   void dispose() {
     super.dispose();
     //re enable System UI
-    SystemChrome.setEnabledSystemUIOverlays(
-        const [SystemUiOverlay.top, SystemUiOverlay.bottom]);
+    SystemChrome.setEnabledSystemUIOverlays(const [SystemUiOverlay.top, SystemUiOverlay.bottom]);
   }
 
   @override
@@ -36,8 +35,7 @@ class FullScreenMvPlayerState extends State<FullScreenMvPlayer> {
           Center(
             child: AspectRatio(
                 aspectRatio: value.initialized ? value.aspectRatio : 1,
-                child: VideoPlayer(
-                    VideoPlayerModel.of(context).videoPlayerController)),
+                child: VideoPlayer(VideoPlayerModel.of(context).videoPlayerController)),
           ),
           _FullScreenController(),
         ],
@@ -56,8 +54,7 @@ class _FullScreenController extends StatelessWidget {
       center: MvPlayPauseButton(),
       beforeChange: (show) {
         if (show) {
-          SystemChrome.setEnabledSystemUIOverlays(
-              const [SystemUiOverlay.top, SystemUiOverlay.bottom]);
+          SystemChrome.setEnabledSystemUIOverlays(const [SystemUiOverlay.top, SystemUiOverlay.bottom]);
         }
       },
       afterChange: (show) {
@@ -72,9 +69,7 @@ class _FullScreenController extends StatelessWidget {
     return Container(
       decoration: const BoxDecoration(
           gradient: const LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: const [Colors.black87, Colors.black12])),
+              begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: const [Colors.black87, Colors.black12])),
       child: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -86,9 +81,7 @@ class _FullScreenController extends StatelessWidget {
             onPressed: () => notImplemented(context),
           ),
           IconButton(
-            icon: Icon(VideoPlayerModel.of(context).subscribed
-                ? Icons.check_box
-                : Icons.add_box),
+            icon: Icon(VideoPlayerModel.of(context).subscribed ? Icons.check_box : Icons.add_box),
             onPressed: () => subscribeOrUnSubscribeMv(context),
           ),
           IconButton(
@@ -113,11 +106,9 @@ class _FullScreenController extends StatelessWidget {
     return Container(
       decoration: const BoxDecoration(
           gradient: const LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: const [Colors.black12, Colors.black87])),
+              begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: const [Colors.black12, Colors.black87])),
       child: DefaultTextStyle(
-        style: Theme.of(context).primaryTextTheme.body1,
+        style: Theme.of(context).primaryTextTheme.bodyText2,
         child: Row(
           children: <Widget>[
             Text(getTimeStamp(position)),
@@ -145,12 +136,10 @@ class _FullScreenController extends StatelessWidget {
                           ))
                       .toList();
                 },
-                onSelected: (v) =>
-                    VideoPlayerModel.of(context).currentImageResolution = v,
+                onSelected: (v) => VideoPlayerModel.of(context).currentImageResolution = v,
                 child: Container(
                   padding: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
-                  child: Text(
-                      '${VideoPlayerModel.of(context).currentImageResolution}P'),
+                  child: Text('${VideoPlayerModel.of(context).currentImageResolution}P'),
                 )),
             IconButton(
                 icon: Icon(Icons.fullscreen_exit, color: Colors.white),

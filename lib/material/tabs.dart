@@ -23,7 +23,7 @@ class RoundedTabBar extends StatelessWidget implements PreferredSizeWidget {
             indicator:
                 PrimaryTabIndicator(color: Theme.of(context).accentColor),
             indicatorSize: TabBarIndicatorSize.label,
-            labelColor: Theme.of(context).textTheme.body2.color,
+            labelColor: Theme.of(context).textTheme.bodyText1.color,
             tabs: tabs),
       ),
     );

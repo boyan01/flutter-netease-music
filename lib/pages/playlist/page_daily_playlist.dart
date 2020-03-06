@@ -79,7 +79,7 @@ class _HeaderContent extends StatelessWidget {
       background: Container(color: Theme.of(context).primaryColor),
       content: DefaultTextStyle(
         maxLines: 1,
-        style: textTheme.body1.copyWith(fontWeight: FontWeight.bold),
+        style: textTheme.bodyText2.copyWith(fontWeight: FontWeight.bold),
         child: Padding(
           padding: EdgeInsets.only(
             left: 16,

@@ -44,10 +44,7 @@ class ArtistSelectionDialog extends StatelessWidget {
         title: Padding(
           padding: const EdgeInsets.only(left: 8),
           child: Text(artist.name,
-              style: Theme.of(context)
-                  .textTheme
-                  .body1
-                  .merge(TextStyle(color: enabled ? null : Colors.grey))),
+              style: Theme.of(context).textTheme.bodyText2.merge(TextStyle(color: enabled ? null : Colors.grey))),
         ),
         enabled: enabled,
         onTap: () {
@@ -62,8 +59,7 @@ class ArtistSelectionDialog extends StatelessWidget {
         child: SimpleDialog(
           title: Container(
             child: Text("请选择要查看的歌手"),
-            constraints: BoxConstraints(
-                minWidth: MediaQuery.of(context).size.width * 0.8),
+            constraints: BoxConstraints(minWidth: MediaQuery.of(context).size.width * 0.8),
           ),
           children: children,
         ),

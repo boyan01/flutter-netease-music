@@ -42,7 +42,7 @@ class _ArtistFlexHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DefaultTextStyle(
-      style: Theme.of(context).primaryTextTheme.body1,
+      style: Theme.of(context).primaryTextTheme.bodyText2,
       maxLines: 1,
       child: FlexibleDetailBar(
         background:

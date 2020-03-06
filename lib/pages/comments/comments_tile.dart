@@ -80,7 +80,7 @@ class _ItemTitle extends StatelessWidget {
                     children: <Widget>[
                       Text(
                         payload.title,
-                        style: Theme.of(context).textTheme.subtitle,
+                        style: Theme.of(context).textTheme.subtitle2,
                       ),
                       Text(
                         payload.subtitle,
@@ -229,7 +229,7 @@ class _ItemCommentState extends State<_ItemComment> {
                     children: <Widget>[
                       Text(
                         user.nickname,
-                        style: Theme.of(context).textTheme.body1,
+                        style: Theme.of(context).textTheme.bodyText2,
                       ),
                       Text(
                         getFormattedTime(widget.comment.time),

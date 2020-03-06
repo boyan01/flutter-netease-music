@@ -19,7 +19,7 @@ class _PlaylistEditPageState extends State<PlaylistEditPage> {
   Widget build(BuildContext context) {
     final style = Theme.of(context)
         .textTheme
-        .body1
+        .bodyText2
         .copyWith(fontSize: 15, shadows: [Shadow(offset: Offset(0.3, 0.3), color: Colors.black87)]);
 
     return Scaffold(
@@ -158,7 +158,7 @@ class _PlaylistNameEditPageState extends State<_PlaylistNameEditPage> {
                 }
               },
               child: Text("保存"),
-              textColor: Theme.of(context).primaryTextTheme.body1.color)
+              textColor: Theme.of(context).primaryTextTheme.bodyText2.color)
         ],
       ),
       body: Padding(

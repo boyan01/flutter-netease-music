@@ -9,8 +9,7 @@ class MainCloudPage extends StatefulWidget {
   State<StatefulWidget> createState() => CloudPageState();
 }
 
-class CloudPageState extends State<MainCloudPage>
-    with AutomaticKeepAliveClientMixin {
+class CloudPageState extends State<MainCloudPage> with AutomaticKeepAliveClientMixin {
   @override
   bool get wantKeepAlive => true;
 
@@ -67,10 +66,7 @@ class _Header extends StatelessWidget {
           Padding(padding: EdgeInsets.only(left: 8)),
           Text(
             text,
-            style: Theme.of(context)
-                .textTheme
-                .subhead
-                .copyWith(fontWeight: FontWeight.w800),
+            style: Theme.of(context).textTheme.subtitle1.copyWith(fontWeight: FontWeight.w800),
           ),
           Icon(Icons.chevron_right),
         ],
@@ -153,7 +149,7 @@ class _SectionPlaylist extends StatelessWidget {
               return AlertDialog(
                 content: Text(
                   playlist["copywriter"],
-                  style: Theme.of(context).textTheme.body2,
+                  style: Theme.of(context).textTheme.bodyText1,
                 ),
               );
             });
@@ -208,10 +204,7 @@ class _SectionNewSongs extends StatelessWidget {
     return Loader<Map>(
       loadTask: () => neteaseRepository.personalizedNewSong(),
       builder: (context, result) {
-        List<Music> songs = (result["result"] as List)
-            .cast<Map>()
-            .map(_mapJsonToMusic)
-            .toList();
+        List<Music> songs = (result["result"] as List).cast<Map>().map(_mapJsonToMusic).toList();
         return MusicTileConfiguration(
           musics: songs,
           token: 'playlist_main_newsong',

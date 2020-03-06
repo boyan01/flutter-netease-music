@@ -111,7 +111,7 @@ class _PhoneInput extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final style = Theme.of(context).textTheme.body1.copyWith(
+    final style = Theme.of(context).textTheme.bodyText2.copyWith(
           fontSize: 16,
           color: _textColor(context),
         );
@@ -178,7 +178,7 @@ class _ButtonNextStep extends StatelessWidget {
     return RaisedButton(
       color: Theme.of(context).primaryColor,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-      textColor: Theme.of(context).primaryTextTheme.body1.color,
+      textColor: Theme.of(context).primaryTextTheme.bodyText2.color,
       child: Text('下一步'),
       onPressed: () async {
         final model = ScopedModel.of<_InputModel>(context);

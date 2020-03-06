@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:music_player/music_player.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:quiet/pages/playlist/dialog_selector.dart';
 import 'package:quiet/part/part.dart';
@@ -60,22 +59,6 @@ class _Header extends StatelessWidget {
   Widget build(BuildContext context) {
     final playMode = context.playMode;
     final count = context.playList.queue.length;
-    IconData icon;
-    String name;
-    switch (playMode) {
-      case PlayMode.single:
-        icon = Icons.repeat_one;
-        name = "单曲循环";
-        break;
-      case PlayMode.sequence:
-        icon = Icons.repeat;
-        name = "列表循环";
-        break;
-      case PlayMode.shuffle:
-        icon = Icons.shuffle;
-        name = "随机播放";
-        break;
-    }
     return Material(
       elevation: 0.5,
       child: Container(
@@ -86,8 +69,8 @@ class _Header extends StatelessWidget {
                 onPressed: () {
                   context.transportControls.setPlayMode(playMode.next);
                 },
-                icon: Icon(icon),
-                label: Text("$name($count)")),
+                icon: Icon(playMode.icon),
+                label: Text("${playMode.name}($count)")),
             Spacer(),
             FlatButton.icon(
                 onPressed: () async {
@@ -150,7 +133,7 @@ class _MusicTile extends StatelessWidget {
       artist = color;
     } else {
       leading = Container();
-      name = Theme.of(context).textTheme.body1.color;
+      name = Theme.of(context).textTheme.bodyText2.color;
       artist = Theme.of(context).textTheme.caption.color;
     }
     return InkWell(

@@ -86,7 +86,7 @@ class StretchButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var background = Theme.of(context).primaryColor;
-    var foreground = Theme.of(context).primaryTextTheme.body1.color;
+    var foreground = Theme.of(context).primaryTextTheme.bodyText2.color;
     if (primary) {
       var temp = background;
       background = foreground;
@@ -164,7 +164,7 @@ class _LoginIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color = Theme.of(context).primaryTextTheme.body1.color;
+    final color = Theme.of(context).primaryTextTheme.bodyText2.color;
     return Material(
       shape: CircleBorder(side: BorderSide(color: color.withOpacity(0.5), width: 0.5)),
       color: Colors.transparent,
