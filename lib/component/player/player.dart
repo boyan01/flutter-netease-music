@@ -10,29 +10,28 @@ import 'package:scoped_model/scoped_model.dart';
 export 'package:quiet/component/player/bottom_player_bar.dart';
 export 'package:quiet/component/player/lryic.dart';
 
-///key which save playing music to local preference
-const String _PREF_KEY_PLAYING = "quiet_player_playing";
-
-///key which save playing music list to local preference
-const String _PREF_KEY_PLAYLIST = "quiet_player_playlist";
-
-///key which save playing list token to local preference
-const String _PREF_KEY_TOKEN = "quiet_player_token";
-
-///key which save playing mode to local preference
-const String _PREF_KEY_PLAY_MODE = "quiet_player_play_mode";
+//
+/////key which save playing music to local preference
+//const String _PREF_KEY_PLAYING = "quiet_player_playing";
+//
+/////key which save playing music list to local preference
+//const String _PREF_KEY_PLAYLIST = "quiet_player_playlist";
+//
+/////key which save playing list token to local preference
+//const String _PREF_KEY_TOKEN = "quiet_player_token";
+//
+/////key which save playing mode to local preference
+//const String _PREF_KEY_PLAY_MODE = "quiet_player_play_mode";
 
 extension PlayModeGetNext on PlayMode {
   PlayMode get next {
-    switch (this) {
-      case PlayMode.sequence:
-        return PlayMode.shuffle;
-      case PlayMode.shuffle:
-        return PlayMode.single;
-      case PlayMode.single:
-        return PlayMode.sequence;
+    if (this == PlayMode.sequence) {
+      return PlayMode.shuffle;
+    } else if (this == PlayMode.shuffle) {
+      return PlayMode.single;
+    } else {
+      return PlayMode.sequence;
     }
-    throw "illegal state";
   }
 }
 
@@ -125,5 +124,27 @@ class _QuietState extends State<Quiet> {
         child: widget.child,
       ),
     );
+  }
+}
+
+extension PlayModeDescription on PlayMode {
+  IconData get icon {
+    if (this == PlayMode.single) {
+      return Icons.repeat_one;
+    } else if (this == PlayMode.shuffle) {
+      return Icons.shuffle;
+    } else {
+      return Icons.repeat;
+    }
+  }
+
+  String get name {
+    if (this == PlayMode.single) {
+      return "单曲循环";
+    } else if (this == PlayMode.shuffle) {
+      return "随机播放";
+    } else {
+      return "列表循环";
+    }
   }
 }

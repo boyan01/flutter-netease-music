@@ -50,7 +50,7 @@ class DurationProgressBarState extends State<DurationProgressBar> {
           Slider(
             value: position.toDouble().clamp(0.0, duration.toDouble()),
             min: 0.0,
-            activeColor: theme.body1.color.withOpacity(0.75),
+            activeColor: theme.bodyText2.color.withOpacity(0.75),
             inactiveColor: theme.caption.color.withOpacity(0.3),
             max: duration.toDouble(),
             onChangeStart: (value) {
@@ -82,13 +82,13 @@ class DurationProgressBarState extends State<DurationProgressBar> {
       padding: EdgeInsets.symmetric(vertical: 4, horizontal: 16),
       child: Row(
         children: <Widget>[
-          Text(positionText ?? "00:00", style: theme.body1),
+          Text(positionText ?? "00:00", style: theme.bodyText2),
           Padding(padding: EdgeInsets.only(left: 4)),
           Expanded(
             child: progressIndicator,
           ),
           Padding(padding: EdgeInsets.only(left: 4)),
-          Text(durationText ?? "00:00", style: theme.body1),
+          Text(durationText ?? "00:00", style: theme.bodyText2),
         ],
       ),
     );

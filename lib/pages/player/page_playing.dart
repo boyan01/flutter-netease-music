@@ -2,7 +2,6 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:music_player/music_player.dart';
 import 'package:quiet/component/netease/netease.dart';
 import 'package:quiet/material/playing_indicator.dart';
 import 'package:quiet/pages/artists/page_artist_detail.dart';
@@ -55,25 +54,7 @@ class PlayingPage extends StatelessWidget {
 /// pause,play,play next,play previous...
 class _ControllerBar extends StatelessWidget {
   Widget getPlayModeIcon(BuildContext context, Color color) {
-    var playMode = context.playMode;
-    switch (playMode) {
-      case PlayMode.single:
-        return Icon(
-          Icons.repeat_one,
-          color: color,
-        );
-      case PlayMode.sequence:
-        return Icon(
-          Icons.repeat,
-          color: color,
-        );
-      case PlayMode.shuffle:
-        return Icon(
-          Icons.shuffle,
-          color: color,
-        );
-    }
-    return Container();
+    return Icon(context.playMode.icon, color: color);
   }
 
   @override
@@ -285,7 +266,7 @@ class _CloudLyric extends StatelessWidget {
   }
 
   Widget _buildLyric(BuildContext context) {
-    TextStyle style = Theme.of(context).textTheme.body1.copyWith(height: 2, fontSize: 16, color: Colors.white);
+    TextStyle style = Theme.of(context).textTheme.bodyText2.copyWith(height: 2, fontSize: 16, color: Colors.white);
     final playingLyric = PlayingLyric.of(context);
 
     if (playingLyric.hasLyric) {
@@ -408,7 +389,7 @@ class _PlayingTitle extends StatelessWidget {
                     constraints: BoxConstraints(maxWidth: 200),
                     child: Text(
                       music.artist.map((a) => a.name).join('/'),
-                      style: Theme.of(context).primaryTextTheme.body1.copyWith(fontSize: 13),
+                      style: Theme.of(context).primaryTextTheme.bodyText2.copyWith(fontSize: 13),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),

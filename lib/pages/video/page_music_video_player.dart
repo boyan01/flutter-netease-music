@@ -172,8 +172,6 @@ class _SimpleMusicVideo extends StatelessWidget {
 
 ///小屏幕下的mv控制栏
 class _SimpleVideoController extends StatelessWidget {
-  static const closeDelay = const Duration(seconds: 5);
-
   @override
   Widget build(BuildContext context) {
     final model = ScopedModel.of<VideoPlayerModel>(context);
@@ -331,7 +329,7 @@ class _InformationSectionState extends State<_InformationSection> {
                   children: <Widget>[
                     Text(
                       data.name,
-                      style: Theme.of(context).textTheme.title.copyWith(fontWeight: FontWeight.bold),
+                      style: Theme.of(context).textTheme.headline6.copyWith(fontWeight: FontWeight.bold),
                     ),
                     DefaultTextStyle(
                       style: TextStyle(color: Colors.grey),
@@ -490,7 +488,7 @@ class _ArtistSection extends StatelessWidget {
                   toast('收藏');
                 },
                 materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                textColor: Theme.of(context).primaryTextTheme.body1.color,
+                textColor: Theme.of(context).primaryTextTheme.bodyText2.color,
                 icon: Icon(Icons.add, size: 18),
                 label: Text('收藏', style: TextStyle(fontSize: 12)),
                 color: Theme.of(context).primaryColor,

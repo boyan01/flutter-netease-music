@@ -142,13 +142,13 @@ class _AppDrawerHeader extends StatelessWidget {
                 SizedBox(height: 8),
                 FlatButton(
                     shape: RoundedRectangleBorder(
-                        side: BorderSide(color: Theme.of(context).primaryTextTheme.body1.color.withOpacity(0.3)),
+                        side: BorderSide(color: Theme.of(context).primaryTextTheme.bodyText2.color.withOpacity(0.3)),
                         borderRadius: BorderRadius.circular(20)),
                     padding: EdgeInsets.symmetric(horizontal: 40),
                     onPressed: () {
                       Navigator.pushNamed(context, pageLogin);
                     },
-                    textColor: Theme.of(context).primaryTextTheme.body1.color,
+                    textColor: Theme.of(context).primaryTextTheme.bodyText2.color,
                     child: Text("立即登陆"))
               ],
             ),

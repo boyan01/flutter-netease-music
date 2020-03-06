@@ -65,7 +65,7 @@ class FlexibleDetailBar extends StatelessWidget {
         child: Padding(
           padding: EdgeInsets.only(bottom: bottomPadding),
           child: Material(
-              child: DefaultTextStyle(style: Theme.of(context).primaryTextTheme.body1, child: content),
+              child: DefaultTextStyle(style: Theme.of(context).primaryTextTheme.bodyText2, child: content),
               elevation: 0,
               color: Colors.transparent),
         ),
@@ -79,7 +79,7 @@ class FlexibleDetailBar extends StatelessWidget {
     return _FlexibleDetail(t,
         child: ClipRect(
             child: DefaultTextStyle(
-                style: Theme.of(context).primaryTextTheme.body1,
+                style: Theme.of(context).primaryTextTheme.bodyText2,
                 child: Stack(children: children, fit: StackFit.expand))));
   }
 }

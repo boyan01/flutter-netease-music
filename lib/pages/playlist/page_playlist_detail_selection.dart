@@ -43,7 +43,7 @@ class PlaylistSelectionPageState extends State<PlaylistSelectionPage> {
         title: Text("已选择${selectedList.length}项"),
         actions: <Widget>[
           FlatButton(
-            child: Text(allSelected ? "取消全选" : "全选", style: Theme.of(context).primaryTextTheme.body1),
+            child: Text(allSelected ? "取消全选" : "全选", style: Theme.of(context).primaryTextTheme.bodyText2),
             onPressed: () {
               setState(() {
                 allSelected = !allSelected;

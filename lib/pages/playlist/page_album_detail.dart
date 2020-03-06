@@ -132,7 +132,7 @@ class _AlbumDetailHeader extends StatelessWidget {
               SizedBox(width: 16),
               Expanded(
                   child: DefaultTextStyle(
-                style: Theme.of(context).primaryTextTheme.body1,
+                style: Theme.of(context).primaryTextTheme.bodyText2,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 child: Column(

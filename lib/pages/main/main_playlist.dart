@@ -257,7 +257,7 @@ class _ExpansionPlaylistGroupState extends State<_ExpansionPlaylistGroup> with S
                 )),
             SizedBox(width: 4),
             Text('${widget.title}',
-                style: Theme.of(context).textTheme.title.copyWith(fontWeight: FontWeight.bold, fontSize: 16)),
+                style: Theme.of(context).textTheme.bodyText2.copyWith(fontWeight: FontWeight.bold, fontSize: 16)),
             SizedBox(width: 4),
             Text(
               '(${widget.children.length})',

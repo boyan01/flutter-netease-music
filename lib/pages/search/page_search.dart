@@ -130,12 +130,12 @@ class _NeteaseSearchPageState extends State<NeteaseSearchPage> {
                 title: TextField(
                   controller: _queryTextController,
                   focusNode: _focusNode,
-                  style: theme.primaryTextTheme.title,
+                  style: theme.primaryTextTheme.headline6,
                   textInputAction: TextInputAction.search,
                   onSubmitted: (String _) => _search(query),
                   decoration: InputDecoration(
                       border: InputBorder.none,
-                      hintStyle: theme.primaryTextTheme.title,
+                      hintStyle: theme.primaryTextTheme.headline6,
                       hintText: MaterialLocalizations.of(context).searchFieldLabel),
                 ),
                 actions: buildActions(context),

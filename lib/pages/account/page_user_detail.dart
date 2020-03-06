@@ -11,11 +11,9 @@ import 'package:quiet/repository/netease.dart';
 
 import 'user_detail_bean.dart';
 
-part 'tab_music.dart';
-
-part 'tab_events.dart';
-
 part 'tab_about.dart';
+part 'tab_events.dart';
+part 'tab_music.dart';
 
 ///用户详情页
 class UserDetailPage extends StatelessWidget {
@@ -52,7 +50,7 @@ class _DetailPage extends StatelessWidget {
               headerSliverBuilder: (context, _) {
                 return [
                   SliverOverlapAbsorber(
-                      handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context), child: _UserDetailAppBar(user))
+                      handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context), sliver: _UserDetailAppBar(user))
                 ];
               },
               body: SafeArea(

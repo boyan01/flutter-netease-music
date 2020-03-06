@@ -6,13 +6,13 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:quiet/component/utils/utils.dart';
+import 'package:quiet/material/flexible_app_bar.dart';
 import 'package:quiet/model/playlist_detail.dart';
 import 'package:quiet/pages/account/page_user_detail.dart';
 import 'package:quiet/pages/comments/page_comment.dart';
 import 'package:quiet/part/part.dart';
 import 'package:quiet/repository/netease.dart';
 
-import 'package:quiet/material/flexible_app_bar.dart';
 import 'music_list.dart';
 import 'page_playlist_detail_selection.dart';
 import 'playlist_internal_search.dart';
@@ -219,7 +219,7 @@ class _SubscribeButtonState extends State<_SubscribeButton> {
                   SizedBox(width: 4),
                   Text(
                     "收藏(${getFormattedNumber(widget.subscribedCount)})",
-                    style: Theme.of(context).primaryTextTheme.body1,
+                    style: Theme.of(context).primaryTextTheme.bodyText2,
                   ),
                   SizedBox(width: 16),
                 ],
@@ -282,14 +282,14 @@ class _HeaderAction extends StatelessWidget {
 
     return InkResponse(
       onTap: onTap,
-      splashColor: textTheme.body1.color,
+      splashColor: textTheme.bodyText2.color,
       child: Opacity(
         opacity: onTap == null ? 0.5 : 1,
         child: Column(
           children: <Widget>[
             Icon(
               icon,
-              color: textTheme.body1.color,
+              color: textTheme.bodyText2.color,
             ),
             const Padding(padding: EdgeInsets.only(top: 4)),
             Text(
@@ -478,7 +478,7 @@ class _PlaylistDetailHeader extends StatelessWidget {
                             children: <Widget>[
                               Icon(Icons.headset, color: Theme.of(context).primaryIconTheme.color, size: 12),
                               Text(getFormattedNumber(playlist.playCount),
-                                  style: Theme.of(context).primaryTextTheme.body1.copyWith(fontSize: 11))
+                                  style: Theme.of(context).primaryTextTheme.bodyText2.copyWith(fontSize: 11))
                             ],
                           ),
                         ),
@@ -495,7 +495,7 @@ class _PlaylistDetailHeader extends StatelessWidget {
                     SizedBox(height: 10),
                     Text(
                       playlist.name,
-                      style: Theme.of(context).primaryTextTheme.title.copyWith(fontSize: 17),
+                      style: Theme.of(context).primaryTextTheme.headline6.copyWith(fontSize: 17),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -521,7 +521,7 @@ class _PlaylistDetailHeader extends StatelessWidget {
                             Padding(padding: EdgeInsets.only(left: 4)),
                             Text(
                               creator["nickname"],
-                              style: Theme.of(context).primaryTextTheme.body1,
+                              style: Theme.of(context).primaryTextTheme.bodyText2,
                             ),
                             Icon(
                               Icons.chevron_right,

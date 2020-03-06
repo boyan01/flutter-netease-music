@@ -39,8 +39,7 @@ class ArtistDetailPage extends StatelessWidget {
         },
         builder: (context, result) {
           final artist = model.Artist.fromJson(result["artist"]);
-          List<Music> musicList = mapJsonListToMusicList(result["hotSongs"],
-              artistKey: "ar", albumKey: "al");
+          List<Music> musicList = mapJsonListToMusicList(result["hotSongs"], artistKey: "ar", albumKey: "al");
 
           return Scaffold(
               body: BoxWithBottomPlayerController(
@@ -50,24 +49,20 @@ class ArtistDetailPage extends StatelessWidget {
                   headerSliverBuilder: (context, innerBoxIsScrolled) {
                     return [
                       SliverOverlapAbsorber(
-                        handle: NestedScrollView.sliverOverlapAbsorberHandleFor(
-                            context),
-                        child: ArtistHeader(artist: artist),
+                        handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+                        sliver: ArtistHeader(artist: artist),
                       ),
                     ];
                   },
                   body: SafeArea(
                     child: Padding(
-                      padding: const EdgeInsets.only(
-                          top: kToolbarHeight + kTextTabBarHeight),
+                      padding: const EdgeInsets.only(top: kToolbarHeight + kTextTabBarHeight),
                       child: TabBarView(
                         children: [
-                          _PageHotSongs(
-                              musicList: musicList, artistId: artistId),
+                          _PageHotSongs(musicList: musicList, artistId: artistId),
                           _PageAlbums(artistId: artistId),
                           _PageMVs(artistId: artistId, mvCount: artist.mvSize),
-                          _PageArtistIntroduction(
-                              artistId: artistId, artistName: artist.name),
+                          _PageArtistIntroduction(artistId: artistId, artistName: artist.name),
                         ],
                       ),
                     ),
@@ -80,8 +75,7 @@ class ArtistDetailPage extends StatelessWidget {
 
 ///热门单曲
 class _PageHotSongs extends StatefulWidget {
-  const _PageHotSongs(
-      {Key key, @required this.musicList, @required this.artistId})
+  const _PageHotSongs({Key key, @required this.musicList, @required this.artistId})
       : assert(musicList != null),
         super(key: key);
 
@@ -95,13 +89,11 @@ class _PageHotSongs extends StatefulWidget {
   }
 }
 
-class _PageHotSongsState extends State<_PageHotSongs>
-    with AutomaticKeepAliveClientMixin {
+class _PageHotSongsState extends State<_PageHotSongs> with AutomaticKeepAliveClientMixin {
   Widget _buildHeader(BuildContext context) {
     return InkWell(
       onTap: () {
-        PlaylistSelectorDialog.addSongs(
-            context, widget.musicList.map((m) => m.id).toList());
+        PlaylistSelectorDialog.addSongs(context, widget.musicList.map((m) => m.id).toList());
       },
       child: Container(
         height: 48,
@@ -117,8 +109,7 @@ class _PageHotSongsState extends State<_PageHotSongs>
                   FlatButton(
                       child: Text("多选"),
                       onPressed: () {
-                        Navigator.of(context)
-                            .push(MaterialPageRoute(builder: (context) {
+                        Navigator.of(context).push(MaterialPageRoute(builder: (context) {
                           return PlaylistSelectionPage(list: widget.musicList);
                         }));
                       })
@@ -173,11 +164,9 @@ class _PageAlbums extends StatefulWidget {
   }
 }
 
-class _PageAlbumsState extends State<_PageAlbums>
-    with AutomaticKeepAliveClientMixin {
+class _PageAlbumsState extends State<_PageAlbums> with AutomaticKeepAliveClientMixin {
   Future<Result<List<Map>>> _delegate(offset) async {
-    final result =
-        await neteaseRepository.artistAlbums(widget.artistId, offset: offset);
+    final result = await neteaseRepository.artistAlbums(widget.artistId, offset: offset);
     return ValueResult((result.asValue.value["hotAlbums"] as List).cast());
   }
 
@@ -201,8 +190,7 @@ class _PageMVs extends StatefulWidget {
 
   final int mvCount;
 
-  const _PageMVs({Key key, @required this.artistId, @required this.mvCount})
-      : super(key: key);
+  const _PageMVs({Key key, @required this.artistId, @required this.mvCount}) : super(key: key);
 
   @override
   _PageMVsState createState() {
@@ -212,8 +200,7 @@ class _PageMVs extends StatefulWidget {
 
 class _PageMVsState extends State<_PageMVs> with AutomaticKeepAliveClientMixin {
   Future<Result<List<Map>>> _loadMv(int offset) async {
-    final result =
-        await neteaseRepository.artistMvs(widget.artistId, offset: offset);
+    final result = await neteaseRepository.artistMvs(widget.artistId, offset: offset);
     return ValueResult((result.asValue.value["mvs"] as List).cast());
   }
 
@@ -250,11 +237,9 @@ class _PageMVsState extends State<_PageMVs> with AutomaticKeepAliveClientMixin {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Spacer(),
-                      Text(mv["name"],
-                          maxLines: 1, overflow: TextOverflow.ellipsis),
+                      Text(mv["name"], maxLines: 1, overflow: TextOverflow.ellipsis),
                       SizedBox(height: 4),
-                      Text(mv["publishTime"],
-                          style: Theme.of(context).textTheme.caption),
+                      Text(mv["publishTime"], style: Theme.of(context).textTheme.caption),
                       Spacer(),
                       Divider(height: 0)
                     ],
@@ -275,9 +260,7 @@ class _PageArtistIntroduction extends StatefulWidget {
 
   final String artistName;
 
-  const _PageArtistIntroduction(
-      {Key key, @required this.artistId, @required this.artistName})
-      : super(key: key);
+  const _PageArtistIntroduction({Key key, @required this.artistId, @required this.artistName}) : super(key: key);
 
   @override
   _PageArtistIntroductionState createState() {
@@ -285,14 +268,12 @@ class _PageArtistIntroduction extends StatefulWidget {
   }
 }
 
-class _PageArtistIntroductionState extends State<_PageArtistIntroduction>
-    with AutomaticKeepAliveClientMixin {
+class _PageArtistIntroductionState extends State<_PageArtistIntroduction> with AutomaticKeepAliveClientMixin {
   List<Widget> _buildIntroduction(BuildContext context, Map result) {
     Widget title = Padding(
         padding: EdgeInsets.symmetric(vertical: 10, horizontal: 8),
-        child: Text(("${widget.artistName}简介"),
-            style: TextStyle(
-                fontSize: 15, fontWeight: FontWeight.bold, shadows: [])));
+        child:
+            Text(("${widget.artistName}简介"), style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, shadows: [])));
 
     Widget briefDesc = Padding(
       padding: EdgeInsets.symmetric(horizontal: 8),
@@ -322,12 +303,9 @@ class _PageArtistIntroductionState extends State<_PageArtistIntroduction>
     }
     Widget title = Padding(
         padding: EdgeInsets.symmetric(vertical: 10, horizontal: 8),
-        child: Text(("相关专题文章"),
-            style: TextStyle(
-                fontSize: 15, fontWeight: FontWeight.bold, shadows: [])));
+        child: Text(("相关专题文章"), style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, shadows: [])));
     List<Widget> list = data.map<Widget>((topic) {
-      String subtitle =
-          "by ${topic["creator"]["nickname"]} 阅读 ${topic["readCount"]}";
+      String subtitle = "by ${topic["creator"]["nickname"]} 阅读 ${topic["readCount"]}";
       return InkWell(
         onTap: () {
           debugPrint("on tap : ${topic["url"]}");
@@ -355,8 +333,7 @@ class _PageArtistIntroductionState extends State<_PageArtistIntroduction>
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Spacer(),
-                  Text(topic["mainTitle"],
-                      maxLines: 1, overflow: TextOverflow.ellipsis),
+                  Text(topic["mainTitle"], maxLines: 1, overflow: TextOverflow.ellipsis),
                   SizedBox(height: 4),
                   Text(subtitle, style: Theme.of(context).textTheme.caption),
                   Spacer(),

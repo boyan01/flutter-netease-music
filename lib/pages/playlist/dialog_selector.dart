@@ -26,15 +26,13 @@ class PlaylistSelectorDialog extends StatelessWidget {
       return null;
     }
     try {
-      return await neteaseRepository.playlistTracksEdit(
-          PlaylistOperation.add, playlistId, ids);
+      return await neteaseRepository.playlistTracksEdit(PlaylistOperation.add, playlistId, ids);
     } catch (e) {
       return false;
     }
   }
 
-  Widget _buildTile(BuildContext context, Widget leading, Widget title,
-      Widget subTitle, GestureTapCallback onTap) {
+  Widget _buildTile(BuildContext context, Widget leading, Widget title, Widget subTitle, GestureTapCallback onTap) {
     return InkWell(
       onTap: onTap,
       child: Container(
@@ -57,15 +55,11 @@ class PlaylistSelectorDialog extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
                 AnimatedDefaultTextStyle(
-                    child: title,
-                    style: Theme.of(context).textTheme.body1,
-                    duration: Duration.zero),
+                    child: title, style: Theme.of(context).textTheme.bodyText2, duration: Duration.zero),
                 subTitle == null
                     ? null
                     : AnimatedDefaultTextStyle(
-                        child: subTitle,
-                        style: Theme.of(context).textTheme.caption,
-                        duration: Duration.zero),
+                        child: subTitle, style: Theme.of(context).textTheme.caption, duration: Duration.zero),
               ]..removeWhere((v) => v == null),
             ))
           ],
@@ -80,8 +74,7 @@ class PlaylistSelectorDialog extends StatelessWidget {
       child: Row(
         children: <Widget>[
           Padding(padding: EdgeInsets.only(left: 16)),
-          Expanded(
-              child: Text("收藏到歌单", style: Theme.of(context).textTheme.title))
+          Expanded(child: Text("收藏到歌单", style: Theme.of(context).textTheme.headline6))
         ],
       ),
     );
@@ -95,13 +88,11 @@ class PlaylistSelectorDialog extends StatelessWidget {
           padding: EdgeInsets.symmetric(vertical: 24, horizontal: 16),
           child: Center(
             child: ConstrainedBox(
-              constraints:
-                  const BoxConstraints(minWidth: 280.0, maxHeight: 356),
+              constraints: const BoxConstraints(minWidth: 280.0, maxHeight: 356),
               child: Material(
                 elevation: 24.0,
                 type: MaterialType.card,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(4.0))),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(4.0))),
                 child: Column(
                   children: <Widget>[
                     _buildTitle(context),
@@ -167,8 +158,7 @@ class PlaylistSelectorDialog extends StatelessWidget {
       },
       builder: (context, result) {
         return Builder(builder: (context) {
-          final list = result
-            ..removeWhere((p) => p.creator["userId"] != userId);
+          final list = result..removeWhere((p) => p.creator["userId"] != userId);
 
           final widgets = <Widget>[];
 
