@@ -29,11 +29,12 @@ const ROUTE_PLAYLIST_DETAIL = "/playlist/detail";
 
 const ROUTE_PAYING = "/playing";
 
-const ROUTE_LEADERBOARD = "/leaderboard";
+const pageLeaderboard = "/leaderboard";
 
-const ROUTE_DAILY = "/daily";
+/// route name of [DailyPlaylistPage]
+const pageDaily = "/daily";
 
-const ROUTE_MY_DJ = '/mydj';
+const pageMyDj = '/mydj';
 
 const ROUTE_MY_COLLECTION = '/my_collection';
 
@@ -43,14 +44,17 @@ const ROUTE_SETTING_THEME = '/setting/theme';
 
 const pageWelcome = 'welcome';
 
+/// Search page route name
+const pageSearch = "search";
+
 ///app routers
 final Map<String, WidgetBuilder> routes = {
   pageMain: (context) => MainPage(),
   pageLogin: (context) => LoginNavigator(),
   ROUTE_PAYING: (context) => PlayingPage(),
-  ROUTE_LEADERBOARD: (context) => LeaderboardPage(),
-  ROUTE_DAILY: (context) => DailyPlaylistPage(),
-  ROUTE_MY_DJ: (context) => MyDjPage(),
+  pageLeaderboard: (context) => LeaderboardPage(),
+  pageDaily: (context) => DailyPlaylistPage(),
+  pageMyDj: (context) => MyDjPage(),
   ROUTE_MY_COLLECTION: (context) => MyCollectionPage(),
   ROUTE_SETTING: (context) => SettingPage(),
   ROUTE_SETTING_THEME: (context) => SettingThemePage(),

@@ -14,7 +14,9 @@ export 'package:quiet/material/tiles.dart';
 export 'package:quiet/model/model.dart';
 export 'package:quiet/pages/account/account.dart';
 export 'package:scoped_model/scoped_model.dart';
+export 'package:quiet/component/global/orientation.dart';
 
+@deprecated
 void notImplemented(BuildContext context) {
   toast('页面未完成');
 }

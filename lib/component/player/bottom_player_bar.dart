@@ -48,7 +48,11 @@ class BoxWithBottomPlayerController extends StatelessWidget {
 class BottomControllerBar extends StatelessWidget {
   final double bottomPadding;
 
-  const BottomControllerBar({Key key, this.bottomPadding}) : super(key: key);
+  const BottomControllerBar({
+    Key key,
+    this.bottomPadding = 0,
+  })  : assert(bottomPadding != null),
+        super(key: key);
 
   @override
   Widget build(BuildContext context) {
