@@ -8,7 +8,7 @@ import 'search_result_page.dart';
 import 'search_suggestion.dart';
 
 class NeteaseSearchPageRoute<T> extends PageRoute<T> {
-  NeteaseSearchPageRoute(this._proxyAnimation);
+  NeteaseSearchPageRoute(this._proxyAnimation) : super(settings: RouteSettings(name: pageSearch));
 
   final ProxyAnimation _proxyAnimation;
 

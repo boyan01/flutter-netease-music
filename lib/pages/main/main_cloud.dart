@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:overlay_support/overlay_support.dart';
 import 'package:quiet/pages/playlist/music_list.dart';
 import 'package:quiet/pages/playlist/page_playlist_detail.dart';
 import 'package:quiet/part/part.dart';
@@ -37,13 +38,13 @@ class _NavigationLine extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
           _ItemNavigator(Icons.radio, "私人FM", () {
-            notImplemented(context);
+            toast("未接入");
           }),
           _ItemNavigator(Icons.today, "每日推荐", () {
-            Navigator.pushNamed(context, ROUTE_DAILY);
+            context.secondaryNavigator.pushNamed(pageDaily);
           }),
           _ItemNavigator(Icons.show_chart, "排行榜", () {
-            Navigator.pushNamed(context, ROUTE_LEADERBOARD);
+            context.secondaryNavigator.pushNamed(pageLeaderboard);
           }),
         ],
       ),
@@ -124,20 +125,41 @@ class _SectionPlaylist extends StatelessWidget {
       loadTask: () => neteaseRepository.personalizedPlaylist(limit: 6),
       builder: (context, result) {
         List<Map> list = (result["result"] as List).cast();
-        return GridView.count(
-          physics: NeverScrollableScrollPhysics(),
-          shrinkWrap: true,
-          crossAxisCount: 3,
-          childAspectRatio: 10 / 14,
-          children: list.map<Widget>((p) {
-            return _buildPlaylistItem(context, p);
-          }).toList(),
-        );
+        return LayoutBuilder(builder: (context, constraints) {
+          assert(constraints.maxWidth.isFinite, "can not layout playlist item in infinite width container.");
+          final parentWidth = constraints.maxWidth - 8;
+          int count = /* false ? 6 : */ 3;
+          double width = (parentWidth ~/ count).toDouble().clamp(80.0, 200.0);
+          double spacing = (parentWidth - width * count) / (count + 1);
+          return Padding(
+            padding: EdgeInsets.symmetric(horizontal: 4 + spacing),
+            child: Wrap(
+              spacing: spacing,
+              direction: Axis.horizontal,
+              children: list.map<Widget>((p) {
+                return _PlayListItemView(playlist: p, width: width);
+              }).toList(),
+            ),
+          );
+        });
       },
     );
   }
+}
 
-  Widget _buildPlaylistItem(BuildContext context, Map playlist) {
+class _PlayListItemView extends StatelessWidget {
+  final Map playlist;
+
+  final double width;
+
+  const _PlayListItemView({
+    Key key,
+    @required this.playlist,
+    @required this.width,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
     GestureLongPressCallback onLongPress;
 
     String copyWrite = playlist["copywriter"];
@@ -158,7 +180,7 @@ class _SectionPlaylist extends StatelessWidget {
 
     return InkWell(
       onTap: () {
-        Navigator.push(context, MaterialPageRoute(builder: (context) {
+        context.secondaryNavigator.push(MaterialPageRoute(builder: (context) {
           return PlaylistDetailPage(
             playlist["id"],
           );
@@ -166,17 +188,22 @@ class _SectionPlaylist extends StatelessWidget {
       },
       onLongPress: onLongPress,
       child: Container(
+        width: width,
         padding: EdgeInsets.symmetric(horizontal: 4, vertical: 8),
         child: Column(
           children: <Widget>[
-            ClipRRect(
-              borderRadius: BorderRadius.all(Radius.circular(6)),
-              child: AspectRatio(
-                aspectRatio: 1,
-                child: FadeInImage(
-                  placeholder: AssetImage("assets/playlist_playlist.9.png"),
-                  image: CachedImage(playlist["picUrl"]),
-                  fit: BoxFit.cover,
+            Container(
+              height: width,
+              width: width,
+              child: ClipRRect(
+                borderRadius: BorderRadius.all(Radius.circular(6)),
+                child: AspectRatio(
+                  aspectRatio: 1,
+                  child: FadeInImage(
+                    placeholder: AssetImage("assets/playlist_playlist.9.png"),
+                    image: CachedImage(playlist["picUrl"]),
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
             ),

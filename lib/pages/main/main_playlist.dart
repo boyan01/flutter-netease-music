@@ -112,7 +112,7 @@ class _PinnedHeader extends StatelessWidget {
               title: Text('播放记录'),
               onTap: () {
                 if (UserAccount.of(context, rebuildOnChange: false).isLogin) {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  context.secondaryNavigator.push(MaterialPageRoute(builder: (context) {
                     return RecordPage(uid: UserAccount.of(context, rebuildOnChange: false).userId);
                   }));
                 } else {
@@ -134,7 +134,7 @@ class _PinnedHeader extends StatelessWidget {
                     text: '(${Counter.of(context).djRadioCount + Counter.of(context).createDjRadioCount})'),
               ])),
               onTap: () {
-                Navigator.pushNamed(context, ROUTE_MY_DJ);
+                context.secondaryNavigator.pushNamed(pageMyDj);
               },
             )),
         ListTile(
