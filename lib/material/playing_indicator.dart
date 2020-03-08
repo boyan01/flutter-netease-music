@@ -89,6 +89,8 @@ class _PlayingIndicatorState extends State<PlayingIndicator> {
 }
 
 /// 监听播放器播放进度的 Widget
+/// 使用 [ProgressTrackingContainer]
+@deprecated
 class ProgressTrackContainer extends StatefulWidget {
   final WidgetBuilder builder;
 

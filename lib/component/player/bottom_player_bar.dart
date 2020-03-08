@@ -1,6 +1,7 @@
 library player;
 
 import 'package:flutter/material.dart';
+import 'package:music_player/music_player.dart';
 import 'package:quiet/component/utils/utils.dart';
 import 'package:quiet/material/playing_indicator.dart';
 import 'package:quiet/pages/page_playing_list.dart';
@@ -56,14 +57,14 @@ class BottomControllerBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final music = context.playerValue.current;
+    final music = context.listenPlayerValue.current;
     if (music == null) {
       return Container();
     }
     return InkWell(
       onTap: () {
         if (music != null) {
-          Navigator.pushNamed(context, ROUTE_PAYING);
+          context.rootNavigator.pushNamed(pagePlaying);
         }
       },
       child: Card(
@@ -109,7 +110,10 @@ class BottomControllerBar extends StatelessWidget {
                       ),
                       Padding(padding: const EdgeInsets.only(top: 2)),
                       DefaultTextStyle(
-                        child: ProgressTrackContainer(builder: (context) => _SubTitleOrLyric(music.subTitle)),
+                        child: ProgressTrackingContainer(
+                          builder: (context) => _SubTitleOrLyric(music.subTitle),
+                          player: context.player,
+                        ),
                         maxLines: 1,
                         style: Theme.of(context).textTheme.caption,
                       ),

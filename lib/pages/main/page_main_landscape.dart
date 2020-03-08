@@ -216,11 +216,9 @@ class _BottomPlayerBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final current = context.listenPlayerValue.current;
-    debugPrint("current : $paddingPageBottom");
     if (current == null) {
       return SizedBox(height: paddingPageBottom);
     }
-    debugPrint("current : $current");
     return BottomControllerBar(
       bottomPadding: paddingPageBottom,
     );

@@ -27,11 +27,12 @@ const pageLogin = "/login";
 
 const ROUTE_PLAYLIST_DETAIL = "/playlist/detail";
 
-const ROUTE_PAYING = "/playing";
+/// Route name of [PlayingPage].
+const pagePlaying = "/playing";
 
 const pageLeaderboard = "/leaderboard";
 
-/// route name of [DailyPlaylistPage]
+/// Route name of [DailyPlaylistPage]
 const pageDaily = "/daily";
 
 const pageMyDj = '/mydj';
@@ -51,7 +52,7 @@ const pageSearch = "search";
 final Map<String, WidgetBuilder> routes = {
   pageMain: (context) => MainPage(),
   pageLogin: (context) => LoginNavigator(),
-  ROUTE_PAYING: (context) => PlayingPage(),
+  pagePlaying: (context) => PlayingPage(),
   pageLeaderboard: (context) => LeaderboardPage(),
   pageDaily: (context) => DailyPlaylistPage(),
   pageMyDj: (context) => MyDjPage(),
