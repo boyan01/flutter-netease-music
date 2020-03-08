@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:music_player/music_player.dart';
 import 'package:quiet/component/utils/utils.dart';
-import 'package:quiet/material/playing_indicator.dart';
 import 'package:quiet/part/part.dart';
 
 /// A seek bar for current position.
@@ -16,7 +16,7 @@ class DurationProgressBarState extends State<DurationProgressBar> {
 
   @override
   Widget build(BuildContext context) {
-    return ProgressTrackContainer(builder: _buildBar);
+    return ProgressTrackingContainer(builder: _buildBar, player: context.player);
   }
 
   Widget _buildBar(BuildContext context) {
@@ -29,7 +29,7 @@ class DurationProgressBarState extends State<DurationProgressBar> {
     String positionText;
 
     if (state.initialized) {
-      var duration = context.playerValue.metadata.duration ?? 0;
+      var duration = context.listenPlayerValue.metadata.duration ?? 0;
 
       var position = isUserTracking ? trackingPosition.round() : state.positionWithOffset;
 

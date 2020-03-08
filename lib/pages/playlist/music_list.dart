@@ -78,7 +78,7 @@ class MusicTileConfiguration extends StatelessWidget {
     final PlayQueue playList = player.value.queue;
     if (playList.queueId == list.token && player.playbackState.isPlaying && player.metadata == music.metadata) {
       //open playing page
-      Navigator.pushNamed(context, ROUTE_PAYING);
+      Navigator.pushNamed(context, pagePlaying);
     } else {
       context.player.playWithQueue(PlayQueue(queue: list.queue, queueId: list.token, queueTitle: list.token),
           metadata: music.metadata);
@@ -215,7 +215,7 @@ class MusicListHeader extends StatelessWidget implements PreferredSizeWidget {
             final list = MusicTileConfiguration.of(context);
             if (context.player.queue.queueId == list.token && context.player.playbackState.isPlaying) {
               //open playing page
-              Navigator.pushNamed(context, ROUTE_PAYING);
+              Navigator.pushNamed(context, pagePlaying);
             } else {
               context.player.playWithQueue(PlayQueue(queue: list.queue, queueId: list.token, queueTitle: list.token));
             }

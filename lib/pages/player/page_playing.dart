@@ -2,14 +2,16 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:music_player/music_player.dart';
 import 'package:quiet/component/netease/netease.dart';
 import 'package:quiet/material/playing_indicator.dart';
 import 'package:quiet/pages/artists/page_artist_detail.dart';
 import 'package:quiet/pages/comments/page_comment.dart';
 import 'package:quiet/pages/page_playing_list.dart';
+import 'package:quiet/pages/player/page_playing_landscape.dart';
 import 'package:quiet/part/part.dart';
-import 'package:quiet/repository/netease.dart';
 
+import 'background.dart';
 import 'cover.dart';
 import 'lyric.dart';
 import 'player_progress.dart';
@@ -18,28 +20,31 @@ import 'player_progress.dart';
 class PlayingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final current = context.playerValue.current;
+    final current = context.listenPlayerValue.current;
     if (current == null) {
       WidgetsBinding.instance.scheduleFrameCallback((_) {
         Navigator.of(context).pop();
       });
       return Container();
     }
+    if (context.isLandscape) {
+      return LandscapePlayingPage();
+    }
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Stack(
         children: <Widget>[
-          _BlurBackground(music: current),
+          BlurBackground(music: current),
           Material(
             color: Colors.transparent,
             child: Column(
               children: <Widget>[
-                _PlayingTitle(music: current),
+                PlayingTitle(music: current),
                 _CenterSection(music: current),
-                _OperationBar(),
+                PlayingOperationBar(),
                 const SizedBox(height: 10),
                 DurationProgressBar(),
-                _ControllerBar(),
+                PlayerControllerBar(),
                 SizedBox(height: MediaQuery.of(context).viewInsets.bottom),
               ],
             ),
@@ -52,7 +57,7 @@ class PlayingPage extends StatelessWidget {
 
 ///player controller
 /// pause,play,play next,play previous...
-class _ControllerBar extends StatelessWidget {
+class PlayerControllerBar extends StatelessWidget {
   Widget getPlayModeIcon(BuildContext context, Color color) {
     return Icon(context.playMode.icon, color: color);
   }
@@ -140,7 +145,7 @@ class _ControllerBar extends StatelessWidget {
   }
 }
 
-class _OperationBar extends StatelessWidget {
+class PlayingOperationBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final iconColor = Theme.of(context).primaryIconTheme.color;
@@ -240,7 +245,7 @@ class _CenterSectionState extends State<_CenterSection> {
           },
           child: AlbumCover(music: widget.music),
         ),
-        secondChild: _CloudLyric(
+        secondChild: PlayingLyricView(
           music: widget.music,
           onTap: () {
             setState(() {
@@ -253,16 +258,16 @@ class _CenterSectionState extends State<_CenterSection> {
   }
 }
 
-class _CloudLyric extends StatelessWidget {
+class PlayingLyricView extends StatelessWidget {
   final VoidCallback onTap;
 
   final Music music;
 
-  const _CloudLyric({Key key, this.onTap, @required this.music}) : super(key: key);
+  const PlayingLyricView({Key key, this.onTap, @required this.music}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return ProgressTrackContainer(builder: _buildLyric);
+    return ProgressTrackingContainer(builder: _buildLyric, player: context.player);
   }
 
   Widget _buildLyric(BuildContext context) {
@@ -311,48 +316,10 @@ class _CloudLyric extends StatelessWidget {
   }
 }
 
-class _BlurBackground extends StatelessWidget {
+class PlayingTitle extends StatelessWidget {
   final Music music;
 
-  const _BlurBackground({Key key, @required this.music}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Stack(
-      fit: StackFit.expand,
-      children: <Widget>[
-        Image(
-          image: CachedImage(music.imageUrl.toString()),
-          fit: BoxFit.cover,
-          height: 15,
-          width: 15,
-          gaplessPlayback: true,
-        ),
-        BackdropFilter(
-          filter: ui.ImageFilter.blur(sigmaY: 14, sigmaX: 24),
-          child: Container(
-            decoration: BoxDecoration(
-                gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [
-                Colors.black54,
-                Colors.black26,
-                Colors.black45,
-                Colors.black87,
-              ],
-            )),
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _PlayingTitle extends StatelessWidget {
-  final Music music;
-
-  const _PlayingTitle({Key key, @required this.music}) : super(key: key);
+  const PlayingTitle({Key key, @required this.music}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

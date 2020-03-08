@@ -171,6 +171,17 @@ class _AlbumCoverState extends State<AlbumCover> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    return LayoutBuilder(builder: (context, constraints) {
+      assert(constraints.maxWidth.isFinite, "the width of cover layout should be constrainted!");
+      return ClipRect(
+          child: Padding(
+        padding: const EdgeInsets.only(bottom: 20),
+        child: _build(context, constraints.maxWidth),
+      ));
+    });
+  }
+
+  Widget _build(BuildContext context, double layoutWidth) {
     return Stack(
       children: <Widget>[
         GestureDetector(
@@ -193,7 +204,7 @@ class _AlbumCoverState extends State<AlbumCover> with TickerProviderStateMixin {
 
             final sameDirection = (_coverTranslateX > 0 && detail.primaryVelocity > 0) ||
                 (_coverTranslateX < 0 && detail.primaryVelocity < 0);
-            if (_coverTranslateX.abs() > MediaQuery.of(context).size.width / 2 ||
+            if (_coverTranslateX.abs() > layoutWidth / 2 ||
                 (sameDirection && detail.primaryVelocity.abs() > vThreshold)) {
               var des = MediaQuery.of(context).size.width;
               if (_coverTranslateX < 0) {
@@ -237,7 +248,7 @@ class _AlbumCoverState extends State<AlbumCover> with TickerProviderStateMixin {
                     ),
                   ),
                   Transform.translate(
-                    offset: Offset(_coverTranslateX - MediaQuery.of(context).size.width, 0),
+                    offset: Offset(_coverTranslateX - layoutWidth, 0),
                     child: _RotationCoverImage(rotating: false, music: _previous),
                   ),
                   Transform.translate(
@@ -245,7 +256,7 @@ class _AlbumCoverState extends State<AlbumCover> with TickerProviderStateMixin {
                     child: _RotationCoverImage(rotating: _coverRotating && !_beDragging, music: _current),
                   ),
                   Transform.translate(
-                    offset: Offset(_coverTranslateX + MediaQuery.of(context).size.width, 0),
+                    offset: Offset(_coverTranslateX + layoutWidth, 0),
                     child: _RotationCoverImage(rotating: false, music: _next),
                   ),
                 ],
