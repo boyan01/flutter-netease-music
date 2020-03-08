@@ -6,6 +6,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:quiet/component/utils/utils.dart';
+import 'package:quiet/material.dart';
 import 'package:quiet/material/flexible_app_bar.dart';
 import 'package:quiet/model/playlist_detail.dart';
 import 'package:quiet/pages/account/page_user_detail.dart';
@@ -445,7 +446,7 @@ class _PlaylistDetailHeader extends StatelessWidget {
             }));
           }
         },
-        onShareTap: () => notImplemented(context),
+        onShareTap: () => toast("未接入！"),
         content: Container(
           height: 146,
           padding: EdgeInsets.only(top: 20),
@@ -458,7 +459,7 @@ class _PlaylistDetailHeader extends StatelessWidget {
                   borderRadius: BorderRadius.all(Radius.circular(3)),
                   child: Stack(
                     children: <Widget>[
-                      Hero(
+                      QuietHero(
                         tag: playlist.heroTag,
                         child: Image(fit: BoxFit.cover, image: CachedImage(playlist.coverUrl)),
                       ),
