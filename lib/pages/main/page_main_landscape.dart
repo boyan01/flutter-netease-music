@@ -175,7 +175,18 @@ class _LandscapeDrawer extends StatelessWidget {
                   context.primaryNavigator.pushNamed(_navigationFmPlayer);
                 }),
             Spacer(),
-            _DrawerTile(icon: Icon(Icons.account_circle), title: Text("我的"), onTap: () {}),
+            _DrawerTile(
+                icon: Icon(Icons.account_circle),
+                title: Text("我的"),
+                onTap: () {
+                  if (!UserAccount.of(context).isLogin) {
+                    context.rootNavigator.pushNamed(pageLogin);
+                    return;
+                  }
+                  context.primaryNavigator.push(
+                    MaterialPageRoute(builder: (context) => UserDetailPage(userId: UserAccount.of(context).userId)),
+                  );
+                }),
           ],
         ),
       ),
