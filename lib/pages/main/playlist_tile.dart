@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:overlay_support/overlay_support.dart';
 import 'package:quiet/model/playlist_detail.dart';
 import 'package:quiet/pages/page_playlist_edit.dart';
 import 'package:quiet/pages/playlist/page_playlist_detail.dart';
@@ -43,11 +44,8 @@ class PlaylistTile extends StatelessWidget {
 
     return InkWell(
       onTap: () {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) =>
-                    PlaylistDetailPage(playlist.id, playlist: playlist)));
+        context.secondaryNavigator
+            .push(MaterialPageRoute(builder: (context) => PlaylistDetailPage(playlist.id, playlist: playlist)));
       },
       child: Container(
         height: 60,
@@ -68,8 +66,7 @@ class PlaylistTile extends StatelessWidget {
                     style: TextStyle(fontSize: 15),
                   ),
                   Padding(padding: EdgeInsets.only(top: 4)),
-                  Text("${playlist.trackCount}首",
-                      style: Theme.of(context).textTheme.caption),
+                  Text("${playlist.trackCount}首", style: Theme.of(context).textTheme.caption),
                   Spacer(),
                 ],
               ),
@@ -79,8 +76,7 @@ class PlaylistTile extends StatelessWidget {
                 itemBuilder: (context) {
                   return [
                     PopupMenuItem(child: Text("分享"), value: PlaylistOp.share),
-                    PopupMenuItem(
-                        child: Text("编辑歌单信息"), value: PlaylistOp.edit),
+                    PopupMenuItem(child: Text("编辑歌单信息"), value: PlaylistOp.edit),
                     PopupMenuItem(child: Text("删除"), value: PlaylistOp.delete),
                   ];
                 },
@@ -88,11 +84,10 @@ class PlaylistTile extends StatelessWidget {
                   switch (op) {
                     case PlaylistOp.delete:
                     case PlaylistOp.share:
-                      notImplemented(context);
+                      toast("未接入。");
                       break;
                     case PlaylistOp.edit:
-                      Navigator.of(context)
-                          .push(MaterialPageRoute(builder: (context) {
+                      context.secondaryNavigator.push(MaterialPageRoute(builder: (context) {
                         return PlaylistEditPage(playlist);
                       }));
                       break;

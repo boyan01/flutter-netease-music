@@ -99,7 +99,7 @@ class _PinnedHeader extends StatelessWidget {
                 title: Text("当前未登录，点击登录!"),
                 trailing: Icon(Icons.chevron_right),
                 onTap: () {
-                  Navigator.pushNamed(context, "/login");
+                  context.rootNavigator.pushNamed(pageLogin);
                 }),
           ),
         DividerWrapper(
@@ -149,7 +149,7 @@ class _PinnedHeader extends StatelessWidget {
                 text: '(${Counter.of(context).mvCount + Counter.of(context).artistCount})'),
           ])),
           onTap: () {
-            Navigator.pushNamed(context, ROUTE_MY_COLLECTION);
+            context.secondaryNavigator.pushNamed(ROUTE_MY_COLLECTION);
           },
         ),
         Container(height: 8, color: Theme.of(context).dividerColor)

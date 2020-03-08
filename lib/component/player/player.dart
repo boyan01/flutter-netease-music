@@ -47,7 +47,13 @@ extension QuitPlayerExt on BuildContext {
 
   TransportControls get transportControls => player.transportControls;
 
+  /// use [listenPlayerValue]
+  @deprecated
   MusicPlayerValue get playerValue {
+    return ScopedModel.of<QuietModel>(this, rebuildOnChange: true).player.value;
+  }
+
+  MusicPlayerValue get listenPlayerValue {
     return ScopedModel.of<QuietModel>(this, rebuildOnChange: true).player.value;
   }
 

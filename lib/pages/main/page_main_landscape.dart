@@ -84,7 +84,9 @@ class _LandscapeMainPageState extends State<_LandscapeMainPage> with NavigatorOb
               ),
             ),
           ),
-          _BottomPlayerBar(),
+          _BottomPlayerBar(
+            paddingPageBottom: MediaQuery.of(context).viewInsets.bottom + MediaQuery.of(context).padding.bottom,
+          ),
         ],
       ),
     );
@@ -94,10 +96,18 @@ class _LandscapeMainPageState extends State<_LandscapeMainPage> with NavigatorOb
     Widget widget;
     switch (settings.name) {
       case _navigationMyPlaylist:
-        widget = Scaffold(body: MainPlaylistPage());
+        widget = Scaffold(
+          body: MainPlaylistPage(),
+          primary: false,
+          resizeToAvoidBottomInset: false,
+        );
         break;
       case _navigationCloud:
-        widget = Scaffold(body: MainCloudPage());
+        widget = Scaffold(
+          body: MainCloudPage(),
+          primary: false,
+          resizeToAvoidBottomInset: false,
+        );
         break;
       case _navigationSearch:
         return NeteaseSearchPageRoute(null);
@@ -197,11 +207,22 @@ class _SecondaryPlaceholder extends StatelessWidget {
   }
 }
 
+/// Bottom player bar for landscape
 class _BottomPlayerBar extends StatelessWidget {
+  final double paddingPageBottom;
+
+  const _BottomPlayerBar({Key key, this.paddingPageBottom}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
+    final current = context.listenPlayerValue.current;
+    debugPrint("current : $paddingPageBottom");
+    if (current == null) {
+      return SizedBox(height: paddingPageBottom);
+    }
+    debugPrint("current : $current");
     return BottomControllerBar(
-      bottomPadding: MediaQuery.of(context).viewPadding.bottom + MediaQuery.of(context).viewInsets.bottom,
+      bottomPadding: paddingPageBottom,
     );
   }
 }
