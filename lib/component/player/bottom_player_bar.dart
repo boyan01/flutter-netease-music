@@ -3,6 +3,7 @@ library player;
 import 'package:flutter/material.dart';
 import 'package:music_player/music_player.dart';
 import 'package:quiet/component/utils/utils.dart';
+import 'package:quiet/material.dart';
 import 'package:quiet/material/playing_indicator.dart';
 import 'package:quiet/pages/page_playing_list.dart';
 import 'package:quiet/part/part.dart';
@@ -77,7 +78,7 @@ class BottomControllerBar extends StatelessWidget {
           margin: EdgeInsets.only(bottom: bottomPadding),
           child: Row(
             children: <Widget>[
-              Hero(
+              QuietHero(
                 tag: "album_cover",
                 child: Container(
                   padding: const EdgeInsets.all(8),

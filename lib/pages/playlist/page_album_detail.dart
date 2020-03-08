@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:quiet/component/utils/utils.dart';
+import 'package:quiet/material.dart';
 import 'package:quiet/pages/artists/page_artist_detail.dart';
 import 'package:quiet/pages/comments/page_comment.dart';
 import 'package:quiet/part/part.dart';
@@ -119,7 +120,7 @@ class _AlbumDetailHeader extends StatelessWidget {
           child: Row(
             children: <Widget>[
               SizedBox(width: 32),
-              Hero(
+              QuietHero(
                 tag: "album_image_${album["id"]}",
                 child: AspectRatio(
                   aspectRatio: 1,
