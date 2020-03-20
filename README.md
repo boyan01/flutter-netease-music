@@ -16,7 +16,7 @@ Imitation of [NeteaseMusic](https://music.163.com/#/download).
   ```
   2. install [Flutter](https://flutter.io/docs/get-started/install)
   
-      * require use latest dev/stable channel.
+      * require use latest dev channel.
       
   3. build & run
  ```bash
