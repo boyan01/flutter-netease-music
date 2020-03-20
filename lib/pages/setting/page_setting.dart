@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:quiet/component/global/settings.dart';
 import 'package:quiet/component/route.dart';
+import 'package:quiet/component.dart';
 
 import 'material.dart';
 
@@ -22,7 +23,7 @@ class SettingPage extends StatelessWidget {
             children: <Widget>[
               ListTile(
                 title: Text('更换主题'),
-                onTap: () => Navigator.pushNamed(context, ROUTE_SETTING_THEME),
+                onTap: () => context.secondaryNavigator.pushNamed(ROUTE_SETTING_THEME),
               ),
               _CopyRightCheckBox(),
             ],

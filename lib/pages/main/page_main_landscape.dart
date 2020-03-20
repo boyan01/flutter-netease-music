@@ -13,6 +13,8 @@ const _navigationCloud = "cloud";
 
 const _navigationFmPlayer = "fm";
 
+const _navigationSettings = "settings";
+
 class _LandscapeMainPageState extends State<_LandscapeMainPage> with NavigatorObserver {
   static const double DRAWER_WIDTH = 120.0;
 
@@ -115,6 +117,9 @@ class _LandscapeMainPageState extends State<_LandscapeMainPage> with NavigatorOb
         toast("页面未完成");
         widget = Container();
         break;
+      case _navigationSettings:
+        widget = SettingPage();
+        break;
     }
     assert(widget != null, "can not generate route for $settings");
     return MaterialPageRoute(settings: settings, builder: (context) => widget);
@@ -175,6 +180,13 @@ class _LandscapeDrawer extends StatelessWidget {
                   context.primaryNavigator.pushNamed(_navigationFmPlayer);
                 }),
             Spacer(),
+            _DrawerTile(
+              icon: Icon(Icons.settings),
+              title: Container(),
+              onTap: () {
+                context.primaryNavigator.pushNamed(_navigationSettings);
+              },
+            ),
             _DrawerTile(
                 icon: Icon(Icons.account_circle),
                 title: Text("我的"),
