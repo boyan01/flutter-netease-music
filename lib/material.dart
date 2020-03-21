@@ -8,3 +8,4 @@ export 'material/images.dart';
 export 'material/playing_indicator.dart';
 export 'material/tabs.dart';
 export 'material/tiles.dart';
+export 'material/landscape.dart';
