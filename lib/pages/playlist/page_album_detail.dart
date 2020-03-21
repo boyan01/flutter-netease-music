@@ -87,10 +87,16 @@ class _AlbumDetailHeader extends StatelessWidget {
         background: PlayListHeaderBackground(imageUrl: album['picUrl']),
         content: _buildContent(context),
         builder: (context, t) => AppBar(
+              automaticallyImplyLeading: false,
               title: Text(t > 0.5 ? album["name"] : '专辑'),
-              titleSpacing: 0,
+              titleSpacing: 16,
               elevation: 0,
               backgroundColor: Colors.transparent,
+              actions: <Widget>[
+                LandscapeWidgetSwitcher(
+                  landscape: (context) => CloseButton(),
+                )
+              ],
             ));
   }
 

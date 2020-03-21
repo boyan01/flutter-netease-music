@@ -48,6 +48,7 @@ class _PlayListDetailState extends State<PlaylistDetailPage> {
     return CustomScrollView(
       slivers: <Widget>[
         SliverAppBar(
+          automaticallyImplyLeading: false,
           title: widget.playlist == null ? Text('歌单') : null,
           expandedHeight: widget.playlist == null ? kToolbarHeight : HEIGHT_HEADER,
           flexibleSpace: widget.playlist == null ? null : _PlaylistDetailHeader(widget.playlist),
@@ -130,6 +131,7 @@ class _PlaylistBodyState extends State<_PlaylistBody> {
           SliverAppBar(
             elevation: 0,
             pinned: true,
+            automaticallyImplyLeading: false,
             backgroundColor: Colors.transparent,
             expandedHeight: HEIGHT_HEADER,
             bottom: _buildListHeader(context),
@@ -401,10 +403,12 @@ class _PlaylistDetailHeader extends StatelessWidget {
       background: PlayListHeaderBackground(imageUrl: playlist.coverUrl),
       content: _buildContent(context),
       builder: (context, t) => AppBar(
+        leading: context.isLandscape ? null : BackButton(),
+        automaticallyImplyLeading: false,
         title: Text(t > 0.5 ? playlist.name : '歌单'),
         backgroundColor: Colors.transparent,
         elevation: 0,
-        titleSpacing: 0,
+        titleSpacing: 16,
         actions: <Widget>[
           IconButton(
               icon: Icon(Icons.search),
@@ -412,7 +416,13 @@ class _PlaylistDetailHeader extends StatelessWidget {
               onPressed: () {
                 showSearch(context: context, delegate: PlaylistInternalSearchDelegate(playlist));
               }),
-          IconButton(icon: Icon(Icons.more_vert), tooltip: "更多选项", onPressed: () {})
+          LandscapeWidgetSwitcher(
+            landscape: (context) {
+              return CloseButton(onPressed: () {
+                context.secondaryNavigator.maybePop();
+              });
+            },
+          )
         ],
       ),
     );

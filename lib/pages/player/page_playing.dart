@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:music_player/music_player.dart';
 import 'package:quiet/component/netease/netease.dart';
+import 'package:quiet/material.dart';
 import 'package:quiet/material/playing_indicator.dart';
 import 'package:quiet/pages/artists/page_artist_detail.dart';
 import 'package:quiet/pages/comments/page_comment.dart';
@@ -325,13 +326,17 @@ class PlayingTitle extends StatelessWidget {
       child: AppBar(
         elevation: 0,
         primary: false,
-        leading: IconButton(
-            tooltip: '返回上一层',
-            icon: Icon(
-              Icons.arrow_back,
-              color: Theme.of(context).primaryIconTheme.color,
-            ),
-            onPressed: () => Navigator.pop(context)),
+        leading: LandscapeWidgetSwitcher(
+          portrait: (context) {
+            return IconButton(
+                tooltip: '返回上一层',
+                icon: Icon(
+                  Icons.arrow_back,
+                  color: Theme.of(context).primaryIconTheme.color,
+                ),
+                onPressed: () => Navigator.pop(context));
+          },
+        ),
         titleSpacing: 0,
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -377,7 +382,12 @@ class PlayingTitle extends StatelessWidget {
               Icons.more_vert,
               color: Theme.of(context).primaryIconTheme.color,
             ),
-          )
+          ),
+          LandscapeWidgetSwitcher(landscape: (context) {
+            return CloseButton(onPressed: () {
+              context.rootNavigator.maybePop();
+            });
+          })
         ],
       ),
     );
