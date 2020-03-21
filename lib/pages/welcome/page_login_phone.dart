@@ -122,6 +122,10 @@ class _PhoneInput extends StatelessWidget {
         controller: controller,
         style: style,
         keyboardType: TextInputType.phone,
+        textInputAction: TextInputAction.next,
+        onSubmitted: (text) {
+          _next(context);
+        },
         decoration: InputDecoration(
           prefixIcon: InkWell(
             onTap: () async {
@@ -170,6 +174,35 @@ class _RegionSelectionDialog extends StatelessWidget {
   }
 }
 
+void _next(BuildContext context) async {
+  final model = ScopedModel.of<_InputModel>(context);
+  final text = model.phoneNumber;
+  if (text.isEmpty) {
+    toast('请输入手机号');
+    return;
+  }
+  final result = await showLoaderOverlay(
+      context,
+      WelcomeRepository.checkPhoneExist(
+        text,
+        model.region.dialCode.replaceAll("+", "").replaceAll(" ", ""),
+      ));
+  if (result.isError) {
+    toast(result.asError.error.toString());
+    return;
+  }
+  final value = result.asValue.value;
+  if (!value.isExist) {
+    toast('注册流程开发未完成,欢迎贡献代码...');
+    return;
+  }
+  if (!value.hasPassword) {
+    toast('无密码登录流程的开发未完成,欢迎提出PR贡献代码...');
+    return;
+  }
+  Navigator.pushNamed(context, pageLoginPassword, arguments: {'phone': text});
+}
+
 class _ButtonNextStep extends StatelessWidget {
   const _ButtonNextStep({Key key}) : super(key: key);
 
@@ -181,32 +214,7 @@ class _ButtonNextStep extends StatelessWidget {
       textColor: Theme.of(context).primaryTextTheme.bodyText2.color,
       child: Text('下一步'),
       onPressed: () async {
-        final model = ScopedModel.of<_InputModel>(context);
-        final text = model.phoneNumber;
-        if (text.isEmpty) {
-          toast('请输入手机号');
-          return;
-        }
-        final result = await showLoaderOverlay(
-            context,
-            WelcomeRepository.checkPhoneExist(
-              text,
-              model.region.dialCode.replaceAll("+", "").replaceAll(" ", ""),
-            ));
-        if (result.isError) {
-          toast(result.asError.error.toString());
-          return;
-        }
-        final value = result.asValue.value;
-        if (!value.isExist) {
-          toast('注册流程开发未完成,欢迎贡献代码...');
-          return;
-        }
-        if (!value.hasPassword) {
-          toast('无密码登录流程的开发未完成,欢迎提出PR贡献代码...');
-          return;
-        }
-        Navigator.pushNamed(context, pageLoginPassword, arguments: {'phone': text});
+        _next(context);
       },
     );
   }
