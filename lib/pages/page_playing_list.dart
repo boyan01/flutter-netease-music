@@ -3,7 +3,23 @@ import 'package:overlay_support/overlay_support.dart';
 import 'package:quiet/pages/playlist/dialog_selector.dart';
 import 'package:quiet/part/part.dart';
 
+/// Current Playing List Dialog
+///
+/// use [show] to open PlayingList
+///
+/// TODO: do no use [showModalBottomSheet]
+///
+///
 class PlayingListDialog extends StatefulWidget {
+  static void show(BuildContext context) {
+    showModalBottomSheet(
+        context: context,
+        backgroundColor: Colors.transparent,
+        builder: (context) {
+          return PlayingListDialog();
+        });
+  }
+
   @override
   PlayingListDialogState createState() {
     return new PlayingListDialogState();
@@ -25,14 +41,18 @@ class PlayingListDialogState extends State<PlayingListDialog> {
 
   @override
   Widget build(BuildContext context) {
-    final playingList = context.playerValue.playingList;
-    final music = context.playerValue.current;
+    final playingList = context.listenPlayerValue.playingList;
+    final music = context.listenPlayerValue.current;
 
-    return Container(
-      height: MediaQuery.of(context).size.height / 2,
+    return _PlayingListContainer(
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
           _Header(),
+          const Divider(
+            height: 1,
+            thickness: 1,
+          ),
           Expanded(
             child: ListView.builder(
                 controller: _controller,
@@ -41,9 +61,64 @@ class PlayingListDialogState extends State<PlayingListDialog> {
                   var item = playingList[index];
                   return _MusicTile(music: item, playing: item == music);
                 }),
-          ),
-          SizedBox(height: MediaQuery.of(context).viewInsets.bottom),
+          )
         ],
+      ),
+    );
+  }
+}
+
+class _PlayingListContainer extends StatelessWidget {
+  final Widget child;
+
+  const _PlayingListContainer({Key key, this.child}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    if (context.isLandscape) {
+      return _LandscapePlayingListContainer(child: child);
+    } else {
+      return _PortraitPlayingListContainer(child: child);
+    }
+  }
+}
+
+class _PortraitPlayingListContainer extends StatelessWidget {
+  final Widget child;
+
+  const _PortraitPlayingListContainer({Key key, this.child}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 16),
+      padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+      child: Material(
+        borderRadius: BorderRadius.circular(8),
+        color: Theme.of(context).scaffoldBackgroundColor,
+        child: child,
+      ),
+    );
+  }
+}
+
+class _LandscapePlayingListContainer extends StatelessWidget {
+  final Widget child;
+
+  const _LandscapePlayingListContainer({Key key, this.child}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Container(
+        margin: EdgeInsets.symmetric(horizontal: 16),
+        padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+        width: 520,
+        child: Material(
+          borderRadius: BorderRadius.circular(8),
+          color: Theme.of(context).scaffoldBackgroundColor,
+          child: child,
+        ),
       ),
     );
   }
@@ -51,55 +126,47 @@ class PlayingListDialogState extends State<PlayingListDialog> {
 
 class _Header extends StatelessWidget {
   @override
-  StatelessElement createElement() {
-    return super.createElement();
-  }
-
-  @override
   Widget build(BuildContext context) {
     final playMode = context.playMode;
     final count = context.playList.queue.length;
-    return Material(
-      elevation: 0.5,
-      child: Container(
-        height: 48,
-        child: Row(
-          children: <Widget>[
-            FlatButton.icon(
-                onPressed: () {
-                  context.transportControls.setPlayMode(playMode.next);
-                },
-                icon: Icon(playMode.icon),
-                label: Text("${playMode.name}($count)")),
-            Spacer(),
-            FlatButton.icon(
-                onPressed: () async {
-                  final ids = context.playList.queue.map((m) => int.parse(m.mediaId)).toList();
-                  if (ids.isEmpty) {
-                    return;
-                  }
-                  final succeed = await PlaylistSelectorDialog.addSongs(context, ids);
-                  if (succeed == null) {
-                    return;
-                  }
-                  if (succeed) {
-                    showSimpleNotification(Text("添加到收藏成功"));
-                  } else {
-                    showSimpleNotification(Text("添加到收藏失败"),
-                        leading: Icon(Icons.error), background: Theme.of(context).errorColor);
-                  }
-                },
-                icon: Icon(Icons.add_box),
-                label: Text("收藏全部")),
-            IconButton(
-                icon: Icon(Icons.delete_outline),
-                onPressed: () async {
-                  Navigator.pop(context);
-                  //FIXME
+    return Container(
+      height: 48,
+      child: Row(
+        children: <Widget>[
+          FlatButton.icon(
+              onPressed: () {
+                context.transportControls.setPlayMode(playMode.next);
+              },
+              icon: Icon(playMode.icon),
+              label: Text("${playMode.name}($count)")),
+          Spacer(),
+          FlatButton.icon(
+              onPressed: () async {
+                final ids = context.playList.queue.map((m) => int.parse(m.mediaId)).toList();
+                if (ids.isEmpty) {
+                  return;
+                }
+                final succeed = await PlaylistSelectorDialog.addSongs(context, ids);
+                if (succeed == null) {
+                  return;
+                }
+                if (succeed) {
+                  showSimpleNotification(Text("添加到收藏成功"));
+                } else {
+                  showSimpleNotification(Text("添加到收藏失败"),
+                      leading: Icon(Icons.error), background: Theme.of(context).errorColor);
+                }
+              },
+              icon: Icon(Icons.add_box),
+              label: Text("收藏全部")),
+          IconButton(
+              icon: Icon(Icons.delete_outline),
+              onPressed: () async {
+                Navigator.pop(context);
+                //FIXME
 //                  context.player.setPlayList(PlayList.empty());
-                })
-          ],
-        ),
+              })
+        ],
       ),
     );
   }

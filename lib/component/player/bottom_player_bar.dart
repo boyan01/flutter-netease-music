@@ -128,11 +128,7 @@ class BottomControllerBar extends StatelessWidget {
                   tooltip: "当前播放列表",
                   icon: Icon(Icons.menu),
                   onPressed: () {
-                    showModalBottomSheet(
-                        context: context,
-                        builder: (context) {
-                          return PlayingListDialog();
-                        });
+                    PlayingListDialog.show(context);
                   }),
             ],
           ),

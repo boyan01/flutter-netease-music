@@ -133,11 +133,7 @@ class PlayerControllerBar extends StatelessWidget {
                 color: color,
               ),
               onPressed: () {
-                showModalBottomSheet(
-                    context: context,
-                    builder: (context) {
-                      return PlayingListDialog();
-                    });
+                PlayingListDialog.show(context);
               }),
         ],
       ),
@@ -150,7 +146,7 @@ class PlayingOperationBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final iconColor = Theme.of(context).primaryIconTheme.color;
 
-    final music = context.playerValue.current;
+    final music = context.listenPlayerValue.current;
     final liked = LikedSongList.contain(context, music);
 
     return Row(
