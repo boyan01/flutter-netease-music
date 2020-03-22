@@ -142,7 +142,7 @@ class _SectionPlaylist extends StatelessWidget {
           double width = (parentWidth ~/ count).toDouble().clamp(80.0, 200.0);
           double spacing = (parentWidth - width * count) / (count + 1);
           return Padding(
-            padding: EdgeInsets.symmetric(horizontal: 4 + spacing),
+            padding: EdgeInsets.symmetric(horizontal: 4 + spacing.roundToDouble()),
             child: Wrap(
               spacing: spacing,
               direction: Axis.horizontal,
