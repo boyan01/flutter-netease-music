@@ -227,9 +227,9 @@ class _FmControllerBar extends StatelessWidget {
                 context.secondaryNavigator.push(MaterialPageRoute(
                     builder: (context) => CommentPage(
                           threadId: CommentThreadId(
-                            context.playerValue.current.id,
+                            context.player.value.current.id,
                             CommentType.song,
-                            payload: CommentThreadPayload.music(context.playerValue.current),
+                            payload: CommentThreadPayload.music(context.player.value.current),
                           ),
                         )));
               }),
