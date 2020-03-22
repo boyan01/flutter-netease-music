@@ -78,18 +78,21 @@ class DurationProgressBarState extends State<DurationProgressBar> {
       progressIndicator = Slider(value: 0, onChanged: (_) => {});
     }
 
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: 4, horizontal: 16),
-      child: Row(
-        children: <Widget>[
-          Text(positionText ?? "00:00", style: theme.bodyText2),
-          Padding(padding: EdgeInsets.only(left: 4)),
-          Expanded(
-            child: progressIndicator,
-          ),
-          Padding(padding: EdgeInsets.only(left: 4)),
-          Text(durationText ?? "00:00", style: theme.bodyText2),
-        ],
+    return SliderTheme(
+      data: SliderThemeData(thumbShape: RoundSliderThumbShape(enabledThumbRadius: 6)),
+      child: Padding(
+        padding: EdgeInsets.symmetric( horizontal: 16),
+        child: Row(
+          children: <Widget>[
+            Text(positionText ?? "00:00", style: theme.bodyText2),
+            Padding(padding: EdgeInsets.only(left: 4)),
+            Expanded(
+              child: progressIndicator,
+            ),
+            Padding(padding: EdgeInsets.only(left: 4)),
+            Text(durationText ?? "00:00", style: theme.bodyText2),
+          ],
+        ),
       ),
     );
   }

@@ -43,7 +43,6 @@ class PlayingPage extends StatelessWidget {
                 PlayingTitle(music: current),
                 _CenterSection(music: current),
                 PlayingOperationBar(),
-                const SizedBox(height: 10),
                 DurationProgressBar(),
                 PlayerControllerBar(),
                 SizedBox(height: MediaQuery.of(context).viewInsets.bottom),
