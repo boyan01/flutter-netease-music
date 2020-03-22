@@ -113,7 +113,18 @@ class _FmCover extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 16),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(4),
-            child: Image(image: CachedImage(music.imageUrl)),
+            child: AspectRatio(
+              aspectRatio: 1.0,
+              child: Image(
+                image: CachedImage(music.imageUrl),
+                loadingBuilder: (context, child, loadingProgress) {
+                  if (loadingProgress != null) {
+                    child = Container(child: child);
+                  }
+                  return child;
+                },
+              ),
+            ),
           ),
         ),
         Text(
