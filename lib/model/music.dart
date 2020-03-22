@@ -42,6 +42,8 @@ class Music {
     return _metadata;
   }
 
+  String get artistString => artist.map((e) => e.name).join('/');
+
   String get subTitle {
     var ar = artist.map((a) => a.name).join('/');
     var al = album.name;
@@ -91,6 +93,12 @@ extension MusicExt on Music {
       "album": album.toMap(),
       "artist": artist.map((e) => e.toMap()).toList()
     };
+  }
+}
+
+extension MusicListExt on List<Music> {
+  List<MusicMetadata> toMetadataList() {
+    return map((e) => e.metadata).toList();
   }
 }
 

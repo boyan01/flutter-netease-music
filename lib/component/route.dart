@@ -3,6 +3,7 @@ import 'package:quiet/pages/collection/page_collections.dart';
 import 'package:quiet/pages/leaderboard/page_leaderboard.dart';
 import 'package:quiet/pages/main/page_main.dart';
 import 'package:quiet/pages/page_my_dj.dart';
+import 'package:quiet/pages/player/page_fm_playing.dart';
 import 'package:quiet/pages/player/page_playing.dart';
 import 'package:quiet/pages/playlist/page_daily_playlist.dart';
 import 'package:quiet/pages/setting/page_setting.dart';
@@ -29,6 +30,9 @@ const ROUTE_PLAYLIST_DETAIL = "/playlist/detail";
 
 /// Route name of [PlayingPage].
 const pagePlaying = "/playing";
+
+/// 私人FM
+const pageFmPlaying = "/playing_fm";
 
 const pageLeaderboard = "/leaderboard";
 
@@ -60,6 +64,7 @@ final Map<String, WidgetBuilder> routes = {
   ROUTE_SETTING: (context) => SettingPage(),
   ROUTE_SETTING_THEME: (context) => SettingThemePage(),
   pageWelcome: (context) => PageWelcome(),
+  pageFmPlaying: (context) => PagePlayingFm(),
 };
 
 Route<dynamic> routeFactory(RouteSettings settings) {

@@ -365,6 +365,18 @@ class NeteaseRepository {
     return doRequest('/user/detail', {'uid': uid});
   }
 
+  ///
+  /// 获取私人 FM 推荐歌曲。一次两首歌曲。
+  ///
+  Future<List<Music>> getPersonalFmMusics() async {
+    final result = await doRequest('/personal_fm');
+    if (result.isError) {
+      throw result.asError.error;
+    }
+    final data = result.asValue.value["data"];
+    return mapJsonListToMusicList(data as List);
+  }
+
   ///[path] request path
   ///[data] parameter
   Future<Result<Map<String, dynamic>>> doRequest(String path, [Map param = const {}]) async {
@@ -416,7 +428,7 @@ List<Music> mapJsonListToMusicList(List tracks, {String artistKey = "artists", S
   if (tracks == null) {
     return null;
   }
-  var list = tracks.cast<Map>().map((e) => mapJsonToMusic(e, artistKey: "ar", albumKey: "al"));
+  var list = tracks.cast<Map>().map((e) => mapJsonToMusic(e, artistKey: artistKey, albumKey: albumKey));
   return list.toList();
 }
 

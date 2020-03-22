@@ -10,6 +10,8 @@ import 'package:scoped_model/scoped_model.dart';
 export 'package:quiet/component/player/bottom_player_bar.dart';
 export 'package:quiet/component/player/lryic.dart';
 
+const String FM_PLAY_QUEUE_ID = "pernal_fm";
+
 //
 /////key which save playing music to local preference
 //const String _PREF_KEY_PLAYING = "quiet_player_playing";
@@ -64,9 +66,21 @@ extension QuitPlayerExt on BuildContext {
   PlayQueue get playList => playerValue.queue;
 }
 
+extension PlayQueueExt on PlayQueue {
+  /// 是否处于私人FM 播放模式
+  bool get isPlayingFm => queueId == FM_PLAY_QUEUE_ID;
+}
+
 extension MusicPlayerExt on MusicPlayer {
   //FIXME is this logic right???
   bool get initialized => value.metadata != null && value.metadata.duration > 0;
+
+  /// 播放私人 FM
+  /// [musics] 初始化数据
+  void playFm(List<Music> musics) {
+    final queue = PlayQueue(queueTitle: "私人FM", queueId: FM_PLAY_QUEUE_ID, queue: musics.toMetadataList());
+    playWithQueue(queue);
+  }
 }
 
 extension MusicPlayerValueExt on MusicPlayerValue {

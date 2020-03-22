@@ -43,6 +43,7 @@ void playerBackgroundService() {
   runBackgroundService(
     imageLoadInterceptor: BackgroundInterceptors.loadImageInterceptor,
     playUriInterceptor: BackgroundInterceptors.playUriInterceptor,
+    playQueueInterceptor: QuietPlayQueueInterceptor(),
   );
 }
 
