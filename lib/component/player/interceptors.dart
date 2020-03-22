@@ -5,6 +5,9 @@ import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:music_player/music_player.dart';
 import 'package:quiet/repository/netease.dart';
+import 'package:quiet/model/model.dart';
+
+import 'player.dart';
 
 class BackgroundInterceptors {
   // 获取播放地址
@@ -13,6 +16,7 @@ class BackgroundInterceptors {
     if (result.isError) {
       return fallbackUri;
     }
+
     /// some devices do not support http request.
     return result.asValue.value.replaceFirst("http://", "https://");
   }
@@ -34,5 +38,16 @@ class BackgroundInterceptors {
         .timeout(const Duration(seconds: 10));
     debugPrint("load image for : ${metadata.title} ${result.length}");
     return result;
+  }
+}
+
+class QuietPlayQueueInterceptor extends PlayQueueInterceptor {
+  @override
+  Future<List<MusicMetadata>> fetchMoreMusic(BackgroundPlayQueue queue, PlayMode playMode) async {
+    if (queue.queueId == FM_PLAY_QUEUE_ID) {
+      final musics = await neteaseRepository.getPersonalFmMusics();
+      return musics.toMetadataList();
+    }
+    return super.fetchMoreMusic(queue, playMode);
   }
 }

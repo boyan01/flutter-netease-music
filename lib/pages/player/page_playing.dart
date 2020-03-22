@@ -5,7 +5,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:music_player/music_player.dart';
 import 'package:quiet/component/netease/netease.dart';
 import 'package:quiet/material.dart';
-import 'package:quiet/material/playing_indicator.dart';
+import 'package:quiet/material/player.dart';
 import 'package:quiet/pages/artists/page_artist_detail.dart';
 import 'package:quiet/pages/comments/page_comment.dart';
 import 'package:quiet/pages/page_playing_list.dart';
@@ -356,7 +356,7 @@ class PlayingTitle extends StatelessWidget {
                   Container(
                     constraints: BoxConstraints(maxWidth: 200),
                     child: Text(
-                      music.artist.map((a) => a.name).join('/'),
+                      music.artistString,
                       style: Theme.of(context).primaryTextTheme.bodyText2.copyWith(fontSize: 13),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,

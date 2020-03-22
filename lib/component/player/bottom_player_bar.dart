@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:music_player/music_player.dart';
 import 'package:quiet/component/utils/utils.dart';
 import 'package:quiet/material.dart';
-import 'package:quiet/material/playing_indicator.dart';
+import 'package:quiet/material/player.dart';
 import 'package:quiet/pages/page_playing_list.dart';
 import 'package:quiet/part/part.dart';
 import 'package:quiet/repository/cached_image.dart';
@@ -59,13 +59,14 @@ class BottomControllerBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final music = context.listenPlayerValue.current;
+    final queue = context.listenPlayerValue.queue;
     if (music == null) {
       return Container();
     }
     return InkWell(
       onTap: () {
         if (music != null) {
-          context.rootNavigator.pushNamed(pagePlaying);
+          context.rootNavigator.pushNamed(queue.isPlayingFm ? pageFmPlaying : pagePlaying);
         }
       },
       child: Card(
@@ -124,12 +125,15 @@ class BottomControllerBar extends StatelessWidget {
                 ),
               ),
               _PauseButton(),
-              IconButton(
-                  tooltip: "当前播放列表",
-                  icon: Icon(Icons.menu),
-                  onPressed: () {
-                    PlayingListDialog.show(context);
-                  }),
+              if (context.player.queue.isPlayingFm)
+                LikeButton.current(context)
+              else
+                IconButton(
+                    tooltip: "当前播放列表",
+                    icon: Icon(Icons.menu),
+                    onPressed: () {
+                      PlayingListDialog.show(context);
+                    }),
             ],
           ),
         ),

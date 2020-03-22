@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:async/async.dart';
 import 'package:flutter/material.dart';
 import 'package:music_player/music_player.dart';
+import 'package:quiet/component/netease/netease.dart';
 import 'package:quiet/part/part.dart';
 
 ///
@@ -144,5 +145,33 @@ class _ProgressTrackContainerState extends State<ProgressTrackContainer> {
   @override
   Widget build(BuildContext context) {
     return widget.builder(context);
+  }
+}
+
+/// 歌曲喜欢按钮
+class LikeButton extends StatelessWidget {
+  final Music music;
+
+  const LikeButton({Key key, @required this.music})
+      : assert(music != null),
+        super(key: key);
+
+  factory LikeButton.current(BuildContext context) {
+    return LikeButton(music: context.listenPlayerValue.current);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final isLiked = LikedSongList.contain(context, music);
+    return IconButton(
+      icon: Icon(isLiked ? Icons.favorite : Icons.favorite_border),
+      onPressed: () {
+        if (!isLiked) {
+          LikedSongList.of(context).likeMusic(music);
+        } else {
+          LikedSongList.of(context).dislikeMusic(music);
+        }
+      },
+    );
   }
 }
