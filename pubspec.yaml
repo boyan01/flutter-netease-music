@@ -21,9 +21,9 @@ dependencies:
   dio_cookie_manager: 1.0.0
   path_provider: ^1.6.1
   path_provider_macos: ^0.0.1
-  shared_preferences: ^0.5.3+4
-  video_player: ^0.10.5
-  url_launcher: ^5.1.0
+  shared_preferences: ^0.5.8
+  video_player: ^0.10.12
+  url_launcher: ^5.5.0
   intl: ^0.15.8
   sembast: ^1.13.2
   scoped_model: ^1.0.1
