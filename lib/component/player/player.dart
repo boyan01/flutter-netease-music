@@ -101,7 +101,8 @@ extension PlaybackStateExt on PlaybackState {
   bool get initialized => state != PlayerState.None;
 
   /// Current real position
-  int get positionWithOffset => position + (DateTime.now().millisecondsSinceEpoch - updateTime);
+  @Deprecated("use computedPosition")
+  int get positionWithOffset => computedPosition;
 }
 
 @visibleForTesting
