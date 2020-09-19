@@ -8,6 +8,7 @@ import 'package:quiet/pages/welcome/login_sub_navigation.dart';
 import 'package:quiet/part/part.dart';
 
 import '_repository.dart';
+import 'page_dia_code_selection.dart';
 
 class PageLoginWithPhone extends StatefulWidget {
   @override
@@ -131,7 +132,7 @@ class _PhoneInput extends StatelessWidget {
           prefixIcon: InkWell(
             onTap: () async {
               final region = await showDialog<RegionFlag>(
-                  context: context, builder: (context) => _RegionSelectionDialog(regions: inputModel.flags));
+                  context: context, builder: (context) => RegionSelectionDialog(regions: inputModel.flags));
               if (region != null) {
                 inputModel.region = region;
               }
@@ -142,34 +143,6 @@ class _PhoneInput extends StatelessWidget {
             ),
           ),
         ),
-      ),
-    );
-  }
-}
-
-class _RegionSelectionDialog extends StatelessWidget {
-  final List<RegionFlag> regions;
-
-  const _RegionSelectionDialog({Key key, @required this.regions}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Dialog(
-      child: ListTileTheme(
-        style: ListTileStyle.drawer,
-        child: ListView.builder(
-            itemCount: regions.length,
-            itemBuilder: (context, index) {
-              final region = regions[index];
-              return ListTile(
-                leading: Text(region.emoji),
-                title: Text(region.name),
-                trailing: Text(region.dialCode),
-                onTap: () {
-                  Navigator.of(context).pop(region);
-                },
-              );
-            }),
       ),
     );
   }
