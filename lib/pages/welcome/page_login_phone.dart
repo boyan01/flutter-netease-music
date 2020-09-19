@@ -43,8 +43,9 @@ class _PageLoginWithPhoneState extends State<PageLoginWithPhone> {
         ),
       ),
       body: Loader<_InputModel>(
-        loadTask: () =>
-            WelcomeRepository.getRegions().then((value) => Result.value(_InputModel(value, _phoneInputController))),
+        loadTask: () => WelcomeRepository.getRegions().then((value) {
+          return Result.value(_InputModel(value, _phoneInputController));
+        }),
         builder: (context, data) {
           return ScopedModel<_InputModel>(
             model: data,
@@ -80,7 +81,7 @@ class _InputModel extends Model {
 
   _InputModel(this.flags, this.phoneInputController) {
     final countryCode = window.locale.countryCode;
-    final region = flags.firstWhere((region) => region.code == countryCode) ?? flags[0];
+    final region = flags.firstWhere((region) => region.code == countryCode, orElse: () => flags[0]);
     _region = region;
   }
 

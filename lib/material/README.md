@@ -1,1 +1,1 @@
-封装了一些常用的视图Widget
+deprecated. use scaffold instead.
