@@ -147,7 +147,7 @@ class PlayingOperationBar extends StatelessWidget {
     final iconColor = Theme.of(context).primaryIconTheme.color;
 
     final music = context.listenPlayerValue.current;
-    final liked = LikedSongList.contain(context, music);
+    final liked = FavoriteMusicList.contain(context, music);
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -159,9 +159,9 @@ class PlayingOperationBar extends StatelessWidget {
             ),
             onPressed: () {
               if (liked) {
-                LikedSongList.of(context).dislikeMusic(music);
+                FavoriteMusicList.of(context).dislikeMusic(music);
               } else {
-                LikedSongList.of(context).likeMusic(music);
+                FavoriteMusicList.of(context).likeMusic(music);
               }
             }),
         IconButton(

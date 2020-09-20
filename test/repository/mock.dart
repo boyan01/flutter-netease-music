@@ -9,6 +9,6 @@ class MockNeteaseLocalData extends Mock implements LocalData {}
 
 class MockLoginState extends Mock implements UserAccount {}
 
-class MockLikedSongList extends Mock implements LikedSongList {}
+class MockLikedSongList extends Mock implements FavoriteMusicList {}
 
 class MockCounter extends Mock implements Counter {}

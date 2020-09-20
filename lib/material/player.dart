@@ -162,14 +162,14 @@ class LikeButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isLiked = LikedSongList.contain(context, music);
+    final isLiked = FavoriteMusicList.contain(context, music);
     return IconButton(
       icon: Icon(isLiked ? Icons.favorite : Icons.favorite_border),
       onPressed: () {
         if (!isLiked) {
-          LikedSongList.of(context).likeMusic(music);
+          FavoriteMusicList.of(context).likeMusic(music);
         } else {
-          LikedSongList.of(context).dislikeMusic(music);
+          FavoriteMusicList.of(context).dislikeMusic(music);
         }
       },
     );
