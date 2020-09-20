@@ -131,8 +131,12 @@ class _PhoneInput extends StatelessWidget {
         decoration: InputDecoration(
           prefixIcon: InkWell(
             onTap: () async {
-              final region = await showDialog<RegionFlag>(
-                  context: context, builder: (context) => RegionSelectionDialog(regions: inputModel.flags));
+              final RegionFlag region = await Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) {
+                  return RegionSelectionPage(regions: inputModel.flags);
+                }),
+              );
               if (region != null) {
                 inputModel.region = region;
               }

@@ -37,6 +37,7 @@ dependencies:
     path: music_service/
   provider: ^4.0.1
   scrollable_positioned_list: ^0.1.7
+  hive: ^1.4.4
 
 dev_dependencies:
   flutter_test:

@@ -8,15 +8,16 @@ import 'package:quiet/scaffold.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 /// Region selection for login.
-class RegionSelectionDialog extends StatelessWidget {
+class RegionSelectionPage extends StatelessWidget {
   final List<RegionFlag> regions;
 
-  const RegionSelectionDialog({Key key, @required this.regions}) : super(key: key);
+  const RegionSelectionPage({Key key, @required this.regions}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Dialog(
-      child: _DiaCodeList(regions: regions),
+    return Scaffold(
+      appBar: AppBar(title: Text("地区选择")),
+      body: _DiaCodeList(regions: regions),
     );
   }
 }
@@ -109,6 +110,7 @@ class _DiaCodeListState extends State<_DiaCodeList> {
               }, duration: const Duration(milliseconds: 500));
               _jumpToAlphabet(selection.toLowerCase());
             },
+            textStyle: Theme.of(context).textTheme.bodyText1,
           ),
         ],
       ),
@@ -174,17 +176,22 @@ typedef OnSelection = void Function(String char);
 /// Custom render for vertical A_Z list.
 class AZSelection extends SingleChildRenderObjectWidget {
   final OnSelection onSelection;
+  final TextStyle textStyle;
 
-  const AZSelection({Key key, this.onSelection}) : super(key: key);
+  const AZSelection({Key key, this.onSelection, this.textStyle}) : super(key: key);
 
   @override
   RenderObject createRenderObject(BuildContext context) {
-    return AZRender()..onSelection = onSelection;
+    return AZRender()
+      ..onSelection = onSelection
+      ..textStyle = textStyle ?? Theme.of(context).textTheme.bodyText1;
   }
 
   @override
   void updateRenderObject(BuildContext context, covariant AZRender renderObject) {
-    renderObject..onSelection = onSelection;
+    renderObject
+      ..onSelection = onSelection
+      ..textStyle = textStyle ?? Theme.of(context).textTheme.bodyText1;
   }
 }
 
@@ -196,10 +203,12 @@ class AZRender extends RenderBox {
   OnSelection onSelection;
 
   final double width = 20;
-  final TextStyle textStyle = TextStyle(
-    color: Colors.white,
-    fontSize: 16,
-  );
+  TextStyle _textStyle = const TextStyle();
+
+  set textStyle(TextStyle value) {
+    _textStyle = value;
+    markNeedsLayout();
+  }
 
   @override
   void performLayout() {
@@ -218,7 +227,7 @@ class AZRender extends RenderBox {
       final painter = TextPainter(
         textDirection: TextDirection.ltr,
         textAlign: TextAlign.center,
-        text: TextSpan(text: item, style: textStyle),
+        text: TextSpan(text: item, style: _textStyle),
       );
       painter.layout(minWidth: width);
       _offsets[painter] = Offset(constraints.maxWidth - painter.width, lineHeight * i);
