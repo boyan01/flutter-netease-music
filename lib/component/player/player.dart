@@ -81,7 +81,10 @@ extension MusicPlayerExt on MusicPlayer {
   /// 播放私人 FM
   /// [musics] 初始化数据
   void playFm(List<Music> musics) {
-    final queue = PlayQueue(queueTitle: "私人FM", queueId: FM_PLAY_QUEUE_ID, queue: musics.toMetadataList());
+    final queue = PlayQueue(
+        queueTitle: "私人FM",
+        queueId: FM_PLAY_QUEUE_ID,
+        queue: musics.toMetadataList());
     playWithQueue(queue);
   }
 }
@@ -90,7 +93,8 @@ extension MusicPlayerValueExt on MusicPlayerValue {
   ///might be null
   Music get current => Music.fromMetadata(metadata);
 
-  List<Music> get playingList => queue.queue.map((e) => Music.fromMetadata(e)).toList();
+  List<Music> get playingList =>
+      queue.queue.map((e) => Music.fromMetadata(e)).toList();
 }
 
 extension PlaybackStateExt on PlaybackState {
@@ -110,11 +114,9 @@ extension PlaybackStateExt on PlaybackState {
 
 @visibleForTesting
 class QuietModel extends Model {
-  final Box<Map> data;
-
   MusicPlayer player = MusicPlayer();
 
-  QuietModel(this.data) {
+  QuietModel(Box<Map> data) {
     player.addListener(() {
       this.notifyListeners();
     });
