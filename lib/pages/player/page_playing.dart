@@ -3,7 +3,6 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:music_player/music_player.dart';
-import 'package:quiet/component/netease/netease.dart';
 import 'package:quiet/material.dart';
 import 'package:quiet/material/player.dart';
 import 'package:quiet/pages/artists/page_artist_detail.dart';
@@ -147,23 +146,11 @@ class PlayingOperationBar extends StatelessWidget {
     final iconColor = Theme.of(context).primaryIconTheme.color;
 
     final music = context.listenPlayerValue.current;
-    final liked = FavoriteMusicList.contain(context, music);
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: <Widget>[
-        IconButton(
-            icon: Icon(
-              liked ? Icons.favorite : Icons.favorite_border,
-              color: iconColor,
-            ),
-            onPressed: () {
-              if (liked) {
-                FavoriteMusicList.of(context).dislikeMusic(music);
-              } else {
-                FavoriteMusicList.of(context).likeMusic(music);
-              }
-            }),
+        LikeButton.current(context),
         IconButton(
             icon: Icon(
               Icons.file_download,
@@ -294,7 +281,7 @@ class PlayingLyricView extends StatelessWidget {
               lyric: playingLyric.lyric,
               lyricLineStyle: normalStyle,
               highlight: style.color,
-              position: context.playbackState.positionWithOffset,
+              position: context.playbackState.computedPosition,
               onTap: onTap,
               size: Size(constraints.maxWidth, constraints.maxHeight == double.infinity ? 0 : constraints.maxHeight),
               playing: context.playbackState.isPlaying,
