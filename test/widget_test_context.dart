@@ -30,7 +30,7 @@ class TestContext extends StatelessWidget {
         model: account,
         child: ScopedModel<Counter>(
           model: Counter(account, null, null),
-          child: ScopedModel<LikedSongList>(
+          child: ScopedModel<FavoriteMusicList>(
             model: likedSong,
             child: ScopedModel<QuietModel>(
               model: _TestQuietModel(),

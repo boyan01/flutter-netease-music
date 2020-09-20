@@ -2,9 +2,12 @@ import 'dart:async';
 
 import 'package:async/async.dart';
 import 'package:flutter/material.dart';
+import 'package:logging/logging.dart';
 import 'package:music_player/music_player.dart';
 import 'package:quiet/component/netease/netease.dart';
 import 'package:quiet/part/part.dart';
+
+import 'user.dart';
 
 ///
 /// an widget which indicator player is Playing/Pausing/Buffering
@@ -89,67 +92,10 @@ class _PlayingIndicatorState extends State<PlayingIndicator> {
   }
 }
 
-/// 监听播放器播放进度的 Widget
-/// 使用 [ProgressTrackingContainer]
-@deprecated
-class ProgressTrackContainer extends StatefulWidget {
-  final WidgetBuilder builder;
-
-  const ProgressTrackContainer({Key key, @required this.builder}) : super(key: key);
-
-  @override
-  _ProgressTrackContainerState createState() => _ProgressTrackContainerState();
-}
-
-class _ProgressTrackContainerState extends State<ProgressTrackContainer> {
-  MusicPlayer _player;
-
-  @override
-  void initState() {
-    super.initState();
-    _player = context.player..addListener(_onStateChanged);
-    _onStateChanged();
-  }
-
-  bool _tracking = false;
-
-  Timer _timer;
-
-  void _onStateChanged() {
-    final needTrack = context.player.playbackState.isPlaying;
-    if (_tracking == needTrack) return;
-    if (_tracking) {
-      _tracking = false;
-      _timer?.cancel();
-    } else {
-      _tracking = true;
-      _timer?.cancel();
-      _timer = Timer.periodic(const Duration(milliseconds: 50), (timer) {
-        if (!mounted) {
-          timer.cancel();
-          return;
-        }
-        setState(() {});
-      });
-    }
-  }
-
-  @override
-  void dispose() {
-    _player.removeListener(_onStateChanged);
-    _tracking = false;
-    _timer?.cancel();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return widget.builder(context);
-  }
-}
-
 /// 歌曲喜欢按钮
 class LikeButton extends StatelessWidget {
+  static final _logger = Logger("LikeButton");
+
   final Music music;
 
   const LikeButton({Key key, @required this.music})
@@ -162,14 +108,21 @@ class LikeButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isLiked = LikedSongList.contain(context, music);
+    final isLiked = FavoriteMusicList.contain(context, music);
     return IconButton(
       icon: Icon(isLiked ? Icons.favorite : Icons.favorite_border),
-      onPressed: () {
+      onPressed: () async {
+        if (!UserAccount.of(context, rebuildOnChange: false).isLogin) {
+          final login = await showNeedLoginToast(context);
+          _logger.info("show login: $login");
+          if (!login) {
+            return;
+          }
+        }
         if (!isLiked) {
-          LikedSongList.of(context).likeMusic(music);
+          FavoriteMusicList.of(context).likeMusic(music);
         } else {
-          LikedSongList.of(context).dislikeMusic(music);
+          FavoriteMusicList.of(context).dislikeMusic(music);
         }
       },
     );

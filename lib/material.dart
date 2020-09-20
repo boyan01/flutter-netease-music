@@ -11,3 +11,4 @@ export 'material/landscape.dart';
 export 'material/player.dart';
 export 'material/tabs.dart';
 export 'material/tiles.dart';
+export 'material/user.dart';
