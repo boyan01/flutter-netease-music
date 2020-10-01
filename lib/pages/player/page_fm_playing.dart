@@ -67,7 +67,7 @@ class _CenterSectionState extends State<_CenterSection> {
         crossFadeState: _showLyric ? CrossFadeState.showSecond : CrossFadeState.showFirst,
         layoutBuilder: (Widget topChild, Key topChildKey, Widget bottomChild, Key bottomChildKey) {
           return Stack(
-            overflow: Overflow.visible,
+            clipBehavior: Clip.none,
             children: <Widget>[
               Center(
                 key: bottomChildKey,
