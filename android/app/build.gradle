@@ -64,20 +64,8 @@ flutter {
 dependencies {
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'androidx.core:core:1.1.0'
-    implementation 'androidx.media:media:1.1.0'
-    implementation 'androidx.core:core-ktx:1.1.0'
-    implementation "com.google.android.exoplayer:extension-mediasession:2.9.6"
-
-    //exo player
-    implementation 'com.google.android.exoplayer:exoplayer-core:2.10.1'
-
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutine_version"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutine_version"
-
-    implementation 'androidx.lifecycle:lifecycle-livedata:2.1.0'
 
     testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 }
