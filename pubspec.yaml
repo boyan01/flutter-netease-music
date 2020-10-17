@@ -28,7 +28,7 @@ dependencies:
   sembast: ^1.13.2
   scoped_model: ^1.0.1
   loader:
-    path: loader/
+    git: https://github.com/boyan01/loader.git
   encrypt: ^3.0.0
   netease_music_api:
     path: cloud_music_api/
