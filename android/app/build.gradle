@@ -38,7 +38,7 @@ android {
 
     defaultConfig {
         applicationId "tech.soit.quiet.app"
-        minSdkVersion 16
+        minSdkVersion 21
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         targetSdkVersion 29
         versionCode flutterVersionCode.toInteger()
