@@ -1,11 +1,13 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:hive/hive.dart';
 import 'package:logging/logging.dart';
 import 'package:music_player/music_player.dart';
 import 'package:netease_music_api/netease_cloud_music.dart' as api;
 import 'package:overlay_support/overlay_support.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:quiet/component.dart';
 import 'package:quiet/component/route.dart';
 import 'package:quiet/material/app.dart';
 import 'package:quiet/pages/account/account.dart';
@@ -84,6 +86,12 @@ class MyApp extends StatelessWidget {
                   routes: routes,
                   onGenerateRoute: routeFactory,
                   title: 'Quiet',
+                  supportedLocales: [const Locale("en"), const Locale("zh")],
+                  localizationsDelegates: [
+                    GlobalWidgetsLocalizations.delegate,
+                    GlobalMaterialLocalizations.delegate,
+                    QuietLocalizationsDelegate(),
+                  ],
                   theme: setting.theme,
                   darkTheme: setting.darkTheme,
                   themeMode: setting.themeMode,

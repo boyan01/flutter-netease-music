@@ -31,10 +31,7 @@ class _MainPageState extends State<_PortraitMainPage> with SingleTickerProviderS
       drawer: _Drawer(),
       appBar: AppBar(
         leading: IconButton(
-            icon: AnimatedIcon(
-                icon: AnimatedIcons.menu_arrow,
-                color: Theme.of(context).primaryIconTheme.color,
-                progress: transitionAnimation),
+            icon: Icon(Icons.menu),
             onPressed: () {
               _scaffoldKey.currentState.openDrawer();
             }),
@@ -43,15 +40,18 @@ class _MainPageState extends State<_PortraitMainPage> with SingleTickerProviderS
           width: 128,
           child: TabBar(
             controller: _tabController,
-            indicator: UnderlineTabIndicator(insets: EdgeInsets.only(bottom: 4)),
-            indicatorSize: TabBarIndicatorSize.label,
+            indicatorColor: Colors.transparent,
+            labelStyle: Theme.of(context).primaryTextTheme.bodyText1.copyWith(fontWeight: FontWeight.bold),
+            unselectedLabelStyle: Theme.of(context).primaryTextTheme.caption.copyWith(fontSize: 14),
             tabs: <Widget>[
-              Tab(child: Icon(Icons.music_note)),
-              Tab(child: Icon(Icons.cloud)),
+              _PageTab(text: context.strings.main_page_tab_title_my),
+              _PageTab(text: context.strings.main_page_tab_title_discover),
             ],
           ),
         ),
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         titleSpacing: 0,
+        elevation: 0,
         centerTitle: true,
         actions: <Widget>[
           IconButton(
@@ -66,6 +66,23 @@ class _MainPageState extends State<_PortraitMainPage> with SingleTickerProviderS
         controller: _tabController,
         children: <Widget>[MainPlaylistPage(), MainCloudPage()],
       )),
+    );
+  }
+}
+
+class _PageTab extends StatelessWidget {
+  final String text;
+
+  const _PageTab({Key key, @required this.text}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16),
+      child: Align(
+        alignment: Alignment.bottomCenter,
+        child: Text(text),
+      ),
     );
   }
 }
