@@ -1,7 +1,5 @@
 export 'music.dart';
 
-
-
 class Album {
   Album({this.coverImageUrl, this.name, this.id});
 
@@ -14,7 +12,10 @@ class Album {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is Album && runtimeType == other.runtimeType && name == other.name && id == other.id;
+      other is Album &&
+          runtimeType == other.runtimeType &&
+          name == other.name &&
+          id == other.id;
 
   @override
   int get hashCode => name.hashCode ^ id.hashCode;
@@ -25,11 +26,19 @@ class Album {
   }
 
   static Album fromMap(Map map) {
-    return Album(id: map["id"], name: map["name"], coverImageUrl: map["coverImageUrl"]);
+    return Album(
+      id: map["id"],
+      name: map["name"],
+      coverImageUrl: map["coverImageUrl"],
+    );
   }
 
   Map toMap() {
-    return {"id": id, "name": name, "coverImageUrl": coverImageUrl};
+    return {
+      "id": id,
+      "name": name,
+      "coverImageUrl": coverImageUrl,
+    };
   }
 }
 

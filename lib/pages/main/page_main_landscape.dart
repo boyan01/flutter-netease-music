@@ -99,14 +99,14 @@ class _LandscapeMainPageState extends State<_LandscapeMainPage> with NavigatorOb
     switch (settings.name) {
       case _navigationMyPlaylist:
         widget = Scaffold(
-          body: MainPlaylistPage(),
+          body: MainPageMy(),
           primary: false,
           resizeToAvoidBottomInset: false,
         );
         break;
       case _navigationCloud:
         widget = Scaffold(
-          body: MainCloudPage(),
+          body: MainPageDiscover(),
           primary: false,
           resizeToAvoidBottomInset: false,
         );
@@ -151,28 +151,28 @@ class _LandscapeDrawer extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            _DrawerTile(
+            MainNavigationDrawerTile(
                 selected: _navigationSearch == selectedRouteName,
                 icon: Icon(Icons.search),
                 title: Text("搜索"),
                 onTap: () {
                   context.primaryNavigator.pushNamed(_navigationSearch);
                 }),
-            _DrawerTile(
+            MainNavigationDrawerTile(
                 selected: _navigationMyPlaylist == selectedRouteName,
                 icon: Icon(Icons.music_note),
                 title: Text("我的音乐"),
                 onTap: () {
                   context.primaryNavigator.pushNamed(_navigationMyPlaylist);
                 }),
-            _DrawerTile(
+            MainNavigationDrawerTile(
                 selected: _navigationCloud == selectedRouteName,
                 icon: Icon(Icons.cloud),
                 title: Text("发现音乐"),
                 onTap: () {
                   context.primaryNavigator.pushNamed(_navigationCloud);
                 }),
-            _DrawerTile(
+            MainNavigationDrawerTile(
                 selected: _navigationFmPlayer == selectedRouteName,
                 icon: Icon(Icons.radio),
                 title: Text("私人FM"),
@@ -180,14 +180,14 @@ class _LandscapeDrawer extends StatelessWidget {
                   context.primaryNavigator.pushNamed(_navigationFmPlayer);
                 }),
             Spacer(),
-            _DrawerTile(
+            MainNavigationDrawerTile(
               icon: Icon(Icons.settings),
               title: Container(),
               onTap: () {
                 context.primaryNavigator.pushNamed(_navigationSettings);
               },
             ),
-            _DrawerTile(
+            MainNavigationDrawerTile(
                 icon: Icon(Icons.account_circle),
                 title: Text("我的"),
                 onTap: () {

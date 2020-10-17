@@ -1,11 +1,14 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:logging/logging.dart';
 import 'package:netease_music_api/netease_cloud_music.dart' as api;
 import 'package:path_provider/path_provider.dart';
 import 'package:quiet/model/playlist_detail.dart';
+import 'package:quiet/model/user_detail_bean.dart';
 import 'package:quiet/pages/comments/page_comment.dart';
 import 'package:quiet/part/part.dart';
 
@@ -360,9 +363,15 @@ class NeteaseRepository {
   }
 
   ///获取用户详情
-  Future<Result<Map>> getUserDetail(int uid) {
+  Future<Result<UserDetail>> getUserDetail(int uid) async {
     assert(uid != null);
-    return doRequest('/user/detail', {'uid': uid});
+    final result = await doRequest('/user/detail', {'uid': uid});
+    if (result.isValue) {
+      // save user_detail to local data.
+      // TODO: limit count.
+      neteaseLocalData['user_detail_$uid'] = result.asValue.value;
+    }
+    return _map(result, (t) => UserDetail.fromJsonMap(t));
   }
 
   ///
@@ -401,6 +410,8 @@ class NeteaseRepository {
     } else if (map['code'] != _CODE_SUCCESS) {
       return Result.error(map['msg'] ?? '请求失败了~');
     }
+    final Logger logger = Logger("doRequest");
+    logger.info("$path -> ${json.encode(map)}");
     return Result.value(map);
   }
 }

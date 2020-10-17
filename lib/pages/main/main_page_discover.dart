@@ -5,12 +5,12 @@ import 'package:quiet/pages/playlist/page_playlist_detail.dart';
 import 'package:quiet/part/part.dart';
 import 'package:quiet/repository/netease.dart';
 
-class MainCloudPage extends StatefulWidget {
+class MainPageDiscover extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => CloudPageState();
 }
 
-class CloudPageState extends State<MainCloudPage> with AutomaticKeepAliveClientMixin {
+class CloudPageState extends State<MainPageDiscover> with AutomaticKeepAliveClientMixin {
   @override
   bool get wantKeepAlive => true;
 

@@ -1,7 +1,7 @@
 part of 'page_user_detail.dart';
 
 class TabMusic extends StatefulWidget {
-  final Profile profile;
+  final UserProfile profile;
 
   const TabMusic(this.profile, {Key key})
       : assert(profile != null),

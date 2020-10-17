@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-import 'package:quiet/pages/account/account.dart';
+import 'package:provider/provider.dart';
 import 'package:quiet/pages/account/page_need_login.dart';
-import 'package:scoped_model/scoped_model.dart';
 
 import '../../repository/mock.dart';
 import '../../widget_test_context.dart';
@@ -14,8 +13,8 @@ void main() {
     when(loginModel.isLogin).thenReturn(false);
 
     await tester.pumpWidget(TestContext(
-      child: ScopedModel<UserAccount>(
-          model: loginModel,
+      child: Provider.value(
+          value: loginModel,
           child: PageNeedLogin(
             builder: (context) => Container(),
           )),
@@ -28,8 +27,8 @@ void main() {
     when(loginModel.isLogin).thenReturn(true);
 
     await tester.pumpWidget(TestContext(
-      child: ScopedModel<UserAccount>(
-          model: loginModel,
+      child: Provider.value(
+          value: loginModel,
           child: PageNeedLogin(
             builder: (context) => Container(child: Text('已登录')),
           )),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+import 'package:provider/provider.dart';
 import 'package:quiet/component/netease/netease.dart';
 import 'package:quiet/part/part.dart';
 
@@ -28,8 +29,8 @@ void main() {
       "code": 200
     }));
 
-    await tester.pumpWidget(ScopedModel(
-        model: loginModel,
+    await tester.pumpWidget(Provider.value(
+        value: loginModel,
         child: ScopedModel(
           model: Counter(loginModel, netease, cache),
           child: _CounterTestWidget(),
@@ -59,11 +60,9 @@ void main() {
     }));
 
     await tester.pumpWidget(
-      ScopedModel(
-          model: loginModel,
-          child: ScopedModel(
-              model: Counter(loginModel, netease, cache),
-              child: _CounterTestWidget())),
+      Provider.value(
+          value: loginModel,
+          child: ScopedModel(model: Counter(loginModel, netease, cache), child: _CounterTestWidget())),
     );
     await tester.pump();
     await tester.pump();
@@ -82,11 +81,9 @@ void main() {
     when(netease.subCount()).thenReturn(Result.error('网络异常'));
 
     await tester.pumpWidget(
-      ScopedModel(
-          model: loginModel,
-          child: ScopedModel(
-              model: Counter(loginModel, netease, cache),
-              child: _CounterTestWidget())),
+      Provider.value(
+          value: loginModel,
+          child: ScopedModel(model: Counter(loginModel, netease, cache), child: _CounterTestWidget())),
     );
     await tester.pump();
     await tester.pump();
@@ -94,8 +91,7 @@ void main() {
     expect(find.text('0'), findsNWidgets(6));
   });
 
-  testWidgets('test counter login and fetch error with correct cache',
-      (tester) async {
+  testWidgets('test counter login and fetch error with correct cache', (tester) async {
     when(loginModel.isLogin).thenReturn(true);
 
     //no cache
@@ -114,11 +110,9 @@ void main() {
     when(netease.subCount()).thenReturn(Result.error('网络异常'));
 
     await tester.pumpWidget(
-      ScopedModel(
-          model: loginModel,
-          child: ScopedModel(
-              model: Counter(loginModel, netease, cache),
-              child: _CounterTestWidget())),
+      Provider.value(
+          value: loginModel,
+          child: ScopedModel(model: Counter(loginModel, netease, cache), child: _CounterTestWidget())),
     );
     await tester.pump();
     await tester.pump();

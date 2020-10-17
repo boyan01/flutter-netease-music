@@ -9,7 +9,7 @@ import 'package:quiet/pages/main/playlist_tile.dart';
 import 'package:quiet/part/part.dart';
 import 'package:quiet/repository/netease.dart';
 
-import 'user_detail_bean.dart';
+import '../../model/user_detail_bean.dart';
 
 part 'tab_about.dart';
 part 'tab_events.dart';
@@ -24,12 +24,10 @@ class UserDetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Loader<Map>(
+    return Loader<UserDetail>(
       initialData: neteaseLocalData.get('user_detail_$userId'),
       loadTask: () => neteaseRepository.getUserDetail(userId),
-      builder: (BuildContext context, Map result) {
-        neteaseLocalData['user_detail_$userId'] = result;
-        final user = UserDetail.fromJsonMap(result.cast());
+      builder: (BuildContext context, UserDetail user) {
         return _DetailPage(user: user);
       },
     );

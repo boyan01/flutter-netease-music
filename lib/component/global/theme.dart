@@ -23,13 +23,15 @@ final quietThemes = [
   _buildTheme(Colors.teal),
 ];
 
-final quietDarkTheme = ThemeData.dark();
+final quietDarkTheme = ThemeData.dark().copyWith(
+  backgroundColor: Colors.white12,
+);
 
 ThemeData _buildTheme(Color primaryColor) {
   return ThemeData(
-    primaryColor: primaryColor,
-    dividerColor: Color(0xfff5f5f5),
-    iconTheme: IconThemeData(color: Color(0xFFb3b3b3)),
-    primaryColorLight: primaryColor,
-  );
+      primaryColor: primaryColor,
+      dividerColor: Color(0xfff5f5f5),
+      iconTheme: IconThemeData(color: Color(0xFFb3b3b3)),
+      primaryColorLight: primaryColor,
+      backgroundColor: Colors.white);
 }

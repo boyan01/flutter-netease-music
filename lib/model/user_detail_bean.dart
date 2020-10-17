@@ -4,7 +4,7 @@ class UserDetail {
   final UserPoint userPoint;
   final bool mobileSign;
   final bool pcSign;
-  final Profile profile;
+  final UserProfile profile;
   final bool peopleCanSeeMyPlayRecord;
   final List<Bindings> bindings;
   final bool adValid;
@@ -18,10 +18,9 @@ class UserDetail {
         userPoint = UserPoint.fromJsonMap(map["userPoint"]),
         mobileSign = map["mobileSign"],
         pcSign = map["pcSign"],
-        profile = Profile.fromJsonMap(map["profile"]),
+        profile = UserProfile.fromJsonMap(map["profile"]),
         peopleCanSeeMyPlayRecord = map["peopleCanSeeMyPlayRecord"],
-        bindings = List<Bindings>.from(
-            map["bindings"].map((it) => Bindings.fromJsonMap(it))),
+        bindings = List<Bindings>.from(map["bindings"].map((it) => Bindings.fromJsonMap(it))),
         adValid = map["adValid"],
         code = map["code"],
         createTime = map["createTime"],
@@ -36,8 +35,7 @@ class UserDetail {
     data['pcSign'] = pcSign;
     data['profile'] = profile == null ? null : profile.toJson();
     data['peopleCanSeeMyPlayRecord'] = peopleCanSeeMyPlayRecord;
-    data['bindings'] =
-        bindings != null ? this.bindings.map((v) => v.toJson()).toList() : null;
+    data['bindings'] = bindings != null ? this.bindings.map((v) => v.toJson()).toList() : null;
     data['adValid'] = adValid;
     data['code'] = code;
     data['createTime'] = createTime;
@@ -74,7 +72,7 @@ class UserPoint {
   }
 }
 
-class Profile {
+class UserProfile {
   final String detailDescription;
   final bool followed;
   final String avatarImgIdStr;
@@ -114,7 +112,7 @@ class Profile {
   final int playlistBeSubscribedCount;
   final int sCount;
 
-  Profile.fromJsonMap(Map<String, dynamic> map)
+  UserProfile.fromJsonMap(Map<String, dynamic> map)
       : detailDescription = map["detailDescription"],
         followed = map["followed"],
         avatarImgIdStr = map["avatarImgIdStr"],

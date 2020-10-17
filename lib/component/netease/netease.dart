@@ -41,8 +41,8 @@ class NeteaseState extends State<Netease> {
 
   @override
   Widget build(BuildContext context) {
-    return ScopedModel<UserAccount>(
-      model: account,
+    return ListenableProvider.value(
+      value: account,
       child: ListenableProvider(
         create: (context) {
           return FavoriteMusicList(account);

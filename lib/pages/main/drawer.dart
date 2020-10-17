@@ -1,12 +1,18 @@
-part of "page_main.dart";
+import 'package:flutter/material.dart';
+import 'package:quiet/component.dart';
+import 'package:quiet/material.dart';
+import 'package:quiet/model.dart';
+import 'package:quiet/pages/account/account.dart';
+import 'package:quiet/pages/account/page_user_detail.dart';
+import 'package:url_launcher/url_launcher.dart';
 
-class _Drawer extends StatelessWidget {
+class MainNavigationDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Drawer(
       child: Column(
         children: <Widget>[
-          _UserInfo(),
+          UserInfo(),
           MediaQuery.removePadding(
               context: context,
               removeTop: true,
@@ -15,7 +21,7 @@ class _Drawer extends StatelessWidget {
                   style: ListTileStyle.drawer,
                   child: ListView(
                     children: <Widget>[
-                      _DrawerTile(
+                      MainNavigationDrawerTile(
                         icon: Icon(Icons.settings),
                         title: Text("设置"),
                         onTap: () {
@@ -23,7 +29,7 @@ class _Drawer extends StatelessWidget {
                         },
                       ),
                       Divider(height: 0, indent: 16),
-                      _DrawerTile(
+                      MainNavigationDrawerTile(
                         icon: Icon(Icons.format_quote),
                         title: Text("Star On GitHub"),
                         onTap: () {
@@ -41,7 +47,7 @@ class _Drawer extends StatelessWidget {
 }
 
 // The tile item for main draw. auto fit landscape and portrait.
-class _DrawerTile extends StatelessWidget {
+class MainNavigationDrawerTile extends StatelessWidget {
   final Widget icon;
   final Widget title;
 
@@ -49,7 +55,7 @@ class _DrawerTile extends StatelessWidget {
 
   final bool selected;
 
-  const _DrawerTile({
+  const MainNavigationDrawerTile({
     Key key,
     @required this.icon,
     @required this.title,
@@ -90,5 +96,85 @@ class _DrawerTile extends StatelessWidget {
         selected: selected,
       );
     }
+  }
+}
+
+///the header of drawer
+class UserInfo extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    if (UserAccount.of(context).isLogin) {
+      return _buildHeader(context);
+    } else {
+      return _buildHeaderNotLogin(context);
+    }
+  }
+
+  Widget _buildHeader(BuildContext context) {
+    UserProfile profile = UserAccount.of(context).userDetail.profile;
+    return UserAccountsDrawerHeader(
+      currentAccountPicture: InkResponse(
+        onTap: () {
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => UserDetailPage(userId: UserAccount.of(context).userId)));
+        },
+        child: CircleAvatar(
+          backgroundImage: CachedImage(profile.avatarUrl),
+        ),
+      ),
+      accountName: Text(profile.nickname),
+      accountEmail: null,
+      otherAccountsPictures: [
+        Material(
+          color: Colors.transparent,
+          child: IconButton(
+            icon: Icon(
+              Icons.exit_to_app,
+              color: Theme.of(context).primaryIconTheme.color,
+            ),
+            tooltip: "退出登陆",
+            onPressed: () async {
+              if (await showConfirmDialog(context, Text('确认退出登录吗？'), positiveLabel: '退出登录')) {
+                UserAccount.of(context, rebuildOnChange: false).logout();
+              }
+            },
+          ),
+        )
+      ],
+    );
+  }
+
+  Widget _buildHeaderNotLogin(BuildContext context) {
+    return DrawerHeader(
+      decoration: BoxDecoration(
+        color: Theme.of(context).primaryColorDark,
+      ),
+      child: Container(
+        constraints: BoxConstraints.expand(),
+        child: DefaultTextStyle(
+          style: Theme.of(context).primaryTextTheme.caption.copyWith(fontSize: 14),
+          child: Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Text("登陆网易云音乐"),
+                Text("手机电脑多端同步,尽享海量高品质音乐"),
+                SizedBox(height: 8),
+                FlatButton(
+                    shape: RoundedRectangleBorder(
+                        side: BorderSide(color: Theme.of(context).primaryTextTheme.bodyText2.color.withOpacity(0.3)),
+                        borderRadius: BorderRadius.circular(20)),
+                    padding: EdgeInsets.symmetric(horizontal: 40),
+                    onPressed: () {
+                      Navigator.pushNamed(context, pageLogin);
+                    },
+                    textColor: Theme.of(context).primaryTextTheme.bodyText2.color,
+                    child: Text("立即登陆"))
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }
