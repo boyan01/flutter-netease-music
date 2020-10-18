@@ -48,7 +48,7 @@ class PlaylistTile extends StatelessWidget {
         context.secondaryNavigator
             .push(MaterialPageRoute(builder: (context) => PlaylistDetailPage(playlist.id, playlist: playlist)));
       },
-      child: Container(
+      child: SizedBox(
         height: 60,
         child: Row(
           children: <Widget>[

@@ -35,7 +35,9 @@ class QuietLocalizations {
       "already_buy": "Payed",
       "todo": "TBD",
       "login_right_now": "Login",
-      "playlist_login_description": "Login to discover your playlists."
+      "playlist_login_description": "Login to discover your playlists.",
+      "created_song_list": "Created Song List",
+      "favorite_song_list": "Favorite Song List",
     },
     "zh": {
       "main_page_tab_title_my": "我的",
@@ -49,7 +51,9 @@ class QuietLocalizations {
       "collection_like": "收藏和赞",
       "todo": "TBD",
       "login_right_now": "立即登录",
-      "playlist_login_description": "登录以加载你的私人播放列表。"
+      "playlist_login_description": "登录以加载你的私人播放列表。",
+      "created_song_list": "创建歌单",
+      "favorite_song_list": "收藏歌单",
     },
   };
 
