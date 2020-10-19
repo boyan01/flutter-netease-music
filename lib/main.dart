@@ -40,6 +40,7 @@ void main() {
     ],
     builder: (context, data) {
       return MyApp(
+        debugShowCheckedModeBanner: false,
         setting: Settings(data[0]),
         user: data[1],
         player: data[2],
