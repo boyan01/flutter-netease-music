@@ -13,7 +13,7 @@ class QuietLocalizationsDelegate extends LocalizationsDelegate<QuietLocalization
 
   @override
   bool shouldReload(covariant LocalizationsDelegate<QuietLocalizations> old) {
-    return false;
+    return true;
   }
 }
 
