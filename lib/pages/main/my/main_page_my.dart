@@ -1,241 +1,188 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
-import 'package:quiet/component.dart';
-import 'package:quiet/model/playlist_detail.dart';
 import 'package:quiet/part/part.dart';
-import 'package:quiet/repository/netease.dart';
 
-import '../playlist_tile.dart';
+import '_playlists.dart';
 import '_preset_grid.dart';
 import '_profile.dart';
 
 ///the first page display in page_main
 class MainPageMy extends StatefulWidget {
   @override
-  createState() => _MainPlaylistState();
+  createState() => _MainPageMyState();
 }
 
-class _MainPlaylistState extends State<MainPageMy> with AutomaticKeepAliveClientMixin {
-  GlobalKey<LoaderState> _loaderKey = GlobalKey();
+class _MainPageMyState extends State<MainPageMy> with AutomaticKeepAliveClientMixin, SingleTickerProviderStateMixin {
+  final Logger logger = Logger("_MainPlaylistState");
+
+  ScrollController _scrollController = ScrollController();
+
+  TabController _tabController;
+
+  bool _scrollerAnimating = false;
+  bool _tabAnimating = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: PlayListType.values.length, vsync: this);
+    _tabController.addListener(_onUserSelectedTab);
+  }
+
+  void _onUserSelectedTab() {
+    logger.info("_onUserSelectedTab : ${_tabController.index} ${_tabController.indexIsChanging}");
+    if (_scrollerAnimating || _tabAnimating) {
+      return;
+    }
+    _scrollToPlayList(PlayListType.values[_tabController.index]);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _tabController.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     super.build(context);
     final userId = UserAccount.of(context).userId;
-    return NotificationListener<ScrollUpdateNotification>(
-      onNotification: (notification) {
-        final Logger logger = Logger("_MyPlayListsHeaderState");
-        logger.info("on update: ${notification.scrollDelta}");
-        return true;
-      },
-      child: CustomScrollView(
-        slivers: [
-          SliverList(
-            delegate: SliverChildListDelegate(
-              [
-                UserProfileSection(),
-                PresetGridSection(),
-                SizedBox(height: 8),
-              ],
-            ),
+    return CustomScrollView(
+      controller: _scrollController,
+      slivers: [
+        SliverList(
+          delegate: SliverChildListDelegate(
+            [
+              UserProfileSection(),
+              PresetGridSection(),
+              SizedBox(height: 8),
+            ],
           ),
-          SliverPersistentHeader(
-            pinned: true,
-            delegate: MyPlayListsHeaderDelegate(),
+        ),
+        SliverPersistentHeader(
+          pinned: true,
+          delegate: MyPlayListsHeaderDelegate(_tabController),
+        ),
+        NotificationListener<PlayListTypeNotification>(
+          onNotification: (notification) {
+            _updateCurrentTabSelection(notification.type);
+            return true;
+          },
+          child: UserPlayListSection(
+            userId: userId,
+            scrollController: _scrollController,
           ),
-          _UserPlayListSection(loaderKey: _loaderKey, userId: userId),
-        ],
-      ),
+        ),
+      ],
     );
+  }
+
+  void _computeScroller(void callback(PlayListSliverKey sliverKey, List<Element> children, int start, int end)) {
+    SliverMultiBoxAdaptorElement playListSliver;
+    void playListSliverFinder(Element element) {
+      if (element.widget.key is PlayListSliverKey) {
+        playListSliver = element;
+      } else if (playListSliver == null) {
+        element.visitChildElements(playListSliverFinder);
+      }
+    }
+
+    // to find PlayListSliver.
+    context.visitChildElements(playListSliverFinder);
+
+    final PlayListSliverKey sliverKey = playListSliver.widget.key as PlayListSliverKey;
+    assert(playListSliver != null, "can not find sliver");
+    assert(sliverKey != null, "can not find sliver");
+
+    logger.info("sliverKey : created position: ${sliverKey.createdPosition} ${sliverKey.favoritePosition}");
+
+    final List<Element> children = [];
+    playListSliver.visitChildElements((element) {
+      children.add(element);
+    });
+    if (children.isEmpty) {
+      return;
+    }
+    final start = _index(children.first);
+    final end = _index(children.last);
+    if (end <= start) {
+      return;
+    }
+    logger.info("position start - end -> $start - $end");
+    callback(sliverKey, children, start, end);
+  }
+
+  void _scrollToPlayList(PlayListType type) {
+    _scrollerAnimating = true;
+
+    _computeScroller((sliverKey, children, start, end) {
+      final target = type == PlayListType.created ? sliverKey.createdPosition : sliverKey.favoritePosition;
+      final position = _scrollController.position;
+      if (target >= start && target <= end) {
+        Element toShow = children[target - start];
+        position
+            .ensureVisible(toShow.renderObject, duration: const Duration(milliseconds: 300), curve: Curves.linear)
+            .whenComplete(() {
+          _scrollerAnimating = false;
+        });
+      } else if (target < start) {
+        position
+            .ensureVisible(
+          children.first.renderObject,
+          duration: const Duration(milliseconds: 150),
+          curve: Curves.linear,
+        )
+            .then((_) {
+          WidgetsBinding.instance.scheduleFrameCallback((timeStamp) {
+            _scrollToPlayList(type);
+          });
+        });
+      } else if (target > end) {
+        position
+            .ensureVisible(
+          children.last.renderObject,
+          duration: const Duration(milliseconds: 150),
+          curve: Curves.linear,
+        )
+            .then((_) {
+          WidgetsBinding.instance.scheduleFrameCallback((timeStamp) {
+            _scrollToPlayList(type);
+          });
+        });
+      }
+    });
+  }
+
+  static int _index(Element element) {
+    int index;
+    void _findIndex(Element e) {
+      if (e.widget is IndexedSemantics) {
+        index = (e.widget as IndexedSemantics).index;
+      } else {
+        e.visitChildElements(_findIndex);
+      }
+    }
+
+    element.visitChildElements(_findIndex);
+    assert(index != null, "can not get index for element $element");
+    return index;
   }
 
   @override
   bool get wantKeepAlive => true;
-}
 
-const double _kPlayListHeaderHeight = 48;
-
-class MyPlayListsHeaderDelegate extends SliverPersistentHeaderDelegate {
-  @override
-  Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
-    return _MyPlayListsHeader();
-  }
-
-  @override
-  double get maxExtent => _kPlayListHeaderHeight;
-
-  @override
-  double get minExtent => _kPlayListHeaderHeight;
-
-  @override
-  bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) {
-    return true;
-  }
-}
-
-class _MyPlayListsHeader extends StatefulWidget implements PreferredSizeWidget {
-  @override
-  _MyPlayListsHeaderState createState() => _MyPlayListsHeaderState();
-
-  @override
-  Size get preferredSize => const Size.fromHeight(_kPlayListHeaderHeight);
-}
-
-class _MyPlayListsHeaderState extends State<_MyPlayListsHeader> with SingleTickerProviderStateMixin {
-  TabController _controller;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = TabController(length: 2, vsync: this);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      color: Theme.of(context).scaffoldBackgroundColor,
-      child: TabBar(
-        controller: _controller,
-        labelColor: Theme.of(context).textTheme.bodyText1.color,
-        indicatorSize: TabBarIndicatorSize.label,
-        tabs: [
-          Tab(text: context.strings["created_song_list"]),
-          Tab(text: context.strings["favorite_song_list"]),
-        ],
-      ),
-    );
-  }
-}
-
-class _UserPlayListSection extends StatelessWidget {
-  const _UserPlayListSection({
-    Key key,
-    @required GlobalKey<LoaderState> loaderKey,
-    @required this.userId,
-  })  : _loaderKey = loaderKey,
-        super(key: key);
-
-  final GlobalKey<LoaderState> _loaderKey;
-  final int userId;
-
-  @override
-  Widget build(BuildContext context) {
-    if (!UserAccount.of(context).isLogin) {
-      return _singleSliver(child: notLogin(context));
+  void _updateCurrentTabSelection(PlayListType type) async {
+    if (_tabController.index == type.index) {
+      return;
     }
-    return Loader<List<PlaylistDetail>>(
-        key: _loaderKey,
-        initialData: neteaseLocalData.getUserPlaylist(userId),
-        loadTask: () {
-          return neteaseRepository.userPlaylist(userId);
-        },
-        loadingBuilder: (context) {
-          return _singleSliver(child: Container());
-        },
-        errorBuilder: (context, result) {
-          return _singleSliver(child: Loader.buildSimpleFailedWidget(context, result));
-        },
-        builder: (context, result) {
-          final created = result.where((p) => p.creator["userId"] == userId);
-          final subscribed = result.where((p) => p.creator["userId"] != userId);
-          return SliverList(
-            delegate: SliverChildListDelegate([
-              SizedBox(height: 10),
-              _PlayListsGroupHeader(name: context.strings["created_song_list"], count: created.length),
-              ..._playlistWidget(created),
-              SizedBox(height: 10),
-              _PlayListsGroupHeader(name: context.strings["favorite_song_list"], count: subscribed.length),
-              ..._playlistWidget(subscribed),
-              SizedBox(height: 10),
-            ]),
-          );
-        });
-  }
-
-  static Iterable<Widget> _playlistWidget(Iterable<PlaylistDetail> details) {
-    if (details.isEmpty) {
-      return const [];
+    if (_tabController.indexIsChanging || _scrollerAnimating || _tabAnimating) {
+      return;
     }
-    final list = details.toList(growable: false);
-    final List<Widget> widgets = <Widget>[];
-    for (int i = 0; i < list.length; i++) {
-      widgets.add(_MyPlayListTile(data: list[i], enableBottomRadius: i == list.length - 1));
-    }
-    return widgets;
-  }
-
-  static Widget _singleSliver({@required Widget child}) {
-    return SliverList(
-      delegate: SliverChildListDelegate([child]),
-    );
-  }
-
-  Widget notLogin(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.only(top: 40),
-      child: Column(
-        children: [
-          Text(context.strings["playlist_login_description"]),
-          TextButton(
-            child: Text(context.strings["login_right_now"]),
-            onPressed: () {
-              Navigator.of(context).pushNamed(pageLogin);
-            },
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _MyPlayListTile extends StatelessWidget {
-  final PlaylistDetail data;
-  final bool enableBottomRadius;
-
-  const _MyPlayListTile({Key key, @required this.data, this.enableBottomRadius = false}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 16),
-      child: Material(
-        borderRadius: enableBottomRadius ? const BorderRadius.vertical(bottom: Radius.circular(4)) : null,
-        color: Theme.of(context).backgroundColor,
-        child: Container(
-          child: PlaylistTile(playlist: data),
-        ),
-      ),
-    );
-  }
-}
-
-class _PlayListsGroupHeader extends StatelessWidget {
-  final String name;
-  final int count;
-
-  const _PlayListsGroupHeader({Key key, @required this.name, this.count}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Material(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(4)),
-        color: Theme.of(context).backgroundColor,
-        child: Container(
-          height: 40,
-          padding: EdgeInsets.symmetric(horizontal: 8),
-          child: Row(
-            children: [
-              Text("$name($count)"),
-              Spacer(),
-              Icon(Icons.add),
-              Icon(Icons.more_vert),
-            ],
-          ),
-        ),
-      ),
-    );
+    _tabAnimating = true;
+    _tabController.animateTo(type.index, duration: kTabScrollDuration);
+    Future.delayed(kTabScrollDuration + Duration(milliseconds: 100)).whenComplete(() {
+      _tabAnimating = false;
+    });
   }
 }
