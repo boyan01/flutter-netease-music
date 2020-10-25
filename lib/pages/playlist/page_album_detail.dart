@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:intl/message_format.dart';
+import 'package:overlay_support/overlay_support.dart';
+import 'package:quiet/component.dart';
 import 'package:quiet/component/utils/utils.dart';
 import 'package:quiet/material.dart';
+import 'package:quiet/material/flexible_app_bar.dart';
 import 'package:quiet/pages/artists/page_artist_detail.dart';
 import 'package:quiet/pages/comments/page_comment.dart';
 import 'package:quiet/part/part.dart';
@@ -8,7 +13,6 @@ import 'package:quiet/repository/netease.dart';
 
 import 'music_list.dart';
 import 'page_playlist_detail_selection.dart';
-import 'package:quiet/material/flexible_app_bar.dart';
 
 class AlbumDetailPage extends StatefulWidget {
   final int albumId;
@@ -119,7 +123,16 @@ class _AlbumDetailHeader extends StatelessWidget {
             return PlaylistSelectionPage(list: musicList);
           }));
         },
-        onShareTap: () => notImplemented(context),
+        onShareTap: () {
+          final content = MessageFormat(context.strings["album_share_content"]).format({
+            "artistName": artist.map((e) => e.name).join(','),
+            "albumName": album["name"],
+            "albumId": album["id"].toString(),
+            "sharedUserId": UserAccount.of(context, rebuildOnChange: false).userId.toString(),
+          });
+          Clipboard.setData(ClipboardData(text: content));
+          toast(context.strings["share_content_copied"]);
+        },
         content: Container(
           padding: EdgeInsets.symmetric(vertical: 16),
           height: 150,

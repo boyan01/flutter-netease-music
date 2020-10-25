@@ -38,6 +38,11 @@ class QuietLocalizations {
       "playlist_login_description": "Login to discover your playlists.",
       "created_song_list": "Created Song List",
       "favorite_song_list": "Favorite Song List",
+      "playlist_share_content": "The PlayList created by {username}「{title}」: "
+          "http://music.163.com/playlist/{playlistId}/{userId}/?userid={shareUserId} (From @NeteaseCouldMusic)",
+      "share_content_copied": "Share content has copied to clipboard.",
+      "album_share_content": "The {artistName}'s album《{albumName}》: "
+          "http://music.163.com/album/{albumId}/?userid={sharedUserId} (From @NeteaseCouldMusic)"
     },
     "zh": {
       "main_page_tab_title_my": "我的",
@@ -54,6 +59,11 @@ class QuietLocalizations {
       "playlist_login_description": "登录以加载你的私人播放列表。",
       "created_song_list": "创建歌单",
       "favorite_song_list": "收藏歌单",
+      "playlist_share_content": "分享{username}创建的歌单「{title}」: "
+          "http://music.163.com/playlist/{playlistId}/{userId}/?userid={shareUserId} (来自@网易云音乐)",
+      "share_content_copied": "分享内容已复制到剪切板",
+      "album_share_content": "分享{artistName}的专辑《{albumName}》: "
+          "http://music.163.com/album/{albumId}/?userid={sharedUserId} (来自@网易云音乐)"
     },
   };
 

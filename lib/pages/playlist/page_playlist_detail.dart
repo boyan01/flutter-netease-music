@@ -4,7 +4,10 @@ import 'dart:ui';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:intl/message_format.dart';
 import 'package:overlay_support/overlay_support.dart';
+import 'package:quiet/component.dart';
 import 'package:quiet/component/utils/utils.dart';
 import 'package:quiet/material.dart';
 import 'package:quiet/material/flexible_app_bar.dart';
@@ -456,7 +459,17 @@ class _PlaylistDetailHeader extends StatelessWidget {
             }));
           }
         },
-        onShareTap: () => toast("未接入！"),
+        onShareTap: () {
+          final String content = MessageFormat(context.strings["playlist_share_content"]).format({
+            "username": playlist.creator["nickname"],
+            "title": playlist.name,
+            "playlistId": playlist.id.toString(),
+            "userId": playlist.creator["userId"].toString(),
+            "shareUserId": UserAccount.of(context, rebuildOnChange: false).userId.toString(),
+          });
+          Clipboard.setData(ClipboardData(text: content));
+          toast(context.strings["share_content_copied"]);
+        },
         content: Container(
           height: 146,
           padding: EdgeInsets.only(top: 20),
