@@ -42,6 +42,9 @@ dependencies:
   scrollable_positioned_list: ^0.1.7
   hive: ^1.4.4
 
+dependency_overrides:
+  intl: ^0.17.0-nullsafety.2
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

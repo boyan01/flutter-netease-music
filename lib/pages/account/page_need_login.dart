@@ -37,7 +37,7 @@ class PageNeedLogin extends StatelessWidget {
       ),
     );
 
-    if (Scaffold.of(context, nullOk: true) == null) {
+    if (Scaffold.maybeOf(context) == null) {
       widget = Scaffold(body: widget, appBar: AppBar(title: Text('需要登陆')));
     }
     return widget;
