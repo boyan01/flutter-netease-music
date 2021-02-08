@@ -29,13 +29,13 @@ dependencies:
   intl: ^0.16.1
   intl_translation: ^0.17.10+1
   sembast: ^1.13.2
-  scoped_model: ^1.0.1
+  scoped_model: ^1.1.0
   loader:
     git: https://github.com/boyan01/loader.git
   encrypt: ^3.0.0
   netease_music_api:
     path: cloud_music_api/
-  overlay_support: ^1.0.1
+  overlay_support: ^1.2.0-nullsafety.0
   music_player:
     path: music_service/
   provider: ^4.0.1

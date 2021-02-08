@@ -11,7 +11,6 @@ class LandscapePlayingPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      resizeToAvoidBottomPadding: false,
       body: Stack(
         children: <Widget>[
           BlurBackground(music: context.listenPlayerValue.current),

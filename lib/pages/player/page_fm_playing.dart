@@ -23,7 +23,6 @@ class PagePlayingFm extends StatelessWidget {
     }
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      resizeToAvoidBottomPadding: false,
       body: Stack(
         children: <Widget>[
           BlurBackground(music: current),
