@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:quiet/model/playlist_detail.dart';
 import 'package:flutter/foundation.dart';
+import 'package:sembast/sembast.dart';
 
 import 'database.dart';
 
@@ -9,7 +10,8 @@ LocalData neteaseLocalData = LocalData._();
 
 class LocalData {
   ///netData 类型必须是可以放入 [store] 中的类型
-  static Stream<T> withData<T>(String key, Future<T> netData, {void onNetError(dynamic e)}) async* {
+  static Stream<T> withData<T>(String key, Future<T> netData,
+      {void onNetError(dynamic e)}) async* {
     final data = neteaseLocalData[key];
     if (data != null) {
       final cached = await data;
@@ -30,17 +32,6 @@ class LocalData {
 
   LocalData._();
 
-  Store _store;
-
-  Future<Store> get store async {
-    if (_store != null) {
-      return _store;
-    }
-    final db = await getApplicationDatabase();
-    _store = db.getStore("netease");
-    return _store;
-  }
-
   FutureOr operator [](key) async {
     return get(key);
   }
@@ -50,15 +41,18 @@ class LocalData {
   }
 
   Future<T> get<T>(dynamic key) async {
-    final result = await (await store).get(key);
+    final Database db = await getApplicationDatabase();
+    final dynamic result = StoreRef.main().record(key).get(db);
     if (result is T) {
       return result;
     }
+    assert(false, "the result of $key is not subtype of $T");
     return null;
   }
 
   Future _put(dynamic value, [dynamic key]) async {
-    return (await store).put(value, key);
+    final Database db = await getApplicationDatabase();
+    return StoreRef.main().record(key).put(db, value);
   }
 
   Future<List<PlaylistDetail>> getUserPlaylist(int userId) async {
@@ -66,7 +60,10 @@ class LocalData {
     if (data == null) {
       return null;
     }
-    final result = (data as List).cast<Map>().map((m) => PlaylistDetail.fromMap(m)).toList();
+    final result = (data as List)
+        .cast<Map>()
+        .map((m) => PlaylistDetail.fromMap(m))
+        .toList();
     return result;
   }
 

@@ -8,6 +8,7 @@ description: a music player
 # build by specifying --build-name and --build-number, respectively.
 # Read more about versioning at semver.org.
 version: 1.0.0+1
+publish_to: none
 
 environment:
   sdk: ">=2.9.0 <3.0.0"
@@ -28,7 +29,7 @@ dependencies:
   url_launcher: ^5.5.0
   intl: ^0.16.1
   intl_translation: ^0.17.10+1
-  sembast: ^1.13.2
+  sembast: ^3.0.0+2
   scoped_model: ^1.1.0
   loader:
     git: https://github.com/boyan01/loader.git
