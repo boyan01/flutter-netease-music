@@ -23,7 +23,7 @@ Imitation of [NeteaseMusic](https://music.163.com/#/download).
  flutter run --profile
  ```
 
-## Denpendency backend
+## Dependency backend
 
 * Toast and InApp notification： [**overlay_support**](https://github.com/boyan01/overlay_support)
 * music player:  [**flutter-music-player**](https://github.com/boyan01/flutter-music-player)
