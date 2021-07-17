@@ -48,12 +48,15 @@ class _DetailPage extends StatelessWidget {
               headerSliverBuilder: (context, _) {
                 return [
                   SliverOverlapAbsorber(
-                      handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context), sliver: _UserDetailAppBar(user))
+                      handle: NestedScrollView.sliverOverlapAbsorberHandleFor(
+                          context),
+                      sliver: _UserDetailAppBar(user))
                 ];
               },
               body: SafeArea(
                 child: Padding(
-                  padding: const EdgeInsets.only(top: kToolbarHeight + kTextTabBarHeight),
+                  padding: const EdgeInsets.only(
+                      top: kToolbarHeight + kTextTabBarHeight),
                   child: TabBarView(children: <Widget>[
                     TabMusic(user.profile),
                     TabEvents(),
@@ -79,36 +82,44 @@ class _UserDetailAppBar extends StatelessWidget {
       expandedHeight: 330,
       flexibleSpace: FlexibleDetailBar(
         background: FlexShadowBackground(
-          child: Image(height: 300, width: 300, fit: BoxFit.cover, image: CachedImage(user.profile.backgroundUrl)),
+          child: Image(
+              height: 300,
+              width: 300,
+              fit: BoxFit.cover,
+              image: CachedImage(user.profile.backgroundUrl)),
         ),
         content: Padding(
           padding: EdgeInsets.symmetric(horizontal: 20),
-          child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
-            Spacer(),
-            Row(
+          child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                RoundedImage(user.profile.avatarUrl, size: 60),
-              ],
-            ),
-            SizedBox(height: 10),
-            Text(user.profile.nickname, style: TextStyle(fontSize: 17, fontWeight: FontWeight.w400)),
-            SizedBox(height: 6),
-            Row(children: <Widget>[
-              InkWell(
-                  child: Text('关注:${user.profile.follows}'),
-                  onTap: () {
-                    toast('关注');
-                  }),
-              VerticalDivider(),
-              InkWell(
-                child: Text('粉丝:${user.profile.followeds}'),
-                onTap: () {
-                  toast('粉丝');
-                },
-              ),
-            ]),
-            SizedBox(height: 16),
-          ]),
+                Spacer(),
+                Row(
+                  children: <Widget>[
+                    RoundedImage(user.profile.avatarUrl, size: 60),
+                  ],
+                ),
+                SizedBox(height: 10),
+                Text(user.profile.nickname,
+                    style:
+                        TextStyle(fontSize: 17, fontWeight: FontWeight.w400)),
+                SizedBox(height: 6),
+                Row(children: <Widget>[
+                  InkWell(
+                      child: Text('关注:${user.profile.follows}'),
+                      onTap: () {
+                        toast('关注');
+                      }),
+                  VerticalDivider(),
+                  InkWell(
+                    child: Text('粉丝:${user.profile.followeds}'),
+                    onTap: () {
+                      toast('粉丝');
+                    },
+                  ),
+                ]),
+                SizedBox(height: 16),
+              ]),
         ),
         builder: (context, t) {
           return AppBar(
@@ -118,7 +129,8 @@ class _UserDetailAppBar extends StatelessWidget {
             backgroundColor: Colors.transparent,
             actions: <Widget>[
               IconButton(
-                  icon: Icon(Icons.more_vert, color: Theme.of(context).primaryIconTheme.color),
+                  icon: Icon(Icons.more_vert,
+                      color: Theme.of(context).primaryIconTheme.color),
                   onPressed: () {
                     //TODO
                     toast('todo');

@@ -92,7 +92,8 @@ class _PortraitPlayingListContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 16),
-      padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+      padding:
+          EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
       child: Material(
         borderRadius: BorderRadius.circular(8),
         color: Theme.of(context).scaffoldBackgroundColor,
@@ -112,7 +113,8 @@ class _LandscapePlayingListContainer extends StatelessWidget {
     return Center(
       child: Container(
         margin: EdgeInsets.symmetric(horizontal: 16),
-        padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+        padding:
+            EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
         width: 520,
         child: Material(
           borderRadius: BorderRadius.circular(8),
@@ -142,11 +144,14 @@ class _Header extends StatelessWidget {
           Spacer(),
           FlatButton.icon(
               onPressed: () async {
-                final ids = context.playList.queue.map((m) => int.parse(m.mediaId)).toList();
+                final ids = context.playList.queue
+                    .map((m) => int.parse(m.mediaId))
+                    .toList();
                 if (ids.isEmpty) {
                   return;
                 }
-                final succeed = await PlaylistSelectorDialog.addSongs(context, ids);
+                final succeed =
+                    await PlaylistSelectorDialog.addSongs(context, ids);
                 if (succeed == null) {
                   return;
                 }
@@ -154,7 +159,8 @@ class _Header extends StatelessWidget {
                   showSimpleNotification(Text("添加到收藏成功"));
                 } else {
                   showSimpleNotification(Text("添加到收藏失败"),
-                      leading: Icon(Icons.error), background: Theme.of(context).errorColor);
+                      leading: Icon(Icons.error),
+                      background: Theme.of(context).errorColor);
                 }
               },
               icon: Icon(Icons.add_box),
@@ -210,8 +216,10 @@ class _MusicTile extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.only(left: 8),
         height: _HEIGHT_MUSIC_TILE,
-        decoration:
-            BoxDecoration(border: Border(bottom: BorderSide(color: Theme.of(context).dividerColor, width: 0.3))),
+        decoration: BoxDecoration(
+            border: Border(
+                bottom: BorderSide(
+                    color: Theme.of(context).dividerColor, width: 0.3))),
         child: Row(
           children: <Widget>[
             leading,

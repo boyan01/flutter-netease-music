@@ -18,7 +18,8 @@ class _MyDjPageState extends State<MyDjPage> {
       ),
       body: ListView(
         children: <Widget>[
-          _ListTitle(title: '我创建的电台(${Counter.of(context).createDjRadioCount})'),
+          _ListTitle(
+              title: '我创建的电台(${Counter.of(context).createDjRadioCount})'),
           _SectionMyCreated(),
           _ListTitle(title: '我订阅的电台(${Counter.of(context).djRadioCount})'),
           _SectionSubscribed(),
@@ -116,7 +117,8 @@ class _SectionMyCreated extends StatelessWidget {
   Widget build(BuildContext context) {
     if (UserAccount.of(context).isLogin) {
       return Loader<List<Map>>(
-          loadTask: () => neteaseRepository.userDj(UserAccount.of(context).userId),
+          loadTask: () =>
+              neteaseRepository.userDj(UserAccount.of(context).userId),
           loadingBuilder: (context) {
             return Loader.buildSimpleLoadingWidget(context);
           },
@@ -125,7 +127,8 @@ class _SectionMyCreated extends StatelessWidget {
             final widgets = <Widget>[];
             widgets.add(DividerWrapper(
               child: ListTile(
-                leading: Icon(Icons.mic_none, color: Theme.of(context).primaryColor),
+                leading:
+                    Icon(Icons.mic_none, color: Theme.of(context).primaryColor),
                 title: Text('申请做主播'),
                 trailing: Icon(Icons.chevron_right),
                 onTap: () {

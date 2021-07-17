@@ -11,7 +11,8 @@ class RecordPage extends StatelessWidget {
   ///could be null
   final String username;
 
-  const RecordPage({Key key, @required this.uid, this.username}) : super(key: key);
+  const RecordPage({Key key, @required this.uid, this.username})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +49,8 @@ class _RecordSection extends StatefulWidget {
   _RecordSectionState createState() => _RecordSectionState();
 }
 
-class _RecordSectionState extends State<_RecordSection> with AutomaticKeepAliveClientMixin {
+class _RecordSectionState extends State<_RecordSection>
+    with AutomaticKeepAliveClientMixin {
   static const _keys = ['allData', 'weekData'];
 
   @override
@@ -62,7 +64,9 @@ class _RecordSectionState extends State<_RecordSection> with AutomaticKeepAliveC
       builder: (context, result) {
         debugPrint('Record(${widget.type}) result : $result');
         List data = result[_keys[widget.type]];
-        return _RecordMusicList(type: widget.type, recordList: data.cast<Map>().map(_RecordMusic.fromJson).toList());
+        return _RecordMusicList(
+            type: widget.type,
+            recordList: data.cast<Map>().map(_RecordMusic.fromJson).toList());
       },
     );
   }

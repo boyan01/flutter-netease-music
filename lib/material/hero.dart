@@ -5,7 +5,8 @@ class QuietHero extends StatelessWidget {
   final Object tag;
   final Widget child;
 
-  const QuietHero({Key key, @required this.tag, @required this.child}) : super(key: key);
+  const QuietHero({Key key, @required this.tag, @required this.child})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {

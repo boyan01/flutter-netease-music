@@ -14,7 +14,8 @@ class PlayListsGroupHeader extends StatelessWidget {
   final String name;
   final int count;
 
-  const PlayListsGroupHeader({Key key, @required this.name, this.count}) : super(key: key);
+  const PlayListsGroupHeader({Key key, @required this.name, this.count})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +56,9 @@ class MainPlayListTile extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 16),
       child: Material(
-        borderRadius: enableBottomRadius ? const BorderRadius.vertical(bottom: Radius.circular(4)) : null,
+        borderRadius: enableBottomRadius
+            ? const BorderRadius.vertical(bottom: Radius.circular(4))
+            : null,
         color: Theme.of(context).backgroundColor,
         child: Container(
           child: PlaylistTile(playlist: data),
@@ -75,7 +78,8 @@ class MyPlayListsHeaderDelegate extends SliverPersistentHeaderDelegate {
   MyPlayListsHeaderDelegate(this.tabController);
 
   @override
-  Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
+  Widget build(
+      BuildContext context, double shrinkOffset, bool overlapsContent) {
     return _MyPlayListsHeader(controller: tabController);
   }
 
@@ -91,7 +95,8 @@ class MyPlayListsHeaderDelegate extends SliverPersistentHeaderDelegate {
   }
 }
 
-class _MyPlayListsHeader extends StatelessWidget implements PreferredSizeWidget {
+class _MyPlayListsHeader extends StatelessWidget
+    implements PreferredSizeWidget {
   final TabController controller;
 
   const _MyPlayListsHeader({Key key, this.controller}) : super(key: key);
@@ -126,7 +131,8 @@ class PlayListSliverKey extends ValueKey {
   final int createdPosition;
   final int favoritePosition;
 
-  const PlayListSliverKey({this.createdPosition, this.favoritePosition}) : super("_PlayListSliverKey");
+  const PlayListSliverKey({this.createdPosition, this.favoritePosition})
+      : super("_PlayListSliverKey");
 }
 
 class UserPlayListSection extends StatefulWidget {
@@ -183,7 +189,10 @@ class _UserPlayListSectionState extends State<UserPlayListSection> {
     }
     final offset = global.childMainAxisPosition(child);
     const height = _kPlayListHeaderHeight + _kPlayListDividerHeight / 2;
-    PlayListTypeNotification(type: offset > height ? PlayListType.created : PlayListType.favorite).dispatch(context);
+    PlayListTypeNotification(
+            type:
+                offset > height ? PlayListType.created : PlayListType.favorite)
+        .dispatch(context);
   }
 
   @override
@@ -200,20 +209,28 @@ class _UserPlayListSectionState extends State<UserPlayListSection> {
           return _singleSliver(child: Container());
         },
         errorBuilder: (context, result) {
-          return _singleSliver(child: Loader.buildSimpleFailedWidget(context, result));
+          return _singleSliver(
+              child: Loader.buildSimpleFailedWidget(context, result));
         },
         builder: (context, result) {
-          final created = result.where((p) => p.creator["userId"] == widget.userId);
-          final subscribed = result.where((p) => p.creator["userId"] != widget.userId);
+          final created =
+              result.where((p) => p.creator["userId"] == widget.userId);
+          final subscribed =
+              result.where((p) => p.creator["userId"] != widget.userId);
           _dividerIndex = 2 + created.length;
           return SliverList(
-            key: PlayListSliverKey(createdPosition: 1, favoritePosition: 3 + created.length),
+            key: PlayListSliverKey(
+                createdPosition: 1, favoritePosition: 3 + created.length),
             delegate: SliverChildListDelegate.fixed([
               SizedBox(height: _kPlayListDividerHeight),
-              PlayListsGroupHeader(name: context.strings["created_song_list"], count: created.length),
+              PlayListsGroupHeader(
+                  name: context.strings["created_song_list"],
+                  count: created.length),
               ..._playlistWidget(created),
               SizedBox(height: _kPlayListDividerHeight, key: _dividerKey),
-              PlayListsGroupHeader(name: context.strings["favorite_song_list"], count: subscribed.length),
+              PlayListsGroupHeader(
+                  name: context.strings["favorite_song_list"],
+                  count: subscribed.length),
               ..._playlistWidget(subscribed),
               SizedBox(height: _kPlayListDividerHeight),
             ], addAutomaticKeepAlives: false),
@@ -245,7 +262,8 @@ class _UserPlayListSectionState extends State<UserPlayListSection> {
     final list = details.toList(growable: false);
     final List<Widget> widgets = <Widget>[];
     for (int i = 0; i < list.length; i++) {
-      widgets.add(MainPlayListTile(data: list[i], enableBottomRadius: i == list.length - 1));
+      widgets.add(MainPlayListTile(
+          data: list[i], enableBottomRadius: i == list.length - 1));
     }
     return widgets;
   }

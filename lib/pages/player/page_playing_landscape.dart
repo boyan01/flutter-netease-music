@@ -16,7 +16,8 @@ class LandscapePlayingPage extends StatelessWidget {
           BlurBackground(music: context.listenPlayerValue.current),
           Padding(
             padding: EdgeInsets.only(
-              bottom: MediaQuery.of(context).padding.bottom + MediaQuery.of(context).viewInsets.bottom,
+              bottom: MediaQuery.of(context).padding.bottom +
+                  MediaQuery.of(context).viewInsets.bottom,
             ),
             child: Row(
               children: <Widget>[
@@ -54,7 +55,8 @@ class _LayoutLyric extends StatelessWidget {
     return Column(
       children: <Widget>[
         PlayingTitle(music: context.listenPlayerValue.current),
-        Expanded(child: PlayingLyricView(music: context.listenPlayerValue.current)),
+        Expanded(
+            child: PlayingLyricView(music: context.listenPlayerValue.current)),
         PlayingOperationBar(),
         SizedBox(height: 16),
       ],

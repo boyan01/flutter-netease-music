@@ -28,7 +28,8 @@ class BoxWithBottomPlayerController extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (context.findAncestorWidgetOfExactType<DisableBottomController>() != null) {
+    if (context.findAncestorWidgetOfExactType<DisableBottomController>() !=
+        null) {
       return child;
     }
 
@@ -66,14 +67,16 @@ class BottomControllerBar extends StatelessWidget {
     return InkWell(
       onTap: () {
         if (music != null) {
-          context.rootNavigator.pushNamed(queue.isPlayingFm ? pageFmPlaying : pagePlaying);
+          context.rootNavigator
+              .pushNamed(queue.isPlayingFm ? pageFmPlaying : pagePlaying);
         }
       },
       child: Card(
         margin: const EdgeInsets.all(0),
         shape: const RoundedRectangleBorder(
-            borderRadius:
-                const BorderRadius.only(topLeft: const Radius.circular(4.0), topRight: const Radius.circular(4.0))),
+            borderRadius: const BorderRadius.only(
+                topLeft: const Radius.circular(4.0),
+                topRight: const Radius.circular(4.0))),
         child: Container(
           height: 56,
           margin: EdgeInsets.only(bottom: bottomPadding),
@@ -113,7 +116,8 @@ class BottomControllerBar extends StatelessWidget {
                       Padding(padding: const EdgeInsets.only(top: 2)),
                       DefaultTextStyle(
                         child: ProgressTrackingContainer(
-                          builder: (context) => _SubTitleOrLyric(music.subTitle),
+                          builder: (context) =>
+                              _SubTitleOrLyric(music.subTitle),
                           player: context.player,
                         ),
                         maxLines: 1,
@@ -153,7 +157,9 @@ class _SubTitleOrLyric extends StatelessWidget {
     if (!playingLyric.hasLyric) {
       return Text(subtitle);
     }
-    final line = playingLyric.lyric.getLineByTimeStamp(context.playbackState.positionWithOffset, 0)?.line;
+    final line = playingLyric.lyric
+        .getLineByTimeStamp(context.playbackState.positionWithOffset, 0)
+        ?.line;
     if (line == null || line.isEmpty) {
       return Text(subtitle);
     }

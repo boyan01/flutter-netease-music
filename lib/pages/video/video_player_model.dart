@@ -11,8 +11,10 @@ import 'music_video_datail.dart';
 
 ///播放中mv的model
 class VideoPlayerModel extends Model {
-  static VideoPlayerModel of(BuildContext context, {bool rebuildOnChange = true}) {
-    return ScopedModel.of<VideoPlayerModel>(context, rebuildOnChange: rebuildOnChange);
+  static VideoPlayerModel of(BuildContext context,
+      {bool rebuildOnChange = true}) {
+    return ScopedModel.of<VideoPlayerModel>(context,
+        rebuildOnChange: rebuildOnChange);
   }
 
   VideoPlayerModel(this.data, {subscribed = false}) {
@@ -36,7 +38,8 @@ class VideoPlayerModel extends Model {
       _videoPlayerController.dispose();
     }
 
-    _videoPlayerController = _VideoPlayerControllerWrapper.network(brs[imageResolution]);
+    _videoPlayerController =
+        _VideoPlayerControllerWrapper.network(brs[imageResolution]);
     _videoPlayerController.initialize().then((_) {
       _videoPlayerController.seekTo(moment);
       if (play) _videoPlayerController.play();
@@ -92,10 +95,13 @@ class VideoPlayerModel extends Model {
 ///收藏或者取消收藏mv
 void subscribeOrUnSubscribeMv(BuildContext context) async {
   final model = VideoPlayerModel.of(context);
-  if (model.subscribed && !await showConfirmDialog(context, Text('确定要取消收藏吗？'), positiveLabel: '不再收藏')) {
+  if (model.subscribed &&
+      !await showConfirmDialog(context, Text('确定要取消收藏吗？'),
+          positiveLabel: '不再收藏')) {
     return;
   }
-  bool succeed = await showLoaderOverlay(context, model.subscribe(!model.subscribed));
+  bool succeed =
+      await showLoaderOverlay(context, model.subscribe(!model.subscribed));
   if (!succeed) {
     showSimpleNotification(Text('${model.subscribed ? '取消收藏' : '收藏'}失败'));
   }
@@ -105,7 +111,8 @@ void subscribeOrUnSubscribeMv(BuildContext context) async {
 ///VideoPlayerController被 dispose 后,有可能会被 VideoPlayer 调用 removeListener 方法,从而引发错误
 ///所以包裹了一层保护
 class _VideoPlayerControllerWrapper extends VideoPlayerController {
-  _VideoPlayerControllerWrapper.network(String dataSource) : super.network(dataSource);
+  _VideoPlayerControllerWrapper.network(String dataSource)
+      : super.network(dataSource);
 
   bool _disposed = false;
 

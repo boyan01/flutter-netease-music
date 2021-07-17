@@ -18,7 +18,8 @@ class SongsResultSection extends StatefulWidget {
   }
 }
 
-class SongsResultSectionState extends State<SongsResultSection> with AutomaticKeepAliveClientMixin {
+class SongsResultSectionState extends State<SongsResultSection>
+    with AutomaticKeepAliveClientMixin {
   @override
   Widget build(BuildContext context) {
     super.build(context);
@@ -28,25 +29,31 @@ class SongsResultSectionState extends State<SongsResultSection> with AutomaticKe
       onMusicTap: (context, item) async {
         var playable = await neteaseRepository.checkMusic(item.id);
         if (!playable) {
-          showDialog(context: context, builder: (context) => DialogNoCopyRight());
+          showDialog(
+              context: context, builder: (context) => DialogNoCopyRight());
           return;
         }
         final song = await neteaseRepository.getMusicDetail(item.id);
         if (song.isValue) {
-          final metadata = mapJsonToMusic(song.asValue.value, artistKey: "ar", albumKey: "al").metadata;
+          final metadata = mapJsonToMusic(song.asValue.value,
+                  artistKey: "ar", albumKey: "al")
+              .metadata;
           context.player
             ..insertToNext(metadata)
             ..transportControls.playFromMediaId(metadata.mediaId);
         } else {
           showSimpleNotification(Text("播放歌曲失败!"),
-              leading: Icon(Icons.notification_important), background: Theme.of(context).errorColor);
+              leading: Icon(Icons.notification_important),
+              background: Theme.of(context).errorColor);
         }
       },
       child: AutoLoadMoreList(
         loadMore: (count) async {
-          final result = await neteaseRepository.search(widget.query, NeteaseSearchType.song, offset: count);
+          final result = await neteaseRepository
+              .search(widget.query, NeteaseSearchType.song, offset: count);
           if (result.isValue) {
-            return LoadMoreResult(result.asValue.value["result"]["songs"] ?? []);
+            return LoadMoreResult(
+                result.asValue.value["result"]["songs"] ?? []);
           }
           return result as Result<List>;
         },

@@ -22,7 +22,8 @@ abstract class Cache<T> {
 }
 
 class FileCacheProvider {
-  FileCacheProvider(this.directory, {@required this.maxSize}) : assert(directory != null);
+  FileCacheProvider(this.directory, {@required this.maxSize})
+      : assert(directory != null);
 
   final Directory directory;
 
@@ -38,7 +39,8 @@ class FileCacheProvider {
     return _cacheFileForKey(key);
   }
 
-  File _cacheFileForKey(CacheKey key) => File(directory.path + "/" + key.getKey());
+  File _cacheFileForKey(CacheKey key) =>
+      File(directory.path + "/" + key.getKey());
 
   void touchFile(File file) {
     file.setLastModified(DateTime.now()).catchError((e) {
@@ -51,7 +53,8 @@ class FileCacheProvider {
       return;
     }
     _calculating = true;
-    compute(_fileLru, {"path": directory.path, "maxSize": maxSize}, debugLabel: "file lruc check size")
+    compute(_fileLru, {"path": directory.path, "maxSize": maxSize},
+            debugLabel: "file lruc check size")
         .whenComplete(() {
       _calculating = false;
     });
@@ -64,7 +67,8 @@ Future<void> _fileLru(Map params) async {
   if (!directory.existsSync()) {
     return;
   }
-  List<File> files = directory.listSync().where((e) => e is File).cast<File>().toList();
+  List<File> files =
+      directory.listSync().where((e) => e is File).cast<File>().toList();
   files.sort((a, b) => a.lastModifiedSync().compareTo(b.lastModifiedSync()));
 
   int totalSize = 0;

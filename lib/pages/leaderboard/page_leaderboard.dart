@@ -41,7 +41,10 @@ class _Leaderboard extends StatelessWidget {
         itemCount: data.length - 4,
         physics: NeverScrollableScrollPhysics(),
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 3, childAspectRatio: 10 / 13.5, mainAxisSpacing: 4, crossAxisSpacing: 8),
+            crossAxisCount: 3,
+            childAspectRatio: 10 / 13.5,
+            mainAxisSpacing: 4,
+            crossAxisSpacing: 8),
         itemBuilder: (context, int i) {
           return _ItemLeaderBoard2(data[i + 4]);
         }));
@@ -62,7 +65,10 @@ class _ItemTitle extends StatelessWidget {
       margin: EdgeInsets.only(top: 8, left: 16, bottom: 4),
       child: Text(
         title,
-        style: Theme.of(context).textTheme.subtitle1.copyWith(fontWeight: FontWeight.w800),
+        style: Theme.of(context)
+            .textTheme
+            .subtitle1
+            .copyWith(fontWeight: FontWeight.w800),
       ),
     );
   }
@@ -103,7 +109,10 @@ class _ItemLeaderBoard2 extends StatelessWidget {
                             gradient: LinearGradient(
                                 begin: Alignment.topCenter,
                                 end: Alignment.bottomCenter,
-                                colors: const [Colors.transparent, Colors.black45])),
+                                colors: const [
+                              Colors.transparent,
+                              Colors.black45
+                            ])),
                         child: Row(
                           children: <Widget>[
                             Spacer(),
@@ -166,7 +175,10 @@ class _ItemLeaderboard1 extends StatelessWidget {
                             gradient: LinearGradient(
                                 begin: Alignment.topCenter,
                                 end: Alignment.bottomCenter,
-                                colors: const [Colors.transparent, Colors.black45])),
+                                colors: const [
+                              Colors.transparent,
+                              Colors.black45
+                            ])),
                         child: Row(
                           children: <Widget>[
                             Spacer(),

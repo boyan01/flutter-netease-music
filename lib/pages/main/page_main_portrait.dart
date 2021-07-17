@@ -5,12 +5,14 @@ class _PortraitMainPage extends StatefulWidget {
   State<StatefulWidget> createState() => _MainPageState();
 }
 
-class _MainPageState extends State<_PortraitMainPage> with SingleTickerProviderStateMixin {
+class _MainPageState extends State<_PortraitMainPage>
+    with SingleTickerProviderStateMixin {
   TabController _tabController;
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  ProxyAnimation transitionAnimation = ProxyAnimation(kAlwaysDismissedAnimation);
+  ProxyAnimation transitionAnimation =
+      ProxyAnimation(kAlwaysDismissedAnimation);
 
   @override
   void initState() {
@@ -45,8 +47,12 @@ class _MainPageState extends State<_PortraitMainPage> with SingleTickerProviderS
             unselectedLabelColor: Theme.of(context).textTheme.caption.color,
             controller: _tabController,
             indicatorColor: Colors.transparent,
-            labelStyle: Theme.of(context).textTheme.bodyText1.copyWith(fontWeight: FontWeight.bold),
-            unselectedLabelStyle: Theme.of(context).textTheme.caption.copyWith(fontSize: 14),
+            labelStyle: Theme.of(context)
+                .textTheme
+                .bodyText1
+                .copyWith(fontWeight: FontWeight.bold),
+            unselectedLabelStyle:
+                Theme.of(context).textTheme.caption.copyWith(fontSize: 14),
             tabs: <Widget>[
               _PageTab(text: context.strings.main_page_tab_title_my),
               _PageTab(text: context.strings.main_page_tab_title_discover),
@@ -60,7 +66,8 @@ class _MainPageState extends State<_PortraitMainPage> with SingleTickerProviderS
         actions: <Widget>[
           IconButton(
             onPressed: () {
-              Navigator.push(context, NeteaseSearchPageRoute(transitionAnimation));
+              Navigator.push(
+                  context, NeteaseSearchPageRoute(transitionAnimation));
             },
             icon: Icon(Icons.search),
           )

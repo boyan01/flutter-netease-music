@@ -11,7 +11,8 @@ import 'package:quiet/repository/netease.dart';
 ///
 class WelcomeRepository {
   ///检测手机号是否已存在
-  static Future<Result<PhoneCheckResult>> checkPhoneExist(String phone, String countryCode) async {
+  static Future<Result<PhoneCheckResult>> checkPhoneExist(
+      String phone, String countryCode) async {
     final result = await neteaseRepository.doRequest(
       '/cellphone/existence/check',
       {'phone': phone, 'countrycode': countryCode},
@@ -23,9 +24,11 @@ class WelcomeRepository {
 
   /// Read emoji flags from assets.
   static Future<List<RegionFlag>> getRegions() async {
-    final jsonStr = await rootBundle.loadString("assets/emoji-flags.json", cache: false);
+    final jsonStr =
+        await rootBundle.loadString("assets/emoji-flags.json", cache: false);
     final flags = json.decode(jsonStr) as List;
-    final result = flags.cast<Map>().map((map) => RegionFlag.fromMap(map)).where((flag) {
+    final result =
+        flags.cast<Map>().map((map) => RegionFlag.fromMap(map)).where((flag) {
       return flag.dialCode != null && flag.dialCode.trim().isNotEmpty;
     }).toList();
     return result;

@@ -60,7 +60,8 @@ class UserAccount extends ChangeNotifier {
           logout();
         } else {
           // refresh user
-          final result = await neteaseRepository.getUserDetail(_userDetail.profile.userId);
+          final result =
+              await neteaseRepository.getUserDetail(_userDetail.profile.userId);
           if (result.isValue) {
             _userDetail = result.asValue.value;
             neteaseLocalData[_persistenceKey] = _userDetail.toJson();

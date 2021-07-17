@@ -106,8 +106,6 @@ class CommentList extends Model with AutoLoadMoreMixin {
   }
 }
 
-
-
 class Comment {
   User user;
   List<Object> beReplied;

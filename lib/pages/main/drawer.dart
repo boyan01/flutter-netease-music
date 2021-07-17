@@ -33,7 +33,8 @@ class MainNavigationDrawer extends StatelessWidget {
                         icon: Icon(Icons.format_quote),
                         title: Text("Star On GitHub"),
                         onTap: () {
-                          launch("https://github.com/boyan01/flutter-netease-music");
+                          launch(
+                              "https://github.com/boyan01/flutter-netease-music");
                         },
                       ),
                     ],
@@ -66,8 +67,11 @@ class MainNavigationDrawerTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (context.isLandscape) {
-      final background = selected ? Theme.of(context).primaryColor : Colors.transparent;
-      final foreground = selected ? Theme.of(context).primaryIconTheme.color : Theme.of(context).iconTheme.color;
+      final background =
+          selected ? Theme.of(context).primaryColor : Colors.transparent;
+      final foreground = selected
+          ? Theme.of(context).primaryIconTheme.color
+          : Theme.of(context).iconTheme.color;
       return Material(
         color: background,
         child: InkWell(
@@ -82,7 +86,8 @@ class MainNavigationDrawerTile extends StatelessWidget {
                   child: icon,
                 ),
                 SizedBox(height: 8),
-                DefaultTextStyle(style: TextStyle(color: foreground), child: title),
+                DefaultTextStyle(
+                    style: TextStyle(color: foreground), child: title),
               ],
             ),
           ),
@@ -116,7 +121,10 @@ class UserInfo extends StatelessWidget {
       currentAccountPicture: InkResponse(
         onTap: () {
           Navigator.push(
-              context, MaterialPageRoute(builder: (context) => UserDetailPage(userId: UserAccount.of(context).userId)));
+              context,
+              MaterialPageRoute(
+                  builder: (context) =>
+                      UserDetailPage(userId: UserAccount.of(context).userId)));
         },
         child: CircleAvatar(
           backgroundImage: CachedImage(profile.avatarUrl),
@@ -134,7 +142,8 @@ class UserInfo extends StatelessWidget {
             ),
             tooltip: "退出登陆",
             onPressed: () async {
-              if (await showConfirmDialog(context, Text('确认退出登录吗？'), positiveLabel: '退出登录')) {
+              if (await showConfirmDialog(context, Text('确认退出登录吗？'),
+                  positiveLabel: '退出登录')) {
                 UserAccount.of(context, rebuildOnChange: false).logout();
               }
             },
@@ -152,7 +161,8 @@ class UserInfo extends StatelessWidget {
       child: Container(
         constraints: BoxConstraints.expand(),
         child: DefaultTextStyle(
-          style: Theme.of(context).primaryTextTheme.caption.copyWith(fontSize: 14),
+          style:
+              Theme.of(context).primaryTextTheme.caption.copyWith(fontSize: 14),
           child: Center(
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -162,13 +172,19 @@ class UserInfo extends StatelessWidget {
                 SizedBox(height: 8),
                 FlatButton(
                     shape: RoundedRectangleBorder(
-                        side: BorderSide(color: Theme.of(context).primaryTextTheme.bodyText2.color.withOpacity(0.3)),
+                        side: BorderSide(
+                            color: Theme.of(context)
+                                .primaryTextTheme
+                                .bodyText2
+                                .color
+                                .withOpacity(0.3)),
                         borderRadius: BorderRadius.circular(20)),
                     padding: EdgeInsets.symmetric(horizontal: 40),
                     onPressed: () {
                       Navigator.pushNamed(context, pageLogin);
                     },
-                    textColor: Theme.of(context).primaryTextTheme.bodyText2.color,
+                    textColor:
+                        Theme.of(context).primaryTextTheme.bodyText2.color,
                     child: Text("立即登陆"))
               ],
             ),

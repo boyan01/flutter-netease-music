@@ -13,7 +13,8 @@ class PageSplash extends StatefulWidget {
 
   final AppBuilder builder;
 
-  const PageSplash({Key key, @required this.futures, @required this.builder}) : super(key: key);
+  const PageSplash({Key key, @required this.futures, @required this.builder})
+      : super(key: key);
 
   @override
   _PageSplashState createState() => _PageSplashState();

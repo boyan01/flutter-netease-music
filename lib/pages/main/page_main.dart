@@ -25,9 +25,13 @@ class MainPage extends StatelessWidget {
 extension LandscapeMainContext on BuildContext {
   /// Obtain the primary navigator for landscape mode.
   NavigatorState get landscapePrimaryNavigator =>
-      findAncestorStateOfType<_LandscapeMainPageState>()._landscapeNavigatorKey.currentState;
+      findAncestorStateOfType<_LandscapeMainPageState>()
+          ._landscapeNavigatorKey
+          .currentState;
 
   /// Obtain the secondary navigator for landscape mode.
   NavigatorState get landscapeSecondaryNavigator =>
-      findAncestorStateOfType<_LandscapeMainPageState>()._landscapeSecondaryNavigatorKey.currentState;
+      findAncestorStateOfType<_LandscapeMainPageState>()
+          ._landscapeSecondaryNavigatorKey
+          .currentState;
 }

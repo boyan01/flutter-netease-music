@@ -51,7 +51,8 @@ class Music {
   }
 
   @override
-  bool operator ==(Object other) => identical(this, other) || other is Music && id == other.id;
+  bool operator ==(Object other) =>
+      identical(this, other) || other is Music && id == other.id;
 
   @override
   int get hashCode => id.hashCode;
@@ -78,7 +79,8 @@ class Music {
         url: map["url"],
         album: Album.fromMap(map["album"]),
         mvId: map['mvId'] ?? 0,
-        artist: (map["artist"] as List).cast<Map>().map(Artist.fromMap).toList());
+        artist:
+            (map["artist"] as List).cast<Map>().map(Artist.fromMap).toList());
   }
 }
 

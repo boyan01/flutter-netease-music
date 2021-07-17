@@ -27,7 +27,8 @@ void main() {
   neteaseRepository = NeteaseRepository();
   api.debugPrint = debugPrint;
   Logger.root.onRecord.listen((record) {
-    debugPrint('${record.time} ${record.level.name} ${record.loggerName}: ${record.message}');
+    debugPrint(
+        '${record.time} ${record.level.name} ${record.loggerName}: ${record.message}');
   });
   runApp(PageSplash(
     futures: [
@@ -69,13 +70,16 @@ class MyApp extends StatelessWidget {
 
   final Box<Map> player;
 
-  const MyApp({Key key, @required this.setting, @required this.user, this.player}) : super(key: key);
+  const MyApp(
+      {Key key, @required this.setting, @required this.user, this.player})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return ScopedModel<Settings>(
       model: setting,
-      child: ScopedModelDescendant<Settings>(builder: (context, child, setting) {
+      child:
+          ScopedModelDescendant<Settings>(builder: (context, child, setting) {
         return Netease(
           user: user,
           child: Quiet(

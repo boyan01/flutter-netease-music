@@ -4,7 +4,8 @@ import 'package:quiet/pages/playlist/music_list.dart';
 import 'package:quiet/part/part.dart';
 
 class PlaylistInternalSearchDelegate extends SearchDelegate {
-  PlaylistInternalSearchDelegate(this.playlist) : assert(playlist != null && playlist.musicList != null);
+  PlaylistInternalSearchDelegate(this.playlist)
+      : assert(playlist != null && playlist.musicList != null);
 
   final PlaylistDetail playlist;
 
@@ -39,7 +40,9 @@ class PlaylistInternalSearchDelegate extends SearchDelegate {
     if (query.isEmpty) {
       return Container();
     }
-    var result = list?.where((m) => m.title.contains(query) || m.subTitle.contains(query))?.toList();
+    var result = list
+        ?.where((m) => m.title.contains(query) || m.subTitle.contains(query))
+        ?.toList();
     if (result == null || result.isEmpty) {
       return _EmptyResultSection(query);
     }

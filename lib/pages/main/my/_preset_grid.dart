@@ -45,9 +45,14 @@ class PresetGridSection extends StatelessWidget {
                     icon: Icons.play_circle_outline,
                     label: context.strings["latest_play_history"],
                     onTap: () {
-                      if (UserAccount.of(context, rebuildOnChange: false).isLogin) {
-                        context.secondaryNavigator.push(MaterialPageRoute(builder: (context) {
-                          return RecordPage(uid: UserAccount.of(context, rebuildOnChange: false).userId);
+                      if (UserAccount.of(context, rebuildOnChange: false)
+                          .isLogin) {
+                        context.secondaryNavigator
+                            .push(MaterialPageRoute(builder: (context) {
+                          return RecordPage(
+                              uid: UserAccount.of(context,
+                                      rebuildOnChange: false)
+                                  .userId);
                         }));
                       } else {
                         Navigator.of(context).pushNamed(pageLogin);
@@ -112,7 +117,8 @@ class _PinnedTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      customBorder: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+      customBorder:
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       onTap: onTap,
       child: Container(
         width: 60,
@@ -123,7 +129,11 @@ class _PinnedTile extends StatelessWidget {
           children: [
             Icon(icon, size: 24, color: Theme.of(context).primaryColorLight),
             SizedBox(height: 4),
-            Text(label, style: Theme.of(context).textTheme.bodyText2.copyWith(fontSize: 12)),
+            Text(label,
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyText2
+                    .copyWith(fontSize: 12)),
           ],
         ),
       ),

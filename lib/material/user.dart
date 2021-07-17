@@ -17,17 +17,24 @@ Future<bool> showNeedLoginToast(BuildContext context) async {
             InkWell(
               child: Text(
                 "点击前往登录页面",
-                style: Theme.of(context).textTheme.bodyText1.copyWith(color: Colors.blue),
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyText1
+                    .copyWith(color: Colors.blue),
               ),
               onTap: () async {
                 OverlaySupportEntry.of(context).dismiss();
-                final loginResult = await Navigator.pushNamed(context, pageLogin);
+                final loginResult =
+                    await Navigator.pushNamed(context, pageLogin);
                 completer.complete(loginResult == true);
               },
             )
           ],
         )));
-  }, curve: Curves.ease, key: const ValueKey('overlay_need_login'), duration: Duration(milliseconds: 2000));
+  },
+      curve: Curves.ease,
+      key: const ValueKey('overlay_need_login'),
+      duration: Duration(milliseconds: 2000));
   return await completer.future;
 }
 
@@ -44,7 +51,8 @@ class _Toast extends StatelessWidget {
     return SafeArea(
       maintainBottomViewPadding: true,
       child: Padding(
-        padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+        padding:
+            EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
         child: DefaultTextStyle(
           style: Theme.of(context).textTheme.bodyText1,
           child: Align(
@@ -52,7 +60,8 @@ class _Toast extends StatelessWidget {
             child: Material(
               borderRadius: BorderRadius.circular(8),
               child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
                 child: child,
               ),
             ),

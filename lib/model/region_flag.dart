@@ -41,7 +41,12 @@ class RegionFlag {
           dialCode == other.dialCode;
 
   @override
-  int get hashCode => code.hashCode ^ emoji.hashCode ^ unicode.hashCode ^ name.hashCode ^ dialCode.hashCode;
+  int get hashCode =>
+      code.hashCode ^
+      emoji.hashCode ^
+      unicode.hashCode ^
+      name.hashCode ^
+      dialCode.hashCode;
 
   @override
   String toString() {

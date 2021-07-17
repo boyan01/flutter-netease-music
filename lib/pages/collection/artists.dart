@@ -19,8 +19,8 @@ class CollectionArtists extends StatelessWidget {
                         leading: Container(
                             height: 48,
                             width: 48,
-                            child: Image(
-                                image: CachedImage(artist['img1v1Url']))),
+                            child:
+                                Image(image: CachedImage(artist['img1v1Url']))),
                         title: Text(artist['name']),
                         subtitle: Text(
                             '专辑:${artist['albumSize']} MV:${artist['mvSize']}'),

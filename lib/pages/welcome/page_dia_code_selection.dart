@@ -11,7 +11,8 @@ import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 class RegionSelectionPage extends StatelessWidget {
   final List<RegionFlag> regions;
 
-  const RegionSelectionPage({Key key, @required this.regions}) : super(key: key);
+  const RegionSelectionPage({Key key, @required this.regions})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -46,14 +47,16 @@ class _DiaCodeListState extends State<_DiaCodeList> {
   @override
   void initState() {
     super.initState();
-    _sortedRegions = widget.regions.toList()..sort((a, b) => a.name.compareTo(b.name));
+    _sortedRegions = widget.regions.toList()
+      ..sort((a, b) => a.name.compareTo(b.name));
     _scrollController = ItemScrollController();
   }
 
   @override
   void didUpdateWidget(covariant _DiaCodeList oldWidget) {
     super.didUpdateWidget(oldWidget);
-    _sortedRegions = widget.regions.toList()..sort((a, b) => a.name.compareTo(b.name));
+    _sortedRegions = widget.regions.toList()
+      ..sort((a, b) => a.name.compareTo(b.name));
   }
 
   /// Jump to best matched index in [_sortedRegions] with [q].
@@ -178,7 +181,8 @@ class AZSelection extends SingleChildRenderObjectWidget {
   final OnSelection onSelection;
   final TextStyle textStyle;
 
-  const AZSelection({Key key, this.onSelection, this.textStyle}) : super(key: key);
+  const AZSelection({Key key, this.onSelection, this.textStyle})
+      : super(key: key);
 
   @override
   RenderObject createRenderObject(BuildContext context) {
@@ -188,7 +192,8 @@ class AZSelection extends SingleChildRenderObjectWidget {
   }
 
   @override
-  void updateRenderObject(BuildContext context, covariant AZRender renderObject) {
+  void updateRenderObject(
+      BuildContext context, covariant AZRender renderObject) {
     renderObject
       ..onSelection = onSelection
       ..textStyle = textStyle ?? Theme.of(context).textTheme.bodyText1;
@@ -196,7 +201,8 @@ class AZSelection extends SingleChildRenderObjectWidget {
 }
 
 class AZRender extends RenderBox {
-  static final _chars = "abcdefghijklmnopqrstuvwxyz".toUpperCase().characters.toList();
+  static final _chars =
+      "abcdefghijklmnopqrstuvwxyz".toUpperCase().characters.toList();
 
   final _offsets = HashMap<TextPainter, Offset>();
 
@@ -230,7 +236,8 @@ class AZRender extends RenderBox {
         text: TextSpan(text: item, style: _textStyle),
       );
       painter.layout(minWidth: width);
-      _offsets[painter] = Offset(constraints.maxWidth - painter.width, lineHeight * i);
+      _offsets[painter] =
+          Offset(constraints.maxWidth - painter.width, lineHeight * i);
     }
   }
 
@@ -249,7 +256,9 @@ class AZRender extends RenderBox {
   void handleEvent(PointerEvent event, covariant BoxHitTestEntry entry) {
     super.handleEvent(event, entry);
     final position = event.localPosition;
-    final index = ((position.dy / constraints.maxHeight) * _chars.length).round().clamp(0, _chars.length - 1);
+    final index = ((position.dy / constraints.maxHeight) * _chars.length)
+        .round()
+        .clamp(0, _chars.length - 1);
     if (onSelection != null) {
       onSelection(_chars[index]);
     }
@@ -261,7 +270,8 @@ class AZRender extends RenderBox {
     if (onSelection == null) {
       return false;
     }
-    final rect = Rect.fromLTWH(constraints.maxWidth - width, 0, width, constraints.maxHeight);
+    final rect = Rect.fromLTWH(
+        constraints.maxWidth - width, 0, width, constraints.maxHeight);
     if (rect.contains(position)) {
       result.add(BoxHitTestEntry(this, position));
       return true;

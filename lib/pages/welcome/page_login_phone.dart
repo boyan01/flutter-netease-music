@@ -82,7 +82,8 @@ class _InputModel extends Model {
 
   _InputModel(this.flags, this.phoneInputController) {
     final countryCode = window.locale.countryCode;
-    final region = flags.firstWhere((region) => region.code == countryCode, orElse: () => flags[0]);
+    final region = flags.firstWhere((region) => region.code == countryCode,
+        orElse: () => flags[0]);
     _region = region;
   }
 
@@ -117,7 +118,8 @@ class _PhoneInput extends StatelessWidget {
           fontSize: 16,
           color: _textColor(context),
         );
-    final inputModel = ScopedModel.of<_InputModel>(context, rebuildOnChange: true);
+    final inputModel =
+        ScopedModel.of<_InputModel>(context, rebuildOnChange: true);
     return DefaultTextStyle(
       style: style,
       child: TextField(
@@ -143,7 +145,8 @@ class _PhoneInput extends StatelessWidget {
             },
             child: Padding(
               padding: EdgeInsets.all(12),
-              child: Text(inputModel.region.emoji + " " + inputModel.region.dialCode),
+              child: Text(
+                  inputModel.region.emoji + " " + inputModel.region.dialCode),
             ),
           ),
         ),

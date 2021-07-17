@@ -16,7 +16,8 @@ class DurationProgressBarState extends State<DurationProgressBar> {
 
   @override
   Widget build(BuildContext context) {
-    return ProgressTrackingContainer(builder: _buildBar, player: context.player);
+    return ProgressTrackingContainer(
+        builder: _buildBar, player: context.player);
   }
 
   Widget _buildBar(BuildContext context) {
@@ -31,7 +32,8 @@ class DurationProgressBarState extends State<DurationProgressBar> {
     if (state.initialized) {
       var duration = context.listenPlayerValue.metadata.duration ?? 0;
 
-      var position = isUserTracking ? trackingPosition.round() : state.positionWithOffset;
+      var position =
+          isUserTracking ? trackingPosition.round() : state.positionWithOffset;
 
       durationText = getTimeStamp(duration);
       positionText = getTimeStamp(position);
@@ -79,9 +81,10 @@ class DurationProgressBarState extends State<DurationProgressBar> {
     }
 
     return SliderTheme(
-      data: SliderThemeData(thumbShape: RoundSliderThumbShape(enabledThumbRadius: 6)),
+      data: SliderThemeData(
+          thumbShape: RoundSliderThumbShape(enabledThumbRadius: 6)),
       child: Padding(
-        padding: EdgeInsets.symmetric( horizontal: 16),
+        padding: EdgeInsets.symmetric(horizontal: 16),
         child: Row(
           children: <Widget>[
             Text(positionText ?? "00:00", style: theme.bodyText2),

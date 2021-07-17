@@ -8,7 +8,11 @@ import 'package:quiet/repository/netease.dart';
 typedef SuggestionSelectedCallback = void Function(String keyword);
 
 class SuggestionSection extends StatelessWidget {
-  const SuggestionSection({Key key, @required this.title, @required this.content, this.onDeleteClicked})
+  const SuggestionSection(
+      {Key key,
+      @required this.title,
+      @required this.content,
+      this.onDeleteClicked})
       : assert(title != null),
         super(key: key);
 
@@ -36,7 +40,10 @@ class SuggestionSection extends StatelessWidget {
               children: <Widget>[
                 Expanded(
                   child: Text(title,
-                      style: Theme.of(context).textTheme.subtitle2.copyWith(fontWeight: FontWeight.bold, fontSize: 17)),
+                      style: Theme.of(context)
+                          .textTheme
+                          .subtitle2
+                          .copyWith(fontWeight: FontWeight.bold, fontSize: 17)),
                 ),
                 onDeleteClicked == null
                     ? Container()
@@ -60,13 +67,15 @@ class SuggestionSectionContent extends StatelessWidget {
   final List<String> words;
   final SuggestionSelectedCallback suggestionSelectedCallback;
 
-  const SuggestionSectionContent({Key key, this.words, this.suggestionSelectedCallback})
+  const SuggestionSectionContent(
+      {Key key, this.words, this.suggestionSelectedCallback})
       : assert(words != null),
         assert(suggestionSelectedCallback != null),
         super(key: key);
 
   factory SuggestionSectionContent.from(
-      {final List<String> words, final SuggestionSelectedCallback suggestionSelectedCallback}) {
+      {final List<String> words,
+      final SuggestionSelectedCallback suggestionSelectedCallback}) {
     if (words == null || words.isEmpty) {
       return null;
     }
@@ -93,7 +102,8 @@ class SuggestionSectionContent extends StatelessWidget {
 
 ///搜索建议
 class SuggestionOverflow extends StatefulWidget {
-  SuggestionOverflow({@required this.query, @required this.onSuggestionSelected})
+  SuggestionOverflow(
+      {@required this.query, @required this.onSuggestionSelected})
       : assert(query != null),
         assert(onSuggestionSelected != null);
 

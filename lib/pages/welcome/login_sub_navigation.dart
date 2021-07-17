@@ -23,7 +23,9 @@ class LoginNavigator extends StatelessWidget {
       child: Navigator(
         initialRoute: pageLoginPhone,
         onGenerateRoute: (RouteSettings settings) {
-          return MaterialPageRoute(settings: settings, builder: (context) => _generatePage(settings));
+          return MaterialPageRoute(
+              settings: settings,
+              builder: (context) => _generatePage(settings));
         },
       ),
     );

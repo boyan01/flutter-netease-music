@@ -33,7 +33,10 @@ class SettingThemePage extends StatelessWidget {
               )
             ],
           ),
-          if (context.settings.themeMode == ThemeMode.dark) _DarkThemeSwitchGroup() else _LightThemeSwitchGroup(),
+          if (context.settings.themeMode == ThemeMode.dark)
+            _DarkThemeSwitchGroup()
+          else
+            _LightThemeSwitchGroup(),
         ],
       ),
     );
@@ -49,7 +52,8 @@ class _DarkThemeSwitchGroup extends StatelessWidget {
         groupValue: null,
         value: null,
         selected: true,
-        title: Container(color: context.settings.darkTheme.primaryColor, height: 20),
+        title: Container(
+            color: context.settings.darkTheme.primaryColor, height: 20),
       )
     ]);
   }
@@ -60,7 +64,9 @@ class _LightThemeSwitchGroup extends StatelessWidget {
   Widget build(BuildContext context) {
     return SettingGroup(
       title: "亮色主题颜色选择",
-      children: <Widget>[...quietThemes.map((theme) => _RadioLightThemeTile(themeData: theme))],
+      children: <Widget>[
+        ...quietThemes.map((theme) => _RadioLightThemeTile(themeData: theme))
+      ],
     );
   }
 }
@@ -68,7 +74,8 @@ class _LightThemeSwitchGroup extends StatelessWidget {
 class _RadioLightThemeTile extends StatelessWidget {
   final ThemeData themeData;
 
-  const _RadioLightThemeTile({Key key, @required this.themeData}) : super(key: key);
+  const _RadioLightThemeTile({Key key, @required this.themeData})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {

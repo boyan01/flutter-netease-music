@@ -15,10 +15,12 @@ const _navigationFmPlayer = "fm";
 
 const _navigationSettings = "settings";
 
-class _LandscapeMainPageState extends State<_LandscapeMainPage> with NavigatorObserver {
+class _LandscapeMainPageState extends State<_LandscapeMainPage>
+    with NavigatorObserver {
   static const double DRAWER_WIDTH = 120.0;
 
-  final GlobalKey<NavigatorState> _landscapeNavigatorKey = GlobalKey(debugLabel: "landscape_main_navigator");
+  final GlobalKey<NavigatorState> _landscapeNavigatorKey =
+      GlobalKey(debugLabel: "landscape_main_navigator");
 
   final GlobalKey<NavigatorState> _landscapeSecondaryNavigatorKey = GlobalKey(
     debugLabel: "landscape_secondary_navigator",
@@ -61,13 +63,18 @@ class _LandscapeMainPageState extends State<_LandscapeMainPage> with NavigatorOb
                   Container(
                     constraints: BoxConstraints.tightFor(width: DRAWER_WIDTH),
                     decoration: BoxDecoration(
-                        border: BorderDirectional(end: BorderSide(color: Theme.of(context).dividerColor))),
-                    child: _LandscapeDrawer(selectedRouteName: _currentSubRouteName),
+                        border: BorderDirectional(
+                            end: BorderSide(
+                                color: Theme.of(context).dividerColor))),
+                    child: _LandscapeDrawer(
+                        selectedRouteName: _currentSubRouteName),
                   ),
                   Flexible(
                     child: Container(
                       decoration: BoxDecoration(
-                          border: BorderDirectional(end: BorderSide(color: Theme.of(context).dividerColor))),
+                          border: BorderDirectional(
+                              end: BorderSide(
+                                  color: Theme.of(context).dividerColor))),
                       child: Navigator(
                         key: _landscapeNavigatorKey,
                         initialRoute: _navigationMyPlaylist,
@@ -87,7 +94,8 @@ class _LandscapeMainPageState extends State<_LandscapeMainPage> with NavigatorOb
             ),
           ),
           _BottomPlayerBar(
-            paddingPageBottom: MediaQuery.of(context).viewInsets.bottom + MediaQuery.of(context).padding.bottom,
+            paddingPageBottom: MediaQuery.of(context).viewInsets.bottom +
+                MediaQuery.of(context).padding.bottom,
           ),
         ],
       ),
@@ -127,7 +135,8 @@ class _LandscapeMainPageState extends State<_LandscapeMainPage> with NavigatorOb
 
   Route<dynamic> _onGenerateSecondaryRoute(RouteSettings settings) {
     if (settings.name == Navigator.defaultRouteName) {
-      return MaterialPageRoute(settings: settings, builder: (context) => _SecondaryPlaceholder());
+      return MaterialPageRoute(
+          settings: settings, builder: (context) => _SecondaryPlaceholder());
     }
     final builder = routes[settings.name];
     if (builder != null) {
@@ -141,7 +150,8 @@ class _LandscapeDrawer extends StatelessWidget {
   // Current selected page name in Main Drawer.
   final String selectedRouteName;
 
-  const _LandscapeDrawer({Key key, @required this.selectedRouteName}) : super(key: key);
+  const _LandscapeDrawer({Key key, @required this.selectedRouteName})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -196,7 +206,9 @@ class _LandscapeDrawer extends StatelessWidget {
                     return;
                   }
                   context.primaryNavigator.push(
-                    MaterialPageRoute(builder: (context) => UserDetailPage(userId: UserAccount.of(context).userId)),
+                    MaterialPageRoute(
+                        builder: (context) => UserDetailPage(
+                            userId: UserAccount.of(context).userId)),
                   );
                 }),
           ],

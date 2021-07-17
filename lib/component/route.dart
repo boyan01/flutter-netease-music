@@ -75,7 +75,8 @@ Route<dynamic> routeFactory(RouteSettings settings) {
       break;
   }
 
-  if (builder != null) return MaterialPageRoute(builder: builder, settings: settings);
+  if (builder != null)
+    return MaterialPageRoute(builder: builder, settings: settings);
 
   assert(false, 'ERROR: can not generate Route for ${settings.name}');
   return null;

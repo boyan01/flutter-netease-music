@@ -51,5 +51,4 @@ class SearchHistory extends Model {
     final preference = await SharedPreferences.getInstance();
     preference.setStringList(_KEY_HISTORY, _histories);
   }
-  
 }

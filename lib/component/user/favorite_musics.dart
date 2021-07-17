@@ -31,7 +31,8 @@ class FavoriteMusicList extends Model {
 
   void _loadUserLikedList(int userId) async {
     _log.info("_loadUserLikedList $userId");
-    _ids = (await neteaseLocalData['likedSongList'] as List)?.cast() ?? const [];
+    _ids =
+        (await neteaseLocalData['likedSongList'] as List)?.cast() ?? const [];
     _log.info("favorite list: $ids");
     notifyListeners();
     final result = await neteaseRepository.likedList(userId);
@@ -46,7 +47,8 @@ class FavoriteMusicList extends Model {
 
   List<int> get ids => _ids;
 
-  static FavoriteMusicList of(BuildContext context, {bool rebuildOnChange = false}) {
+  static FavoriteMusicList of(BuildContext context,
+      {bool rebuildOnChange = false}) {
     return Provider.of<FavoriteMusicList>(context, listen: rebuildOnChange);
   }
 

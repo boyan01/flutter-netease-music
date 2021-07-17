@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 
-class QuietLocalizationsDelegate extends LocalizationsDelegate<QuietLocalizations> {
+class QuietLocalizationsDelegate
+    extends LocalizationsDelegate<QuietLocalizations> {
   @override
   bool isSupported(Locale locale) {
     return ["en", "zh"].contains(locale.languageCode);
@@ -80,7 +81,8 @@ class QuietLocalizations {
 
 // ignore: non_constant_identifier_names
   String get main_page_tab_title_discover {
-    return _localizedValues[locale.languageCode]["main_page_tab_title_discover"];
+    return _localizedValues[locale.languageCode]
+        ["main_page_tab_title_discover"];
   }
 }
 

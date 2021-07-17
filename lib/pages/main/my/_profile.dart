@@ -17,12 +17,14 @@ class UserProfileSection extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(bottom: 8, left: 16, right: 16),
       child: InkWell(
-        customBorder: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+        customBorder:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
         onTap: () {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => UserDetailPage(userId: UserAccount.of(context).userId),
+              builder: (context) =>
+                  UserDetailPage(userId: UserAccount.of(context).userId),
             ),
           );
         },
@@ -51,7 +53,8 @@ class UserProfileSection extends StatelessWidget {
                             color: Theme.of(context).backgroundColor,
                             borderRadius: BorderRadius.circular(12),
                           ),
-                          padding: EdgeInsets.symmetric(vertical: 2, horizontal: 4),
+                          padding:
+                              EdgeInsets.symmetric(vertical: 2, horizontal: 4),
                           child: Text(
                             "Lv.${detail.level}",
                             style: TextStyle(
@@ -78,7 +81,8 @@ class UserProfileSection extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(bottom: 8, left: 16, right: 16),
       child: InkWell(
-        customBorder: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+        customBorder:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
         onTap: () {
           Navigator.of(context).pushNamed(pageLogin);
         },

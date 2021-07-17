@@ -23,7 +23,8 @@ class SettingPage extends StatelessWidget {
             children: <Widget>[
               ListTile(
                 title: Text('更换主题'),
-                onTap: () => context.secondaryNavigator.pushNamed(ROUTE_SETTING_THEME),
+                onTap: () =>
+                    context.secondaryNavigator.pushNamed(ROUTE_SETTING_THEME),
               ),
               _CopyRightCheckBox(),
             ],
@@ -38,7 +39,8 @@ class SettingPage extends StatelessWidget {
                       context: context,
                       builder: (context) {
                         return AboutDialog(
-                          applicationIcon: Image.asset("assets/ic_launcher_round.png"),
+                          applicationIcon:
+                              Image.asset("assets/ic_launcher_round.png"),
                           applicationVersion: "0.3-alpha",
                           applicationLegalese: "此应用仅供学习交流使用，请勿用于任何商业用途。",
                         );

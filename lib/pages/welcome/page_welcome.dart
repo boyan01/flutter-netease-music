@@ -26,7 +26,8 @@ class _PageWelcomeState extends State<PageWelcome> {
           builder: (context, child, model) {
             return Padding(
               padding: const EdgeInsets.symmetric(horizontal: 50) +
-                  EdgeInsets.only(bottom: MediaQuery.of(context).viewPadding.bottom),
+                  EdgeInsets.only(
+                      bottom: MediaQuery.of(context).viewPadding.bottom),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 mainAxisSize: MainAxisSize.max,
@@ -36,7 +37,8 @@ class _PageWelcomeState extends State<PageWelcome> {
                     text: "手机号登录",
                     onTap: () async {
                       if (model.accept) {
-                        final result = await Navigator.pushNamed(context, pageLogin);
+                        final result =
+                            await Navigator.pushNamed(context, pageLogin);
                         if (result == true) {
                           _navigateToMain(context);
                         }
@@ -48,7 +50,8 @@ class _PageWelcomeState extends State<PageWelcome> {
                       primary: false,
                       onTap: () {
                         if (model.accept) {
-                          Settings.of(context, rebuildOnChange: false).setSkipWelcomePage();
+                          Settings.of(context, rebuildOnChange: false)
+                              .setSkipWelcomePage();
                           _navigateToMain(context);
                         }
                       }),
@@ -92,10 +95,13 @@ class StretchButton extends StatelessWidget {
       background = foreground;
       foreground = temp;
     }
-    final border = primary ? BorderSide.none : BorderSide(color: foreground.withOpacity(0.5), width: 0.5);
+    final border = primary
+        ? BorderSide.none
+        : BorderSide(color: foreground.withOpacity(0.5), width: 0.5);
     return FlatButton(
       child: Text(text),
-      shape: RoundedRectangleBorder(side: border, borderRadius: BorderRadius.circular(20)),
+      shape: RoundedRectangleBorder(
+          side: border, borderRadius: BorderRadius.circular(20)),
       color: background,
       textColor: foreground,
       onPressed: onTap,
@@ -112,7 +118,8 @@ class _LeadingLayout extends StatelessWidget {
         child: Container(
           width: 48,
           height: 48,
-          decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.white),
+          decoration:
+              BoxDecoration(shape: BoxShape.circle, color: Colors.white),
         ),
       ),
     );
@@ -160,13 +167,15 @@ class _LoginIcon extends StatelessWidget {
 
   final VoidCallback onTap;
 
-  const _LoginIcon({Key key, this.image, @required this.onTap}) : super(key: key);
+  const _LoginIcon({Key key, this.image, @required this.onTap})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final color = Theme.of(context).primaryTextTheme.bodyText2.color;
     return Material(
-      shape: CircleBorder(side: BorderSide(color: color.withOpacity(0.5), width: 0.5)),
+      shape: CircleBorder(
+          side: BorderSide(color: color.withOpacity(0.5), width: 0.5)),
       color: Colors.transparent,
       elevation: 0,
       clipBehavior: Clip.antiAlias,
@@ -181,8 +190,10 @@ class _LoginIcon extends StatelessWidget {
 }
 
 class _LicenseModel extends Model {
-  static _LicenseModel of(BuildContext context, {bool rebuildOnChange = false}) {
-    return ScopedModel.of<_LicenseModel>(context, rebuildOnChange: rebuildOnChange);
+  static _LicenseModel of(BuildContext context,
+      {bool rebuildOnChange = false}) {
+    return ScopedModel.of<_LicenseModel>(context,
+        rebuildOnChange: rebuildOnChange);
   }
 
   bool _accept = false;
@@ -248,7 +259,8 @@ class _LicenseAndPolicyState extends State<_LicenseAndPolicy> {
                 alignment: Alignment.centerRight,
                 child: Checkbox(
                     materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                    value: _LicenseModel.of(context, rebuildOnChange: true)._accept,
+                    value: _LicenseModel.of(context, rebuildOnChange: true)
+                        ._accept,
                     activeColor: color,
                     onChanged: (value) {
                       _LicenseModel.of(context).check(value);

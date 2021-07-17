@@ -79,7 +79,9 @@ class _CommentInputState extends State<_CommentInput> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(border: Border(top: BorderSide(color: Theme.of(context).dividerColor))),
+      decoration: BoxDecoration(
+          border:
+              Border(top: BorderSide(color: Theme.of(context).dividerColor))),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
@@ -89,7 +91,8 @@ class _CommentInputState extends State<_CommentInput> {
             child: TextField(
               focusNode: _focusNode,
               controller: _controller,
-              decoration: InputDecoration(hintText: "随乐而起，有感而发", errorText: _error),
+              decoration:
+                  InputDecoration(hintText: "随乐而起，有感而发", errorText: _error),
             ),
           )),
           IconButton(
@@ -101,7 +104,8 @@ class _CommentInputState extends State<_CommentInput> {
                 }
                 _error = null;
                 _isPosting = true;
-                final result = await _postComment(_controller.text, widget.threadId);
+                final result =
+                    await _postComment(_controller.text, widget.threadId);
                 if (result.isValue) {
                   _controller.text = "";
                   if (_focusNode.hasFocus) {
@@ -122,7 +126,8 @@ class _CommentInputState extends State<_CommentInput> {
 }
 
 class CommentThreadId {
-  CommentThreadId(this.id, this.type, {this.payload}) : assert(id != null && type != null);
+  CommentThreadId(this.id, this.type, {this.payload})
+      : assert(id != null && type != null);
 
   final int id;
 
@@ -223,9 +228,11 @@ enum CommentType {
 //}
 
 ///post comment to a comment thread
-Future<Result<Map>> _postComment(String content, CommentThreadId commentThread) async {
+Future<Result<Map>> _postComment(
+    String content, CommentThreadId commentThread) async {
   return await neteaseRepository.doRequest(
-      "https://music.163.com/weapi/resource/comments/add", {"content": content, "threadId": commentThread.threadId});
+      "https://music.163.com/weapi/resource/comments/add",
+      {"content": content, "threadId": commentThread.threadId});
 }
 
 //Future<bool> _deleteComment(CommentThreadId commentThread, int commentId) async {

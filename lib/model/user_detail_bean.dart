@@ -20,7 +20,8 @@ class UserDetail {
         pcSign = map["pcSign"],
         profile = UserProfile.fromJsonMap(map["profile"]),
         peopleCanSeeMyPlayRecord = map["peopleCanSeeMyPlayRecord"],
-        bindings = List<Bindings>.from(map["bindings"].map((it) => Bindings.fromJsonMap(it))),
+        bindings = List<Bindings>.from(
+            map["bindings"].map((it) => Bindings.fromJsonMap(it))),
         adValid = map["adValid"],
         code = map["code"],
         createTime = map["createTime"],
@@ -35,7 +36,8 @@ class UserDetail {
     data['pcSign'] = pcSign;
     data['profile'] = profile == null ? null : profile.toJson();
     data['peopleCanSeeMyPlayRecord'] = peopleCanSeeMyPlayRecord;
-    data['bindings'] = bindings != null ? this.bindings.map((v) => v.toJson()).toList() : null;
+    data['bindings'] =
+        bindings != null ? this.bindings.map((v) => v.toJson()).toList() : null;
     data['adValid'] = adValid;
     data['code'] = code;
     data['createTime'] = createTime;

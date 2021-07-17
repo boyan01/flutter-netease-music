@@ -34,20 +34,24 @@ class CachedLoader<T> extends StatelessWidget {
   Widget build(BuildContext context) {
     assert(() {
       () async {
-        debugPrint("load cache $cacheKey : ${(await neteaseLocalData.get(cacheKey)) == null ? 'null' : 'hit'}");
+        debugPrint(
+            "load cache $cacheKey : ${(await neteaseLocalData.get(cacheKey)) == null ? 'null' : 'hit'}");
       }();
       return true;
     }());
     return Loader<T>(
       initialData: enableCache
           ? neteaseLocalData.get(cacheKey).then((cache) {
-              return deserialize != null && cache != null ? deserialize(cache) : cache;
+              return deserialize != null && cache != null
+                  ? deserialize(cache)
+                  : cache;
             })
           : null,
       loadTask: loadTask,
       builder: (context, result) {
         if (enableCache) {
-          neteaseLocalData[cacheKey] = serialize != null ? serialize(result) : result;
+          neteaseLocalData[cacheKey] =
+              serialize != null ? serialize(result) : result;
         }
         return builder(context, result);
       },

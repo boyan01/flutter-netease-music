@@ -19,11 +19,15 @@ class DailyPlaylistPage extends StatelessWidget {
           Loader<Map>(
               loadTask: () => neteaseRepository.recommendSongs(),
               builder: (context, result) {
-                final list = (result["recommend"] as List).cast<Map>().map(mapJsonToMusic).toList();
+                final list = (result["recommend"] as List)
+                    .cast<Map>()
+                    .map(mapJsonToMusic)
+                    .toList();
                 return MusicTileConfiguration(
                     token: 'playlist_daily_recommend',
                     musics: list,
-                    trailingBuilder: MusicTileConfiguration.defaultTrailingBuilder,
+                    trailingBuilder:
+                        MusicTileConfiguration.defaultTrailingBuilder,
                     leadingBuilder: MusicTileConfiguration.coverLeadingBuilder,
                     onMusicTap: MusicTileConfiguration.defaultOnTap,
                     child: _DailyMusicList());
@@ -52,13 +56,15 @@ class _DailyMusicList extends StatelessWidget {
             IconButton(
                 icon: Icon(Icons.help_outline),
                 onPressed: () {
-                  launch("http://music.163.com/m/topic/19193112", forceWebView: true);
+                  launch("http://music.163.com/m/topic/19193112",
+                      forceWebView: true);
                 })
           ],
           flexibleSpace: _HeaderContent(),
           expandedHeight: 232 - MediaQuery.of(context).padding.top,
           pinned: true,
-          bottom: MusicListHeader(MusicTileConfiguration.of(context).musics.length),
+          bottom:
+              MusicListHeader(MusicTileConfiguration.of(context).musics.length),
         ),
         SliverList(
             delegate: SliverChildBuilderDelegate((context, index) {
@@ -92,7 +98,9 @@ class _HeaderContent extends StatelessWidget {
             children: <Widget>[
               Spacer(flex: 10),
               Text.rich(TextSpan(children: [
-                TextSpan(text: date.day.toString().padLeft(2, '0'), style: TextStyle(fontSize: 23)),
+                TextSpan(
+                    text: date.day.toString().padLeft(2, '0'),
+                    style: TextStyle(fontSize: 23)),
                 TextSpan(text: ' / '),
                 TextSpan(text: date.month.toString().padLeft(2, '0')),
               ])),

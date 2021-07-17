@@ -70,8 +70,10 @@ class Settings extends Model {
   }
 
   Settings(this._preferences) {
-    _themeMode = ThemeMode.values[_preferences.getInt(_key_theme_mode) ?? 0]; /* default is system */
-    _theme = quietThemes[_preferences.getInt(_key_theme) ?? 0]; /* default is NetEase Red */
+    _themeMode = ThemeMode.values[
+        _preferences.getInt(_key_theme_mode) ?? 0]; /* default is system */
+    _theme = quietThemes[
+        _preferences.getInt(_key_theme) ?? 0]; /* default is NetEase Red */
     _showCopyrightOverlay = _preferences.get(_key_copyright);
     _skipWelcomePage = _preferences.get(_key_skip_welcome_page) ?? false;
   }

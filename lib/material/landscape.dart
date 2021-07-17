@@ -6,7 +6,8 @@ class LandscapeWidgetSwitcher extends StatelessWidget {
   final WidgetBuilder landscape;
   final WidgetBuilder portrait;
 
-  const LandscapeWidgetSwitcher({Key key, this.landscape, this.portrait}) : super(key: key);
+  const LandscapeWidgetSwitcher({Key key, this.landscape, this.portrait})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {

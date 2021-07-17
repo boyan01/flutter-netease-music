@@ -17,7 +17,8 @@ class Netease extends StatefulWidget {
 
   final Map user;
 
-  const Netease({Key key, @required this.child, @required this.user}) : super(key: key);
+  const Netease({Key key, @required this.child, @required this.user})
+      : super(key: key);
 
   @override
   NeteaseState createState() => NeteaseState();
