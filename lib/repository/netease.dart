@@ -238,9 +238,13 @@ class NeteaseRepository {
     return _map(result, (result) {
       final data = result['data'] as List;
       if (data.isEmpty) {
-        throw "无法获取播放地址";
+        throw "we can not get realtime play url: data is empty";
       }
-      return data.first['url'];
+      final url = data.first['url'] as String;
+      if (url.isEmpty) {
+        throw "we can not get realtime play url: URL is null";
+      }
+      return url;
     });
   }
 
