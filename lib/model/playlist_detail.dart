@@ -14,7 +14,8 @@ class PlaylistDetail {
       this.subscribedCount,
       this.commentCount,
       this.shareCount,
-      this.playCount);
+      this.playCount)
+      : assert(subscribed != null);
 
   ///null when playlist not complete loaded
   final List<Music> musicList;
@@ -61,7 +62,7 @@ class PlaylistDetail {
         playlist["coverImgUrl"],
         playlist["trackCount"],
         playlist["description"],
-        playlist["subscribed"],
+        playlist["subscribed"] ?? false,
         playlist["subscribedCount"],
         playlist["commentCount"],
         playlist["shareCount"],
