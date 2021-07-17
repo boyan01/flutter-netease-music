@@ -13,7 +13,8 @@ class MainPageMy extends StatefulWidget {
   createState() => _MainPageMyState();
 }
 
-class _MainPageMyState extends State<MainPageMy> with AutomaticKeepAliveClientMixin, SingleTickerProviderStateMixin {
+class _MainPageMyState extends State<MainPageMy>
+    with AutomaticKeepAliveClientMixin, SingleTickerProviderStateMixin {
   final Logger logger = Logger("_MainPlaylistState");
 
   ScrollController _scrollController = ScrollController();
@@ -26,12 +27,14 @@ class _MainPageMyState extends State<MainPageMy> with AutomaticKeepAliveClientMi
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: PlayListType.values.length, vsync: this);
+    _tabController =
+        TabController(length: PlayListType.values.length, vsync: this);
     _tabController.addListener(_onUserSelectedTab);
   }
 
   void _onUserSelectedTab() {
-    logger.info("_onUserSelectedTab : ${_tabController.index} ${_tabController.indexIsChanging}");
+    logger.info(
+        "_onUserSelectedTab : ${_tabController.index} ${_tabController.indexIsChanging}");
     if (_scrollerAnimating || _tabAnimating) {
       return;
     }
@@ -78,7 +81,9 @@ class _MainPageMyState extends State<MainPageMy> with AutomaticKeepAliveClientMi
     );
   }
 
-  void _computeScroller(void callback(PlayListSliverKey sliverKey, List<Element> children, int start, int end)) {
+  void _computeScroller(
+      void callback(PlayListSliverKey sliverKey, List<Element> children,
+          int start, int end)) {
     SliverMultiBoxAdaptorElement playListSliver;
     void playListSliverFinder(Element element) {
       if (element.widget.key is PlayListSliverKey) {
@@ -91,11 +96,17 @@ class _MainPageMyState extends State<MainPageMy> with AutomaticKeepAliveClientMi
     // to find PlayListSliver.
     context.visitChildElements(playListSliverFinder);
 
-    final PlayListSliverKey sliverKey = playListSliver.widget.key as PlayListSliverKey;
+    if (playListSliver == null) {
+      return;
+    }
+
+    final PlayListSliverKey sliverKey =
+        playListSliver.widget.key as PlayListSliverKey;
     assert(playListSliver != null, "can not find sliver");
     assert(sliverKey != null, "can not find sliver");
 
-    logger.info("sliverKey : created position: ${sliverKey.createdPosition} ${sliverKey.favoritePosition}");
+    logger.info(
+        "sliverKey : created position: ${sliverKey.createdPosition} ${sliverKey.favoritePosition}");
 
     final List<Element> children = [];
     playListSliver.visitChildElements((element) {
@@ -117,12 +128,16 @@ class _MainPageMyState extends State<MainPageMy> with AutomaticKeepAliveClientMi
     _scrollerAnimating = true;
 
     _computeScroller((sliverKey, children, start, end) {
-      final target = type == PlayListType.created ? sliverKey.createdPosition : sliverKey.favoritePosition;
+      final target = type == PlayListType.created
+          ? sliverKey.createdPosition
+          : sliverKey.favoritePosition;
       final position = _scrollController.position;
       if (target >= start && target <= end) {
         Element toShow = children[target - start];
         position
-            .ensureVisible(toShow.renderObject, duration: const Duration(milliseconds: 300), curve: Curves.linear)
+            .ensureVisible(toShow.renderObject,
+                duration: const Duration(milliseconds: 300),
+                curve: Curves.linear)
             .whenComplete(() {
           _scrollerAnimating = false;
         });
@@ -181,7 +196,8 @@ class _MainPageMyState extends State<MainPageMy> with AutomaticKeepAliveClientMi
     }
     _tabAnimating = true;
     _tabController.animateTo(type.index, duration: kTabScrollDuration);
-    Future.delayed(kTabScrollDuration + Duration(milliseconds: 100)).whenComplete(() {
+    Future.delayed(kTabScrollDuration + Duration(milliseconds: 100))
+        .whenComplete(() {
       _tabAnimating = false;
     });
   }
