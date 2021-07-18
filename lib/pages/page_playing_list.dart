@@ -15,6 +15,9 @@ class PlayingListDialog extends StatefulWidget {
     showModalBottomSheet(
         context: context,
         backgroundColor: Colors.transparent,
+        useRootNavigator: true,
+        constraints:
+            BoxConstraints(maxWidth: MediaQuery.of(context).size.width - 32),
         builder: (context) {
           return PlayingListDialog();
         });
@@ -89,14 +92,14 @@ class _PortraitPlayingListContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.symmetric(horizontal: 16),
-      padding:
-          EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-      child: Material(
-        borderRadius: BorderRadius.circular(8),
-        color: Theme.of(context).scaffoldBackgroundColor,
-        child: child,
+    return SafeArea(
+      child: Padding(
+        padding: EdgeInsets.only(bottom: 8),
+        child: Material(
+          borderRadius: BorderRadius.all(Radius.circular(8)),
+          color: Theme.of(context).scaffoldBackgroundColor,
+          child: child,
+        ),
       ),
     );
   }
@@ -105,7 +108,8 @@ class _PortraitPlayingListContainer extends StatelessWidget {
 class _LandscapePlayingListContainer extends StatelessWidget {
   final Widget? child;
 
-  const _LandscapePlayingListContainer({Key? key, this.child}) : super(key: key);
+  const _LandscapePlayingListContainer({Key? key, this.child})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
