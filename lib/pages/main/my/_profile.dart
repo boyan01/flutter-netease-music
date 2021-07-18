@@ -98,7 +98,7 @@ class UserProfileSection extends StatelessWidget {
                 radius: 20,
               ),
               SizedBox(width: 12),
-              Text(context.strings!["login_right_now"]),
+              Text(context.strings.login),
               Icon(Icons.chevron_right)
             ],
           ),

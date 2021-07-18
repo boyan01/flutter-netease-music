@@ -92,10 +92,10 @@ class MyApp extends StatelessWidget {
                   onGenerateRoute: routeFactory,
                   title: 'Quiet',
                   supportedLocales: const [Locale("en"), Locale("zh")],
-                  localizationsDelegates: [
+                  localizationsDelegates: const [
+                    S.delegate,
                     GlobalWidgetsLocalizations.delegate,
                     GlobalMaterialLocalizations.delegate,
-                    QuietLocalizationsDelegate(),
                   ],
                   theme: setting.theme,
                   darkTheme: setting.darkTheme,

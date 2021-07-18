@@ -1,0 +1,19 @@
+{
+    "my": "My",
+    "discover": "Discover",
+    "localMusic": "Local Music",
+    "cloudMusic": "Could Space",
+    "latestPlayHistory": "Play History",
+    "friends": "Friends",
+    "myDjs": "Dj",
+    "collectionLike": "Collections",
+    "alreadyBuy": "Payed",
+    "todo": "TBD",
+    "login": "Login",
+    "playlistLoginDescription": "Login to discover your playlists.",
+    "createdSongList": "Created Song List",
+    "favoriteSongList": "Favorite Song List",
+    "playlistShareContent": "The PlayList created by {username}「{title}」: http://music.163.com/playlist/{playlistId}/{userId}/?userid={shareUserId} (From @NeteaseCouldMusic)",
+    "shareContentCopied": "Share content has copied to clipboard.",
+    "albumShareContent": "The {artistName}'s album《{albumName}》: http://music.163.com/album/{albumId}/?userid={sharedUserId} (From @NeteaseCouldMusic)"
+}

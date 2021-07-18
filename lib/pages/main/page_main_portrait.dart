@@ -35,11 +35,11 @@ class _MainPageState extends State<_PortraitMainPage>
         textTheme: Theme.of(context).textTheme,
         iconTheme: Theme.of(context).iconTheme,
         leading: IconButton(
-            icon: Icon(Icons.menu),
+            icon: const Icon(Icons.menu),
             onPressed: () {
               _scaffoldKey.currentState!.openDrawer();
             }),
-        title: Container(
+        title: SizedBox(
           height: kToolbarHeight,
           width: 128,
           child: TabBar(
@@ -54,8 +54,8 @@ class _MainPageState extends State<_PortraitMainPage>
             unselectedLabelStyle:
                 Theme.of(context).textTheme.caption!.copyWith(fontSize: 14),
             tabs: <Widget>[
-              _PageTab(text: context.strings!.main_page_tab_title_my),
-              _PageTab(text: context.strings!.main_page_tab_title_discover),
+              _PageTab(text: context.strings.my),
+              _PageTab(text: context.strings.discover),
             ],
           ),
         ),
@@ -69,7 +69,7 @@ class _MainPageState extends State<_PortraitMainPage>
               Navigator.push(
                   context, NeteaseSearchPageRoute(transitionAnimation));
             },
-            icon: Icon(Icons.search),
+            icon: const Icon(Icons.search),
           )
         ],
       ),
@@ -82,9 +82,8 @@ class _MainPageState extends State<_PortraitMainPage>
 }
 
 class _PageTab extends StatelessWidget {
-  final String? text;
-
   const _PageTab({Key? key, required this.text}) : super(key: key);
+  final String? text;
 
   @override
   Widget build(BuildContext context) {

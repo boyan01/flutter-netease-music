@@ -22,28 +22,28 @@ class PresetGridSection extends StatelessWidget {
                 children: [
                   _PinnedTile(
                     icon: Icons.arrow_circle_down_outlined,
-                    label: context.strings!["local_music"],
+                    label: context.strings.localMusic,
                     onTap: () {
                       toast("TODO");
                     },
                   ),
                   _PinnedTile(
                     icon: Icons.cloud_upload_outlined,
-                    label: context.strings!["cloud_music"],
+                    label: context.strings.cloudMusic,
                     onTap: () {
                       toast("TODO");
                     },
                   ),
                   _PinnedTile(
                     icon: Icons.check_circle_outline_outlined,
-                    label: context.strings!["already_buy"],
+                    label: context.strings.alreadyBuy,
                     onTap: () {
                       toast("TODO");
                     },
                   ),
                   _PinnedTile(
                     icon: Icons.play_circle_outline,
-                    label: context.strings!["latest_play_history"],
+                    label: context.strings.latestPlayHistory,
                     onTap: () {
                       if (UserAccount.of(context, rebuildOnChange: false)
                           .isLogin) {
@@ -66,28 +66,29 @@ class PresetGridSection extends StatelessWidget {
                 children: [
                   _PinnedTile(
                     icon: Icons.supervised_user_circle_outlined,
-                    label: context.strings!["friends"],
+                    label: context.strings.friends,
                     onTap: () {
                       toast("TODO");
                     },
                   ),
                   _PinnedTile(
                     icon: Icons.star_border_rounded,
-                    label: context.strings!["collection_like"],
+                    label: context.strings.collectionLike,
                     onTap: () {
-                      context.secondaryNavigator!.pushNamed(ROUTE_MY_COLLECTION);
+                      context.secondaryNavigator!
+                          .pushNamed(ROUTE_MY_COLLECTION);
                     },
                   ),
                   _PinnedTile(
                     icon: Icons.radio,
-                    label: context.strings!["my_djs"],
+                    label: context.strings.myDjs,
                     onTap: () {
                       context.secondaryNavigator!.pushNamed(pageMyDj);
                     },
                   ),
                   _PinnedTile(
                     icon: Icons.favorite,
-                    label: context.strings!["todo"],
+                    label: context.strings.todo,
                     onTap: () {
                       toast("TODO");
                     },

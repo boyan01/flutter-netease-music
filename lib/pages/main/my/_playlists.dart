@@ -113,8 +113,8 @@ class _MyPlayListsHeader extends StatelessWidget
         labelColor: Theme.of(context).textTheme.bodyText1!.color,
         indicatorSize: TabBarIndicatorSize.label,
         tabs: [
-          Tab(text: context.strings!["created_song_list"]),
-          Tab(text: context.strings!["favorite_song_list"]),
+          Tab(text: context.strings.createdSongList),
+          Tab(text: context.strings.favoriteSongList),
         ],
       ),
     );
@@ -179,9 +179,14 @@ class _UserPlayListSectionState extends State<UserPlayListSection> {
     if (_dividerIndex < 0) {
       return;
     }
-    final RenderSliverList global = context.findRenderObject() as RenderSliverList;
+    final RenderSliverList? global =
+        context.findRenderObject() as RenderSliverList?;
+    if (global == null) {
+      return;
+    }
     RenderObject? child = global.firstChild;
-    while (child != null && global.indexOf(child as RenderBox) != _dividerIndex) {
+    while (
+        child != null && global.indexOf(child as RenderBox) != _dividerIndex) {
       child = global.childAfter(child);
     }
     if (child == null) {
@@ -203,7 +208,9 @@ class _UserPlayListSectionState extends State<UserPlayListSection> {
     return Loader<List<PlaylistDetail?>?>(
         initialData: neteaseLocalData.getUserPlaylist(widget.userId),
         loadTask: () {
-          return neteaseRepository!.userPlaylist(widget.userId).then((value) => value);
+          return neteaseRepository!
+              .userPlaylist(widget.userId)
+              .then((value) => value);
         },
         loadingBuilder: (context) {
           return _singleSliver(child: Container());
@@ -222,14 +229,13 @@ class _UserPlayListSectionState extends State<UserPlayListSection> {
             key: PlayListSliverKey(
                 createdPosition: 1, favoritePosition: 3 + created.length),
             delegate: SliverChildListDelegate.fixed([
-              SizedBox(height: _kPlayListDividerHeight),
+              const SizedBox(height: _kPlayListDividerHeight),
               PlayListsGroupHeader(
-                  name: context.strings!["created_song_list"],
-                  count: created.length),
+                  name: context.strings.createdSongList, count: created.length),
               ..._playlistWidget(created),
               SizedBox(height: _kPlayListDividerHeight, key: _dividerKey),
               PlayListsGroupHeader(
-                  name: context.strings!["favorite_song_list"],
+                  name: context.strings.favoriteSongList,
                   count: subscribed.length),
               ..._playlistWidget(subscribed),
               SizedBox(height: _kPlayListDividerHeight),
@@ -239,13 +245,13 @@ class _UserPlayListSectionState extends State<UserPlayListSection> {
   }
 
   Widget notLogin(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.only(top: 40),
+    return Padding(
+      padding: const EdgeInsets.only(top: 40),
       child: Column(
         children: [
-          Text(context.strings!["playlist_login_description"]),
+          Text(context.strings.playlistLoginDescription),
           TextButton(
-            child: Text(context.strings!["login_right_now"]),
+            child: Text(context.strings.login),
             onPressed: () {
               Navigator.of(context).pushNamed(pageLogin);
             },

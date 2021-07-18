@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:intl/message_format.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:quiet/component.dart';
 import 'package:quiet/component/utils/utils.dart';
@@ -61,7 +60,7 @@ class _AlbumBody extends StatelessWidget {
         child: BoxWithBottomPlayerController(CustomScrollView(slivers: [
           SliverAppBar(
             automaticallyImplyLeading: false,
-            expandedHeight: HEIGHT_HEADER,
+            expandedHeight: kHeaderHeight,
             backgroundColor: Colors.transparent,
             pinned: true,
             elevation: 0,
@@ -125,36 +124,34 @@ class _AlbumDetailHeader extends StatelessWidget {
           }));
         },
         onShareTap: () {
-          final content =
-              MessageFormat(context.strings!["album_share_content"]).format({
-            "artistName": artist.map((e) => e.name).join(','),
-            "albumName": album["name"],
-            "albumId": album["id"].toString(),
-            "sharedUserId": UserAccount.of(context, rebuildOnChange: false)
-                .userId
-                .toString(),
-          });
+          final content = context.strings.albumShareContent(
+              artist.map((e) => e.name).join(','),
+              album["name"],
+              album["id"].toString(),
+              UserAccount.of(context, rebuildOnChange: false)
+                  .userId
+                  .toString());
           Clipboard.setData(ClipboardData(text: content));
-          toast(context.strings!["share_content_copied"]);
+          toast(context.strings.shareContentCopied);
         },
         content: Container(
-          padding: EdgeInsets.symmetric(vertical: 16),
+          padding: const EdgeInsets.symmetric(vertical: 16),
           height: 150,
           child: Row(
             children: <Widget>[
-              SizedBox(width: 32),
+              const SizedBox(width: 32),
               QuietHero(
                 tag: "album_image_${album["id"]}",
                 child: AspectRatio(
                   aspectRatio: 1,
                   child: ClipRRect(
-                    borderRadius: BorderRadius.all(Radius.circular(3)),
+                    borderRadius: const BorderRadius.all(Radius.circular(3)),
                     child: Image(
                         fit: BoxFit.cover, image: CachedImage(album["picUrl"])),
                   ),
                 ),
               ),
-              SizedBox(width: 16),
+              const SizedBox(width: 16),
               Expanded(
                   child: DefaultTextStyle(
                 style: Theme.of(context).primaryTextTheme.bodyText2!,
@@ -163,9 +160,9 @@ class _AlbumDetailHeader extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    SizedBox(height: 8),
-                    Text(album["name"], style: TextStyle(fontSize: 17)),
-                    SizedBox(height: 10),
+                    const SizedBox(height: 8),
+                    Text(album["name"], style: const TextStyle(fontSize: 17)),
+                    const SizedBox(height: 10),
                     InkWell(
                         child: Padding(
                           padding: const EdgeInsets.only(top: 4, bottom: 4),
@@ -175,7 +172,7 @@ class _AlbumDetailHeader extends StatelessWidget {
                         onTap: () {
                           launchArtistDetailPage(context, artist);
                         }),
-                    SizedBox(height: 4),
+                    const SizedBox(height: 4),
                     Text("发行时间：${getFormattedTime(album["publishTime"])}")
                   ],
                 ),

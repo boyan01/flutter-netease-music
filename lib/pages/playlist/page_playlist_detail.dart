@@ -5,7 +5,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:intl/message_format.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:quiet/component.dart';
 import 'package:quiet/component/utils/utils.dart';
@@ -22,7 +21,7 @@ import 'page_playlist_detail_selection.dart';
 import 'playlist_internal_search.dart';
 
 ///歌单详情信息 header 高度
-const double HEIGHT_HEADER = 280 + kToolbarHeight;
+const double kHeaderHeight = 280 + kToolbarHeight;
 
 ///page display a Playlist
 ///
@@ -32,7 +31,7 @@ const double HEIGHT_HEADER = 280 + kToolbarHeight;
 ///
 ///
 class PlaylistDetailPage extends StatefulWidget {
-  PlaylistDetailPage(this.playlistId, {this.playlist});
+  const PlaylistDetailPage(this.playlistId, {this.playlist});
 
   ///playlist id，can not be null
   final int playlistId;
@@ -54,7 +53,7 @@ class _PlayListDetailState extends State<PlaylistDetailPage> {
           automaticallyImplyLeading: false,
           title: widget.playlist == null ? Text('歌单') : null,
           expandedHeight:
-              widget.playlist == null ? kToolbarHeight : HEIGHT_HEADER,
+              widget.playlist == null ? kToolbarHeight : kHeaderHeight,
           flexibleSpace: widget.playlist == null
               ? null
               : _PlaylistDetailHeader(widget.playlist!),
@@ -68,8 +67,8 @@ class _PlayListDetailState extends State<PlaylistDetailPage> {
   }
 
   Widget _buildLoading(BuildContext context) {
-    return _buildPreview(
-        context, Container(height: 200, child: Center(child: Text("加载中..."))));
+    return _buildPreview(context,
+        const SizedBox(height: 200, child: Center(child: Text("加载中..."))));
   }
 
   @override
@@ -79,16 +78,16 @@ class _PlayListDetailState extends State<PlaylistDetailPage> {
       body: BoxWithBottomPlayerController(
         Loader<PlaylistDetail?>(
             initialData: neteaseLocalData.getPlaylistDetail(widget.playlistId),
-            loadTask: (() => neteaseRepository!
+            loadTask: () => neteaseRepository!
                 .playlistDetail(widget.playlistId)
-                .then((value) => value!)),
+                .then((value) => value!),
             loadingBuilder: (context) {
               return _buildLoading(context);
             },
             errorBuilder: (context, result) {
               return _buildPreview(
                   context,
-                  Container(
+                  const SizedBox(
                     height: 200,
                     child: Center(child: Text("加载失败")),
                   ));
@@ -145,7 +144,7 @@ class _PlaylistBodyState extends State<_PlaylistBody> {
             pinned: true,
             automaticallyImplyLeading: false,
             backgroundColor: Colors.transparent,
-            expandedHeight: HEIGHT_HEADER,
+            expandedHeight: kHeaderHeight,
             bottom: _buildListHeader(context) as PreferredSizeWidget?,
             flexibleSpace: _PlaylistDetailHeader(widget.playlist),
           ),
@@ -220,7 +219,7 @@ class _SubscribeButtonState extends State<_SubscribeButton> {
   Widget build(BuildContext context) {
     if (!subscribed) {
       return ClipRRect(
-        borderRadius: BorderRadius.all(Radius.circular(16)),
+        borderRadius: const BorderRadius.all(Radius.circular(16)),
         child: Container(
           height: 40,
           decoration: BoxDecoration(
@@ -239,15 +238,15 @@ class _SubscribeButtonState extends State<_SubscribeButton> {
               },
               child: Row(
                 children: <Widget>[
-                  SizedBox(width: 16),
+                  const SizedBox(width: 16),
                   Icon(Icons.add,
                       color: Theme.of(context).primaryIconTheme.color),
-                  SizedBox(width: 4),
+                  const SizedBox(width: 4),
                   Text(
                     "收藏(${getFormattedNumber(widget.subscribedCount!)})",
                     style: Theme.of(context).primaryTextTheme.bodyText2,
                   ),
-                  SizedBox(width: 16),
+                  const SizedBox(width: 16),
                 ],
               ),
             ),
@@ -256,20 +255,20 @@ class _SubscribeButtonState extends State<_SubscribeButton> {
       );
     } else {
       return InkWell(
-          child: Container(
+          child: SizedBox(
             height: 40,
             child: Row(
               children: <Widget>[
-                SizedBox(width: 16),
+                const SizedBox(width: 16),
                 Icon(Icons.folder_special,
                     size: 20, color: Theme.of(context).disabledColor),
-                SizedBox(width: 4),
+                const SizedBox(width: 4),
                 Text(getFormattedNumber(widget.subscribedCount!),
                     style: Theme.of(context)
                         .textTheme
                         .caption!
                         .copyWith(fontSize: 14)),
-                SizedBox(width: 16),
+                const SizedBox(width: 16),
               ],
             ),
           ),
@@ -278,14 +277,14 @@ class _SubscribeButtonState extends State<_SubscribeButton> {
                 context: context,
                 builder: (context) {
                   return AlertDialog(
-                    content: Text("确定不再收藏此歌单吗?"),
+                    content: const Text("确定不再收藏此歌单吗?"),
                     actions: <Widget>[
                       FlatButton(
                           onPressed: () => Navigator.pop(context),
-                          child: Text("取消")),
+                          child: const Text("取消")),
                       FlatButton(
                           onPressed: () => Navigator.pop(context, true),
-                          child: Text("不再收藏"))
+                          child: const Text("不再收藏"))
                     ],
                   );
                 });
@@ -420,7 +419,7 @@ class DetailHeader extends StatelessWidget {
                     _HeaderAction(Icons.check_box, "多选", onSelectionTap),
                   ],
                 ),
-                Spacer(),
+                const Spacer(),
               ],
             ),
           ),
@@ -433,7 +432,7 @@ class DetailHeader extends StatelessWidget {
 
 ///a detail header describe playlist information
 class _PlaylistDetailHeader extends StatelessWidget {
-  _PlaylistDetailHeader(this.playlist);
+  const _PlaylistDetailHeader(this.playlist);
 
   final PlaylistDetail playlist;
 
@@ -505,29 +504,30 @@ class _PlaylistDetailHeader extends StatelessWidget {
           }
         },
         onShareTap: () {
-          final String content =
-              MessageFormat(context.strings!["playlist_share_content"]).format({
-            "username": playlist.creator!["nickname"],
-            "title": playlist.name!,
-            "playlistId": playlist.id.toString(),
-            "userId": playlist.creator!["userId"].toString(),
-            "shareUserId": UserAccount.of(context, rebuildOnChange: false)
-                .userId
-                .toString(),
-          });
-          Clipboard.setData(ClipboardData(text: content));
-          toast(context.strings!["share_content_copied"]);
+          Clipboard.setData(
+            ClipboardData(
+              text: context.strings.playlistShareContent(
+                  playlist.creator!["nickname"],
+                  playlist.name!,
+                  playlist.id.toString(),
+                  playlist.creator!["userId"].toString(),
+                  UserAccount.of(context, rebuildOnChange: false)
+                      .userId
+                      .toString()),
+            ),
+          );
+          toast(context.strings.shareContentCopied);
         },
         content: Container(
           height: 146,
-          padding: EdgeInsets.only(top: 20),
+          padding: const EdgeInsets.only(top: 20),
           child: Row(
             children: <Widget>[
-              SizedBox(width: 16),
+              const SizedBox(width: 16),
               AspectRatio(
                 aspectRatio: 1,
                 child: ClipRRect(
-                  borderRadius: BorderRadius.all(Radius.circular(3)),
+                  borderRadius: const BorderRadius.all(Radius.circular(3)),
                   child: Stack(
                     children: <Widget>[
                       QuietHero(
@@ -537,8 +537,8 @@ class _PlaylistDetailHeader extends StatelessWidget {
                             image: CachedImage(playlist.coverUrl!)),
                       ),
                       Container(
-                        padding: EdgeInsets.all(4),
-                        decoration: BoxDecoration(
+                        padding: const EdgeInsets.all(4),
+                        decoration: const BoxDecoration(
                             gradient: LinearGradient(
                                 begin: Alignment.topCenter,
                                 end: Alignment.bottomCenter,
@@ -570,12 +570,12 @@ class _PlaylistDetailHeader extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(width: 16),
+              const SizedBox(width: 16),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    SizedBox(height: 10),
+                    const SizedBox(height: 10),
                     Text(
                       playlist.name!,
                       style: Theme.of(context)
@@ -585,7 +585,7 @@ class _PlaylistDetailHeader extends StatelessWidget {
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
-                    SizedBox(height: 10),
+                    const SizedBox(height: 10),
                     InkWell(
                       onTap: () {
                         Navigator.push(context,
@@ -625,7 +625,7 @@ class _PlaylistDetailHeader extends StatelessWidget {
                   ],
                 ),
               ),
-              SizedBox(width: 16),
+              const SizedBox(width: 16),
             ],
           ),
         ));

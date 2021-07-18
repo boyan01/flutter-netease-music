@@ -10,18 +10,18 @@ import 'package:video_player/video_player.dart';
 
 ///播放中mv的model
 class VideoPlayerModel extends Model {
-  static VideoPlayerModel of(BuildContext context,
-      {bool rebuildOnChange = true}) {
-    return ScopedModel.of<VideoPlayerModel>(context,
-        rebuildOnChange: rebuildOnChange);
-  }
-
-  VideoPlayerModel(this.data, {subscribed = false}) {
+  VideoPlayerModel(this.data, {bool subscribed = false}) {
     final Map brs = data.brs!;
     assert(brs.isNotEmpty);
     _imageResolutions = brs.keys.toList() as List<String>?;
     _subscribed = subscribed;
     _initPlayerController(imageResolutions!.first);
+  }
+
+  static VideoPlayerModel of(BuildContext context,
+      {bool rebuildOnChange = true}) {
+    return ScopedModel.of<VideoPlayerModel>(context,
+        rebuildOnChange: rebuildOnChange);
   }
 
   ///根据分辨率初始化播放器

@@ -1,0 +1,20 @@
+{
+    "recommendPlayLists": "推荐歌单",
+    "my": "我的",
+    "discover": "发现",
+    "localMusic": "本地音乐",
+    "cloudMusic": "云盘",
+    "latestPlayHistory": "最近播放",
+    "friends": "我的好友",
+    "myDjs": "我的电台",
+    "collectionLike": "已购",
+    "alreadyBuy": "收藏和赞",
+    "todo": "TBD",
+    "login": "立即登录",
+    "playlistLoginDescription": "登录以加载你的私人播放列表。",
+    "createdSongList": "创建歌单",
+    "favoriteSongList": "收藏歌单",
+    "playlistShareContent": "分享{username}创建的歌单「{title}」: http://music.163.com/playlist/{playlistId}/{userId}/?userid={shareUserId} (来自@网易云音乐)",
+    "shareContentCopied": "分享内容已复制到剪切板",
+    "albumShareContent": "分享{artistName}的专辑《{albumName}》: http://music.163.com/album/{albumId}/?userid={sharedUserId} (来自@网易云音乐)"
+}

@@ -34,7 +34,7 @@ class _NavigationLine extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 16),
+      margin: const EdgeInsets.symmetric(vertical: 16),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
@@ -66,17 +66,19 @@ class _NavigationLine extends StatelessWidget {
 
 ///common header for section
 class _Header extends StatelessWidget {
+  const _Header(this.text, this.onTap);
+
   final String text;
   final GestureTapCallback onTap;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(top: 10, bottom: 6),
+      margin: const EdgeInsets.only(top: 10, bottom: 6),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Padding(padding: EdgeInsets.only(left: 8)),
+          const Padding(padding: EdgeInsets.only(left: 8)),
           Text(
             text,
             style: Theme.of(context)
@@ -84,16 +86,16 @@ class _Header extends StatelessWidget {
                 .subtitle1!
                 .copyWith(fontWeight: FontWeight.w800),
           ),
-          Icon(Icons.chevron_right),
+          const Icon(Icons.chevron_right),
         ],
       ),
     );
   }
-
-  _Header(this.text, this.onTap);
 }
 
 class _ItemNavigator extends StatelessWidget {
+  const _ItemNavigator(this.icon, this.text, this.onTap);
+
   final IconData icon;
 
   final String text;
@@ -105,11 +107,11 @@ class _ItemNavigator extends StatelessWidget {
     return InkWell(
         onTap: onTap,
         child: Container(
-          padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
           child: Column(
             children: <Widget>[
               Material(
-                shape: CircleBorder(),
+                shape: const CircleBorder(),
                 elevation: 5,
                 child: ClipOval(
                   child: Container(
@@ -123,14 +125,12 @@ class _ItemNavigator extends StatelessWidget {
                   ),
                 ),
               ),
-              Padding(padding: EdgeInsets.only(top: 8)),
+              Padding(padding: const EdgeInsets.only(top: 8)),
               Text(text),
             ],
           ),
         ));
   }
-
-  _ItemNavigator(this.icon, this.text, this.onTap);
 }
 
 class _SectionPlaylist extends StatelessWidget {
@@ -139,20 +139,20 @@ class _SectionPlaylist extends StatelessWidget {
     return Loader<Map>(
       loadTask: () => neteaseRepository!.personalizedPlaylist(limit: 6),
       builder: (context, result) {
-        List<Map> list = (result["result"] as List).cast();
+        final List<Map> list = (result["result"] as List).cast();
         return LayoutBuilder(builder: (context, constraints) {
           assert(constraints.maxWidth.isFinite,
               "can not layout playlist item in infinite width container.");
           final parentWidth = constraints.maxWidth - 8;
-          int count = /* false ? 6 : */ 3;
-          double width = (parentWidth ~/ count).toDouble().clamp(80.0, 200.0);
-          double spacing = (parentWidth - width * count) / (count + 1);
+          const int count = /* false ? 6 : */ 3;
+          final double width =
+              (parentWidth ~/ count).toDouble().clamp(80.0, 200.0);
+          final double spacing = (parentWidth - width * count) / (count + 1);
           return Padding(
             padding:
                 EdgeInsets.symmetric(horizontal: 4 + spacing.roundToDouble()),
             child: Wrap(
               spacing: spacing,
-              direction: Axis.horizontal,
               children: list.map<Widget>((p) {
                 return _PlayListItemView(playlist: p, width: width);
               }).toList(),
@@ -165,15 +165,15 @@ class _SectionPlaylist extends StatelessWidget {
 }
 
 class _PlayListItemView extends StatelessWidget {
-  final Map playlist;
-
-  final double width;
-
   const _PlayListItemView({
     Key? key,
     required this.playlist,
     required this.width,
   }) : super(key: key);
+
+  final Map playlist;
+
+  final double width;
 
   @override
   Widget build(BuildContext context) {
@@ -206,7 +206,7 @@ class _PlayListItemView extends StatelessWidget {
       onLongPress: onLongPress,
       child: Container(
         width: width,
-        padding: EdgeInsets.symmetric(horizontal: 4, vertical: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
         child: Column(
           children: <Widget>[
             Container(
@@ -217,14 +217,15 @@ class _PlayListItemView extends StatelessWidget {
                 child: AspectRatio(
                   aspectRatio: 1,
                   child: FadeInImage(
-                    placeholder: AssetImage("assets/playlist_playlist.9.png"),
+                    placeholder:
+                        const AssetImage("assets/playlist_playlist.9.png"),
                     image: CachedImage(playlist["picUrl"]),
                     fit: BoxFit.cover,
                   ),
                 ),
               ),
             ),
-            Padding(padding: EdgeInsets.only(top: 4)),
+            const Padding(padding: EdgeInsets.only(top: 4)),
             Text(
               playlist["name"],
               maxLines: 2,
@@ -248,7 +249,7 @@ class _SectionNewSongs extends StatelessWidget {
     return Loader<Map>(
       loadTask: () => neteaseRepository!.personalizedNewSong(),
       builder: (context, result) {
-        List<Music> songs = (result["result"] as List)
+        final List<Music> songs = (result["result"] as List)
             .cast<Map>()
             .map(_mapJsonToMusic)
             .toList();
