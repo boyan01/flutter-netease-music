@@ -46,10 +46,11 @@ class PlayingLyric extends Model {
       return;
     }
     _lyricLoader = CancelableOperation<String?>.fromFuture(
-        neteaseRepository!.lyric(music.id!))
-      ..value.then((lyric) {
+      neteaseRepository!.lyric(music.id),
+    )..value.then((lyric) {
         _setLyric(lyric: lyric);
-      }, onError: (e) {
+      }, onError: (e, s) {
+        debugPrint('error to load lyric: $e $s');
         _setLyric(message: e.toString());
       });
   }

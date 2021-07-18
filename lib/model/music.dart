@@ -4,7 +4,7 @@ import 'model.dart';
 
 class Music {
   Music({
-    this.id,
+    required this.id,
     this.title,
     this.url,
     this.album,
@@ -12,7 +12,7 @@ class Music {
     int? mvId,
   }) : this.mvId = mvId ?? 0;
 
-  final int? id;
+  final int id;
 
   final String? title;
 

@@ -178,7 +178,7 @@ class NeteaseRepository {
 
   ///根据音乐id获取歌词
   Future<String?> lyric(int id) async {
-    final lyricCache = await (_lyricCache() as FutureOr<_LyricCache>);
+    final lyricCache = await _lyricCache();
     final key = _LyricCacheKey(id);
     //check cache first
     String? cached = await lyricCache.get(key);
@@ -493,9 +493,9 @@ class _LyricCacheKey implements CacheKey {
 
 _LyricCache? __lyricCache;
 
-Future<_LyricCache?> _lyricCache() async {
+Future<_LyricCache> _lyricCache() async {
   if (__lyricCache != null) {
-    return __lyricCache;
+    return __lyricCache!;
   }
   var temp = await getTemporaryDirectory();
   var dir = Directory(temp.path + "/lyrics/");
@@ -503,7 +503,7 @@ Future<_LyricCache?> _lyricCache() async {
     dir = await dir.create();
   }
   __lyricCache = _LyricCache._(dir);
-  return __lyricCache;
+  return __lyricCache!;
 }
 
 class _LyricCache implements Cache<String?> {
