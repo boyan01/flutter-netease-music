@@ -246,10 +246,14 @@ class AZRender extends RenderBox {
 
   @override
   void paint(PaintingContext context, Offset offset) {
-    super.paint(context, offset);
     _offsets.forEach((painter, value) {
       painter.paint(context.canvas, value + offset);
     });
+  }
+
+  @override
+  Size computeDryLayout(BoxConstraints constraints) {
+    return Size(width, constraints.maxHeight);
   }
 
   @override

@@ -26,7 +26,7 @@ class UserDetailPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Loader<UserDetail?>(
       initialData: neteaseLocalData.get('user_detail_$userId'),
-      loadTask: (() => neteaseRepository!.getUserDetail(userId!).then((value) => value!)),
+      loadTask: (() => neteaseRepository!.getUserDetail(userId!)),
       builder: (BuildContext context, UserDetail? user) {
         return _DetailPage(user: user);
       },

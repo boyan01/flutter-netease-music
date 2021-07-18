@@ -28,10 +28,11 @@ class UserAccount extends ChangeNotifier {
       final json = result.asValue!.value;
       final userId = json["account"]["id"];
 
-      final userDetailResult = await (neteaseRepository!.getUserDetail(userId)
-          as FutureOr<Result<UserDetail>>);
+      final userDetailResult = await neteaseRepository!.getUserDetail(userId);
       if (userDetailResult.isError) {
-        return Result.error("can not get user detail");
+        final error = userDetailResult.asError!;
+        debugPrint('error : ${error.error} ${error.stackTrace}');
+        return Result.error("can not get user detail.");
       }
       _userDetail = userDetailResult.asValue!.value;
       neteaseLocalData[_persistenceKey] = _userDetail!.toJson();

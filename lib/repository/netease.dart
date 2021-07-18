@@ -392,14 +392,17 @@ class NeteaseRepository {
   }
 
   ///获取用户详情
-  Future<Result<UserDetail>?> getUserDetail(int uid) async {
+  Future<Result<UserDetail>> getUserDetail(int uid) async {
     final result = await doRequest('/user/detail', {'uid': uid});
     if (result.isValue) {
       // save user_detail to local data.
       // TODO: limit count.
       neteaseLocalData['user_detail_$uid'] = result.asValue!.value;
     }
-    return _map(result, (dynamic t) => UserDetail.fromJsonMap(t));
+    return _map(
+      result,
+      (t) => UserDetail.fromJsonMap((t as Map).cast()),
+    );
   }
 
   ///

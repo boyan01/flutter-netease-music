@@ -101,7 +101,7 @@ class UserProfile {
   final String? backgroundUrl;
   final String? signature;
   final int? authority;
-  final List<Object>? artistIdentity;
+  final List<dynamic>? artistIdentity;
   final int? followeds;
   final int? follows;
   final int? cCount;
