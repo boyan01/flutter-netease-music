@@ -203,7 +203,7 @@ class _UserPlayListSectionState extends State<UserPlayListSection> {
     return Loader<List<PlaylistDetail?>?>(
         initialData: neteaseLocalData.getUserPlaylist(widget.userId),
         loadTask: () {
-          return neteaseRepository!.userPlaylist(widget.userId).then((value) => value!);
+          return neteaseRepository!.userPlaylist(widget.userId).then((value) => value);
         },
         loadingBuilder: (context) {
           return _singleSliver(child: Container());

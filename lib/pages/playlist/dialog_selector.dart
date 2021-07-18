@@ -143,7 +143,7 @@ class PlaylistSelectorDialog extends StatelessWidget {
     }
     final userId = UserAccount.of(context).userId;
     return Loader<List<PlaylistDetail?>>(
-      loadTask: (() => neteaseRepository!.userPlaylist(userId).then((value) => value!)),
+      loadTask: (() => neteaseRepository!.userPlaylist(userId).then((value) => value)),
       errorBuilder: (context, result) {
         return _buildDialog(
             context,

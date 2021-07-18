@@ -41,17 +41,17 @@ class LocalData {
   }
 
   Future<T?> get<T>(dynamic key) async {
-    final Database db = await (getApplicationDatabase() as FutureOr<Database>);
-    final dynamic result = StoreRef.main().record(key).get(db);
+    final Database db = await getApplicationDatabase();
+    final dynamic result = await StoreRef.main().record(key).get(db);
     if (result is T) {
       return result;
     }
-    assert(false, "the result of $key is not subtype of $T");
+    assert(false, "the result of $key is not subtype of $T. $result");
     return null;
   }
 
   Future _put(dynamic value, [dynamic key]) async {
-    final Database db = await (getApplicationDatabase() as FutureOr<Database>);
+    final Database db = await getApplicationDatabase();
     return StoreRef.main().record(key).put(db, value);
   }
 

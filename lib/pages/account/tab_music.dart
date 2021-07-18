@@ -17,19 +17,19 @@ class _TabMusicState extends State<TabMusic>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return CachedLoader<List<PlaylistDetail?>>(
+    return CachedLoader<List<PlaylistDetail>>(
       cacheKey: 'user_playlist_${widget.profile.userId}',
       loadTask: () => neteaseRepository!.userPlaylist(widget.profile.userId),
-      serialize: (list) => list.map((it) => it!.toMap()).toList(),
+      serialize: (list) => list.map((it) => it.toMap()).toList(),
       deserialize: (list) => (list as List)
           .map((it) => PlaylistDetail.fromMap(it))
           .toList()
           .cast(),
       builder: (context, result) {
         final created =
-            result.where((p) => p!.creator!["userId"] == widget.profile.userId);
+            result.where((p) => p.creator!["userId"] == widget.profile.userId);
         final subscribed =
-            result.where((p) => p!.creator!["userId"] != widget.profile.userId);
+            result.where((p) => p.creator!["userId"] != widget.profile.userId);
         return ListView(
           children: <Widget>[
             Row(

@@ -105,13 +105,13 @@ class NeteaseRepository {
 
   ///根据用户ID获取歌单
   ///PlayListDetail 中的 tracks 都是空数据
-  Future<Result<List<PlaylistDetail?>>?> userPlaylist(int? userId,
+  Future<Result<List<PlaylistDetail>>> userPlaylist(int? userId,
       [int offset = 0, int limit = 1000]) async {
     final response = await doRequest(
         "/user/playlist", {"offset": offset, "uid": userId, "limit": limit});
 
     return _map(response, (Map result) {
-      final List<PlaylistDetail?> list = (result["playlist"] as List)
+      final List<PlaylistDetail> list = (result["playlist"] as List)
           .cast<Map>()
           .map((e) => PlaylistDetail.fromJson(e))
           .toList();
