@@ -11,4 +11,3 @@ linter:
     #    prefer_single_quotes: true
     lines_longer_than_80_chars: true
     unnecessary_const: true
-    always_use_package_imports: true

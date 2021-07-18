@@ -1,7 +1,16 @@
+import 'package:json_annotation/json_annotation.dart';
+
 export 'music.dart';
 
+part 'model.g.dart';
+
+@JsonSerializable()
 class Album {
-  Album({this.coverImageUrl, this.name, this.id});
+  Album({
+    this.coverImageUrl,
+    this.name,
+    this.id,
+  });
 
   String? coverImageUrl;
 
@@ -25,25 +34,18 @@ class Album {
     return 'Album{name: $name, id: $id}';
   }
 
-  static Album fromMap(Map map) {
-    return Album(
-      id: map["id"],
-      name: map["name"],
-      coverImageUrl: map["coverImageUrl"],
-    );
-  }
+  static Album fromJson(Map map) => _$AlbumFromJson(map);
 
-  Map toMap() {
-    return {
-      "id": id,
-      "name": name,
-      "coverImageUrl": coverImageUrl,
-    };
-  }
+  Map<String, dynamic> toJson() => _$AlbumToJson(this);
 }
 
+@JsonSerializable()
 class Artist {
-  Artist({this.name, this.id, this.imageUrl});
+  Artist({
+    this.name,
+    this.id,
+    this.imageUrl,
+  });
 
   String? name;
 
@@ -56,11 +58,11 @@ class Artist {
     return 'Artist{name: $name, id: $id, imageUrl: $imageUrl}';
   }
 
-  static Artist fromMap(Map map) {
-    return Artist(id: map["id"], name: map["name"]);
+  static Artist fromJson(Map json) {
+    return _$ArtistFromJson(json);
   }
 
-  Map toMap() {
-    return {"id": id, "name": name};
+  Map<String, dynamic> toJson() {
+    return _$ArtistToJson(this);
   }
 }

@@ -8,10 +8,10 @@ import 'package:quiet/pages/comments/comments.dart';
 import 'package:quiet/pages/comments/page_comment.dart';
 import 'package:quiet/part/part.dart';
 import 'package:quiet/repository/netease.dart';
+import 'package:quiet/repository/objects/music_video_detail.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:video_player/video_player.dart';
 
-import 'music_video_datail.dart';
 import 'page_music_video_player_fullscreen.dart';
 import 'video_controller.dart';
 import 'video_player_model.dart';
@@ -20,9 +20,9 @@ import 'video_player_model.dart';
 ///顶部是视频播放
 ///下方显示评论
 class MusicVideoPlayerPage extends StatelessWidget {
-  final int mvId;
+  const MusicVideoPlayerPage(this.mvId, {Key? key}) : super(key: key);
 
-  MusicVideoPlayerPage(this.mvId, {Key? key}) : super(key: key);
+  final int mvId;
 
   @override
   Widget build(BuildContext context) {
@@ -37,10 +37,13 @@ class MusicVideoPlayerPage extends StatelessWidget {
             child: MediaQuery.removePadding(
               context: context,
               removeTop: true,
-              child: Loader(
+              child: Loader<MusicVideoDetailResult>(
                   loadTask: () => neteaseRepository!.mvDetail(mvId),
-                  builder: (context, dynamic result) {
-                    return _MvDetailPage(result: result);
+                  builder: (context, result) {
+                    return _MvDetailPage(
+                      subscribed: result.subscribed,
+                      musicVideoDetail: result.data,
+                    );
                   }),
             ),
           ),
@@ -51,15 +54,17 @@ class MusicVideoPlayerPage extends StatelessWidget {
 }
 
 class _MvDetailPage extends StatefulWidget {
-  ///response of [NeteaseRepository.mvDetail]
-  final Map? result;
+  const _MvDetailPage({
+    Key? key,
+    required this.musicVideoDetail,
+    required this.subscribed,
+  }) : super(key: key);
 
-  const _MvDetailPage({Key? key, this.result}) : super(key: key);
+  final MusicVideoDetail musicVideoDetail;
+  final bool subscribed;
 
   @override
-  _MvDetailPageState createState() {
-    return new _MvDetailPageState();
-  }
+  _MvDetailPageState createState() => _MvDetailPageState();
 }
 
 class _MvDetailPageState extends State<_MvDetailPage> {
@@ -71,8 +76,9 @@ class _MvDetailPageState extends State<_MvDetailPage> {
   void initState() {
     super.initState();
     _model = VideoPlayerModel(
-        MusicVideoDetail.fromJsonMap(widget.result!['data']),
-        subscribed: widget.result!['subed']);
+      widget.musicVideoDetail,
+      subscribed: widget.subscribed,
+    );
     _model.videoPlayerController.play();
     //TODO audio focus
     if (context.player.playbackState.isPlaying) {
@@ -103,7 +109,7 @@ class _MvDetailPageState extends State<_MvDetailPage> {
             _SimpleMusicVideo(),
             Expanded(child: ScopedModelDescendant<CommentList>(
               builder: (context, child, model) {
-                List data = [];
+                final List data = [];
                 data.addAll(MusicVideoFloor.values);
                 data.addAll(model.items);
 
@@ -119,7 +125,7 @@ class _MvDetailPageState extends State<_MvDetailPage> {
                         final item = data[index];
                         switch (item) {
                           case MusicVideoFloor.title:
-                            return _InformationSection();
+                            return const _InformationSection();
                           case MusicVideoFloor.actions:
                             return _ActionsSection();
                           case MusicVideoFloor.artists:
@@ -156,19 +162,17 @@ class _SimpleMusicVideo extends StatelessWidget {
     } else {
       aspect = _defaultVideoAspect;
     }
-    return Container(
-      child: AspectRatio(
-        aspectRatio: _defaultVideoAspect,
-        child: Container(
-          color: Colors.black,
-          child: Stack(children: <Widget>[
-            Center(
-                child: AspectRatio(
-                    aspectRatio: aspect,
-                    child: VideoPlayer(model.videoPlayerController))),
-            _SimpleVideoController(),
-          ]),
-        ),
+    return AspectRatio(
+      aspectRatio: _defaultVideoAspect,
+      child: Container(
+        color: Colors.black,
+        child: Stack(children: <Widget>[
+          Center(
+              child: AspectRatio(
+                  aspectRatio: aspect,
+                  child: VideoPlayer(model.videoPlayerController))),
+          _SimpleVideoController(),
+        ]),
       ),
     );
   }
@@ -184,14 +188,16 @@ class _SimpleVideoController extends StatelessWidget {
         showBottomIndicator: true,
         top: Container(
           decoration: const BoxDecoration(
-              gradient: const LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
                 Colors.black38,
                 Colors.black26,
                 Colors.transparent,
-              ])),
+              ],
+            ),
+          ),
           child: AppBar(
               elevation: 0,
               titleSpacing: 0,
@@ -199,7 +205,7 @@ class _SimpleVideoController extends StatelessWidget {
               title: Text(data.name!)),
         ),
         bottom: _buildBottom(context),
-        center: MvPlayPauseButton());
+        center: const MvPlayPauseButton());
   }
 
   Widget _buildBottom(BuildContext context) {
@@ -209,28 +215,31 @@ class _SimpleVideoController extends StatelessWidget {
     final duration = value.duration.inMilliseconds;
     return Container(
       decoration: const BoxDecoration(
-          gradient: const LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
             Colors.transparent,
             Colors.black26,
             Colors.black38,
-          ])),
+          ],
+        ),
+      ),
       child: Row(
         children: <Widget>[
-          SizedBox(width: 8),
+          const SizedBox(width: 8),
           Text.rich(
             TextSpan(children: <TextSpan>[
               TextSpan(
                   text: getTimeStamp(position),
-                  style: TextStyle(color: Colors.white)),
-              TextSpan(text: ' / ', style: TextStyle(color: Colors.white70)),
+                  style: const TextStyle(color: Colors.white)),
+              const TextSpan(
+                  text: ' / ', style: TextStyle(color: Colors.white70)),
               TextSpan(
                   text: getTimeStamp(duration),
-                  style: TextStyle(color: Colors.white70)),
+                  style: const TextStyle(color: Colors.white70)),
             ]),
-            style: TextStyle(fontSize: 13),
+            style: const TextStyle(fontSize: 13),
           ),
           Expanded(
               child: Slider(
@@ -243,9 +252,10 @@ class _SimpleVideoController extends StatelessWidget {
                   })),
           InkWell(
               splashColor: Colors.white,
-              child: Padding(
-                  padding: const EdgeInsets.all(8),
-                  child: Icon(Icons.fullscreen, color: Colors.white)),
+              child: const Padding(
+                padding: EdgeInsets.all(8),
+                child: Icon(Icons.fullscreen, color: Colors.white),
+              ),
               onTap: () async {
                 final route = MaterialPageRoute(
                     builder: (_) => ScopedModel<VideoPlayerModel>(
@@ -270,9 +280,9 @@ class _SimpleVideoController extends StatelessWidget {
 }
 
 class MvPlayPauseButton extends StatelessWidget {
-  final VoidCallback? onInteracted;
-
   const MvPlayPauseButton({Key? key, this.onInteracted}) : super(key: key);
+
+  final VoidCallback? onInteracted;
 
   @override
   Widget build(BuildContext context) {
@@ -358,7 +368,7 @@ class _InformationSectionState extends State<_InformationSection> {
                           .copyWith(fontWeight: FontWeight.bold),
                     ),
                     DefaultTextStyle(
-                      style: TextStyle(color: Colors.grey),
+                      style: const TextStyle(color: Colors.grey),
                       child: Row(
                         children: <Widget>[
                           Text('发布: ${data.publishTime}'),
@@ -400,7 +410,7 @@ class _ActionsSection extends StatelessWidget {
     return DividerWrapper(
       child: ButtonTheme(
         textTheme: ButtonTextTheme.accent,
-        colorScheme: ColorScheme.light(secondary: Colors.black54),
+        colorScheme: const ColorScheme.light(secondary: Colors.black54),
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 8),
           child: Row(
@@ -412,7 +422,7 @@ class _ActionsSection extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
                       const SizedBox(height: 4.0),
-                      Icon(Icons.thumb_up),
+                      const Icon(Icons.thumb_up),
                       const SizedBox(height: 4.0),
                       Text('${data.likeCount}'),
                     ],
@@ -424,7 +434,7 @@ class _ActionsSection extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
                       const SizedBox(height: 4.0),
-                      Icon(Icons.comment),
+                      const Icon(Icons.comment),
                       const SizedBox(height: 4.0),
                       Text('${data.commentCount}'),
                     ],
@@ -435,7 +445,7 @@ class _ActionsSection extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
                       const SizedBox(height: 4.0),
-                      Icon(Icons.share),
+                      const Icon(Icons.share),
                       const SizedBox(height: 4.0),
                       Text('${data.shareCount}'),
                     ],
@@ -493,7 +503,7 @@ class _ArtistSection extends StatelessWidget {
         launchArtistDetailPage(context, artist);
       },
       child: Container(
-        padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
         child: Row(
           children: <Widget>[
             ClipOval(
@@ -504,24 +514,24 @@ class _ArtistSection extends StatelessWidget {
                 child: Container(color: Theme.of(context).disabledColor),
               ),
             ),
-            SizedBox(width: 12),
+            const SizedBox(width: 12),
             Text(artist.map((ar) => ar.name).join('/')),
-            Spacer(),
+            const Spacer(),
             ButtonTheme(
               minWidth: 30,
               height: 32,
-              padding: EdgeInsets.all(0),
+              padding: const EdgeInsets.all(0),
               child: RaisedButtonWithIcon(
                 onPressed: () {
                   toast('收藏');
                 },
                 materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                 textColor: Theme.of(context).primaryTextTheme.bodyText2!.color,
-                icon: Icon(Icons.add, size: 18),
-                label: Text('收藏', style: TextStyle(fontSize: 12)),
+                icon: const Icon(Icons.add, size: 18),
+                label: const Text('收藏', style: TextStyle(fontSize: 12)),
                 color: Theme.of(context).primaryColor,
                 labelSpacing: 4,
-                shape: RoundedRectangleBorder(
+                shape: const RoundedRectangleBorder(
                     borderRadius: BorderRadius.all(Radius.circular(20))),
               ),
             )

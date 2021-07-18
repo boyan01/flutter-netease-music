@@ -64,6 +64,7 @@ class Artist extends model.Artist {
     this.alias!.addAll(aliasList.map((o) => o.toString()));
   }
 
+  @override
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['img1v1Url'] = this.img1v1Url;

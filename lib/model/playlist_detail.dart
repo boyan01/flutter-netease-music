@@ -75,8 +75,8 @@ class PlaylistDetail {
     return PlaylistDetail(
         map['id'],
         (map['musicList'] as List?)
-            ?.cast<Map>()
-            .map((m) => Music.fromMap(m))
+            ?.cast<Map<String, dynamic>>()
+            .map((m) => Music.fromJson(m))
             .cast<Music>()
             .toList(),
         map['creator'],
@@ -94,7 +94,7 @@ class PlaylistDetail {
   Map toMap() {
     return {
       'id': id,
-      'musicList': musicList?.map((m) => m.toMap()).toList(),
+      'musicList': musicList?.map((m) => m.toJson()).toList(),
       'creator': creator,
       'name': name,
       'coverUrl': coverUrl,

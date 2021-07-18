@@ -11,6 +11,7 @@ import 'package:quiet/model/playlist_detail.dart';
 import 'package:quiet/model/user_detail_bean.dart';
 import 'package:quiet/pages/comments/page_comment.dart';
 import 'package:quiet/part/part.dart';
+import 'package:quiet/repository/objects/music_video_detail.dart';
 
 import 'local_cache_data.dart';
 
@@ -53,6 +54,24 @@ Result<R> _map<T, R>(Result<T> source, R f(T t)) {
     return Result.value(f(source.asValue!.value));
   } catch (e, s) {
     return Result.error(e, s);
+  }
+}
+
+extension _ResultMapExtension<T> on Result<T> {
+  Result<R> map<R>(R Function(T value) transform) {
+    if (isError) return asError!;
+    try {
+      return Result.value(transform(asValue!.value));
+    } catch (e, s) {
+      debugPrint('error to transform: ${asValue!.value}');
+      return Result.error(e, s);
+    }
+  }
+}
+
+extension _FutureMapExtension<T> on Future<Result<T>> {
+  Future<Result<R>> map<R>(R Function(T value) transform) {
+    return then((value) => value.map(transform));
   }
 }
 
@@ -373,8 +392,9 @@ class NeteaseRepository {
   }
 
   ///获取对应 MV 数据 , 数据包含 mv 名字 , 歌手 , 发布时间 , mv 视频地址等数据
-  Future<Result<Map>> mvDetail(int mvId) {
-    return doRequest('/mv/detail', {'mvid': mvId});
+  Future<Result<MusicVideoDetailResult>> mvDetail(int mvId) {
+    return doRequest('/mv/detail', {'mvid': mvId})
+        .map((json) => MusicVideoDetailResult.fromJson(json));
   }
 
   ///调用此接口,可收藏 MV

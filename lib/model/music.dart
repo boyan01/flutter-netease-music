@@ -1,7 +1,11 @@
+import 'package:json_annotation/json_annotation.dart';
 import 'package:music_player/music_player.dart';
 
 import 'model.dart';
 
+part 'music.g.dart';
+
+@JsonSerializable()
 class Music {
   Music({
     required this.id,
@@ -10,7 +14,15 @@ class Music {
     this.album,
     this.artist,
     int? mvId,
-  }) : this.mvId = mvId ?? 0;
+  }) : mvId = mvId ?? 0;
+
+  factory Music.fromMetadata(MusicMetadata metadata) {
+    return Music.fromJson(metadata.extras!.cast<String, dynamic>());
+  }
+
+  factory Music.fromJson(Map<String, dynamic> json) {
+    return _$MusicFromJson(json);
+  }
 
   final int id;
 
@@ -30,25 +42,31 @@ class Music {
   MusicMetadata? _metadata;
 
   MusicMetadata get metadata {
-    if (_metadata == null) {
-      _metadata = MusicMetadata(
-        mediaId: id.toString(),
-        title: title,
-        subtitle: subTitle,
-        duration: 0,
-        iconUri: imageUrl,
-        extras: MusicExt(this).toMap(),
-      );
-    }
+    _metadata ??= MusicMetadata(
+      mediaId: id.toString(),
+      title: title,
+      subtitle: subTitle,
+      iconUri: imageUrl,
+      extras: toJson(),
+    );
     return _metadata!;
   }
 
   String get artistString => artist!.map((e) => e.name).join('/');
 
   String get subTitle {
-    var ar = artist!.map((a) => a.name).join('/');
-    var al = album!.name;
-    return "$al - $ar";
+    final ar = artist?.map((a) => a.name).join('/');
+    final al = album?.name;
+    if (ar == null && al == null) {
+      return '';
+    }
+    if (ar == null) {
+      return al!;
+    } else if (al == null) {
+      return ar;
+    } else {
+      return "$al - $ar";
+    }
   }
 
   @override
@@ -58,42 +76,7 @@ class Music {
   @override
   int get hashCode => id.hashCode;
 
-  @override
-  String toString() {
-    return 'Music{id: $id, title: $title, url: $url, album: $album, artist: $artist}';
-  }
-
-  factory Music.fromMetadata(MusicMetadata metadata) {
-    return fromMap(metadata.extras!)!;
-  }
-
-  static Music? fromMap(Map? map) {
-    if (map == null) {
-      return null;
-    }
-    return Music(
-        id: map["id"],
-        title: map["title"],
-        url: map["url"],
-        album: Album.fromMap(map["album"]),
-        mvId: map['mvId'] ?? 0,
-        artist:
-            (map["artist"] as List).cast<Map>().map(Artist.fromMap).toList());
-  }
-}
-
-extension MusicExt on Music {
-  Map toMap() {
-    return {
-      "id": id,
-      "title": title,
-      "url": url,
-      "subTitle": subTitle,
-      'mvId': mvId,
-      "album": album!.toMap(),
-      "artist": artist!.map((e) => e.toMap()).toList()
-    };
-  }
+  Map<String, dynamic> toJson() => _$MusicToJson(this);
 }
 
 extension MusicListExt on List<Music> {
