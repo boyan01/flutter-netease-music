@@ -39,7 +39,15 @@ class BoxWithBottomPlayerController extends StatelessWidget {
     bool hide = isSoftKeyboardDisplay(media);
     return Column(
       children: <Widget>[
-        Expanded(child: child),
+        Expanded(
+          child: MediaQuery(
+            data: media.copyWith(
+              viewInsets: media.viewInsets.copyWith(bottom: 0),
+              padding: media.padding.copyWith(bottom: hide ? null : 0),
+            ),
+            child: child,
+          ),
+        ),
         if (!hide) BottomControllerBar(bottomPadding: media.padding.bottom),
         SizedBox(height: media.viewInsets.bottom)
       ],
