@@ -44,7 +44,10 @@ class PlayingPage extends StatelessWidget {
                 PlayingOperationBar(),
                 DurationProgressBar(),
                 PlayerControllerBar(),
-                SizedBox(height: MediaQuery.of(context).viewInsets.bottom),
+                SizedBox(
+                  height: MediaQuery.of(context).viewInsets.bottom +
+                      MediaQuery.of(context).viewPadding.bottom,
+                ),
               ],
             ),
           ),
@@ -268,7 +271,8 @@ class PlayingLyricView extends StatelessWidget {
 
     if (playingLyric.hasLyric) {
       return LayoutBuilder(builder: (context, constraints) {
-        final normalStyle = style.copyWith(color: style.color!.withOpacity(0.7));
+        final normalStyle =
+            style.copyWith(color: style.color!.withOpacity(0.7));
         //歌词顶部与尾部半透明显示
         return ShaderMask(
           shaderCallback: (rect) {
