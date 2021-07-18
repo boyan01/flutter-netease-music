@@ -40,10 +40,10 @@ void main() {
         UserAccount.getPersistenceUser(),
         getApplicationDocumentsDirectory().then((dir) {
           Hive.init(dir.path);
-          return Hive.openBox<Map>("player");
+          return Hive.openBox<Map>('player');
         }),
       ],
-      builder: (context, data) {
+      builder: (BuildContext context, List<dynamic> data) {
         return MyApp(
           setting: Settings(data[0]),
           user: data[1],
