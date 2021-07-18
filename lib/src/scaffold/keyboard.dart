@@ -5,16 +5,16 @@ typedef OnEmit = void Function(String char);
 typedef OnDelete = void Function();
 
 class KeyEmitter extends StatefulWidget {
-  final Widget child;
-  final OnEmit onEmit;
-  final OnDelete onDelete;
-
   const KeyEmitter({
     Key? key,
     required this.onEmit,
     required this.child,
     required this.onDelete,
   }) : super(key: key);
+
+  final Widget child;
+  final OnEmit onEmit;
+  final OnDelete onDelete;
 
   @override
   _KeyEmitterState createState() => _KeyEmitterState();

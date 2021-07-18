@@ -2,28 +2,13 @@ include: package:lint/analysis_options.yaml
 
 linter:
   rules:
-    # ------ Disable individual rules ----- #
-    #                 ---                   #
-    # Turn off what you don't like.         #
-    # ------------------------------------- #
     always_put_required_named_parameters_first: false
     avoid_classes_with_only_static_members: false
     always_specify_types: false
     sort_pub_dependencies: false
 
-    # ------ Enable individual rules ------ #
-    #                 ---                   #
-    # These rules here are good but too     #
-    # opinionated to enable them by default #
-    # ------------------------------------- #
-
-    # Make constructors the first thing in every class
     sort_constructors_first: true
-    # The new tabs vs. spaces. Choose wisely
-    prefer_single_quotes: true
-
-    # Blindly follow the Flutter code style, which prefers types everywhere
-
-    # Back to the 80s
+    #    prefer_single_quotes: true
     lines_longer_than_80_chars: true
     unnecessary_const: true
+    always_use_package_imports: true

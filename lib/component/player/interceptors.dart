@@ -4,16 +4,15 @@ import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:music_player/music_player.dart';
-import 'package:quiet/repository/netease.dart';
+import 'package:quiet/component.dart';
 import 'package:quiet/model/model.dart';
-
-import 'player.dart';
+import 'package:quiet/repository/netease.dart';
 
 class BackgroundInterceptors {
   // 获取播放地址
   static Future<String> playUriInterceptor(
       String? mediaId, String? fallbackUri) async {
-    final result = await (neteaseRepository!.getPlayUrl(int.parse(mediaId!)));
+    final result = await neteaseRepository!.getPlayUrl(int.parse(mediaId!));
     if (result.isError) {
       return fallbackUri ?? '';
     }
@@ -31,7 +30,7 @@ class BackgroundInterceptors {
     final image = Completer<ImageInfo>();
     stream.addListener(ImageStreamListener((info, a) {
       image.complete(info);
-    }, onError: (dynamic exception, StackTrace? stackTrace) {
+    }, onError: (exception, stackTrace) {
       image.completeError(exception, stackTrace);
     }));
     final result = await image.future
@@ -47,8 +46,9 @@ class QuietPlayQueueInterceptor extends PlayQueueInterceptor {
   @override
   Future<List<MusicMetadata>> fetchMoreMusic(
       BackgroundPlayQueue queue, PlayMode playMode) async {
-    if (queue.queueId == FM_PLAY_QUEUE_ID) {
-      final musics = await (neteaseRepository!.getPersonalFmMusics() as FutureOr<List<Music>>);
+    if (queue.queueId == kFmPlayQueueId) {
+      final musics = await (neteaseRepository!.getPersonalFmMusics()
+          as FutureOr<List<Music>>);
       return musics.toMetadataList();
     }
     return super.fetchMoreMusic(queue, playMode);

@@ -11,9 +11,9 @@ import 'package:quiet/repository/cached_image.dart';
 
 @visibleForTesting
 class DisableBottomController extends StatelessWidget {
-  final Widget? child;
-
   const DisableBottomController({Key? key, this.child}) : super(key: key);
+
+  final Widget? child;
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +22,7 @@ class DisableBottomController extends StatelessWidget {
 }
 
 class BoxWithBottomPlayerController extends StatelessWidget {
-  BoxWithBottomPlayerController(this.child);
+  const BoxWithBottomPlayerController(this.child);
 
   final Widget child;
 
@@ -36,7 +36,7 @@ class BoxWithBottomPlayerController extends StatelessWidget {
     final media = MediaQuery.of(context);
     //hide bottom player controller when view inserts
     //bottom too height (such as typing with soft keyboard)
-    bool hide = isSoftKeyboardDisplay(media);
+    final bool hide = isSoftKeyboardDisplay(media);
     return Column(
       children: <Widget>[
         Expanded(
@@ -57,12 +57,12 @@ class BoxWithBottomPlayerController extends StatelessWidget {
 
 ///底部当前音乐播放控制栏
 class BottomControllerBar extends StatelessWidget {
-  final double bottomPadding;
-
   const BottomControllerBar({
     Key? key,
     this.bottomPadding = 0,
   }) : super(key: key);
+
+  final double bottomPadding;
 
   @override
   Widget build(BuildContext context) {
@@ -79,9 +79,11 @@ class BottomControllerBar extends StatelessWidget {
       child: Card(
         margin: const EdgeInsets.all(0),
         shape: const RoundedRectangleBorder(
-            borderRadius: const BorderRadius.only(
-                topLeft: const Radius.circular(4.0),
-                topRight: const Radius.circular(4.0))),
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(4.0),
+            topRight: Radius.circular(4.0),
+          ),
+        ),
         child: Container(
           height: 56,
           margin: EdgeInsets.only(bottom: bottomPadding),
@@ -94,7 +96,7 @@ class BottomControllerBar extends StatelessWidget {
                   child: AspectRatio(
                     aspectRatio: 1,
                     child: ClipRRect(
-                      borderRadius: BorderRadius.all(Radius.circular(3)),
+                      borderRadius: const BorderRadius.all(Radius.circular(3)),
                       child: music.imageUrl == null
                           ? Container(color: Colors.grey)
                           : Image(
@@ -107,28 +109,28 @@ class BottomControllerBar extends StatelessWidget {
               ),
               Expanded(
                 child: DefaultTextStyle(
-                  style: TextStyle(),
+                  style: const TextStyle(),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      Spacer(),
+                      const Spacer(),
                       Text(
                         music.title!,
                         style: Theme.of(context).textTheme.bodyText2,
                       ),
-                      Padding(padding: const EdgeInsets.only(top: 2)),
+                      const Padding(padding: EdgeInsets.only(top: 2)),
                       DefaultTextStyle(
+                        maxLines: 1,
+                        style: Theme.of(context).textTheme.caption!,
                         child: ProgressTrackingContainer(
                           builder: (context) =>
                               _SubTitleOrLyric(music.subTitle),
                           player: context.player,
                         ),
-                        maxLines: 1,
-                        style: Theme.of(context).textTheme.caption!,
                       ),
-                      Spacer(),
+                      const Spacer(),
                     ],
                   ),
                 ),
@@ -139,7 +141,7 @@ class BottomControllerBar extends StatelessWidget {
               else
                 IconButton(
                     tooltip: "当前播放列表",
-                    icon: Icon(Icons.menu),
+                    icon: const Icon(Icons.menu),
                     onPressed: () {
                       PlayingListDialog.show(context);
                     }),
@@ -152,9 +154,9 @@ class BottomControllerBar extends StatelessWidget {
 }
 
 class _SubTitleOrLyric extends StatelessWidget {
-  final String subtitle;
-
   const _SubTitleOrLyric(this.subtitle, {Key? key}) : super(key: key);
+
+  final String subtitle;
 
   @override
   Widget build(BuildContext context) {
@@ -177,12 +179,12 @@ class _PauseButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return PlayingIndicator(
       playing: IconButton(
-          icon: Icon(Icons.pause),
+          icon: const Icon(Icons.pause),
           onPressed: () {
             context.transportControls.pause();
           }),
       pausing: IconButton(
-          icon: Icon(Icons.play_arrow),
+          icon: const Icon(Icons.play_arrow),
           onPressed: () {
             context.transportControls.play();
           }),
@@ -190,9 +192,9 @@ class _PauseButton extends StatelessWidget {
         height: 24,
         width: 24,
         //to fit  IconButton min width 48
-        margin: EdgeInsets.only(right: 12),
-        padding: EdgeInsets.all(4),
-        child: CircularProgressIndicator(),
+        margin: const EdgeInsets.only(right: 12),
+        padding: const EdgeInsets.all(4),
+        child: const CircularProgressIndicator(),
       ),
     );
   }

@@ -39,11 +39,11 @@ class FileCacheProvider {
   }
 
   File _cacheFileForKey(CacheKey key) =>
-      File(directory.path + "/" + key.getKey());
+      File('${directory.path}/${key.getKey()}');
 
   void touchFile(File file) {
     file.setLastModified(DateTime.now()).catchError((e) {
-      debugPrint("setLastModified for ${file.path} failed. $e");
+      debugPrint('setLastModified for ${file.path} failed. $e');
     });
   }
 
@@ -52,8 +52,8 @@ class FileCacheProvider {
       return;
     }
     _calculating = true;
-    compute(_fileLru, {"path": directory.path, "maxSize": maxSize},
-            debugLabel: "file lruc check size")
+    compute(_fileLru, {'path': directory.path, 'maxSize': maxSize},
+            debugLabel: 'file lru check size')
         .whenComplete(() {
       _calculating = false;
     });
@@ -61,13 +61,12 @@ class FileCacheProvider {
 }
 
 Future<void> _fileLru(Map params) async {
-  final Directory directory = Directory(params["path"]);
-  final int? maxSize = params["maxSize"];
+  final Directory directory = Directory(params['path'] as String);
+  final int? maxSize = params['maxSize'] as int?;
   if (!directory.existsSync()) {
     return;
   }
-  List<File> files =
-      directory.listSync().where((e) => e is File).cast<File>().toList();
+  final List<File> files = directory.listSync().whereType<File>().toList();
   files.sort((a, b) => a.lastModifiedSync().compareTo(b.lastModifiedSync()));
 
   int totalSize = 0;

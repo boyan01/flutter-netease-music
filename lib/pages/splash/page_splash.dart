@@ -4,17 +4,17 @@ import 'package:flutter/material.dart';
 
 ///used to build application widget
 ///[data] the data initial in [PageSplash]
-typedef AppBuilder = Function(BuildContext context, List<dynamic> data);
+typedef AppBuilder = Widget Function(BuildContext context, List<dynamic> data);
 
 ///the splash screen of application
 class PageSplash extends StatefulWidget {
+  const PageSplash({Key? key, required this.futures, required this.builder})
+      : super(key: key);
+
   ///the data need init before application running
   final List<Future> futures;
 
   final AppBuilder builder;
-
-  const PageSplash({Key? key, required this.futures, required this.builder})
-      : super(key: key);
 
   @override
   _PageSplashState createState() => _PageSplashState();

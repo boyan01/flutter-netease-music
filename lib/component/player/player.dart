@@ -13,7 +13,7 @@ export 'package:quiet/component/player/lryic.dart';
 
 part 'persistence.dart';
 
-const String FM_PLAY_QUEUE_ID = "pernal_fm";
+const String kFmPlayQueueId = "personal_fm";
 
 //
 /////key which save playing music to local preference
@@ -71,7 +71,7 @@ extension QuitPlayerExt on BuildContext {
 
 extension PlayQueueExt on PlayQueue {
   /// 是否处于私人FM 播放模式
-  bool get isPlayingFm => queueId == FM_PLAY_QUEUE_ID;
+  bool get isPlayingFm => queueId == kFmPlayQueueId;
 }
 
 extension MusicPlayerExt on MusicPlayer {
@@ -84,7 +84,7 @@ extension MusicPlayerExt on MusicPlayer {
   void playFm(List<Music> musics) {
     final queue = PlayQueue(
         queueTitle: "私人FM",
-        queueId: FM_PLAY_QUEUE_ID,
+        queueId: kFmPlayQueueId,
         queue: musics.toMetadataList());
     playWithQueue(queue);
   }
@@ -108,16 +108,13 @@ extension PlaybackStateExt on PlaybackState {
   bool get isBuffering => state == PlayerState.Buffering;
 
   bool get initialized => state != PlayerState.None;
-
 }
 
 @visibleForTesting
 class QuietModel extends Model {
-  MusicPlayer player = MusicPlayer();
-
   QuietModel(Box<Map>? data) {
     player.addListener(() {
-      this.notifyListeners();
+      notifyListeners();
     });
     player.metadataListenable.addListener(() {
       data!.saveCurrentMetadata(player.metadata!);
@@ -143,10 +140,12 @@ class QuietModel extends Model {
       player.transportControls.setPlayMode(data.restorePlayMode());
     });
   }
+
+  MusicPlayer player = MusicPlayer();
 }
 
 class Quiet extends StatefulWidget {
-  Quiet({required this.child, Key? key, this.box}) : super(key: key);
+  const Quiet({required this.child, Key? key, this.box}) : super(key: key);
 
   final Widget child;
 

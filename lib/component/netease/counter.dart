@@ -9,7 +9,7 @@ import 'package:scoped_model/scoped_model.dart';
 /// 提供各种数目,比如收藏数目,我的电台数目
 ///
 class Counter extends Model {
-  static final key = 'netease_sub_count';
+  static const key = 'netease_sub_count';
 
   int _djRadioCount = 0;
 
