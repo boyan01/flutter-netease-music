@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:loader/loader.dart';
 import 'package:overlay_support/overlay_support.dart';
@@ -8,9 +10,9 @@ import 'package:quiet/repository/netease.dart';
 
 ///song list result
 class SongsResultSection extends StatefulWidget {
-  const SongsResultSection({Key key, @required this.query}) : super(key: key);
+  const SongsResultSection({Key? key, required this.query}) : super(key: key);
 
-  final String query;
+  final String? query;
 
   @override
   SongsResultSectionState createState() {
@@ -27,15 +29,16 @@ class SongsResultSectionState extends State<SongsResultSection>
     return MusicTileConfiguration(
       musics: const [],
       onMusicTap: (context, item) async {
-        var playable = await neteaseRepository.checkMusic(item.id);
+        var playable = await neteaseRepository!.checkMusic(item.id);
         if (!playable) {
           showDialog(
               context: context, builder: (context) => DialogNoCopyRight());
           return;
         }
-        final song = await neteaseRepository.getMusicDetail(item.id);
+        final song = await (neteaseRepository!.getMusicDetail(item.id)
+            as FutureOr<Result<Map<String, Object>?>>);
         if (song.isValue) {
-          final metadata = mapJsonToMusic(song.asValue.value,
+          final metadata = mapJsonToMusic(song.asValue!.value!,
                   artistKey: "ar", albumKey: "al")
               .metadata;
           context.player
@@ -49,15 +52,15 @@ class SongsResultSectionState extends State<SongsResultSection>
       },
       child: AutoLoadMoreList(
         loadMore: (count) async {
-          final result = await neteaseRepository
+          final result = await neteaseRepository!
               .search(widget.query, NeteaseSearchType.song, offset: count);
           if (result.isValue) {
             return LoadMoreResult(
-                result.asValue.value["result"]["songs"] ?? []);
+                result.asValue!.value["result"]["songs"] ?? []);
           }
           return result as Result<List>;
         },
-        builder: (context, item) {
+        builder: (context, dynamic item) {
           return MusicTile(mapJsonToMusic(item as Map));
         },
       ),

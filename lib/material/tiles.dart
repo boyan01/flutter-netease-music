@@ -4,14 +4,13 @@ import 'package:quiet/component/route.dart';
 import 'package:quiet/repository/cached_image.dart';
 
 class AlbumTile extends StatelessWidget {
-  const AlbumTile({Key key, @required this.album, this.subtitle})
-      : assert(album != null),
-        super(key: key);
+  const AlbumTile({Key? key, required this.album, this.subtitle})
+      : super(key: key);
 
   ///netease album json object
   final Map album;
 
-  final String Function(Map album) subtitle;
+  final String Function(Map album)? subtitle;
 
   String _defaultSubtitle(Map album) {
     String date = DateFormat("y.M.d")

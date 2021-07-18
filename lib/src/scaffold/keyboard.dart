@@ -10,10 +10,10 @@ class KeyEmitter extends StatefulWidget {
   final OnDelete onDelete;
 
   const KeyEmitter({
-    Key key,
-    @required this.onEmit,
-    @required this.child,
-    @required this.onDelete,
+    Key? key,
+    required this.onEmit,
+    required this.child,
+    required this.onDelete,
   }) : super(key: key);
 
   @override

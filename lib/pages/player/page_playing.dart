@@ -22,7 +22,7 @@ class PlayingPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final current = context.listenPlayerValue.current;
     if (current == null) {
-      WidgetsBinding.instance.scheduleFrameCallback((_) {
+      WidgetsBinding.instance!.scheduleFrameCallback((_) {
         Navigator.of(context).pop();
       });
       return Container();
@@ -57,7 +57,7 @@ class PlayingPage extends StatelessWidget {
 ///player controller
 /// pause,play,play next,play previous...
 class PlayerControllerBar extends StatelessWidget {
-  Widget getPlayModeIcon(BuildContext context, Color color) {
+  Widget getPlayModeIcon(BuildContext context, Color? color) {
     return Icon(context.playMode.icon, color: color);
   }
 
@@ -192,7 +192,7 @@ class PlayingOperationBar extends StatelessWidget {
 class _CenterSection extends StatefulWidget {
   final Music music;
 
-  const _CenterSection({Key key, @required this.music}) : super(key: key);
+  const _CenterSection({Key? key, required this.music}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _CenterSectionState();
@@ -246,11 +246,11 @@ class _CenterSectionState extends State<_CenterSection> {
 }
 
 class PlayingLyricView extends StatelessWidget {
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
 
   final Music music;
 
-  const PlayingLyricView({Key key, this.onTap, @required this.music})
+  const PlayingLyricView({Key? key, this.onTap, required this.music})
       : super(key: key);
 
   @override
@@ -262,21 +262,21 @@ class PlayingLyricView extends StatelessWidget {
   Widget _buildLyric(BuildContext context) {
     TextStyle style = Theme.of(context)
         .textTheme
-        .bodyText2
+        .bodyText2!
         .copyWith(height: 2, fontSize: 16, color: Colors.white);
     final playingLyric = PlayingLyric.of(context);
 
     if (playingLyric.hasLyric) {
       return LayoutBuilder(builder: (context, constraints) {
-        final normalStyle = style.copyWith(color: style.color.withOpacity(0.7));
+        final normalStyle = style.copyWith(color: style.color!.withOpacity(0.7));
         //歌词顶部与尾部半透明显示
         return ShaderMask(
           shaderCallback: (rect) {
             return ui.Gradient.linear(Offset(rect.width / 2, 0),
                 Offset(rect.width / 2, constraints.maxHeight), [
               const Color(0x00FFFFFF),
-              style.color,
-              style.color,
+              style.color!,
+              style.color!,
               const Color(0x00FFFFFF),
             ], [
               0.0,
@@ -288,7 +288,7 @@ class PlayingLyricView extends StatelessWidget {
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 20),
             child: Lyric(
-              lyric: playingLyric.lyric,
+              lyric: playingLyric.lyric!,
               lyricLineStyle: normalStyle,
               highlight: style.color,
               position: context.playbackState.computedPosition,
@@ -306,7 +306,7 @@ class PlayingLyricView extends StatelessWidget {
     } else {
       return Container(
         child: Center(
-          child: Text(playingLyric.message, style: style),
+          child: Text(playingLyric.message!, style: style),
         ),
       );
     }
@@ -316,7 +316,7 @@ class PlayingLyricView extends StatelessWidget {
 class PlayingTitle extends StatelessWidget {
   final Music music;
 
-  const PlayingTitle({Key key, @required this.music}) : super(key: key);
+  const PlayingTitle({Key? key, required this.music}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -343,7 +343,7 @@ class PlayingTitle extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             Text(
-              music.title,
+              music.title!,
               style: TextStyle(fontSize: 17),
             ),
             InkWell(
@@ -359,7 +359,7 @@ class PlayingTitle extends StatelessWidget {
                       music.artistString,
                       style: Theme.of(context)
                           .primaryTextTheme
-                          .bodyText2
+                          .bodyText2!
                           .copyWith(fontSize: 13),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,

@@ -16,7 +16,7 @@ class PagePlayingFm extends StatelessWidget {
   Widget build(BuildContext context) {
     final current = context.listenPlayerValue.current;
     if (current == null) {
-      WidgetsBinding.instance.scheduleFrameCallback((_) {
+      WidgetsBinding.instance!.scheduleFrameCallback((_) {
         Navigator.of(context).pop();
       });
       return Container();
@@ -50,7 +50,7 @@ class PagePlayingFm extends StatelessWidget {
 }
 
 class _CenterSection extends StatefulWidget {
-  const _CenterSection({Key key}) : super(key: key);
+  const _CenterSection({Key? key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _CenterSectionState();
@@ -91,7 +91,7 @@ class _CenterSectionState extends State<_CenterSection> {
           child: _FmCover(),
         ),
         secondChild: PlayingLyricView(
-          music: context.listenPlayerValue.current,
+          music: context.listenPlayerValue.current!,
           onTap: () {
             setState(() {
               _showLyric = !_showLyric;
@@ -106,7 +106,7 @@ class _CenterSectionState extends State<_CenterSection> {
 class _FmCover extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final music = context.listenPlayerValue.current;
+    final music = context.listenPlayerValue.current!;
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
@@ -117,7 +117,7 @@ class _FmCover extends StatelessWidget {
             child: AspectRatio(
               aspectRatio: 1.0,
               child: Image(
-                image: CachedImage(music.imageUrl),
+                image: CachedImage(music.imageUrl!),
                 loadingBuilder: (context, child, loadingProgress) {
                   if (loadingProgress != null) {
                     child = Container(child: child);
@@ -146,7 +146,7 @@ class _FmCover extends StatelessWidget {
                   music.artistString,
                   style: Theme.of(context)
                       .primaryTextTheme
-                      .caption
+                      .caption!
                       .copyWith(fontSize: 13),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
@@ -154,7 +154,7 @@ class _FmCover extends StatelessWidget {
               ),
               Icon(Icons.chevron_right,
                   size: 17,
-                  color: Theme.of(context).primaryTextTheme.caption.color),
+                  color: Theme.of(context).primaryTextTheme.caption!.color),
             ],
           ),
         )
@@ -231,13 +231,13 @@ class _FmControllerBar extends StatelessWidget {
                 color: color,
               ),
               onPressed: () {
-                context.secondaryNavigator.push(MaterialPageRoute(
+                context.secondaryNavigator!.push(MaterialPageRoute(
                     builder: (context) => CommentPage(
                           threadId: CommentThreadId(
-                            context.player.value.current.id,
+                            context.player.value.current!.id,
                             CommentType.song,
                             payload: CommentThreadPayload.music(
-                                context.player.value.current),
+                                context.player.value.current!),
                           ),
                         )));
               }),

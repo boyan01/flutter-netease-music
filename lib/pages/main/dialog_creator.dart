@@ -13,18 +13,18 @@ class _PlaylistCreatorDialogState extends State<PlaylistCreatorDialog> {
   ///communicate to server,creating new playlist
   bool creating = false;
 
-  String error;
+  String? error;
 
   GlobalKey<FormFieldState<String>> _formKey = GlobalKey();
 
-  void _create(String name) async {
+  void _create(String? name) async {
     final playlistDetail = await showLoaderOverlay(
-        context, neteaseRepository.createPlaylist(name));
+        context, neteaseRepository!.createPlaylist(name).then((value) => value!));
     if (playlistDetail.isValue) {
       Navigator.pop(context, playlistDetail);
     } else {
       setState(() {
-        error = playlistDetail.asError.error.toString();
+        error = playlistDetail.asError!.error.toString();
       });
     }
   }
@@ -43,7 +43,7 @@ class _PlaylistCreatorDialogState extends State<PlaylistCreatorDialog> {
           errorText: error,
         ),
         validator: (v) {
-          if (v.isEmpty) {
+          if (v!.isEmpty) {
             return "歌单名不能为空";
           }
           return null;
@@ -56,14 +56,14 @@ class _PlaylistCreatorDialogState extends State<PlaylistCreatorDialog> {
             Navigator.of(context).pop();
           },
           child: Text("取消"),
-          textColor: Theme.of(context).textTheme.caption.color,
+          textColor: Theme.of(context).textTheme.caption!.color,
         ),
         FlatButton(
             onPressed: () {
-              if (!_formKey.currentState.validate()) {
+              if (!_formKey.currentState!.validate()) {
                 return;
               }
-              _create(_formKey.currentState.value);
+              _create(_formKey.currentState!.value);
             },
             child: Text("创建"))
       ],

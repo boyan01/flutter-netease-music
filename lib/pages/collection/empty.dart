@@ -3,9 +3,8 @@ import 'package:flutter/material.dart';
 class CollectionEmpty extends StatelessWidget {
   final String message;
 
-  const CollectionEmpty({Key key, @required this.message})
-      : assert(message != null),
-        super(key: key);
+  const CollectionEmpty({Key? key, required this.message})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {

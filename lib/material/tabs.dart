@@ -11,7 +11,7 @@ class PrimaryTabIndicator extends UnderlineTabIndicator {
 class RoundedTabBar extends StatelessWidget implements PreferredSizeWidget {
   final List<Widget> tabs;
 
-  const RoundedTabBar({Key key, @required this.tabs}) : super(key: key);
+  const RoundedTabBar({Key? key, required this.tabs}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +23,7 @@ class RoundedTabBar extends StatelessWidget implements PreferredSizeWidget {
             indicator:
                 PrimaryTabIndicator(color: Theme.of(context).accentColor),
             indicatorSize: TabBarIndicatorSize.label,
-            labelColor: Theme.of(context).textTheme.bodyText1.color,
+            labelColor: Theme.of(context).textTheme.bodyText1!.color,
             tabs: tabs),
       ),
     );

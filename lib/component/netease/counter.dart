@@ -45,34 +45,34 @@ class Counter extends Model {
     notifyListeners();
   }
 
-  final UserAccount account;
-  final NeteaseRepository repository;
-  final LocalData cache;
+  final UserAccount? account;
+  final NeteaseRepository? repository;
+  final LocalData? cache;
 
   Counter(this.account, this.repository, this.cache) {
     void _onAccountStateChanged() {
-      if (account.isLogin) {
+      if (account!.isLogin) {
         scheduleMicrotask(_loadUserCounterData);
       } else {
         _handleData({});
       }
     }
 
-    account.addListener(() {
+    account!.addListener(() {
       _onAccountStateChanged();
     });
     _onAccountStateChanged();
   }
 
   Future<void> _loadUserCounterData() async {
-    final c = await cache[key];
+    final c = await cache![key];
     if (c != null) {
       _handleData(c);
     }
-    final loaded = await repository.subCount();
+    final loaded = await repository!.subCount();
     if (loaded.isValue) {
-      cache[key] = loaded.asValue.value; //cache loaded data
-      _handleData(loaded.asValue.value);
+      cache![key] = loaded.asValue!.value; //cache loaded data
+      _handleData(loaded.asValue!.value);
     }
   }
 

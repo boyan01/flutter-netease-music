@@ -8,14 +8,13 @@ import 'package:sembast/sembast_io.dart';
 export 'package:sembast/sembast.dart';
 export 'package:sembast/sembast_io.dart';
 
-Database _db;
+Database? _db;
 
 ///Quiet application database
 Future<Database> getApplicationDatabase() async {
-  if (_db != null) {
-    return _db;
+  if (_db == null) {
+    _db = await databaseFactoryIo.openDatabase(
+        join((await getTemporaryDirectory()).path, 'database', 'quiet.db'));
   }
-  _db = await databaseFactoryIo.openDatabase(
-      join((await getTemporaryDirectory()).path, 'database', 'quiet.db'));
-  return _db;
+  return _db!;
 }

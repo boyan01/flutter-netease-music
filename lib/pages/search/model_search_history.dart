@@ -21,14 +21,14 @@ class SearchHistory extends Model {
 
   bool get _init => _histories != null;
 
-  List<String> _histories;
+  List<String>? _histories;
 
   List<String> get histories => _histories ?? const [];
 
   void clearSearchHistory() async {
     if (!_init) return;
 
-    _histories.clear();
+    _histories!.clear();
     notifyListeners();
 
     final preference = await SharedPreferences.getInstance();
@@ -41,14 +41,14 @@ class SearchHistory extends Model {
 
     if (!_init) return;
 
-    _histories.remove(query);
-    _histories.insert(0, query);
-    while (_histories.length > 10) {
-      _histories.removeLast();
+    _histories!.remove(query);
+    _histories!.insert(0, query);
+    while (_histories!.length > 10) {
+      _histories!.removeLast();
     }
     notifyListeners();
 
     final preference = await SharedPreferences.getInstance();
-    preference.setStringList(_KEY_HISTORY, _histories);
+    preference.setStringList(_KEY_HISTORY, _histories!);
   }
 }

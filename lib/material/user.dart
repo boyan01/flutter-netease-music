@@ -19,11 +19,11 @@ Future<bool> showNeedLoginToast(BuildContext context) async {
                 "点击前往登录页面",
                 style: Theme.of(context)
                     .textTheme
-                    .bodyText1
+                    .bodyText1!
                     .copyWith(color: Colors.blue),
               ),
               onTap: () async {
-                OverlaySupportEntry.of(context).dismiss();
+                OverlaySupportEntry.of(context)!.dismiss();
                 final loginResult =
                     await Navigator.pushNamed(context, pageLogin);
                 completer.complete(loginResult == true);
@@ -35,15 +35,15 @@ Future<bool> showNeedLoginToast(BuildContext context) async {
       curve: Curves.ease,
       key: const ValueKey('overlay_need_login'),
       duration: Duration(milliseconds: 2000));
-  return await completer.future;
+  return await (completer.future as FutureOr<bool>);
 }
 
 class _Toast extends StatelessWidget {
   final Widget child;
 
   const _Toast({
-    Key key,
-    @required this.child,
+    Key? key,
+    required this.child,
   }) : super(key: key);
 
   @override
@@ -54,7 +54,7 @@ class _Toast extends StatelessWidget {
         padding:
             EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
         child: DefaultTextStyle(
-          style: Theme.of(context).textTheme.bodyText1,
+          style: Theme.of(context).textTheme.bodyText1!,
           child: Align(
             alignment: Alignment(0, 0.5),
             child: Material(

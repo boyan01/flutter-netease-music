@@ -32,7 +32,7 @@ class _MyDjPageState extends State<MyDjPage> {
 class DjTile extends StatelessWidget {
   final Map data;
 
-  const DjTile(this.data, {Key key}) : super(key: key);
+  const DjTile(this.data, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +57,7 @@ class DjTile extends StatelessWidget {
               SizedBox(width: 4),
               Expanded(
                   child: DefaultTextStyle(
-                style: Theme.of(context).textTheme.bodyText2,
+                style: Theme.of(context).textTheme.bodyText2!,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 child: Column(
@@ -100,7 +100,7 @@ class _SectionSubscribed extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Loader<List<Map>>(
-      loadTask: () => neteaseRepository.djSubList(),
+      loadTask: (() => neteaseRepository!.djSubList().then((value) => value!)),
       builder: (context, result) {
         return Column(
           mainAxisSize: MainAxisSize.min,
@@ -117,8 +117,8 @@ class _SectionMyCreated extends StatelessWidget {
   Widget build(BuildContext context) {
     if (UserAccount.of(context).isLogin) {
       return Loader<List<Map>>(
-          loadTask: () =>
-              neteaseRepository.userDj(UserAccount.of(context).userId),
+          loadTask: (() =>
+              neteaseRepository!.userDj(UserAccount.of(context).userId).then((value) => value!)),
           loadingBuilder: (context) {
             return Loader.buildSimpleLoadingWidget(context);
           },
@@ -155,7 +155,7 @@ class _SectionMyCreated extends StatelessWidget {
 class _ListTitle extends StatelessWidget {
   final String title;
 
-  const _ListTitle({Key key, @required this.title}) : super(key: key);
+  const _ListTitle({Key? key, required this.title}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

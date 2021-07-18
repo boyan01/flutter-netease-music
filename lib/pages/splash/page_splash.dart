@@ -13,7 +13,7 @@ class PageSplash extends StatefulWidget {
 
   final AppBuilder builder;
 
-  const PageSplash({Key key, @required this.futures, @required this.builder})
+  const PageSplash({Key? key, required this.futures, required this.builder})
       : super(key: key);
 
   @override
@@ -21,7 +21,7 @@ class PageSplash extends StatefulWidget {
 }
 
 class _PageSplashState extends State<PageSplash> {
-  List _data;
+  List? _data;
 
   @override
   void initState() {
@@ -41,6 +41,6 @@ class _PageSplashState extends State<PageSplash> {
     if (_data == null) {
       return Container(color: const Color(0xFFd92e29));
     }
-    return widget.builder(context, _data);
+    return widget.builder(context, _data!);
   }
 }

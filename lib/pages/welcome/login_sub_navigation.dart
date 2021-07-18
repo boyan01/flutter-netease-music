@@ -15,7 +15,7 @@ const pageRegister = "register";
 
 ///登录子流程
 class LoginNavigator extends StatelessWidget {
-  const LoginNavigator({Key key}) : super(key: key);
+  const LoginNavigator({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -25,20 +25,20 @@ class LoginNavigator extends StatelessWidget {
         onGenerateRoute: (RouteSettings settings) {
           return MaterialPageRoute(
               settings: settings,
-              builder: (context) => _generatePage(settings));
+              builder: (context) => _generatePage(settings)!);
         },
       ),
     );
   }
 
-  Widget _generatePage(RouteSettings settings) {
+  Widget? _generatePage(RouteSettings settings) {
     switch (settings.name) {
       case pageLoginPhone:
         return PageLoginWithPhone();
       case pageLoginPassword:
         final args = settings.arguments as Map<String, Object>;
         return PageLoginPassword(
-          phone: args['phone'],
+          phone: args['phone'] as String?,
         );
     }
     return null;

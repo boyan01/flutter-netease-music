@@ -1,29 +1,29 @@
 import 'package:quiet/model/model.dart';
 
 class MusicVideoDetail {
-  int id;
-  String name;
-  int artistId;
-  String artistName;
-  String briefDesc;
-  String desc;
-  String cover;
-  int coverId;
-  int playCount;
-  int subCount;
-  int shareCount;
-  int likeCount;
-  int commentCount;
-  int duration;
-  int nType;
-  String publishTime;
+  int? id;
+  String? name;
+  int? artistId;
+  String? artistName;
+  String? briefDesc;
+  String? desc;
+  String? cover;
+  int? coverId;
+  int? playCount;
+  int? subCount;
+  int? shareCount;
+  int? likeCount;
+  int? commentCount;
+  int? duration;
+  int? nType;
+  String? publishTime;
 
   ///key: video stream name
   ///value:video stream url
-  Map brs;
+  Map? brs;
   List<Artist> artists;
-  bool isReward;
-  String commentThreadId;
+  bool? isReward;
+  String? commentThreadId;
 
   MusicVideoDetail.fromJsonMap(Map<String, dynamic> map)
       : id = map["id"],
@@ -67,8 +67,7 @@ class MusicVideoDetail {
     data['nType'] = nType;
     data['publishTime'] = publishTime;
     data['brs'] = brs;
-    data['artists'] =
-        artists != null ? this.artists.map((v) => v.toMap()).toList() : null;
+    data['artists'] = this.artists.map((v) => v.toMap()).toList();
     data['isReward'] = isReward;
     data['commentThreadId'] = commentThreadId;
     return data;

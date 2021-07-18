@@ -19,23 +19,23 @@ class PlayingLyric extends Model {
         rebuildOnChange: rebuildOnChange);
   }
 
-  CancelableOperation _lyricLoader;
+  CancelableOperation? _lyricLoader;
 
-  String _message = '暂无歌词';
+  String? _message = '暂无歌词';
 
-  LyricContent _lyricContent;
+  LyricContent? _lyricContent;
 
   ///没有歌词时的提示
   ///与[lyric]互斥，当[lyric]为null时，[message]定不能为null
-  String get message => _message;
+  String? get message => _message;
 
-  LyricContent get lyric => _lyricContent;
+  LyricContent? get lyric => _lyricContent;
 
-  bool get hasLyric => lyric != null && lyric.size > 0;
+  bool get hasLyric => lyric != null && lyric!.size > 0;
 
-  Music _music;
+  Music? _music;
 
-  void _shouldLoadLyric(Music music) {
+  void _shouldLoadLyric(Music? music) {
     if (_music == music) {
       return;
     }
@@ -45,8 +45,8 @@ class PlayingLyric extends Model {
       _setLyric();
       return;
     }
-    _lyricLoader = CancelableOperation<String>.fromFuture(
-        neteaseRepository.lyric(music.id))
+    _lyricLoader = CancelableOperation<String?>.fromFuture(
+        neteaseRepository!.lyric(music.id!))
       ..value.then((lyric) {
         _setLyric(lyric: lyric);
       }, onError: (e) {
@@ -54,7 +54,7 @@ class PlayingLyric extends Model {
       });
   }
 
-  void _setLyric({String lyric, String message}) {
+  void _setLyric({String? lyric, String? message}) {
     assert(lyric == null || message == null);
     _message = message;
     if (lyric != null && lyric.isNotEmpty) {

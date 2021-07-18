@@ -4,9 +4,9 @@ import 'package:quiet/part/part.dart';
 import 'package:quiet/repository/netease.dart';
 
 class ArtistsResultSection extends StatefulWidget {
-  final String query;
+  final String? query;
 
-  const ArtistsResultSection({Key key, this.query}) : super(key: key);
+  const ArtistsResultSection({Key? key, this.query}) : super(key: key);
 
   @override
   _ArtistsResultSectionState createState() => _ArtistsResultSectionState();
@@ -18,13 +18,13 @@ class _ArtistsResultSectionState extends State<ArtistsResultSection>
   Widget build(BuildContext context) {
     super.build(context);
     return AutoLoadMoreList(loadMore: (offset) async {
-      final result = await neteaseRepository
+      final result = await neteaseRepository!
           .search(widget.query, NeteaseSearchType.artist, offset: offset);
       if (result.isValue) {
-        return Result.value(result.asValue.value["result"]["artists"] as List);
+        return Result.value((result.asValue!.value["result"]["artists"] as List?)!);
       }
       return result as Result<List>;
-    }, builder: (context, item) {
+    }, builder: (context, dynamic item) {
       return ArtistTile(map: item as Map);
     });
   }
@@ -37,9 +37,8 @@ class _ArtistsResultSectionState extends State<ArtistsResultSection>
 class ArtistTile extends StatelessWidget {
   final Map map;
 
-  const ArtistTile({Key key, @required this.map})
-      : assert(map != null),
-        super(key: key);
+  const ArtistTile({Key? key, required this.map})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -74,7 +73,7 @@ class ArtistTile extends StatelessWidget {
               children: <Widget>[
                 Expanded(
                     child: Row(
-                  children: <Widget>[
+                  children: (<Widget?>[
                     Expanded(
                         child: Align(
                             alignment: Alignment.centerLeft,
@@ -90,7 +89,7 @@ class ArtistTile extends StatelessWidget {
                             Text("已入驻",
                                 style: Theme.of(context).textTheme.caption)
                           ])
-                  ]..removeWhere((v) => v == null),
+                  ]..removeWhere((v) => v == null)) as List<Widget>,
                 )),
                 Divider(height: 0)
               ],

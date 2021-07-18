@@ -6,9 +6,9 @@ class RoundedImage extends StatelessWidget {
   ///图片直径
   final double size;
 
-  final String url;
+  final String? url;
 
-  const RoundedImage(this.url, {Key key, this.size = 48}) : super(key: key);
+  const RoundedImage(this.url, {Key? key, this.size = 48}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +18,7 @@ class RoundedImage extends StatelessWidget {
       child: Image(
         height: size,
         width: size,
-        image: CachedImage(url),
+        image: CachedImage(url!),
       ),
     ));
   }

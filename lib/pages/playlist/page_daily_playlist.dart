@@ -17,7 +17,7 @@ class DailyPlaylistPage extends StatelessWidget {
       builder: (context) => Scaffold(
         body: BoxWithBottomPlayerController(
           Loader<Map>(
-              loadTask: () => neteaseRepository.recommendSongs(),
+              loadTask: () => neteaseRepository!.recommendSongs(),
               builder: (context, result) {
                 final list = (result["recommend"] as List)
                     .cast<Map>()
@@ -85,7 +85,7 @@ class _HeaderContent extends StatelessWidget {
       background: Container(color: Theme.of(context).primaryColor),
       content: DefaultTextStyle(
         maxLines: 1,
-        style: textTheme.bodyText2.copyWith(fontWeight: FontWeight.bold),
+        style: textTheme.bodyText2!.copyWith(fontWeight: FontWeight.bold),
         child: Padding(
           padding: EdgeInsets.only(
             left: 16,

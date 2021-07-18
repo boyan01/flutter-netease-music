@@ -26,7 +26,7 @@ class Settings extends Model {
 
   final SharedPreferences _preferences;
 
-  ThemeData _theme;
+  ThemeData? _theme;
 
   ThemeData get theme => _theme ?? quietThemes.first;
 
@@ -49,7 +49,7 @@ class Settings extends Model {
     notifyListeners();
   }
 
-  bool _showCopyrightOverlay;
+  bool? _showCopyrightOverlay;
 
   bool get showCopyrightOverlay => _showCopyrightOverlay ?? true;
 
@@ -59,7 +59,7 @@ class Settings extends Model {
     notifyListeners();
   }
 
-  bool _skipWelcomePage;
+  bool? _skipWelcomePage;
 
   bool get skipWelcomePage => _skipWelcomePage ?? false;
 
@@ -74,7 +74,7 @@ class Settings extends Model {
         _preferences.getInt(_key_theme_mode) ?? 0]; /* default is system */
     _theme = quietThemes[
         _preferences.getInt(_key_theme) ?? 0]; /* default is NetEase Red */
-    _showCopyrightOverlay = _preferences.get(_key_copyright);
-    _skipWelcomePage = _preferences.get(_key_skip_welcome_page) ?? false;
+    _showCopyrightOverlay = _preferences.get(_key_copyright) as bool?;
+    _skipWelcomePage = _preferences.get(_key_skip_welcome_page) as bool? ?? false;
   }
 }

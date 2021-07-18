@@ -1,6 +1,0 @@
-[submodule "cloud_music_api"]
-	path = cloud_music_api
-	url = https://github.com/ziming1/NeteaseCloudMusicApi
-[submodule "music_service"]
-	path = music_service
-	url = https://github.com/boyan01/flutter-music-player

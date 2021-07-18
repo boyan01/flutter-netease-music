@@ -1,11 +1,11 @@
 class RegionFlag {
-  final String code;
-  final String emoji;
-  final String unicode;
-  final String name;
+  final String? code;
+  final String? emoji;
+  final String? unicode;
+  final String? name;
 
   // could be null
-  final String dialCode;
+  final String? dialCode;
 
   RegionFlag({this.code, this.emoji, this.unicode, this.name, this.dialCode});
 
@@ -21,11 +21,11 @@ class RegionFlag {
 
   factory RegionFlag.fromMap(Map map) {
     return new RegionFlag(
-      code: map['code'] as String,
-      emoji: map['emoji'] as String,
-      unicode: map['unicode'] as String,
-      name: map['name'] as String,
-      dialCode: map['dialCode'] as String,
+      code: map['code'] as String?,
+      emoji: map['emoji'] as String?,
+      unicode: map['unicode'] as String?,
+      name: map['name'] as String?,
+      dialCode: map['dialCode'] as String?,
     );
   }
 

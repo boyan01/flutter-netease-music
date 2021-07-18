@@ -15,23 +15,23 @@ export 'netease_loader.dart';
 class Netease extends StatefulWidget {
   final Widget child;
 
-  final Map user;
+  final Map? user;
 
-  const Netease({Key key, @required this.child, @required this.user})
+  const Netease({Key? key, required this.child, required this.user})
       : super(key: key);
 
   @override
   NeteaseState createState() => NeteaseState();
 
-  static NeteaseState of(BuildContext context) {
+  static NeteaseState? of(BuildContext context) {
     return context.findAncestorStateOfType<NeteaseState>();
   }
 }
 
 class NeteaseState extends State<Netease> {
-  UserAccount account;
+  UserAccount? account;
 
-  Counter counter;
+  late Counter counter;
 
   @override
   void initState() {
@@ -42,11 +42,11 @@ class NeteaseState extends State<Netease> {
 
   @override
   Widget build(BuildContext context) {
-    return ListenableProvider.value(
-      value: account,
-      child: ListenableProvider(
+    return ListenableProvider<UserAccount>.value(
+      value: account!,
+      child: ListenableProvider<FavoriteMusicList>(
         create: (context) {
-          return FavoriteMusicList(account);
+          return FavoriteMusicList(account!);
         },
         child: ScopedModel<MyCollectionApi>(
           model: MyCollectionApi(),

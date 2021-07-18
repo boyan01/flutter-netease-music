@@ -16,7 +16,7 @@ class PlaylistSelectorDialog extends StatelessWidget {
   /// if success -> true
   /// failed -> false
   /// cancel -> null
-  static Future<bool> addSongs(BuildContext context, List<int> ids) async {
+  static Future<bool?> addSongs(BuildContext context, List<int?> ids) async {
     final playlistId = await showDialog(
         context: context,
         builder: (context) {
@@ -26,7 +26,7 @@ class PlaylistSelectorDialog extends StatelessWidget {
       return null;
     }
     try {
-      return await neteaseRepository.playlistTracksEdit(
+      return await neteaseRepository!.playlistTracksEdit(
           PlaylistOperation.add, playlistId, ids);
     } catch (e) {
       return false;
@@ -34,7 +34,7 @@ class PlaylistSelectorDialog extends StatelessWidget {
   }
 
   Widget _buildTile(BuildContext context, Widget leading, Widget title,
-      Widget subTitle, GestureTapCallback onTap) {
+      Widget? subTitle, GestureTapCallback onTap) {
     return InkWell(
       onTap: onTap,
       child: Container(
@@ -55,18 +55,18 @@ class PlaylistSelectorDialog extends StatelessWidget {
                 child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
+              children: (<Widget?>[
                 AnimatedDefaultTextStyle(
                     child: title,
-                    style: Theme.of(context).textTheme.bodyText2,
+                    style: Theme.of(context).textTheme.bodyText2!,
                     duration: Duration.zero),
                 subTitle == null
                     ? null
                     : AnimatedDefaultTextStyle(
                         child: subTitle,
-                        style: Theme.of(context).textTheme.caption,
+                        style: Theme.of(context).textTheme.caption!,
                         duration: Duration.zero),
-              ]..removeWhere((v) => v == null),
+              ]..removeWhere((v) => v == null)) as List<Widget>,
             ))
           ],
         ),
@@ -142,8 +142,8 @@ class PlaylistSelectorDialog extends StatelessWidget {
           ));
     }
     final userId = UserAccount.of(context).userId;
-    return Loader<List<PlaylistDetail>>(
-      loadTask: () => neteaseRepository.userPlaylist(userId),
+    return Loader<List<PlaylistDetail?>>(
+      loadTask: (() => neteaseRepository!.userPlaylist(userId).then((value) => value!)),
       errorBuilder: (context, result) {
         return _buildDialog(
             context,
@@ -153,12 +153,12 @@ class PlaylistSelectorDialog extends StatelessWidget {
                 children: <Widget>[
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Text(result.error.toString() ?? "加载失败"),
+                    child: Text(result.error.toString()),
                   ),
                   SizedBox(height: 16),
                   RaisedButton(
                       onPressed: () {
-                        Loader.of(context).refresh();
+                        Loader.of(context)!.refresh();
                       },
                       child: Text("重试")),
                   SizedBox(height: 32),
@@ -169,7 +169,7 @@ class PlaylistSelectorDialog extends StatelessWidget {
       builder: (context, result) {
         return Builder(builder: (context) {
           final list = result
-            ..removeWhere((p) => p.creator["userId"] != userId);
+            ..removeWhere((p) => p!.creator!["userId"] != userId);
 
           final widgets = <Widget>[];
 
@@ -186,7 +186,7 @@ class PlaylistSelectorDialog extends StatelessWidget {
               ),
               Text("新建歌单"),
               null, () async {
-            PlaylistDetail created = await showDialog(
+            PlaylistDetail? created = await showDialog(
                 context: context,
                 builder: (context) {
                   return PlaylistCreatorDialog();
@@ -194,7 +194,7 @@ class PlaylistSelectorDialog extends StatelessWidget {
             created = created;
             if (created != null) {
               // ignore: invalid_use_of_protected_member
-              Loader.of(context).setState(() {
+              Loader.of(context)!.setState(() {
                 result.insert(0, created);
               });
             }
@@ -204,11 +204,11 @@ class PlaylistSelectorDialog extends StatelessWidget {
             return _buildTile(
                 context,
                 FadeInImage(
-                  image: CachedImage(p.coverUrl),
+                  image: CachedImage(p!.coverUrl!),
                   placeholder: AssetImage("assets/playlist_playlist.9.png"),
                   fit: BoxFit.cover,
                 ),
-                Text(p.name),
+                Text(p.name!),
                 Text("共${p.trackCount}首"), () {
               Navigator.of(context).pop(p.id);
             });

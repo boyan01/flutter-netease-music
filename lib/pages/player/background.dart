@@ -7,7 +7,7 @@ import 'package:quiet/repository/netease.dart';
 class BlurBackground extends StatelessWidget {
   final Music music;
 
-  const BlurBackground({Key key, @required this.music}) : super(key: key);
+  const BlurBackground({Key? key, required this.music}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

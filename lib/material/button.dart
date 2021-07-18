@@ -7,32 +7,30 @@ import 'package:flutter/rendering.dart';
 class RaisedButtonWithIcon extends RaisedButton
     with MaterialButtonWithIconMixin {
   RaisedButtonWithIcon({
-    Key key,
-    @required VoidCallback onPressed,
-    ValueChanged<bool> onHighlightChanged,
-    ButtonTextTheme textTheme,
-    Color textColor,
-    Color disabledTextColor,
-    Color color,
-    Color disabledColor,
-    Color highlightColor,
-    Color splashColor,
-    Brightness colorBrightness,
-    double elevation,
-    double highlightElevation,
-    double disabledElevation,
-    ShapeBorder shape,
+    Key? key,
+    required VoidCallback onPressed,
+    ValueChanged<bool>? onHighlightChanged,
+    ButtonTextTheme? textTheme,
+    Color? textColor,
+    Color? disabledTextColor,
+    Color? color,
+    Color? disabledColor,
+    Color? highlightColor,
+    Color? splashColor,
+    Brightness? colorBrightness,
+    double? elevation,
+    double? highlightElevation,
+    double? disabledElevation,
+    ShapeBorder? shape,
     Clip clipBehavior = Clip.none,
-    MaterialTapTargetSize materialTapTargetSize,
-    Duration animationDuration,
-    @required Widget icon,
-    @required Widget label,
+    MaterialTapTargetSize? materialTapTargetSize,
+    Duration? animationDuration,
+    required Widget icon,
+    required Widget label,
     double labelSpacing = 8,
   })  : assert(elevation == null || elevation >= 0.0),
         assert(highlightElevation == null || highlightElevation >= 0.0),
         assert(disabledElevation == null || disabledElevation >= 0.0),
-        assert(icon != null),
-        assert(label != null),
         super(
           key: key,
           onPressed: onPressed,
@@ -77,22 +75,18 @@ class IconButton2 extends StatelessWidget {
   /// The [icon] argument must be specified, and is typically either an [Icon]
   /// or an [ImageIcon].
   const IconButton2(
-      {Key key,
+      {Key? key,
       this.iconSize = 24.0,
       this.padding = const EdgeInsets.all(8.0),
       this.alignment = Alignment.center,
-      @required this.icon,
+      required this.icon,
       this.color,
       this.highlightColor,
       this.splashColor,
       this.disabledColor,
-      @required this.onPressed,
+      required this.onPressed,
       this.tooltip})
-      : assert(iconSize != null),
-        assert(padding != null),
-        assert(alignment != null),
-        assert(icon != null),
-        super(key: key);
+      : super(key: key);
 
   /// The size of the icon inside the button.
   ///
@@ -150,7 +144,7 @@ class IconButton2 extends StatelessWidget {
   ///   icon: Icons.widgets,
   /// )
   /// ```
-  final Color color;
+  final Color? color;
 
   /// The primary color of the button when the button is in the down (pressed) state.
   /// The splash is represented as a circular overlay that appears above the
@@ -160,7 +154,7 @@ class IconButton2 extends StatelessWidget {
   /// color has transparency then the highlight and button color will show through.
   ///
   /// Defaults to the Theme's splash color, [ThemeData.splashColor].
-  final Color splashColor;
+  final Color? splashColor;
 
   /// The secondary color of the button when the button is in the down (pressed)
   /// state. The highlight color is represented as a solid color that is overlaid over the
@@ -168,7 +162,7 @@ class IconButton2 extends StatelessWidget {
   /// will show through. The highlight fades in quickly as the button is held down.
   ///
   /// Defaults to the Theme's highlight color, [ThemeData.highlightColor].
-  final Color highlightColor;
+  final Color? highlightColor;
 
   /// The color to use for the icon inside the button, if the icon is disabled.
   /// Defaults to the [ThemeData.disabledColor] of the current [Theme].
@@ -176,23 +170,23 @@ class IconButton2 extends StatelessWidget {
   /// The icon is disabled if [onPressed] is null.
   ///
   /// See also [color].
-  final Color disabledColor;
+  final Color? disabledColor;
 
   /// The callback that is called when the button is tapped or otherwise activated.
   ///
   /// If this is set to null, the button will be disabled.
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
 
   /// Text that describes the action that will occur when the button is pressed.
   ///
   /// This text is displayed when the user long-presses on the button and is
   /// used for accessibility.
-  final String tooltip;
+  final String? tooltip;
 
   @override
   Widget build(BuildContext context) {
     assert(debugCheckHasMaterial(context));
-    Color currentColor;
+    Color? currentColor;
     if (onPressed != null)
       currentColor = color;
     else
@@ -217,7 +211,7 @@ class IconButton2 extends StatelessWidget {
     );
 
     if (tooltip != null) {
-      result = Tooltip(message: tooltip, child: result);
+      result = Tooltip(message: tooltip!, child: result);
     }
     return InkResponse(
       onTap: onPressed,

@@ -9,7 +9,7 @@ import 'artist.model.dart';
 class ArtistHeader extends StatelessWidget {
   final Artist artist;
 
-  const ArtistHeader({Key key, @required this.artist}) : super(key: key);
+  const ArtistHeader({Key? key, required this.artist}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -40,17 +40,17 @@ class ArtistHeader extends StatelessWidget {
 class _ArtistFlexHeader extends StatelessWidget {
   final Artist artist;
 
-  const _ArtistFlexHeader({Key key, @required this.artist}) : super(key: key);
+  const _ArtistFlexHeader({Key? key, required this.artist}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return DefaultTextStyle(
-      style: Theme.of(context).primaryTextTheme.bodyText2,
+      style: Theme.of(context).primaryTextTheme.bodyText2!,
       maxLines: 1,
       child: FlexibleDetailBar(
         background: FlexShadowBackground(
             child: Image(
-                image: CachedImage(artist.picUrl),
+                image: CachedImage(artist.picUrl!),
                 height: 300,
                 fit: BoxFit.cover)),
         content: Padding(
@@ -61,14 +61,14 @@ class _ArtistFlexHeader extends StatelessWidget {
                 Spacer(),
                 Text(
                     '${artist.name}' +
-                        (artist.alias.isEmpty ? '' : '(${artist.alias[0]})'),
+                        (artist.alias!.isEmpty ? '' : '(${artist.alias![0]})'),
                     style: TextStyle(fontSize: 20)),
                 Text('歌曲数量:${artist.musicSize}'),
               ]),
         ),
         builder: (context, t) {
           return AppBar(
-            title: Text(t > 0.5 ? artist.name : ''),
+            title: Text(t > 0.5 ? artist.name! : ''),
             backgroundColor: Colors.transparent,
             elevation: 0,
             titleSpacing: 0,

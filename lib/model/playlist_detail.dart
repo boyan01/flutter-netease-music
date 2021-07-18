@@ -14,34 +14,33 @@ class PlaylistDetail {
       this.subscribedCount,
       this.commentCount,
       this.shareCount,
-      this.playCount)
-      : assert(subscribed != null);
+      this.playCount);
 
   ///null when playlist not complete loaded
-  final List<Music> musicList;
+  final List<Music>? musicList;
 
-  String name;
+  String? name;
 
-  String coverUrl;
+  String? coverUrl;
 
-  int id;
+  int? id;
 
-  int trackCount;
+  int? trackCount;
 
-  String description;
+  String? description;
 
   bool subscribed;
 
-  int subscribedCount;
+  int? subscribedCount;
 
-  int commentCount;
+  int? commentCount;
 
-  int shareCount;
+  int? shareCount;
 
-  int playCount;
+  int? playCount;
 
   bool get loaded =>
-      trackCount == 0 || (musicList != null && musicList.length == trackCount);
+      trackCount == 0 || (musicList != null && musicList!.length == trackCount);
 
   ///tag fro hero transition
   String get heroTag => "playlist_hero_$id";
@@ -50,7 +49,7 @@ class PlaylistDetail {
   /// properties:
   /// avatarUrl , nickname
   ///
-  final Map<String, dynamic> creator;
+  final Map<String, dynamic>? creator;
 
   static PlaylistDetail fromJson(Map playlist) {
     return PlaylistDetail(
@@ -69,16 +68,17 @@ class PlaylistDetail {
         playlist["playCount"]);
   }
 
-  static PlaylistDetail fromMap(Map map) {
+  static PlaylistDetail? fromMap(Map? map) {
     if (map == null) {
       return null;
     }
     return PlaylistDetail(
         map['id'],
-        (map['musicList'] as List)
+        (map['musicList'] as List?)
             ?.cast<Map>()
-            ?.map((m) => Music.fromMap(m))
-            ?.toList(),
+            .map((m) => Music.fromMap(m))
+            .cast<Music>()
+            .toList(),
         map['creator'],
         map['name'],
         map['coverUrl'],
@@ -94,7 +94,7 @@ class PlaylistDetail {
   Map toMap() {
     return {
       'id': id,
-      'musicList': musicList?.map((m) => m.toMap())?.toList(),
+      'musicList': musicList?.map((m) => m.toMap()).toList(),
       'creator': creator,
       'name': name,
       'coverUrl': coverUrl,

@@ -16,11 +16,10 @@ import 'page_playlist_detail_selection.dart';
 
 class AlbumDetailPage extends StatefulWidget {
   final int albumId;
-  final Map album;
+  final Map? album;
 
-  const AlbumDetailPage({Key key, @required this.albumId, this.album})
-      : assert(albumId != null),
-        super(key: key);
+  const AlbumDetailPage({Key? key, required this.albumId, this.album})
+      : super(key: key);
 
   @override
   _AlbumDetailPageState createState() => _AlbumDetailPageState();
@@ -31,7 +30,7 @@ class _AlbumDetailPageState extends State<AlbumDetailPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Loader<Map>(
-          loadTask: () => neteaseRepository.albumDetail(widget.albumId),
+          loadTask: () => neteaseRepository!.albumDetail(widget.albumId),
           builder: (context, result) {
             return _AlbumBody(
               album: result["album"],
@@ -48,10 +47,8 @@ class _AlbumBody extends StatelessWidget {
   final Map album;
   final List<Music> musicList;
 
-  const _AlbumBody({Key key, @required this.album, @required this.musicList})
-      : assert(album != null),
-        assert(musicList != null),
-        super(key: key);
+  const _AlbumBody({Key? key, required this.album, required this.musicList})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -82,11 +79,10 @@ class _AlbumBody extends StatelessWidget {
 /// a detail header describe album information
 class _AlbumDetailHeader extends StatelessWidget {
   final Map album;
-  final List<Music> musicList;
+  final List<Music>? musicList;
 
-  const _AlbumDetailHeader({Key key, @required this.album, this.musicList})
-      : assert(album != null),
-        super(key: key);
+  const _AlbumDetailHeader({Key? key, required this.album, this.musicList})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -130,7 +126,7 @@ class _AlbumDetailHeader extends StatelessWidget {
         },
         onShareTap: () {
           final content =
-              MessageFormat(context.strings["album_share_content"]).format({
+              MessageFormat(context.strings!["album_share_content"]).format({
             "artistName": artist.map((e) => e.name).join(','),
             "albumName": album["name"],
             "albumId": album["id"].toString(),
@@ -139,7 +135,7 @@ class _AlbumDetailHeader extends StatelessWidget {
                 .toString(),
           });
           Clipboard.setData(ClipboardData(text: content));
-          toast(context.strings["share_content_copied"]);
+          toast(context.strings!["share_content_copied"]);
         },
         content: Container(
           padding: EdgeInsets.symmetric(vertical: 16),
@@ -161,7 +157,7 @@ class _AlbumDetailHeader extends StatelessWidget {
               SizedBox(width: 16),
               Expanded(
                   child: DefaultTextStyle(
-                style: Theme.of(context).primaryTextTheme.bodyText2,
+                style: Theme.of(context).primaryTextTheme.bodyText2!,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 child: Column(

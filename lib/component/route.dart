@@ -67,11 +67,11 @@ final Map<String, WidgetBuilder> routes = {
   pageFmPlaying: (context) => PagePlayingFm(),
 };
 
-Route<dynamic> routeFactory(RouteSettings settings) {
-  WidgetBuilder builder;
+Route<dynamic>? routeFactory(RouteSettings settings) {
+  WidgetBuilder? builder;
   switch (settings.name) {
     case "/mv":
-      builder = (context) => MusicVideoPlayerPage(settings.arguments);
+      builder = (context) => MusicVideoPlayerPage(settings.arguments as int);
       break;
   }
 

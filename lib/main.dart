@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -30,23 +32,28 @@ void main() {
     debugPrint(
         '${record.time} ${record.level.name} ${record.loggerName}: ${record.message}');
   });
-  runApp(PageSplash(
-    futures: [
-      SharedPreferences.getInstance(),
-      UserAccount.getPersistenceUser(),
-      getApplicationDocumentsDirectory().then((dir) {
-        Hive.init(dir.path);
-        return Hive.openBox<Map>("player");
-      }),
-    ],
-    builder: (context, data) {
-      return MyApp(
-        setting: Settings(data[0]),
-        user: data[1],
-        player: data[2],
-      );
-    },
-  ));
+
+  runZonedGuarded(() {
+    runApp(PageSplash(
+      futures: [
+        SharedPreferences.getInstance(),
+        UserAccount.getPersistenceUser(),
+        getApplicationDocumentsDirectory().then((dir) {
+          Hive.init(dir.path);
+          return Hive.openBox<Map>("player");
+        }),
+      ],
+      builder: (context, data) {
+        return MyApp(
+          setting: Settings(data[0]),
+          user: data[1],
+          player: data[2],
+        );
+      },
+    ));
+  }, (error, stack) {
+    debugPrint('uncaught error : $error $stack');
+  });
 }
 
 /// The entry of dart background service
@@ -66,12 +73,12 @@ void playerBackgroundService() {
 class MyApp extends StatelessWidget {
   final Settings setting;
 
-  final Map user;
+  final Map? user;
 
-  final Box<Map> player;
+  final Box<Map>? player;
 
   const MyApp(
-      {Key key, @required this.setting, @required this.user, this.player})
+      {Key? key, required this.setting, required this.user, this.player})
       : super(key: key);
 
   @override

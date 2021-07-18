@@ -26,22 +26,22 @@ class _LandscapeMainPageState extends State<_LandscapeMainPage>
     debugLabel: "landscape_secondary_navigator",
   );
 
-  String _currentSubRouteName;
+  String? _currentSubRouteName;
 
   @override
-  void didPush(Route route, Route previousRoute) {
+  void didPush(Route route, Route? previousRoute) {
     _onPageSelected(route);
   }
 
   @override
-  void didPop(Route route, Route previousRoute) {
-    _onPageSelected(previousRoute);
+  void didPop(Route route, Route? previousRoute) {
+    _onPageSelected(previousRoute!);
   }
 
   void _onPageSelected(Route route) {
     final name = route.settings.name;
     debugPrint("on landscape show : $name");
-    WidgetsBinding.instance.scheduleFrameCallback((timeStamp) {
+    WidgetsBinding.instance!.scheduleFrameCallback((timeStamp) {
       setState(() {
         _currentSubRouteName = name;
       });
@@ -103,7 +103,7 @@ class _LandscapeMainPageState extends State<_LandscapeMainPage>
   }
 
   Route<dynamic> _onGeneratePrimaryRoute(RouteSettings settings) {
-    Widget widget;
+    Widget? widget;
     switch (settings.name) {
       case _navigationMyPlaylist:
         widget = Scaffold(
@@ -130,15 +130,15 @@ class _LandscapeMainPageState extends State<_LandscapeMainPage>
         break;
     }
     assert(widget != null, "can not generate route for $settings");
-    return MaterialPageRoute(settings: settings, builder: (context) => widget);
+    return MaterialPageRoute(settings: settings, builder: (context) => widget!);
   }
 
-  Route<dynamic> _onGenerateSecondaryRoute(RouteSettings settings) {
+  Route<dynamic>? _onGenerateSecondaryRoute(RouteSettings settings) {
     if (settings.name == Navigator.defaultRouteName) {
       return MaterialPageRoute(
           settings: settings, builder: (context) => _SecondaryPlaceholder());
     }
-    final builder = routes[settings.name];
+    final builder = routes[settings.name!];
     if (builder != null) {
       return MaterialPageRoute(settings: settings, builder: builder);
     }
@@ -148,9 +148,9 @@ class _LandscapeMainPageState extends State<_LandscapeMainPage>
 
 class _LandscapeDrawer extends StatelessWidget {
   // Current selected page name in Main Drawer.
-  final String selectedRouteName;
+  final String? selectedRouteName;
 
-  const _LandscapeDrawer({Key key, @required this.selectedRouteName})
+  const _LandscapeDrawer({Key? key, required this.selectedRouteName})
       : super(key: key);
 
   @override
@@ -166,35 +166,35 @@ class _LandscapeDrawer extends StatelessWidget {
                 icon: Icon(Icons.search),
                 title: Text("搜索"),
                 onTap: () {
-                  context.primaryNavigator.pushNamed(_navigationSearch);
+                  context.primaryNavigator!.pushNamed(_navigationSearch);
                 }),
             MainNavigationDrawerTile(
                 selected: _navigationMyPlaylist == selectedRouteName,
                 icon: Icon(Icons.music_note),
                 title: Text("我的音乐"),
                 onTap: () {
-                  context.primaryNavigator.pushNamed(_navigationMyPlaylist);
+                  context.primaryNavigator!.pushNamed(_navigationMyPlaylist);
                 }),
             MainNavigationDrawerTile(
                 selected: _navigationCloud == selectedRouteName,
                 icon: Icon(Icons.cloud),
                 title: Text("发现音乐"),
                 onTap: () {
-                  context.primaryNavigator.pushNamed(_navigationCloud);
+                  context.primaryNavigator!.pushNamed(_navigationCloud);
                 }),
             MainNavigationDrawerTile(
                 selected: _navigationFmPlayer == selectedRouteName,
                 icon: Icon(Icons.radio),
                 title: Text("私人FM"),
                 onTap: () {
-                  context.primaryNavigator.pushNamed(_navigationFmPlayer);
+                  context.primaryNavigator!.pushNamed(_navigationFmPlayer);
                 }),
             Spacer(),
             MainNavigationDrawerTile(
               icon: Icon(Icons.settings),
               title: Container(),
               onTap: () {
-                context.primaryNavigator.pushNamed(_navigationSettings);
+                context.primaryNavigator!.pushNamed(_navigationSettings);
               },
             ),
             MainNavigationDrawerTile(
@@ -205,7 +205,7 @@ class _LandscapeDrawer extends StatelessWidget {
                     context.rootNavigator.pushNamed(pageLogin);
                     return;
                   }
-                  context.primaryNavigator.push(
+                  context.primaryNavigator!.push(
                     MaterialPageRoute(
                         builder: (context) => UserDetailPage(
                             userId: UserAccount.of(context).userId)),
@@ -244,9 +244,9 @@ class _SecondaryPlaceholder extends StatelessWidget {
 
 /// Bottom player bar for landscape
 class _BottomPlayerBar extends StatelessWidget {
-  final double paddingPageBottom;
+  final double? paddingPageBottom;
 
-  const _BottomPlayerBar({Key key, this.paddingPageBottom}) : super(key: key);
+  const _BottomPlayerBar({Key? key, this.paddingPageBottom}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -255,7 +255,7 @@ class _BottomPlayerBar extends StatelessWidget {
       return SizedBox(height: paddingPageBottom);
     }
     return BottomControllerBar(
-      bottomPadding: paddingPageBottom,
+      bottomPadding: paddingPageBottom!,
     );
   }
 }

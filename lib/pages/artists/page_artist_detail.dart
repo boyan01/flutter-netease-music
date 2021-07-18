@@ -17,14 +17,12 @@ class ArtistDetailPage extends StatelessWidget {
   ///歌手ID
   final int artistId;
 
-  const ArtistDetailPage({Key key, @required this.artistId})
-      : assert(artistId != null),
-        super(key: key);
+  const ArtistDetailPage({Key? key, required this.artistId}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Loader<Map>(
-        loadTask: () => neteaseRepository.artistDetail(artistId),
+        loadTask: () => neteaseRepository!.artistDetail(artistId),
         loadingBuilder: (context) {
           return Scaffold(
             appBar: AppBar(title: Text("歌手")),
@@ -40,7 +38,7 @@ class ArtistDetailPage extends StatelessWidget {
         builder: (context, result) {
           final artist = model.Artist.fromJson(result["artist"]);
           List<Music> musicList = mapJsonListToMusicList(result["hotSongs"],
-              artistKey: "ar", albumKey: "al");
+              artistKey: "ar", albumKey: "al")!;
 
           return Scaffold(
               body: BoxWithBottomPlayerController(
@@ -81,9 +79,8 @@ class ArtistDetailPage extends StatelessWidget {
 ///热门单曲
 class _PageHotSongs extends StatefulWidget {
   const _PageHotSongs(
-      {Key key, @required this.musicList, @required this.artistId})
-      : assert(musicList != null),
-        super(key: key);
+      {Key? key, required this.musicList, required this.artistId})
+      : super(key: key);
 
   final List<Music> musicList;
 
@@ -165,7 +162,7 @@ class _PageHotSongsState extends State<_PageHotSongs>
 class _PageAlbums extends StatefulWidget {
   final int artistId;
 
-  const _PageAlbums({Key key, @required this.artistId}) : super(key: key);
+  const _PageAlbums({Key? key, required this.artistId}) : super(key: key);
 
   @override
   _PageAlbumsState createState() {
@@ -177,8 +174,8 @@ class _PageAlbumsState extends State<_PageAlbums>
     with AutomaticKeepAliveClientMixin {
   Future<Result<List<Map>>> _delegate(offset) async {
     final result =
-        await neteaseRepository.artistAlbums(widget.artistId, offset: offset);
-    return ValueResult((result.asValue.value["hotAlbums"] as List).cast());
+        await neteaseRepository!.artistAlbums(widget.artistId, offset: offset);
+    return ValueResult((result.asValue!.value["hotAlbums"] as List).cast());
   }
 
   @override
@@ -199,9 +196,9 @@ class _PageAlbumsState extends State<_PageAlbums>
 class _PageMVs extends StatefulWidget {
   final int artistId;
 
-  final int mvCount;
+  final int? mvCount;
 
-  const _PageMVs({Key key, @required this.artistId, @required this.mvCount})
+  const _PageMVs({Key? key, required this.artistId, required this.mvCount})
       : super(key: key);
 
   @override
@@ -213,8 +210,8 @@ class _PageMVs extends StatefulWidget {
 class _PageMVsState extends State<_PageMVs> with AutomaticKeepAliveClientMixin {
   Future<Result<List<Map>>> _loadMv(int offset) async {
     final result =
-        await neteaseRepository.artistMvs(widget.artistId, offset: offset);
-    return ValueResult((result.asValue.value["mvs"] as List).cast());
+        await neteaseRepository!.artistMvs(widget.artistId, offset: offset);
+    return ValueResult((result.asValue!.value["mvs"] as List).cast());
   }
 
   @override
@@ -273,10 +270,10 @@ class _PageMVsState extends State<_PageMVs> with AutomaticKeepAliveClientMixin {
 class _PageArtistIntroduction extends StatefulWidget {
   final int artistId;
 
-  final String artistName;
+  final String? artistName;
 
   const _PageArtistIntroduction(
-      {Key key, @required this.artistId, @required this.artistName})
+      {Key? key, required this.artistId, required this.artistName})
       : super(key: key);
 
   @override
@@ -298,7 +295,7 @@ class _PageArtistIntroductionState extends State<_PageArtistIntroduction>
       padding: EdgeInsets.symmetric(horizontal: 8),
       child: Text(
         result["briefDesc"],
-        style: TextStyle(color: Theme.of(context).textTheme.caption.color),
+        style: TextStyle(color: Theme.of(context).textTheme.caption!.color),
       ),
     );
     Widget button = InkWell(
@@ -316,7 +313,7 @@ class _PageArtistIntroductionState extends State<_PageArtistIntroduction>
   }
 
   List<Widget> _buildTopic(BuildContext context, Map result) {
-    final List<Map> data = (result["topicData"] as List)?.cast();
+    final List<Map>? data = (result["topicData"] as List?)?.cast();
     if (data == null || data.length == 0) {
       return [];
     }
@@ -391,7 +388,7 @@ class _PageArtistIntroductionState extends State<_PageArtistIntroduction>
   Widget build(BuildContext context) {
     super.build(context);
     return Loader<Map>(
-      loadTask: () => neteaseRepository.artistDesc(widget.artistId),
+      loadTask: () => neteaseRepository!.artistDesc(widget.artistId),
       builder: (context, result) {
         final widgets = <Widget>[];
         widgets.addAll(_buildIntroduction(context, result));

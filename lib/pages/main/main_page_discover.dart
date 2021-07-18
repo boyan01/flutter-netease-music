@@ -40,23 +40,23 @@ class _NavigationLine extends StatelessWidget {
         children: <Widget>[
           _ItemNavigator(Icons.radio, "私人FM", () {
             if (context.player.queue.isPlayingFm) {
-              context.secondaryNavigator.pushNamed(pageFmPlaying);
+              context.secondaryNavigator!.pushNamed(pageFmPlaying);
               return;
             }
-            showLoaderOverlay(context, neteaseRepository.getPersonalFmMusics())
+            showLoaderOverlay(context, neteaseRepository!.getPersonalFmMusics())
                 .then((musics) {
-              context.player.playFm(musics);
-              context.secondaryNavigator.pushNamed(pageFmPlaying);
+              context.player.playFm(musics!);
+              context.secondaryNavigator!.pushNamed(pageFmPlaying);
             }).catchError((error, stacktrace) {
               debugPrint("error to play personal fm : $error $stacktrace");
               toast('无法获取私人FM数据');
             });
           }),
           _ItemNavigator(Icons.today, "每日推荐", () {
-            context.secondaryNavigator.pushNamed(pageDaily);
+            context.secondaryNavigator!.pushNamed(pageDaily);
           }),
           _ItemNavigator(Icons.show_chart, "排行榜", () {
-            context.secondaryNavigator.pushNamed(pageLeaderboard);
+            context.secondaryNavigator!.pushNamed(pageLeaderboard);
           }),
         ],
       ),
@@ -81,7 +81,7 @@ class _Header extends StatelessWidget {
             text,
             style: Theme.of(context)
                 .textTheme
-                .subtitle1
+                .subtitle1!
                 .copyWith(fontWeight: FontWeight.w800),
           ),
           Icon(Icons.chevron_right),
@@ -137,7 +137,7 @@ class _SectionPlaylist extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Loader<Map>(
-      loadTask: () => neteaseRepository.personalizedPlaylist(limit: 6),
+      loadTask: () => neteaseRepository!.personalizedPlaylist(limit: 6),
       builder: (context, result) {
         List<Map> list = (result["result"] as List).cast();
         return LayoutBuilder(builder: (context, constraints) {
@@ -170,16 +170,16 @@ class _PlayListItemView extends StatelessWidget {
   final double width;
 
   const _PlayListItemView({
-    Key key,
-    @required this.playlist,
-    @required this.width,
+    Key? key,
+    required this.playlist,
+    required this.width,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    GestureLongPressCallback onLongPress;
+    GestureLongPressCallback? onLongPress;
 
-    String copyWrite = playlist["copywriter"];
+    String? copyWrite = playlist["copywriter"];
     if (copyWrite != null && copyWrite.isNotEmpty) {
       onLongPress = () {
         showDialog(
@@ -197,7 +197,7 @@ class _PlayListItemView extends StatelessWidget {
 
     return InkWell(
       onTap: () {
-        context.secondaryNavigator.push(MaterialPageRoute(builder: (context) {
+        context.secondaryNavigator!.push(MaterialPageRoute(builder: (context) {
           return PlaylistDetailPage(
             playlist["id"],
           );
@@ -239,14 +239,14 @@ class _PlayListItemView extends StatelessWidget {
 
 class _SectionNewSongs extends StatelessWidget {
   Music _mapJsonToMusic(Map json) {
-    Map<String, Object> song = json["song"];
+    Map<String, Object> song = (json["song"] as Map).cast();
     return mapJsonToMusic(song);
   }
 
   @override
   Widget build(BuildContext context) {
     return Loader<Map>(
-      loadTask: () => neteaseRepository.personalizedNewSong(),
+      loadTask: () => neteaseRepository!.personalizedNewSong(),
       builder: (context, result) {
         List<Music> songs = (result["result"] as List)
             .cast<Map>()

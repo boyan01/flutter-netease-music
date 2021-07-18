@@ -19,14 +19,14 @@ class AnimatedMvController extends StatefulWidget {
   ///当 controller 隐藏的是否是否显示底部的播放进度条
   final bool showBottomIndicator;
 
-  final MvControllerChangeCallback beforeChange;
-  final MvControllerChangeCallback afterChange;
+  final MvControllerChangeCallback? beforeChange;
+  final MvControllerChangeCallback? afterChange;
 
   const AnimatedMvController(
-      {Key key,
-      @required this.top,
-      @required this.bottom,
-      @required this.center,
+      {Key? key,
+      required this.top,
+      required this.bottom,
+      required this.center,
       this.beforeChange,
       this.afterChange,
       this.showBottomIndicator = false})
@@ -39,9 +39,9 @@ class AnimatedMvController extends StatefulWidget {
 class _AnimatedMvControllerState extends State<AnimatedMvController>
     with SingleTickerProviderStateMixin {
   ///ui显示和隐藏的动画,lowerBound代表隐藏
-  AnimationController _controller;
+  late AnimationController _controller;
 
-  CancelableOperation _hideOperation;
+  CancelableOperation? _hideOperation;
 
   //完全显示
   bool get _show => _controller.status == AnimationStatus.completed;
@@ -57,10 +57,10 @@ class _AnimatedMvControllerState extends State<AnimatedMvController>
     _controller.addListener(() => setState(() {}));
     _controller.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
-        if (widget.afterChange != null) widget.afterChange(true);
+        if (widget.afterChange != null) widget.afterChange!(true);
         _hideDelay();
       } else if (status == AnimationStatus.dismissed) {
-        if (widget.afterChange != null) widget.afterChange(false);
+        if (widget.afterChange != null) widget.afterChange!(false);
       }
     });
     _controller.forward(from: 0);
@@ -68,10 +68,10 @@ class _AnimatedMvControllerState extends State<AnimatedMvController>
 
   void _setUiVisibility(bool show) {
     if (show) {
-      if (widget.beforeChange != null) widget.beforeChange(true);
+      if (widget.beforeChange != null) widget.beforeChange!(true);
       _controller.forward(from: _controller.value);
     } else {
-      if (widget.beforeChange != null) widget.beforeChange(false);
+      if (widget.beforeChange != null) widget.beforeChange!(false);
       _controller.reverse(from: _controller.value);
     }
   }
@@ -109,7 +109,7 @@ class _AnimatedMvControllerState extends State<AnimatedMvController>
         onDoubleTap: () {
           final controller = VideoPlayerModel.of(context).videoPlayerController;
           final value = controller.value;
-          if (value.initialized) {
+          if (value.isInitialized) {
             if (value.isPlaying) {
               controller.pause();
             } else {
@@ -154,9 +154,9 @@ class _AnimatedMvControllerState extends State<AnimatedMvController>
   }
 
   Widget _buildBottomIndicator(BuildContext context) {
-    double progress;
+    double? progress;
     final playerValue = VideoPlayerModel.of(context).playerValue;
-    if (playerValue.initialized) {
+    if (playerValue.isInitialized) {
       progress = playerValue.position.inMilliseconds /
           playerValue.duration.inMilliseconds;
     }

@@ -8,9 +8,7 @@ import 'package:quiet/repository/netease.dart';
 
 ///a single CommentPage for music or playlist or album
 class CommentPage extends StatelessWidget {
-  const CommentPage({Key key, @required this.threadId})
-      : assert(threadId != null),
-        super(key: key);
+  const CommentPage({Key? key, required this.threadId}) : super(key: key);
 
   final CommentThreadId threadId;
 
@@ -45,7 +43,7 @@ class CommentPage extends StatelessWidget {
 }
 
 class _CommentInput extends StatefulWidget {
-  const _CommentInput({Key key, @required this.threadId}) : super(key: key);
+  const _CommentInput({Key? key, required this.threadId}) : super(key: key);
 
   final CommentThreadId threadId;
 
@@ -54,13 +52,13 @@ class _CommentInput extends StatefulWidget {
 }
 
 class _CommentInputState extends State<_CommentInput> {
-  TextEditingController _controller;
+  TextEditingController? _controller;
 
-  FocusNode _focusNode;
+  FocusNode? _focusNode;
 
   bool _isPosting = false;
 
-  String _error;
+  String? _error;
 
   @override
   void initState() {
@@ -71,8 +69,8 @@ class _CommentInputState extends State<_CommentInput> {
 
   @override
   void dispose() {
-    _controller.dispose();
-    _focusNode.dispose();
+    _controller!.dispose();
+    _focusNode!.dispose();
     super.dispose();
   }
 
@@ -98,20 +96,20 @@ class _CommentInputState extends State<_CommentInput> {
           IconButton(
               icon: Icon(Icons.send),
               onPressed: () async {
-                if (_isPosting || _controller.text.trim().isEmpty) {
+                if (_isPosting || _controller!.text.trim().isEmpty) {
                   //do nothing..
                   return;
                 }
                 _error = null;
                 _isPosting = true;
                 final result =
-                    await _postComment(_controller.text, widget.threadId);
+                    await _postComment(_controller!.text, widget.threadId);
                 if (result.isValue) {
-                  _controller.text = "";
-                  if (_focusNode.hasFocus) {
-                    _focusNode.unfocus();
+                  _controller!.text = "";
+                  if (_focusNode!.hasFocus) {
+                    _focusNode!.unfocus();
                   }
-                  Loader.of(context).refresh();
+                  Loader.of(context)!.refresh();
                 } else {
                   setState(() {
                     _error = "发送失败";
@@ -126,14 +124,13 @@ class _CommentInputState extends State<_CommentInput> {
 }
 
 class CommentThreadId {
-  CommentThreadId(this.id, this.type, {this.payload})
-      : assert(id != null && type != null);
+  CommentThreadId(this.id, this.type, {this.payload}) : assert(id != null);
 
-  final int id;
+  final int? id;
 
   final CommentType type;
 
-  final CommentThreadPayload payload;
+  final CommentThreadPayload? payload;
 
   String get typePath {
     switch (type) {
@@ -150,11 +147,10 @@ class CommentThreadId {
       case CommentType.video:
         return 'video';
     }
-    throw '非法$type';
   }
 
   String get threadId {
-    String prefix;
+    late String prefix;
     switch (type) {
       case CommentType.song:
         prefix = "R_SO_4_";
@@ -181,9 +177,9 @@ class CommentThreadId {
 
 class CommentThreadPayload {
   final dynamic obj;
-  final String coverImage;
-  final String title;
-  final String subtitle;
+  final String? coverImage;
+  final String? title;
+  final String? subtitle;
 
   CommentThreadPayload.music(Music music)
       : this.obj = music,
@@ -195,7 +191,7 @@ class CommentThreadPayload {
       : this.obj = playlist,
         this.coverImage = playlist.coverUrl,
         this.title = playlist.name,
-        this.subtitle = playlist.creator["nickname"];
+        this.subtitle = playlist.creator!["nickname"];
 }
 
 enum CommentType {
@@ -230,7 +226,7 @@ enum CommentType {
 ///post comment to a comment thread
 Future<Result<Map>> _postComment(
     String content, CommentThreadId commentThread) async {
-  return await neteaseRepository.doRequest(
+  return await neteaseRepository!.doRequest(
       "https://music.163.com/weapi/resource/comments/add",
       {"content": content, "threadId": commentThread.threadId});
 }

@@ -1,13 +1,12 @@
 part of 'comments.dart';
 
 class _ItemTitle extends StatelessWidget {
-  const _ItemTitle({Key key, @required this.commentThreadId})
-      : assert(commentThreadId != null),
-        super(key: key);
+  const _ItemTitle({Key? key, required this.commentThreadId})
+      : super(key: key);
 
   final CommentThreadId commentThreadId;
 
-  CommentThreadPayload get payload => commentThreadId.payload;
+  CommentThreadPayload? get payload => commentThreadId.payload;
 
   @override
   Widget build(BuildContext context) {
@@ -17,14 +16,14 @@ class _ItemTitle extends StatelessWidget {
           onTap: () async {
             if (commentThreadId.type == CommentType.playlist) {
               Navigator.push(context, MaterialPageRoute(builder: (context) {
-                final playlist = (payload.obj as PlaylistDetail);
+                final playlist = (payload!.obj as PlaylistDetail);
                 return PlaylistDetailPage(
-                  playlist.id,
+                  playlist.id!,
                   playlist: playlist,
                 );
               }));
             } else if (commentThreadId.type == CommentType.song) {
-              Music music = payload.obj;
+              Music music = payload!.obj;
               if (context.playerValue.current != music) {
                 dynamic result = await showDialog(
                     context: context,
@@ -66,7 +65,7 @@ class _ItemTitle extends StatelessWidget {
                   borderRadius: BorderRadius.all(Radius.circular(3)),
                   child: Image(
                     fit: BoxFit.cover,
-                    image: CachedImage(payload.coverImage),
+                    image: CachedImage(payload!.coverImage!),
                     width: 60,
                     height: 60,
                   ),
@@ -79,11 +78,11 @@ class _ItemTitle extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Text(
-                        payload.title,
+                        payload!.title!,
                         style: Theme.of(context).textTheme.subtitle2,
                       ),
                       Text(
-                        payload.subtitle,
+                        payload!.subtitle!,
                         style: Theme.of(context).textTheme.caption,
                       ),
                     ],
@@ -147,7 +146,7 @@ class _ItemMoreHot extends StatelessWidget {
 class _ItemHeader extends StatelessWidget {
   final String title;
 
-  const _ItemHeader({Key key, @required this.title}) : super(key: key);
+  const _ItemHeader({Key? key, required this.title}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -162,7 +161,7 @@ class _ItemHeader extends StatelessWidget {
 }
 
 class _ItemComment extends StatefulWidget {
-  const _ItemComment({Key key, @required this.comment}) : super(key: key);
+  const _ItemComment({Key? key, required this.comment}) : super(key: key);
 
   final Comment comment;
 
@@ -220,7 +219,7 @@ class _ItemCommentState extends State<_ItemComment> {
                                   UserDetailPage(userId: user.userId)));
                     },
                     child: Image(
-                      image: CachedImage(user.avatarUrl),
+                      image: CachedImage(user.avatarUrl!),
                       width: 36,
                       height: 36,
                     ),
@@ -232,11 +231,11 @@ class _ItemCommentState extends State<_ItemComment> {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
                       Text(
-                        user.nickname,
+                        user.nickname!,
                         style: Theme.of(context).textTheme.bodyText2,
                       ),
                       Text(
-                        getFormattedTime(widget.comment.time),
+                        getFormattedTime(widget.comment.time!),
                         style: Theme.of(context).textTheme.caption,
                       ),
                     ],
@@ -258,7 +257,7 @@ class _ItemCommentState extends State<_ItemComment> {
                         child: Icon(
                           Icons.thumb_up,
                           size: 15,
-                          color: widget.comment.liked
+                          color: widget.comment.liked!
                               ? Theme.of(context).accentColor
                               : Theme.of(context).disabledColor,
                         ),
@@ -270,7 +269,7 @@ class _ItemCommentState extends State<_ItemComment> {
               Container(
                 padding: EdgeInsets.only(left: 44),
                 margin: EdgeInsets.symmetric(vertical: 8),
-                child: Text(widget.comment.content, maxLines: 10),
+                child: Text(widget.comment.content!, maxLines: 10),
               ),
             ],
           ),

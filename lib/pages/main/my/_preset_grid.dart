@@ -22,32 +22,32 @@ class PresetGridSection extends StatelessWidget {
                 children: [
                   _PinnedTile(
                     icon: Icons.arrow_circle_down_outlined,
-                    label: context.strings["local_music"],
+                    label: context.strings!["local_music"],
                     onTap: () {
                       toast("TODO");
                     },
                   ),
                   _PinnedTile(
                     icon: Icons.cloud_upload_outlined,
-                    label: context.strings["cloud_music"],
+                    label: context.strings!["cloud_music"],
                     onTap: () {
                       toast("TODO");
                     },
                   ),
                   _PinnedTile(
                     icon: Icons.check_circle_outline_outlined,
-                    label: context.strings["already_buy"],
+                    label: context.strings!["already_buy"],
                     onTap: () {
                       toast("TODO");
                     },
                   ),
                   _PinnedTile(
                     icon: Icons.play_circle_outline,
-                    label: context.strings["latest_play_history"],
+                    label: context.strings!["latest_play_history"],
                     onTap: () {
                       if (UserAccount.of(context, rebuildOnChange: false)
                           .isLogin) {
-                        context.secondaryNavigator
+                        context.secondaryNavigator!
                             .push(MaterialPageRoute(builder: (context) {
                           return RecordPage(
                               uid: UserAccount.of(context,
@@ -66,28 +66,28 @@ class PresetGridSection extends StatelessWidget {
                 children: [
                   _PinnedTile(
                     icon: Icons.supervised_user_circle_outlined,
-                    label: context.strings["friends"],
+                    label: context.strings!["friends"],
                     onTap: () {
                       toast("TODO");
                     },
                   ),
                   _PinnedTile(
                     icon: Icons.star_border_rounded,
-                    label: context.strings["collection_like"],
+                    label: context.strings!["collection_like"],
                     onTap: () {
-                      context.secondaryNavigator.pushNamed(ROUTE_MY_COLLECTION);
+                      context.secondaryNavigator!.pushNamed(ROUTE_MY_COLLECTION);
                     },
                   ),
                   _PinnedTile(
                     icon: Icons.radio,
-                    label: context.strings["my_djs"],
+                    label: context.strings!["my_djs"],
                     onTap: () {
-                      context.secondaryNavigator.pushNamed(pageMyDj);
+                      context.secondaryNavigator!.pushNamed(pageMyDj);
                     },
                   ),
                   _PinnedTile(
                     icon: Icons.favorite,
-                    label: context.strings["todo"],
+                    label: context.strings!["todo"],
                     onTap: () {
                       toast("TODO");
                     },
@@ -105,12 +105,12 @@ class PresetGridSection extends StatelessWidget {
 class _PinnedTile extends StatelessWidget {
   final IconData icon;
   final String label;
-  final GestureTapCallback onTap;
+  final GestureTapCallback? onTap;
 
   const _PinnedTile({
-    Key key,
-    @required this.icon,
-    @required this.label,
+    Key? key,
+    required this.icon,
+    required this.label,
     this.onTap,
   }) : super(key: key);
 
@@ -132,7 +132,7 @@ class _PinnedTile extends StatelessWidget {
             Text(label,
                 style: Theme.of(context)
                     .textTheme
-                    .bodyText2
+                    .bodyText2!
                     .copyWith(fontSize: 12)),
           ],
         ),

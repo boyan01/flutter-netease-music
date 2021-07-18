@@ -14,15 +14,15 @@ import 'user.dart';
 ///
 class PlayingIndicator extends StatefulWidget {
   ///show when player is playing
-  final Widget playing;
+  final Widget? playing;
 
   ///show when player is pausing
-  final Widget pausing;
+  final Widget? pausing;
 
   ///show when player is buffering
-  final Widget buffering;
+  final Widget? buffering;
 
-  const PlayingIndicator({Key key, this.playing, this.pausing, this.buffering})
+  const PlayingIndicator({Key? key, this.playing, this.pausing, this.buffering})
       : super(key: key);
 
   @override
@@ -41,7 +41,7 @@ class _PlayingIndicatorState extends State<PlayingIndicator> {
 
   final _changeStateOperations = <CancelableOperation>[];
 
-  MusicPlayer _player;
+  late MusicPlayer _player;
 
   @override
   void initState() {
@@ -91,7 +91,7 @@ class _PlayingIndicatorState extends State<PlayingIndicator> {
     return IndexedStack(
       index: _index,
       alignment: Alignment.center,
-      children: <Widget>[widget.pausing, widget.playing, widget.buffering],
+      children: <Widget>[widget.pausing!, widget.playing!, widget.buffering!],
     );
   }
 }
@@ -102,12 +102,11 @@ class LikeButton extends StatelessWidget {
 
   final Music music;
 
-  const LikeButton({Key key, @required this.music})
-      : assert(music != null),
-        super(key: key);
+  const LikeButton({Key? key, required this.music})
+      : super(key: key);
 
   factory LikeButton.current(BuildContext context) {
-    return LikeButton(music: context.listenPlayerValue.current);
+    return LikeButton(music: context.listenPlayerValue.current!);
   }
 
   @override

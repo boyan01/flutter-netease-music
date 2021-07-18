@@ -22,9 +22,7 @@ import 'video_player_model.dart';
 class MusicVideoPlayerPage extends StatelessWidget {
   final int mvId;
 
-  MusicVideoPlayerPage(this.mvId, {Key key})
-      : assert(mvId != null),
-        super(key: key);
+  MusicVideoPlayerPage(this.mvId, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -40,8 +38,8 @@ class MusicVideoPlayerPage extends StatelessWidget {
               context: context,
               removeTop: true,
               child: Loader(
-                  loadTask: () => neteaseRepository.mvDetail(mvId),
-                  builder: (context, result) {
+                  loadTask: () => neteaseRepository!.mvDetail(mvId),
+                  builder: (context, dynamic result) {
                     return _MvDetailPage(result: result);
                   }),
             ),
@@ -54,9 +52,9 @@ class MusicVideoPlayerPage extends StatelessWidget {
 
 class _MvDetailPage extends StatefulWidget {
   ///response of [NeteaseRepository.mvDetail]
-  final Map result;
+  final Map? result;
 
-  const _MvDetailPage({Key key, this.result}) : super(key: key);
+  const _MvDetailPage({Key? key, this.result}) : super(key: key);
 
   @override
   _MvDetailPageState createState() {
@@ -65,7 +63,7 @@ class _MvDetailPage extends StatefulWidget {
 }
 
 class _MvDetailPageState extends State<_MvDetailPage> {
-  VideoPlayerModel _model;
+  late VideoPlayerModel _model;
 
   bool _pausedPlayingMusic = false;
 
@@ -73,8 +71,8 @@ class _MvDetailPageState extends State<_MvDetailPage> {
   void initState() {
     super.initState();
     _model = VideoPlayerModel(
-        MusicVideoDetail.fromJsonMap(widget.result['data']),
-        subscribed: widget.result['subed']);
+        MusicVideoDetail.fromJsonMap(widget.result!['data']),
+        subscribed: widget.result!['subed']);
     _model.videoPlayerController.play();
     //TODO audio focus
     if (context.player.playbackState.isPlaying) {
@@ -153,7 +151,7 @@ class _SimpleMusicVideo extends StatelessWidget {
   Widget build(BuildContext context) {
     final model = VideoPlayerModel.of(context);
     double aspect;
-    if (model.playerValue.size != null && model.playerValue.size != Size.zero) {
+    if (model.playerValue.size != Size.zero) {
       aspect = model.playerValue.aspectRatio;
     } else {
       aspect = _defaultVideoAspect;
@@ -198,7 +196,7 @@ class _SimpleVideoController extends StatelessWidget {
               elevation: 0,
               titleSpacing: 0,
               backgroundColor: Colors.transparent,
-              title: Text(data.name)),
+              title: Text(data.name!)),
         ),
         bottom: _buildBottom(context),
         center: MvPlayPauseButton());
@@ -208,7 +206,7 @@ class _SimpleVideoController extends StatelessWidget {
     final value = VideoPlayerModel.of(context).playerValue;
 
     final position = value.position.inMilliseconds;
-    final duration = value.duration?.inMilliseconds ?? 0;
+    final duration = value.duration.inMilliseconds;
     return Container(
       decoration: const BoxDecoration(
           gradient: const LinearGradient(
@@ -272,15 +270,15 @@ class _SimpleVideoController extends StatelessWidget {
 }
 
 class MvPlayPauseButton extends StatelessWidget {
-  final VoidCallback onInteracted;
+  final VoidCallback? onInteracted;
 
-  const MvPlayPauseButton({Key key, this.onInteracted}) : super(key: key);
+  const MvPlayPauseButton({Key? key, this.onInteracted}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final controller = VideoPlayerModel.of(context).videoPlayerController;
 
-    final reachEnd = controller.value.initialized &&
+    final reachEnd = controller.value.isInitialized &&
         controller.value.position >= controller.value.duration;
     final isPlaying = controller.value.isPlaying && !reachEnd;
 
@@ -297,7 +295,7 @@ class MvPlayPauseButton extends StatelessWidget {
           ),
         ),
         onTap: () async {
-          if (onInteracted != null) onInteracted();
+          if (onInteracted != null) onInteracted!();
           if (isPlaying) {
             controller.pause();
           } else {
@@ -314,7 +312,7 @@ class MvPlayPauseButton extends StatelessWidget {
 
 /// title
 class _InformationSection extends StatefulWidget {
-  const _InformationSection({Key key}) : super(key: key);
+  const _InformationSection({Key? key}) : super(key: key);
 
   @override
   _InformationSectionState createState() => _InformationSectionState();
@@ -332,7 +330,7 @@ class _InformationSectionState extends State<_InformationSection> {
       description = Padding(
         padding: const EdgeInsets.only(top: 8),
         child: Text(
-          data.desc,
+          data.desc!,
           maxLines: 6,
         ),
       );
@@ -353,10 +351,10 @@ class _InformationSectionState extends State<_InformationSection> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      data.name,
+                      data.name!,
                       style: Theme.of(context)
                           .textTheme
-                          .headline6
+                          .headline6!
                           .copyWith(fontWeight: FontWeight.bold),
                     ),
                     DefaultTextStyle(
@@ -366,7 +364,7 @@ class _InformationSectionState extends State<_InformationSection> {
                           Text('发布: ${data.publishTime}'),
                           VerticalDivider(
                               color: Theme.of(context).dividerColor),
-                          Text('播放: ${getFormattedNumber(data.playCount)}')
+                          Text('播放: ${getFormattedNumber(data.playCount!)}')
                         ],
                       ),
                     )
@@ -460,7 +458,7 @@ class _SubscribeButton extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             const SizedBox(height: 4.0),
-            Icon(model.subscribed ? Icons.check_box : Icons.add_box),
+            Icon(model.subscribed! ? Icons.check_box : Icons.add_box),
             const SizedBox(height: 4.0),
             Text('${model.data.subCount}'),
           ],
@@ -474,7 +472,7 @@ class _ArtistSection extends StatelessWidget {
     var data = VideoPlayerModel.of(context).data;
 
     Widget widget;
-    if (data.artists == null || data.artists.isEmpty) {
+    if (data.artists.isEmpty) {
       widget = Container();
     } else {
       widget = _buildArtistTile(context, data.artists);
@@ -518,7 +516,7 @@ class _ArtistSection extends StatelessWidget {
                   toast('收藏');
                 },
                 materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                textColor: Theme.of(context).primaryTextTheme.bodyText2.color,
+                textColor: Theme.of(context).primaryTextTheme.bodyText2!.color,
                 icon: Icon(Icons.add, size: 18),
                 label: Text('收藏', style: TextStyle(fontSize: 12)),
                 color: Theme.of(context).primaryColor,

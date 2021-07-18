@@ -13,7 +13,7 @@ class LeaderboardPage extends StatelessWidget {
         title: const Text("排行榜"),
       ),
       body: Loader<Map>(
-        loadTask: () => neteaseRepository.topListDetail(),
+        loadTask: () => neteaseRepository!.topListDetail(),
         builder: (context, result) {
           return _Leaderboard((result['list'] as List).cast());
         },
@@ -67,7 +67,7 @@ class _ItemTitle extends StatelessWidget {
         title,
         style: Theme.of(context)
             .textTheme
-            .subtitle1
+            .subtitle1!
             .copyWith(fontWeight: FontWeight.w800),
       ),
     );

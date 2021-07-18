@@ -9,7 +9,7 @@ import 'video_player_model.dart';
 
 ///全屏播放界面
 class FullScreenMvPlayer extends StatefulWidget {
-  FullScreenMvPlayer({Key key}) : super(key: key);
+  FullScreenMvPlayer({Key? key}) : super(key: key);
 
   @override
   FullScreenMvPlayerState createState() {
@@ -35,7 +35,7 @@ class FullScreenMvPlayerState extends State<FullScreenMvPlayer> {
         children: <Widget>[
           Center(
             child: AspectRatio(
-                aspectRatio: value.initialized ? value.aspectRatio : 1,
+                aspectRatio: value.isInitialized ? value.aspectRatio : 1,
                 child: VideoPlayer(
                     VideoPlayerModel.of(context).videoPlayerController)),
           ),
@@ -79,14 +79,14 @@ class _FullScreenController extends StatelessWidget {
         backgroundColor: Colors.transparent,
         elevation: 0,
         titleSpacing: 0,
-        title: Text(VideoPlayerModel.of(context).data.name),
+        title: Text(VideoPlayerModel.of(context).data.name!),
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.thumb_up),
             onPressed: () => notImplemented(context),
           ),
           IconButton(
-            icon: Icon(VideoPlayerModel.of(context).subscribed
+            icon: Icon(VideoPlayerModel.of(context).subscribed!
                 ? Icons.check_box
                 : Icons.add_box),
             onPressed: () => subscribeOrUnSubscribeMv(context),
@@ -108,7 +108,7 @@ class _FullScreenController extends StatelessWidget {
     final value = VideoPlayerModel.of(context).playerValue;
 
     final position = value.position.inMilliseconds;
-    final duration = value.duration?.inMilliseconds ?? 0;
+    final duration = value.duration.inMilliseconds;
 
     return Container(
       decoration: const BoxDecoration(
@@ -117,7 +117,7 @@ class _FullScreenController extends StatelessWidget {
               end: Alignment.bottomCenter,
               colors: const [Colors.black12, Colors.black87])),
       child: DefaultTextStyle(
-        style: Theme.of(context).primaryTextTheme.bodyText2,
+        style: Theme.of(context).primaryTextTheme.bodyText2!,
         child: Row(
           children: <Widget>[
             Text(getTimeStamp(position)),
@@ -125,7 +125,7 @@ class _FullScreenController extends StatelessWidget {
               child: Slider(
                   value: position.clamp(0, duration).toDouble(),
                   max: duration.toDouble(),
-                  onChanged: value.initialized
+                  onChanged: value.isInitialized
                       ? (v) {
                           VideoPlayerModel.of(context).videoPlayerController
                             ..seekTo(Duration(milliseconds: v.toInt()))
@@ -138,7 +138,7 @@ class _FullScreenController extends StatelessWidget {
             PopupMenuButton<String>(
                 itemBuilder: (context) {
                   return VideoPlayerModel.of(context)
-                      .imageResolutions
+                      .imageResolutions!
                       .map((str) => PopupMenuItem<String>(
                             value: str,
                             child: Container(child: Text('${str}P')),

@@ -27,14 +27,13 @@ class PlayingListDialog extends StatefulWidget {
 }
 
 class PlayingListDialogState extends State<PlayingListDialog> {
-  ScrollController _controller;
+  ScrollController? _controller;
 
   @override
   void initState() {
     super.initState();
     final playingList = context.player.value.playingList;
-    final music = context.player.value.current;
-    assert(music != null, '展示播放列表时，当前音乐不能为空！');
+    final music = context.player.value.current!;
     double offset = playingList.indexOf(music) * _HEIGHT_MUSIC_TILE;
     _controller = ScrollController(initialScrollOffset: offset);
   }
@@ -69,9 +68,9 @@ class PlayingListDialogState extends State<PlayingListDialog> {
 }
 
 class _PlayingListContainer extends StatelessWidget {
-  final Widget child;
+  final Widget? child;
 
-  const _PlayingListContainer({Key key, this.child}) : super(key: key);
+  const _PlayingListContainer({Key? key, this.child}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -84,9 +83,9 @@ class _PlayingListContainer extends StatelessWidget {
 }
 
 class _PortraitPlayingListContainer extends StatelessWidget {
-  final Widget child;
+  final Widget? child;
 
-  const _PortraitPlayingListContainer({Key key, this.child}) : super(key: key);
+  const _PortraitPlayingListContainer({Key? key, this.child}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -104,9 +103,9 @@ class _PortraitPlayingListContainer extends StatelessWidget {
 }
 
 class _LandscapePlayingListContainer extends StatelessWidget {
-  final Widget child;
+  final Widget? child;
 
-  const _LandscapePlayingListContainer({Key key, this.child}) : super(key: key);
+  const _LandscapePlayingListContainer({Key? key, this.child}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -181,17 +180,17 @@ class _Header extends StatelessWidget {
 const _HEIGHT_MUSIC_TILE = 48.0;
 
 class _MusicTile extends StatelessWidget {
-  final Music music;
+  final Music? music;
   final bool playing;
 
-  const _MusicTile({Key key, this.music, this.playing = false})
-      : assert(music != null && playing != null),
+  const _MusicTile({Key? key, this.music, this.playing = false})
+      : assert(music != null),
         super(key: key);
 
   @override
   Widget build(BuildContext context) {
     Widget leading;
-    Color name, artist;
+    Color? name, artist;
     if (playing) {
       Color color = Theme.of(context).primaryColorLight;
       leading = Container(
@@ -206,12 +205,12 @@ class _MusicTile extends StatelessWidget {
       artist = color;
     } else {
       leading = Container();
-      name = Theme.of(context).textTheme.bodyText2.color;
-      artist = Theme.of(context).textTheme.caption.color;
+      name = Theme.of(context).textTheme.bodyText2!.color;
+      artist = Theme.of(context).textTheme.caption!.color;
     }
     return InkWell(
       onTap: () {
-        context.transportControls.playFromMediaId(music.metadata.mediaId);
+        context.transportControls.playFromMediaId(music!.metadata.mediaId);
       },
       child: Container(
         padding: EdgeInsets.only(left: 8),
@@ -226,9 +225,9 @@ class _MusicTile extends StatelessWidget {
             Expanded(
                 child: Text.rich(
               TextSpan(children: [
-                TextSpan(text: music.title, style: TextStyle(color: name)),
+                TextSpan(text: music!.title, style: TextStyle(color: name)),
                 TextSpan(
-                    text: " - ${music.artist.map((a) => a.name).join('/')}",
+                    text: " - ${music!.artist!.map((a) => a.name).join('/')}",
                     style: TextStyle(color: artist, fontSize: 12))
               ]),
               maxLines: 1,
@@ -237,7 +236,7 @@ class _MusicTile extends StatelessWidget {
             IconButton(
                 icon: Icon(Icons.close),
                 onPressed: () {
-                  context.player.removeMusicItem(music.metadata);
+                  context.player.removeMusicItem(music!.metadata);
                 })
           ],
         ),

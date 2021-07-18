@@ -3,11 +3,11 @@ export 'music.dart';
 class Album {
   Album({this.coverImageUrl, this.name, this.id});
 
-  String coverImageUrl;
+  String? coverImageUrl;
 
-  String name;
+  String? name;
 
-  int id;
+  int? id;
 
   @override
   bool operator ==(Object other) =>
@@ -45,11 +45,11 @@ class Album {
 class Artist {
   Artist({this.name, this.id, this.imageUrl});
 
-  String name;
+  String? name;
 
-  int id;
+  int? id;
 
-  String imageUrl;
+  String? imageUrl;
 
   @override
   String toString() {

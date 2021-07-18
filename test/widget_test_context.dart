@@ -11,9 +11,9 @@ import 'repository/mock.dart';
 
 ///配置一些通用用于测试的Widget上下文
 class TestContext extends StatefulWidget {
-  final Widget child;
+  final Widget? child;
 
-  TestContext({Key key, this.child}) : super(key: key);
+  TestContext({Key? key, this.child}) : super(key: key);
 
   @override
   _TestContextState createState() => _TestContextState();

@@ -5,9 +5,9 @@ import 'package:quiet/part/part.dart';
 import 'package:quiet/repository/netease.dart';
 
 class PlaylistResultSection extends StatefulWidget {
-  final String query;
+  final String? query;
 
-  const PlaylistResultSection({Key key, this.query}) : super(key: key);
+  const PlaylistResultSection({Key? key, this.query}) : super(key: key);
 
   @override
   _PlaylistResultSectionState createState() => _PlaylistResultSectionState();
@@ -22,13 +22,13 @@ class _PlaylistResultSectionState extends State<PlaylistResultSection>
   Widget build(BuildContext context) {
     super.build(context);
     return AutoLoadMoreList(loadMore: (offset) async {
-      final result = await neteaseRepository
+      final result = await neteaseRepository!
           .search(widget.query, NeteaseSearchType.playlist, offset: offset);
       if (result.isValue) {
-        return LoadMoreResult(result.asValue.value["result"]["playlists"]);
+        return LoadMoreResult(result.asValue!.value["result"]["playlists"]);
       }
       return result as Result<List>;
-    }, builder: (context, item) {
+    }, builder: (context, dynamic item) {
       return _PlayListTile(item);
     });
   }
@@ -37,7 +37,7 @@ class _PlaylistResultSectionState extends State<PlaylistResultSection>
 class _PlayListTile extends StatelessWidget {
   final Map item;
 
-  const _PlayListTile(this.item, {Key key}) : super(key: key);
+  const _PlayListTile(this.item, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

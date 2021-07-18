@@ -24,7 +24,7 @@ class SettingPage extends StatelessWidget {
               ListTile(
                 title: Text('更换主题'),
                 onTap: () =>
-                    context.secondaryNavigator.pushNamed(ROUTE_SETTING_THEME),
+                    context.secondaryNavigator!.pushNamed(ROUTE_SETTING_THEME),
               ),
               _CopyRightCheckBox(),
             ],
@@ -61,7 +61,7 @@ class _CopyRightCheckBox extends StatelessWidget {
     return CheckboxListTile(
       value: Settings.of(context).showCopyrightOverlay,
       onChanged: (value) {
-        Settings.of(context).showCopyrightOverlay = value;
+        Settings.of(context).showCopyrightOverlay = value!;
       },
       title: Text('隐藏版权浮层'),
     );

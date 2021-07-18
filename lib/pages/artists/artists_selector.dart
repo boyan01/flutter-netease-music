@@ -4,14 +4,14 @@ import 'package:quiet/model/model.dart';
 import 'page_artist_detail.dart';
 
 ///quick launch [ArtistDetailPage] if have more than one id
-void launchArtistDetailPage(BuildContext context, List<Artist> artists) async {
+void launchArtistDetailPage(BuildContext context, List<Artist>? artists) async {
   debugPrint("to artist :$artists");
   if (artists == null || artists.isEmpty) {
     return;
   }
   if (artists.length == 1) {
     Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-      return ArtistDetailPage(artistId: artists[0].id);
+      return ArtistDetailPage(artistId: artists[0].id!);
     }));
   } else {
     final artist = await showDialog<Artist>(
@@ -21,7 +21,7 @@ void launchArtistDetailPage(BuildContext context, List<Artist> artists) async {
         });
     if (artist != null) {
       Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-        return ArtistDetailPage(artistId: artist.id);
+        return ArtistDetailPage(artistId: artist.id!);
       }));
     }
   }
@@ -32,9 +32,8 @@ void launchArtistDetailPage(BuildContext context, List<Artist> artists) async {
 class ArtistSelectionDialog extends StatelessWidget {
   final List<Artist> artists;
 
-  const ArtistSelectionDialog({Key key, @required this.artists})
-      : assert(artists != null),
-        super(key: key);
+  const ArtistSelectionDialog({Key? key, required this.artists})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -43,10 +42,10 @@ class ArtistSelectionDialog extends StatelessWidget {
       return ListTile(
         title: Padding(
           padding: const EdgeInsets.only(left: 8),
-          child: Text(artist.name,
+          child: Text(artist.name!,
               style: Theme.of(context)
                   .textTheme
-                  .bodyText2
+                  .bodyText2!
                   .merge(TextStyle(color: enabled ? null : Colors.grey))),
         ),
         enabled: enabled,

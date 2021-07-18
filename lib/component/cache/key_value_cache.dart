@@ -22,8 +22,7 @@ abstract class Cache<T> {
 }
 
 class FileCacheProvider {
-  FileCacheProvider(this.directory, {@required this.maxSize})
-      : assert(directory != null);
+  FileCacheProvider(this.directory, {required this.maxSize});
 
   final Directory directory;
 
@@ -63,7 +62,7 @@ class FileCacheProvider {
 
 Future<void> _fileLru(Map params) async {
   final Directory directory = Directory(params["path"]);
-  final int maxSize = params["maxSize"];
+  final int? maxSize = params["maxSize"];
   if (!directory.existsSync()) {
     return;
   }
@@ -73,7 +72,7 @@ Future<void> _fileLru(Map params) async {
 
   int totalSize = 0;
   for (final File file in files) {
-    if (totalSize > maxSize) {
+    if (totalSize > maxSize!) {
       file.deleteSync();
     } else {
       totalSize += file.lengthSync();

@@ -26,14 +26,14 @@ class DurationProgressBarState extends State<DurationProgressBar> {
 
     Widget progressIndicator;
 
-    String durationText;
-    String positionText;
+    String? durationText;
+    String? positionText;
 
     if (state.initialized) {
-      var duration = context.listenPlayerValue.metadata.duration ?? 0;
+      var duration = context.listenPlayerValue.metadata!.duration;
 
       var position =
-          isUserTracking ? trackingPosition.round() : state.positionWithOffset;
+          isUserTracking ? trackingPosition.round() : state.computedPosition;
 
       durationText = getTimeStamp(duration);
       positionText = getTimeStamp(position);
@@ -52,8 +52,8 @@ class DurationProgressBarState extends State<DurationProgressBar> {
           Slider(
             value: position.toDouble().clamp(0.0, duration.toDouble()),
             min: 0.0,
-            activeColor: theme.bodyText2.color.withOpacity(0.75),
-            inactiveColor: theme.caption.color.withOpacity(0.3),
+            activeColor: theme.bodyText2!.color!.withOpacity(0.75),
+            inactiveColor: theme.caption!.color!.withOpacity(0.3),
             max: duration.toDouble(),
             onChangeStart: (value) {
               setState(() {

@@ -32,15 +32,14 @@ const double HEIGHT_HEADER = 280 + kToolbarHeight;
 ///
 ///
 class PlaylistDetailPage extends StatefulWidget {
-  PlaylistDetailPage(this.playlistId, {this.playlist})
-      : assert(playlistId != null);
+  PlaylistDetailPage(this.playlistId, {this.playlist});
 
   ///playlist id，can not be null
   final int playlistId;
 
   ///a simple playlist json obj , can be null
   ///used to preview playlist information when loading
-  final PlaylistDetail playlist;
+  final PlaylistDetail? playlist;
 
   @override
   State<StatefulWidget> createState() => _PlayListDetailState();
@@ -58,10 +57,10 @@ class _PlayListDetailState extends State<PlaylistDetailPage> {
               widget.playlist == null ? kToolbarHeight : HEIGHT_HEADER,
           flexibleSpace: widget.playlist == null
               ? null
-              : _PlaylistDetailHeader(widget.playlist),
+              : _PlaylistDetailHeader(widget.playlist!),
           bottom: widget.playlist == null
               ? null
-              : MusicListHeader(widget.playlist.trackCount),
+              : MusicListHeader(widget.playlist!.trackCount),
         ),
         SliverList(delegate: SliverChildListDelegate([content]))
       ],
@@ -78,9 +77,11 @@ class _PlayListDetailState extends State<PlaylistDetailPage> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: BoxWithBottomPlayerController(
-        Loader<PlaylistDetail>(
+        Loader<PlaylistDetail?>(
             initialData: neteaseLocalData.getPlaylistDetail(widget.playlistId),
-            loadTask: () => neteaseRepository.playlistDetail(widget.playlistId),
+            loadTask: (() => neteaseRepository!
+                .playlistDetail(widget.playlistId)
+                .then((value) => value!)),
             loadingBuilder: (context) {
               return _buildLoading(context);
             },
@@ -103,11 +104,11 @@ class _PlayListDetailState extends State<PlaylistDetailPage> {
 
 ///body display the list of song item and a header of playlist
 class _PlaylistBody extends StatefulWidget {
-  _PlaylistBody(this.playlist) : assert(playlist != null);
+  _PlaylistBody(this.playlist);
 
   final PlaylistDetail playlist;
 
-  List<Music> get musicList => playlist.musicList;
+  List<Music>? get musicList => playlist.musicList;
 
   @override
   _PlaylistBodyState createState() {
@@ -120,20 +121,20 @@ class _PlaylistBodyState extends State<_PlaylistBody> {
   Widget build(BuildContext context) {
     return MusicTileConfiguration(
       token: "playlist_${widget.playlist.id}",
-      musics: widget.musicList,
-      remove:
-          widget.playlist.creator["userId"] != UserAccount.of(context).userId
-              ? null
-              : (music) async {
-                  var result = await neteaseRepository.playlistTracksEdit(
-                      PlaylistOperation.remove, widget.playlist.id, [music.id]);
-                  if (result) {
-                    setState(() {
-                      widget.playlist.musicList.remove(music);
-                    });
-                  }
-                  toast(result ? '删除成功' : '删除失败');
-                },
+      musics: widget.musicList!,
+      remove: widget.playlist.creator!["userId"] !=
+              UserAccount.of(context).userId
+          ? null
+          : (music) async {
+              var result = await neteaseRepository!.playlistTracksEdit(
+                  PlaylistOperation.remove, widget.playlist.id!, [music.id]);
+              if (result) {
+                setState(() {
+                  widget.playlist.musicList!.remove(music);
+                });
+              }
+              toast(result ? '删除成功' : '删除失败');
+            },
       onMusicTap: MusicTileConfiguration.defaultOnTap,
       leadingBuilder: MusicTileConfiguration.indexedLeadingBuilder,
       trailingBuilder: MusicTileConfiguration.defaultTrailingBuilder,
@@ -145,13 +146,13 @@ class _PlaylistBodyState extends State<_PlaylistBody> {
             automaticallyImplyLeading: false,
             backgroundColor: Colors.transparent,
             expandedHeight: HEIGHT_HEADER,
-            bottom: _buildListHeader(context),
+            bottom: _buildListHeader(context) as PreferredSizeWidget?,
             flexibleSpace: _PlaylistDetailHeader(widget.playlist),
           ),
           SliverList(
             delegate: SliverChildBuilderDelegate(
-                (context, index) => MusicTile(widget.musicList[index]),
-                childCount: widget.musicList.length),
+                (context, index) => MusicTile(widget.musicList![index]),
+                childCount: widget.musicList!.length),
           ),
         ],
       ),
@@ -163,7 +164,7 @@ class _PlaylistBodyState extends State<_PlaylistBody> {
     bool succeed;
     try {
       succeed = await showLoaderOverlay(context,
-          neteaseRepository.playlistSubscribe(widget.playlist.id, !subscribe));
+          neteaseRepository!.playlistSubscribe(widget.playlist.id, !subscribe));
     } catch (e) {
       succeed = false;
     }
@@ -179,27 +180,27 @@ class _PlaylistBodyState extends State<_PlaylistBody> {
 
   Widget _buildListHeader(BuildContext context) {
     bool owner =
-        widget.playlist.creator["userId"] == UserAccount.of(context).userId;
-    Widget tail;
+        widget.playlist.creator!["userId"] == UserAccount.of(context).userId;
+    Widget? tail;
     if (!owner) {
       tail = _SubscribeButton(widget.playlist.subscribed,
           widget.playlist.subscribedCount, _doSubscribeChanged);
     }
-    return MusicListHeader(widget.musicList.length, tail: tail);
+    return MusicListHeader(widget.musicList!.length, tail: tail);
   }
 }
 
 class _SubscribeButton extends StatefulWidget {
   final bool subscribed;
 
-  final int subscribedCount;
+  final int? subscribedCount;
 
   ///currentState : is playlist be subscribed when function invoked
   final Future<bool> Function(bool currentState) doSubscribeChanged;
 
   const _SubscribeButton(
       this.subscribed, this.subscribedCount, this.doSubscribeChanged,
-      {Key key})
+      {Key? key})
       : super(key: key);
 
   @override
@@ -243,7 +244,7 @@ class _SubscribeButtonState extends State<_SubscribeButton> {
                       color: Theme.of(context).primaryIconTheme.color),
                   SizedBox(width: 4),
                   Text(
-                    "收藏(${getFormattedNumber(widget.subscribedCount)})",
+                    "收藏(${getFormattedNumber(widget.subscribedCount!)})",
                     style: Theme.of(context).primaryTextTheme.bodyText2,
                   ),
                   SizedBox(width: 16),
@@ -263,10 +264,10 @@ class _SubscribeButtonState extends State<_SubscribeButton> {
                 Icon(Icons.folder_special,
                     size: 20, color: Theme.of(context).disabledColor),
                 SizedBox(width: 4),
-                Text(getFormattedNumber(widget.subscribedCount),
+                Text(getFormattedNumber(widget.subscribedCount!),
                     style: Theme.of(context)
                         .textTheme
-                        .caption
+                        .caption!
                         .copyWith(fontSize: 14)),
                 SizedBox(width: 16),
               ],
@@ -307,7 +308,7 @@ class _HeaderAction extends StatelessWidget {
 
   final String action;
 
-  final GestureTapCallback onTap;
+  final GestureTapCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -315,19 +316,19 @@ class _HeaderAction extends StatelessWidget {
 
     return InkResponse(
       onTap: onTap,
-      splashColor: textTheme.bodyText2.color,
+      splashColor: textTheme.bodyText2!.color,
       child: Opacity(
         opacity: onTap == null ? 0.5 : 1,
         child: Column(
           children: <Widget>[
             Icon(
               icon,
-              color: textTheme.bodyText2.color,
+              color: textTheme.bodyText2!.color,
             ),
             const Padding(padding: EdgeInsets.only(top: 4)),
             Text(
               action,
-              style: textTheme.caption.copyWith(fontSize: 13),
+              style: textTheme.caption!.copyWith(fontSize: 13),
             )
           ],
         ),
@@ -338,9 +339,9 @@ class _HeaderAction extends StatelessWidget {
 
 ///播放列表头部背景
 class PlayListHeaderBackground extends StatelessWidget {
-  final String imageUrl;
+  final String? imageUrl;
 
-  const PlayListHeaderBackground({Key key, @required this.imageUrl})
+  const PlayListHeaderBackground({Key? key, required this.imageUrl})
       : super(key: key);
 
   @override
@@ -349,7 +350,7 @@ class PlayListHeaderBackground extends StatelessWidget {
       fit: StackFit.passthrough,
       children: <Widget>[
         Image(
-            image: CachedImage(imageUrl),
+            image: CachedImage(imageUrl!),
             fit: BoxFit.cover,
             width: 120,
             height: 1),
@@ -366,13 +367,13 @@ class PlayListHeaderBackground extends StatelessWidget {
 ///header show list information
 class DetailHeader extends StatelessWidget {
   const DetailHeader(
-      {Key key,
-      @required this.content,
+      {Key? key,
+      required this.content,
       this.onCommentTap,
       this.onShareTap,
       this.onSelectionTap,
-      int commentCount = 0,
-      int shareCount = 0,
+      int? commentCount = 0,
+      int? shareCount = 0,
       this.background})
       : this.commentCount = commentCount ?? 0,
         this.shareCount = shareCount ?? 0,
@@ -380,19 +381,19 @@ class DetailHeader extends StatelessWidget {
 
   final Widget content;
 
-  final GestureTapCallback onCommentTap;
-  final GestureTapCallback onShareTap;
-  final GestureTapCallback onSelectionTap;
+  final GestureTapCallback? onCommentTap;
+  final GestureTapCallback? onShareTap;
+  final GestureTapCallback? onSelectionTap;
 
   final int commentCount;
   final int shareCount;
 
-  final Widget background;
+  final Widget? background;
 
   @override
   Widget build(BuildContext context) {
     return Stack(
-      children: <Widget>[
+      children: (<Widget?>[
         background,
         Material(
           color: Colors.transparent,
@@ -424,20 +425,21 @@ class DetailHeader extends StatelessWidget {
             ),
           ),
         ),
-      ]..removeWhere((v) => v == null),
+      ]..removeWhere((v) => v == null))
+          .cast(),
     );
   }
 }
 
 ///a detail header describe playlist information
 class _PlaylistDetailHeader extends StatelessWidget {
-  _PlaylistDetailHeader(this.playlist) : assert(playlist != null);
+  _PlaylistDetailHeader(this.playlist);
 
   final PlaylistDetail playlist;
 
   ///the music list
   ///could be null if music list if not loaded
-  List<Music> get musicList => playlist.musicList;
+  List<Music>? get musicList => playlist.musicList;
 
   @override
   Widget build(BuildContext context) {
@@ -447,7 +449,7 @@ class _PlaylistDetailHeader extends StatelessWidget {
       builder: (context, t) => AppBar(
         leading: context.isLandscape ? null : BackButton(),
         automaticallyImplyLeading: false,
-        title: Text(t > 0.5 ? playlist.name : '歌单'),
+        title: Text(t > 0.5 ? playlist.name! : '歌单'),
         backgroundColor: Colors.transparent,
         elevation: 0,
         titleSpacing: 16,
@@ -463,7 +465,7 @@ class _PlaylistDetailHeader extends StatelessWidget {
           LandscapeWidgetSwitcher(
             landscape: (context) {
               return CloseButton(onPressed: () {
-                context.secondaryNavigator.maybePop();
+                context.secondaryNavigator!.maybePop();
               });
             },
           )
@@ -473,7 +475,7 @@ class _PlaylistDetailHeader extends StatelessWidget {
   }
 
   Widget _buildContent(BuildContext context) {
-    Map<String, Object> creator = playlist.creator;
+    Map<String, dynamic> creator = playlist.creator as Map<String, dynamic>;
 
     return DetailHeader(
         commentCount: playlist.commentCount,
@@ -494,9 +496,9 @@ class _PlaylistDetailHeader extends StatelessWidget {
               return PlaylistSelectionPage(
                   list: musicList,
                   onDelete: (selected) async {
-                    return neteaseRepository.playlistTracksEdit(
+                    return neteaseRepository!.playlistTracksEdit(
                         PlaylistOperation.remove,
-                        playlist.id,
+                        playlist.id!,
                         selected.map((m) => m.id).toList());
                   });
             }));
@@ -504,17 +506,17 @@ class _PlaylistDetailHeader extends StatelessWidget {
         },
         onShareTap: () {
           final String content =
-              MessageFormat(context.strings["playlist_share_content"]).format({
-            "username": playlist.creator["nickname"],
-            "title": playlist.name,
+              MessageFormat(context.strings!["playlist_share_content"]).format({
+            "username": playlist.creator!["nickname"],
+            "title": playlist.name!,
             "playlistId": playlist.id.toString(),
-            "userId": playlist.creator["userId"].toString(),
+            "userId": playlist.creator!["userId"].toString(),
             "shareUserId": UserAccount.of(context, rebuildOnChange: false)
                 .userId
                 .toString(),
           });
           Clipboard.setData(ClipboardData(text: content));
-          toast(context.strings["share_content_copied"]);
+          toast(context.strings!["share_content_copied"]);
         },
         content: Container(
           height: 146,
@@ -532,7 +534,7 @@ class _PlaylistDetailHeader extends StatelessWidget {
                         tag: playlist.heroTag,
                         child: Image(
                             fit: BoxFit.cover,
-                            image: CachedImage(playlist.coverUrl)),
+                            image: CachedImage(playlist.coverUrl!)),
                       ),
                       Container(
                         padding: EdgeInsets.all(4),
@@ -555,10 +557,10 @@ class _PlaylistDetailHeader extends StatelessWidget {
                                   color:
                                       Theme.of(context).primaryIconTheme.color,
                                   size: 12),
-                              Text(getFormattedNumber(playlist.playCount),
+                              Text(getFormattedNumber(playlist.playCount!),
                                   style: Theme.of(context)
                                       .primaryTextTheme
-                                      .bodyText2
+                                      .bodyText2!
                                       .copyWith(fontSize: 11))
                             ],
                           ),
@@ -575,10 +577,10 @@ class _PlaylistDetailHeader extends StatelessWidget {
                   children: <Widget>[
                     SizedBox(height: 10),
                     Text(
-                      playlist.name,
+                      playlist.name!,
                       style: Theme.of(context)
                           .primaryTextTheme
-                          .headline6
+                          .headline6!
                           .copyWith(fontSize: 17),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
@@ -588,7 +590,8 @@ class _PlaylistDetailHeader extends StatelessWidget {
                       onTap: () {
                         Navigator.push(context,
                             MaterialPageRoute(builder: (context) {
-                          return UserDetailPage(userId: creator['userId']);
+                          return UserDetailPage(
+                              userId: creator['userId'] as int?);
                         }));
                       },
                       child: Padding(
@@ -601,12 +604,13 @@ class _PlaylistDetailHeader extends StatelessWidget {
                               width: 24,
                               child: ClipOval(
                                 child: Image(
-                                    image: CachedImage(creator["avatarUrl"])),
+                                    image: CachedImage(
+                                        creator["avatarUrl"] as String)),
                               ),
                             ),
                             Padding(padding: EdgeInsets.only(left: 4)),
                             Text(
-                              creator["nickname"],
+                              creator["nickname"] as String,
                               style:
                                   Theme.of(context).primaryTextTheme.bodyText2,
                             ),

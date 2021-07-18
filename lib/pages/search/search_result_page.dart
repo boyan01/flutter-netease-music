@@ -10,11 +10,11 @@ import 'result_videos.dart';
 const List<String> SECTIONS = ["单曲", "视频", "歌手", "专辑", "歌单"];
 
 class SearchResultPage extends StatefulWidget {
-  SearchResultPage({Key key, this.query})
+  SearchResultPage({Key? key, this.query})
       : assert(query != null && query.isNotEmpty),
         super(key: key);
 
-  final String query;
+  final String? query;
 
   @override
   _SearchResultPageState createState() {
@@ -23,7 +23,7 @@ class SearchResultPage extends StatefulWidget {
 }
 
 class _SearchResultPageState extends State<SearchResultPage> {
-  String query;
+  String? query;
 
   @override
   void initState() {

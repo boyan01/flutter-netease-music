@@ -87,11 +87,11 @@ class _InputModel extends Model {
     _region = region;
   }
 
-  RegionFlag _region;
+  RegionFlag? _region;
 
-  RegionFlag get region => _region;
+  RegionFlag? get region => _region;
 
-  set region(RegionFlag flag) {
+  set region(RegionFlag? flag) {
     if (_region == flag) return;
     _region = flag;
     notifyListeners();
@@ -101,12 +101,12 @@ class _InputModel extends Model {
 }
 
 class _PhoneInput extends StatelessWidget {
-  final TextEditingController controller;
+  final TextEditingController? controller;
 
-  _PhoneInput({Key key, this.controller}) : super(key: key);
+  _PhoneInput({Key? key, this.controller}) : super(key: key);
 
-  Color _textColor(BuildContext context) {
-    if (controller.text.isEmpty) {
+  Color? _textColor(BuildContext context) {
+    if (controller!.text.isEmpty) {
       return Theme.of(context).disabledColor;
     }
     return null;
@@ -114,7 +114,7 @@ class _PhoneInput extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final style = Theme.of(context).textTheme.bodyText2.copyWith(
+    final style = Theme.of(context).textTheme.bodyText2!.copyWith(
           fontSize: 16,
           color: _textColor(context),
         );
@@ -133,7 +133,7 @@ class _PhoneInput extends StatelessWidget {
         decoration: InputDecoration(
           prefixIcon: InkWell(
             onTap: () async {
-              final RegionFlag region = await Navigator.push(
+              final RegionFlag? region = await Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) {
                   return RegionSelectionPage(regions: inputModel.flags);
@@ -146,7 +146,7 @@ class _PhoneInput extends StatelessWidget {
             child: Padding(
               padding: EdgeInsets.all(12),
               child: Text(
-                  inputModel.region.emoji + " " + inputModel.region.dialCode),
+                  inputModel.region!.emoji! + " " + inputModel.region!.dialCode!),
             ),
           ),
         ),
@@ -166,18 +166,18 @@ void _next(BuildContext context) async {
       context,
       WelcomeRepository.checkPhoneExist(
         text,
-        model.region.dialCode.replaceAll("+", "").replaceAll(" ", ""),
-      ));
+        model.region!.dialCode!.replaceAll("+", "").replaceAll(" ", ""),
+      ).then((value) => value!));
   if (result.isError) {
-    toast(result.asError.error.toString());
+    toast(result.asError!.error.toString());
     return;
   }
-  final value = result.asValue.value;
+  final value = result.asValue!.value;
   if (!value.isExist) {
     toast('注册流程开发未完成,欢迎贡献代码...');
     return;
   }
-  if (!value.hasPassword) {
+  if (!value.hasPassword!) {
     toast('无密码登录流程的开发未完成,欢迎提出PR贡献代码...');
     return;
   }
@@ -185,14 +185,14 @@ void _next(BuildContext context) async {
 }
 
 class _ButtonNextStep extends StatelessWidget {
-  const _ButtonNextStep({Key key}) : super(key: key);
+  const _ButtonNextStep({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return RaisedButton(
       color: Theme.of(context).primaryColor,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-      textColor: Theme.of(context).primaryTextTheme.bodyText2.color,
+      textColor: Theme.of(context).primaryTextTheme.bodyText2!.color,
       child: Text('下一步'),
       onPressed: () async {
         _next(context);

@@ -17,9 +17,7 @@ class CachedImage extends ImageProvider<CachedImage> implements CacheKey {
   ///
   /// The arguments must not be null.
   const CachedImage(this.url, {this.scale = 1.0, this.headers})
-      : assert(url != null),
-        assert(scale != null),
-        this._size = null;
+      : this._size = null;
 
   const CachedImage._internal(this.url, this._size,
       {this.scale = 1.0, this.headers});
@@ -32,18 +30,18 @@ class CachedImage extends ImageProvider<CachedImage> implements CacheKey {
 
   /// the size in pixel (widget & height) of this image
   /// might be null
-  final Size _size;
+  final Size? _size;
 
-  int get height => _size == null || _size.height == double.infinity
+  int get height => _size == null || _size!.height == double.infinity
       ? -1
-      : _size.height.toInt();
+      : _size!.height.toInt();
 
-  int get width => _size == null || _size.width == double.infinity
+  int get width => _size == null || _size!.width == double.infinity
       ? -1
-      : _size.width.toInt();
+      : _size!.width.toInt();
 
   /// The HTTP headers that will be used with [HttpClient.get] to fetch image from network.
-  final Map<String, String> headers;
+  final Map<String, String>? headers;
 
   ///the id of this image
   ///netease image url has a unique id at url last part
@@ -70,7 +68,7 @@ class CachedImage extends ImageProvider<CachedImage> implements CacheKey {
   static final HttpClient _httpClient = HttpClient();
 
   Future<ui.Codec> _loadAsync(CachedImage key, DecoderCallback decode) async {
-    final cache = await _imageCache();
+    final cache = await (_imageCache());
     var image = await cache.get(key);
     if (image != null) {
       return await decode(Uint8List.fromList(image),
@@ -85,7 +83,7 @@ class CachedImage extends ImageProvider<CachedImage> implements CacheKey {
     final HttpClientResponse response = await request.close();
     if (response.statusCode != HttpStatus.ok)
       throw Exception(
-          'HTTP request failed, statusCode: ${response?.statusCode}, $resolved');
+          'HTTP request failed, statusCode: ${response.statusCode}, $resolved');
 
     final Uint8List bytes = await consolidateHttpClientResponseBytes(response);
     if (bytes.lengthInBytes == 0)
@@ -103,7 +101,7 @@ class CachedImage extends ImageProvider<CachedImage> implements CacheKey {
     return SynchronousFuture<CachedImage>(CachedImage._internal(
         url,
         (configuration.size ?? _defaultImageSize) *
-            configuration.devicePixelRatio,
+            configuration.devicePixelRatio!,
         scale: scale,
         headers: headers));
   }
@@ -119,11 +117,11 @@ class CachedImage extends ImageProvider<CachedImage> implements CacheKey {
   }
 }
 
-_ImageCache __imageCache;
+_ImageCache? __imageCache;
 
 Future<_ImageCache> _imageCache() async {
   if (__imageCache != null) {
-    return __imageCache;
+    return __imageCache!;
   }
   var temp = await getTemporaryDirectory();
   var dir = Directory(temp.path + "/quiet_images/");
@@ -131,11 +129,11 @@ Future<_ImageCache> _imageCache() async {
     dir = await dir.create();
   }
   __imageCache = _ImageCache(dir);
-  return __imageCache;
+  return __imageCache!;
 }
 
 ///cache netease image data
-class _ImageCache implements Cache<Uint8List> {
+class _ImageCache implements Cache<Uint8List?> {
   _ImageCache(Directory dir)
       : provider =
             FileCacheProvider(dir, maxSize: 600 * 1024 * 1024 /* 600 Mb*/);
@@ -143,7 +141,7 @@ class _ImageCache implements Cache<Uint8List> {
   final FileCacheProvider provider;
 
   @override
-  Future<Uint8List> get(CacheKey key) async {
+  Future<Uint8List?> get(CacheKey key) async {
     var file = provider.getFile(key);
     if (await file.exists()) {
       provider.touchFile(file);
@@ -153,13 +151,13 @@ class _ImageCache implements Cache<Uint8List> {
   }
 
   @override
-  Future<bool> update(CacheKey key, Uint8List t) async {
+  Future<bool> update(CacheKey key, Uint8List? t) async {
     var file = provider.getFile(key);
     if (await file.exists()) {
       file.delete();
     }
     file = await file.create();
-    await file.writeAsBytes(t);
+    await file.writeAsBytes(t!);
     try {
       return await file.exists();
     } finally {

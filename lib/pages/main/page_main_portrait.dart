@@ -7,7 +7,7 @@ class _PortraitMainPage extends StatefulWidget {
 
 class _MainPageState extends State<_PortraitMainPage>
     with SingleTickerProviderStateMixin {
-  TabController _tabController;
+  TabController? _tabController;
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -22,7 +22,7 @@ class _MainPageState extends State<_PortraitMainPage>
 
   @override
   void dispose() {
-    _tabController.dispose();
+    _tabController!.dispose();
     super.dispose();
   }
 
@@ -37,25 +37,25 @@ class _MainPageState extends State<_PortraitMainPage>
         leading: IconButton(
             icon: Icon(Icons.menu),
             onPressed: () {
-              _scaffoldKey.currentState.openDrawer();
+              _scaffoldKey.currentState!.openDrawer();
             }),
         title: Container(
           height: kToolbarHeight,
           width: 128,
           child: TabBar(
-            labelColor: Theme.of(context).textTheme.bodyText1.color,
-            unselectedLabelColor: Theme.of(context).textTheme.caption.color,
+            labelColor: Theme.of(context).textTheme.bodyText1!.color,
+            unselectedLabelColor: Theme.of(context).textTheme.caption!.color,
             controller: _tabController,
             indicatorColor: Colors.transparent,
             labelStyle: Theme.of(context)
                 .textTheme
-                .bodyText1
+                .bodyText1!
                 .copyWith(fontWeight: FontWeight.bold),
             unselectedLabelStyle:
-                Theme.of(context).textTheme.caption.copyWith(fontSize: 14),
+                Theme.of(context).textTheme.caption!.copyWith(fontSize: 14),
             tabs: <Widget>[
-              _PageTab(text: context.strings.main_page_tab_title_my),
-              _PageTab(text: context.strings.main_page_tab_title_discover),
+              _PageTab(text: context.strings!.main_page_tab_title_my),
+              _PageTab(text: context.strings!.main_page_tab_title_discover),
             ],
           ),
         ),
@@ -82,9 +82,9 @@ class _MainPageState extends State<_PortraitMainPage>
 }
 
 class _PageTab extends StatelessWidget {
-  final String text;
+  final String? text;
 
-  const _PageTab({Key key, @required this.text}) : super(key: key);
+  const _PageTab({Key? key, required this.text}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -92,7 +92,7 @@ class _PageTab extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: 16),
       child: Align(
         alignment: Alignment.bottomCenter,
-        child: Text(text),
+        child: Text(text!),
       ),
     );
   }

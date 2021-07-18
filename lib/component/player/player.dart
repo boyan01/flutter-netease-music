@@ -76,7 +76,8 @@ extension PlayQueueExt on PlayQueue {
 
 extension MusicPlayerExt on MusicPlayer {
   //FIXME is this logic right???
-  bool get initialized => value.metadata != null && value.metadata.duration > 0;
+  bool get initialized =>
+      value.metadata != null && value.metadata!.duration > 0;
 
   /// 播放私人 FM
   /// [musics] 初始化数据
@@ -90,8 +91,9 @@ extension MusicPlayerExt on MusicPlayer {
 }
 
 extension MusicPlayerValueExt on MusicPlayerValue {
-  ///might be null
-  Music get current => Music.fromMetadata(metadata);
+  Music? get current => metadata == null ? null : Music.fromMetadata(metadata!);
+
+  Music get requireCurrent => current!;
 
   List<Music> get playingList =>
       queue.queue.map((e) => Music.fromMetadata(e)).toList();
@@ -107,35 +109,32 @@ extension PlaybackStateExt on PlaybackState {
 
   bool get initialized => state != PlayerState.None;
 
-  /// Current real position
-  @Deprecated("use computedPosition")
-  int get positionWithOffset => computedPosition;
 }
 
 @visibleForTesting
 class QuietModel extends Model {
   MusicPlayer player = MusicPlayer();
 
-  QuietModel(Box<Map> data) {
+  QuietModel(Box<Map>? data) {
     player.addListener(() {
       this.notifyListeners();
     });
     player.metadataListenable.addListener(() {
-      data.saveCurrentMetadata(player.metadata);
+      data!.saveCurrentMetadata(player.metadata!);
     });
     player.queueListenable.addListener(() {
-      data.savePlayQueue(player.queue);
+      data!.savePlayQueue(player.queue);
     });
     player.playModeListenable.addListener(() {
-      data.savePlayMode(player.playMode);
+      data!.savePlayMode(player.playMode);
     });
 
     player.isMusicServiceAvailable().then((available) {
-      if (available) {
+      if (available!) {
         return;
       }
-      final MusicMetadata metadata = data.restoreMetadata();
-      final PlayQueue queue = data.restorePlayQueue();
+      final MusicMetadata? metadata = data!.restoreMetadata();
+      final PlayQueue? queue = data.restorePlayQueue();
       if (metadata == null || queue == null) {
         return;
       }
@@ -147,20 +146,20 @@ class QuietModel extends Model {
 }
 
 class Quiet extends StatefulWidget {
-  Quiet({@required this.child, Key key, this.box}) : super(key: key);
+  Quiet({required this.child, Key? key, this.box}) : super(key: key);
 
   final Widget child;
 
-  final Box<Map> box;
+  final Box<Map>? box;
 
   @override
   State<StatefulWidget> createState() => _QuietState();
 }
 
 class _QuietState extends State<Quiet> {
-  QuietModel _quiet;
+  late QuietModel _quiet;
 
-  PlayingLyric _playingLyric;
+  late PlayingLyric _playingLyric;
 
   @override
   void initState() {

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:loader/loader.dart';
 import 'package:quiet/component/utils/utils.dart';
@@ -6,9 +8,9 @@ import 'package:quiet/repository/netease.dart';
 
 ///video list result
 class VideosResultSection extends StatefulWidget {
-  const VideosResultSection({Key key, @required this.query}) : super(key: key);
+  const VideosResultSection({Key? key, required this.query}) : super(key: key);
 
-  final String query;
+  final String? query;
 
   @override
   _VideosResultSectionState createState() => _VideosResultSectionState();
@@ -20,12 +22,12 @@ class _VideosResultSectionState extends State<VideosResultSection>
   Widget build(BuildContext context) {
     super.build(context);
     return AutoLoadMoreList(loadMore: (offset) async {
-      final result = await neteaseRepository
+      final result = await neteaseRepository!
           .search(widget.query, NeteaseSearchType.video, offset: offset);
-      return LoadMoreResult.map<Map, List>(result, (value) {
+      return LoadMoreResult.map<Map, List?>(result, (value) {
         return value["result"]["videos"];
-      });
-    }, builder: (context, item) {
+      }) as FutureOr<Result<List<Map>>>;
+    }, builder: (context, dynamic item) {
       return VideoTile(map: item);
     });
   }
@@ -36,9 +38,7 @@ class _VideosResultSectionState extends State<VideosResultSection>
 
 ///item for video
 class VideoTile extends StatelessWidget {
-  const VideoTile({Key key, this.map})
-      : assert(map != null),
-        super(key: key);
+  const VideoTile({Key? key, required this.map}) : super(key: key);
 
   final Map<String, dynamic> map;
 

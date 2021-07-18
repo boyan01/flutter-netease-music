@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 
 ///在 widget 底部添加分割线
 class DividerWrapper extends StatelessWidget {
-  final Widget child;
+  final Widget? child;
 
   final double indent;
 
   final double extent;
 
-  const DividerWrapper({Key key, this.child, this.indent = 0, this.extent = 0})
+  const DividerWrapper({Key? key, this.child, this.indent = 0, this.extent = 0})
       : super(key: key);
 
   @override
@@ -18,7 +18,7 @@ class DividerWrapper extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          child,
+          child!,
           SizedBox(height: extent),
           Divider(
             height: 0,

@@ -4,14 +4,14 @@ import 'package:quiet/pages/account/account.dart';
 
 ///包裹页面，表示当前页面需要登陆才能正常显示
 class PageNeedLogin extends StatelessWidget {
-  final WidgetBuilder builder;
+  final WidgetBuilder? builder;
 
-  const PageNeedLogin({Key key, this.builder}) : super(key: key);
+  const PageNeedLogin({Key? key, this.builder}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     if (UserAccount.of(context).isLogin) {
-      return builder(context);
+      return builder!(context);
     }
     Widget widget = Center(
       child: Column(

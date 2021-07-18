@@ -30,7 +30,7 @@ void main() {
   enableCache = false;
 
   testWidgets('aritst page', (tester) async {
-    when(neteaseRepository.artistDetail(1056002)).thenAnswer((_) => Future.value(Result.value(marblueDetail)));
+    when(neteaseRepository!.artistDetail(1056002)).thenAnswer((_) => Future.value(Result.value(marblueDetail)));
 
     await tester.pumpWidget(TestContext(
       child: ArtistDetailPage(artistId: 1056002),
@@ -57,7 +57,7 @@ void main() {
 
   testWidgets('comment page', (tester) async {
     final threadId = CommentThreadId(186016, CommentType.song);
-    when(neteaseRepository.getComments(threadId)).thenAnswer((_) => Future.value(Result.value(comments)));
+    when(neteaseRepository!.getComments(threadId)).thenAnswer((_) => Future.value(Result.value(comments)));
 
     await tester.pumpWidget(TestContext(child: CommentPage(threadId: threadId)));
     await tester.pump(const Duration(milliseconds: 100));
@@ -67,7 +67,7 @@ void main() {
   });
 
   testWidgets('leader board page', (tester) async {
-    when(neteaseRepository.topListDetail()).thenAnswer((_) => Future.value(Result.value(leaderBoard)));
+    when(neteaseRepository!.topListDetail()).thenAnswer((_) => Future.value(Result.value(leaderBoard)));
     await tester.pumpWidget(TestContext(child: LeaderboardPage()));
     await tester.pump(const Duration(milliseconds: 100));
     await tester.pump();
@@ -86,8 +86,8 @@ void main() {
   });
 
   testWidgets('playlist detail page', (tester) async {
-    when(neteaseRepository.playlistDetail(84687600))
-        .thenAnswer((_) => Future.value(Result.value(PlaylistDetail.fromJson(playlist['playlist']))));
+    when(neteaseRepository!.playlistDetail(84687600))
+        .thenAnswer((_) => Future.value(Result.value(PlaylistDetail.fromJson(playlist['playlist'] as Map<dynamic, dynamic>))));
     await tester.pumpWidget(TestContext(child: PlaylistDetailPage(84687600)));
 
     await tester.pump(const Duration(milliseconds: 100));
@@ -99,7 +99,7 @@ void main() {
   });
 
   testWidgets('dialy playlist page', (tester) async {
-    when(neteaseRepository.recommendSongs()).thenAnswer((_) => Future.value(Result.value(recommend)));
+    when(neteaseRepository!.recommendSongs()).thenAnswer((_) => Future.value(Result.value(recommend)));
     final account = MockLoginState();
     when(account.isLogin).thenReturn(true);
     await tester.pumpWidget(TestContext(child: Provider.value(value: account, child: DailyPlaylistPage())));
@@ -112,7 +112,7 @@ void main() {
   });
 
   testWidgets('album detail page', (tester) async {
-    when(neteaseRepository.albumDetail(77430187)).thenAnswer((_) => Future.value(Result.value(album)));
+    when(neteaseRepository!.albumDetail(77430187)).thenAnswer((_) => Future.value(Result.value(album)));
     await tester.pumpWidget(TestContext(child: AlbumDetailPage(albumId: 77430187)));
     await tester.pump(const Duration(milliseconds: 100));
 
@@ -123,7 +123,7 @@ void main() {
   });
 
   testWidgets('record page', (tester) async {
-    when(neteaseRepository.getRecord(any, any)).thenAnswer((_) => Future.value(Result.value(record)));
+    when(neteaseRepository!.getRecord(any, any)).thenAnswer((_) => Future.value(Result.value(record)));
     await tester.pumpWidget(TestContext(child: RecordPage(uid: 12)));
     await tester.pump(const Duration(milliseconds: 100));
 

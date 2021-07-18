@@ -30,14 +30,14 @@ class CommentList extends Model with AutoLoadMoreMixin {
 
   final CommentThreadId threadId;
 
-  int total = 0;
+  int? total = 0;
 
   @override
   Future<Result<List>> loadData(int offset) async {
     final result =
-        await neteaseRepository.getComments(threadId, offset: offset);
-    if (result.isError) return result.asError;
-    final value = result.asValue.value;
+        await neteaseRepository!.getComments(threadId, offset: offset);
+    if (result.isError) return result.asError!;
+    final value = result.asValue!.value;
 
     final comments =
         (value['comments'] as List).map((e) => Comment.fromJsonMap(e)).toList();
@@ -74,7 +74,7 @@ class CommentList extends Model with AutoLoadMoreMixin {
   }
 
   @override
-  Widget buildItem(BuildContext context, List data, int index) {
+  Widget? buildItem(BuildContext context, List data, int index) {
     final item = data[index];
     if (item is Comment) {
       return _ItemComment(comment: item);
@@ -108,20 +108,20 @@ class CommentList extends Model with AutoLoadMoreMixin {
 
 class Comment {
   User user;
-  List<Object> beReplied;
-  Object pendantData;
-  Object showFloorComment;
-  int status;
-  int commentLocationType;
-  int parentCommentId;
-  bool repliedMark;
-  int likedCount;
-  bool liked;
-  int commentId;
-  int time;
-  Object expressionUrl;
-  String content;
-  bool isRemoveHotComment;
+  List<Object>? beReplied;
+  Object? pendantData;
+  Object? showFloorComment;
+  int? status;
+  int? commentLocationType;
+  int? parentCommentId;
+  bool? repliedMark;
+  int? likedCount;
+  bool? liked;
+  int? commentId;
+  int? time;
+  Object? expressionUrl;
+  String? content;
+  bool? isRemoveHotComment;
 
   Comment.fromJsonMap(Map<String, dynamic> map)
       : user = User.fromJsonMap(map["user"]),
@@ -142,7 +142,7 @@ class Comment {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['user'] = user == null ? null : user.toJson();
+    data['user'] = user.toJson();
     data['beReplied'] = beReplied;
     data['pendantData'] = pendantData;
     data['showFloorComment'] = showFloorComment;

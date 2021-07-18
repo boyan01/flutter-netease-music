@@ -12,13 +12,13 @@ typedef MusicDeletionCallback = Future<bool> Function(List<Music> selected);
 
 ///多选歌曲
 class PlaylistSelectionPage extends StatefulWidget {
-  PlaylistSelectionPage({Key key, @required this.list, this.onDelete})
+  PlaylistSelectionPage({Key? key, required this.list, this.onDelete})
       : super(key: key);
 
-  final List<Music> list;
+  final List<Music>? list;
 
   ///null if do not track delete operation
-  final MusicDeletionCallback onDelete;
+  final MusicDeletionCallback? onDelete;
 
   @override
   PlaylistSelectionPageState createState() {
@@ -51,7 +51,7 @@ class PlaylistSelectionPageState extends State<PlaylistSelectionPage> {
                 allSelected = !allSelected;
                 if (allSelected) {
                   selectedList.clear();
-                  selectedList.addAll(widget.list);
+                  selectedList.addAll(widget.list!);
                 } else {
                   selectedList.clear();
                 }
@@ -61,13 +61,13 @@ class PlaylistSelectionPageState extends State<PlaylistSelectionPage> {
         ],
       ),
       body: MusicTileConfiguration(
-        musics: widget.list,
+        musics: widget.list!,
         onMusicTap: (context, item) {
           setState(() {
             if (!selectedList.remove(item)) {
               selectedList.add(item);
             }
-            if (selectedList.length == widget.list.length) {
+            if (selectedList.length == widget.list!.length) {
               allSelected = true;
             } else {
               allSelected = false;
@@ -76,10 +76,10 @@ class PlaylistSelectionPageState extends State<PlaylistSelectionPage> {
         },
         child: ListView.builder(
             controller: controller,
-            itemCount: widget.list.length,
+            itemCount: widget.list!.length,
             itemBuilder: (context, index) {
               debugPrint("build item $index");
-              final item = widget.list[index];
+              final item = widget.list![index];
               final checked = selectedList.contains(item);
               return _SelectionItem(music: item, selected: checked);
             }),
@@ -96,7 +96,7 @@ class PlaylistSelectionPageState extends State<PlaylistSelectionPage> {
           data: ButtonBarThemeData(buttonTextTheme: ButtonTextTheme.normal),
           child: ButtonBar(
             alignment: MainAxisAlignment.spaceAround,
-            children: <Widget>[
+            children: (<Widget?>[
               FlatButton(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
@@ -123,7 +123,7 @@ class PlaylistSelectionPageState extends State<PlaylistSelectionPage> {
                   ],
                 ),
                 onPressed: () async {
-                  bool succeed = await PlaylistSelectorDialog.addSongs(
+                  bool? succeed = await PlaylistSelectorDialog.addSongs(
                       context, selectedList.map((m) => m.id).toList());
                   if (succeed == null) {
                     return;
@@ -150,10 +150,10 @@ class PlaylistSelectionPageState extends State<PlaylistSelectionPage> {
                       ),
                       onPressed: () async {
                         final succeed = await showLoaderOverlay(
-                            context, widget.onDelete(selectedList));
+                            context, widget.onDelete!(selectedList));
                         if (succeed) {
                           setState(() {
-                            widget.list
+                            widget.list!
                                 .removeWhere((v) => selectedList.contains(v));
                             selectedList.clear();
                           });
@@ -169,7 +169,7 @@ class PlaylistSelectionPageState extends State<PlaylistSelectionPage> {
                         }
                       },
                     ),
-            ]..removeWhere((v) => v == null),
+            ]..removeWhere((v) => v == null)) as List<Widget>,
           ),
         ),
       ),
@@ -178,7 +178,7 @@ class PlaylistSelectionPageState extends State<PlaylistSelectionPage> {
 }
 
 class _SelectionItem extends StatelessWidget {
-  const _SelectionItem({Key key, @required this.music, @required this.selected})
+  const _SelectionItem({Key? key, required this.music, required this.selected})
       : super(key: key);
 
   final Music music;
@@ -189,7 +189,7 @@ class _SelectionItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () =>
-          MusicTileConfiguration.of(context).onMusicTap(context, music),
+          MusicTileConfiguration.of(context).onMusicTap!(context, music),
       child: IgnorePointer(
         child: Row(
           children: <Widget>[

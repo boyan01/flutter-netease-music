@@ -9,7 +9,7 @@ extension _PlayerPersistenceExtensions on Box<Map> {
     put(_key_play_queue, queue.toMap());
   }
 
-  PlayQueue restorePlayQueue() {
+  PlayQueue? restorePlayQueue() {
     final map = get(_key_play_queue);
     if (map == null) {
       return null;
@@ -22,7 +22,7 @@ extension _PlayerPersistenceExtensions on Box<Map> {
     put(_key_current_playing, metadata.toMap());
   }
 
-  MusicMetadata restoreMetadata() {
+  MusicMetadata? restoreMetadata() {
     final map = get(_key_current_playing);
     if (map == null) {
       return null;
@@ -40,7 +40,7 @@ extension _PlayerPersistenceExtensions on Box<Map> {
     if (map == null) {
       return PlayMode.sequence;
     } else {
-      int mode = map["mode"] ?? PlayMode.sequence.index;
+      int? mode = map["mode"] ?? PlayMode.sequence.index;
       return PlayMode(mode);
     }
   }

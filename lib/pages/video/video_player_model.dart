@@ -18,34 +18,34 @@ class VideoPlayerModel extends Model {
   }
 
   VideoPlayerModel(this.data, {subscribed = false}) {
-    final Map brs = data.brs;
-    assert(brs != null && brs.isNotEmpty);
-    _imageResolutions = brs.keys.toList();
+    final Map brs = data.brs!;
+    assert(brs.isNotEmpty);
+    _imageResolutions = brs.keys.toList() as List<String>?;
     _subscribed = subscribed;
-    _initPlayerController(imageResolutions.first);
+    _initPlayerController(imageResolutions!.first);
   }
 
   ///根据分辨率初始化播放器
-  void _initPlayerController(String imageResolution) {
-    final Map brs = data.brs;
+  void _initPlayerController(String? imageResolution) {
+    final Map brs = data.brs!;
     _currentImageResolution = imageResolution;
 
     Duration moment = Duration.zero;
     bool play = false;
     if (_videoPlayerController != null) {
-      moment = _videoPlayerController.value.position;
-      play = _videoPlayerController.value.isPlaying;
-      _videoPlayerController.dispose();
+      moment = _videoPlayerController!.value.position;
+      play = _videoPlayerController!.value.isPlaying;
+      _videoPlayerController!.dispose();
     }
 
     _videoPlayerController =
         _VideoPlayerControllerWrapper.network(brs[imageResolution]);
-    _videoPlayerController.initialize().then((_) {
-      _videoPlayerController.seekTo(moment);
-      if (play) _videoPlayerController.play();
+    _videoPlayerController!.initialize().then((_) {
+      _videoPlayerController!.seekTo(moment);
+      if (play) _videoPlayerController!.play();
     });
 
-    _videoPlayerController.addListener(() {
+    _videoPlayerController!.addListener(() {
       notifyListeners();
     });
   }
@@ -53,9 +53,9 @@ class VideoPlayerModel extends Model {
   ///mv数据
   final MusicVideoDetail data;
 
-  bool _subscribed;
+  bool? _subscribed;
 
-  bool get subscribed => _subscribed;
+  bool? get subscribed => _subscribed;
 
   ///收藏或者取消收藏mv
   ///return: true: 操作成功
@@ -63,7 +63,7 @@ class VideoPlayerModel extends Model {
     if (subscribe == _subscribed) {
       return false;
     }
-    final success = await neteaseRepository.mvSubscribe(data.id, subscribe);
+    final success = await neteaseRepository!.mvSubscribe(data.id, subscribe);
     if (success) {
       _subscribed = subscribe;
       notifyListeners();
@@ -71,23 +71,23 @@ class VideoPlayerModel extends Model {
     return success;
   }
 
-  VideoPlayerController _videoPlayerController;
+  VideoPlayerController? _videoPlayerController;
 
-  VideoPlayerController get videoPlayerController => _videoPlayerController;
+  VideoPlayerController get videoPlayerController => _videoPlayerController!;
 
   VideoPlayerValue get playerValue => videoPlayerController.value;
 
   ///分辨率
-  List<String> _imageResolutions;
+  List<String>? _imageResolutions;
 
-  List<String> get imageResolutions => _imageResolutions;
+  List<String>? get imageResolutions => _imageResolutions;
 
   ///当前的分辨率
-  String _currentImageResolution;
+  String? _currentImageResolution;
 
-  String get currentImageResolution => _currentImageResolution;
+  String? get currentImageResolution => _currentImageResolution;
 
-  set currentImageResolution(String value) {
+  set currentImageResolution(String? value) {
     _initPlayerController(value);
   }
 }
@@ -95,15 +95,15 @@ class VideoPlayerModel extends Model {
 ///收藏或者取消收藏mv
 void subscribeOrUnSubscribeMv(BuildContext context) async {
   final model = VideoPlayerModel.of(context);
-  if (model.subscribed &&
+  if (model.subscribed! &&
       !await showConfirmDialog(context, Text('确定要取消收藏吗？'),
           positiveLabel: '不再收藏')) {
     return;
   }
   bool succeed =
-      await showLoaderOverlay(context, model.subscribe(!model.subscribed));
+      await showLoaderOverlay(context, model.subscribe(!model.subscribed!));
   if (!succeed) {
-    showSimpleNotification(Text('${model.subscribed ? '取消收藏' : '收藏'}失败'));
+    showSimpleNotification(Text('${model.subscribed! ? '取消收藏' : '收藏'}失败'));
   }
 }
 

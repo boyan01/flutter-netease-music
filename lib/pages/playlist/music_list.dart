@@ -15,7 +15,7 @@ class MusicTileConfiguration extends StatelessWidget {
     final list =
         context.findAncestorWidgetOfExactType<MusicTileConfiguration>();
     assert(list != null, 'you can only use [MusicTile] inside MusicList scope');
-    return list;
+    return list!;
   }
 
   static final Widget Function(BuildContext context, Music music)
@@ -62,7 +62,7 @@ class MusicTileConfiguration extends StatelessWidget {
   };
 
   //return null if current music is not be playing
-  static Widget _buildPlayingLeading(BuildContext context, Music music) {
+  static Widget? _buildPlayingLeading(BuildContext context, Music music) {
     if (MusicTileConfiguration.of(context).token == context.playList.queueId &&
         music == context.playerValue.current) {
       return Container(
@@ -91,33 +91,35 @@ class MusicTileConfiguration extends StatelessWidget {
     } else {
       context.player.playWithQueue(
           PlayQueue(
-              queue: list.queue, queueId: list.token, queueTitle: list.token),
+              queue: list.queue as List<MusicMetadata>,
+              queueId: list.token!,
+              queueTitle: list.token!),
           metadata: music.metadata);
     }
   };
 
-  final String token;
+  final String? token;
 
   final List<Music> musics;
 
-  final List<MusicMetadata> queue;
+  final List<MusicMetadata?> queue;
 
-  final void Function(BuildContext context, Music muisc) onMusicTap;
+  final void Function(BuildContext context, Music muisc)? onMusicTap;
 
-  final Widget Function(BuildContext context, Music music) leadingBuilder;
+  final Widget Function(BuildContext context, Music music)? leadingBuilder;
 
-  final Widget Function(BuildContext context, Music music) trailingBuilder;
+  final Widget Function(BuildContext context, Music music)? trailingBuilder;
 
   final bool supportAlbumMenu;
 
-  final void Function(Music music) remove;
+  final void Function(Music music)? remove;
 
-  final Widget child;
+  final Widget? child;
 
   MusicTileConfiguration(
-      {Key key,
+      {Key? key,
       this.token,
-      @required this.musics,
+      required this.musics,
       this.onMusicTap,
       this.child,
       this.leadingBuilder,
@@ -129,7 +131,7 @@ class MusicTileConfiguration extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return child;
+    return child!;
   }
 }
 
@@ -137,9 +139,9 @@ class MusicTileConfiguration extends StatelessWidget {
 class MusicTile extends StatelessWidget {
   final Music music;
 
-  MusicTile(this.music, {Key key}) : super(key: key);
+  MusicTile(this.music, {Key? key}) : super(key: key);
 
-  Widget _buildPadding(BuildContext context, Music music) {
+  Widget _buildPadding(BuildContext context, Music? music) {
     return SizedBox(width: 8);
   }
 
@@ -150,7 +152,7 @@ class MusicTile extends StatelessWidget {
       height: 56,
       child: InkWell(
         onTap: () {
-          if (list.onMusicTap != null) list.onMusicTap(context, music);
+          if (list.onMusicTap != null) list.onMusicTap!(context, music);
         },
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -168,9 +170,9 @@ class MusicTile extends StatelessWidget {
 }
 
 class _SimpleMusicTile extends StatelessWidget {
-  final Music music;
+  final Music? music;
 
-  const _SimpleMusicTile(this.music, {Key key}) : super(key: key);
+  const _SimpleMusicTile(this.music, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -185,14 +187,14 @@ class _SimpleMusicTile extends StatelessWidget {
             children: <Widget>[
               Spacer(),
               Text(
-                music.title,
+                music!.title!,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: Theme.of(context).textTheme.bodyText2,
               ),
               Padding(padding: EdgeInsets.only(top: 3)),
               Text(
-                music.subTitle,
+                music!.subTitle,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: Theme.of(context).textTheme.caption,
@@ -210,9 +212,9 @@ class _SimpleMusicTile extends StatelessWidget {
 class MusicListHeader extends StatelessWidget implements PreferredSizeWidget {
   MusicListHeader(this.count, {this.tail});
 
-  final int count;
+  final int? count;
 
-  final Widget tail;
+  final Widget? tail;
 
   @override
   Widget build(BuildContext context) {
@@ -230,15 +232,15 @@ class MusicListHeader extends StatelessWidget implements PreferredSizeWidget {
               Navigator.pushNamed(context, pagePlaying);
             } else {
               context.player.playWithQueue(PlayQueue(
-                  queue: list.queue,
-                  queueId: list.token,
-                  queueTitle: list.token));
+                  queue: list.queue as List<MusicMetadata>,
+                  queueId: list.token!,
+                  queueTitle: list.token!));
             }
           },
           child: SizedBox.fromSize(
             size: preferredSize,
             child: Row(
-              children: <Widget>[
+              children: (<Widget?>[
                 Padding(padding: EdgeInsets.only(left: 16)),
                 Icon(
                   Icons.play_circle_outline,
@@ -256,7 +258,8 @@ class MusicListHeader extends StatelessWidget implements PreferredSizeWidget {
                 ),
                 Spacer(),
                 tail,
-              ]..removeWhere((v) => v == null),
+              ]..removeWhere((v) => v == null))
+                  .cast(),
             ),
           ),
         ),
@@ -272,9 +275,7 @@ class MusicListHeader extends StatelessWidget implements PreferredSizeWidget {
 class IconMV extends StatelessWidget {
   final Music music;
 
-  const IconMV(this.music, {Key key})
-      : assert(music != null),
-        super(key: key);
+  const IconMV(this.music, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -312,7 +313,7 @@ enum _MusicAction {
 class _IconMore extends StatelessWidget {
   final Music music;
 
-  const _IconMore(this.music, {Key key}) : super(key: key);
+  const _IconMore(this.music, {Key? key}) : super(key: key);
 
   List<PopupMenuItem> _buildMenu(BuildContext context) {
     var items = [
@@ -331,10 +332,10 @@ class _IconMore extends StatelessWidget {
     ];
 
     items.add(PopupMenuItem(
-        child: Text("歌手: ${music.artist.map((a) => a.name).join('/')}",
+        child: Text("歌手: ${music.artist!.map((a) => a.name).join('/')}",
             maxLines: 1),
         //如果所有artist的id为0，那么disable这个item
-        enabled: music.artist.fold(0, (c, ar) => c + ar.id) != 0,
+        enabled: music.artist!.fold(0, (dynamic c, ar) => c + ar.id) != 0,
         value: _MusicAction.artists));
 
     if (MusicTileConfiguration.of(context).supportAlbumMenu) {
@@ -366,7 +367,7 @@ class _IconMore extends StatelessWidget {
         }));
         break;
       case _MusicAction.delete:
-        MusicTileConfiguration.of(context).remove(music);
+        MusicTileConfiguration.of(context).remove!(music);
         break;
       case _MusicAction.addToPlaylist:
         final id = await showDialog(
@@ -375,9 +376,9 @@ class _IconMore extends StatelessWidget {
               return PlaylistSelectorDialog();
             });
         if (id != null) {
-          bool succeed = await neteaseRepository
+          bool succeed = await neteaseRepository!
               .playlistTracksEdit(PlaylistOperation.add, id, [music.id]);
-          var scaffold = Scaffold.of(context);
+          var scaffold = Scaffold.maybeOf(context);
           if (scaffold == null) {
             //not notify when scaffold is empty
             return;
@@ -393,7 +394,7 @@ class _IconMore extends StatelessWidget {
         break;
       case _MusicAction.album:
         Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-          return AlbumDetailPage(albumId: music.album.id);
+          return AlbumDetailPage(albumId: music.album!.id!);
         }));
         break;
       case _MusicAction.artists:
@@ -407,7 +408,7 @@ class _IconMore extends StatelessWidget {
     return PopupMenuButton(
       icon: Icon(Icons.more_vert),
       itemBuilder: _buildMenu,
-      onSelected: (type) => _handleMusicAction(context, type),
+      onSelected: (dynamic type) => _handleMusicAction(context, type),
     );
   }
 }

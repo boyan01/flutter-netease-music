@@ -57,10 +57,10 @@ class MainNavigationDrawerTile extends StatelessWidget {
   final bool selected;
 
   const MainNavigationDrawerTile({
-    Key key,
-    @required this.icon,
-    @required this.title,
-    @required this.onTap,
+    Key? key,
+    required this.icon,
+    required this.title,
+    required this.onTap,
     this.selected = false,
   }) : super(key: key);
 
@@ -116,7 +116,7 @@ class UserInfo extends StatelessWidget {
   }
 
   Widget _buildHeader(BuildContext context) {
-    UserProfile profile = UserAccount.of(context).userDetail.profile;
+    UserProfile profile = UserAccount.of(context).userDetail!.profile;
     return UserAccountsDrawerHeader(
       currentAccountPicture: InkResponse(
         onTap: () {
@@ -127,10 +127,10 @@ class UserInfo extends StatelessWidget {
                       UserDetailPage(userId: UserAccount.of(context).userId)));
         },
         child: CircleAvatar(
-          backgroundImage: CachedImage(profile.avatarUrl),
+          backgroundImage: CachedImage(profile.avatarUrl!),
         ),
       ),
-      accountName: Text(profile.nickname),
+      accountName: Text(profile.nickname!),
       accountEmail: null,
       otherAccountsPictures: [
         Material(
@@ -162,7 +162,7 @@ class UserInfo extends StatelessWidget {
         constraints: BoxConstraints.expand(),
         child: DefaultTextStyle(
           style:
-              Theme.of(context).primaryTextTheme.caption.copyWith(fontSize: 14),
+              Theme.of(context).primaryTextTheme.caption!.copyWith(fontSize: 14),
           child: Center(
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -175,8 +175,8 @@ class UserInfo extends StatelessWidget {
                         side: BorderSide(
                             color: Theme.of(context)
                                 .primaryTextTheme
-                                .bodyText2
-                                .color
+                                .bodyText2!
+                                .color!
                                 .withOpacity(0.3)),
                         borderRadius: BorderRadius.circular(20)),
                     padding: EdgeInsets.symmetric(horizontal: 40),
@@ -184,7 +184,7 @@ class UserInfo extends StatelessWidget {
                       Navigator.pushNamed(context, pageLogin);
                     },
                     textColor:
-                        Theme.of(context).primaryTextTheme.bodyText2.color,
+                        Theme.of(context).primaryTextTheme.bodyText2!.color,
                     child: Text("立即登陆"))
               ],
             ),

@@ -11,13 +11,13 @@ class NeteaseSearchPageRoute<T> extends PageRoute<T> {
   NeteaseSearchPageRoute(this._proxyAnimation)
       : super(settings: RouteSettings(name: pageSearch));
 
-  final ProxyAnimation _proxyAnimation;
+  final ProxyAnimation? _proxyAnimation;
 
   @override
-  Color get barrierColor => null;
+  Color? get barrierColor => null;
 
   @override
-  String get barrierLabel => null;
+  String? get barrierLabel => null;
 
   @override
   Duration get transitionDuration => const Duration(milliseconds: 300);
@@ -60,7 +60,7 @@ class NeteaseSearchPageRoute<T> extends PageRoute<T> {
 class NeteaseSearchPage extends StatefulWidget {
   final Animation<double> animation;
 
-  const NeteaseSearchPage({Key key, @required this.animation})
+  const NeteaseSearchPage({Key? key, required this.animation})
       : super(key: key);
 
   @override
@@ -77,7 +77,6 @@ class _NeteaseSearchPageState extends State<NeteaseSearchPage> {
   String get query => _queryTextController.text;
 
   set query(String value) {
-    assert(value != null);
     _queryTextController.text = value;
   }
 
@@ -108,7 +107,7 @@ class _NeteaseSearchPageState extends State<NeteaseSearchPage> {
   Widget build(BuildContext context) {
     final ThemeData theme = Theme.of(context);
 
-    Widget tabs;
+    Widget? tabs;
     if (!initialState) {
       tabs = TabBar(
           indicator: UnderlineTabIndicator(insets: EdgeInsets.only(bottom: 4)),
@@ -141,8 +140,8 @@ class _NeteaseSearchPageState extends State<NeteaseSearchPage> {
                       hintText:
                           MaterialLocalizations.of(context).searchFieldLabel),
                 ),
-                actions: buildActions(context),
-                bottom: tabs,
+                actions: buildActions(context) as List<Widget>?,
+                bottom: tabs as PreferredSizeWidget?,
               ),
               resizeToAvoidBottomInset: false,
               body: BoxWithBottomPlayerController(initialState
@@ -193,8 +192,8 @@ class _NeteaseSearchPageState extends State<NeteaseSearchPage> {
     setState(() {});
   }
 
-  List<Widget> buildActions(BuildContext context) {
-    return <Widget>[
+  List<Widget?> buildActions(BuildContext context) {
+    return <Widget?>[
       query.isEmpty
           ? null
           : IconButton(
@@ -227,10 +226,10 @@ class _NeteaseSearchPageState extends State<NeteaseSearchPage> {
 ///with hot query keyword from network
 ///with query history from local
 class _EmptyQuerySuggestionSection extends StatelessWidget {
-  _EmptyQuerySuggestionSection(
-      {Key key, @required this.suggestionSelectedCallback})
-      : assert(suggestionSelectedCallback != null),
-        super(key: key);
+  _EmptyQuerySuggestionSection({
+    Key? key,
+    required this.suggestionSelectedCallback,
+  }) : super(key: key);
 
   final SuggestionSelectedCallback suggestionSelectedCallback;
 
@@ -239,7 +238,7 @@ class _EmptyQuerySuggestionSection extends StatelessWidget {
     return ListView(
       children: <Widget>[
         Loader<List<String>>(
-            loadTask: () => neteaseRepository.searchHotWords(),
+            loadTask: (() => neteaseRepository!.searchHotWords()),
             //hide when failed load hot words
             errorBuilder: (context, result) => Container(),
             loadingBuilder: (context) {

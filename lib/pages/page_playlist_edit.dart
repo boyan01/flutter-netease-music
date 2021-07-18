@@ -6,9 +6,9 @@ import 'package:quiet/part/part.dart';
 
 ///page for playlist edit
 class PlaylistEditPage extends StatefulWidget {
-  final PlaylistDetail playlist;
+  final PlaylistDetail? playlist;
 
-  const PlaylistEditPage(this.playlist, {Key key}) : super(key: key);
+  const PlaylistEditPage(this.playlist, {Key? key}) : super(key: key);
 
   @override
   _PlaylistEditPageState createState() => _PlaylistEditPageState();
@@ -17,7 +17,7 @@ class PlaylistEditPage extends StatefulWidget {
 class _PlaylistEditPageState extends State<PlaylistEditPage> {
   @override
   Widget build(BuildContext context) {
-    final style = Theme.of(context).textTheme.bodyText2.copyWith(
+    final style = Theme.of(context).textTheme.bodyText2!.copyWith(
         fontSize: 15,
         shadows: [Shadow(offset: Offset(0.3, 0.3), color: Colors.black87)]);
 
@@ -42,7 +42,7 @@ class _PlaylistEditPageState extends State<PlaylistEditPage> {
                   children: <Widget>[
                     Expanded(child: Text("更换封面", style: style)),
                     Image(
-                        image: CachedImage(widget.playlist.coverUrl),
+                        image: CachedImage(widget.playlist!.coverUrl!),
                         height: 56,
                         width: 56)
                   ],
@@ -63,7 +63,7 @@ class _PlaylistEditPageState extends State<PlaylistEditPage> {
                 child: Row(
                   children: <Widget>[
                     Expanded(child: Text("名称", style: style)),
-                    Text(widget.playlist.name)
+                    Text(widget.playlist!.name!)
                   ],
                 ),
               ),
@@ -97,7 +97,7 @@ class _PlaylistEditPageState extends State<PlaylistEditPage> {
                 child: Row(
                   children: <Widget>[
                     Expanded(child: Text("描述", style: style)),
-                    Text(widget.playlist.name)
+                    Text(widget.playlist!.name!)
                   ],
                 ),
               ),
@@ -111,9 +111,9 @@ class _PlaylistEditPageState extends State<PlaylistEditPage> {
 }
 
 class _PlaylistNameEditPage extends StatefulWidget {
-  final PlaylistDetail playlist;
+  final PlaylistDetail? playlist;
 
-  _PlaylistNameEditPage(this.playlist, {Key key}) : super(key: key);
+  _PlaylistNameEditPage(this.playlist, {Key? key}) : super(key: key);
 
   @override
   _PlaylistNameEditPageState createState() {
@@ -122,21 +122,21 @@ class _PlaylistNameEditPage extends StatefulWidget {
 }
 
 class _PlaylistNameEditPageState extends State<_PlaylistNameEditPage> {
-  String error;
+  String? error;
 
-  TextEditingController _controller;
+  TextEditingController? _controller;
 
   FocusNode _focusNode = FocusNode();
 
   @override
   void initState() {
     super.initState();
-    _controller = TextEditingController(text: widget.playlist.name);
+    _controller = TextEditingController(text: widget.playlist!.name);
   }
 
   @override
   void dispose() {
-    _controller.dispose();
+    _controller!.dispose();
     super.dispose();
   }
 
@@ -150,28 +150,28 @@ class _PlaylistNameEditPageState extends State<_PlaylistNameEditPage> {
           FlatButton(
               onPressed: () async {
                 _focusNode.unfocus();
-                final name = widget.playlist.name;
-                widget.playlist.name = _controller.text;
+                final name = widget.playlist!.name;
+                widget.playlist!.name = _controller!.text;
                 try {
                   bool succeed = await showLoaderOverlay(context,
-                      neteaseRepository.updatePlaylist(widget.playlist));
+                      neteaseRepository!.updatePlaylist(widget.playlist!));
                   if (succeed) {
                     Navigator.pop(context, true);
                   } else {
                     setState(() {
-                      widget.playlist.name = name;
+                      widget.playlist!.name = name;
                       error = "修改失败";
                     });
                   }
                 } catch (msg) {
                   setState(() {
-                    widget.playlist.name = name;
-                    error = msg;
+                    widget.playlist!.name = name;
+                    error = msg.toString();
                   });
                 }
               },
               child: Text("保存"),
-              textColor: Theme.of(context).primaryTextTheme.bodyText2.color)
+              textColor: Theme.of(context).primaryTextTheme.bodyText2!.color)
         ],
       ),
       body: Padding(
@@ -191,10 +191,10 @@ class _PlaylistNameEditPageState extends State<_PlaylistNameEditPage> {
                   suffixIcon: IconButton(
                       icon: Icon(Icons.close),
                       onPressed: () {
-                        _controller.text = "";
+                        _controller!.text = "";
                       })),
               validator: (v) {
-                if (v.isEmpty) {
+                if (v!.isEmpty) {
                   return "歌单名不能为空";
                 }
                 return null;

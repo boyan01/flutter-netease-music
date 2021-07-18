@@ -11,13 +11,13 @@ import 'package:quiet/repository/cached_image.dart';
 
 @visibleForTesting
 class DisableBottomController extends StatelessWidget {
-  final Widget child;
+  final Widget? child;
 
-  const DisableBottomController({Key key, this.child}) : super(key: key);
+  const DisableBottomController({Key? key, this.child}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return child;
+    return child!;
   }
 }
 
@@ -52,10 +52,9 @@ class BottomControllerBar extends StatelessWidget {
   final double bottomPadding;
 
   const BottomControllerBar({
-    Key key,
+    Key? key,
     this.bottomPadding = 0,
-  })  : assert(bottomPadding != null),
-        super(key: key);
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -66,10 +65,8 @@ class BottomControllerBar extends StatelessWidget {
     }
     return InkWell(
       onTap: () {
-        if (music != null) {
-          context.rootNavigator
-              .pushNamed(queue.isPlayingFm ? pageFmPlaying : pagePlaying);
-        }
+        context.rootNavigator
+            .pushNamed(queue.isPlayingFm ? pageFmPlaying : pagePlaying);
       },
       child: Card(
         margin: const EdgeInsets.all(0),
@@ -94,7 +91,7 @@ class BottomControllerBar extends StatelessWidget {
                           ? Container(color: Colors.grey)
                           : Image(
                               fit: BoxFit.cover,
-                              image: CachedImage(music.imageUrl),
+                              image: CachedImage(music.imageUrl!),
                             ),
                     ),
                   ),
@@ -110,7 +107,7 @@ class BottomControllerBar extends StatelessWidget {
                     children: <Widget>[
                       Spacer(),
                       Text(
-                        music.title,
+                        music.title!,
                         style: Theme.of(context).textTheme.bodyText2,
                       ),
                       Padding(padding: const EdgeInsets.only(top: 2)),
@@ -121,7 +118,7 @@ class BottomControllerBar extends StatelessWidget {
                           player: context.player,
                         ),
                         maxLines: 1,
-                        style: Theme.of(context).textTheme.caption,
+                        style: Theme.of(context).textTheme.caption!,
                       ),
                       Spacer(),
                     ],
@@ -149,7 +146,7 @@ class BottomControllerBar extends StatelessWidget {
 class _SubTitleOrLyric extends StatelessWidget {
   final String subtitle;
 
-  const _SubTitleOrLyric(this.subtitle, {Key key}) : super(key: key);
+  const _SubTitleOrLyric(this.subtitle, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -157,8 +154,8 @@ class _SubTitleOrLyric extends StatelessWidget {
     if (!playingLyric.hasLyric) {
       return Text(subtitle);
     }
-    final line = playingLyric.lyric
-        .getLineByTimeStamp(context.playbackState.positionWithOffset, 0)
+    final line = playingLyric.lyric!
+        .getLineByTimeStamp(context.playbackState.computedPosition, 0)
         ?.line;
     if (line == null || line.isEmpty) {
       return Text(subtitle);

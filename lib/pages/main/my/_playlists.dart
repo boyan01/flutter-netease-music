@@ -12,9 +12,9 @@ enum PlayListType { created, favorite }
 
 class PlayListsGroupHeader extends StatelessWidget {
   final String name;
-  final int count;
+  final int? count;
 
-  const PlayListsGroupHeader({Key key, @required this.name, this.count})
+  const PlayListsGroupHeader({Key? key, required this.name, this.count})
       : super(key: key);
 
   @override
@@ -42,12 +42,12 @@ class PlayListsGroupHeader extends StatelessWidget {
 }
 
 class MainPlayListTile extends StatelessWidget {
-  final PlaylistDetail data;
+  final PlaylistDetail? data;
   final bool enableBottomRadius;
 
   const MainPlayListTile({
-    Key key,
-    @required this.data,
+    Key? key,
+    required this.data,
     this.enableBottomRadius = false,
   }) : super(key: key);
 
@@ -73,7 +73,7 @@ const double _kPlayListHeaderHeight = 48;
 const double _kPlayListDividerHeight = 10;
 
 class MyPlayListsHeaderDelegate extends SliverPersistentHeaderDelegate {
-  final TabController tabController;
+  final TabController? tabController;
 
   MyPlayListsHeaderDelegate(this.tabController);
 
@@ -97,9 +97,9 @@ class MyPlayListsHeaderDelegate extends SliverPersistentHeaderDelegate {
 
 class _MyPlayListsHeader extends StatelessWidget
     implements PreferredSizeWidget {
-  final TabController controller;
+  final TabController? controller;
 
-  const _MyPlayListsHeader({Key key, this.controller}) : super(key: key);
+  const _MyPlayListsHeader({Key? key, this.controller}) : super(key: key);
 
   @override
   Size get preferredSize => const Size.fromHeight(_kPlayListHeaderHeight);
@@ -110,11 +110,11 @@ class _MyPlayListsHeader extends StatelessWidget
       color: Theme.of(context).scaffoldBackgroundColor,
       child: TabBar(
         controller: controller,
-        labelColor: Theme.of(context).textTheme.bodyText1.color,
+        labelColor: Theme.of(context).textTheme.bodyText1!.color,
         indicatorSize: TabBarIndicatorSize.label,
         tabs: [
-          Tab(text: context.strings["created_song_list"]),
-          Tab(text: context.strings["favorite_song_list"]),
+          Tab(text: context.strings!["created_song_list"]),
+          Tab(text: context.strings!["favorite_song_list"]),
         ],
       ),
     );
@@ -124,12 +124,12 @@ class _MyPlayListsHeader extends StatelessWidget
 class PlayListTypeNotification extends Notification {
   final PlayListType type;
 
-  PlayListTypeNotification({@required this.type});
+  PlayListTypeNotification({required this.type});
 }
 
 class PlayListSliverKey extends ValueKey {
-  final int createdPosition;
-  final int favoritePosition;
+  final int? createdPosition;
+  final int? favoritePosition;
 
   const PlayListSliverKey({this.createdPosition, this.favoritePosition})
       : super("_PlayListSliverKey");
@@ -137,13 +137,13 @@ class PlayListSliverKey extends ValueKey {
 
 class UserPlayListSection extends StatefulWidget {
   const UserPlayListSection({
-    Key key,
-    @required this.userId,
+    Key? key,
+    required this.userId,
     this.scrollController,
   }) : super(key: key);
 
-  final int userId;
-  final ScrollController scrollController;
+  final int? userId;
+  final ScrollController? scrollController;
 
   @override
   _UserPlayListSectionState createState() => _UserPlayListSectionState();
@@ -159,35 +159,35 @@ class _UserPlayListSectionState extends State<UserPlayListSection> {
   @override
   void initState() {
     super.initState();
-    widget.scrollController.addListener(_onScrolled);
+    widget.scrollController!.addListener(_onScrolled);
   }
 
   @override
   void didUpdateWidget(covariant UserPlayListSection oldWidget) {
     super.didUpdateWidget(oldWidget);
-    oldWidget.scrollController.removeListener(_onScrolled);
-    widget.scrollController.addListener(_onScrolled);
+    oldWidget.scrollController!.removeListener(_onScrolled);
+    widget.scrollController!.addListener(_onScrolled);
   }
 
   @override
   void dispose() {
     super.dispose();
-    widget.scrollController.removeListener(_onScrolled);
+    widget.scrollController!.removeListener(_onScrolled);
   }
 
   void _onScrolled() {
     if (_dividerIndex < 0) {
       return;
     }
-    final RenderSliverList global = context.findRenderObject();
-    RenderObject child = global.firstChild;
-    while (child != null && global.indexOf(child) != _dividerIndex) {
+    final RenderSliverList global = context.findRenderObject() as RenderSliverList;
+    RenderObject? child = global.firstChild;
+    while (child != null && global.indexOf(child as RenderBox) != _dividerIndex) {
       child = global.childAfter(child);
     }
     if (child == null) {
       return;
     }
-    final offset = global.childMainAxisPosition(child);
+    final offset = global.childMainAxisPosition(child as RenderBox);
     const height = _kPlayListHeaderHeight + _kPlayListDividerHeight / 2;
     PlayListTypeNotification(
             type:
@@ -200,10 +200,10 @@ class _UserPlayListSectionState extends State<UserPlayListSection> {
     if (!UserAccount.of(context).isLogin) {
       return _singleSliver(child: notLogin(context));
     }
-    return Loader<List<PlaylistDetail>>(
+    return Loader<List<PlaylistDetail?>?>(
         initialData: neteaseLocalData.getUserPlaylist(widget.userId),
         loadTask: () {
-          return neteaseRepository.userPlaylist(widget.userId);
+          return neteaseRepository!.userPlaylist(widget.userId).then((value) => value!);
         },
         loadingBuilder: (context) {
           return _singleSliver(child: Container());
@@ -214,9 +214,9 @@ class _UserPlayListSectionState extends State<UserPlayListSection> {
         },
         builder: (context, result) {
           final created =
-              result.where((p) => p.creator["userId"] == widget.userId);
+              result!.where((p) => p!.creator!["userId"] == widget.userId);
           final subscribed =
-              result.where((p) => p.creator["userId"] != widget.userId);
+              result.where((p) => p!.creator!["userId"] != widget.userId);
           _dividerIndex = 2 + created.length;
           return SliverList(
             key: PlayListSliverKey(
@@ -224,12 +224,12 @@ class _UserPlayListSectionState extends State<UserPlayListSection> {
             delegate: SliverChildListDelegate.fixed([
               SizedBox(height: _kPlayListDividerHeight),
               PlayListsGroupHeader(
-                  name: context.strings["created_song_list"],
+                  name: context.strings!["created_song_list"],
                   count: created.length),
               ..._playlistWidget(created),
               SizedBox(height: _kPlayListDividerHeight, key: _dividerKey),
               PlayListsGroupHeader(
-                  name: context.strings["favorite_song_list"],
+                  name: context.strings!["favorite_song_list"],
                   count: subscribed.length),
               ..._playlistWidget(subscribed),
               SizedBox(height: _kPlayListDividerHeight),
@@ -243,9 +243,9 @@ class _UserPlayListSectionState extends State<UserPlayListSection> {
       padding: EdgeInsets.only(top: 40),
       child: Column(
         children: [
-          Text(context.strings["playlist_login_description"]),
+          Text(context.strings!["playlist_login_description"]),
           TextButton(
-            child: Text(context.strings["login_right_now"]),
+            child: Text(context.strings!["login_right_now"]),
             onPressed: () {
               Navigator.of(context).pushNamed(pageLogin);
             },
@@ -255,7 +255,7 @@ class _UserPlayListSectionState extends State<UserPlayListSection> {
     );
   }
 
-  static Iterable<Widget> _playlistWidget(Iterable<PlaylistDetail> details) {
+  static Iterable<Widget> _playlistWidget(Iterable<PlaylistDetail?> details) {
     if (details.isEmpty) {
       return const [];
     }
@@ -268,7 +268,7 @@ class _UserPlayListSectionState extends State<UserPlayListSection> {
     return widgets;
   }
 
-  static Widget _singleSliver({@required Widget child}) {
+  static Widget _singleSliver({required Widget child}) {
     return SliverList(
       delegate: SliverChildListDelegate([child]),
     );

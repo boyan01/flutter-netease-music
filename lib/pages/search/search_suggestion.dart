@@ -9,21 +9,20 @@ typedef SuggestionSelectedCallback = void Function(String keyword);
 
 class SuggestionSection extends StatelessWidget {
   const SuggestionSection(
-      {Key key,
-      @required this.title,
-      @required this.content,
+      {Key? key,
+      required this.title,
+      required this.content,
       this.onDeleteClicked})
-      : assert(title != null),
-        super(key: key);
+      : super(key: key);
 
   final String title;
-  final VoidCallback onDeleteClicked;
+  final VoidCallback? onDeleteClicked;
 
   ///搜索建议的内容
   ///一般使用 [SuggestionSectionContent]
   ///或者使用 [CircularProgressIndicator] 来表示正在加载中
   ///如果 content 为 null，那么整个 [SuggestionSection] 都会隐藏
-  final Widget content;
+  final Widget? content;
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +41,7 @@ class SuggestionSection extends StatelessWidget {
                   child: Text(title,
                       style: Theme.of(context)
                           .textTheme
-                          .subtitle2
+                          .subtitle2!
                           .copyWith(fontWeight: FontWeight.bold, fontSize: 17)),
                 ),
                 onDeleteClicked == null
@@ -56,7 +55,7 @@ class SuggestionSection extends StatelessWidget {
               ],
             ),
           ),
-          content,
+          content!,
         ],
       ),
     );
@@ -64,24 +63,21 @@ class SuggestionSection extends StatelessWidget {
 }
 
 class SuggestionSectionContent extends StatelessWidget {
-  final List<String> words;
+  final List<String?> words;
   final SuggestionSelectedCallback suggestionSelectedCallback;
 
-  const SuggestionSectionContent(
-      {Key key, this.words, this.suggestionSelectedCallback})
-      : assert(words != null),
-        assert(suggestionSelectedCallback != null),
-        super(key: key);
+  const SuggestionSectionContent({
+    Key? key,
+    required this.words,
+    required this.suggestionSelectedCallback,
+  }) : super(key: key);
 
   factory SuggestionSectionContent.from(
-      {final List<String> words,
-      final SuggestionSelectedCallback suggestionSelectedCallback}) {
-    if (words == null || words.isEmpty) {
-      return null;
-    }
+      {required List<String> words,
+      final SuggestionSelectedCallback? suggestionSelectedCallback}) {
     return SuggestionSectionContent(
       words: words,
-      suggestionSelectedCallback: suggestionSelectedCallback,
+      suggestionSelectedCallback: suggestionSelectedCallback!,
     );
   }
 
@@ -91,7 +87,7 @@ class SuggestionSectionContent extends StatelessWidget {
         spacing: 4,
         children: words.map<Widget>((str) {
           return ActionChip(
-            label: Text(str),
+            label: Text(str!),
             onPressed: () {
               suggestionSelectedCallback(str);
             },
@@ -102,10 +98,7 @@ class SuggestionSectionContent extends StatelessWidget {
 
 ///搜索建议
 class SuggestionOverflow extends StatefulWidget {
-  SuggestionOverflow(
-      {@required this.query, @required this.onSuggestionSelected})
-      : assert(query != null),
-        assert(onSuggestionSelected != null);
+  SuggestionOverflow({required this.query, required this.onSuggestionSelected});
 
   final String query;
 
@@ -118,9 +111,9 @@ class SuggestionOverflow extends StatefulWidget {
 }
 
 class _SuggestionOverflowState extends State<SuggestionOverflow> {
-  String _query;
+  String? _query;
 
-  CancelableOperation _operationDelay;
+  CancelableOperation? _operationDelay;
 
   @override
   void didUpdateWidget(SuggestionOverflow oldWidget) {
@@ -168,7 +161,9 @@ class _SuggestionOverflowState extends State<SuggestionOverflow> {
               ),
               Loader<List<String>>(
                   key: Key("suggest_$_query"),
-                  loadTask: () => neteaseRepository.searchSuggest(_query),
+                  loadTask: (() => neteaseRepository!
+                      .searchSuggest(_query)
+                      .then((value) => value!)),
                   loadingBuilder: (context) {
                     return Container();
                   },

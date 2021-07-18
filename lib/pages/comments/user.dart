@@ -1,15 +1,15 @@
 class User {
-  Object locationInfo;
-  int userId;
-  Object remarkName;
-  Object expertTags;
-  String nickname;
-  int userType;
-  VipRights vipRights;
-  int vipType;
-  int authStatus;
-  String avatarUrl;
-  Object experts;
+  Object? locationInfo;
+  int? userId;
+  Object? remarkName;
+  Object? expertTags;
+  String? nickname;
+  int? userType;
+  VipRights? vipRights;
+  int? vipType;
+  int? authStatus;
+  String? avatarUrl;
+  Object? experts;
 
   User.fromJsonMap(Map<String, dynamic> map)
       : locationInfo = map["locationInfo"],
@@ -34,7 +34,7 @@ class User {
     data['expertTags'] = expertTags;
     data['nickname'] = nickname;
     data['userType'] = userType;
-    data['vipRights'] = vipRights == null ? null : vipRights.toJson();
+    data['vipRights'] = vipRights == null ? null : vipRights!.toJson();
     data['vipType'] = vipType;
     data['authStatus'] = authStatus;
     data['avatarUrl'] = avatarUrl;
@@ -44,9 +44,9 @@ class User {
 }
 
 class VipRights {
-  Associator associator;
-  Object musicPackage;
-  int redVipAnnualCount;
+  Associator? associator;
+  Object? musicPackage;
+  int? redVipAnnualCount;
 
   VipRights.fromJsonMap(Map<String, dynamic> map)
       : associator = map["associator"] == null
@@ -57,7 +57,7 @@ class VipRights {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['associator'] = associator == null ? null : associator.toJson();
+    data['associator'] = associator == null ? null : associator!.toJson();
     data['musicPackage'] = musicPackage;
     data['redVipAnnualCount'] = redVipAnnualCount;
     return data;
@@ -65,8 +65,8 @@ class VipRights {
 }
 
 class Associator {
-  int vipCode;
-  bool rights;
+  int? vipCode;
+  bool? rights;
 
   Associator.fromJsonMap(Map<String, dynamic> map)
       : vipCode = map["vipCode"],

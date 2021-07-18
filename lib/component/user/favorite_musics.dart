@@ -12,7 +12,7 @@ class FavoriteMusicList extends Model {
   final _log = Logger("runBackgroundService");
 
   FavoriteMusicList(UserAccount account) {
-    int userId = 0;
+    int? userId = 0;
 
     void listener() {
       if (account.isLogin && account.userId != userId) {
@@ -29,23 +29,23 @@ class FavoriteMusicList extends Model {
     listener();
   }
 
-  void _loadUserLikedList(int userId) async {
+  void _loadUserLikedList(int? userId) async {
     _log.info("_loadUserLikedList $userId");
     _ids =
-        (await neteaseLocalData['likedSongList'] as List)?.cast() ?? const [];
+        (await neteaseLocalData['likedSongList'] as List?)?.cast() ?? const [];
     _log.info("favorite list: $ids");
     notifyListeners();
-    final result = await neteaseRepository.likedList(userId);
+    final result = await (neteaseRepository!.likedList(userId) as FutureOr<Result<List<int>>>);
     if (result.isValue) {
-      _ids = result.asValue.value;
+      _ids = result.asValue!.value;
       notifyListeners();
       neteaseLocalData['likedSongList'] = _ids;
     }
   }
 
-  List<int> _ids = const [];
+  List<int?> _ids = const [];
 
-  List<int> get ids => _ids;
+  List<int?> get ids => _ids;
 
   static FavoriteMusicList of(BuildContext context,
       {bool rebuildOnChange = false}) {
@@ -54,12 +54,12 @@ class FavoriteMusicList extends Model {
 
   static bool contain(BuildContext context, Music music) {
     final list = Provider.of<FavoriteMusicList>(context, listen: true);
-    return list.ids?.contains(music.id) == true;
+    return list.ids.contains(music.id) == true;
   }
 
   /// 红心歌曲
   Future<void> likeMusic(Music music) async {
-    final succeed = await neteaseRepository.like(music.id, true);
+    final succeed = await neteaseRepository!.like(music.id, true);
     if (succeed) {
       _ids = List.from(_ids)..add(music.id);
       notifyListeners();
@@ -68,7 +68,7 @@ class FavoriteMusicList extends Model {
 
   ///取消红心歌曲
   Future<void> dislikeMusic(Music music) async {
-    final succeed = await neteaseRepository.like(music.id, false);
+    final succeed = await neteaseRepository!.like(music.id, false);
     if (succeed) {
       _ids = List.from(_ids)..remove(music.id);
       notifyListeners();

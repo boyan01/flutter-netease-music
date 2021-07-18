@@ -21,7 +21,7 @@ export 'package:async/async.dart' show ErrorResult;
 export 'cached_image.dart';
 export 'local_cache_data.dart';
 
-NeteaseRepository neteaseRepository;
+NeteaseRepository? neteaseRepository;
 
 ///enum for [NeteaseRepository.search] param type
 class NeteaseSearchType {
@@ -48,9 +48,9 @@ const _CODE_NEED_LOGIN = 301;
 
 ///map a result to any other
 Result<R> _map<T, R>(Result<T> source, R f(T t)) {
-  if (source.isError) return source.asError;
+  if (source.isError) return source.asError!;
   try {
-    return Result.value(f(source.asValue.value));
+    return Result.value(f(source.asValue!.value));
   } catch (e, s) {
     return Result.error(e, s);
   }
@@ -59,10 +59,10 @@ Result<R> _map<T, R>(Result<T> source, R f(T t)) {
 class NeteaseRepository {
   NeteaseRepository() {
     scheduleMicrotask(() async {
-      PersistCookieJar cookieJar;
+      PersistCookieJar? cookieJar;
       try {
         final path = (await getApplicationDocumentsDirectory()).path;
-        cookieJar = PersistCookieJar(dir: path + '/.cookies/');
+        cookieJar = PersistCookieJar(storage: FileStorage(path + '/.cookies/'));
       } catch (e) {
         debugPrint("error: can not create persist cookie jar");
       }
@@ -74,19 +74,17 @@ class NeteaseRepository {
 
   Future<List<Cookie>> _loadCookies() async {
     final jar = await _cookieJar.future;
-    if (jar == null) return const [];
     final uri = Uri.parse('http://music.163.com');
     return jar.loadForRequest(uri);
   }
 
   void _saveCookies(List<Cookie> cookies) async {
     final jar = await _cookieJar.future;
-    if (jar == null) return;
     jar.saveFromResponse(Uri.parse('http://music.163.com'), cookies);
   }
 
   ///使用手机号码登录
-  Future<Result<Map>> login(String phone, String password) async {
+  Future<Result<Map>> login(String? phone, String password) async {
     return await doRequest(
         "/login/cellphone", {"phone": phone, "password": password});
   }
@@ -102,18 +100,18 @@ class NeteaseRepository {
   ///登出,删除本地cookie信息
   Future<void> logout() async {
     //删除cookie
-    _cookieJar.future.then((v) => v?.deleteAll());
+    _cookieJar.future.then((v) => v.deleteAll());
   }
 
   ///根据用户ID获取歌单
   ///PlayListDetail 中的 tracks 都是空数据
-  Future<Result<List<PlaylistDetail>>> userPlaylist(int userId,
+  Future<Result<List<PlaylistDetail?>>?> userPlaylist(int? userId,
       [int offset = 0, int limit = 1000]) async {
     final response = await doRequest(
         "/user/playlist", {"offset": offset, "uid": userId, "limit": limit});
 
     return _map(response, (Map result) {
-      final list = (result["playlist"] as List)
+      final List<PlaylistDetail?> list = (result["playlist"] as List)
           .cast<Map>()
           .map((e) => PlaylistDetail.fromJson(e))
           .toList();
@@ -123,11 +121,11 @@ class NeteaseRepository {
   }
 
   ///create new playlist by [name]
-  Future<Result<PlaylistDetail>> createPlaylist(String name,
+  Future<Result<PlaylistDetail>?> createPlaylist(String? name,
       {bool privacy = false}) async {
     final response = await doRequest(
         "/playlist/create", {"name": name, 'privacy': privacy ? 10 : null});
-    return _map(response, (result) {
+    return _map(response, (dynamic result) {
       return PlaylistDetail.fromJson(result["playlist"]);
     });
   }
@@ -135,9 +133,9 @@ class NeteaseRepository {
   ///根据歌单id获取歌单详情，包括歌曲
   ///
   /// [s] 歌单最近的 s 个收藏者
-  Future<Result<PlaylistDetail>> playlistDetail(int id, {int s = 5}) async {
+  Future<Result<PlaylistDetail>?> playlistDetail(int id, {int s = 5}) async {
     final response = await doRequest("/playlist/detail", {"id": "$id", "s": s});
-    return _map(response, (t) {
+    return _map(response, (dynamic t) {
       final result = PlaylistDetail.fromJson(t["playlist"]);
       neteaseLocalData.updatePlaylistDetail(result);
       return result;
@@ -146,7 +144,7 @@ class NeteaseRepository {
 
   ///id 歌单id
   ///return true if action success
-  Future<bool> playlistSubscribe(int id, bool subscribe) async {
+  Future<bool> playlistSubscribe(int? id, bool subscribe) async {
     final response = await doRequest(
         "/playlist/subscribe", {"id": id, 't': subscribe ? 1 : 2});
     return response.isValue;
@@ -179,19 +177,19 @@ class NeteaseRepository {
   }
 
   ///根据音乐id获取歌词
-  Future<String> lyric(int id) async {
-    final lyricCache = await _lyricCache();
+  Future<String?> lyric(int id) async {
+    final lyricCache = await (_lyricCache() as FutureOr<_LyricCache>);
     final key = _LyricCacheKey(id);
     //check cache first
-    String cached = await lyricCache.get(key);
+    String? cached = await lyricCache.get(key);
     if (cached != null) {
       return cached;
     }
     var result = await doRequest('/lyric', {"id": id});
     if (result.isError) {
-      return Future.error(result.asError.error);
+      return Future.error(result.asError!.error);
     }
-    Map lyc = result.asValue.value["lrc"];
+    Map? lyc = result.asValue!.value["lrc"];
     if (lyc == null) {
       return null;
     }
@@ -204,7 +202,7 @@ class NeteaseRepository {
   ///获取搜索热词
   Future<Result<List<String>>> searchHotWords() async {
     var result = await doRequest("/search/hot", {"type": 1111});
-    return _map(result, (t) {
+    return _map(result, (dynamic t) {
       List hots = (t["result"] as Map)["hots"];
       return hots.cast<Map<String, dynamic>>().map((map) {
         return map["first"] as String;
@@ -213,7 +211,7 @@ class NeteaseRepository {
   }
 
   ///search by keyword
-  Future<Result<Map>> search(String keyword, NeteaseSearchType type,
+  Future<Result<Map>> search(String? keyword, NeteaseSearchType type,
       {int limit = 20, int offset = 0}) {
     return doRequest("/search", {
       "keywords": keyword,
@@ -225,7 +223,7 @@ class NeteaseRepository {
 
   ///搜索建议
   ///返回搜索建议列表，结果一定不会为null
-  Future<Result<List<String>>> searchSuggest(String keyword) async {
+  Future<Result<List<String>>?> searchSuggest(String? keyword) async {
     if (keyword == null || keyword.isEmpty || keyword.trim().isEmpty) {
       return Result.value(const []);
     }
@@ -235,9 +233,9 @@ class NeteaseRepository {
     if (response.isError) {
       return Result.value(const []);
     }
-    return _map(response, (t) {
-      List<Map> match =
-          ((response.asValue.value["result"]["allMatch"]) as List)?.cast();
+    return _map(response, (dynamic t) {
+      List<Map>? match =
+          ((response.asValue!.value["result"]["allMatch"]) as List?)?.cast();
       if (match == null) {
         return [];
       }
@@ -246,16 +244,16 @@ class NeteaseRepository {
   }
 
   ///check music is available
-  Future<bool> checkMusic(int id) async {
+  Future<bool> checkMusic(int? id) async {
     var result = await doRequest(
         "https://music.163.com/weapi/song/enhance/player/url",
         {"ids": "[$id]", "br": 999000});
-    return result.isValue && result.asValue.value["data"][0]["code"] == 200;
+    return result.isValue && result.asValue!.value["data"][0]["code"] == 200;
   }
 
   Future<Result<String>> getPlayUrl(int id, [int br = 320000]) async {
     final result = await doRequest("/song/url", {"id": id, "br": br});
-    return _map(result, (result) {
+    return _map(result, (dynamic result) {
       final data = result['data'] as List;
       if (data.isEmpty) {
         throw "we can not get realtime play url: data is empty";
@@ -269,11 +267,11 @@ class NeteaseRepository {
   }
 
   ///fetch music detail from id
-  Future<Result<Map<String, Object>>> getMusicDetail(int id) async {
+  Future<Result<Map<String, Object>?>?> getMusicDetail(int? id) async {
     final result = await doRequest("https://music.163.com/weapi/v3/song/detail",
         {"ids": "[$id]", "c": '[{"id":$id}]'});
 
-    return _map(result, (result) {
+    return _map(result, (dynamic result) {
       return result["songs"][0];
     });
   }
@@ -281,10 +279,8 @@ class NeteaseRepository {
   ///edit playlist tracks
   ///true : succeed
   Future<bool> playlistTracksEdit(
-      PlaylistOperation operation, int playlistId, List<int> musicIds) async {
-    assert(operation != null);
-    assert(playlistId != null);
-    assert(musicIds != null && musicIds.isNotEmpty);
+      PlaylistOperation operation, int playlistId, List<int?> musicIds) async {
+    assert(musicIds.isNotEmpty);
 
     var result = await doRequest(
         "https://music.163.com/weapi/playlist/manipulate/tracks", {
@@ -302,7 +298,7 @@ class NeteaseRepository {
       'name': playlist.name,
       'desc': playlist.description,
     });
-    return _map(response, (t) {
+    return _map(response, (dynamic t) {
       return true;
     }).isValue;
   }
@@ -342,15 +338,15 @@ class NeteaseRepository {
   }
 
   ///给歌曲加红心
-  Future<bool> like(int musicId, bool like) async {
+  Future<bool> like(int? musicId, bool like) async {
     final response = await doRequest("/like", {"id": musicId, "like": like});
     return response.isValue;
   }
 
   ///获取用户红心歌曲id列表
-  Future<Result<List<int>>> likedList(int userId) async {
+  Future<Result<List<int>>?> likedList(int? userId) async {
     final response = await doRequest("/likelist", {"uid": userId});
-    return _map(response, (t) {
+    return _map(response, (dynamic t) {
       return (t["ids"] as List).cast();
     });
   }
@@ -361,17 +357,17 @@ class NeteaseRepository {
   }
 
   ///获取用户创建的电台
-  Future<Result<List<Map>>> userDj(int userId) async {
+  Future<Result<List<Map>>?> userDj(int? userId) async {
     final response =
         await doRequest('/user/dj', {'uid': userId, 'limit': 30, 'offset': 0});
-    return _map(response, (t) {
+    return _map(response, (dynamic t) {
       return (t['programs'] as List).cast();
     });
   }
 
   ///登陆后调用此接口 , 可获取订阅的电台列表
-  Future<Result<List<Map>>> djSubList() async {
-    return _map(await doRequest('/dj/sublist'), (t) {
+  Future<Result<List<Map>>?> djSubList() async {
+    return _map(await doRequest('/dj/sublist'), (dynamic t) {
       return (t['djRadios'] as List).cast();
     });
   }
@@ -382,7 +378,7 @@ class NeteaseRepository {
   }
 
   ///调用此接口,可收藏 MV
-  Future<bool> mvSubscribe(int mvId, bool subscribe) async {
+  Future<bool> mvSubscribe(int? mvId, bool subscribe) async {
     final result =
         await doRequest('/mv/sub', {'id': mvId, 't': subscribe ? '1' : '0'});
     return result.isValue;
@@ -390,38 +386,37 @@ class NeteaseRepository {
 
   ///获取用户播放记录
   ///type : 0 all , 1 this week
-  Future<Result<Map>> getRecord(int uid, int type) {
+  Future<Result<Map>> getRecord(int? uid, int? type) {
     assert(type == 0 || type == 1);
     return doRequest('/user/record', {'uid': uid, 'type': type});
   }
 
   ///获取用户详情
-  Future<Result<UserDetail>> getUserDetail(int uid) async {
-    assert(uid != null);
+  Future<Result<UserDetail>?> getUserDetail(int uid) async {
     final result = await doRequest('/user/detail', {'uid': uid});
     if (result.isValue) {
       // save user_detail to local data.
       // TODO: limit count.
-      neteaseLocalData['user_detail_$uid'] = result.asValue.value;
+      neteaseLocalData['user_detail_$uid'] = result.asValue!.value;
     }
-    return _map(result, (t) => UserDetail.fromJsonMap(t));
+    return _map(result, (dynamic t) => UserDetail.fromJsonMap(t));
   }
 
   ///
   /// 获取私人 FM 推荐歌曲。一次两首歌曲。
   ///
-  Future<List<Music>> getPersonalFmMusics() async {
+  Future<List<Music>?> getPersonalFmMusics() async {
     final result = await doRequest('/personal_fm');
     if (result.isError) {
-      throw result.asError.error;
+      throw result.asError!.error;
     }
-    final data = result.asValue.value["data"];
-    return mapJsonListToMusicList(data as List);
+    final data = result.asValue!.value["data"];
+    return mapJsonListToMusicList(data as List?);
   }
 
   ///[path] request path
   ///[data] parameter
-  Future<Result<Map<String, dynamic>>> doRequest(String path,
+  Future<Result<Map<String?, dynamic>>> doRequest(String path,
       [Map param = const {}]) async {
     api.Answer result;
     try {
@@ -448,7 +443,7 @@ class NeteaseRepository {
     }
     final Logger logger = Logger("doRequest");
     logger.info("$path -> ${json.encode(map)}");
-    return Result.value(map);
+    return Result.value(map as Map<String?, dynamic>);
   }
 }
 
@@ -473,7 +468,7 @@ Music mapJsonToMusic(Map song,
       artist: artists);
 }
 
-List<Music> mapJsonListToMusicList(List tracks,
+List<Music>? mapJsonListToMusicList(List? tracks,
     {String artistKey = "artists", String albumKey = "album"}) {
   if (tracks == null) {
     return null;
@@ -488,7 +483,7 @@ List<Music> mapJsonListToMusicList(List tracks,
 class _LyricCacheKey implements CacheKey {
   final int musicId;
 
-  _LyricCacheKey(this.musicId) : assert(musicId != null);
+  _LyricCacheKey(this.musicId);
 
   @override
   String getKey() {
@@ -496,9 +491,9 @@ class _LyricCacheKey implements CacheKey {
   }
 }
 
-_LyricCache __lyricCache;
+_LyricCache? __lyricCache;
 
-Future<_LyricCache> _lyricCache() async {
+Future<_LyricCache?> _lyricCache() async {
   if (__lyricCache != null) {
     return __lyricCache;
   }
@@ -511,7 +506,7 @@ Future<_LyricCache> _lyricCache() async {
   return __lyricCache;
 }
 
-class _LyricCache implements Cache<String> {
+class _LyricCache implements Cache<String?> {
   _LyricCache._(Directory dir)
       : provider =
             FileCacheProvider(dir, maxSize: 20 * 1024 * 1024 /* 20 Mb */);
@@ -519,7 +514,7 @@ class _LyricCache implements Cache<String> {
   final FileCacheProvider provider;
 
   @override
-  Future<String> get(CacheKey key) async {
+  Future<String?> get(CacheKey key) async {
     final file = provider.getFile(key);
     if (await file.exists()) {
       return file.readAsStringSync();
@@ -529,13 +524,13 @@ class _LyricCache implements Cache<String> {
   }
 
   @override
-  Future<bool> update(CacheKey key, String t) async {
+  Future<bool> update(CacheKey key, String? t) async {
     var file = provider.getFile(key);
     if (await file.exists()) {
       file.delete();
     }
     file = await file.create();
-    await file.writeAsString(t);
+    await file.writeAsString(t!);
     try {
       return await file.exists();
     } finally {

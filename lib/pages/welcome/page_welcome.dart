@@ -36,7 +36,7 @@ class _PageWelcomeState extends State<PageWelcome> {
                   StretchButton(
                     text: "手机号登录",
                     onTap: () async {
-                      if (model.accept) {
+                      if (model.accept!) {
                         final result =
                             await Navigator.pushNamed(context, pageLogin);
                         if (result == true) {
@@ -49,7 +49,7 @@ class _PageWelcomeState extends State<PageWelcome> {
                       text: "立即体验",
                       primary: false,
                       onTap: () {
-                        if (model.accept) {
+                        if (model.accept!) {
                           Settings.of(context, rebuildOnChange: false)
                               .setSkipWelcomePage();
                           _navigateToMain(context);
@@ -80,16 +80,16 @@ class StretchButton extends StatelessWidget {
   final bool primary;
 
   const StretchButton({
-    Key key,
-    @required this.onTap,
-    @required this.text,
+    Key? key,
+    required this.onTap,
+    required this.text,
     this.primary = true,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    var background = Theme.of(context).primaryColor;
-    var foreground = Theme.of(context).primaryTextTheme.bodyText2.color;
+    Color? background = Theme.of(context).primaryColor;
+    var foreground = Theme.of(context).primaryTextTheme.bodyText2!.color;
     if (primary) {
       var temp = background;
       background = foreground;
@@ -97,7 +97,7 @@ class StretchButton extends StatelessWidget {
     }
     final border = primary
         ? BorderSide.none
-        : BorderSide(color: foreground.withOpacity(0.5), width: 0.5);
+        : BorderSide(color: foreground!.withOpacity(0.5), width: 0.5);
     return FlatButton(
       child: Text(text),
       shape: RoundedRectangleBorder(
@@ -163,16 +163,16 @@ class _LoginLayout extends StatelessWidget {
 }
 
 class _LoginIcon extends StatelessWidget {
-  final String image;
+  final String? image;
 
   final VoidCallback onTap;
 
-  const _LoginIcon({Key key, this.image, @required this.onTap})
+  const _LoginIcon({Key? key, this.image, required this.onTap})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final color = Theme.of(context).primaryTextTheme.bodyText2.color;
+    final color = Theme.of(context).primaryTextTheme.bodyText2!.color!;
     return Material(
       shape: CircleBorder(
           side: BorderSide(color: color.withOpacity(0.5), width: 0.5)),
@@ -196,16 +196,16 @@ class _LicenseModel extends Model {
         rebuildOnChange: rebuildOnChange);
   }
 
-  bool _accept = false;
+  bool? _accept = false;
 
-  bool get accept {
-    if (!_accept) {
+  bool? get accept {
+    if (!_accept!) {
       toast('请先同意"用户协议"和"隐私政策"');
     }
     return _accept;
   }
 
-  void check(bool checked) {
+  void check(bool? checked) {
     _accept = checked;
     notifyListeners();
   }
@@ -217,8 +217,8 @@ class _LicenseAndPolicy extends StatefulWidget {
 }
 
 class _LicenseAndPolicyState extends State<_LicenseAndPolicy> {
-  TapGestureRecognizer _licenseTapRecognizer;
-  TapGestureRecognizer _policyTapRecognizer;
+  TapGestureRecognizer? _licenseTapRecognizer;
+  TapGestureRecognizer? _policyTapRecognizer;
 
   @override
   void initState() {
@@ -235,19 +235,19 @@ class _LicenseAndPolicyState extends State<_LicenseAndPolicy> {
 
   @override
   void dispose() {
-    _licenseTapRecognizer.dispose();
-    _policyTapRecognizer.dispose();
+    _licenseTapRecognizer!.dispose();
+    _policyTapRecognizer!.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final color = Theme.of(context).primaryTextTheme.caption.color;
+    final color = Theme.of(context).primaryTextTheme.caption!.color!;
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 8),
       alignment: Alignment.center,
       child: DefaultTextStyle(
-        style: Theme.of(context).primaryTextTheme.caption,
+        style: Theme.of(context).primaryTextTheme.caption!,
         child: Row(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.center,

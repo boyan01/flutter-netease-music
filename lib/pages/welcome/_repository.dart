@@ -11,14 +11,14 @@ import 'package:quiet/repository/netease.dart';
 ///
 class WelcomeRepository {
   ///检测手机号是否已存在
-  static Future<Result<PhoneCheckResult>> checkPhoneExist(
+  static Future<Result<PhoneCheckResult>?> checkPhoneExist(
       String phone, String countryCode) async {
-    final result = await neteaseRepository.doRequest(
+    final result = await neteaseRepository!.doRequest(
       '/cellphone/existence/check',
       {'phone': phone, 'countrycode': countryCode},
     );
     if (result.isError) return result.asError;
-    final value = PhoneCheckResult.fromJsonMap(result.asValue.value);
+    final value = PhoneCheckResult.fromJsonMap(result.asValue!.value);
     return Result.value(value);
   }
 
@@ -29,20 +29,20 @@ class WelcomeRepository {
     final flags = json.decode(jsonStr) as List;
     final result =
         flags.cast<Map>().map((map) => RegionFlag.fromMap(map)).where((flag) {
-      return flag.dialCode != null && flag.dialCode.trim().isNotEmpty;
+      return flag.dialCode != null && flag.dialCode!.trim().isNotEmpty;
     }).toList();
     return result;
   }
 }
 
 class PhoneCheckResult {
-  final int exist;
-  final String nickname;
-  final bool hasPassword;
+  final int? exist;
+  final String? nickname;
+  final bool? hasPassword;
 
   bool get isExist => exist == 1;
 
-  PhoneCheckResult.fromJsonMap(Map<String, dynamic> map)
+  PhoneCheckResult.fromJsonMap(Map<String?, dynamic> map)
       : exist = map["exist"],
         nickname = map["nickname"],
         hasPassword = map["hasPassword"];

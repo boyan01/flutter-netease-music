@@ -8,9 +8,9 @@ import 'page_welcome.dart';
 ///登录流程: 密码输入
 class PageLoginPassword extends StatefulWidget {
   ///手机号
-  final String phone;
+  final String? phone;
 
-  const PageLoginPassword({Key key, @required this.phone}) : super(key: key);
+  const PageLoginPassword({Key? key, required this.phone}) : super(key: key);
 
   @override
   _PageLoginPasswordState createState() => _PageLoginPasswordState();
@@ -73,7 +73,7 @@ class _PageLoginPasswordState extends State<PageLoginPassword> {
       //退出登录流程,表示我们登录成功了
       Navigator.of(context, rootNavigator: true).pop(true);
     } else {
-      toast('登录失败:${result.asError.error}');
+      toast('登录失败:${result.asError!.error}');
     }
   }
 }

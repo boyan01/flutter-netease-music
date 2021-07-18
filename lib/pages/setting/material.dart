@@ -6,7 +6,7 @@
 import 'package:flutter/material.dart';
 
 class SettingGroup extends StatelessWidget {
-  const SettingGroup({Key key, @required this.title, @required this.children})
+  const SettingGroup({Key? key, required this.title, required this.children})
       : super(key: key);
 
   final String title;
@@ -33,7 +33,7 @@ class SettingGroup extends StatelessWidget {
 class _SettingTitle extends StatelessWidget {
   final String title;
 
-  const _SettingTitle({Key key, @required this.title}) : super(key: key);
+  const _SettingTitle({Key? key, required this.title}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

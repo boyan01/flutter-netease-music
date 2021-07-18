@@ -5,11 +5,11 @@ import 'package:quiet/part/part.dart';
 
 class PlaylistInternalSearchDelegate extends SearchDelegate {
   PlaylistInternalSearchDelegate(this.playlist)
-      : assert(playlist != null && playlist.musicList != null);
+      : assert(playlist.musicList != null);
 
   final PlaylistDetail playlist;
 
-  List<Music> get list => playlist.musicList;
+  List<Music>? get list => playlist.musicList;
 
   @override
   List<Widget> buildActions(BuildContext context) {
@@ -41,8 +41,8 @@ class PlaylistInternalSearchDelegate extends SearchDelegate {
       return Container();
     }
     var result = list
-        ?.where((m) => m.title.contains(query) || m.subTitle.contains(query))
-        ?.toList();
+        ?.where((m) => m.title!.contains(query) || m.subTitle.contains(query))
+        .toList();
     if (result == null || result.isEmpty) {
       return _EmptyResultSection(query);
     }
@@ -67,7 +67,10 @@ class _EmptyResultSection extends StatelessWidget {
 }
 
 class _InternalResultSection extends StatelessWidget {
-  const _InternalResultSection({Key key, this.musics}) : super(key: key);
+  const _InternalResultSection({
+    Key? key,
+    required this.musics,
+  }) : super(key: key);
 
   ///result song list, can not be null and empty
   final List<Music> musics;

@@ -13,7 +13,7 @@ class LandscapePlayingPage extends StatelessWidget {
       resizeToAvoidBottomInset: false,
       body: Stack(
         children: <Widget>[
-          BlurBackground(music: context.listenPlayerValue.current),
+          BlurBackground(music: context.listenPlayerValue.requireCurrent),
           Padding(
             padding: EdgeInsets.only(
               bottom: MediaQuery.of(context).padding.bottom +
@@ -38,7 +38,7 @@ class _LayoutCover extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
-        AlbumCover(music: context.listenPlayerValue.current),
+        AlbumCover(music: context.listenPlayerValue.requireCurrent),
         Spacer(),
         PlayerControllerBar(),
         SizedBox(height: 16),
@@ -54,9 +54,9 @@ class _LayoutLyric extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
-        PlayingTitle(music: context.listenPlayerValue.current),
+        PlayingTitle(music: context.listenPlayerValue.requireCurrent),
         Expanded(
-            child: PlayingLyricView(music: context.listenPlayerValue.current)),
+            child: PlayingLyricView(music: context.listenPlayerValue.requireCurrent)),
         PlayingOperationBar(),
         SizedBox(height: 16),
       ],

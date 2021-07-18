@@ -18,16 +18,16 @@ part 'tab_music.dart';
 ///用户详情页
 class UserDetailPage extends StatelessWidget {
   ///用户ID
-  final int userId;
+  final int? userId;
 
-  const UserDetailPage({Key key, @required this.userId}) : super(key: key);
+  const UserDetailPage({Key? key, required this.userId}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Loader<UserDetail>(
+    return Loader<UserDetail?>(
       initialData: neteaseLocalData.get('user_detail_$userId'),
-      loadTask: () => neteaseRepository.getUserDetail(userId),
-      builder: (BuildContext context, UserDetail user) {
+      loadTask: (() => neteaseRepository!.getUserDetail(userId!).then((value) => value!)),
+      builder: (BuildContext context, UserDetail? user) {
         return _DetailPage(user: user);
       },
     );
@@ -35,9 +35,9 @@ class UserDetailPage extends StatelessWidget {
 }
 
 class _DetailPage extends StatelessWidget {
-  final UserDetail user;
+  final UserDetail? user;
 
-  const _DetailPage({Key key, this.user}) : super(key: key);
+  const _DetailPage({Key? key, this.user}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +58,7 @@ class _DetailPage extends StatelessWidget {
                   padding: const EdgeInsets.only(
                       top: kToolbarHeight + kTextTabBarHeight),
                   child: TabBarView(children: <Widget>[
-                    TabMusic(user.profile),
+                    TabMusic(user!.profile),
                     TabEvents(),
                     TabAbout(user),
                   ]),
@@ -70,9 +70,9 @@ class _DetailPage extends StatelessWidget {
 
 ///伸缩自如的AppBar
 class _UserDetailAppBar extends StatelessWidget {
-  final UserDetail user;
+  final UserDetail? user;
 
-  const _UserDetailAppBar(this.user, {Key key}) : super(key: key);
+  const _UserDetailAppBar(this.user, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -86,7 +86,7 @@ class _UserDetailAppBar extends StatelessWidget {
               height: 300,
               width: 300,
               fit: BoxFit.cover,
-              image: CachedImage(user.profile.backgroundUrl)),
+              image: CachedImage(user!.profile.backgroundUrl!)),
         ),
         content: Padding(
           padding: EdgeInsets.symmetric(horizontal: 20),
@@ -96,23 +96,23 @@ class _UserDetailAppBar extends StatelessWidget {
                 Spacer(),
                 Row(
                   children: <Widget>[
-                    RoundedImage(user.profile.avatarUrl, size: 60),
+                    RoundedImage(user!.profile.avatarUrl, size: 60),
                   ],
                 ),
                 SizedBox(height: 10),
-                Text(user.profile.nickname,
+                Text(user!.profile.nickname!,
                     style:
                         TextStyle(fontSize: 17, fontWeight: FontWeight.w400)),
                 SizedBox(height: 6),
                 Row(children: <Widget>[
                   InkWell(
-                      child: Text('关注:${user.profile.follows}'),
+                      child: Text('关注:${user!.profile.follows}'),
                       onTap: () {
                         toast('关注');
                       }),
                   VerticalDivider(),
                   InkWell(
-                    child: Text('粉丝:${user.profile.followeds}'),
+                    child: Text('粉丝:${user!.profile.followeds}'),
                     onTap: () {
                       toast('粉丝');
                     },
@@ -123,7 +123,7 @@ class _UserDetailAppBar extends StatelessWidget {
         ),
         builder: (context, t) {
           return AppBar(
-            title: Text(t > 0.5 ? user.profile.nickname : ''),
+            title: Text(t > 0.5 ? user!.profile.nickname! : ''),
             titleSpacing: 0,
             elevation: 0,
             backgroundColor: Colors.transparent,
@@ -143,8 +143,8 @@ class _UserDetailAppBar extends StatelessWidget {
       forceElevated: false,
       bottom: RoundedTabBar(
         tabs: <Widget>[
-          Tab(text: '音乐(${user.profile.playlistCount})'),
-          Tab(text: '动态(${user.profile.eventCount})'),
+          Tab(text: '音乐(${user!.profile.playlistCount})'),
+          Tab(text: '动态(${user!.profile.eventCount})'),
           Tab(text: '关于TA'),
         ],
       ),

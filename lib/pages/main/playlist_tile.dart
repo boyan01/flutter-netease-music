@@ -10,13 +10,13 @@ import 'package:quiet/repository/cached_image.dart';
 ///歌单列表元素
 class PlaylistTile extends StatelessWidget {
   const PlaylistTile({
-    Key key,
-    @required this.playlist,
+    Key? key,
+    required this.playlist,
     this.enableMore = true,
     this.enableHero = true,
   }) : super(key: key);
 
-  final PlaylistDetail playlist;
+  final PlaylistDetail? playlist;
 
   final bool enableMore;
 
@@ -29,7 +29,7 @@ class PlaylistTile extends StatelessWidget {
         borderRadius: BorderRadius.all(Radius.circular(4)),
         child: FadeInImage(
           placeholder: AssetImage("assets/playlist_playlist.9.png"),
-          image: CachedImage(playlist.coverUrl),
+          image: CachedImage(playlist!.coverUrl!),
           fit: BoxFit.cover,
           height: 50,
           width: 50,
@@ -38,16 +38,16 @@ class PlaylistTile extends StatelessWidget {
     );
     if (enableHero) {
       cover = QuietHero(
-        tag: playlist.heroTag,
+        tag: playlist!.heroTag,
         child: cover,
       );
     }
 
     return InkWell(
       onTap: () {
-        context.secondaryNavigator.push(MaterialPageRoute(
+        context.secondaryNavigator!.push(MaterialPageRoute(
             builder: (context) =>
-                PlaylistDetailPage(playlist.id, playlist: playlist)));
+                PlaylistDetailPage(playlist!.id!, playlist: playlist)));
       },
       child: SizedBox(
         height: 60,
@@ -62,13 +62,13 @@ class PlaylistTile extends StatelessWidget {
                 children: <Widget>[
                   Spacer(),
                   Text(
-                    playlist.name,
+                    playlist!.name!,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(fontSize: 15),
                   ),
                   Padding(padding: EdgeInsets.only(top: 4)),
-                  Text("${playlist.trackCount}首",
+                  Text("${playlist!.trackCount}首",
                       style: Theme.of(context).textTheme.caption),
                   Spacer(),
                 ],
@@ -91,7 +91,7 @@ class PlaylistTile extends StatelessWidget {
                       toast("未接入。");
                       break;
                     case PlaylistOp.edit:
-                      context.secondaryNavigator
+                      context.secondaryNavigator!
                           .push(MaterialPageRoute(builder: (context) {
                         return PlaylistEditPage(playlist);
                       }));

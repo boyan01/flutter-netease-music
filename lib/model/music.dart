@@ -9,44 +9,45 @@ class Music {
     this.url,
     this.album,
     this.artist,
-    int mvId,
+    int? mvId,
   }) : this.mvId = mvId ?? 0;
 
-  final int id;
+  final int? id;
 
-  final String title;
+  final String? title;
 
-  final String url;
+  final String? url;
 
-  final Album album;
+  final Album? album;
 
-  final List<Artist> artist;
+  final List<Artist>? artist;
 
   ///歌曲mv id,当其为0时,表示没有mv
   final int mvId;
 
-  String get imageUrl => album.coverImageUrl;
+  String? get imageUrl => album!.coverImageUrl;
 
-  MusicMetadata _metadata;
+  MusicMetadata? _metadata;
 
   MusicMetadata get metadata {
-    if (_metadata != null) return _metadata;
-    _metadata = MusicMetadata(
-      mediaId: id.toString(),
-      title: title,
-      subtitle: subTitle,
-      duration: 0,
-      iconUri: imageUrl,
-      extras: MusicExt(this).toMap(),
-    );
-    return _metadata;
+    if (_metadata == null) {
+      _metadata = MusicMetadata(
+        mediaId: id.toString(),
+        title: title,
+        subtitle: subTitle,
+        duration: 0,
+        iconUri: imageUrl,
+        extras: MusicExt(this).toMap(),
+      );
+    }
+    return _metadata!;
   }
 
-  String get artistString => artist.map((e) => e.name).join('/');
+  String get artistString => artist!.map((e) => e.name).join('/');
 
   String get subTitle {
-    var ar = artist.map((a) => a.name).join('/');
-    var al = album.name;
+    var ar = artist!.map((a) => a.name).join('/');
+    var al = album!.name;
     return "$al - $ar";
   }
 
@@ -63,13 +64,10 @@ class Music {
   }
 
   factory Music.fromMetadata(MusicMetadata metadata) {
-    if (metadata == null) {
-      return null;
-    }
-    return fromMap(metadata.extras);
+    return fromMap(metadata.extras!)!;
   }
 
-  static Music fromMap(Map map) {
+  static Music? fromMap(Map? map) {
     if (map == null) {
       return null;
     }
@@ -92,8 +90,8 @@ extension MusicExt on Music {
       "url": url,
       "subTitle": subTitle,
       'mvId': mvId,
-      "album": album.toMap(),
-      "artist": artist.map((e) => e.toMap()).toList()
+      "album": album!.toMap(),
+      "artist": artist!.map((e) => e.toMap()).toList()
     };
   }
 }

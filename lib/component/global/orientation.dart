@@ -4,10 +4,10 @@ import 'package:quiet/pages/main/page_main.dart';
 extension OrientationContext on BuildContext {
   NavigatorState get rootNavigator => Navigator.of(this, rootNavigator: true);
 
-  NavigatorState get primaryNavigator =>
+  NavigatorState? get primaryNavigator =>
       isLandscape ? landscapePrimaryNavigator : Navigator.of(this);
 
-  NavigatorState get secondaryNavigator =>
+  NavigatorState? get secondaryNavigator =>
       isLandscape ? landscapeSecondaryNavigator : Navigator.of(this);
 
   ///

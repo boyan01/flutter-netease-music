@@ -69,25 +69,25 @@ class QuietLocalizations {
   };
 
   String operator [](String key) {
-    final value = _localizedValues[locale.languageCode][key];
+    final value = _localizedValues[locale.languageCode]![key];
     assert(value != null, "can not find $key");
-    return value ?? "";
+    return value!;
   }
 
   // ignore: non_constant_identifier_names
-  String get main_page_tab_title_my {
-    return _localizedValues[locale.languageCode]["main_page_tab_title_my"];
+  String? get main_page_tab_title_my {
+    return _localizedValues[locale.languageCode]!["main_page_tab_title_my"];
   }
 
 // ignore: non_constant_identifier_names
-  String get main_page_tab_title_discover {
-    return _localizedValues[locale.languageCode]
+  String? get main_page_tab_title_discover {
+    return _localizedValues[locale.languageCode]!
         ["main_page_tab_title_discover"];
   }
 }
 
 extension QuietLocalizationsContext on BuildContext {
-  QuietLocalizations get strings {
+  QuietLocalizations? get strings {
     return Localizations.of<QuietLocalizations>(this, QuietLocalizations);
   }
 }

@@ -5,11 +5,11 @@ import 'package:quiet/component/global/settings.dart';
 
 ///版权说明浮层
 class CopyRightOverlay extends StatelessWidget {
-  final Widget child;
+  final Widget? child;
 
   final _painter = _CopyrightPainter();
 
-  CopyRightOverlay({Key key, this.child}) : super(key: key);
+  CopyRightOverlay({Key? key, this.child}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

@@ -6,11 +6,11 @@ import 'package:quiet/pages/account/account.dart';
 import 'package:quiet/pages/account/page_user_detail.dart';
 
 class UserProfileSection extends StatelessWidget {
-  const UserProfileSection({Key key}) : super(key: key);
+  const UserProfileSection({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final UserDetail detail = UserAccount.of(context).userDetail;
+    final UserDetail? detail = UserAccount.of(context).userDetail;
     if (detail == null) {
       return userNotLogin(context);
     }
@@ -35,7 +35,7 @@ class UserProfileSection extends StatelessWidget {
             children: [
               SizedBox(width: 8),
               CircleAvatar(
-                backgroundImage: CachedImage(detail.profile.avatarUrl),
+                backgroundImage: CachedImage(detail.profile.avatarUrl!),
                 radius: 20,
               ),
               SizedBox(width: 12),
@@ -44,7 +44,7 @@ class UserProfileSection extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(detail.profile.nickname),
+                    Text(detail.profile.nickname!),
                     SizedBox(height: 4),
                     Row(
                       children: [
@@ -98,7 +98,7 @@ class UserProfileSection extends StatelessWidget {
                 radius: 20,
               ),
               SizedBox(width: 12),
-              Text(context.strings["login_right_now"]),
+              Text(context.strings!["login_right_now"]),
               Icon(Icons.chevron_right)
             ],
           ),

@@ -10,10 +10,10 @@ class MyCollectionApi extends Model {
   }
 
   Future<Result<Map>> getAlbums() {
-    return neteaseRepository.doRequest('/album/sublist');
+    return neteaseRepository!.doRequest('/album/sublist');
   }
 
   Future<Result<Map>> getArtists() {
-    return neteaseRepository.doRequest('/artist/sublist');
+    return neteaseRepository!.doRequest('/artist/sublist');
   }
 }

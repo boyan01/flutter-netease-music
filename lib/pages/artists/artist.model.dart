@@ -1,23 +1,23 @@
 import 'package:quiet/model/model.dart' as model;
 
 class Artist extends model.Artist {
-  String img1v1Url;
-  String picUrl;
-  String trans;
-  String briefDesc;
-  String name;
-  String picIdStr;
-  bool followed;
-  int topicPerson;
-  int musicSize;
-  int albumSize;
-  int id;
-  int accountId;
-  int mvSize;
-  num img1v1Id;
-  num picId;
-  num publishTime;
-  List<String> alias;
+  String? img1v1Url;
+  String? picUrl;
+  String? trans;
+  String? briefDesc;
+  String? name;
+  String? picIdStr;
+  bool? followed;
+  int? topicPerson;
+  int? musicSize;
+  int? albumSize;
+  int? id;
+  int? accountId;
+  int? mvSize;
+  num? img1v1Id;
+  num? picId;
+  num? publishTime;
+  List<String>? alias;
 
   Artist(
       {this.img1v1Url,
@@ -60,8 +60,8 @@ class Artist extends model.Artist {
     this.imageUrl = picUrl;
 
     List<dynamic> aliasList = json['alias'];
-    this.alias = new List();
-    this.alias.addAll(aliasList.map((o) => o.toString()));
+    this.alias = [];
+    this.alias!.addAll(aliasList.map((o) => o.toString()));
   }
 
   Map<String, dynamic> toJson() {
