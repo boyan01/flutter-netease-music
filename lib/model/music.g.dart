@@ -23,7 +23,7 @@ Map<String, dynamic> _$MusicToJson(Music instance) => <String, dynamic>{
       'id': instance.id,
       'title': instance.title,
       'url': instance.url,
-      'album': instance.album,
-      'artist': instance.artist,
+      'album': instance.album?.toJson(),
+      'artist': instance.artist?.map((e) => e.toJson()).toList(),
       'mvId': instance.mvId,
     };

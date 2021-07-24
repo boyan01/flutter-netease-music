@@ -27,7 +27,7 @@ Map<String, dynamic> _$MusicVideoDetailResultToJson(
       'loadingPicFS': instance.loadingPicFS,
       'bufferPicFS': instance.bufferPicFS,
       'subed': instance.subscribed,
-      'data': instance.data,
+      'data': instance.data.toJson(),
       'code': instance.code,
     };
 
@@ -77,7 +77,7 @@ Map<String, dynamic> _$MusicVideoDetailToJson(MusicVideoDetail instance) =>
       'nType': instance.nType,
       'publishTime': instance.publishTime,
       'brs': instance.brs,
-      'artists': instance.artists,
+      'artists': instance.artists.map((e) => e.toJson()).toList(),
       'isReward': instance.isReward,
       'commentThreadId': instance.commentThreadId,
     };
