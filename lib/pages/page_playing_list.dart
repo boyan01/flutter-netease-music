@@ -16,8 +16,6 @@ class PlayingListDialog extends StatefulWidget {
         context: context,
         backgroundColor: Colors.transparent,
         useRootNavigator: true,
-        constraints:
-            BoxConstraints(maxWidth: MediaQuery.of(context).size.width - 32),
         builder: (context) {
           return PlayingListDialog();
         });
