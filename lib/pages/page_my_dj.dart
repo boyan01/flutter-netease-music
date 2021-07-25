@@ -1,27 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quiet/component/netease/netease.dart';
 import 'package:quiet/part/part.dart';
 import 'package:quiet/repository/netease.dart';
 
 ///我的电台页面
-class MyDjPage extends StatefulWidget {
+class MyDjPage extends ConsumerWidget {
   @override
-  _MyDjPageState createState() => _MyDjPageState();
-}
-
-class _MyDjPageState extends State<MyDjPage> {
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('我的电台'),
+        title: const Text('我的电台'),
       ),
       body: ListView(
         children: <Widget>[
           _ListTitle(
-              title: '我创建的电台(${Counter.of(context).createDjRadioCount})'),
+              title: '我创建的电台('
+                  '${ref.watch(userMusicCountProvider).createDjRadioCount})'),
           _SectionMyCreated(),
-          _ListTitle(title: '我订阅的电台(${Counter.of(context).djRadioCount})'),
+          _ListTitle(
+              title:
+                  '我订阅的电台(${ref.watch(userMusicCountProvider).djRadioCount})'),
           _SectionSubscribed(),
         ],
       ),
@@ -30,9 +29,8 @@ class _MyDjPageState extends State<MyDjPage> {
 }
 
 class DjTile extends StatelessWidget {
-  final Map data;
-
   const DjTile(this.data, {Key? key}) : super(key: key);
+  final Map data;
 
   @override
   Widget build(BuildContext context) {
@@ -42,19 +40,19 @@ class DjTile extends StatelessWidget {
       },
       child: DividerWrapper(
         indent: 72,
-        child: Container(
+        child: SizedBox(
           height: 72,
           child: Row(
             children: <Widget>[
-              SizedBox(width: 4),
+              const SizedBox(width: 4),
               SizedBox.fromSize(
                 size: const Size(64, 64),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(4),
-                  child: Image(image: CachedImage(data['picUrl'])),
+                  child: Image(image: CachedImage(data['picUrl'] as String)),
                 ),
               ),
-              SizedBox(width: 4),
+              const SizedBox(width: 4),
               Expanded(
                   child: DefaultTextStyle(
                 style: Theme.of(context).textTheme.bodyText2!,
@@ -63,25 +61,25 @@ class DjTile extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    SizedBox(height: 4),
-                    Text(data['name']),
-                    SizedBox(height: 4),
+                    const SizedBox(height: 4),
+                    Text(data['name'] as String),
+                    const SizedBox(height: 4),
                     Text(
                       'by ${data['dj']['nickname']}',
                       style: Theme.of(context).textTheme.caption,
                     ),
-                    Spacer(),
+                    const Spacer(),
                     Text(
-                      data['lastProgramName'] ?? '暂无更新',
+                      data['lastProgramName'] as String? ?? '暂无更新',
                       style: Theme.of(context).textTheme.caption,
                     ),
-                    SizedBox(height: 4),
+                    const SizedBox(height: 4),
                   ],
                 ),
               )),
               InkWell(
                 onTap: () {},
-                child: SizedBox(
+                child: const SizedBox(
                   width: 48,
                   height: 72,
                   child: Icon(Icons.more_vert),
@@ -100,7 +98,7 @@ class _SectionSubscribed extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Loader<List<Map>>(
-      loadTask: (() => neteaseRepository!.djSubList().then((value) => value!)),
+      loadTask: () => neteaseRepository!.djSubList().then((value) => value!),
       builder: (context, result) {
         return Column(
           mainAxisSize: MainAxisSize.min,
@@ -112,13 +110,14 @@ class _SectionSubscribed extends StatelessWidget {
 }
 
 ///我创建的电台
-class _SectionMyCreated extends StatelessWidget {
+class _SectionMyCreated extends ConsumerWidget {
   @override
-  Widget build(BuildContext context) {
-    if (UserAccount.of(context).isLogin) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    if (ref.watch(userProvider).isLogin) {
       return Loader<List<Map>>(
-          loadTask: (() =>
-              neteaseRepository!.userDj(UserAccount.of(context).userId).then((value) => value!)),
+          loadTask: () => neteaseRepository!
+              .userDj(ref.read(userProvider).userId)
+              .then((value) => value!),
           loadingBuilder: (context) {
             return Loader.buildSimpleLoadingWidget(context);
           },
@@ -129,8 +128,8 @@ class _SectionMyCreated extends StatelessWidget {
               child: ListTile(
                 leading:
                     Icon(Icons.mic_none, color: Theme.of(context).primaryColor),
-                title: Text('申请做主播'),
-                trailing: Icon(Icons.chevron_right),
+                title: const Text('申请做主播'),
+                trailing: const Icon(Icons.chevron_right),
                 onTap: () {
                   notImplemented(context);
                 },
@@ -142,7 +141,7 @@ class _SectionMyCreated extends StatelessWidget {
             );
           });
     } else {
-      return SizedBox(
+      return const SizedBox(
         height: 200,
         child: Center(
           child: Text("当前未登录"),
@@ -153,18 +152,17 @@ class _SectionMyCreated extends StatelessWidget {
 }
 
 class _ListTitle extends StatelessWidget {
-  final String title;
-
   const _ListTitle({Key? key, required this.title}) : super(key: key);
+  final String title;
 
   @override
   Widget build(BuildContext context) {
     return Container(
       color: Colors.grey[300],
-      padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
       child: Text(
         title,
-        style: TextStyle(fontSize: 14),
+        style: const TextStyle(fontSize: 14),
       ),
     );
   }

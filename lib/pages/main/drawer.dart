@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quiet/component.dart';
 import 'package:quiet/material.dart';
 import 'package:quiet/model.dart';
@@ -22,16 +23,16 @@ class MainNavigationDrawer extends StatelessWidget {
                   child: ListView(
                     children: <Widget>[
                       MainNavigationDrawerTile(
-                        icon: Icon(Icons.settings),
-                        title: Text("设置"),
+                        icon: const Icon(Icons.settings),
+                        title: const Text("设置"),
                         onTap: () {
                           Navigator.pushNamed(context, ROUTE_SETTING);
                         },
                       ),
-                      Divider(height: 0, indent: 16),
+                      const Divider(height: 0, indent: 16),
                       MainNavigationDrawerTile(
-                        icon: Icon(Icons.format_quote),
-                        title: Text("Star On GitHub"),
+                        icon: const Icon(Icons.format_quote),
+                        title: const Text("Star On GitHub"),
                         onTap: () {
                           launch(
                               "https://github.com/boyan01/flutter-netease-music");
@@ -49,13 +50,6 @@ class MainNavigationDrawer extends StatelessWidget {
 
 // The tile item for main draw. auto fit landscape and portrait.
 class MainNavigationDrawerTile extends StatelessWidget {
-  final Widget icon;
-  final Widget title;
-
-  final VoidCallback onTap;
-
-  final bool selected;
-
   const MainNavigationDrawerTile({
     Key? key,
     required this.icon,
@@ -63,6 +57,13 @@ class MainNavigationDrawerTile extends StatelessWidget {
     required this.onTap,
     this.selected = false,
   }) : super(key: key);
+
+  final Widget icon;
+  final Widget title;
+
+  final VoidCallback onTap;
+
+  final bool selected;
 
   @override
   Widget build(BuildContext context) {
@@ -77,7 +78,7 @@ class MainNavigationDrawerTile extends StatelessWidget {
         child: InkWell(
           onTap: onTap,
           child: Padding(
-            padding: EdgeInsets.symmetric(vertical: 10),
+            padding: const EdgeInsets.symmetric(vertical: 10),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
@@ -85,7 +86,7 @@ class MainNavigationDrawerTile extends StatelessWidget {
                   data: IconThemeData(size: 36, color: foreground),
                   child: icon,
                 ),
-                SizedBox(height: 8),
+                const SizedBox(height: 8),
                 DefaultTextStyle(
                     style: TextStyle(color: foreground), child: title),
               ],
@@ -105,26 +106,29 @@ class MainNavigationDrawerTile extends StatelessWidget {
 }
 
 ///the header of drawer
-class UserInfo extends StatelessWidget {
+class UserInfo extends ConsumerWidget {
   @override
-  Widget build(BuildContext context) {
-    if (UserAccount.of(context).isLogin) {
-      return _buildHeader(context);
+  Widget build(BuildContext context, WidgetRef ref) {
+    if (ref.watch(userProvider).isLogin) {
+      return _buildHeader(context, ref);
     } else {
       return _buildHeaderNotLogin(context);
     }
   }
 
-  Widget _buildHeader(BuildContext context) {
-    UserProfile profile = UserAccount.of(context).userDetail!.profile;
+  Widget _buildHeader(BuildContext context, WidgetRef ref) {
+    final UserProfile profile = ref.watch(userProvider).userDetail!.profile;
     return UserAccountsDrawerHeader(
       currentAccountPicture: InkResponse(
         onTap: () {
           Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) =>
-                      UserDetailPage(userId: UserAccount.of(context).userId)));
+            context,
+            MaterialPageRoute(
+              builder: (context) => UserDetailPage(
+                userId: ref.read(userProvider).userId,
+              ),
+            ),
+          );
         },
         child: CircleAvatar(
           backgroundImage: CachedImage(profile.avatarUrl!),
@@ -142,9 +146,9 @@ class UserInfo extends StatelessWidget {
             ),
             tooltip: "退出登陆",
             onPressed: () async {
-              if (await showConfirmDialog(context, Text('确认退出登录吗？'),
+              if (await showConfirmDialog(context, const Text('确认退出登录吗？'),
                   positiveLabel: '退出登录')) {
-                UserAccount.of(context, rebuildOnChange: false).logout();
+                ref.read(userProvider.notifier).logout();
               }
             },
           ),
@@ -159,17 +163,19 @@ class UserInfo extends StatelessWidget {
         color: Theme.of(context).primaryColorDark,
       ),
       child: Container(
-        constraints: BoxConstraints.expand(),
+        constraints: const BoxConstraints.expand(),
         child: DefaultTextStyle(
-          style:
-              Theme.of(context).primaryTextTheme.caption!.copyWith(fontSize: 14),
+          style: Theme.of(context)
+              .primaryTextTheme
+              .caption!
+              .copyWith(fontSize: 14),
           child: Center(
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
-                Text("登陆网易云音乐"),
-                Text("手机电脑多端同步,尽享海量高品质音乐"),
-                SizedBox(height: 8),
+                const Text("登陆网易云音乐"),
+                const Text("手机电脑多端同步,尽享海量高品质音乐"),
+                const SizedBox(height: 8),
                 FlatButton(
                     shape: RoundedRectangleBorder(
                         side: BorderSide(
@@ -179,13 +185,13 @@ class UserInfo extends StatelessWidget {
                                 .color!
                                 .withOpacity(0.3)),
                         borderRadius: BorderRadius.circular(20)),
-                    padding: EdgeInsets.symmetric(horizontal: 40),
+                    padding: const EdgeInsets.symmetric(horizontal: 40),
                     onPressed: () {
                       Navigator.pushNamed(context, pageLogin);
                     },
                     textColor:
                         Theme.of(context).primaryTextTheme.bodyText2!.color,
-                    child: Text("立即登陆"))
+                    child: const Text("立即登陆"))
               ],
             ),
           ),

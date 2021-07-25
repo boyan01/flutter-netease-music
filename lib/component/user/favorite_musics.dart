@@ -1,68 +1,28 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
-import 'package:logging/logging.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:quiet/component.dart';
 import 'package:quiet/model/model.dart';
 import 'package:quiet/part/part.dart';
 import 'package:quiet/repository/netease.dart';
-import 'package:scoped_model/scoped_model.dart';
 
-class FavoriteMusicList extends Model {
-  final _log = Logger("runBackgroundService");
+final userFavoriteMusicListProvider =
+    StateNotifierProvider<UserFavoriteMusicListNotifier, List<int>>(
+  (ref) => UserFavoriteMusicListNotifier(ref.watch(userProvider).userId),
+);
 
-  FavoriteMusicList(UserAccount account) {
-    int? userId = 0;
+class UserFavoriteMusicListNotifier extends CacheableStateNotifier<List<int>> {
+  UserFavoriteMusicListNotifier(this.userId) : super(const []);
 
-    void listener() {
-      if (account.isLogin && account.userId != userId) {
-        userId = account.userId;
-        _loadUserLikedList(userId);
-      } else if (!account.isLogin) {
-        userId = 0;
-        _ids = const [];
-        notifyListeners();
-      }
-    }
+  static const _keyLikedSongList = 'likedSongList';
 
-    account.addListener(listener);
-    listener();
-  }
-
-  void _loadUserLikedList(int? userId) async {
-    _log.info("_loadUserLikedList $userId");
-    _ids =
-        (await neteaseLocalData['likedSongList'] as List?)?.cast() ?? const [];
-    _log.info("favorite list: $ids");
-    notifyListeners();
-    final result = await (neteaseRepository!.likedList(userId) as FutureOr<Result<List<int>>>);
-    if (result.isValue) {
-      _ids = result.asValue!.value;
-      notifyListeners();
-      neteaseLocalData['likedSongList'] = _ids;
-    }
-  }
-
-  List<int?> _ids = const [];
-
-  List<int?> get ids => _ids;
-
-  static FavoriteMusicList of(BuildContext context,
-      {bool rebuildOnChange = false}) {
-    return Provider.of<FavoriteMusicList>(context, listen: rebuildOnChange);
-  }
-
-  static bool contain(BuildContext context, Music music) {
-    final list = Provider.of<FavoriteMusicList>(context, listen: true);
-    return list.ids.contains(music.id) == true;
-  }
+  final int? userId;
 
   /// 红心歌曲
   Future<void> likeMusic(Music music) async {
     final succeed = await neteaseRepository!.like(music.id, true);
     if (succeed) {
-      _ids = List.from(_ids)..add(music.id);
-      notifyListeners();
+      state = [...state, music.id];
     }
   }
 
@@ -70,8 +30,29 @@ class FavoriteMusicList extends Model {
   Future<void> dislikeMusic(Music music) async {
     final succeed = await neteaseRepository!.like(music.id, false);
     if (succeed) {
-      _ids = List.from(_ids)..remove(music.id);
-      notifyListeners();
+      state = List.from(state)..remove(music.id);
     }
   }
+
+  @override
+  Future<List<int>?> load() async {
+    final value = await neteaseRepository!.likedList(userId);
+    if (value.isValue) {
+      return value.asValue!.value;
+    }
+    return null;
+  }
+
+  @override
+  Future<List<int>?> loadFromCache() async =>
+      (await neteaseLocalData[_keyLikedSongList] as List?)?.cast<int>();
+
+  @override
+  void saveToCache(List<int> value) {
+    neteaseLocalData[_keyLikedSongList] = value;
+  }
 }
+
+final musicIsFavoriteProvider = Provider.family<bool, Music>((ref, music) {
+  return ref.watch(userFavoriteMusicListProvider).contains(music.id);
+});

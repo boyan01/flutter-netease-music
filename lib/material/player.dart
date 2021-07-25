@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:async/async.dart';
 import 'package:flutter/material.dart';
-import 'package:logging/logging.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:music_player/music_player.dart';
 import 'package:quiet/component/netease/netease.dart';
 import 'package:quiet/part/part.dart';
@@ -13,6 +13,9 @@ import 'user.dart';
 /// an widget which indicator player is Playing/Pausing/Buffering
 ///
 class PlayingIndicator extends StatefulWidget {
+  const PlayingIndicator({Key? key, this.playing, this.pausing, this.buffering})
+      : super(key: key);
+
   ///show when player is playing
   final Widget? playing;
 
@@ -22,9 +25,6 @@ class PlayingIndicator extends StatefulWidget {
   ///show when player is buffering
   final Widget? buffering;
 
-  const PlayingIndicator({Key? key, this.playing, this.pausing, this.buffering})
-      : super(key: key);
-
   @override
   _PlayingIndicatorState createState() => _PlayingIndicatorState();
 }
@@ -33,11 +33,11 @@ class _PlayingIndicatorState extends State<PlayingIndicator> {
   ///delay 200ms to change current state
   static const _durationDelay = Duration(milliseconds: 200);
 
-  static const _INDEX_BUFFERING = 2;
-  static const _INDEX_PLAYING = 1;
-  static const _INDEX_PAUSING = 0;
+  static const _indexBuffering = 2;
+  static const _indexPlaying = 1;
+  static const _indexPausing = 0;
 
-  int _index = _INDEX_PAUSING;
+  int _index = _indexPausing;
 
   final _changeStateOperations = <CancelableOperation>[];
 
@@ -52,10 +52,10 @@ class _PlayingIndicatorState extends State<PlayingIndicator> {
 
   ///get current player state index
   int get _playerState => _player.playbackState.isBuffering
-      ? _INDEX_BUFFERING
+      ? _indexBuffering
       : _player.playbackState.isPlaying
-          ? _INDEX_PLAYING
-          : _INDEX_PAUSING;
+          ? _indexPlaying
+          : _indexPausing;
 
   void _onMusicStateChanged() {
     final target = _playerState;
@@ -82,7 +82,9 @@ class _PlayingIndicatorState extends State<PlayingIndicator> {
   @override
   void dispose() {
     _player.removeListener(_onMusicStateChanged);
-    _changeStateOperations.forEach((o) => o.cancel());
+    for (final o in _changeStateOperations) {
+      o.cancel();
+    }
     super.dispose();
   }
 
@@ -97,35 +99,31 @@ class _PlayingIndicatorState extends State<PlayingIndicator> {
 }
 
 /// 歌曲喜欢按钮
-class LikeButton extends StatelessWidget {
-  static final _logger = Logger("LikeButton");
-
-  final Music music;
-
-  const LikeButton({Key? key, required this.music})
-      : super(key: key);
+class LikeButton extends ConsumerWidget {
+  const LikeButton({Key? key, required this.music}) : super(key: key);
 
   factory LikeButton.current(BuildContext context) {
     return LikeButton(music: context.listenPlayerValue.current!);
   }
 
+  final Music music;
+
   @override
-  Widget build(BuildContext context) {
-    final isLiked = FavoriteMusicList.contain(context, music);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isLiked = ref.watch(musicIsFavoriteProvider(music));
     return IconButton(
       icon: Icon(isLiked ? Icons.favorite : Icons.favorite_border),
       onPressed: () async {
-        if (!UserAccount.of(context, rebuildOnChange: false).isLogin) {
+        if (!ref.watch(userProvider).isLogin) {
           final login = await showNeedLoginToast(context);
-          _logger.info("show login: $login");
           if (!login) {
             return;
           }
         }
         if (!isLiked) {
-          FavoriteMusicList.of(context).likeMusic(music);
+          ref.read(userFavoriteMusicListProvider.notifier).likeMusic(music);
         } else {
-          FavoriteMusicList.of(context).dislikeMusic(music);
+          ref.read(userFavoriteMusicListProvider.notifier).dislikeMusic(music);
         }
       },
     );

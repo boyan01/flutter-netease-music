@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive/hive.dart';
 import 'package:logging/logging.dart';
 import 'package:music_player/music_player.dart';
@@ -28,22 +29,22 @@ void main() {
   });
 
   runZonedGuarded(() {
-    runApp(PageSplash(
-      futures: [
-        SharedPreferences.getInstance(),
-        UserAccount.getPersistenceUser(),
-        getApplicationDocumentsDirectory().then((dir) {
-          Hive.init(dir.path);
-          return Hive.openBox<Map>('player');
-        }),
-      ],
-      builder: (BuildContext context, List<dynamic> data) {
-        return MyApp(
-          setting: Settings(data[0] as SharedPreferences),
-          user: data[1] as Map?,
-          player: data[2] as Box<Map>,
-        );
-      },
+    runApp(ProviderScope(
+      child: PageSplash(
+        futures: [
+          SharedPreferences.getInstance(),
+          getApplicationDocumentsDirectory().then((dir) {
+            Hive.init(dir.path);
+            return Hive.openBox<Map>('player');
+          }),
+        ],
+        builder: (BuildContext context, List<dynamic> data) {
+          return MyApp(
+            setting: Settings(data[0] as SharedPreferences),
+            player: data[1] as Box<Map>,
+          );
+        },
+      ),
     ));
   }, (error, stack) {
     debugPrint('uncaught error : $error $stack');
@@ -64,25 +65,24 @@ void playerBackgroundService() {
   );
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp(
-      {Key? key, required this.setting, required this.user, this.player})
-      : super(key: key);
+class MyApp extends ConsumerWidget {
+  const MyApp({
+    Key? key,
+    required this.setting,
+    this.player,
+  }) : super(key: key);
 
   final Settings setting;
-
-  final Map? user;
 
   final Box<Map>? player;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return ScopedModel<Settings>(
       model: setting,
       child:
           ScopedModelDescendant<Settings>(builder: (context, child, setting) {
         return Netease(
-          user: user,
           child: Quiet(
             box: player,
             child: CopyRightOverlay(
@@ -100,7 +100,7 @@ class MyApp extends StatelessWidget {
                   theme: setting.theme,
                   darkTheme: setting.darkTheme,
                   themeMode: setting.themeMode,
-                  initialRoute: getInitialRoute(),
+                  initialRoute: getInitialRoute(ref),
                 ),
               ),
             ),
@@ -110,8 +110,8 @@ class MyApp extends StatelessWidget {
     );
   }
 
-  String getInitialRoute() {
-    final bool login = user != null;
+  String getInitialRoute(WidgetRef ref) {
+    final bool login = ref.read(isLoginProvider);
     if (!login && !setting.skipWelcomePage) {
       return pageWelcome;
     }

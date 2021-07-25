@@ -130,12 +130,12 @@ class _CounterTestWidget extends StatelessWidget {
       textDirection: TextDirection.ltr,
       child: Column(
         children: <Widget>[
-          Text('${Counter.of(context).artistCount}'),
-          Text('${Counter.of(context).createDjRadioCount}'),
-          Text('${Counter.of(context).createdPlaylistCount}'),
-          Text('${Counter.of(context).djRadioCount}'),
-          Text('${Counter.of(context).mvCount}'),
-          Text('${Counter.of(context).subPlaylistCount}'),
+          // Text('${Counter.of(context).artistCount}'),
+          // Text('${Counter.of(context).createDjRadioCount}'),
+          // Text('${Counter.of(context).createdPlaylistCount}'),
+          // Text('${Counter.of(context).djRadioCount}'),
+          // Text('${Counter.of(context).mvCount}'),
+          // Text('${Counter.of(context).subPlaylistCount}'),
         ],
       ),
     );

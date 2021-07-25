@@ -11,6 +11,7 @@ import 'package:quiet/model/playlist_detail.dart';
 import 'package:quiet/model/user_detail_bean.dart';
 import 'package:quiet/pages/comments/page_comment.dart';
 import 'package:quiet/part/part.dart';
+import 'package:quiet/repository/objects/music_count.dart';
 import 'package:quiet/repository/objects/music_video_detail.dart';
 
 import 'local_cache_data.dart';
@@ -363,7 +364,7 @@ class NeteaseRepository {
   }
 
   ///获取用户红心歌曲id列表
-  Future<Result<List<int>>?> likedList(int? userId) async {
+  Future<Result<List<int>>> likedList(int? userId) async {
     final response = await doRequest("/likelist", {"uid": userId});
     return _map(response, (dynamic t) {
       return (t["ids"] as List).cast();
@@ -371,8 +372,9 @@ class NeteaseRepository {
   }
 
   ///获取用户信息 , 歌单，收藏，mv, dj 数量
-  FutureOr<Result<Map>> subCount() async {
-    return await doRequest('/user/subcount');
+  FutureOr<Result<MusicCount>> subCount() {
+    return doRequest('/user/subcount')
+        .map((value) => MusicCount.fromJson(value));
   }
 
   ///获取用户创建的电台

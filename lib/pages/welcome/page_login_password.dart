@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:quiet/material/dialogs.dart';
 import 'package:quiet/pages/account/account.dart';
@@ -6,17 +7,17 @@ import 'package:quiet/pages/account/account.dart';
 import 'page_welcome.dart';
 
 ///登录流程: 密码输入
-class PageLoginPassword extends StatefulWidget {
+class PageLoginPassword extends ConsumerStatefulWidget {
+  const PageLoginPassword({Key? key, required this.phone}) : super(key: key);
+
   ///手机号
   final String? phone;
-
-  const PageLoginPassword({Key? key, required this.phone}) : super(key: key);
 
   @override
   _PageLoginPasswordState createState() => _PageLoginPasswordState();
 }
 
-class _PageLoginPasswordState extends State<PageLoginPassword> {
+class _PageLoginPasswordState extends ConsumerState<PageLoginPassword> {
   final _inputController = TextEditingController();
 
   @override
@@ -34,14 +35,14 @@ class _PageLoginPasswordState extends State<PageLoginPassword> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('手机号登录')),
+      appBar: AppBar(title: const Text('手机号登录')),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             Padding(
-              padding: EdgeInsets.symmetric(vertical: 20),
+              padding: const EdgeInsets.symmetric(vertical: 20),
               child: TextField(
                 controller: _inputController,
                 obscureText: true,
@@ -60,13 +61,13 @@ class _PageLoginPasswordState extends State<PageLoginPassword> {
     );
   }
 
-  void _doLogin() async {
+  Future<void> _doLogin() async {
     final password = _inputController.text;
     if (password.isEmpty) {
       toast('请输入密码');
       return;
     }
-    final account = UserAccount.of(context, rebuildOnChange: false);
+    final account = ref.read(userProvider.notifier);
     final result =
         await showLoaderOverlay(context, account.login(widget.phone, password));
     if (result.isValue) {

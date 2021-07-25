@@ -1,13 +1,15 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:quiet/pages/account/account.dart';
 
 ///used to build application widget
 ///[data] the data initial in [PageSplash]
 typedef AppBuilder = Widget Function(BuildContext context, List<dynamic> data);
 
 ///the splash screen of application
-class PageSplash extends StatefulWidget {
+class PageSplash extends ConsumerStatefulWidget {
   const PageSplash({Key? key, required this.futures, required this.builder})
       : super(key: key);
 
@@ -20,14 +22,18 @@ class PageSplash extends StatefulWidget {
   _PageSplashState createState() => _PageSplashState();
 }
 
-class _PageSplashState extends State<PageSplash> {
+class _PageSplashState extends ConsumerState<PageSplash> {
   List? _data;
 
   @override
   void initState() {
     super.initState();
+    final tasks = [ref.read(userProvider.notifier).initialize()];
     final start = DateTime.now().millisecondsSinceEpoch;
-    Future.wait(widget.futures).then((data) {
+    Future.wait([
+      ...widget.futures,
+      ...tasks,
+    ]).then((data) {
       final duration = DateTime.now().millisecondsSinceEpoch - start;
       debugPrint("flutter initial in : $duration");
       setState(() {
