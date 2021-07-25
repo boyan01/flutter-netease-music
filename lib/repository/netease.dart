@@ -459,6 +459,11 @@ class NeteaseRepository {
     if (result.status == 200) {
       _saveCookies(result.cookie);
     }
+    // assert(() {
+    //   debugPrint('path: $path');
+    //   debugPrint('result: ${result.status} ${result.body}');
+    //   return true;
+    // }());
     if (map == null) {
       return Result.error('请求失败了');
     } else if (map['code'] == _CODE_NEED_LOGIN) {

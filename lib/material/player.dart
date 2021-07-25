@@ -114,7 +114,7 @@ class LikeButton extends ConsumerWidget {
     return IconButton(
       icon: Icon(isLiked ? Icons.favorite : Icons.favorite_border),
       onPressed: () async {
-        if (!ref.watch(userProvider).isLogin) {
+        if (!ref.read(isLoginProvider)) {
           final login = await showNeedLoginToast(context);
           if (!login) {
             return;
