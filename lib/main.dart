@@ -19,7 +19,6 @@ import 'package:scoped_model/scoped_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
-  debugDefaultTargetPlatformOverride = TargetPlatform.android;
   WidgetsFlutterBinding.ensureInitialized();
   neteaseRepository = NeteaseRepository();
   api.debugPrint = debugPrint;
