@@ -222,16 +222,6 @@ class S {
     );
   }
 
-  /// `debug api`
-  String get debugApi {
-    return Intl.message(
-      'debug api',
-      name: 'debugApi',
-      desc: '',
-      args: [],
-    );
-  }
-
   /// `error to fetch data.`
   String get errorToFetchData {
     return Intl.message(

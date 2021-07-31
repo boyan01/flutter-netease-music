@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:quiet/pages/apis/page_debug_apis.dart';
 import 'package:quiet/pages/collection/page_collections.dart';
 import 'package:quiet/pages/leaderboard/page_leaderboard.dart';
 import 'package:quiet/pages/main/page_main.dart';
@@ -12,7 +11,6 @@ import 'package:quiet/pages/video/page_music_video_player.dart';
 import 'package:quiet/pages/welcome/login_sub_navigation.dart';
 import 'package:quiet/pages/welcome/page_welcome.dart';
 
-export 'package:quiet/pages/apis/page_debug_apis.dart';
 export 'package:quiet/pages/collection/page_collections.dart';
 export 'package:quiet/pages/leaderboard/page_leaderboard.dart';
 export 'package:quiet/pages/main/page_main.dart';
@@ -54,8 +52,6 @@ const pageWelcome = 'welcome';
 /// Search page route name
 const pageSearch = "search";
 
-const pageDebugApi = 'debug_apis';
-
 ///app routers
 final Map<String, WidgetBuilder> routes = {
   pageMain: (context) => MainPage(),
@@ -69,7 +65,6 @@ final Map<String, WidgetBuilder> routes = {
   ROUTE_SETTING_THEME: (context) => SettingThemePage(),
   pageWelcome: (context) => PageWelcome(),
   pageFmPlaying: (context) => PagePlayingFm(),
-  pageDebugApi: (context) => const PageDebugApis(),
 };
 
 Route<dynamic>? routeFactory(RouteSettings settings) {

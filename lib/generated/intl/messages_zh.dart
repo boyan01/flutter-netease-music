@@ -32,7 +32,6 @@ class MessageLookup extends MessageLookupByLibrary {
         "cloudMusic": MessageLookupByLibrary.simpleMessage("云盘"),
         "collectionLike": MessageLookupByLibrary.simpleMessage("已购"),
         "createdSongList": MessageLookupByLibrary.simpleMessage("创建歌单"),
-        "debugApi": MessageLookupByLibrary.simpleMessage("调试 api"),
         "discover": MessageLookupByLibrary.simpleMessage("发现"),
         "errorToFetchData": MessageLookupByLibrary.simpleMessage("获取数据失败"),
         "favoriteSongList": MessageLookupByLibrary.simpleMessage("收藏歌单"),

@@ -33,14 +33,6 @@ class MainNavigationDrawer extends StatelessWidget {
                       ),
                       const Divider(height: 0, indent: 16),
                       MainNavigationDrawerTile(
-                        icon: const Icon(Icons.bug_report),
-                        title: Text(context.strings.debugApi),
-                        onTap: () {
-                          Navigator.pushNamed(context, pageDebugApi);
-                        },
-                      ),
-                      const Divider(height: 0, indent: 16),
-                      MainNavigationDrawerTile(
                         icon: const Icon(Icons.format_quote),
                         title: const Text("Star On GitHub"),
                         onTap: () {
