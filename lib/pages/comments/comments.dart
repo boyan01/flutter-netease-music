@@ -83,15 +83,15 @@ class CommentList extends Model with AutoLoadMoreMixin {
     if (item is Pair<int, dynamic>) {
       switch (item.first) {
         case CommentList._TYPE_HEADER:
-          return _ItemHeader(title: item.last);
+          return _ItemHeader(title: item.last.toString());
         case CommentList._TYPE_MORE_HOT:
           return _ItemMoreHot();
         case CommentList._TYPE_LOAD_MORE:
           return _ItemLoadMore();
         case CommentList._TYPE_EMPTY:
           return Container(
-            padding: EdgeInsets.symmetric(vertical: 40),
-            child: Center(
+            padding: const EdgeInsets.symmetric(vertical: 40),
+            child: const Center(
               child: Text(
                 "暂无评论，欢迎抢沙发",
                 style: TextStyle(color: Colors.black54),
@@ -99,7 +99,7 @@ class CommentList extends Model with AutoLoadMoreMixin {
             ),
           );
         case CommentList._TYPE_TITLE:
-          return _ItemTitle(commentThreadId: item.last);
+          return _ItemTitle(commentThreadId: item.last as CommentThreadId);
       }
     }
     return super.buildItem(context, data, index);

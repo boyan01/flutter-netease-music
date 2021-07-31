@@ -9,5 +9,5 @@ linter:
 
     sort_constructors_first: true
     #    prefer_single_quotes: true
-    lines_longer_than_80_chars: true
+    lines_longer_than_80_chars: false
     unnecessary_const: true

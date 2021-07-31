@@ -7,8 +7,3 @@ class MockNeteaseRepository extends Mock implements NeteaseRepository {}
 
 class MockNeteaseLocalData extends Mock implements LocalData {}
 
-class MockLoginState extends Mock implements UserAccount {}
-
-class MockLikedSongList extends Mock implements FavoriteMusicList {}
-
-class MockCounter extends Mock implements Counter {}

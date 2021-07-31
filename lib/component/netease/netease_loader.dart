@@ -12,15 +12,6 @@ bool enableCache = true;
 /// 如果[T]不是可序列化列表，则设置需要对应的序列化和反序列化方法
 ///
 class CachedLoader<T> extends StatelessWidget {
-  final Future<Result<T>?> Function() loadTask;
-
-  final LoaderWidgetBuilder<T> builder;
-
-  final String cacheKey;
-
-  final dynamic Function(T t)? serialize;
-  final T Function(dynamic)? deserialize;
-
   const CachedLoader(
       {Key? key,
       required this.loadTask,
@@ -29,6 +20,15 @@ class CachedLoader<T> extends StatelessWidget {
       this.serialize,
       this.deserialize})
       : super(key: key);
+
+  final Future<Result<T>?> Function() loadTask;
+
+  final LoaderWidgetBuilder<T> builder;
+
+  final String cacheKey;
+
+  final dynamic Function(T t)? serialize;
+  final T Function(dynamic)? deserialize;
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +41,7 @@ class CachedLoader<T> extends StatelessWidget {
     }());
     return Loader<T>(
       initialData: enableCache
-          ? neteaseLocalData.get(cacheKey).then((cache) {
+          ? neteaseLocalData.get<T>(cacheKey).then((cache) {
               return deserialize != null && cache != null
                   ? deserialize!(cache)
                   : cache;

@@ -67,7 +67,7 @@ class _MainPageState extends State<_PortraitMainPage>
           IconButton(
             onPressed: () {
               Navigator.push(
-                  context, NeteaseSearchPageRoute(transitionAnimation));
+                  context, SearchPageRoute(transitionAnimation));
             },
             icon: const Icon(Icons.search),
           )

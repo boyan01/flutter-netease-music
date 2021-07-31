@@ -120,7 +120,7 @@ class _LandscapeMainPageState extends State<_LandscapeMainPage>
         );
         break;
       case _navigationSearch:
-        return NeteaseSearchPageRoute(null);
+        return SearchPageRoute(null);
       case _navigationFmPlayer:
         toast("页面未完成");
         widget = Container();

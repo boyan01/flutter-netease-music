@@ -16,7 +16,7 @@ class SongsResultSection extends StatefulWidget {
 
   @override
   SongsResultSectionState createState() {
-    return new SongsResultSectionState();
+    return SongsResultSectionState();
   }
 }
 
@@ -29,24 +29,23 @@ class SongsResultSectionState extends State<SongsResultSection>
     return MusicTileConfiguration(
       musics: const [],
       onMusicTap: (context, item) async {
-        var playable = await neteaseRepository!.checkMusic(item.id);
-        if (!playable) {
-          showDialog(
-              context: context, builder: (context) => DialogNoCopyRight());
-          return;
-        }
-        final song = await (neteaseRepository!.getMusicDetail(item.id)
-            as FutureOr<Result<Map<String, Object>?>>);
+        // final playable = await neteaseRepository!.checkMusic(item.id);
+        // if (!playable) {
+        //   showDialog(
+        //       context: context, builder: (context) => DialogNoCopyRight());
+        //   return;
+        // }
+        final song = await neteaseRepository!.getMusicDetail(item.id);
         if (song.isValue) {
-          final metadata = mapJsonToMusic(song.asValue!.value!,
+          final metadata = mapJsonToMusic(song.asValue!.value,
                   artistKey: "ar", albumKey: "al")
               .metadata;
           context.player
             ..insertToNext(metadata)
             ..transportControls.playFromMediaId(metadata.mediaId);
         } else {
-          showSimpleNotification(Text("播放歌曲失败!"),
-              leading: Icon(Icons.notification_important),
+          showSimpleNotification(const Text("播放歌曲失败!"),
+              leading: const Icon(Icons.notification_important),
               background: Theme.of(context).errorColor);
         }
       },

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:quiet/component/utils/utils.dart';
 import 'package:quiet/pages/search/model_search_history.dart';
 import 'package:quiet/part/part.dart';
@@ -7,9 +8,9 @@ import 'package:quiet/repository/netease.dart';
 import 'search_result_page.dart';
 import 'search_suggestion.dart';
 
-class NeteaseSearchPageRoute<T> extends PageRoute<T> {
-  NeteaseSearchPageRoute(this._proxyAnimation)
-      : super(settings: RouteSettings(name: pageSearch));
+class SearchPageRoute<T> extends PageRoute<T> {
+  SearchPageRoute(this._proxyAnimation)
+      : super(settings: const RouteSettings(name: pageSearch));
 
   final ProxyAnimation? _proxyAnimation;
 
@@ -51,25 +52,23 @@ class NeteaseSearchPageRoute<T> extends PageRoute<T> {
     Animation<double> animation,
     Animation<double> secondaryAnimation,
   ) {
-    return NeteaseSearchPage(
+    return SearchPage(
       animation: animation,
     );
   }
 }
 
-class NeteaseSearchPage extends StatefulWidget {
+class SearchPage extends StatefulWidget {
+  const SearchPage({Key? key, required this.animation}) : super(key: key);
   final Animation<double> animation;
-
-  const NeteaseSearchPage({Key? key, required this.animation})
-      : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
-    return _NeteaseSearchPageState();
+    return _SearchPageState();
   }
 }
 
-class _NeteaseSearchPageState extends State<NeteaseSearchPage> {
+class _SearchPageState extends State<SearchPage> {
   final TextEditingController _queryTextController = TextEditingController();
 
   final FocusNode _focusNode = FocusNode();
@@ -85,7 +84,7 @@ class _NeteaseSearchPageState extends State<NeteaseSearchPage> {
 
   bool initialState = true;
 
-  SearchHistory _searchHistory = SearchHistory();
+  final SearchHistory _searchHistory = SearchHistory();
 
   @override
   void initState() {
@@ -110,7 +109,8 @@ class _NeteaseSearchPageState extends State<NeteaseSearchPage> {
     Widget? tabs;
     if (!initialState) {
       tabs = TabBar(
-          indicator: UnderlineTabIndicator(insets: EdgeInsets.only(bottom: 4)),
+          indicator:
+              const UnderlineTabIndicator(insets: EdgeInsets.only(bottom: 4)),
           indicatorSize: TabBarIndicatorSize.label,
           tabs: SECTIONS.map((title) => Tab(child: Text(title))).toList());
     }
@@ -125,9 +125,11 @@ class _NeteaseSearchPageState extends State<NeteaseSearchPage> {
               appBar: AppBar(
                 backgroundColor: theme.primaryColor,
                 iconTheme: theme.primaryIconTheme,
-                textTheme: theme.primaryTextTheme,
-                brightness: theme.primaryColorBrightness,
-                leading: BackButton(),
+                toolbarTextStyle: theme.primaryTextTheme.headline1,
+                systemOverlayStyle: theme.brightness == Brightness.dark
+                    ? SystemUiOverlayStyle.dark
+                    : SystemUiOverlayStyle.light,
+                leading: const BackButton(),
                 title: TextField(
                   controller: _queryTextController,
                   focusNode: _focusNode,
@@ -140,7 +142,7 @@ class _NeteaseSearchPageState extends State<NeteaseSearchPage> {
                       hintText:
                           MaterialLocalizations.of(context).searchFieldLabel),
                 ),
-                actions: buildActions(context) as List<Widget>?,
+                actions: buildActions(context),
                 bottom: tabs as PreferredSizeWidget?,
               ),
               resizeToAvoidBottomInset: false,
@@ -152,7 +154,7 @@ class _NeteaseSearchPageState extends State<NeteaseSearchPage> {
           ),
           SafeArea(
               child: Padding(
-                  padding: EdgeInsets.only(top: kToolbarHeight),
+                  padding: const EdgeInsets.only(top: kToolbarHeight),
                   child: buildSuggestions(context)))
         ],
       ),
@@ -192,25 +194,24 @@ class _NeteaseSearchPageState extends State<NeteaseSearchPage> {
     setState(() {});
   }
 
-  List<Widget?> buildActions(BuildContext context) {
-    return <Widget?>[
-      query.isEmpty
-          ? null
-          : IconButton(
-              tooltip: '清除',
-              icon: const Icon(Icons.clear),
-              onPressed: () {
-                query = '';
-              },
-            )
-    ]..removeWhere((v) => v == null);
+  List<Widget> buildActions(BuildContext context) {
+    return <Widget>[
+      if (query.isNotEmpty)
+        IconButton(
+          tooltip: '清除',
+          icon: const Icon(Icons.clear),
+          onPressed: () {
+            query = '';
+          },
+        ),
+    ];
   }
 
   Widget buildSuggestions(BuildContext context) {
     if (query.isEmpty ||
         !isSoftKeyboardDisplay(MediaQuery.of(context)) ||
         !_focusNode.hasFocus) {
-      return Container(height: 0, width: 0);
+      return const SizedBox(height: 0, width: 0);
     }
     return SuggestionOverflow(
       query: query,
@@ -226,7 +227,7 @@ class _NeteaseSearchPageState extends State<NeteaseSearchPage> {
 ///with hot query keyword from network
 ///with query history from local
 class _EmptyQuerySuggestionSection extends StatelessWidget {
-  _EmptyQuerySuggestionSection({
+  const _EmptyQuerySuggestionSection({
     Key? key,
     required this.suggestionSelectedCallback,
   }) : super(key: key);
@@ -238,7 +239,7 @@ class _EmptyQuerySuggestionSection extends StatelessWidget {
     return ListView(
       children: <Widget>[
         Loader<List<String>>(
-            loadTask: (() => neteaseRepository!.searchHotWords()),
+            loadTask: () => neteaseRepository!.searchHotWords(),
             //hide when failed load hot words
             errorBuilder: (context, result) => Container(),
             loadingBuilder: (context) {

@@ -265,7 +265,7 @@ class NeteaseRepository {
 
   ///check music is available
   Future<bool> checkMusic(int? id) async {
-    var result = await doRequest(
+    final result = await doRequest(
         "https://music.163.com/weapi/song/enhance/player/url",
         {"ids": "[$id]", "br": 999000});
     return result.isValue && result.asValue!.value["data"][0]["code"] == 200;
@@ -287,13 +287,10 @@ class NeteaseRepository {
   }
 
   ///fetch music detail from id
-  Future<Result<Map<String, Object>?>?> getMusicDetail(int? id) async {
-    final result = await doRequest("https://music.163.com/weapi/v3/song/detail",
-        {"ids": "[$id]", "c": '[{"id":$id}]'});
-
-    return _map(result, (dynamic result) {
-      return result["songs"][0];
-    });
+  Future<Result<Map<String, Object>>> getMusicDetail(int id) async {
+    final result = await doRequest("/song/detail", {"ids": "$id"});
+    return result.map(
+        (value) => ((value['songs'] as List)[0] as Map).cast<String, Object>());
   }
 
   ///edit playlist tracks

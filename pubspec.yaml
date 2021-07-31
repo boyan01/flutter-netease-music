@@ -32,13 +32,13 @@ dependencies:
   loader:
     git:
       url: https://github.com/boyan01/loader.git
-      ref: 0c293d9563344e6fff2d156ca275c3c9a3960b8b
+      ref: e1ef2d9957bc8615c7f19f989d4fcfc142e20e93
   encrypt: ^5.0.0
   netease_music_api:
     #    path: ../NeteaseCloudMusicApi
     git:
       url: https://github.com/boyan01/NeteaseCloudMusicApi.git
-      ref: 5a47d69f9318bc703b6cbcf78f377944ac8c0621
+      ref: e007ba78565d9094959d9e50336ea734fc8d4f64
   overlay_support: ^1.2.1
   music_player:
     git:

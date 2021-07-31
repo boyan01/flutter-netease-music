@@ -14,7 +14,7 @@ class PlayingLyric extends Model {
     });
   }
 
-  static PlayingLyric of(BuildContext context, {rebuildOnChange: true}) {
+  static PlayingLyric of(BuildContext context, {bool rebuildOnChange = true}) {
     return ScopedModel.of<PlayingLyric>(context,
         rebuildOnChange: rebuildOnChange);
   }
