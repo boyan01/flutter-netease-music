@@ -287,10 +287,10 @@ class NeteaseRepository {
   }
 
   ///fetch music detail from id
-  Future<Result<Map<String, Object>>> getMusicDetail(int id) async {
+  Future<Result<Map<String, dynamic>>> getMusicDetail(int id) async {
     final result = await doRequest("/song/detail", {"ids": "$id"});
     return result.map(
-        (value) => ((value['songs'] as List)[0] as Map).cast<String, Object>());
+        (value) => ((value['songs'] as List)[0] as Map).cast<String, dynamic>());
   }
 
   ///edit playlist tracks
@@ -468,8 +468,6 @@ class NeteaseRepository {
     } else if (map['code'] != _CODE_SUCCESS) {
       return Result.error(map['msg'] ?? '请求失败了~');
     }
-    final Logger logger = Logger("doRequest");
-    logger.info("$path -> ${json.encode(map)}");
     return Result.value(map as Map<String?, dynamic>);
   }
 }

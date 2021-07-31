@@ -15,5 +15,7 @@
     "favoriteSongList": "Favorite Song List",
     "playlistShareContent": "The PlayList created by {username}「{title}」: http://music.163.com/playlist/{playlistId}/{userId}/?userid={shareUserId} (From @NeteaseCouldMusic)",
     "shareContentCopied": "Share content has copied to clipboard.",
-    "albumShareContent": "The {artistName}'s album《{albumName}》: http://music.163.com/album/{albumId}/?userid={sharedUserId} (From @NeteaseCouldMusic)"
+    "albumShareContent": "The {artistName}'s album《{albumName}》: http://music.163.com/album/{albumId}/?userid={sharedUserId} (From @NeteaseCouldMusic)",
+    "debugApi": "debug api",
+    "errorToFetchData": "error to fetch data."
 }

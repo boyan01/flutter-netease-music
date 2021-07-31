@@ -221,6 +221,26 @@ class S {
       args: [artistName, albumName, albumId, sharedUserId],
     );
   }
+
+  /// `debug api`
+  String get debugApi {
+    return Intl.message(
+      'debug api',
+      name: 'debugApi',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `error to fetch data.`
+  String get errorToFetchData {
+    return Intl.message(
+      'error to fetch data.',
+      name: 'errorToFetchData',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

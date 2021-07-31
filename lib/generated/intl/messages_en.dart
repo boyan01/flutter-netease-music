@@ -33,7 +33,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "collectionLike": MessageLookupByLibrary.simpleMessage("Collections"),
         "createdSongList":
             MessageLookupByLibrary.simpleMessage("Created Song List"),
+        "debugApi": MessageLookupByLibrary.simpleMessage("debug api"),
         "discover": MessageLookupByLibrary.simpleMessage("Discover"),
+        "errorToFetchData":
+            MessageLookupByLibrary.simpleMessage("error to fetch data."),
         "favoriteSongList":
             MessageLookupByLibrary.simpleMessage("Favorite Song List"),
         "friends": MessageLookupByLibrary.simpleMessage("Friends"),

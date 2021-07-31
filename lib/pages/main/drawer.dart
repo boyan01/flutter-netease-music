@@ -8,6 +8,8 @@ import 'package:quiet/pages/account/page_user_detail.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class MainNavigationDrawer extends StatelessWidget {
+  const MainNavigationDrawer({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -27,6 +29,14 @@ class MainNavigationDrawer extends StatelessWidget {
                         title: const Text("设置"),
                         onTap: () {
                           Navigator.pushNamed(context, ROUTE_SETTING);
+                        },
+                      ),
+                      const Divider(height: 0, indent: 16),
+                      MainNavigationDrawerTile(
+                        icon: const Icon(Icons.bug_report),
+                        title: Text(context.strings.debugApi),
+                        onTap: () {
+                          Navigator.pushNamed(context, pageDebugApi);
                         },
                       ),
                       const Divider(height: 0, indent: 16),
