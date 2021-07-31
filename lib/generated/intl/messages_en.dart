@@ -43,13 +43,20 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Play History"),
         "localMusic": MessageLookupByLibrary.simpleMessage("Local Music"),
         "login": MessageLookupByLibrary.simpleMessage("Login"),
+        "loginWithPhone":
+            MessageLookupByLibrary.simpleMessage("login with phone"),
         "my": MessageLookupByLibrary.simpleMessage("My"),
         "myDjs": MessageLookupByLibrary.simpleMessage("Dj"),
+        "nextStep": MessageLookupByLibrary.simpleMessage("next step"),
         "playlistLoginDescription": MessageLookupByLibrary.simpleMessage(
             "Login to discover your playlists."),
         "playlistShareContent": m1,
+        "selectRegionDiaCode":
+            MessageLookupByLibrary.simpleMessage("select region code"),
         "shareContentCopied": MessageLookupByLibrary.simpleMessage(
             "Share content has copied to clipboard."),
+        "tipsAutoRegisterIfUserNotExist":
+            MessageLookupByLibrary.simpleMessage("未注册手机号登陆后将自动创建账号"),
         "todo": MessageLookupByLibrary.simpleMessage("TBD")
       };
 }

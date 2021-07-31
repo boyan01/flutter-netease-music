@@ -39,13 +39,18 @@ class MessageLookup extends MessageLookupByLibrary {
         "latestPlayHistory": MessageLookupByLibrary.simpleMessage("最近播放"),
         "localMusic": MessageLookupByLibrary.simpleMessage("本地音乐"),
         "login": MessageLookupByLibrary.simpleMessage("立即登录"),
+        "loginWithPhone": MessageLookupByLibrary.simpleMessage("手机号登录"),
         "my": MessageLookupByLibrary.simpleMessage("我的"),
         "myDjs": MessageLookupByLibrary.simpleMessage("我的电台"),
+        "nextStep": MessageLookupByLibrary.simpleMessage("下一步"),
         "playlistLoginDescription":
             MessageLookupByLibrary.simpleMessage("登录以加载你的私人播放列表。"),
         "playlistShareContent": m1,
+        "selectRegionDiaCode": MessageLookupByLibrary.simpleMessage("选择地区号码"),
         "shareContentCopied":
             MessageLookupByLibrary.simpleMessage("分享内容已复制到剪切板"),
+        "tipsAutoRegisterIfUserNotExist":
+            MessageLookupByLibrary.simpleMessage("未注册手机号登陆后将自动创建账号"),
         "todo": MessageLookupByLibrary.simpleMessage("TBD")
       };
 }

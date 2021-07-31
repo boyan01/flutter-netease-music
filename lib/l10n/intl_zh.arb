@@ -17,5 +17,9 @@
     "playlistShareContent": "分享{username}创建的歌单「{title}」: http://music.163.com/playlist/{playlistId}/{userId}/?userid={shareUserId} (来自@网易云音乐)",
     "shareContentCopied": "分享内容已复制到剪切板",
     "albumShareContent": "分享{artistName}的专辑《{albumName}》: http://music.163.com/album/{albumId}/?userid={sharedUserId} (来自@网易云音乐)",
-    "errorToFetchData": "获取数据失败"
+    "errorToFetchData": "获取数据失败",
+    "selectRegionDiaCode": "选择地区号码",
+    "nextStep": "下一步",
+    "tipsAutoRegisterIfUserNotExist": "未注册手机号登陆后将自动创建账号",
+    "loginWithPhone": "手机号登录"
 }

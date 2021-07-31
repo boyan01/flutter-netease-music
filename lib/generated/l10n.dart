@@ -231,6 +231,46 @@ class S {
       args: [],
     );
   }
+
+  /// `select region code`
+  String get selectRegionDiaCode {
+    return Intl.message(
+      'select region code',
+      name: 'selectRegionDiaCode',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `next step`
+  String get nextStep {
+    return Intl.message(
+      'next step',
+      name: 'nextStep',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `未注册手机号登陆后将自动创建账号`
+  String get tipsAutoRegisterIfUserNotExist {
+    return Intl.message(
+      '未注册手机号登陆后将自动创建账号',
+      name: 'tipsAutoRegisterIfUserNotExist',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `login with phone`
+  String get loginWithPhone {
+    return Intl.message(
+      'login with phone',
+      name: 'loginWithPhone',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

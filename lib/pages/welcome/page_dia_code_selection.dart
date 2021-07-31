@@ -1,23 +1,24 @@
 import 'dart:collection';
 
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:overlay_support/overlay_support.dart';
+import 'package:quiet/component.dart';
 import 'package:quiet/model/region_flag.dart';
-import 'package:quiet/scaffold.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 /// Region selection for login.
 class RegionSelectionPage extends StatelessWidget {
-  final List<RegionFlag> regions;
-
   const RegionSelectionPage({Key? key, required this.regions})
       : super(key: key);
+  final List<RegionFlag> regions;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("地区选择")),
+      appBar: AppBar(title: Text(context.strings.selectRegionDiaCode)),
       body: _DiaCodeList(regions: regions),
     );
   }
@@ -36,6 +37,8 @@ class _DiaCodeList extends StatefulWidget {
   _DiaCodeListState createState() => _DiaCodeListState();
 }
 
+const _alphabet = 'abcdefghijklmnopqrstuvwxyz';
+
 class _DiaCodeListState extends State<_DiaCodeList> {
   late List<RegionFlag> _sortedRegions;
   ItemScrollController? _scrollController;
@@ -48,7 +51,7 @@ class _DiaCodeListState extends State<_DiaCodeList> {
   void initState() {
     super.initState();
     _sortedRegions = widget.regions.toList()
-      ..sort((a, b) => a.name!.compareTo(b.name!));
+      ..sort((a, b) => a.name.compareTo(b.name));
     _scrollController = ItemScrollController();
   }
 
@@ -56,7 +59,7 @@ class _DiaCodeListState extends State<_DiaCodeList> {
   void didUpdateWidget(covariant _DiaCodeList oldWidget) {
     super.didUpdateWidget(oldWidget);
     _sortedRegions = widget.regions.toList()
-      ..sort((a, b) => a.name!.compareTo(b.name!));
+      ..sort((a, b) => a.name.compareTo(b.name));
   }
 
   /// Jump to best matched index in [_sortedRegions] with [q].
@@ -64,7 +67,7 @@ class _DiaCodeListState extends State<_DiaCodeList> {
     int index = -1;
     for (var i = 0; i < _sortedRegions.length; i++) {
       final RegionFlag item = _sortedRegions[i];
-      if (item.name!.toLowerCase().compareTo(q) < 0) {
+      if (item.name.toLowerCase().compareTo(q) < 0) {
         index = i;
       } else {
         break;
@@ -76,21 +79,37 @@ class _DiaCodeListState extends State<_DiaCodeList> {
     _scrollController!.jumpTo(index: index);
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return KeyEmitter(
-      onEmit: (String char) {
-        _query += char;
-        _jumpToAlphabet(_query);
-        setState(() {});
-      },
-      onDelete: () {
-        if (_query.isEmpty) {
-          return;
-        }
+  void _deleteQuery() {
+    if (_query.isNotEmpty) {
+      setState(() {
         _query = _query.substring(0, _query.length - 1);
         _jumpToAlphabet(_query);
-        setState(() {});
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Focus(
+      autofocus: true,
+      onKeyEvent: (node, event) {
+        if (event.logicalKey == LogicalKeyboardKey.delete ||
+            event.logicalKey == LogicalKeyboardKey.backspace) {
+          if (event is KeyUpEvent) {
+            _deleteQuery();
+          }
+          return KeyEventResult.handled;
+        }
+
+        final char = event.character;
+        if (char == null || !_alphabet.contains(char)) {
+          return KeyEventResult.ignored;
+        }
+        setState(() {
+          _query += char;
+          _jumpToAlphabet(_query);
+        });
+        return KeyEventResult.handled;
       },
       child: Stack(
         children: [
@@ -104,7 +123,26 @@ class _DiaCodeListState extends State<_DiaCodeList> {
                   return _RegionTile(region: region);
                 }),
           ),
-          Text("$_query"),
+          if (_query.isNotEmpty)
+            Opacity(
+              opacity: 0.7,
+              child: Material(
+                color: context.colorScheme.primary,
+                shape: const RoundedRectangleBorder(
+                  borderRadius:
+                      BorderRadius.only(bottomRight: Radius.circular(4)),
+                ),
+                elevation: 2,
+                child: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+                  child: Text(
+                    _query,
+                    style: context.primaryTextTheme.bodyText2,
+                  ),
+                ),
+              ),
+            ),
           AZSelection(
             onSelection: (selection) {
               _currentShowingEntry?.dismiss(animate: false);
@@ -122,30 +160,26 @@ class _DiaCodeListState extends State<_DiaCodeList> {
 }
 
 class _AzSelectionOverlay extends StatelessWidget {
-  final String content;
-
   const _AzSelectionOverlay({
     Key? key,
     required this.content,
   }) : super(key: key);
+  final String content;
 
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Material(
-        color: Theme.of(context).backgroundColor.withOpacity(0.5),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-        child: Container(
-          height: 56,
-          width: 56,
+      child: SizedBox.square(
+        dimension: 80,
+        child: Material(
+          color: context.theme.dividerColor,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
           child: Center(
-              child: Text(
-            "$content",
-            style: TextStyle(
-              fontSize: 22,
-              fontWeight: FontWeight.bold,
+            child: Text(
+              content,
+              style: context.textTheme.headline2,
             ),
-          )),
+          ),
         ),
       ),
     );
@@ -163,10 +197,15 @@ class _RegionTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      dense: true,
-      leading: Text(region.emoji!),
-      title: Text(region.name!),
-      trailing: Text(region.dialCode!),
+      leading: Text(
+        region.emoji,
+        style: const TextStyle(fontSize: 32),
+      ),
+      title: Text(region.name),
+      trailing: Text(
+        region.dialCode!,
+        style: context.textTheme.caption,
+      ),
       onTap: () {
         Navigator.of(context).pop(region);
       },
@@ -178,11 +217,11 @@ typedef OnSelection = void Function(String char);
 
 /// Custom render for vertical A_Z list.
 class AZSelection extends SingleChildRenderObjectWidget {
-  final OnSelection? onSelection;
-  final TextStyle? textStyle;
-
   const AZSelection({Key? key, this.onSelection, this.textStyle})
       : super(key: key);
+
+  final OnSelection? onSelection;
+  final TextStyle? textStyle;
 
   @override
   RenderObject createRenderObject(BuildContext context) {
@@ -216,6 +255,8 @@ class AZRender extends RenderBox {
     markNeedsLayout();
   }
 
+  TextStyle? get textStyle => _textStyle;
+
   @override
   void performLayout() {
     super.performLayout();
@@ -228,7 +269,7 @@ class AZRender extends RenderBox {
     final lineHeight = constraints.maxHeight / _chars.length;
     _offsets.clear();
     for (var i = 0; i < _chars.length; i++) {
-      String item = _chars[i];
+      final String item = _chars[i];
 
       final painter = TextPainter(
         textDirection: TextDirection.ltr,
@@ -259,6 +300,11 @@ class AZRender extends RenderBox {
   @override
   void handleEvent(PointerEvent event, covariant BoxHitTestEntry entry) {
     super.handleEvent(event, entry);
+
+    if (event.kind == PointerDeviceKind.mouse && !event.down) {
+      return;
+    }
+
     final position = event.localPosition;
     final num index = ((position.dy / constraints.maxHeight) * _chars.length)
         .round()

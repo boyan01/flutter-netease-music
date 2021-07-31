@@ -1,17 +1,17 @@
 part of 'settings.dart';
 
 //网易红调色板
-const _swatchNeteaseRed = const MaterialColor(0xFFdd4237, {
-  900: const Color(0xFFae2a20),
-  800: const Color(0xFFbe332a),
-  700: const Color(0xFFcb3931),
-  600: const Color(0xFFdd4237),
-  500: const Color(0xFFec4b38),
-  400: const Color(0xFFe85951),
-  300: const Color(0xFFdf7674),
-  200: const Color(0xFFea9c9a),
-  100: const Color(0xFFfcced2),
-  50: const Color(0xFFfeebee),
+const _swatchNeteaseRed = MaterialColor(0xFFdd4237, {
+  900: Color(0xFFae2a20),
+  800: Color(0xFFbe332a),
+  700: Color(0xFFcb3931),
+  600: Color(0xFFdd4237),
+  500: Color(0xFFec4b38),
+  400: Color(0xFFe85951),
+  300: Color(0xFFdf7674),
+  200: Color(0xFFea9c9a),
+  100: Color(0xFFfcced2),
+  50: Color(0xFFfeebee),
 });
 
 //app主题
@@ -30,8 +30,18 @@ final quietDarkTheme = ThemeData.dark().copyWith(
 ThemeData _buildTheme(Color primaryColor) {
   return ThemeData(
       primaryColor: primaryColor,
-      dividerColor: Color(0xfff5f5f5),
-      iconTheme: IconThemeData(color: Color(0xFFb3b3b3)),
+      dividerColor: const Color(0xfff5f5f5),
+      iconTheme: const IconThemeData(color: Color(0xFFb3b3b3)),
       primaryColorLight: primaryColor,
       backgroundColor: Colors.white);
+}
+
+extension QuietAppTheme on BuildContext {
+  ThemeData get theme => Theme.of(this);
+
+  TextTheme get textTheme => theme.textTheme;
+
+  TextTheme get primaryTextTheme => theme.primaryTextTheme;
+
+  ColorScheme get colorScheme => theme.colorScheme;
 }

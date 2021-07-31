@@ -16,5 +16,9 @@
     "playlistShareContent": "The PlayList created by {username}「{title}」: http://music.163.com/playlist/{playlistId}/{userId}/?userid={shareUserId} (From @NeteaseCouldMusic)",
     "shareContentCopied": "Share content has copied to clipboard.",
     "albumShareContent": "The {artistName}'s album《{albumName}》: http://music.163.com/album/{albumId}/?userid={sharedUserId} (From @NeteaseCouldMusic)",
-    "errorToFetchData": "error to fetch data."
+    "errorToFetchData": "error to fetch data.",
+    "selectRegionDiaCode": "select region code",
+    "nextStep": "next step",
+    "tipsAutoRegisterIfUserNotExist": "未注册手机号登陆后将自动创建账号",
+    "loginWithPhone": "login with phone"
 }

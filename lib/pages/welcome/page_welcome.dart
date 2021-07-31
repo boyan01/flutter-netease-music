@@ -73,12 +73,6 @@ class _PageWelcomeState extends State<PageWelcome> {
 }
 
 class StretchButton extends StatelessWidget {
-  final VoidCallback onTap;
-
-  final String text;
-
-  final bool primary;
-
   const StretchButton({
     Key? key,
     required this.onTap,
@@ -86,25 +80,36 @@ class StretchButton extends StatelessWidget {
     this.primary = true,
   }) : super(key: key);
 
+  final VoidCallback onTap;
+
+  final String text;
+
+  final bool primary;
+
   @override
   Widget build(BuildContext context) {
     Color? background = Theme.of(context).primaryColor;
     var foreground = Theme.of(context).primaryTextTheme.bodyText2!.color;
     if (primary) {
-      var temp = background;
+      final temp = background;
       background = foreground;
       foreground = temp;
     }
     final border = primary
         ? BorderSide.none
         : BorderSide(color: foreground!.withOpacity(0.5), width: 0.5);
-    return FlatButton(
-      child: Text(text),
-      shape: RoundedRectangleBorder(
-          side: border, borderRadius: BorderRadius.circular(20)),
-      color: background,
-      textColor: foreground,
+    return ElevatedButton(
+      style: ElevatedButton.styleFrom(
+        primary: background,
+        textStyle: TextStyle(
+          color: foreground,
+        ),
+        shape: RoundedRectangleBorder(
+            side: border, borderRadius: BorderRadius.circular(20)),
+        padding: const EdgeInsets.symmetric(vertical: 16),
+      ),
       onPressed: onTap,
+      child: Center(child: Text(text)),
     );
   }
 }
