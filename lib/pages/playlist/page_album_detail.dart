@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:quiet/component.dart';
 import 'package:quiet/component/utils/utils.dart';
@@ -13,18 +14,18 @@ import 'package:quiet/repository/netease.dart';
 import 'music_list.dart';
 import 'page_playlist_detail_selection.dart';
 
-class AlbumDetailPage extends StatefulWidget {
-  final int albumId;
-  final Map? album;
-
+class AlbumDetailPage extends ConsumerStatefulWidget {
   const AlbumDetailPage({Key? key, required this.albumId, this.album})
       : super(key: key);
+
+  final int albumId;
+  final Map? album;
 
   @override
   _AlbumDetailPageState createState() => _AlbumDetailPageState();
 }
 
-class _AlbumDetailPageState extends State<AlbumDetailPage> {
+class _AlbumDetailPageState extends ConsumerState<AlbumDetailPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,8 +33,8 @@ class _AlbumDetailPageState extends State<AlbumDetailPage> {
           loadTask: () => neteaseRepository!.albumDetail(widget.albumId),
           builder: (context, result) {
             return _AlbumBody(
-              album: result["album"],
-              musicList: mapJsonListToMusicList(result["songs"],
+              album: result["album"] as Map,
+              musicList: mapJsonListToMusicList(result["songs"] as List?,
                       artistKey: "ar", albumKey: "al") ??
                   [],
             );
@@ -43,11 +44,11 @@ class _AlbumDetailPageState extends State<AlbumDetailPage> {
 }
 
 class _AlbumBody extends StatelessWidget {
-  final Map album;
-  final List<Music> musicList;
-
   const _AlbumBody({Key? key, required this.album, required this.musicList})
       : super(key: key);
+
+  final Map album;
+  final List<Music> musicList;
 
   @override
   Widget build(BuildContext context) {
@@ -76,33 +77,34 @@ class _AlbumBody extends StatelessWidget {
 }
 
 /// a detail header describe album information
-class _AlbumDetailHeader extends StatelessWidget {
-  final Map album;
-  final List<Music>? musicList;
-
+class _AlbumDetailHeader extends ConsumerWidget {
   const _AlbumDetailHeader({Key? key, required this.album, this.musicList})
       : super(key: key);
 
+  final Map album;
+  final List<Music>? musicList;
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return FlexibleDetailBar(
-        background: PlayListHeaderBackground(imageUrl: album['picUrl']),
-        content: _buildContent(context),
+        background:
+            PlayListHeaderBackground(imageUrl: album['picUrl'] as String),
+        content: _buildContent(context, ref),
         builder: (context, t) => AppBar(
               automaticallyImplyLeading: false,
-              title: Text(t > 0.5 ? album["name"] : '专辑'),
+              title: Text(t > 0.5 ? album["name"] as String : '专辑'),
               titleSpacing: 16,
               elevation: 0,
               backgroundColor: Colors.transparent,
               actions: <Widget>[
                 LandscapeWidgetSwitcher(
-                  landscape: (context) => CloseButton(),
+                  landscape: (context) => const CloseButton(),
                 )
               ],
             ));
   }
 
-  Widget _buildContent(BuildContext context) {
+  Widget _buildContent(BuildContext context, WidgetRef ref) {
     final artist = (album["artists"] as List)
         .cast<Map>()
         .map((m) =>
@@ -128,9 +130,7 @@ class _AlbumDetailHeader extends StatelessWidget {
               artist.map((e) => e.name).join(','),
               album["name"],
               album["id"].toString(),
-              UserAccount.of(context, rebuildOnChange: false)
-                  .userId
-                  .toString());
+              ref.read(userProvider).userId.toString());
           Clipboard.setData(ClipboardData(text: content));
           toast(context.strings.shareContentCopied);
         },
@@ -164,14 +164,14 @@ class _AlbumDetailHeader extends StatelessWidget {
                     Text(album["name"], style: const TextStyle(fontSize: 17)),
                     const SizedBox(height: 10),
                     InkWell(
+                        onTap: () {
+                          launchArtistDetailPage(context, artist);
+                        },
                         child: Padding(
                           padding: const EdgeInsets.only(top: 4, bottom: 4),
                           child: Text(
                               "歌手: ${artist.map((a) => a.name).join('/')}"),
-                        ),
-                        onTap: () {
-                          launchArtistDetailPage(context, artist);
-                        }),
+                        )),
                     const SizedBox(height: 4),
                     Text("发行时间：${getFormattedTime(album["publishTime"])}")
                   ],

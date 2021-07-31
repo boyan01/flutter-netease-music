@@ -17,7 +17,7 @@ const _navigationSettings = "settings";
 
 class _LandscapeMainPageState extends State<_LandscapeMainPage>
     with NavigatorObserver {
-  static const double DRAWER_WIDTH = 120.0;
+  static const double kDrawerWidth = 120.0;
 
   final GlobalKey<NavigatorState> _landscapeNavigatorKey =
       GlobalKey(debugLabel: "landscape_main_navigator");
@@ -57,11 +57,11 @@ class _LandscapeMainPageState extends State<_LandscapeMainPage>
           Expanded(
             child: DisableBottomController(
               child: Row(
-                mainAxisSize: MainAxisSize.max,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Container(
-                    constraints: BoxConstraints.tightFor(width: DRAWER_WIDTH),
+                    constraints:
+                        const BoxConstraints.tightFor(width: kDrawerWidth),
                     decoration: BoxDecoration(
                         border: BorderDirectional(
                             end: BorderSide(
@@ -146,15 +146,15 @@ class _LandscapeMainPageState extends State<_LandscapeMainPage>
   }
 }
 
-class _LandscapeDrawer extends StatelessWidget {
-  // Current selected page name in Main Drawer.
-  final String? selectedRouteName;
-
+class _LandscapeDrawer extends ConsumerWidget {
   const _LandscapeDrawer({Key? key, required this.selectedRouteName})
       : super(key: key);
 
+  // Current selected page name in Main Drawer.
+  final String? selectedRouteName;
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Drawer(
       elevation: 0,
       child: SafeArea(
@@ -163,52 +163,54 @@ class _LandscapeDrawer extends StatelessWidget {
           children: <Widget>[
             MainNavigationDrawerTile(
                 selected: _navigationSearch == selectedRouteName,
-                icon: Icon(Icons.search),
-                title: Text("搜索"),
+                icon: const Icon(Icons.search),
+                title: const Text("搜索"),
                 onTap: () {
                   context.primaryNavigator!.pushNamed(_navigationSearch);
                 }),
             MainNavigationDrawerTile(
                 selected: _navigationMyPlaylist == selectedRouteName,
-                icon: Icon(Icons.music_note),
-                title: Text("我的音乐"),
+                icon: const Icon(Icons.music_note),
+                title: const Text("我的音乐"),
                 onTap: () {
                   context.primaryNavigator!.pushNamed(_navigationMyPlaylist);
                 }),
             MainNavigationDrawerTile(
                 selected: _navigationCloud == selectedRouteName,
-                icon: Icon(Icons.cloud),
-                title: Text("发现音乐"),
+                icon: const Icon(Icons.cloud),
+                title: const Text("发现音乐"),
                 onTap: () {
                   context.primaryNavigator!.pushNamed(_navigationCloud);
                 }),
             MainNavigationDrawerTile(
                 selected: _navigationFmPlayer == selectedRouteName,
-                icon: Icon(Icons.radio),
-                title: Text("私人FM"),
+                icon: const Icon(Icons.radio),
+                title: const Text("私人FM"),
                 onTap: () {
                   context.primaryNavigator!.pushNamed(_navigationFmPlayer);
                 }),
-            Spacer(),
+            const Spacer(),
             MainNavigationDrawerTile(
-              icon: Icon(Icons.settings),
+              icon: const Icon(Icons.settings),
               title: Container(),
               onTap: () {
                 context.primaryNavigator!.pushNamed(_navigationSettings);
               },
             ),
             MainNavigationDrawerTile(
-                icon: Icon(Icons.account_circle),
-                title: Text("我的"),
+                icon: const Icon(Icons.account_circle),
+                title: const Text("我的"),
                 onTap: () {
-                  if (!UserAccount.of(context).isLogin) {
+                  if (!ref.read(userProvider).isLogin) {
                     context.rootNavigator.pushNamed(pageLogin);
                     return;
                   }
                   context.primaryNavigator!.push(
                     MaterialPageRoute(
-                        builder: (context) => UserDetailPage(
-                            userId: UserAccount.of(context).userId)),
+                      builder: (context) => UserDetailPage(
+                        userId: ref.read(userProvider).userId,
+                      ),
+                    ),
                   );
                 }),
           ],
@@ -227,13 +229,13 @@ class _SecondaryPlaceholder extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            Text("仿网易云音乐"),
+            const Text("仿网易云音乐"),
             InkWell(
-              child: Text("https://github.com/boyan01/flutter-netease-music",
-                  style: TextStyle(color: Theme.of(context).accentColor)),
               onTap: () {
                 launch("https://github.com/boyan01/flutter-netease-music");
               },
+              child: Text("https://github.com/boyan01/flutter-netease-music",
+                  style: TextStyle(color: Theme.of(context).accentColor)),
             ),
           ],
         ),
@@ -244,9 +246,9 @@ class _SecondaryPlaceholder extends StatelessWidget {
 
 /// Bottom player bar for landscape
 class _BottomPlayerBar extends StatelessWidget {
-  final double? paddingPageBottom;
-
   const _BottomPlayerBar({Key? key, this.paddingPageBottom}) : super(key: key);
+
+  final double? paddingPageBottom;
 
   @override
   Widget build(BuildContext context) {

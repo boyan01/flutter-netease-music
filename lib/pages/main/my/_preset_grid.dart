@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:quiet/component.dart';
 import 'package:quiet/pages/account/account.dart';
 import 'package:quiet/pages/record/page_record.dart';
 
-class PresetGridSection extends StatelessWidget {
+class PresetGridSection extends ConsumerWidget {
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Material(
@@ -45,14 +46,10 @@ class PresetGridSection extends StatelessWidget {
                     icon: Icons.play_circle_outline,
                     label: context.strings.latestPlayHistory,
                     onTap: () {
-                      if (UserAccount.of(context, rebuildOnChange: false)
-                          .isLogin) {
+                      if (ref.read(userProvider).isLogin) {
                         context.secondaryNavigator!
                             .push(MaterialPageRoute(builder: (context) {
-                          return RecordPage(
-                              uid: UserAccount.of(context,
-                                      rebuildOnChange: false)
-                                  .userId);
+                          return RecordPage(uid: ref.read(userProvider).userId);
                         }));
                       } else {
                         Navigator.of(context).pushNamed(pageLogin);
@@ -104,16 +101,16 @@ class PresetGridSection extends StatelessWidget {
 }
 
 class _PinnedTile extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  final GestureTapCallback? onTap;
-
   const _PinnedTile({
     Key? key,
     required this.icon,
     required this.label,
     this.onTap,
   }) : super(key: key);
+
+  final IconData icon;
+  final String label;
+  final GestureTapCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -123,13 +120,12 @@ class _PinnedTile extends StatelessWidget {
       onTap: onTap,
       child: Container(
         width: 60,
-        padding: EdgeInsets.symmetric(vertical: 8),
+        padding: const EdgeInsets.symmetric(vertical: 8),
         child: Column(
           mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Icon(icon, size: 24, color: Theme.of(context).primaryColorLight),
-            SizedBox(height: 4),
+            const SizedBox(height: 4),
             Text(label,
                 style: Theme.of(context)
                     .textTheme

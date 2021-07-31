@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logging/logging.dart';
 import 'package:quiet/part/part.dart';
 
@@ -8,16 +9,16 @@ import '_preset_grid.dart';
 import '_profile.dart';
 
 ///the first page display in page_main
-class MainPageMy extends StatefulWidget {
+class MainPageMy extends ConsumerStatefulWidget {
   @override
-  createState() => _MainPageMyState();
+  _MainPageMyState createState() => _MainPageMyState();
 }
 
-class _MainPageMyState extends State<MainPageMy>
+class _MainPageMyState extends ConsumerState<MainPageMy>
     with AutomaticKeepAliveClientMixin, SingleTickerProviderStateMixin {
   final Logger logger = Logger("_MainPlaylistState");
 
-  ScrollController _scrollController = ScrollController();
+  final ScrollController _scrollController = ScrollController();
 
   TabController? _tabController;
 
@@ -33,8 +34,8 @@ class _MainPageMyState extends State<MainPageMy>
   }
 
   void _onUserSelectedTab() {
-    logger.info(
-        "_onUserSelectedTab : ${_tabController!.index} ${_tabController!.indexIsChanging}");
+    logger.info("_onUserSelectedTab :"
+        " ${_tabController!.index} ${_tabController!.indexIsChanging}");
     if (_scrollerAnimating || _tabAnimating) {
       return;
     }
@@ -50,16 +51,16 @@ class _MainPageMyState extends State<MainPageMy>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    final userId = UserAccount.of(context).userId;
+    final userId = ref.watch(userProvider).userId;
     return CustomScrollView(
       controller: _scrollController,
       slivers: [
         SliverList(
           delegate: SliverChildListDelegate(
             [
-              UserProfileSection(),
+              const UserProfileSection(),
               PresetGridSection(),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
             ],
           ),
         ),
@@ -82,8 +83,14 @@ class _MainPageMyState extends State<MainPageMy>
   }
 
   void _computeScroller(
-      void callback(PlayListSliverKey sliverKey, List<Element> children,
-          int start, int end)) {
+    void Function(
+      PlayListSliverKey sliverKey,
+      List<Element> children,
+      int start,
+      int end,
+    )
+        callback,
+  ) {
     SliverMultiBoxAdaptorElement? playListSliver;
     void playListSliverFinder(Element element) {
       if (element.widget.key is PlayListSliverKey) {
@@ -100,12 +107,11 @@ class _MainPageMyState extends State<MainPageMy>
       return;
     }
 
-    final PlayListSliverKey sliverKey =
-        playListSliver!.widget.key as PlayListSliverKey;
+    final PlayListSliverKey? sliverKey =
+        playListSliver!.widget.key as PlayListSliverKey?;
     assert(playListSliver != null, "can not find sliver");
-
-    logger.info(
-        "sliverKey : created position: ${sliverKey.createdPosition} ${sliverKey.favoritePosition}");
+    logger.info("sliverKey : created position:"
+        " ${sliverKey!.createdPosition} ${sliverKey.favoritePosition}");
 
     final List<Element> children = [];
     playListSliver!.visitChildElements((element) {
@@ -132,7 +138,7 @@ class _MainPageMyState extends State<MainPageMy>
           : sliverKey.favoritePosition!;
       final position = _scrollController.position;
       if (target >= start && target <= end) {
-        Element toShow = children[target - start];
+        final Element toShow = children[target - start];
         position
             .ensureVisible(toShow.renderObject!,
                 duration: const Duration(milliseconds: 300),
@@ -186,16 +192,18 @@ class _MainPageMyState extends State<MainPageMy>
   @override
   bool get wantKeepAlive => true;
 
-  void _updateCurrentTabSelection(PlayListType type) async {
+  Future<void> _updateCurrentTabSelection(PlayListType type) async {
     if (_tabController!.index == type.index) {
       return;
     }
-    if (_tabController!.indexIsChanging || _scrollerAnimating || _tabAnimating) {
+    if (_tabController!.indexIsChanging ||
+        _scrollerAnimating ||
+        _tabAnimating) {
       return;
     }
     _tabAnimating = true;
-    _tabController!.animateTo(type.index, duration: kTabScrollDuration);
-    Future.delayed(kTabScrollDuration + Duration(milliseconds: 100))
+    _tabController!.animateTo(type.index);
+    Future.delayed(kTabScrollDuration + const Duration(milliseconds: 100))
         .whenComplete(() {
       _tabAnimating = false;
     });

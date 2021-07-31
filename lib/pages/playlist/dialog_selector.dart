@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quiet/model/playlist_detail.dart';
 import 'package:quiet/pages/main/dialog_creator.dart';
 import 'package:quiet/part/part.dart';
@@ -10,14 +11,14 @@ import 'package:quiet/repository/netease.dart';
 ///
 ///pop with a int value which represent selected id
 ///or null indicate selected nothing
-class PlaylistSelectorDialog extends StatelessWidget {
+class PlaylistSelectorDialog extends ConsumerWidget {
   ///add songs to user playlist
   ///return :
   /// if success -> true
   /// failed -> false
   /// cancel -> null
   static Future<bool?> addSongs(BuildContext context, List<int?> ids) async {
-    final playlistId = await showDialog(
+    final playlistId = await showDialog<int>(
         context: context,
         builder: (context) {
           return PlaylistSelectorDialog();
@@ -26,8 +27,8 @@ class PlaylistSelectorDialog extends StatelessWidget {
       return null;
     }
     try {
-      return await neteaseRepository!.playlistTracksEdit(
-          PlaylistOperation.add, playlistId, ids);
+      return await neteaseRepository!
+          .playlistTracksEdit(PlaylistOperation.add, playlistId, ids);
     } catch (e) {
       return false;
     }
@@ -39,34 +40,33 @@ class PlaylistSelectorDialog extends StatelessWidget {
       onTap: onTap,
       child: Container(
         height: 56,
-        padding: EdgeInsets.symmetric(vertical: 3, horizontal: 8),
+        padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 8),
         child: Row(
           children: <Widget>[
-            Container(
+            SizedBox(
               height: 40,
               width: 40,
               child: ClipRRect(
-                child: leading,
                 borderRadius: BorderRadius.circular(3),
+                child: leading,
               ),
             ),
-            Padding(padding: EdgeInsets.only(left: 8)),
+            const Padding(padding: EdgeInsets.only(left: 8)),
             Expanded(
                 child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: (<Widget?>[
+              children: [
                 AnimatedDefaultTextStyle(
-                    child: title,
                     style: Theme.of(context).textTheme.bodyText2!,
-                    duration: Duration.zero),
-                subTitle == null
-                    ? null
-                    : AnimatedDefaultTextStyle(
-                        child: subTitle,
-                        style: Theme.of(context).textTheme.caption!,
-                        duration: Duration.zero),
-              ]..removeWhere((v) => v == null)) as List<Widget>,
+                    duration: Duration.zero,
+                    child: title),
+                if (subTitle != null)
+                  AnimatedDefaultTextStyle(
+                      style: Theme.of(context).textTheme.caption!,
+                      duration: Duration.zero,
+                      child: subTitle),
+              ],
             ))
           ],
         ),
@@ -75,11 +75,11 @@ class PlaylistSelectorDialog extends StatelessWidget {
   }
 
   Widget _buildTitle(BuildContext context) {
-    return Container(
+    return SizedBox(
       height: 56,
       child: Row(
         children: <Widget>[
-          Padding(padding: EdgeInsets.only(left: 16)),
+          const Padding(padding: EdgeInsets.only(left: 16)),
           Expanded(
               child:
                   Text("收藏到歌单", style: Theme.of(context).textTheme.headline6))
@@ -89,11 +89,11 @@ class PlaylistSelectorDialog extends StatelessWidget {
   }
 
   Widget _buildDialog(BuildContext context, Widget content) {
-    return Container(
+    return SizedBox(
       height: 356,
       child: SafeArea(
         child: Padding(
-          padding: EdgeInsets.symmetric(vertical: 24, horizontal: 16),
+          padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 16),
           child: Center(
             child: ConstrainedBox(
               constraints:
@@ -101,7 +101,7 @@ class PlaylistSelectorDialog extends StatelessWidget {
               child: Material(
                 elevation: 24.0,
                 type: MaterialType.card,
-                shape: RoundedRectangleBorder(
+                shape: const RoundedRectangleBorder(
                     borderRadius: BorderRadius.all(Radius.circular(4.0))),
                 child: Column(
                   children: <Widget>[
@@ -120,30 +120,31 @@ class PlaylistSelectorDialog extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
-    if (!UserAccount.of(context).isLogin) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    if (!ref.watch(userProvider).isLogin) {
       return _buildDialog(
           context,
           Center(
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
-                Text("当前未登陆"),
-                SizedBox(height: 16),
+                const Text("当前未登陆"),
+                const SizedBox(height: 16),
                 RaisedButton(
                     color: Theme.of(context).primaryColor,
                     onPressed: () {
                       Navigator.of(context).pushNamed(pageLogin);
                     },
-                    child: Text("点击前往登陆页面")),
-                SizedBox(height: 32),
+                    child: const Text("点击前往登陆页面")),
+                const SizedBox(height: 32),
               ],
             ),
           ));
     }
-    final userId = UserAccount.of(context).userId;
+    final userId = ref.watch(userProvider).userId;
     return Loader<List<PlaylistDetail?>>(
-      loadTask: (() => neteaseRepository!.userPlaylist(userId).then((value) => value)),
+      loadTask: () =>
+          neteaseRepository!.userPlaylist(userId).then((value) => value),
       errorBuilder: (context, result) {
         return _buildDialog(
             context,
@@ -155,13 +156,13 @@ class PlaylistSelectorDialog extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: Text(result.error.toString()),
                   ),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
                   RaisedButton(
                       onPressed: () {
                         Loader.of(context)!.refresh();
                       },
-                      child: Text("重试")),
-                  SizedBox(height: 32),
+                      child: const Text("重试")),
+                  const SizedBox(height: 32),
                 ],
               ),
             ));
@@ -176,7 +177,7 @@ class PlaylistSelectorDialog extends StatelessWidget {
           widgets.add(_buildTile(
               context,
               Container(
-                color: Color(0xFFdedede),
+                color: const Color(0xFFdedede),
                 child: Center(
                   child: Icon(
                     Icons.add,
@@ -184,7 +185,7 @@ class PlaylistSelectorDialog extends StatelessWidget {
                   ),
                 ),
               ),
-              Text("新建歌单"),
+              const Text("新建歌单"),
               null, () async {
             PlaylistDetail? created = await showDialog(
                 context: context,
@@ -205,7 +206,8 @@ class PlaylistSelectorDialog extends StatelessWidget {
                 context,
                 FadeInImage(
                   image: CachedImage(p!.coverUrl!),
-                  placeholder: AssetImage("assets/playlist_playlist.9.png"),
+                  placeholder:
+                      const AssetImage("assets/playlist_playlist.9.png"),
                   fit: BoxFit.cover,
                 ),
                 Text(p.name!),
@@ -220,7 +222,7 @@ class PlaylistSelectorDialog extends StatelessWidget {
       loadingBuilder: (context) {
         return _buildDialog(
             context,
-            Center(
+            const Center(
               child: CircularProgressIndicator(),
             ));
       },

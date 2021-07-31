@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:quiet/component.dart';
 import 'package:quiet/component/utils/utils.dart';
@@ -102,7 +103,7 @@ class _PlayListDetailState extends State<PlaylistDetailPage> {
 }
 
 ///body display the list of song item and a header of playlist
-class _PlaylistBody extends StatefulWidget {
+class _PlaylistBody extends ConsumerStatefulWidget {
   _PlaylistBody(this.playlist);
 
   final PlaylistDetail playlist;
@@ -111,21 +112,21 @@ class _PlaylistBody extends StatefulWidget {
 
   @override
   _PlaylistBodyState createState() {
-    return new _PlaylistBodyState();
+    return _PlaylistBodyState();
   }
 }
 
-class _PlaylistBodyState extends State<_PlaylistBody> {
+class _PlaylistBodyState extends ConsumerState<_PlaylistBody> {
   @override
   Widget build(BuildContext context) {
     return MusicTileConfiguration(
       token: "playlist_${widget.playlist.id}",
       musics: widget.musicList!,
       remove: widget.playlist.creator!["userId"] !=
-              UserAccount.of(context).userId
+              ref.read(userProvider).userId
           ? null
           : (music) async {
-              var result = await neteaseRepository!.playlistTracksEdit(
+              final result = await neteaseRepository!.playlistTracksEdit(
                   PlaylistOperation.remove, widget.playlist.id!, [music.id]);
               if (result) {
                 setState(() {
@@ -167,7 +168,7 @@ class _PlaylistBodyState extends State<_PlaylistBody> {
     } catch (e) {
       succeed = false;
     }
-    String action = !subscribe ? "收藏" : "取消收藏";
+    final String action = !subscribe ? "收藏" : "取消收藏";
     if (succeed) {
       showSimpleNotification(Text("$action成功"));
     } else {
@@ -178,8 +179,8 @@ class _PlaylistBodyState extends State<_PlaylistBody> {
   }
 
   Widget _buildListHeader(BuildContext context) {
-    bool owner =
-        widget.playlist.creator!["userId"] == UserAccount.of(context).userId;
+    final bool owner =
+        widget.playlist.creator!["userId"] == ref.watch(userProvider).userId;
     Widget? tail;
     if (!owner) {
       tail = _SubscribeButton(widget.playlist.subscribed,
@@ -255,23 +256,6 @@ class _SubscribeButtonState extends State<_SubscribeButton> {
       );
     } else {
       return InkWell(
-          child: SizedBox(
-            height: 40,
-            child: Row(
-              children: <Widget>[
-                const SizedBox(width: 16),
-                Icon(Icons.folder_special,
-                    size: 20, color: Theme.of(context).disabledColor),
-                const SizedBox(width: 4),
-                Text(getFormattedNumber(widget.subscribedCount!),
-                    style: Theme.of(context)
-                        .textTheme
-                        .caption!
-                        .copyWith(fontSize: 14)),
-                const SizedBox(width: 16),
-              ],
-            ),
-          ),
           onTap: () async {
             final result = await showDialog<bool>(
                 context: context,
@@ -294,14 +278,31 @@ class _SubscribeButtonState extends State<_SubscribeButton> {
                 subscribed = result;
               });
             }
-          });
+          },
+          child: SizedBox(
+            height: 40,
+            child: Row(
+              children: <Widget>[
+                const SizedBox(width: 16),
+                Icon(Icons.folder_special,
+                    size: 20, color: Theme.of(context).disabledColor),
+                const SizedBox(width: 4),
+                Text(getFormattedNumber(widget.subscribedCount!),
+                    style: Theme.of(context)
+                        .textTheme
+                        .caption!
+                        .copyWith(fontSize: 14)),
+                const SizedBox(width: 16),
+              ],
+            ),
+          ));
     }
   }
 }
 
 ///action button for playlist header
 class _HeaderAction extends StatelessWidget {
-  _HeaderAction(this.icon, this.action, this.onTap);
+  const _HeaderAction(this.icon, this.action, this.onTap);
 
   final IconData icon;
 
@@ -311,7 +312,7 @@ class _HeaderAction extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var textTheme = Theme.of(context).primaryTextTheme;
+    final textTheme = Theme.of(context).primaryTextTheme;
 
     return InkResponse(
       onTap: onTap,
@@ -338,10 +339,10 @@ class _HeaderAction extends StatelessWidget {
 
 ///播放列表头部背景
 class PlayListHeaderBackground extends StatelessWidget {
-  final String? imageUrl;
-
   const PlayListHeaderBackground({Key? key, required this.imageUrl})
       : super(key: key);
+
+  final String? imageUrl;
 
   @override
   Widget build(BuildContext context) {
@@ -374,8 +375,8 @@ class DetailHeader extends StatelessWidget {
       int? commentCount = 0,
       int? shareCount = 0,
       this.background})
-      : this.commentCount = commentCount ?? 0,
-        this.shareCount = shareCount ?? 0,
+      : commentCount = commentCount ?? 0,
+        shareCount = shareCount ?? 0,
         super(key: key);
 
   final Widget content;
@@ -402,8 +403,8 @@ class DetailHeader extends StatelessWidget {
             child: Column(
               children: <Widget>[
                 content,
-                SizedBox(height: 10),
-                Spacer(),
+                const SizedBox(height: 10),
+                const Spacer(),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
@@ -431,7 +432,7 @@ class DetailHeader extends StatelessWidget {
 }
 
 ///a detail header describe playlist information
-class _PlaylistDetailHeader extends StatelessWidget {
+class _PlaylistDetailHeader extends ConsumerWidget {
   const _PlaylistDetailHeader(this.playlist);
 
   final PlaylistDetail playlist;
@@ -441,12 +442,12 @@ class _PlaylistDetailHeader extends StatelessWidget {
   List<Music>? get musicList => playlist.musicList;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return FlexibleDetailBar(
       background: PlayListHeaderBackground(imageUrl: playlist.coverUrl),
-      content: _buildContent(context),
+      content: _buildContent(context, ref),
       builder: (context, t) => AppBar(
-        leading: context.isLandscape ? null : BackButton(),
+        leading: context.isLandscape ? null : const BackButton(),
         automaticallyImplyLeading: false,
         title: Text(t > 0.5 ? playlist.name! : '歌单'),
         backgroundColor: Colors.transparent,
@@ -454,7 +455,7 @@ class _PlaylistDetailHeader extends StatelessWidget {
         titleSpacing: 16,
         actions: <Widget>[
           IconButton(
-              icon: Icon(Icons.search),
+              icon: const Icon(Icons.search),
               tooltip: "歌单内搜索",
               onPressed: () {
                 showSearch(
@@ -473,8 +474,9 @@ class _PlaylistDetailHeader extends StatelessWidget {
     );
   }
 
-  Widget _buildContent(BuildContext context) {
-    Map<String, dynamic> creator = playlist.creator as Map<String, dynamic>;
+  Widget _buildContent(BuildContext context, WidgetRef ref) {
+    final Map<String, dynamic> creator =
+        playlist.creator as Map<String, dynamic>;
 
     return DetailHeader(
         commentCount: playlist.commentCount,
@@ -511,9 +513,7 @@ class _PlaylistDetailHeader extends StatelessWidget {
                   playlist.name!,
                   playlist.id.toString(),
                   playlist.creator!["userId"].toString(),
-                  UserAccount.of(context, rebuildOnChange: false)
-                      .userId
-                      .toString()),
+                  ref.read(userProvider).userId.toString()),
             ),
           );
           toast(context.strings.shareContentCopied);

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logging/logging.dart';
 import 'package:quiet/component.dart';
 import 'package:quiet/model/playlist_detail.dart';
@@ -11,28 +12,28 @@ import '../playlist_tile.dart';
 enum PlayListType { created, favorite }
 
 class PlayListsGroupHeader extends StatelessWidget {
-  final String name;
-  final int? count;
-
   const PlayListsGroupHeader({Key? key, required this.name, this.count})
       : super(key: key);
+
+  final String name;
+  final int? count;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Material(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(4)),
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(4)),
         color: Theme.of(context).backgroundColor,
         child: Container(
           height: 40,
-          padding: EdgeInsets.symmetric(horizontal: 8),
+          padding: const EdgeInsets.symmetric(horizontal: 8),
           child: Row(
             children: [
               Text("$name($count)"),
-              Spacer(),
-              Icon(Icons.add),
-              Icon(Icons.more_vert),
+              const Spacer(),
+              const Icon(Icons.add),
+              const Icon(Icons.more_vert),
             ],
           ),
         ),
@@ -42,27 +43,25 @@ class PlayListsGroupHeader extends StatelessWidget {
 }
 
 class MainPlayListTile extends StatelessWidget {
-  final PlaylistDetail? data;
-  final bool enableBottomRadius;
-
   const MainPlayListTile({
     Key? key,
     required this.data,
     this.enableBottomRadius = false,
   }) : super(key: key);
 
+  final PlaylistDetail? data;
+  final bool enableBottomRadius;
+
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 16),
+      padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Material(
         borderRadius: enableBottomRadius
             ? const BorderRadius.vertical(bottom: Radius.circular(4))
             : null,
         color: Theme.of(context).backgroundColor,
-        child: Container(
-          child: PlaylistTile(playlist: data),
-        ),
+        child: PlaylistTile(playlist: data),
       ),
     );
   }
@@ -73,9 +72,9 @@ const double _kPlayListHeaderHeight = 48;
 const double _kPlayListDividerHeight = 10;
 
 class MyPlayListsHeaderDelegate extends SliverPersistentHeaderDelegate {
-  final TabController? tabController;
-
   MyPlayListsHeaderDelegate(this.tabController);
+
+  final TabController? tabController;
 
   @override
   Widget build(
@@ -97,9 +96,8 @@ class MyPlayListsHeaderDelegate extends SliverPersistentHeaderDelegate {
 
 class _MyPlayListsHeader extends StatelessWidget
     implements PreferredSizeWidget {
-  final TabController? controller;
-
   const _MyPlayListsHeader({Key? key, this.controller}) : super(key: key);
+  final TabController? controller;
 
   @override
   Size get preferredSize => const Size.fromHeight(_kPlayListHeaderHeight);
@@ -122,20 +120,19 @@ class _MyPlayListsHeader extends StatelessWidget
 }
 
 class PlayListTypeNotification extends Notification {
-  final PlayListType type;
-
   PlayListTypeNotification({required this.type});
+
+  final PlayListType type;
 }
 
 class PlayListSliverKey extends ValueKey {
-  final int? createdPosition;
-  final int? favoritePosition;
-
   const PlayListSliverKey({this.createdPosition, this.favoritePosition})
       : super("_PlayListSliverKey");
+  final int? createdPosition;
+  final int? favoritePosition;
 }
 
-class UserPlayListSection extends StatefulWidget {
+class UserPlayListSection extends ConsumerStatefulWidget {
   const UserPlayListSection({
     Key? key,
     required this.userId,
@@ -149,7 +146,7 @@ class UserPlayListSection extends StatefulWidget {
   _UserPlayListSectionState createState() => _UserPlayListSectionState();
 }
 
-class _UserPlayListSectionState extends State<UserPlayListSection> {
+class _UserPlayListSectionState extends ConsumerState<UserPlayListSection> {
   final logger = Logger("_UserPlayListSectionState");
 
   final _dividerKey = GlobalKey();
@@ -202,7 +199,7 @@ class _UserPlayListSectionState extends State<UserPlayListSection> {
 
   @override
   Widget build(BuildContext context) {
-    if (!UserAccount.of(context).isLogin) {
+    if (!ref.watch(userProvider).isLogin) {
       return _singleSliver(child: notLogin(context));
     }
     return Loader<List<PlaylistDetail?>?>(
@@ -238,7 +235,7 @@ class _UserPlayListSectionState extends State<UserPlayListSection> {
                   name: context.strings.favoriteSongList,
                   count: subscribed.length),
               ..._playlistWidget(subscribed),
-              SizedBox(height: _kPlayListDividerHeight),
+              const SizedBox(height: _kPlayListDividerHeight),
             ], addAutomaticKeepAlives: false),
           );
         });
@@ -251,10 +248,10 @@ class _UserPlayListSectionState extends State<UserPlayListSection> {
         children: [
           Text(context.strings.playlistLoginDescription),
           TextButton(
-            child: Text(context.strings.login),
             onPressed: () {
               Navigator.of(context).pushNamed(pageLogin);
             },
+            child: Text(context.strings.login),
           ),
         ],
       ),

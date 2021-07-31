@@ -1,16 +1,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quiet/component.dart';
 import 'package:quiet/model.dart';
 import 'package:quiet/pages/account/account.dart';
 import 'package:quiet/pages/account/page_user_detail.dart';
 
-class UserProfileSection extends StatelessWidget {
+class UserProfileSection extends ConsumerWidget {
   const UserProfileSection({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    final UserDetail? detail = UserAccount.of(context).userDetail;
+  Widget build(BuildContext context, WidgetRef ref) {
+    final UserDetail? detail = ref.watch(userProvider).userDetail;
     if (detail == null) {
       return userNotLogin(context);
     }
@@ -24,28 +25,27 @@ class UserProfileSection extends StatelessWidget {
             context,
             MaterialPageRoute(
               builder: (context) =>
-                  UserDetailPage(userId: UserAccount.of(context).userId),
+                  UserDetailPage(userId: ref.read(userProvider).userId),
             ),
           );
         },
-        child: Container(
+        child: SizedBox(
           height: 72,
           child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              SizedBox(width: 8),
+              const SizedBox(width: 8),
               CircleAvatar(
                 backgroundImage: CachedImage(detail.profile.avatarUrl!),
                 radius: 20,
               ),
-              SizedBox(width: 12),
+              const SizedBox(width: 12),
               Expanded(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(detail.profile.nickname!),
-                    SizedBox(height: 4),
+                    const SizedBox(height: 4),
                     Row(
                       children: [
                         Container(
@@ -53,11 +53,11 @@ class UserProfileSection extends StatelessWidget {
                             color: Theme.of(context).backgroundColor,
                             borderRadius: BorderRadius.circular(12),
                           ),
-                          padding:
-                              EdgeInsets.symmetric(vertical: 2, horizontal: 4),
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 2, horizontal: 4),
                           child: Text(
                             "Lv.${detail.level}",
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontStyle: FontStyle.italic,
                               fontSize: 12,
                               fontWeight: FontWeight.bold,
@@ -69,7 +69,7 @@ class UserProfileSection extends StatelessWidget {
                   ],
                 ),
               ),
-              Icon(Icons.chevron_right)
+              const Icon(Icons.chevron_right)
             ],
           ),
         ),
@@ -86,20 +86,19 @@ class UserProfileSection extends StatelessWidget {
         onTap: () {
           Navigator.of(context).pushNamed(pageLogin);
         },
-        child: Container(
+        child: SizedBox(
           height: 72,
           child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              SizedBox(width: 8),
+              const SizedBox(width: 8),
               CircleAvatar(
                 backgroundColor: Theme.of(context).primaryColor,
-                child: Icon(Icons.person),
                 radius: 20,
+                child: const Icon(Icons.person),
               ),
-              SizedBox(width: 12),
+              const SizedBox(width: 12),
               Text(context.strings.login),
-              Icon(Icons.chevron_right)
+              const Icon(Icons.chevron_right)
             ],
           ),
         ),

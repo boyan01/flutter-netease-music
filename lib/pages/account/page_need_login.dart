@@ -1,23 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quiet/component/route.dart';
 import 'package:quiet/pages/account/account.dart';
 
 ///包裹页面，表示当前页面需要登陆才能正常显示
-class PageNeedLogin extends StatelessWidget {
-  final WidgetBuilder? builder;
-
+class PageNeedLogin extends ConsumerWidget {
   const PageNeedLogin({Key? key, this.builder}) : super(key: key);
 
+  final WidgetBuilder? builder;
+
   @override
-  Widget build(BuildContext context) {
-    if (UserAccount.of(context).isLogin) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    if (ref.watch(userProvider).isLogin) {
       return builder!(context);
     }
     Widget widget = Center(
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          Text('当前页面需要登陆', style: TextStyle(fontWeight: FontWeight.bold)),
+          const Text('当前页面需要登陆', style: TextStyle(fontWeight: FontWeight.bold)),
           ButtonBar(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
@@ -29,7 +30,7 @@ class PageNeedLogin extends StatelessWidget {
                   )),
               RaisedButton(
                 onPressed: () => Navigator.pushNamed(context, pageLogin),
-                child: Text('前往登陆页面'),
+                child: const Text('前往登陆页面'),
               )
             ],
           )
@@ -38,7 +39,8 @@ class PageNeedLogin extends StatelessWidget {
     );
 
     if (Scaffold.maybeOf(context) == null) {
-      widget = Scaffold(body: widget, appBar: AppBar(title: Text('需要登陆')));
+      widget =
+          Scaffold(body: widget, appBar: AppBar(title: const Text('需要登陆')));
     }
     return widget;
   }
