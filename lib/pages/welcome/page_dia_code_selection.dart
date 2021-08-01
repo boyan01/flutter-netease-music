@@ -92,10 +92,10 @@ class _DiaCodeListState extends State<_DiaCodeList> {
   Widget build(BuildContext context) {
     return Focus(
       autofocus: true,
-      onKeyEvent: (node, event) {
+      onKey: (node, event) {
         if (event.logicalKey == LogicalKeyboardKey.delete ||
             event.logicalKey == LogicalKeyboardKey.backspace) {
-          if (event is KeyUpEvent) {
+          if (event is RawKeyUpEvent) {
             _deleteQuery();
           }
           return KeyEventResult.handled;
@@ -169,8 +169,9 @@ class _AzSelectionOverlay extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: SizedBox.square(
-        dimension: 80,
+      child: SizedBox(
+        height: 80,
+        width: 80,
         child: Material(
           color: context.theme.dividerColor,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
