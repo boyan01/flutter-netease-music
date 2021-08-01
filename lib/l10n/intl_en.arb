@@ -20,5 +20,10 @@
     "selectRegionDiaCode": "select region code",
     "nextStep": "next step",
     "tipsAutoRegisterIfUserNotExist": "未注册手机号登陆后将自动创建账号",
-    "loginWithPhone": "login with phone"
+    "loginWithPhone": "login with phone",
+    "delete": "delete",
+    "failedToDelete": "delete failed",
+    "addToPlaylist": "add to playlist",
+    "addToPlaylistFailed": "add to playlist failed",
+    "playInNext": "play in next"
 }

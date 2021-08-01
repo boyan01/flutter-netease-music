@@ -271,6 +271,56 @@ class S {
       args: [],
     );
   }
+
+  /// `delete`
+  String get delete {
+    return Intl.message(
+      'delete',
+      name: 'delete',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `delete failed`
+  String get failedToDelete {
+    return Intl.message(
+      'delete failed',
+      name: 'failedToDelete',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `add to playlist`
+  String get addToPlaylist {
+    return Intl.message(
+      'add to playlist',
+      name: 'addToPlaylist',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `add to playlist failed`
+  String get addToPlaylistFailed {
+    return Intl.message(
+      'add to playlist failed',
+      name: 'addToPlaylistFailed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `play in next`
+  String get playInNext {
+    return Intl.message(
+      'play in next',
+      name: 'playInNext',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

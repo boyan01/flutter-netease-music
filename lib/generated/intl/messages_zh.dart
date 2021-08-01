@@ -27,13 +27,17 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+        "addToPlaylist": MessageLookupByLibrary.simpleMessage("加入歌单"),
+        "addToPlaylistFailed": MessageLookupByLibrary.simpleMessage("加入歌单失败"),
         "albumShareContent": m0,
         "alreadyBuy": MessageLookupByLibrary.simpleMessage("收藏和赞"),
         "cloudMusic": MessageLookupByLibrary.simpleMessage("云盘"),
         "collectionLike": MessageLookupByLibrary.simpleMessage("已购"),
         "createdSongList": MessageLookupByLibrary.simpleMessage("创建歌单"),
+        "delete": MessageLookupByLibrary.simpleMessage("删除"),
         "discover": MessageLookupByLibrary.simpleMessage("发现"),
         "errorToFetchData": MessageLookupByLibrary.simpleMessage("获取数据失败"),
+        "failedToDelete": MessageLookupByLibrary.simpleMessage("删除失败"),
         "favoriteSongList": MessageLookupByLibrary.simpleMessage("收藏歌单"),
         "friends": MessageLookupByLibrary.simpleMessage("我的好友"),
         "latestPlayHistory": MessageLookupByLibrary.simpleMessage("最近播放"),
@@ -43,6 +47,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "my": MessageLookupByLibrary.simpleMessage("我的"),
         "myDjs": MessageLookupByLibrary.simpleMessage("我的电台"),
         "nextStep": MessageLookupByLibrary.simpleMessage("下一步"),
+        "playInNext": MessageLookupByLibrary.simpleMessage("下一首播放"),
         "playlistLoginDescription":
             MessageLookupByLibrary.simpleMessage("登录以加载你的私人播放列表。"),
         "playlistShareContent": m1,

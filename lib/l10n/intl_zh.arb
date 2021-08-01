@@ -21,5 +21,10 @@
     "selectRegionDiaCode": "选择地区号码",
     "nextStep": "下一步",
     "tipsAutoRegisterIfUserNotExist": "未注册手机号登陆后将自动创建账号",
-    "loginWithPhone": "手机号登录"
+    "loginWithPhone": "手机号登录",
+    "delete": "删除",
+    "failedToDelete": "删除失败",
+    "addToPlaylist": "加入歌单",
+    "addToPlaylistFailed": "加入歌单失败",
+    "playInNext": "下一首播放"
 }

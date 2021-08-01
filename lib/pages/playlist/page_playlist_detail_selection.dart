@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:overlay_support/overlay_support.dart';
+import 'package:quiet/component.dart';
 import 'package:quiet/model/model.dart';
 import 'package:quiet/pages/playlist/music_list.dart';
 import 'package:quiet/part/part.dart';
@@ -12,8 +13,11 @@ typedef MusicDeletionCallback = Future<bool> Function(List<Music> selected);
 
 ///多选歌曲
 class PlaylistSelectionPage extends StatefulWidget {
-  PlaylistSelectionPage({Key? key, required this.list, this.onDelete})
-      : super(key: key);
+  const PlaylistSelectionPage({
+    Key? key,
+    required this.list,
+    this.onDelete,
+  }) : super(key: key);
 
   final List<Music>? list;
 
@@ -22,14 +26,14 @@ class PlaylistSelectionPage extends StatefulWidget {
 
   @override
   PlaylistSelectionPageState createState() {
-    return new PlaylistSelectionPageState();
+    return PlaylistSelectionPageState();
   }
 }
 
 class PlaylistSelectionPageState extends State<PlaylistSelectionPage> {
   bool allSelected = false;
 
-  GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
 
   final List<Music> selectedList = [];
 
@@ -40,12 +44,10 @@ class PlaylistSelectionPageState extends State<PlaylistSelectionPage> {
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        leading: BackButton(),
+        leading: const BackButton(),
         title: Text("已选择${selectedList.length}项"),
-        actions: <Widget>[
-          FlatButton(
-            child: Text(allSelected ? "取消全选" : "全选",
-                style: Theme.of(context).primaryTextTheme.bodyText2),
+        actions: [
+          TextButton(
             onPressed: () {
               setState(() {
                 allSelected = !allSelected;
@@ -57,6 +59,8 @@ class PlaylistSelectionPageState extends State<PlaylistSelectionPage> {
                 }
               });
             },
+            child: Text(allSelected ? "取消全选" : "全选",
+                style: Theme.of(context).primaryTextTheme.bodyText2),
           )
         ],
       ),
@@ -91,87 +95,83 @@ class PlaylistSelectionPageState extends State<PlaylistSelectionPage> {
   Widget _buildBottomBar(BuildContext context) {
     return Material(
       elevation: 5,
-      child: Container(
-        child: ButtonBarTheme(
-          data: ButtonBarThemeData(buttonTextTheme: ButtonTextTheme.normal),
-          child: ButtonBar(
-            alignment: MainAxisAlignment.spaceAround,
-            children: (<Widget?>[
-              FlatButton(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    Icon(Icons.play_circle_outline),
-                    const SizedBox(height: 2.0),
-                    Text("下一首播放")
-                  ],
-                ),
-                onPressed: () async {
-                  await Stream.fromIterable(selectedList).forEach((e) {
-                    context.player.insertToNext(e.metadata);
-                  });
-                  showSimpleNotification(Text("已添加${selectedList.length}首歌曲"));
-                },
-              ),
-              FlatButton(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    Icon(Icons.add_box),
-                    const SizedBox(height: 2.0),
-                    Text("加入歌单")
-                  ],
-                ),
-                onPressed: () async {
-                  bool? succeed = await PlaylistSelectorDialog.addSongs(
-                      context, selectedList.map((m) => m.id).toList());
-                  if (succeed == null) {
-                    return;
-                  }
-                  if (succeed) {
-                    showSimpleNotification(
-                        Text("已成功收藏${selectedList.length}首歌曲"));
-                  } else {
-                    showSimpleNotification(Text("加入歌单失败"),
-                        background: Theme.of(context).errorColor);
-                  }
-                },
-              ),
-              widget.onDelete == null
-                  ? null // 当 widget.onDelete 为空时，不显示删除按钮。
-                  : FlatButton(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: <Widget>[
-                          Icon(Icons.delete_outline),
-                          const SizedBox(height: 2.0),
-                          Text("删除")
-                        ],
-                      ),
-                      onPressed: () async {
-                        final succeed = await showLoaderOverlay(
-                            context, widget.onDelete!(selectedList));
-                        if (succeed) {
-                          setState(() {
-                            widget.list!
-                                .removeWhere((v) => selectedList.contains(v));
-                            selectedList.clear();
-                          });
-                        }
-                        if (succeed) {
-                          showSimpleNotification(
-                              Text("已删除${selectedList.length}首歌曲"),
-                              background: Theme.of(context).errorColor);
-                        } else {
-                          showSimpleNotification(Text("删除失败"),
-                              leading: Icon(Icons.error),
-                              background: Theme.of(context).errorColor);
-                        }
-                      },
-                    ),
-            ]..removeWhere((v) => v == null)) as List<Widget>,
+      child: ButtonBar(
+        alignment: MainAxisAlignment.spaceAround,
+        buttonTextTheme: ButtonTextTheme.normal,
+        children: [
+          TextButton(
+            onPressed: () async {
+              await Stream.fromIterable(selectedList).forEach((e) {
+                context.player.insertToNext(e.metadata);
+              });
+              showSimpleNotification(Text("已添加${selectedList.length}首歌曲"));
+            },
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(Icons.play_circle_outline),
+                const SizedBox(height: 2.0),
+                Text(context.strings.playInNext)
+              ],
+            ),
           ),
-        ),
+          TextButton(
+            onPressed: () async {
+              final bool? succeed = await PlaylistSelectorDialog.addSongs(
+                  context, selectedList.map((m) => m.id).toList());
+              if (succeed == null) {
+                return;
+              }
+              if (succeed) {
+                showSimpleNotification(Text("已成功收藏${selectedList.length}首歌曲"));
+              } else {
+                showSimpleNotification(
+                  Text(context.strings.addToPlaylistFailed),
+                  background: Theme.of(context).errorColor,
+                );
+              }
+            },
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(Icons.add_box),
+                const SizedBox(height: 2.0),
+                Text(context.strings.addToPlaylist)
+              ],
+            ),
+          ),
+          if (widget.onDelete != null)
+            TextButton(
+              onPressed: () async {
+                final succeed = await showLoaderOverlay(
+                    context, widget.onDelete!(selectedList));
+                if (succeed) {
+                  setState(() {
+                    widget.list!.removeWhere((v) => selectedList.contains(v));
+                    selectedList.clear();
+                  });
+                }
+                if (succeed) {
+                  showSimpleNotification(Text("已删除${selectedList.length}首歌曲"),
+                      background: Theme.of(context).errorColor);
+                } else {
+                  showSimpleNotification(
+                    Text(context.strings.failedToDelete),
+                    leading: const Icon(Icons.error),
+                    background: context.theme.errorColor,
+                  );
+                }
+              },
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Icon(Icons.delete_outline),
+                  const SizedBox(height: 2.0),
+                  Text(context.strings.delete),
+                ],
+              ),
+            ),
+        ],
       ),
     );
   }
@@ -193,12 +193,15 @@ class _SelectionItem extends StatelessWidget {
       child: IgnorePointer(
         child: Row(
           children: <Widget>[
+            const SizedBox(width: 16),
             Checkbox(
                 value: selected,
                 onChanged: (v) => {
                       /*ignored pointer ,so we do not handle this event*/
                     }),
-            Expanded(child: MusicTile(music))
+            const SizedBox(width: 4),
+            Expanded(child: MusicTile(music)),
+            const SizedBox(width: 16),
           ],
         ),
       ),

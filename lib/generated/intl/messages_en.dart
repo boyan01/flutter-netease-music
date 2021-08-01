@@ -27,15 +27,21 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+        "addToPlaylist":
+            MessageLookupByLibrary.simpleMessage("add to playlist"),
+        "addToPlaylistFailed":
+            MessageLookupByLibrary.simpleMessage("add to playlist failed"),
         "albumShareContent": m0,
         "alreadyBuy": MessageLookupByLibrary.simpleMessage("Payed"),
         "cloudMusic": MessageLookupByLibrary.simpleMessage("Could Space"),
         "collectionLike": MessageLookupByLibrary.simpleMessage("Collections"),
         "createdSongList":
             MessageLookupByLibrary.simpleMessage("Created Song List"),
+        "delete": MessageLookupByLibrary.simpleMessage("delete"),
         "discover": MessageLookupByLibrary.simpleMessage("Discover"),
         "errorToFetchData":
             MessageLookupByLibrary.simpleMessage("error to fetch data."),
+        "failedToDelete": MessageLookupByLibrary.simpleMessage("delete failed"),
         "favoriteSongList":
             MessageLookupByLibrary.simpleMessage("Favorite Song List"),
         "friends": MessageLookupByLibrary.simpleMessage("Friends"),
@@ -48,6 +54,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "my": MessageLookupByLibrary.simpleMessage("My"),
         "myDjs": MessageLookupByLibrary.simpleMessage("Dj"),
         "nextStep": MessageLookupByLibrary.simpleMessage("next step"),
+        "playInNext": MessageLookupByLibrary.simpleMessage("play in next"),
         "playlistLoginDescription": MessageLookupByLibrary.simpleMessage(
             "Login to discover your playlists."),
         "playlistShareContent": m1,
