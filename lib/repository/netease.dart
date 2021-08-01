@@ -289,8 +289,8 @@ class NeteaseRepository {
   ///fetch music detail from id
   Future<Result<Map<String, dynamic>>> getMusicDetail(int id) async {
     final result = await doRequest("/song/detail", {"ids": "$id"});
-    return result.map(
-        (value) => ((value['songs'] as List)[0] as Map).cast<String, dynamic>());
+    return result.map((value) =>
+        ((value['songs'] as List)[0] as Map).cast<String, dynamic>());
   }
 
   ///edit playlist tracks
@@ -456,11 +456,11 @@ class NeteaseRepository {
     if (result.status == 200) {
       _saveCookies(result.cookie);
     }
-    // assert(() {
-    //   debugPrint('path: $path');
-    //   debugPrint('result: ${result.status} ${result.body}');
-    //   return true;
-    // }());
+    assert(() {
+      debugPrint('api request: $path $param');
+      debugPrint('api response: ${result.status} ${result.body}');
+      return true;
+    }());
     if (map == null) {
       return Result.error('请求失败了');
     } else if (map['code'] == _CODE_NEED_LOGIN) {
