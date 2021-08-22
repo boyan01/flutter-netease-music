@@ -37,12 +37,6 @@ jobs:
 #           token: ${{secrets.CODECOV_TOKEN}}
 #           flags: unittests
 
-      # discuss https://github.com/flutter/flutter/issues/58247
-      # build debug&profile apk first
-      - name: build debug apk
-        run: flutter build apk --debug
-      - name: build profile apk
-        run: flutter build apk --profile
       - name: build apk
         run: flutter build apk --target-platform android-arm,android-arm64 --split-per-abi
       - uses: actions/upload-artifact@v2
