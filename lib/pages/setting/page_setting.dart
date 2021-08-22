@@ -24,7 +24,7 @@ class SettingPage extends StatelessWidget {
               ListTile(
                 title: Text('更换主题'),
                 onTap: () =>
-                    context.secondaryNavigator!.pushNamed(ROUTE_SETTING_THEME),
+                    context.secondaryNavigator!.pushNamed(pageSettingTheme),
               ),
               _CopyRightCheckBox(),
             ],

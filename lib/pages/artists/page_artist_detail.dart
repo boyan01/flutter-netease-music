@@ -14,10 +14,10 @@ export 'artists_selector.dart';
 
 ///歌手详情页
 class ArtistDetailPage extends StatelessWidget {
+  const ArtistDetailPage({Key? key, required this.artistId}) : super(key: key);
+
   ///歌手ID
   final int artistId;
-
-  const ArtistDetailPage({Key? key, required this.artistId}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -25,20 +25,22 @@ class ArtistDetailPage extends StatelessWidget {
         loadTask: () => neteaseRepository!.artistDetail(artistId),
         loadingBuilder: (context) {
           return Scaffold(
-            appBar: AppBar(title: Text("歌手")),
+            appBar: AppBar(title: const Text("歌手")),
             body: Loader.buildSimpleLoadingWidget(context),
           );
         },
         errorBuilder: (context, result) {
           return Scaffold(
-            appBar: AppBar(title: Text("歌手")),
+            appBar: AppBar(title: const Text("歌手")),
             body: Loader.buildSimpleFailedWidget(context, result),
           );
         },
         builder: (context, result) {
           final artist = model.Artist.fromJson(result["artist"]);
-          List<Music> musicList = mapJsonListToMusicList(result["hotSongs"],
-              artistKey: "ar", albumKey: "al")!;
+          final List<Music> musicList = mapJsonListToMusicList(
+              result["hotSongs"],
+              artistKey: "ar",
+              albumKey: "al")!;
 
           return Scaffold(
               body: BoxWithBottomPlayerController(
@@ -88,7 +90,7 @@ class _PageHotSongs extends StatefulWidget {
 
   @override
   _PageHotSongsState createState() {
-    return new _PageHotSongsState();
+    return _PageHotSongsState();
   }
 }
 
@@ -100,29 +102,29 @@ class _PageHotSongsState extends State<_PageHotSongs>
         PlaylistSelectorDialog.addSongs(
             context, widget.musicList.map((m) => m.id).toList());
       },
-      child: Container(
+      child: SizedBox(
         height: 48,
         child: Column(
           children: <Widget>[
             Expanded(
               child: Row(
                 children: <Widget>[
-                  SizedBox(width: 8),
-                  Icon(Icons.add_box),
-                  SizedBox(width: 8),
+                  const SizedBox(width: 8),
+                  const Icon(Icons.add_box),
+                  const SizedBox(width: 8),
                   Expanded(child: Text("收藏热门${widget.musicList.length}单曲")),
                   FlatButton(
-                      child: Text("多选"),
                       onPressed: () {
                         Navigator.of(context)
                             .push(MaterialPageRoute(builder: (context) {
                           return PlaylistSelectionPage(list: widget.musicList);
                         }));
-                      })
+                      },
+                      child: const Text("多选"))
                 ],
               ),
             ),
-            Divider(height: 0)
+            const Divider(height: 0)
           ],
         ),
       ),
@@ -133,9 +135,7 @@ class _PageHotSongsState extends State<_PageHotSongs>
   Widget build(BuildContext context) {
     super.build(context);
     if (widget.musicList.isEmpty) {
-      return Container(
-        child: Center(child: Text("该歌手无热门曲目")),
-      );
+      return const Center(child: Text("该歌手无热门曲目"));
     }
     return MusicTileConfiguration(
       musics: widget.musicList,
@@ -160,13 +160,12 @@ class _PageHotSongsState extends State<_PageHotSongs>
 }
 
 class _PageAlbums extends StatefulWidget {
-  final int artistId;
-
   const _PageAlbums({Key? key, required this.artistId}) : super(key: key);
+  final int artistId;
 
   @override
   _PageAlbumsState createState() {
-    return new _PageAlbumsState();
+    return _PageAlbumsState();
   }
 }
 
@@ -194,16 +193,16 @@ class _PageAlbumsState extends State<_PageAlbums>
 }
 
 class _PageMVs extends StatefulWidget {
+  const _PageMVs({Key? key, required this.artistId, required this.mvCount})
+      : super(key: key);
+
   final int artistId;
 
   final int? mvCount;
 
-  const _PageMVs({Key? key, required this.artistId, required this.mvCount})
-      : super(key: key);
-
   @override
   _PageMVsState createState() {
-    return new _PageMVsState();
+    return _PageMVsState();
   }
 }
 
@@ -224,15 +223,15 @@ class _PageMVsState extends State<_PageMVs> with AutomaticKeepAliveClientMixin {
             onTap: () {
               Navigator.pushNamed(context, '/mv', arguments: mv['id']);
             },
-            child: Container(
+            child: SizedBox(
               height: 72,
               child: Row(
                 children: <Widget>[
-                  SizedBox(width: 8),
+                  const SizedBox(width: 8),
                   Container(
                     height: 72,
                     width: 72 * 1.6,
-                    padding: EdgeInsets.all(4),
+                    padding: const EdgeInsets.all(4),
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(3),
                       child: Image(
@@ -241,19 +240,19 @@ class _PageMVsState extends State<_PageMVs> with AutomaticKeepAliveClientMixin {
                       ),
                     ),
                   ),
-                  SizedBox(width: 8),
+                  const SizedBox(width: 8),
                   Expanded(
                       child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      Spacer(),
+                      const Spacer(),
                       Text(mv["name"],
                           maxLines: 1, overflow: TextOverflow.ellipsis),
-                      SizedBox(height: 4),
+                      const SizedBox(height: 4),
                       Text(mv["publishTime"],
                           style: Theme.of(context).textTheme.caption),
-                      Spacer(),
-                      Divider(height: 0)
+                      const Spacer(),
+                      const Divider(height: 0)
                     ],
                   ))
                 ],
@@ -268,41 +267,40 @@ class _PageMVsState extends State<_PageMVs> with AutomaticKeepAliveClientMixin {
 }
 
 class _PageArtistIntroduction extends StatefulWidget {
+  const _PageArtistIntroduction(
+      {Key? key, required this.artistId, required this.artistName})
+      : super(key: key);
   final int artistId;
 
   final String? artistName;
 
-  const _PageArtistIntroduction(
-      {Key? key, required this.artistId, required this.artistName})
-      : super(key: key);
-
   @override
   _PageArtistIntroductionState createState() {
-    return new _PageArtistIntroductionState();
+    return _PageArtistIntroductionState();
   }
 }
 
 class _PageArtistIntroductionState extends State<_PageArtistIntroduction>
     with AutomaticKeepAliveClientMixin {
   List<Widget> _buildIntroduction(BuildContext context, Map result) {
-    Widget title = Padding(
-        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 8),
-        child: Text(("${widget.artistName}简介"),
-            style: TextStyle(
+    final Widget title = Padding(
+        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
+        child: Text("${widget.artistName}简介",
+            style: const TextStyle(
                 fontSize: 15, fontWeight: FontWeight.bold, shadows: [])));
 
-    Widget briefDesc = Padding(
-      padding: EdgeInsets.symmetric(horizontal: 8),
+    final Widget briefDesc = Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8),
       child: Text(
         result["briefDesc"],
         style: TextStyle(color: Theme.of(context).textTheme.caption!.color),
       ),
     );
-    Widget button = InkWell(
+    final Widget button = InkWell(
       onTap: () {
         notImplemented(context);
       },
-      child: Container(
+      child: const SizedBox(
         height: 36,
         child: Center(
           child: Text("完整歌手介绍"),
@@ -314,30 +312,30 @@ class _PageArtistIntroductionState extends State<_PageArtistIntroduction>
 
   List<Widget> _buildTopic(BuildContext context, Map result) {
     final List<Map>? data = (result["topicData"] as List?)?.cast();
-    if (data == null || data.length == 0) {
+    if (data == null || data.isEmpty) {
       return [];
     }
-    Widget title = Padding(
+    const Widget title = Padding(
         padding: EdgeInsets.symmetric(vertical: 10, horizontal: 8),
-        child: Text(("相关专题文章"),
+        child: Text("相关专题文章",
             style: TextStyle(
                 fontSize: 15, fontWeight: FontWeight.bold, shadows: [])));
-    List<Widget> list = data.map<Widget>((topic) {
-      String subtitle =
+    final List<Widget> list = data.map<Widget>((topic) {
+      final String subtitle =
           "by ${topic["creator"]["nickname"]} 阅读 ${topic["readCount"]}";
       return InkWell(
         onTap: () {
           debugPrint("on tap : ${topic["url"]}");
         },
-        child: Container(
+        child: SizedBox(
           height: 72,
           child: Row(
             children: <Widget>[
-              SizedBox(width: 8),
+              const SizedBox(width: 8),
               Container(
                 height: 72,
                 width: 72 * 1.6,
-                padding: EdgeInsets.all(4),
+                padding: const EdgeInsets.all(4),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(3),
                   child: Image(
@@ -346,18 +344,18 @@ class _PageArtistIntroductionState extends State<_PageArtistIntroduction>
                   ),
                 ),
               ),
-              SizedBox(width: 8),
+              const SizedBox(width: 8),
               Expanded(
                   child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Spacer(),
+                  const Spacer(),
                   Text(topic["mainTitle"],
                       maxLines: 1, overflow: TextOverflow.ellipsis),
-                  SizedBox(height: 4),
+                  const SizedBox(height: 4),
                   Text(subtitle, style: Theme.of(context).textTheme.caption),
-                  Spacer(),
-                  Divider(height: 0)
+                  const Spacer(),
+                  const Divider(height: 0)
                 ],
               ))
             ],
@@ -372,7 +370,7 @@ class _PageArtistIntroductionState extends State<_PageArtistIntroduction>
         onTap: () {
           notImplemented(context);
         },
-        child: Container(
+        child: const SizedBox(
           height: 56,
           child: Center(
             child: Text("全部专栏文章"),

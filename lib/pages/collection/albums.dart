@@ -23,7 +23,7 @@ class CollectionAlbums extends StatelessWidget {
   }
 
   String _getAlbumSubtitle(Map album) {
-    String artists = (album['artists'] as List)
+    final String artists = (album['artists'] as List)
         .cast<Map>()
         .map((artist) => artist['name'])
         .join('/');

@@ -1,9 +1,8 @@
 part of 'page_user_detail.dart';
 
 class TabAbout extends StatefulWidget {
-  final UserDetail? user;
-
   const TabAbout(this.user, {Key? key}) : super(key: key);
+  final UserDetail? user;
 
   @override
   _TabAboutState createState() => _TabAboutState();
@@ -19,10 +18,10 @@ class _TabAboutState extends State<TabAbout>
     super.build(context);
     return ListView(
       children: <Widget>[
-        _Header(title: '个人信息'),
+        const _Header(title: '个人信息'),
         _UserInformation(widget.user),
         const SizedBox(height: 10),
-        _Header(title: '个人介绍'),
+        const _Header(title: '个人介绍'),
         _UserDescription(description: widget.user!.profile.description),
       ],
     );
@@ -31,9 +30,9 @@ class _TabAboutState extends State<TabAbout>
 
 ///用户信息
 class _UserInformation extends StatelessWidget {
-  final UserDetail? user;
+  const _UserInformation(this.user);
 
-  _UserInformation(this.user);
+  final UserDetail? user;
 
   @override
   Widget build(BuildContext context) {
@@ -58,9 +57,8 @@ class _UserInformation extends StatelessWidget {
 }
 
 class _UserDescription extends StatelessWidget {
-  final String? description;
-
   const _UserDescription({Key? key, this.description}) : super(key: key);
+  final String? description;
 
   @override
   Widget build(BuildContext context) {

@@ -19,15 +19,12 @@ class LoginNavigator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Navigator(
-        initialRoute: pageLoginPhone,
-        onGenerateRoute: (RouteSettings settings) {
-          return MaterialPageRoute(
-              settings: settings,
-              builder: (context) => _generatePage(settings)!);
-        },
-      ),
+    return Navigator(
+      initialRoute: pageLoginPhone,
+      onGenerateRoute: (RouteSettings settings) {
+        return MaterialPageRoute(
+            settings: settings, builder: (context) => _generatePage(settings)!);
+      },
     );
   }
 
@@ -36,7 +33,7 @@ class LoginNavigator extends StatelessWidget {
       case pageLoginPhone:
         return PageLoginWithPhone();
       case pageLoginPassword:
-        final args = settings.arguments as Map<String, Object>;
+        final args = settings.arguments! as Map<String, Object>;
         return PageLoginPassword(
           phone: args['phone'] as String?,
         );

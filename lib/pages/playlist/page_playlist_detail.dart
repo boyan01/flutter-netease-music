@@ -52,7 +52,7 @@ class _PlayListDetailState extends State<PlaylistDetailPage> {
       slivers: <Widget>[
         SliverAppBar(
           automaticallyImplyLeading: false,
-          title: widget.playlist == null ? Text('歌单') : null,
+          title: widget.playlist == null ? const Text('歌单') : null,
           expandedHeight:
               widget.playlist == null ? kToolbarHeight : kHeaderHeight,
           flexibleSpace: widget.playlist == null
@@ -183,25 +183,30 @@ class _PlaylistBodyState extends ConsumerState<_PlaylistBody> {
         widget.playlist.creator!["userId"] == ref.watch(userProvider).userId;
     Widget? tail;
     if (!owner) {
-      tail = _SubscribeButton(widget.playlist.subscribed,
-          widget.playlist.subscribedCount, _doSubscribeChanged);
+      tail = _SubscribeButton(
+        subscribed: widget.playlist.subscribed,
+        subscribedCount: widget.playlist.subscribedCount,
+        doSubscribeChanged: _doSubscribeChanged,
+      );
     }
     return MusicListHeader(widget.musicList!.length, tail: tail);
   }
 }
 
 class _SubscribeButton extends StatefulWidget {
+  const _SubscribeButton({
+    Key? key,
+    required this.subscribed,
+    this.subscribedCount,
+    required this.doSubscribeChanged,
+  }) : super(key: key);
+
   final bool subscribed;
 
   final int? subscribedCount;
 
   ///currentState : is playlist be subscribed when function invoked
   final Future<bool> Function(bool currentState) doSubscribeChanged;
-
-  const _SubscribeButton(
-      this.subscribed, this.subscribedCount, this.doSubscribeChanged,
-      {Key? key})
-      : super(key: key);
 
   @override
   _SubscribeButtonState createState() => _SubscribeButtonState();
@@ -392,42 +397,39 @@ class DetailHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: (<Widget?>[
-        background,
-        Material(
-          color: Colors.transparent,
-          child: Container(
-            padding: EdgeInsets.only(
-                top: MediaQuery.of(context).padding.top + kToolbarHeight),
-            child: Column(
-              children: <Widget>[
-                content,
-                const SizedBox(height: 10),
-                const Spacer(),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    _HeaderAction(
-                        Icons.comment,
-                        commentCount > 0 ? commentCount.toString() : "评论",
-                        onCommentTap),
-                    _HeaderAction(
-                        Icons.share,
-                        shareCount > 0 ? shareCount.toString() : "分享",
-                        onShareTap),
-                    _HeaderAction(Icons.file_download, '下载', null),
-                    _HeaderAction(Icons.check_box, "多选", onSelectionTap),
-                  ],
-                ),
-                const Spacer(),
-              ],
-            ),
+    return Stack(children: [
+      if (background != null) background!,
+      Material(
+        color: Colors.transparent,
+        child: Container(
+          padding: EdgeInsets.only(
+              top: MediaQuery.of(context).padding.top + kToolbarHeight),
+          child: Column(
+            children: <Widget>[
+              content,
+              const SizedBox(height: 10),
+              const Spacer(),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  _HeaderAction(
+                      Icons.comment,
+                      commentCount > 0 ? commentCount.toString() : "评论",
+                      onCommentTap),
+                  _HeaderAction(
+                      Icons.share,
+                      shareCount > 0 ? shareCount.toString() : "分享",
+                      onShareTap),
+                  const _HeaderAction(Icons.file_download, '下载', null),
+                  _HeaderAction(Icons.check_box, "多选", onSelectionTap),
+                ],
+              ),
+              const Spacer(),
+            ],
           ),
         ),
-      ]..removeWhere((v) => v == null))
-          .cast(),
-    );
+      ),
+    ]);
   }
 }
 
@@ -475,8 +477,7 @@ class _PlaylistDetailHeader extends ConsumerWidget {
   }
 
   Widget _buildContent(BuildContext context, WidgetRef ref) {
-    final Map<String, dynamic> creator =
-        playlist.creator as Map<String, dynamic>;
+    final Map<String, dynamic> creator = playlist.creator!;
 
     return DetailHeader(
         commentCount: playlist.commentCount,
@@ -484,14 +485,14 @@ class _PlaylistDetailHeader extends ConsumerWidget {
         onCommentTap: () {
           Navigator.push(context, MaterialPageRoute(builder: (context) {
             return CommentPage(
-              threadId: CommentThreadId(playlist.id, CommentType.playlist,
+              threadId: CommentThreadId(playlist.id!, CommentType.playlist,
                   payload: CommentThreadPayload.playlist(playlist)),
             );
           }));
         },
         onSelectionTap: () async {
           if (musicList == null) {
-            showSimpleNotification(Text("歌曲未加载,请加载后再试"));
+            showSimpleNotification(const Text("歌曲未加载,请加载后再试"));
           } else {
             await Navigator.push(context, MaterialPageRoute(builder: (context) {
               return PlaylistSelectionPage(
@@ -608,7 +609,7 @@ class _PlaylistDetailHeader extends ConsumerWidget {
                                         creator["avatarUrl"] as String)),
                               ),
                             ),
-                            Padding(padding: EdgeInsets.only(left: 4)),
+                            const Padding(padding: EdgeInsets.only(left: 4)),
                             Text(
                               creator["nickname"] as String,
                               style:

@@ -30,7 +30,6 @@ class _PageWelcomeState extends State<PageWelcome> {
                       bottom: MediaQuery.of(context).viewPadding.bottom),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
-                mainAxisSize: MainAxisSize.max,
                 children: <Widget>[
                   _LeadingLayout(),
                   StretchButton(
@@ -119,12 +118,12 @@ class _LeadingLayout extends StatelessWidget {
   Widget build(BuildContext context) {
     return Expanded(
       child: Align(
-        alignment: Alignment(0, 1 - 2 * 0.618),
+        alignment: const Alignment(0, 1 - 2 * 0.618),
         child: Container(
           width: 48,
           height: 48,
           decoration:
-              BoxDecoration(shape: BoxShape.circle, color: Colors.white),
+              const BoxDecoration(shape: BoxShape.circle, color: Colors.white),
         ),
       ),
     );
@@ -137,7 +136,6 @@ class _LoginLayout extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 16),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
@@ -168,12 +166,12 @@ class _LoginLayout extends StatelessWidget {
 }
 
 class _LoginIcon extends StatelessWidget {
+  const _LoginIcon({Key? key, this.image, required this.onTap})
+      : super(key: key);
+
   final String? image;
 
   final VoidCallback onTap;
-
-  const _LoginIcon({Key? key, this.image, required this.onTap})
-      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -182,7 +180,6 @@ class _LoginIcon extends StatelessWidget {
       shape: CircleBorder(
           side: BorderSide(color: color.withOpacity(0.5), width: 0.5)),
       color: Colors.transparent,
-      elevation: 0,
       clipBehavior: Clip.antiAlias,
       child: InkWell(
           onTap: onTap,
@@ -255,7 +252,6 @@ class _LicenseAndPolicyState extends State<_LicenseAndPolicy> {
         style: Theme.of(context).primaryTextTheme.caption!,
         child: Row(
           mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             Theme(
               data: ThemeData(unselectedWidgetColor: color),
@@ -273,13 +269,13 @@ class _LicenseAndPolicyState extends State<_LicenseAndPolicy> {
               ),
             ),
             Text.rich(TextSpan(children: [
-              TextSpan(text: '同意'),
+              const TextSpan(text: '同意'),
               TextSpan(
                 text: '《用户协议》',
                 style: TextStyle(color: color.withOpacity(1)),
                 recognizer: _licenseTapRecognizer,
               ),
-              TextSpan(text: '和'),
+              const TextSpan(text: '和'),
               TextSpan(
                 text: '《隐私政策》',
                 style: TextStyle(color: color.withOpacity(1)),

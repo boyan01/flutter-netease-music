@@ -5,9 +5,8 @@ import 'package:quiet/model/model.dart';
 import 'package:quiet/repository/netease.dart';
 
 class BlurBackground extends StatelessWidget {
-  final Music music;
-
   const BlurBackground({Key? key, required this.music}) : super(key: key);
+  final Music music;
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +23,7 @@ class BlurBackground extends StatelessWidget {
         BackdropFilter(
           filter: ui.ImageFilter.blur(sigmaY: 14, sigmaX: 24),
           child: Container(
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
                 gradient: LinearGradient(
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,

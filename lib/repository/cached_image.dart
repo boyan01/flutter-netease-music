@@ -9,15 +9,14 @@ import 'package:path_provider/path_provider.dart';
 import 'package:quiet/component/cache/key_value_cache.dart';
 
 ///default image size in dimens
-const _defaultImageSize = const Size.fromWidth(200);
+const _defaultImageSize = Size.fromWidth(200);
 
-///image provider for netease image
+///image provider for network image
 class CachedImage extends ImageProvider<CachedImage> implements CacheKey {
   /// Creates an object that fetches the image at the given URL.
   ///
   /// The arguments must not be null.
-  const CachedImage(this.url, {this.scale = 1.0, this.headers})
-      : this._size = null;
+  const CachedImage(this.url, {this.scale = 1.0, this.headers}) : _size = null;
 
   const CachedImage._internal(this.url, this._size,
       {this.scale = 1.0, this.headers});
@@ -68,10 +67,10 @@ class CachedImage extends ImageProvider<CachedImage> implements CacheKey {
   static final HttpClient _httpClient = HttpClient();
 
   Future<ui.Codec> _loadAsync(CachedImage key, DecoderCallback decode) async {
-    final cache = await (_imageCache());
-    var image = await cache.get(key);
+    final cache = await _imageCache();
+    final image = await cache.get(key);
     if (image != null) {
-      return await decode(Uint8List.fromList(image),
+      return decode(Uint8List.fromList(image),
           cacheWidth: key.width, cacheHeight: null);
     }
     //request network source
@@ -81,18 +80,20 @@ class CachedImage extends ImageProvider<CachedImage> implements CacheKey {
       request.headers.add(name, value);
     });
     final HttpClientResponse response = await request.close();
-    if (response.statusCode != HttpStatus.ok)
+    if (response.statusCode != HttpStatus.ok) {
       throw Exception(
           'HTTP request failed, statusCode: ${response.statusCode}, $resolved');
+    }
 
     final Uint8List bytes = await consolidateHttpClientResponseBytes(response);
-    if (bytes.lengthInBytes == 0)
+    if (bytes.lengthInBytes == 0) {
       throw Exception('NetworkImage is an empty file: $resolved');
+    }
 
     //save image to cache
     await cache.update(key, bytes);
 
-    return await decode(Uint8List.fromList(bytes),
+    return decode(Uint8List.fromList(bytes),
         cacheWidth: key.width, cacheHeight: null);
   }
 
@@ -123,8 +124,8 @@ Future<_ImageCache> _imageCache() async {
   if (__imageCache != null) {
     return __imageCache!;
   }
-  var temp = await getTemporaryDirectory();
-  var dir = Directory(temp.path + "/quiet_images/");
+  final temp = await getTemporaryDirectory();
+  var dir = Directory("${temp.path}/quiet_images/");
   if (!(await dir.exists())) {
     dir = await dir.create();
   }
@@ -142,7 +143,7 @@ class _ImageCache implements Cache<Uint8List?> {
 
   @override
   Future<Uint8List?> get(CacheKey key) async {
-    var file = provider.getFile(key);
+    final file = provider.getFile(key);
     if (await file.exists()) {
       provider.touchFile(file);
       return Uint8List.fromList(await file.readAsBytes());

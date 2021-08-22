@@ -9,9 +9,14 @@ import 'database.dart';
 LocalData neteaseLocalData = LocalData._();
 
 class LocalData {
+  LocalData._();
+
   ///netData 类型必须是可以放入 [store] 中的类型
-  static Stream<T> withData<T>(String key, Future<T> netData,
-      {void onNetError(dynamic e)?}) async* {
+  static Stream<T> withData<T>(
+    String key,
+    Future<T> netData, {
+    void Function(dynamic e)? onNetError,
+  }) async* {
     final data = neteaseLocalData[key];
     if (data != null) {
       final cached = await data;
@@ -30,13 +35,11 @@ class LocalData {
     }
   }
 
-  LocalData._();
-
-  FutureOr operator [](key) async {
+  FutureOr operator [](dynamic key) async {
     return get(key);
   }
 
-  void operator []=(key, value) {
+  void operator []=(dynamic key, dynamic value) {
     _put(value, key);
   }
 

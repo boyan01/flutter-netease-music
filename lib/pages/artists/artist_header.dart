@@ -7,9 +7,8 @@ import 'package:quiet/repository/netease.dart';
 import 'artist.model.dart';
 
 class ArtistHeader extends StatelessWidget {
-  final Artist artist;
-
   const ArtistHeader({Key? key, required this.artist}) : super(key: key);
+  final Artist artist;
 
   @override
   Widget build(BuildContext context) {
@@ -18,13 +17,12 @@ class ArtistHeader extends StatelessWidget {
       expandedHeight: 330,
       flexibleSpace: _ArtistFlexHeader(artist: artist),
       elevation: 0,
-      forceElevated: false,
       bottom: RoundedTabBar(
         tabs: <Widget>[
-          Tab(text: "热门单曲"),
+          const Tab(text: "热门单曲"),
           Tab(text: "专辑${artist.albumSize}"),
           Tab(text: "视频${artist.mvSize}"),
-          Tab(text: "艺人信息"),
+          const Tab(text: "艺人信息"),
         ],
       ),
       actions: <Widget>[
@@ -38,9 +36,8 @@ class ArtistHeader extends StatelessWidget {
 }
 
 class _ArtistFlexHeader extends StatelessWidget {
-  final Artist artist;
-
   const _ArtistFlexHeader({Key? key, required this.artist}) : super(key: key);
+  final Artist artist;
 
   @override
   Widget build(BuildContext context) {
@@ -58,11 +55,10 @@ class _ArtistFlexHeader extends StatelessWidget {
           child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Spacer(),
+                const Spacer(),
                 Text(
-                    '${artist.name}' +
-                        (artist.alias!.isEmpty ? '' : '(${artist.alias![0]})'),
-                    style: TextStyle(fontSize: 20)),
+                    '${artist.name}${artist.alias!.isEmpty ? '' : '(${artist.alias![0]})'}',
+                    style: const TextStyle(fontSize: 20)),
                 Text('歌曲数量:${artist.musicSize}'),
               ]),
         ),
@@ -74,7 +70,7 @@ class _ArtistFlexHeader extends StatelessWidget {
             titleSpacing: 0,
             actions: <Widget>[
               IconButton(
-                  icon: Icon(Icons.share),
+                  icon: const Icon(Icons.share),
                   tooltip: "分享",
                   onPressed: () {
                     toast('分享');

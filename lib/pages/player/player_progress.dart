@@ -21,8 +21,8 @@ class DurationProgressBarState extends State<DurationProgressBar> {
   }
 
   Widget _buildBar(BuildContext context) {
-    var theme = Theme.of(context).primaryTextTheme;
-    var state = context.playbackState;
+    final theme = Theme.of(context).primaryTextTheme;
+    final state = context.playbackState;
 
     Widget progressIndicator;
 
@@ -30,9 +30,9 @@ class DurationProgressBarState extends State<DurationProgressBar> {
     String? positionText;
 
     if (state.initialized) {
-      var duration = context.listenPlayerValue.metadata!.duration;
+      final duration = context.listenPlayerValue.metadata!.duration;
 
-      var position =
+      final position =
           isUserTracking ? trackingPosition.round() : state.computedPosition;
 
       durationText = getTimeStamp(duration);
@@ -51,7 +51,6 @@ class DurationProgressBarState extends State<DurationProgressBar> {
 //          ),
           Slider(
             value: position.toDouble().clamp(0.0, duration.toDouble()),
-            min: 0.0,
             activeColor: theme.bodyText2!.color!.withOpacity(0.75),
             inactiveColor: theme.caption!.color!.withOpacity(0.3),
             max: duration.toDouble(),
@@ -81,18 +80,18 @@ class DurationProgressBarState extends State<DurationProgressBar> {
     }
 
     return SliderTheme(
-      data: SliderThemeData(
+      data: const SliderThemeData(
           thumbShape: RoundSliderThumbShape(enabledThumbRadius: 6)),
       child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 16),
+        padding: const EdgeInsets.symmetric(horizontal: 16),
         child: Row(
           children: <Widget>[
             Text(positionText ?? "00:00", style: theme.bodyText2),
-            Padding(padding: EdgeInsets.only(left: 4)),
+            const Padding(padding: EdgeInsets.only(left: 4)),
             Expanded(
               child: progressIndicator,
             ),
-            Padding(padding: EdgeInsets.only(left: 4)),
+            const Padding(padding: EdgeInsets.only(left: 4)),
             Text(durationText ?? "00:00", style: theme.bodyText2),
           ],
         ),

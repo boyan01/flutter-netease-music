@@ -5,7 +5,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:quiet/component/utils/utils.dart';
 
-const _enable_paint_debug = false;
+const _kEnablePaintDebug = false;
 
 class Lyric extends StatefulWidget {
   Lyric({
@@ -98,24 +98,24 @@ class LyricState extends State<Lyric> with TickerProviderStateMixin {
       return;
     }
 
-    int line = widget.lyric
+    final int line = widget.lyric
         .findLineByTimeStamp(milliseconds!, lyricPainter!.currentLine);
 
     if (lyricPainter!.currentLine != line && !dragging) {
-      double offset = lyricPainter!.computeScrollTo(line);
+      final double offset = lyricPainter!.computeScrollTo(line);
 
       if (animate) {
         _lineController?.dispose();
         _lineController = AnimationController(
           vsync: this,
-          duration: Duration(milliseconds: 800),
+          duration: const Duration(milliseconds: 800),
         )..addStatusListener((status) {
             if (status == AnimationStatus.completed) {
               _lineController!.dispose();
               _lineController = null;
             }
           });
-        Animation<double> animation = Tween<double>(
+        final Animation<double> animation = Tween<double>(
                 begin: lyricPainter!.offsetScroll,
                 end: lyricPainter!.offsetScroll + offset)
             .chain(CurveTween(curve: Curves.easeInOut))
@@ -166,7 +166,7 @@ class LyricState extends State<Lyric> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext _) {
     return Container(
-      constraints: BoxConstraints(minWidth: 300, minHeight: 120),
+      constraints: const BoxConstraints(minWidth: 300, minHeight: 120),
       child: GestureDetector(
         onTap: () {
           if (!_consumeTap && widget.onTap != null) {
@@ -232,10 +232,26 @@ class LyricState extends State<Lyric> with TickerProviderStateMixin {
 }
 
 class LyricPainter extends ChangeNotifier implements CustomPainter {
+  ///param lyric must not be null
+  LyricPainter(TextStyle style, this.lyric,
+      {this.textAlign = TextAlign.center, Color? highlight = Colors.red}) {
+    lyricPainters = [];
+    for (int i = 0; i < lyric.size; i++) {
+      final painter = TextPainter(
+          text: TextSpan(style: style, text: lyric[i].line),
+          textAlign: textAlign);
+      painter.textDirection = TextDirection.ltr;
+//      painter.layout();//layout first, to get the height
+      lyricPainters.add(painter);
+    }
+    _styleHighlight = style.copyWith(color: highlight);
+  }
+
   LyricContent lyric;
   late List<TextPainter> lyricPainters;
 
-  TextPainter _highlightPainter = TextPainter(textDirection: TextDirection.ltr);
+  final TextPainter _highlightPainter =
+      TextPainter(textDirection: TextDirection.ltr);
 
   double _offsetScroll = 0;
 
@@ -255,8 +271,10 @@ class LyricPainter extends ChangeNotifier implements CustomPainter {
   }
 
   set offsetScroll(double value) {
-    if (height == -1)
-      return; // do not change offset when height is not available.
+    if (height == -1) {
+      // do not change offset when height is not available.
+      return;
+    }
     _offsetScroll = value.clamp(-height, 0.0);
     repaint();
   }
@@ -266,21 +284,6 @@ class LyricPainter extends ChangeNotifier implements CustomPainter {
   TextAlign textAlign;
 
   TextStyle? _styleHighlight;
-
-  ///param lyric must not be null
-  LyricPainter(TextStyle style, this.lyric,
-      {this.textAlign = TextAlign.center, Color? highlight = Colors.red}) {
-    lyricPainters = [];
-    for (int i = 0; i < lyric.size; i++) {
-      var painter = TextPainter(
-          text: TextSpan(style: style, text: lyric[i].line),
-          textAlign: textAlign);
-      painter.textDirection = TextDirection.ltr;
-//      painter.layout();//layout first, to get the height
-      lyricPainters.add(painter);
-    }
-    _styleHighlight = style.copyWith(color: highlight);
-  }
 
   void repaint() {
     notifyListeners();
@@ -298,7 +301,7 @@ class LyricPainter extends ChangeNotifier implements CustomPainter {
     double dy = offsetScroll + size.height / 2 - lyricPainters[0].height / 2;
 
     for (int line = 0; line < lyricPainters.length; line++) {
-      TextPainter painter = lyricPainters[line];
+      final TextPainter painter = lyricPainters[line];
 
       if (line == currentLine) {
         _paintCurrentLine(canvas, painter, dy, size);
@@ -321,7 +324,7 @@ class LyricPainter extends ChangeNotifier implements CustomPainter {
 
     _highlightPainter
       ..text = TextSpan(
-          text: (painter.text as TextSpan).text, style: _styleHighlight)
+          text: (painter.text as TextSpan?)?.text, style: _styleHighlight)
       ..textAlign = textAlign;
 
     _highlightPainter.layout(); //layout with unbound width
@@ -353,7 +356,7 @@ class LyricPainter extends ChangeNotifier implements CustomPainter {
     canvas.restore();
 
     assert(() {
-      if (_enable_paint_debug) {
+      if (_kEnablePaintDebug) {
         final painter = Paint()
           ..color = Colors.black
           ..style = PaintingStyle.stroke
@@ -391,15 +394,15 @@ class LyricPainter extends ChangeNotifier implements CustomPainter {
 
   void _layoutPainterList(ui.Size size) {
     _height = 0;
-    lyricPainters.forEach((p) {
+    for (final p in lyricPainters) {
       p.layout(maxWidth: size.width);
       _height += p.height;
-    });
+    }
   }
 
   //compute the offset current offset to destination line
   double computeScrollTo(int destination) {
-    if (lyricPainters.length <= 0 || this.height == 0) {
+    if (lyricPainters.isEmpty || this.height == 0) {
       return 0;
     }
 
@@ -418,7 +421,7 @@ class LyricPainter extends ChangeNotifier implements CustomPainter {
   bool? hitTest(ui.Offset position) => null;
 
   @override
-  get semanticsBuilder => null;
+  SemanticsBuilderCallback? get semanticsBuilder => null;
 
   @override
   bool shouldRebuildSemantics(CustomPainter oldDelegate) =>
@@ -426,22 +429,16 @@ class LyricPainter extends ChangeNotifier implements CustomPainter {
 }
 
 class LyricContent {
-  ///splitter lyric content to line
-  static const LineSplitter _SPLITTER = const LineSplitter();
-
-  //默认歌词持续时间
-  static const int _default_line_duration = 5 * 1000;
-
   LyricContent.from(String text) {
-    List<String> lines = _SPLITTER.convert(text);
-    Map map = <int, String>{};
+    final List<String> lines = _kLineSplitter.convert(text);
+    final Map map = <int, String>{};
     lines.forEach((l) => LyricEntry.inflate(l, map as Map<int, String>));
 
-    List<int> keys = map.keys.toList() as List<int>..sort();
+    final List<int> keys = map.keys.toList() as List<int>..sort();
     for (var i = 0; i < keys.length; i++) {
       final key = keys[i];
       _durations.add(key);
-      int duration = _default_line_duration;
+      int duration = _kDefaultLineDuration;
       if (i + 1 < keys.length) {
         duration = keys[i + 1] - key;
       }
@@ -449,8 +446,14 @@ class LyricContent {
     }
   }
 
-  List<int> _durations = [];
-  List<LyricEntry> _lyricEntries = [];
+  ///splitter lyric content to line
+  static const LineSplitter _kLineSplitter = LineSplitter();
+
+  //默认歌词持续时间
+  static const int _kDefaultLineDuration = 5 * 1000;
+
+  final List<int> _durations = [];
+  final List<LyricEntry> _lyricEntries = [];
 
   int get size => _durations.length;
 
@@ -514,6 +517,9 @@ class LyricContent {
 }
 
 class LyricEntry {
+  LyricEntry(this.line, this.position, this.duration)
+      : timeStamp = getTimeStamp(position);
+
   static RegExp pattern = RegExp(r"\[\d{2}:\d{2}.\d{2,3}]");
 
   static int _stamp2int(final String stamp) {
@@ -531,7 +537,7 @@ class LyricEntry {
       millisecond =
           int.parse(stamp.substring(indexOfPoint + 1, stamp.length - 1));
     }
-    return ((((minute * 60) + second) * 1000) + millisecond);
+    return (((minute * 60) + second) * 1000) + millisecond;
   }
 
   ///build from a .lrc file line .such as: [11:44.100] what makes your beautiful
@@ -543,17 +549,14 @@ class LyricEntry {
     } else if (line.startsWith("[au:")) {
     } else if (line.startsWith("[by:")) {
     } else {
-      var stamps = pattern.allMatches(line);
-      var content = line.split(pattern).last;
-      stamps.forEach((stamp) {
-        int timeStamp = _stamp2int(stamp.group(0)!);
+      final stamps = pattern.allMatches(line);
+      final content = line.split(pattern).last;
+      for (final stamp in stamps) {
+        final int timeStamp = _stamp2int(stamp.group(0)!);
         map[timeStamp] = content;
-      });
+      }
     }
   }
-
-  LyricEntry(this.line, this.position, this.duration)
-      : this.timeStamp = getTimeStamp(position);
 
   final String timeStamp;
   final String? line;

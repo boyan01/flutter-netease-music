@@ -95,7 +95,7 @@ class VideoPlayerModel extends Model {
 void subscribeOrUnSubscribeMv(BuildContext context) async {
   final model = VideoPlayerModel.of(context);
   if (model.subscribed! &&
-      !await showConfirmDialog(context, Text('确定要取消收藏吗？'),
+      !await showConfirmDialog(context, const Text('确定要取消收藏吗？'),
           positiveLabel: '不再收藏')) {
     return;
   }
@@ -122,7 +122,7 @@ class _VideoPlayerControllerWrapper extends VideoPlayerController {
   }
 
   @override
-  void removeListener(listener) {
+  void removeListener(VoidCallback listener) {
     if (_disposed) {
       return;
     }
@@ -130,7 +130,7 @@ class _VideoPlayerControllerWrapper extends VideoPlayerController {
   }
 
   @override
-  void addListener(listener) {
+  void addListener(VoidCallback listener) {
     if (_disposed) {
       return;
     }

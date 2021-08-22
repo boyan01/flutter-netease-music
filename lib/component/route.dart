@@ -26,7 +26,7 @@ const pageMain = Navigator.defaultRouteName;
 ///popup with [true] if login succeed
 const pageLogin = "/login";
 
-const ROUTE_PLAYLIST_DETAIL = "/playlist/detail";
+const pagePlaylistDetail = "/playlist/detail";
 
 /// Route name of [PlayingPage].
 const pagePlaying = "/playing";
@@ -41,11 +41,11 @@ const pageDaily = "/daily";
 
 const pageMyDj = '/mydj';
 
-const ROUTE_MY_COLLECTION = '/my_collection';
+const pageMyCollection = '/my_collection';
 
-const ROUTE_SETTING = '/setting';
+const pageSetting = '/setting';
 
-const ROUTE_SETTING_THEME = '/setting/theme';
+const pageSettingTheme = '/setting/theme';
 
 const pageWelcome = 'welcome';
 
@@ -55,14 +55,14 @@ const pageSearch = "search";
 ///app routers
 final Map<String, WidgetBuilder> routes = {
   pageMain: (context) => MainPage(),
-  pageLogin: (context) => LoginNavigator(),
+  pageLogin: (context) => const LoginNavigator(),
   pagePlaying: (context) => PlayingPage(),
   pageLeaderboard: (context) => LeaderboardPage(),
   pageDaily: (context) => DailyPlaylistPage(),
   pageMyDj: (context) => MyDjPage(),
-  ROUTE_MY_COLLECTION: (context) => MyCollectionPage(),
-  ROUTE_SETTING: (context) => SettingPage(),
-  ROUTE_SETTING_THEME: (context) => SettingThemePage(),
+  pageMyCollection: (context) => MyCollectionPage(),
+  pageSetting: (context) => SettingPage(),
+  pageSettingTheme: (context) => SettingThemePage(),
   pageWelcome: (context) => PageWelcome(),
   pageFmPlaying: (context) => PagePlayingFm(),
 };

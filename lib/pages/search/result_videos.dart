@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:loader/loader.dart';
 import 'package:quiet/component/utils/utils.dart';
@@ -24,9 +22,10 @@ class _VideosResultSectionState extends State<VideosResultSection>
     return AutoLoadMoreList(loadMore: (offset) async {
       final result = await neteaseRepository!
           .search(widget.query, NeteaseSearchType.video, offset: offset);
-      return LoadMoreResult.map<Map, List?>(result, (value) {
-        return value["result"]["videos"];
-      }) as FutureOr<Result<List<Map>>>;
+      if (result.isError) {
+        return result.asError!;
+      }
+      return result.asValue!.value['result']['videos'];
     }, builder: (context, dynamic item) {
       return VideoTile(map: item);
     });
@@ -48,14 +47,14 @@ class VideoTile extends StatelessWidget {
       onTap: () {
         debugPrint("on tag : ${map["vid"]}");
       },
-      child: Container(
+      child: SizedBox(
         height: 72,
         child: Row(
           children: <Widget>[
             Container(
               height: 72,
               width: 72 * 1.6,
-              padding: EdgeInsets.all(4),
+              padding: const EdgeInsets.all(4),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(3),
                 child: Image(
@@ -64,7 +63,7 @@ class VideoTile extends StatelessWidget {
                 ),
               ),
             ),
-            Padding(padding: EdgeInsets.only(left: 8)),
+            const Padding(padding: EdgeInsets.only(left: 8)),
             Expanded(
                 child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -86,9 +85,7 @@ class VideoTile extends StatelessWidget {
                     ),
                   ],
                 )),
-                Divider(
-                  height: 0,
-                )
+                const Divider(height: 0)
               ],
             ))
           ],

@@ -18,15 +18,15 @@ import 'user.dart';
 part 'comments_tile.dart';
 
 class CommentList extends Model with AutoLoadMoreMixin {
-  static const _TYPE_HEADER = 0;
-  static const _TYPE_LOAD_MORE = 2;
-  static const _TYPE_MORE_HOT = 3;
-  static const _TYPE_EMPTY = 4;
-  static const _TYPE_TITLE = 5;
-
   CommentList(this.threadId) {
     loadMore();
   }
+
+  static const _typeHeader = 0;
+  static const _typeLoadMore = 2;
+  static const _typeMoreHot = 3;
+  static const _typeEmpty = 4;
+  static const _typeTitle = 5;
 
   final CommentThreadId threadId;
 
@@ -47,23 +47,23 @@ class CommentList extends Model with AutoLoadMoreMixin {
 
       //top addition bar
       if (threadId.payload != null) {
-        list.add(Pair(_TYPE_TITLE, threadId));
+        list.add(Pair(_typeTitle, threadId));
       }
 
       //hot comment
       final hotComments =
           (value["hotComments"] as List).map((e) => Comment.fromJsonMap(e));
       if (hotComments.isNotEmpty) {
-        list.add(Pair(_TYPE_HEADER, "热门评论")); //hot comment header
+        list.add(Pair(_typeHeader, "热门评论")); //hot comment header
         list.addAll(hotComments);
       }
 
       if (value['moreHot'] == true) {
-        list.add(Pair(_TYPE_MORE_HOT, null));
+        list.add(Pair(_typeMoreHot, null));
       }
 
       total = value['total'];
-      list.add(Pair(_TYPE_HEADER, "最新评论($total)")); //latest comment header
+      list.add(Pair(_typeHeader, "最新评论($total)")); //latest comment header
       list.addAll(comments);
 
       return LoadMoreResult(list,
@@ -82,13 +82,13 @@ class CommentList extends Model with AutoLoadMoreMixin {
 
     if (item is Pair<int, dynamic>) {
       switch (item.first) {
-        case CommentList._TYPE_HEADER:
+        case CommentList._typeHeader:
           return _ItemHeader(title: item.last.toString());
-        case CommentList._TYPE_MORE_HOT:
+        case CommentList._typeMoreHot:
           return _ItemMoreHot();
-        case CommentList._TYPE_LOAD_MORE:
+        case CommentList._typeLoadMore:
           return _ItemLoadMore();
-        case CommentList._TYPE_EMPTY:
+        case CommentList._typeEmpty:
           return Container(
             padding: const EdgeInsets.symmetric(vertical: 40),
             child: const Center(
@@ -98,7 +98,7 @@ class CommentList extends Model with AutoLoadMoreMixin {
               ),
             ),
           );
-        case CommentList._TYPE_TITLE:
+        case CommentList._typeTitle:
           return _ItemTitle(commentThreadId: item.last as CommentThreadId);
       }
     }
@@ -107,22 +107,6 @@ class CommentList extends Model with AutoLoadMoreMixin {
 }
 
 class Comment {
-  User user;
-  List<Object>? beReplied;
-  Object? pendantData;
-  Object? showFloorComment;
-  int? status;
-  int? commentLocationType;
-  int? parentCommentId;
-  bool? repliedMark;
-  int? likedCount;
-  bool? liked;
-  int? commentId;
-  int? time;
-  Object? expressionUrl;
-  String? content;
-  bool? isRemoveHotComment;
-
   Comment.fromJsonMap(Map<String, dynamic> map)
       : user = User.fromJsonMap(map["user"]),
         beReplied = map["beReplied"],
@@ -140,8 +124,24 @@ class Comment {
         content = map["content"],
         isRemoveHotComment = map["isRemoveHotComment"];
 
+  User user;
+  List<Object>? beReplied;
+  Object? pendantData;
+  Object? showFloorComment;
+  int? status;
+  int? commentLocationType;
+  int? parentCommentId;
+  bool? repliedMark;
+  int? likedCount;
+  bool? liked;
+  int? commentId;
+  int? time;
+  Object? expressionUrl;
+  String? content;
+  bool? isRemoveHotComment;
+
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['user'] = user.toJson();
     data['beReplied'] = beReplied;
     data['pendantData'] = pendantData;

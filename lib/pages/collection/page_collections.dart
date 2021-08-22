@@ -13,8 +13,8 @@ class MyCollectionPage extends StatelessWidget {
       length: 4,
       child: Scaffold(
         appBar: AppBar(
-          title: Text('我的收藏'),
-          bottom: TabBar(
+          title: const Text('我的收藏'),
+          bottom: const TabBar(
             tabs: [
               Tab(text: '专辑'),
               Tab(text: '歌手'),

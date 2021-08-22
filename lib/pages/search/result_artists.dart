@@ -4,9 +4,8 @@ import 'package:quiet/part/part.dart';
 import 'package:quiet/repository/netease.dart';
 
 class ArtistsResultSection extends StatefulWidget {
-  final String? query;
-
   const ArtistsResultSection({Key? key, this.query}) : super(key: key);
+  final String? query;
 
   @override
   _ArtistsResultSectionState createState() => _ArtistsResultSectionState();
@@ -21,7 +20,8 @@ class _ArtistsResultSectionState extends State<ArtistsResultSection>
       final result = await neteaseRepository!
           .search(widget.query, NeteaseSearchType.artist, offset: offset);
       if (result.isValue) {
-        return Result.value((result.asValue!.value["result"]["artists"] as List?)!);
+        return Result.value(
+            (result.asValue!.value["result"]["artists"] as List?)!);
       }
       return result as Result<List>;
     }, builder: (context, dynamic item) {
@@ -35,10 +35,8 @@ class _ArtistsResultSectionState extends State<ArtistsResultSection>
 
 ///artist result list tile
 class ArtistTile extends StatelessWidget {
+  const ArtistTile({Key? key, required this.map}) : super(key: key);
   final Map map;
-
-  const ArtistTile({Key? key, required this.map})
-      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +48,7 @@ class ArtistTile extends StatelessWidget {
                 return ArtistDetailPage(artistId: map["id"]);
               }));
             },
-      child: Container(
+      child: SizedBox(
         height: 64,
         child: Row(
           children: <Widget>[
@@ -67,34 +65,32 @@ class ArtistTile extends StatelessWidget {
                 ),
               ),
             ),
-            Padding(padding: EdgeInsets.only(left: 8)),
+            const Padding(padding: EdgeInsets.only(left: 8)),
             Expanded(
                 child: Column(
-              children: <Widget>[
+              children: [
                 Expanded(
                     child: Row(
-                  children: (<Widget?>[
+                  children: [
                     Expanded(
                         child: Align(
                             alignment: Alignment.centerLeft,
                             child: Text(map["name"]))),
-                    map["accountId"] == null
-                        ? null
-                        : Row(children: <Widget>[
-                            Icon(
-                              Icons.person,
-                              size: 16,
-                            ),
-                            Padding(padding: EdgeInsets.only(left: 2)),
-                            Text("已入驻",
-                                style: Theme.of(context).textTheme.caption)
-                          ])
-                  ]..removeWhere((v) => v == null)) as List<Widget>,
+                    if (map["accountId"] != null)
+                      Row(children: <Widget>[
+                        const Icon(
+                          Icons.person,
+                          size: 16,
+                        ),
+                        const Padding(padding: EdgeInsets.only(left: 2)),
+                        Text("已入驻", style: Theme.of(context).textTheme.caption)
+                      ])
+                  ],
                 )),
-                Divider(height: 0)
+                const Divider(height: 0)
               ],
             )),
-            Padding(padding: EdgeInsets.only(right: 8))
+            const Padding(padding: EdgeInsets.only(right: 8))
           ],
         ),
       ),

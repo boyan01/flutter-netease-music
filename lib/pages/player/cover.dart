@@ -8,9 +8,8 @@ import 'package:quiet/repository/cached_image.dart';
 
 ///播放页面歌曲封面
 class AlbumCover extends StatefulWidget {
-  final Music music;
-
   const AlbumCover({Key? key, required this.music}) : super(key: key);
+  final Music music;
 
   @override
   State createState() => _AlbumCoverState();
@@ -61,8 +60,7 @@ class _AlbumCoverState extends State<AlbumCover> with TickerProviderStateMixin {
         /*preset need position*/
         value: _needleAttachCover ? 1.0 : 0.0,
         vsync: this,
-        duration: Duration(milliseconds: 500),
-        animationBehavior: AnimationBehavior.normal);
+        duration: const Duration(milliseconds: 500));
     _needleAnimation = Tween<double>(begin: -1 / 12, end: 0)
         .chain(CurveTween(curve: Curves.easeInOut))
         .animate(_needleController);
@@ -75,7 +73,7 @@ class _AlbumCoverState extends State<AlbumCover> with TickerProviderStateMixin {
 
   /// invalidate previous and next music cover...
   /// TODO should invalidate on playMode change.
-  void _invalidatePn() async {
+  Future<void> _invalidatePn() async {
     if (!_previousNextDirty) {
       return;
     }
@@ -114,12 +112,12 @@ class _AlbumCoverState extends State<AlbumCover> with TickerProviderStateMixin {
     final state = _player.playbackState;
 
     // needle is should attach to cover
-    bool attachToCover =
+    final bool attachToCover =
         state.isPlaying && !_beDragging && _translateController == null;
     _rotateNeedle(attachToCover);
 
     //handle album cover animation
-    var _isPlaying = state.isPlaying;
+    final _isPlaying = state.isPlaying;
     setState(() {
       _coverRotating = _isPlaying && _needleAttachCover;
     });
@@ -147,9 +145,9 @@ class _AlbumCoverState extends State<AlbumCover> with TickerProviderStateMixin {
     super.dispose();
   }
 
-  static const double HEIGHT_SPACE_ALBUM_TOP = 100;
+  static const double kHeightSpaceAlbumTop = 100;
 
-  void _animateCoverTranslateTo(double des, {void onCompleted()?}) {
+  void _animateCoverTranslateTo(double des, {void Function()? onCompleted}) {
     _translateController?.dispose();
     _translateController = null;
     _translateController = AnimationController(
@@ -241,7 +239,7 @@ class _AlbumCoverState extends State<AlbumCover> with TickerProviderStateMixin {
           child: Container(
               color: Colors.transparent,
               padding: const EdgeInsets.only(
-                  left: 64, right: 64, top: HEIGHT_SPACE_ALBUM_TOP),
+                  left: 64, right: 64, top: kHeightSpaceAlbumTop),
               child: Stack(
                 children: <Widget>[
                   Transform.scale(
@@ -274,21 +272,19 @@ class _AlbumCoverState extends State<AlbumCover> with TickerProviderStateMixin {
               )),
         ),
         ClipRect(
-          child: Container(
-            child: Align(
-              alignment: Alignment(0, -1),
-              child: Transform.translate(
-                offset: Offset(40, -15),
-                child: RotationTransition(
-                  turns: _needleAnimation,
-                  alignment:
-                      //44,37 是针尾的圆形的中心点像素坐标, 273,402是playing_page_needle.png的宽高
-                      //所以对此计算旋转中心点的偏移,以保重旋转动画的中心在针尾圆形的中点
-                      const Alignment(-1 + 44 * 2 / 273, -1 + 37 * 2 / 402),
-                  child: Image.asset(
-                    "assets/playing_page_needle.png",
-                    height: HEIGHT_SPACE_ALBUM_TOP * 1.8,
-                  ),
+          child: Align(
+            alignment: const Alignment(0, -1),
+            child: Transform.translate(
+              offset: const Offset(40, -15),
+              child: RotationTransition(
+                turns: _needleAnimation,
+                alignment:
+                    //44,37 是针尾的圆形的中心点像素坐标, 273,402是playing_page_needle.png的宽高
+                    //所以对此计算旋转中心点的偏移,以保重旋转动画的中心在针尾圆形的中点
+                    const Alignment(-1 + 44 * 2 / 273, -1 + 37 * 2 / 402),
+                child: Image.asset(
+                  "assets/playing_page_needle.png",
+                  height: kHeightSpaceAlbumTop * 1.8,
                 ),
               ),
             ),
@@ -300,12 +296,12 @@ class _AlbumCoverState extends State<AlbumCover> with TickerProviderStateMixin {
 }
 
 class _RotationCoverImage extends StatefulWidget {
-  final bool rotating;
-  final Music? music;
-
   const _RotationCoverImage(
       {Key? key, required this.rotating, required this.music})
       : super(key: key);
+
+  final bool rotating;
+  final Music? music;
 
   @override
   _RotationCoverImageState createState() => _RotationCoverImageState();
@@ -336,9 +332,9 @@ class _RotationCoverImageState extends State<_RotationCoverImage>
   void initState() {
     super.initState();
     controller = AnimationController(
-        vsync: this,
-        duration: Duration(seconds: 20),
-        animationBehavior: AnimationBehavior.normal)
+      vsync: this,
+      duration: const Duration(seconds: 20),
+    )
       ..addListener(() {
         setState(() {
           rotation = controller.value * 2 * pi;
@@ -364,7 +360,7 @@ class _RotationCoverImageState extends State<_RotationCoverImage>
   Widget build(BuildContext context) {
     ImageProvider image;
     if (widget.music == null || widget.music!.imageUrl == null) {
-      image = AssetImage("assets/playing_page_disc.png");
+      image = const AssetImage("assets/playing_page_disc.png");
     } else {
       image = CachedImage(widget.music!.imageUrl.toString());
     }
@@ -378,10 +374,10 @@ class _RotationCoverImageState extends State<_RotationCoverImage>
         child: AspectRatio(
           aspectRatio: 1,
           child: Container(
-            foregroundDecoration: BoxDecoration(
+            foregroundDecoration: const BoxDecoration(
                 image: DecorationImage(
                     image: AssetImage("assets/playing_page_disc.png"))),
-            padding: EdgeInsets.all(30),
+            padding: const EdgeInsets.all(30),
             child: ClipOval(
               child: Image(
                 image: image,

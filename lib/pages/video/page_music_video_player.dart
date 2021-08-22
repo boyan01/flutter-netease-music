@@ -99,7 +99,7 @@ class _MvDetailPageState extends State<_MvDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    final commentId = CommentThreadId(_model.data.id, CommentType.mv);
+    final commentId = CommentThreadId(_model.data.id!, CommentType.mv);
     return ScopedModel<VideoPlayerModel>(
       model: _model,
       child: ScopedModel<CommentList>(
@@ -251,28 +251,29 @@ class _SimpleVideoController extends StatelessWidget {
                       ..play();
                   })),
           InkWell(
-              splashColor: Colors.white,
-              child: const Padding(
-                padding: EdgeInsets.all(8),
-                child: Icon(Icons.fullscreen, color: Colors.white),
-              ),
-              onTap: () async {
-                final route = MaterialPageRoute(
-                    builder: (_) => ScopedModel<VideoPlayerModel>(
-                        model: ScopedModel.of<VideoPlayerModel>(context),
-                        child: FullScreenMvPlayer()));
-                SystemChrome.setPreferredOrientations(const [
-                  DeviceOrientation.landscapeLeft,
-                  DeviceOrientation.landscapeRight,
-                ]);
-                await Navigator.push(context, route);
-                SystemChrome.setPreferredOrientations(const [
-                  DeviceOrientation.portraitUp,
-                  DeviceOrientation.portraitDown,
-                  DeviceOrientation.landscapeLeft,
-                  DeviceOrientation.landscapeRight,
-                ]);
-              }),
+            splashColor: Colors.white,
+            onTap: () async {
+              final route = MaterialPageRoute(
+                  builder: (_) => ScopedModel<VideoPlayerModel>(
+                      model: ScopedModel.of<VideoPlayerModel>(context),
+                      child: FullScreenMvPlayer()));
+              SystemChrome.setPreferredOrientations(const [
+                DeviceOrientation.landscapeLeft,
+                DeviceOrientation.landscapeRight,
+              ]);
+              await Navigator.push(context, route);
+              SystemChrome.setPreferredOrientations(const [
+                DeviceOrientation.portraitUp,
+                DeviceOrientation.portraitDown,
+                DeviceOrientation.landscapeLeft,
+                DeviceOrientation.landscapeRight,
+              ]);
+            },
+            child: const Padding(
+              padding: EdgeInsets.all(8),
+              child: Icon(Icons.fullscreen, color: Colors.white),
+            ),
+          ),
         ],
       ),
     );
@@ -294,16 +295,6 @@ class MvPlayPauseButton extends StatelessWidget {
 
     return Center(
       child: GestureDetector(
-        child: ClipOval(
-          child: Material(
-            color: Colors.black26,
-            child: Padding(
-              padding: const EdgeInsets.all(10),
-              child: Icon(isPlaying ? Icons.pause : Icons.play_arrow,
-                  color: Colors.white, size: 56),
-            ),
-          ),
-        ),
         onTap: () async {
           if (onInteracted != null) onInteracted!();
           if (isPlaying) {
@@ -315,6 +306,16 @@ class MvPlayPauseButton extends StatelessWidget {
             controller.play();
           }
         },
+        child: ClipOval(
+          child: Material(
+            color: Colors.black26,
+            child: Padding(
+              padding: const EdgeInsets.all(10),
+              child: Icon(isPlaying ? Icons.pause : Icons.play_arrow,
+                  color: Colors.white, size: 56),
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -479,7 +480,7 @@ class _SubscribeButton extends StatelessWidget {
 class _ArtistSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    var data = VideoPlayerModel.of(context).data;
+    final data = VideoPlayerModel.of(context).data;
 
     Widget widget;
     if (data.artists.isEmpty) {

@@ -28,7 +28,7 @@ class MainNavigationDrawer extends StatelessWidget {
                         icon: const Icon(Icons.settings),
                         title: const Text("设置"),
                         onTap: () {
-                          Navigator.pushNamed(context, ROUTE_SETTING);
+                          Navigator.pushNamed(context, pageSetting);
                         },
                       ),
                       const Divider(height: 0, indent: 16),

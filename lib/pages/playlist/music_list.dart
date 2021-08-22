@@ -11,6 +11,19 @@ import 'package:quiet/repository/netease.dart';
 import 'dialog_selector.dart';
 
 class MusicTileConfiguration extends StatelessWidget {
+  MusicTileConfiguration(
+      {Key? key,
+      this.token,
+      required this.musics,
+      this.onMusicTap,
+      this.child,
+      this.leadingBuilder,
+      this.trailingBuilder,
+      this.supportAlbumMenu = true,
+      this.remove})
+      : queue = musics.map((e) => e.metadata).toList(),
+        super(key: key);
+
   static MusicTileConfiguration of(BuildContext context) {
     final list =
         context.findAncestorWidgetOfExactType<MusicTileConfiguration>();
@@ -18,17 +31,16 @@ class MusicTileConfiguration extends StatelessWidget {
     return list!;
   }
 
-  static final Widget Function(BuildContext context, Music music)
-      defaultTrailingBuilder = (context, music) {
+  static Widget defaultTrailingBuilder(BuildContext context, Music music) {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[IconMV(music), _IconMore(music)],
     );
-  };
+  }
 
-  static final Widget Function(BuildContext context, Music music)
-      indexedLeadingBuilder = (context, music) {
-    int index = MusicTileConfiguration.of(context).musics.indexOf(music) + 1;
+  static Widget indexedLeadingBuilder(BuildContext context, Music music) {
+    final int index =
+        MusicTileConfiguration.of(context).musics.indexOf(music) + 1;
     return _buildPlayingLeading(context, music) ??
         Container(
           margin: const EdgeInsets.only(left: 8, right: 8),
@@ -41,10 +53,9 @@ class MusicTileConfiguration extends StatelessWidget {
             ),
           ),
         );
-  };
+  }
 
-  static final Widget Function(BuildContext context, Music music)
-      coverLeadingBuilder = (context, music) {
+  static Widget coverLeadingBuilder(BuildContext context, Music music) {
     return _buildPlayingLeading(context, music) ??
         Container(
           margin: const EdgeInsets.only(left: 8, right: 8),
@@ -55,11 +66,11 @@ class MusicTileConfiguration extends StatelessWidget {
               height: 40,
               fit: BoxFit.cover,
               image: CachedImage(music.imageUrl?.toString() ?? ""),
-              placeholder: AssetImage("assets/playlist_playlist.9.png"),
+              placeholder: const AssetImage("assets/playlist_playlist.9.png"),
             ),
           ),
         );
-  };
+  }
 
   //return null if current music is not be playing
   static Widget? _buildPlayingLeading(BuildContext context, Music music) {
@@ -78,8 +89,7 @@ class MusicTileConfiguration extends StatelessWidget {
     return null;
   }
 
-  static final void Function(BuildContext context, Music muisc) defaultOnTap =
-      (context, music) {
+  static void defaultOnTap(BuildContext context, Music music) {
     final list = MusicTileConfiguration.of(context);
     final player = context.player;
     final PlayQueue playList = player.value.queue;
@@ -96,7 +106,7 @@ class MusicTileConfiguration extends StatelessWidget {
               queueTitle: list.token!),
           metadata: music.metadata);
     }
-  };
+  }
 
   final String? token;
 
@@ -116,19 +126,6 @@ class MusicTileConfiguration extends StatelessWidget {
 
   final Widget? child;
 
-  MusicTileConfiguration(
-      {Key? key,
-      this.token,
-      required this.musics,
-      this.onMusicTap,
-      this.child,
-      this.leadingBuilder,
-      this.trailingBuilder,
-      this.supportAlbumMenu = true,
-      this.remove})
-      : this.queue = musics.map((e) => e.metadata).toList(),
-        super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return child!;
@@ -137,18 +134,17 @@ class MusicTileConfiguration extends StatelessWidget {
 
 /// music item widget
 class MusicTile extends StatelessWidget {
+  const MusicTile(this.music, {Key? key}) : super(key: key);
   final Music music;
 
-  MusicTile(this.music, {Key? key}) : super(key: key);
-
   Widget _buildPadding(BuildContext context, Music? music) {
-    return SizedBox(width: 8);
+    return const SizedBox(width: 8);
   }
 
   @override
   Widget build(BuildContext context) {
     final list = MusicTileConfiguration.of(context);
-    return Container(
+    return SizedBox(
       height: 56,
       child: InkWell(
         onTap: () {
@@ -170,13 +166,12 @@ class MusicTile extends StatelessWidget {
 }
 
 class _SimpleMusicTile extends StatelessWidget {
-  final Music? music;
-
   const _SimpleMusicTile(this.music, {Key? key}) : super(key: key);
+  final Music? music;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       height: 56,
       child: Row(
         children: <Widget>[
@@ -185,21 +180,21 @@ class _SimpleMusicTile extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
-              Spacer(),
+              const Spacer(),
               Text(
                 music!.title!,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: Theme.of(context).textTheme.bodyText2,
               ),
-              Padding(padding: EdgeInsets.only(top: 3)),
+              const Padding(padding: EdgeInsets.only(top: 3)),
               Text(
                 music!.subTitle,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: Theme.of(context).textTheme.caption,
               ),
-              Spacer(),
+              const Spacer(),
             ],
           )),
         ],
@@ -210,7 +205,7 @@ class _SimpleMusicTile extends StatelessWidget {
 
 /// The header view of MusicList
 class MusicListHeader extends StatelessWidget implements PreferredSizeWidget {
-  MusicListHeader(this.count, {this.tail});
+  const MusicListHeader(this.count, {this.tail});
 
   final int? count;
 
@@ -219,10 +214,9 @@ class MusicListHeader extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
-      borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
       child: Material(
         color: Theme.of(context).scaffoldBackgroundColor,
-        elevation: 0,
         child: InkWell(
           onTap: () {
             final list = MusicTileConfiguration.of(context);
@@ -241,22 +235,22 @@ class MusicListHeader extends StatelessWidget implements PreferredSizeWidget {
             size: preferredSize,
             child: Row(
               children: (<Widget?>[
-                Padding(padding: EdgeInsets.only(left: 16)),
+                const Padding(padding: EdgeInsets.only(left: 16)),
                 Icon(
                   Icons.play_circle_outline,
                   color: Theme.of(context).iconTheme.color,
                 ),
-                Padding(padding: EdgeInsets.only(left: 4)),
+                const Padding(padding: EdgeInsets.only(left: 4)),
                 Text(
                   "播放全部",
                   style: Theme.of(context).textTheme.bodyText2,
                 ),
-                Padding(padding: EdgeInsets.only(left: 2)),
+                const Padding(padding: EdgeInsets.only(left: 2)),
                 Text(
                   "(共$count首)",
                   style: Theme.of(context).textTheme.caption,
                 ),
-                Spacer(),
+                const Spacer(),
                 tail,
               ]..removeWhere((v) => v == null))
                   .cast(),
@@ -273,9 +267,8 @@ class MusicListHeader extends StatelessWidget implements PreferredSizeWidget {
 
 ///歌曲item的mv icon
 class IconMV extends StatelessWidget {
-  final Music music;
-
   const IconMV(this.music, {Key? key}) : super(key: key);
+  final Music music;
 
   @override
   Widget build(BuildContext context) {
@@ -283,7 +276,7 @@ class IconMV extends StatelessWidget {
       return Container();
     }
     return IconButton(
-        icon: Icon(Icons.videocam),
+        icon: const Icon(Icons.videocam),
         tooltip: 'MV',
         onPressed: () {
           Navigator.push(
@@ -311,49 +304,48 @@ enum _MusicAction {
 }
 
 class _IconMore extends StatelessWidget {
+  const _IconMore(this.music, {Key? key}) : super(key: key);
   final Music music;
 
-  const _IconMore(this.music, {Key? key}) : super(key: key);
-
   List<PopupMenuItem> _buildMenu(BuildContext context) {
-    var items = [
+    const items = [
       PopupMenuItem(
-        child: Text("下一首播放"),
         value: _MusicAction.addToNext,
+        child: Text("下一首播放"),
       ),
       PopupMenuItem(
-        child: Text("收藏到歌单"),
         value: _MusicAction.addToPlaylist,
+        child: Text("收藏到歌单"),
       ),
       PopupMenuItem(
-        child: Text("评论"),
         value: _MusicAction.comment,
+        child: Text("评论"),
       ),
     ];
 
     items.add(PopupMenuItem(
-        child: Text("歌手: ${music.artist!.map((a) => a.name).join('/')}",
-            maxLines: 1),
-        //如果所有artist的id为0，那么disable这个item
         enabled: music.artist!.fold(0, (dynamic c, ar) => c + ar.id) != 0,
-        value: _MusicAction.artists));
+        value: _MusicAction.artists,
+        child: Text("歌手: ${music.artist!.map((a) => a.name).join('/')}",
+            maxLines: 1)));
 
     if (MusicTileConfiguration.of(context).supportAlbumMenu) {
-      items.add(PopupMenuItem(
-        child: Text("专辑"),
+      items.add(const PopupMenuItem(
         value: _MusicAction.album,
+        child: Text("专辑"),
       ));
     }
     if (MusicTileConfiguration.of(context).remove != null) {
-      items.add(PopupMenuItem(
-        child: Text("删除"),
+      items.add(const PopupMenuItem(
         value: _MusicAction.delete,
+        child: Text("删除"),
       ));
     }
     return items;
   }
 
-  void _handleMusicAction(BuildContext context, _MusicAction type) async {
+  Future<void> _handleMusicAction(
+      BuildContext context, _MusicAction type) async {
     switch (type) {
       case _MusicAction.addToNext:
         context.player.insertToNext(music.metadata);
@@ -376,18 +368,18 @@ class _IconMore extends StatelessWidget {
               return PlaylistSelectorDialog();
             });
         if (id != null) {
-          bool succeed = await neteaseRepository!
+          final bool succeed = await neteaseRepository!
               .playlistTracksEdit(PlaylistOperation.add, id, [music.id]);
-          var scaffold = Scaffold.maybeOf(context);
+          final scaffold = Scaffold.maybeOf(context);
           if (scaffold == null) {
             //not notify when scaffold is empty
             return;
           }
           if (succeed) {
-            showSimpleNotification(Text("已添加到收藏"));
+            showSimpleNotification(const Text("已添加到收藏"));
           } else {
-            showSimpleNotification(Text("收藏歌曲失败!"),
-                leading: Icon(Icons.error),
+            showSimpleNotification(const Text("收藏歌曲失败!"),
+                leading: const Icon(Icons.error),
                 background: Theme.of(context).errorColor);
           }
         }
@@ -406,7 +398,7 @@ class _IconMore extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PopupMenuButton(
-      icon: Icon(Icons.more_vert),
+      icon: const Icon(Icons.more_vert),
       itemBuilder: _buildMenu,
       onSelected: (dynamic type) => _handleMusicAction(context, type),
     );

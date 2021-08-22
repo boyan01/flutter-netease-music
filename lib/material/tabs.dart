@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class PrimaryTabIndicator extends UnderlineTabIndicator {
-  PrimaryTabIndicator({Color color: Colors.white})
+  PrimaryTabIndicator({Color color = Colors.white})
       : super(
             insets: const EdgeInsets.only(bottom: 4),
             borderSide: BorderSide(color: color, width: 2.0));
@@ -9,14 +9,13 @@ class PrimaryTabIndicator extends UnderlineTabIndicator {
 
 ///网易云音乐风格的TabBar
 class RoundedTabBar extends StatelessWidget implements PreferredSizeWidget {
-  final List<Widget> tabs;
-
   const RoundedTabBar({Key? key, required this.tabs}) : super(key: key);
+  final List<Widget> tabs;
 
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
-      borderRadius: BorderRadius.vertical(top: Radius.circular(15)),
+      borderRadius: const BorderRadius.vertical(top: Radius.circular(15)),
       child: Material(
         color: Theme.of(context).scaffoldBackgroundColor,
         child: TabBar(
@@ -30,5 +29,5 @@ class RoundedTabBar extends StatelessWidget implements PreferredSizeWidget {
   }
 
   @override
-  Size get preferredSize => Size.fromHeight(50);
+  Size get preferredSize => const Size.fromHeight(50);
 }

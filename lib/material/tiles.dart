@@ -13,26 +13,26 @@ class AlbumTile extends StatelessWidget {
   final String Function(Map album)? subtitle;
 
   String _defaultSubtitle(Map album) {
-    String date = DateFormat("y.M.d")
+    final String date = DateFormat("y.M.d")
         .format(DateTime.fromMillisecondsSinceEpoch(album["publishTime"]));
     return "$date 歌曲 ${album["size"]}";
   }
 
   @override
   Widget build(BuildContext context) {
-    String subtitle = (this.subtitle ?? _defaultSubtitle)(album);
+    final String subtitle = (this.subtitle ?? _defaultSubtitle)(album);
     return InkWell(
       onTap: () {
         Navigator.of(context).push(MaterialPageRoute(builder: (context) {
           return AlbumDetailPage(albumId: album["id"], album: album);
         }));
       },
-      child: Container(
+      child: SizedBox(
         height: 64,
         child: Row(
           children: <Widget>[
             Padding(
-              padding: EdgeInsets.all(4),
+              padding: const EdgeInsets.all(4),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(4),
                 child: AspectRatio(
@@ -42,18 +42,18 @@ class AlbumTile extends StatelessWidget {
                 ),
               ),
             ),
-            Padding(padding: EdgeInsets.only(left: 4)),
+            const Padding(padding: EdgeInsets.only(left: 4)),
             Expanded(
                 child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Spacer(),
+                const Spacer(),
                 Text(album["name"], maxLines: 1),
-                Spacer(),
+                const Spacer(),
                 Text(subtitle,
                     maxLines: 1, style: Theme.of(context).textTheme.caption),
-                Spacer(),
-                Divider(height: 0)
+                const Spacer(),
+                const Divider(height: 0)
               ],
             ))
           ],

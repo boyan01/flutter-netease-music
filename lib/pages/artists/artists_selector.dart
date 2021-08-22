@@ -4,7 +4,8 @@ import 'package:quiet/model/model.dart';
 import 'page_artist_detail.dart';
 
 ///quick launch [ArtistDetailPage] if have more than one id
-void launchArtistDetailPage(BuildContext context, List<Artist>? artists) async {
+Future<void> launchArtistDetailPage(
+    BuildContext context, List<Artist>? artists) async {
   debugPrint("to artist :$artists");
   if (artists == null || artists.isEmpty) {
     return;
@@ -30,14 +31,13 @@ void launchArtistDetailPage(BuildContext context, List<Artist>? artists) async {
 ///歌手选择弹窗
 ///返回 [Artist]
 class ArtistSelectionDialog extends StatelessWidget {
-  final List<Artist> artists;
-
   const ArtistSelectionDialog({Key? key, required this.artists})
       : super(key: key);
+  final List<Artist> artists;
 
   @override
   Widget build(BuildContext context) {
-    List<Widget> children = artists.map<Widget>((artist) {
+    final List<Widget> children = artists.map<Widget>((artist) {
       final enabled = artist.id != 0;
       return ListTile(
         title: Padding(
@@ -57,12 +57,12 @@ class ArtistSelectionDialog extends StatelessWidget {
 
     return Center(
       child: Container(
-        constraints: BoxConstraints(maxHeight: 356),
+        constraints: const BoxConstraints(maxHeight: 356),
         child: SimpleDialog(
           title: Container(
-            child: Text("请选择要查看的歌手"),
             constraints: BoxConstraints(
                 minWidth: MediaQuery.of(context).size.width * 0.8),
+            child: const Text("请选择要查看的歌手"),
           ),
           children: children,
         ),

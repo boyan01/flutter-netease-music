@@ -13,8 +13,14 @@ Future<bool> showNeedLoginToast(BuildContext context) async {
             child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text("需要登录。"),
+            const Text("需要登录。"),
             InkWell(
+              onTap: () async {
+                OverlaySupportEntry.of(context)!.dismiss();
+                final loginResult =
+                    await Navigator.pushNamed(context, pageLogin);
+                completer.complete(loginResult == true);
+              },
               child: Text(
                 "点击前往登录页面",
                 style: Theme.of(context)
@@ -22,29 +28,22 @@ Future<bool> showNeedLoginToast(BuildContext context) async {
                     .bodyText1!
                     .copyWith(color: Colors.blue),
               ),
-              onTap: () async {
-                OverlaySupportEntry.of(context)!.dismiss();
-                final loginResult =
-                    await Navigator.pushNamed(context, pageLogin);
-                completer.complete(loginResult == true);
-              },
             )
           ],
         )));
   },
       curve: Curves.ease,
       key: const ValueKey('overlay_need_login'),
-      duration: Duration(milliseconds: 2000));
+      duration: const Duration(milliseconds: 2000));
   return await (completer.future as FutureOr<bool>);
 }
 
 class _Toast extends StatelessWidget {
-  final Widget child;
-
   const _Toast({
     Key? key,
     required this.child,
   }) : super(key: key);
+  final Widget child;
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +55,7 @@ class _Toast extends StatelessWidget {
         child: DefaultTextStyle(
           style: Theme.of(context).textTheme.bodyText1!,
           child: Align(
-            alignment: Alignment(0, 0.5),
+            alignment: const Alignment(0, 0.5),
             child: Material(
               borderRadius: BorderRadius.circular(8),
               child: Padding(

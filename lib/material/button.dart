@@ -187,10 +187,11 @@ class IconButton2 extends StatelessWidget {
   Widget build(BuildContext context) {
     assert(debugCheckHasMaterial(context));
     Color? currentColor;
-    if (onPressed != null)
+    if (onPressed != null) {
       currentColor = color;
-    else
+    } else {
       currentColor = disabledColor ?? Theme.of(context).disabledColor;
+    }
 
     Widget result = Semantics(
       button: true,
@@ -215,7 +216,6 @@ class IconButton2 extends StatelessWidget {
     }
     return InkResponse(
       onTap: onPressed,
-      child: result,
       highlightColor: highlightColor ?? Theme.of(context).highlightColor,
       splashColor: splashColor ?? Theme.of(context).splashColor,
       radius: math.min(
@@ -223,6 +223,7 @@ class IconButton2 extends StatelessWidget {
         (iconSize + math.min(padding.horizontal, padding.vertical)) * 0.7,
         // x 0.5 for diameter -> radius and + 40% overflow derived from other Material apps.
       ),
+      child: result,
     );
   }
 

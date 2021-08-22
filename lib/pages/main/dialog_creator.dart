@@ -15,11 +15,11 @@ class _PlaylistCreatorDialogState extends State<PlaylistCreatorDialog> {
 
   String? error;
 
-  GlobalKey<FormFieldState<String>> _formKey = GlobalKey();
+  final GlobalKey<FormFieldState<String>> _formKey = GlobalKey();
 
-  void _create(String? name) async {
-    final playlistDetail = await showLoaderOverlay(
-        context, neteaseRepository!.createPlaylist(name).then((value) => value!));
+  Future<void> _create(String? name) async {
+    final playlistDetail = await showLoaderOverlay(context,
+        neteaseRepository!.createPlaylist(name).then((value) => value!));
     if (playlistDetail.isValue) {
       Navigator.pop(context, playlistDetail);
     } else {
@@ -33,7 +33,7 @@ class _PlaylistCreatorDialogState extends State<PlaylistCreatorDialog> {
   Widget build(BuildContext context) {
     return AlertDialog(
       contentPadding: const EdgeInsets.only(left: 24, right: 24, top: 4),
-      title: Text("新建歌单"),
+      title: const Text("新建歌单"),
       content: TextFormField(
         key: _formKey,
         maxLength: 20,
@@ -55,17 +55,18 @@ class _PlaylistCreatorDialogState extends State<PlaylistCreatorDialog> {
           onPressed: () {
             Navigator.of(context).pop();
           },
-          child: Text("取消"),
           textColor: Theme.of(context).textTheme.caption!.color,
+          child: const Text("取消"),
         ),
         FlatButton(
-            onPressed: () {
-              if (!_formKey.currentState!.validate()) {
-                return;
-              }
-              _create(_formKey.currentState!.value);
-            },
-            child: Text("创建"))
+          onPressed: () {
+            if (!_formKey.currentState!.validate()) {
+              return;
+            }
+            _create(_formKey.currentState!.value);
+          },
+          child: const Text("创建"),
+        )
       ],
     );
   }

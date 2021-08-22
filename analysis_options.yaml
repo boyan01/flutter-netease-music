@@ -1,11 +1,22 @@
 include: package:lint/analysis_options.yaml
 
+analyzer:
+  strong-mode:
+    # TODO remove this
+    implicit-casts: true
+    implicit-dynamic: true
+  exclude:
+    - 'lib/generated/**'
+    - '**.g.dart'
+
 linter:
   rules:
     always_put_required_named_parameters_first: false
     avoid_classes_with_only_static_members: false
     always_specify_types: false
     sort_pub_dependencies: false
+
+    avoid_dynamic_calls: false
 
     sort_constructors_first: true
     #    prefer_single_quotes: true

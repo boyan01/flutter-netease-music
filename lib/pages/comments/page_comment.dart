@@ -81,20 +81,17 @@ class _CommentInputState extends State<_CommentInput> {
           border:
               Border(top: BorderSide(color: Theme.of(context).dividerColor))),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-          Padding(padding: EdgeInsets.only(left: 10)),
+          const Padding(padding: EdgeInsets.only(left: 10)),
           Expanded(
-              child: Container(
-            child: TextField(
-              focusNode: _focusNode,
-              controller: _controller,
-              decoration:
-                  InputDecoration(hintText: "随乐而起，有感而发", errorText: _error),
-            ),
+              child: TextField(
+            focusNode: _focusNode,
+            controller: _controller,
+            decoration:
+                InputDecoration(hintText: "随乐而起，有感而发", errorText: _error),
           )),
           IconButton(
-              icon: Icon(Icons.send),
+              icon: const Icon(Icons.send),
               onPressed: () async {
                 if (_isPosting || _controller!.text.trim().isEmpty) {
                   //do nothing..
@@ -124,9 +121,9 @@ class _CommentInputState extends State<_CommentInput> {
 }
 
 class CommentThreadId {
-  CommentThreadId(this.id, this.type, {this.payload}) : assert(id != null);
+  CommentThreadId(this.id, this.type, {this.payload});
 
-  final int? id;
+  final int id;
 
   final CommentType type;
 
@@ -176,22 +173,22 @@ class CommentThreadId {
 }
 
 class CommentThreadPayload {
-  final dynamic obj;
-  final String? coverImage;
-  final String? title;
-  final String? subtitle;
-
   CommentThreadPayload.music(Music music)
-      : this.obj = music,
+      : obj = music,
         coverImage = music.imageUrl?.toString(),
         title = music.title,
         subtitle = music.subTitle;
 
   CommentThreadPayload.playlist(PlaylistDetail playlist)
-      : this.obj = playlist,
-        this.coverImage = playlist.coverUrl,
-        this.title = playlist.name,
-        this.subtitle = playlist.creator!["nickname"];
+      : obj = playlist,
+        coverImage = playlist.coverUrl,
+        title = playlist.name,
+        subtitle = playlist.creator!["nickname"];
+
+  final dynamic obj;
+  final String? coverImage;
+  final String? title;
+  final String? subtitle;
 }
 
 enum CommentType {
@@ -226,7 +223,7 @@ enum CommentType {
 ///post comment to a comment thread
 Future<Result<Map>> _postComment(
     String content, CommentThreadId commentThread) async {
-  return await neteaseRepository!.doRequest(
+  return neteaseRepository!.doRequest(
       "https://music.163.com/weapi/resource/comments/add",
       {"content": content, "threadId": commentThread.threadId});
 }

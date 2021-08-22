@@ -1,9 +1,8 @@
 part of 'page_user_detail.dart';
 
 class TabMusic extends StatefulWidget {
-  final UserProfile profile;
-
   const TabMusic(this.profile, {Key? key}) : super(key: key);
+  final UserProfile profile;
 
   @override
   _TabMusicState createState() => _TabMusicState();
@@ -37,7 +36,7 @@ class _TabMusicState extends State<TabMusic>
                 Expanded(child: _Header(title: '歌单(${created.length})')),
                 Text('共被收藏${widget.profile.playlistBeSubscribedCount}次',
                     style: Theme.of(context).textTheme.caption),
-                SizedBox(width: 16),
+                const SizedBox(width: 16),
               ],
             ),
             ...created.map((playlist) => PlaylistTile(
@@ -61,17 +60,16 @@ class _TabMusicState extends State<TabMusic>
 }
 
 class _Header extends StatelessWidget {
-  final String title;
-
   const _Header({Key? key, required this.title}) : super(key: key);
+  final String title;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
       child: Text(
         title,
-        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
       ),
     );
   }

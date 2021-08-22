@@ -31,11 +31,11 @@ class PagePlayingFm extends StatelessWidget {
             child: Column(
               children: <Widget>[
                 AppBar(
-                  title: Text("私人FM"),
+                  title: const Text("私人FM"),
                   elevation: 0,
                   backgroundColor: Colors.transparent,
                 ),
-                _CenterSection(),
+                const _CenterSection(),
                 const SizedBox(height: 8),
                 DurationProgressBar(),
                 _FmControllerBar(),
@@ -81,7 +81,7 @@ class _CenterSectionState extends State<_CenterSection> {
             ],
           );
         },
-        duration: Duration(milliseconds: 300),
+        duration: const Duration(milliseconds: 300),
         firstChild: GestureDetector(
           onTap: () {
             setState(() {
@@ -132,7 +132,7 @@ class _FmCover extends StatelessWidget {
           music.title ?? "",
           style: Theme.of(context).primaryTextTheme.subtitle1,
         ),
-        SizedBox(height: 8),
+        const SizedBox(height: 8),
         InkWell(
           onTap: () {
             launchArtistDetailPage(context, music.artist);
@@ -141,7 +141,7 @@ class _FmCover extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               Container(
-                constraints: BoxConstraints(maxWidth: 200),
+                constraints: const BoxConstraints(maxWidth: 200),
                 child: Text(
                   music.artistString,
                   style: Theme.of(context)
@@ -166,7 +166,7 @@ class _FmCover extends StatelessWidget {
 class _FmControllerBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    var color = Theme.of(context).primaryIconTheme.color;
+    final color = Theme.of(context).primaryIconTheme.color;
 
     final iconPlayPause = PlayingIndicator(
       playing: IconButton(
@@ -189,18 +189,21 @@ class _FmControllerBar extends StatelessWidget {
           onPressed: () {
             context.transportControls.play();
           }),
-      buffering: Container(
+      buffering: const SizedBox(
         height: 56,
         width: 56,
         child: Center(
-          child: Container(
-              height: 24, width: 24, child: CircularProgressIndicator()),
+          child: SizedBox(
+            height: 24,
+            width: 24,
+            child: CircularProgressIndicator(),
+          ),
         ),
       ),
     );
 
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 10),
+      padding: const EdgeInsets.symmetric(vertical: 10),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[

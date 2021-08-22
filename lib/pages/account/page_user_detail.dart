@@ -19,10 +19,10 @@ part 'tab_music.dart';
 
 ///用户详情页
 class UserDetailPage extends StatelessWidget {
+  const UserDetailPage({Key? key, required this.userId}) : super(key: key);
+
   ///用户ID
   final int? userId;
-
-  const UserDetailPage({Key? key, required this.userId}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +32,7 @@ class UserDetailPage extends StatelessWidget {
           .then(
             (value) => value == null ? null : UserDetail.fromJsonMap(value),
           ),
-      loadTask: (() => neteaseRepository!.getUserDetail(userId!)),
+      loadTask: () => neteaseRepository!.getUserDetail(userId!),
       builder: (BuildContext context, UserDetail? user) {
         return _DetailPage(user: user);
       },
@@ -41,9 +41,8 @@ class UserDetailPage extends StatelessWidget {
 }
 
 class _DetailPage extends StatelessWidget {
-  final UserDetail? user;
-
   const _DetailPage({Key? key, this.user}) : super(key: key);
+  final UserDetail? user;
 
   @override
   Widget build(BuildContext context) {
@@ -76,9 +75,8 @@ class _DetailPage extends StatelessWidget {
 
 ///伸缩自如的AppBar
 class _UserDetailAppBar extends StatelessWidget {
-  final UserDetail? user;
-
   const _UserDetailAppBar(this.user, {Key? key}) : super(key: key);
+  final UserDetail? user;
 
   @override
   Widget build(BuildContext context) {
@@ -95,36 +93,36 @@ class _UserDetailAppBar extends StatelessWidget {
               image: CachedImage(user!.profile.backgroundUrl!)),
         ),
         content: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20),
+          padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Spacer(),
+                const Spacer(),
                 Row(
                   children: <Widget>[
                     RoundedImage(user!.profile.avatarUrl, size: 60),
                   ],
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 Text(user!.profile.nickname!,
-                    style:
-                        TextStyle(fontSize: 17, fontWeight: FontWeight.w400)),
-                SizedBox(height: 6),
+                    style: const TextStyle(
+                        fontSize: 17, fontWeight: FontWeight.w400)),
+                const SizedBox(height: 6),
                 Row(children: <Widget>[
                   InkWell(
-                      child: Text('关注:${user!.profile.follows}'),
                       onTap: () {
                         toast('关注');
-                      }),
-                  VerticalDivider(),
+                      },
+                      child: Text('关注:${user!.profile.follows}')),
+                  const VerticalDivider(),
                   InkWell(
-                    child: Text('粉丝:${user!.profile.followeds}'),
                     onTap: () {
                       toast('粉丝');
                     },
+                    child: Text('粉丝:${user!.profile.followeds}'),
                   ),
                 ]),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
               ]),
         ),
         builder: (context, t) {
@@ -146,12 +144,11 @@ class _UserDetailAppBar extends StatelessWidget {
         },
       ),
       elevation: 0,
-      forceElevated: false,
       bottom: RoundedTabBar(
         tabs: <Widget>[
           Tab(text: '音乐(${user!.profile.playlistCount})'),
           Tab(text: '动态(${user!.profile.eventCount})'),
-          Tab(text: '关于TA'),
+          const Tab(text: '关于TA'),
         ],
       ),
     );

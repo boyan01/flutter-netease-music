@@ -66,7 +66,7 @@ class PlayerControllerBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var color = Theme.of(context).primaryIconTheme.color;
+    final color = Theme.of(context).primaryIconTheme.color;
 
     final iconPlayPause = PlayingIndicator(
       playing: IconButton(
@@ -89,12 +89,15 @@ class PlayerControllerBar extends StatelessWidget {
           onPressed: () {
             context.transportControls.play();
           }),
-      buffering: Container(
+      buffering: const SizedBox(
         height: 56,
         width: 56,
         child: Center(
-          child: Container(
-              height: 24, width: 24, child: CircularProgressIndicator()),
+          child: SizedBox(
+            height: 24,
+            width: 24,
+            child: CircularProgressIndicator(),
+          ),
         ),
       ),
     );
@@ -193,9 +196,8 @@ class PlayingOperationBar extends StatelessWidget {
 }
 
 class _CenterSection extends StatefulWidget {
-  final Music music;
-
   const _CenterSection({Key? key, required this.music}) : super(key: key);
+  final Music music;
 
   @override
   State<StatefulWidget> createState() => _CenterSectionState();
@@ -226,7 +228,7 @@ class _CenterSectionState extends State<_CenterSection> {
             ],
           );
         },
-        duration: Duration(milliseconds: 300),
+        duration: const Duration(milliseconds: 300),
         firstChild: GestureDetector(
           onTap: () {
             setState(() {
@@ -249,12 +251,11 @@ class _CenterSectionState extends State<_CenterSection> {
 }
 
 class PlayingLyricView extends StatelessWidget {
+  const PlayingLyricView({Key? key, this.onTap, required this.music})
+      : super(key: key);
   final VoidCallback? onTap;
 
   final Music music;
-
-  const PlayingLyricView({Key? key, this.onTap, required this.music})
-      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -263,7 +264,7 @@ class PlayingLyricView extends StatelessWidget {
   }
 
   Widget _buildLyric(BuildContext context) {
-    TextStyle style = Theme.of(context)
+    final TextStyle style = Theme.of(context)
         .textTheme
         .bodyText2!
         .copyWith(height: 2, fontSize: 16, color: Colors.white);
@@ -290,7 +291,7 @@ class PlayingLyricView extends StatelessWidget {
             ]);
           },
           child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20),
+            padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Lyric(
               lyric: playingLyric.lyric!,
               lyricLineStyle: normalStyle,
@@ -308,24 +309,20 @@ class PlayingLyricView extends StatelessWidget {
         );
       });
     } else {
-      return Container(
-        child: Center(
-          child: Text(playingLyric.message!, style: style),
-        ),
+      return Center(
+        child: Text(playingLyric.message!, style: style),
       );
     }
   }
 }
 
 class PlayingTitle extends StatelessWidget {
-  final Music music;
-
   const PlayingTitle({Key? key, required this.music}) : super(key: key);
+  final Music music;
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      top: true,
       bottom: false,
       child: AppBar(
         elevation: 0,
@@ -348,7 +345,7 @@ class PlayingTitle extends StatelessWidget {
           children: <Widget>[
             Text(
               music.title!,
-              style: TextStyle(fontSize: 17),
+              style: const TextStyle(fontSize: 17),
             ),
             InkWell(
               onTap: () {
@@ -358,7 +355,7 @@ class PlayingTitle extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   Container(
-                    constraints: BoxConstraints(maxWidth: 200),
+                    constraints: const BoxConstraints(maxWidth: 200),
                     child: Text(
                       music.artistString,
                       style: Theme.of(context)
@@ -369,7 +366,7 @@ class PlayingTitle extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
-                  Icon(Icons.chevron_right, size: 17),
+                  const Icon(Icons.chevron_right, size: 17),
                 ],
               ),
             )
@@ -379,7 +376,7 @@ class PlayingTitle extends StatelessWidget {
         actions: <Widget>[
           PopupMenuButton(
             itemBuilder: (context) {
-              return [
+              return const [
                 PopupMenuItem(
                   child: Text("下载"),
                 ),

@@ -2,6 +2,13 @@ import 'package:flutter/material.dart';
 
 ///the same as [FlexibleSpaceBar]
 class FlexibleDetailBar extends StatelessWidget {
+  const FlexibleDetailBar({
+    Key? key,
+    required this.content,
+    this.builder,
+    required this.background,
+  }) : super(key: key);
+
   ///the content of bar
   ///scroll with the parent ScrollView
   final Widget content;
@@ -15,18 +22,11 @@ class FlexibleDetailBar extends StatelessWidget {
   final Widget Function(BuildContext context, double t)? builder;
 
   static double percentage(BuildContext context) {
-    _FlexibleDetail? value =
+    final _FlexibleDetail? value =
         context.dependOnInheritedWidgetOfExactType<_FlexibleDetail>();
     assert(value != null, 'ooh , can not find');
     return value!.t;
   }
-
-  const FlexibleDetailBar({
-    Key? key,
-    required this.content,
-    this.builder,
-    required this.background,
-  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +53,7 @@ class FlexibleDetailBar extends StatelessWidget {
 
     //为content 添加 底部的 padding
     double bottomPadding = 0;
-    SliverAppBar? sliverBar =
+    final SliverAppBar? sliverBar =
         context.findAncestorWidgetOfExactType<SliverAppBar>();
     if (sliverBar != null && sliverBar.bottom != null) {
       bottomPadding = sliverBar.bottom!.preferredSize.height;
@@ -68,11 +68,11 @@ class FlexibleDetailBar extends StatelessWidget {
         child: Padding(
           padding: EdgeInsets.only(bottom: bottomPadding),
           child: Material(
-              child: DefaultTextStyle(
-                  style: Theme.of(context).primaryTextTheme.bodyText2!,
-                  child: content),
-              elevation: 0,
-              color: Colors.transparent),
+            color: Colors.transparent,
+            child: DefaultTextStyle(
+                style: Theme.of(context).primaryTextTheme.bodyText2!,
+                child: content),
+          ),
         ),
       ),
     ));
@@ -85,16 +85,19 @@ class FlexibleDetailBar extends StatelessWidget {
         child: ClipRect(
             child: DefaultTextStyle(
                 style: Theme.of(context).primaryTextTheme.bodyText2!,
-                child: Stack(children: children, fit: StackFit.expand))));
+                child: Stack(
+                  fit: StackFit.expand,
+                  children: children,
+                ))));
   }
 }
 
 class _FlexibleDetail extends InheritedWidget {
+  const _FlexibleDetail(this.t, {required Widget child}) : super(child: child);
+
   ///0 : Expanded
   ///1 : Collapsed
   final double t;
-
-  _FlexibleDetail(this.t, {required Widget child}) : super(child: child);
 
   @override
   bool updateShouldNotify(_FlexibleDetail oldWidget) {
@@ -107,9 +110,8 @@ class _FlexibleDetail extends InheritedWidget {
 /// child上下滑动的时候会覆盖上黑色阴影
 ///
 class FlexShadowBackground extends StatelessWidget {
-  final Widget? child;
-
   const FlexShadowBackground({Key? key, this.child}) : super(key: key);
+  final Widget? child;
 
   @override
   Widget build(BuildContext context) {

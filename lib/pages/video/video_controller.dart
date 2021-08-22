@@ -5,23 +5,13 @@ import 'package:flutter/material.dart';
 
 import 'video_player_model.dart';
 
-typedef void MvControllerChangeCallback(bool show);
+typedef MvControllerChangeCallback = void Function(bool show);
 
 ///祖先节点必须存在 [VideoPlayerModel]
 ///[top] 从顶部滑出
 ///[center] 更改透明度浮现
 ///[bottom] 从底部滑出
 class AnimatedMvController extends StatefulWidget {
-  final Widget top;
-  final Widget bottom;
-  final Widget center;
-
-  ///当 controller 隐藏的是否是否显示底部的播放进度条
-  final bool showBottomIndicator;
-
-  final MvControllerChangeCallback? beforeChange;
-  final MvControllerChangeCallback? afterChange;
-
   const AnimatedMvController(
       {Key? key,
       required this.top,
@@ -31,6 +21,16 @@ class AnimatedMvController extends StatefulWidget {
       this.afterChange,
       this.showBottomIndicator = false})
       : super(key: key);
+
+  final Widget top;
+  final Widget bottom;
+  final Widget center;
+
+  ///当 controller 隐藏的是否是否显示底部的播放进度条
+  final bool showBottomIndicator;
+
+  final MvControllerChangeCallback? beforeChange;
+  final MvControllerChangeCallback? afterChange;
 
   @override
   _AnimatedMvControllerState createState() => _AnimatedMvControllerState();
@@ -130,8 +130,8 @@ class _AnimatedMvControllerState extends State<AnimatedMvController>
               Column(
                 children: <Widget>[
                   FractionalTranslation(
-                      child: widget.top,
-                      translation: Offset(0, _controller.value - 1)),
+                      translation: Offset(0, _controller.value - 1),
+                      child: widget.top),
                   Expanded(
                     child: IgnorePointer(
                       ignoring: _controller.value <= 0.1,
@@ -141,8 +141,8 @@ class _AnimatedMvControllerState extends State<AnimatedMvController>
                     ),
                   ),
                   FractionalTranslation(
-                      child: widget.bottom,
-                      translation: Offset(0, 1 - _controller.value))
+                      translation: Offset(0, 1 - _controller.value),
+                      child: widget.bottom)
                 ],
               ),
               _buildBottomIndicator(context),
@@ -166,8 +166,8 @@ class _AnimatedMvControllerState extends State<AnimatedMvController>
           _controller.status == AnimationStatus.dismissed,
       child: Column(
         children: <Widget>[
-          Spacer(),
-          Container(
+          const Spacer(),
+          SizedBox(
             height: 4,
             child: LinearProgressIndicator(
               value: progress,

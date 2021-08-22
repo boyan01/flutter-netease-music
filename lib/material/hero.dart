@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:quiet/component.dart';
 
 class QuietHero extends StatelessWidget {
-  final Object tag;
-  final Widget child;
-
   const QuietHero({Key? key, required this.tag, required this.child})
       : super(key: key);
+
+  final Object tag;
+  final Widget child;
 
   @override
   Widget build(BuildContext context) {

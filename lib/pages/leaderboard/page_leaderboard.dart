@@ -9,7 +9,7 @@ class LeaderboardPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: BackButton(),
+        leading: const BackButton(),
         title: const Text("排行榜"),
       ),
       body: Loader<Map>(
@@ -23,24 +23,24 @@ class LeaderboardPage extends StatelessWidget {
 }
 
 class _Leaderboard extends StatelessWidget {
-  _Leaderboard(this.data);
+  const _Leaderboard(this.data);
 
   final List<Map> data;
 
   @override
   Widget build(BuildContext context) {
-    List<Widget> widgets = [];
-    widgets.add(_ItemTitle("官方榜"));
+    final List<Widget> widgets = [];
+    widgets.add(const _ItemTitle("官方榜"));
     for (var i = 0; i < 4; i++) {
       widgets.add(_ItemLeaderboard1(data[i]));
     }
-    widgets.add(_ItemTitle("全球榜"));
+    widgets.add(const _ItemTitle("全球榜"));
     widgets.add(GridView.builder(
-        padding: EdgeInsets.symmetric(horizontal: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 8),
         shrinkWrap: true,
         itemCount: data.length - 4,
-        physics: NeverScrollableScrollPhysics(),
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        physics: const NeverScrollableScrollPhysics(),
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 3,
             childAspectRatio: 10 / 13.5,
             mainAxisSpacing: 4,
@@ -55,14 +55,14 @@ class _Leaderboard extends StatelessWidget {
 }
 
 class _ItemTitle extends StatelessWidget {
-  _ItemTitle(this.title);
+  const _ItemTitle(this.title);
 
   final String title;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(top: 8, left: 16, bottom: 4),
+      margin: const EdgeInsets.only(top: 8, left: 16, bottom: 4),
       child: Text(
         title,
         style: Theme.of(context)
@@ -75,7 +75,7 @@ class _ItemTitle extends StatelessWidget {
 }
 
 class _ItemLeaderBoard2 extends StatelessWidget {
-  _ItemLeaderBoard2(this.row);
+  const _ItemLeaderBoard2(this.row);
 
   final Map row;
 
@@ -87,7 +87,7 @@ class _ItemLeaderBoard2 extends StatelessWidget {
           return PlaylistDetailPage(row["id"]);
         }));
       },
-      child: Container(
+      child: SizedBox(
         height: 130,
         width: 140,
         child: Column(
@@ -105,22 +105,19 @@ class _ItemLeaderBoard2 extends StatelessWidget {
                       child: Container(
                         height: 24,
                         width: double.infinity,
-                        decoration: BoxDecoration(
+                        decoration: const BoxDecoration(
                             gradient: LinearGradient(
                                 begin: Alignment.topCenter,
                                 end: Alignment.bottomCenter,
-                                colors: const [
-                              Colors.transparent,
-                              Colors.black45
-                            ])),
+                                colors: [Colors.transparent, Colors.black45])),
                         child: Row(
                           children: <Widget>[
-                            Spacer(),
+                            const Spacer(),
                             Text(
                               row["updateFrequency"],
                               style: Theme.of(context).primaryTextTheme.caption,
                             ),
-                            Padding(padding: EdgeInsets.only(right: 4))
+                            const Padding(padding: EdgeInsets.only(right: 4))
                           ],
                         ),
                       ),
@@ -142,7 +139,7 @@ class _ItemLeaderBoard2 extends StatelessWidget {
 }
 
 class _ItemLeaderboard1 extends StatelessWidget {
-  _ItemLeaderboard1(this.row);
+  const _ItemLeaderboard1(this.row);
 
   final Map row;
 
@@ -156,7 +153,7 @@ class _ItemLeaderboard1 extends StatelessWidget {
       },
       child: Container(
         height: 130,
-        padding: EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+        padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
         child: Row(
           children: <Widget>[
             AspectRatio(
@@ -171,22 +168,19 @@ class _ItemLeaderboard1 extends StatelessWidget {
                       child: Container(
                         height: 24,
                         width: double.infinity,
-                        decoration: BoxDecoration(
+                        decoration: const BoxDecoration(
                             gradient: LinearGradient(
                                 begin: Alignment.topCenter,
                                 end: Alignment.bottomCenter,
-                                colors: const [
-                              Colors.transparent,
-                              Colors.black45
-                            ])),
+                                colors: [Colors.transparent, Colors.black45])),
                         child: Row(
                           children: <Widget>[
-                            Spacer(),
+                            const Spacer(),
                             Text(
                               row["updateFrequency"],
                               style: Theme.of(context).primaryTextTheme.caption,
                             ),
-                            Padding(padding: EdgeInsets.only(right: 4))
+                            const Padding(padding: EdgeInsets.only(right: 4))
                           ],
                         ),
                       ),
@@ -195,33 +189,31 @@ class _ItemLeaderboard1 extends StatelessWidget {
                 ),
               ),
             ),
-            Padding(padding: EdgeInsets.only(left: 8)),
+            const Padding(padding: EdgeInsets.only(left: 8)),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Spacer(),
+                  const Spacer(),
                   Text(
                     _getTrack((row["tracks"] as List)[0] as Map),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  Spacer(),
+                  const Spacer(),
                   Text(
                     _getTrack((row["tracks"] as List)[1] as Map),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  Spacer(),
+                  const Spacer(),
                   Text(
                     _getTrack((row["tracks"] as List)[2] as Map),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  Spacer(),
-                  Divider(
-                    height: 0,
-                  ),
+                  const Spacer(),
+                  const Divider(height: 0),
                 ],
               ),
             )

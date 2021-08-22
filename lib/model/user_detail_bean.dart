@@ -1,17 +1,4 @@
 class UserDetail {
-  final int? level;
-  final int? listenSongs;
-  final UserPoint userPoint;
-  final bool? mobileSign;
-  final bool? pcSign;
-  final UserProfile profile;
-  final bool? peopleCanSeeMyPlayRecord;
-  final List<Bindings> bindings;
-  final bool? adValid;
-  final int? code;
-  final int? createTime;
-  final int? createDays;
-
   UserDetail.fromJsonMap(Map<String, dynamic> map)
       : level = map["level"],
         listenSongs = map["listenSongs"],
@@ -27,8 +14,21 @@ class UserDetail {
         createTime = map["createTime"],
         createDays = map["createDays"];
 
+  final int? level;
+  final int? listenSongs;
+  final UserPoint userPoint;
+  final bool? mobileSign;
+  final bool? pcSign;
+  final UserProfile profile;
+  final bool? peopleCanSeeMyPlayRecord;
+  final List<Bindings> bindings;
+  final bool? adValid;
+  final int? code;
+  final int? createTime;
+  final int? createDays;
+
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['level'] = level;
     data['listenSongs'] = listenSongs;
     data['userPoint'] = userPoint.toJson();
@@ -36,7 +36,7 @@ class UserDetail {
     data['pcSign'] = pcSign;
     data['profile'] = profile.toJson();
     data['peopleCanSeeMyPlayRecord'] = peopleCanSeeMyPlayRecord;
-    data['bindings'] = this.bindings.map((v) => v.toJson()).toList();
+    data['bindings'] = bindings.map((v) => v.toJson()).toList();
     data['adValid'] = adValid;
     data['code'] = code;
     data['createTime'] = createTime;
@@ -46,13 +46,6 @@ class UserDetail {
 }
 
 class UserPoint {
-  final int? userId;
-  final int? balance;
-  final int? updateTime;
-  final int? version;
-  final int? status;
-  final int? blockBalance;
-
   UserPoint.fromJsonMap(Map<String, dynamic> map)
       : userId = map["userId"],
         balance = map["balance"],
@@ -61,8 +54,15 @@ class UserPoint {
         status = map["status"],
         blockBalance = map["blockBalance"];
 
+  final int? userId;
+  final int? balance;
+  final int? updateTime;
+  final int? version;
+  final int? status;
+  final int? blockBalance;
+
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['userId'] = userId;
     data['balance'] = balance;
     data['updateTime'] = updateTime;
@@ -74,45 +74,6 @@ class UserPoint {
 }
 
 class UserProfile {
-  final String? detailDescription;
-  final bool? followed;
-  final String? avatarImgIdStr;
-  final String? backgroundImgIdStr;
-  final bool? defaultAvatar;
-  final String? avatarUrl;
-  final int? userId;
-  final int? gender;
-  final int? accountStatus;
-  final int? vipType;
-  final int? avatarImgId;
-  final String? nickname;
-  final int? birthday;
-  final int? city;
-  final int? province;
-  final int? djStatus;
-  final Object? experts;
-  final int? backgroundImgId;
-  final int? userType;
-  final bool? mutual;
-  final Object? remarkName;
-  final Object? expertTags;
-  final int? authStatus;
-  final String? description;
-  final String? backgroundUrl;
-  final String? signature;
-  final int? authority;
-  final List<dynamic>? artistIdentity;
-  final int? followeds;
-  final int? follows;
-  final int? cCount;
-  final bool? blacklist;
-  final int? eventCount;
-  final int? sDJPCount;
-  final int? allSubscribedCount;
-  final int? playlistCount;
-  final int? playlistBeSubscribedCount;
-  final int? sCount;
-
   UserProfile.fromJsonMap(Map<String, dynamic> map)
       : detailDescription = map["detailDescription"],
         followed = map["followed"],
@@ -153,8 +114,47 @@ class UserProfile {
         playlistBeSubscribedCount = map["playlistBeSubscribedCount"],
         sCount = map["sCount"];
 
+  final String? detailDescription;
+  final bool? followed;
+  final String? avatarImgIdStr;
+  final String? backgroundImgIdStr;
+  final bool? defaultAvatar;
+  final String? avatarUrl;
+  final int? userId;
+  final int? gender;
+  final int? accountStatus;
+  final int? vipType;
+  final int? avatarImgId;
+  final String? nickname;
+  final int? birthday;
+  final int? city;
+  final int? province;
+  final int? djStatus;
+  final Object? experts;
+  final int? backgroundImgId;
+  final int? userType;
+  final bool? mutual;
+  final Object? remarkName;
+  final Object? expertTags;
+  final int? authStatus;
+  final String? description;
+  final String? backgroundUrl;
+  final String? signature;
+  final int? authority;
+  final List<dynamic>? artistIdentity;
+  final int? followeds;
+  final int? follows;
+  final int? cCount;
+  final bool? blacklist;
+  final int? eventCount;
+  final int? sDJPCount;
+  final int? allSubscribedCount;
+  final int? playlistCount;
+  final int? playlistBeSubscribedCount;
+  final int? sCount;
+
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['detailDescription'] = detailDescription;
     data['followed'] = followed;
     data['avatarImgIdStr'] = avatarImgIdStr;
@@ -198,16 +198,6 @@ class UserProfile {
 }
 
 class Bindings {
-  final int? refreshTime;
-  final int? expiresIn;
-  final int? userId;
-  final Object? tokenJsonStr;
-  final String? url;
-  final bool? expired;
-  final int? bindingTime;
-  final int? id;
-  final int? type;
-
   Bindings.fromJsonMap(Map<String, dynamic> map)
       : refreshTime = map["refreshTime"],
         expiresIn = map["expiresIn"],
@@ -219,8 +209,18 @@ class Bindings {
         id = map["id"],
         type = map["type"];
 
+  final int? refreshTime;
+  final int? expiresIn;
+  final int? userId;
+  final Object? tokenJsonStr;
+  final String? url;
+  final bool? expired;
+  final int? bindingTime;
+  final int? id;
+  final int? type;
+
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['refreshTime'] = refreshTime;
     data['expiresIn'] = expiresIn;
     data['userId'] = userId;

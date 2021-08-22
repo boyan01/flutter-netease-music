@@ -6,7 +6,7 @@ class DialogNoCopyRight extends StatelessWidget {
     return Dialog(
       child: Column(
         mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
+        children: const [
           Image(image: AssetImage("assets/no_copy_right.png")),
           Padding(padding: EdgeInsets.only(top: 16)),
           Text(

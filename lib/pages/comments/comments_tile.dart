@@ -1,8 +1,7 @@
 part of 'comments.dart';
 
 class _ItemTitle extends StatelessWidget {
-  const _ItemTitle({Key? key, required this.commentThreadId})
-      : super(key: key);
+  const _ItemTitle({Key? key, required this.commentThreadId}) : super(key: key);
 
   final CommentThreadId commentThreadId;
 
@@ -16,16 +15,16 @@ class _ItemTitle extends StatelessWidget {
           onTap: () async {
             if (commentThreadId.type == CommentType.playlist) {
               Navigator.push(context, MaterialPageRoute(builder: (context) {
-                final playlist = (payload!.obj as PlaylistDetail);
+                final playlist = payload!.obj as PlaylistDetail;
                 return PlaylistDetailPage(
                   playlist.id!,
                   playlist: playlist,
                 );
               }));
             } else if (commentThreadId.type == CommentType.song) {
-              Music music = payload!.obj;
+              final Music music = payload!.obj;
               if (context.playerValue.current != music) {
-                dynamic result = await showDialog(
+                final dynamic result = await showDialog(
                     context: context,
                     builder: (context) {
                       return AlertDialog(
@@ -35,12 +34,12 @@ class _ItemTitle extends StatelessWidget {
                               onPressed: () {
                                 Navigator.pop(context);
                               },
-                              child: Text("取消")),
+                              child: const Text("取消")),
                           FlatButton(
                               onPressed: () {
                                 Navigator.pop(context, true);
                               },
-                              child: Text("播放")),
+                              child: const Text("播放")),
                         ],
                       );
                     });
@@ -57,12 +56,11 @@ class _ItemTitle extends StatelessWidget {
             }
           },
           child: Container(
-            padding: EdgeInsets.all(10),
+            padding: const EdgeInsets.all(10),
             child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 ClipRRect(
-                  borderRadius: BorderRadius.all(Radius.circular(3)),
+                  borderRadius: const BorderRadius.all(Radius.circular(3)),
                   child: Image(
                     fit: BoxFit.cover,
                     image: CachedImage(payload!.coverImage!),
@@ -70,8 +68,8 @@ class _ItemTitle extends StatelessWidget {
                     height: 60,
                   ),
                 ),
-                Padding(padding: EdgeInsets.only(left: 10)),
-                Container(
+                const Padding(padding: EdgeInsets.only(left: 10)),
+                SizedBox(
                   height: 60,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -88,8 +86,8 @@ class _ItemTitle extends StatelessWidget {
                     ],
                   ),
                 ),
-                Spacer(),
-                Icon(Icons.chevron_right)
+                const Spacer(),
+                const Icon(Icons.chevron_right)
               ],
             ),
           ),
@@ -103,15 +101,15 @@ class _ItemTitle extends StatelessWidget {
 class _ItemLoadMore extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       height: 56,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
+        children: const [
           SizedBox(
-            child: CircularProgressIndicator(),
             height: 16,
             width: 16,
+            child: CircularProgressIndicator(),
           ),
           Padding(
             padding: EdgeInsets.only(left: 8),
@@ -131,7 +129,7 @@ class _ItemMoreHot extends StatelessWidget {
         debugPrint("go to hot comments");
       },
       child: Container(
-        padding: EdgeInsets.symmetric(vertical: 16),
+        padding: const EdgeInsets.symmetric(vertical: 16),
         child: Center(
           child: Text(
             "全部精彩评论 >",
@@ -144,17 +142,16 @@ class _ItemMoreHot extends StatelessWidget {
 }
 
 class _ItemHeader extends StatelessWidget {
-  final String title;
-
   const _ItemHeader({Key? key, required this.title}) : super(key: key);
+  final String title;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.only(left: 16, top: 16, bottom: 10),
+      padding: const EdgeInsets.only(left: 16, top: 16, bottom: 10),
       child: Text(
         title,
-        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
       ),
     );
   }
@@ -167,24 +164,24 @@ class _ItemComment extends StatefulWidget {
 
   @override
   _ItemCommentState createState() {
-    return new _ItemCommentState();
+    return _ItemCommentState();
   }
 }
 
 class _ItemCommentState extends State<_ItemComment> {
   @override
   Widget build(BuildContext context) {
-    User user = widget.comment.user;
+    final User user = widget.comment.user;
     return InkWell(
       onTap: () {
         showDialog(
             context: context,
             builder: (context) {
               return SimpleDialog(
-                contentPadding: EdgeInsets.only(),
+                contentPadding: const EdgeInsets.only(),
                 children: <Widget>[
                   ListTile(
-                    title: Text("复制"),
+                    title: const Text("复制"),
                     onTap: () {
                       Clipboard.setData(
                           ClipboardData(text: widget.comment.content));
@@ -192,9 +189,7 @@ class _ItemCommentState extends State<_ItemComment> {
                       toast('复制成功');
                     },
                   ),
-                  Divider(
-                    height: 0,
-                  ),
+                  const Divider(height: 0),
                 ],
               );
             });
@@ -202,12 +197,11 @@ class _ItemCommentState extends State<_ItemComment> {
       child: DividerWrapper(
         indent: 60,
         child: Padding(
-          padding: EdgeInsets.only(left: 16, top: 10, right: 16),
+          padding: const EdgeInsets.only(left: 16, top: 10, right: 16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   ClipOval(
                       child: InkResponse(
@@ -224,7 +218,7 @@ class _ItemCommentState extends State<_ItemComment> {
                       height: 36,
                     ),
                   )),
-                  Padding(padding: EdgeInsets.only(left: 10)),
+                  const Padding(padding: EdgeInsets.only(left: 10)),
                   Expanded(
                       child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -247,9 +241,9 @@ class _ItemCommentState extends State<_ItemComment> {
                     children: <Widget>[
                       Text(
                         widget.comment.likedCount.toString(),
-                        style: TextStyle(fontSize: 11),
+                        style: const TextStyle(fontSize: 11),
                       ),
-                      Padding(padding: EdgeInsets.only(left: 5)),
+                      const Padding(padding: EdgeInsets.only(left: 5)),
                       InkResponse(
                         onTap: () async {
                           //TODO
@@ -267,8 +261,8 @@ class _ItemCommentState extends State<_ItemComment> {
                 ],
               ),
               Container(
-                padding: EdgeInsets.only(left: 44),
-                margin: EdgeInsets.symmetric(vertical: 8),
+                padding: const EdgeInsets.only(left: 44),
+                margin: const EdgeInsets.symmetric(vertical: 8),
                 child: Text(widget.comment.content!, maxLines: 10),
               ),
             ],

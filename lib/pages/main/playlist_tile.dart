@@ -24,16 +24,14 @@ class PlaylistTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Widget cover = Container(
-      child: ClipRRect(
-        borderRadius: BorderRadius.all(Radius.circular(4)),
-        child: FadeInImage(
-          placeholder: AssetImage("assets/playlist_playlist.9.png"),
-          image: CachedImage(playlist!.coverUrl!),
-          fit: BoxFit.cover,
-          height: 50,
-          width: 50,
-        ),
+    Widget cover = ClipRRect(
+      borderRadius: const BorderRadius.all(Radius.circular(4)),
+      child: FadeInImage(
+        placeholder: const AssetImage("assets/playlist_playlist.9.png"),
+        image: CachedImage(playlist!.coverUrl!),
+        fit: BoxFit.cover,
+        height: 50,
+        width: 50,
       ),
     );
     if (enableHero) {
@@ -53,35 +51,35 @@ class PlaylistTile extends StatelessWidget {
         height: 60,
         child: Row(
           children: <Widget>[
-            Padding(padding: EdgeInsets.only(left: 16)),
+            const Padding(padding: EdgeInsets.only(left: 16)),
             cover,
-            Padding(padding: EdgeInsets.only(left: 10)),
+            const Padding(padding: EdgeInsets.only(left: 10)),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Spacer(),
+                  const Spacer(),
                   Text(
                     playlist!.name!,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: TextStyle(fontSize: 15),
+                    style: const TextStyle(fontSize: 15),
                   ),
-                  Padding(padding: EdgeInsets.only(top: 4)),
+                  const Padding(padding: EdgeInsets.only(top: 4)),
                   Text("${playlist!.trackCount}首",
                       style: Theme.of(context).textTheme.caption),
-                  Spacer(),
+                  const Spacer(),
                 ],
               ),
             ),
             if (enableMore)
               PopupMenuButton<PlaylistOp>(
                 itemBuilder: (context) {
-                  return [
-                    PopupMenuItem(child: Text("分享"), value: PlaylistOp.share),
+                  return const [
+                    PopupMenuItem(value: PlaylistOp.share, child: Text("分享")),
                     PopupMenuItem(
-                        child: Text("编辑歌单信息"), value: PlaylistOp.edit),
-                    PopupMenuItem(child: Text("删除"), value: PlaylistOp.delete),
+                        value: PlaylistOp.edit, child: Text("编辑歌单信息")),
+                    PopupMenuItem(value: PlaylistOp.delete, child: Text("删除")),
                   ];
                 },
                 onSelected: (op) {
@@ -98,7 +96,7 @@ class PlaylistTile extends StatelessWidget {
                       break;
                   }
                 },
-                icon: Icon(Icons.more_vert),
+                icon: const Icon(Icons.more_vert),
               ),
           ],
         ),

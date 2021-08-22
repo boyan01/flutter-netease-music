@@ -1,10 +1,8 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:logging/logging.dart';
 import 'package:netease_music_api/netease_cloud_music.dart' as api;
 import 'package:path_provider/path_provider.dart';
 import 'package:quiet/model/playlist_detail.dart';
@@ -44,12 +42,12 @@ class NeteaseSearchType {
 
 enum PlaylistOperation { add, remove }
 
-const _CODE_SUCCESS = 200;
+const _kCodeSuccess = 200;
 
-const _CODE_NEED_LOGIN = 301;
+const _kCodeNeedLogin = 301;
 
 ///map a result to any other
-Result<R> _map<T, R>(Result<T> source, R f(T t)) {
+Result<R> _map<T, R>(Result<T> source, R Function(T t) f) {
   if (source.isError) return source.asError!;
   try {
     return Result.value(f(source.asValue!.value));
@@ -82,7 +80,7 @@ class NeteaseRepository {
       PersistCookieJar? cookieJar;
       try {
         final path = (await getApplicationDocumentsDirectory()).path;
-        cookieJar = PersistCookieJar(storage: FileStorage(path + '/.cookies/'));
+        cookieJar = PersistCookieJar(storage: FileStorage('$path/.cookies/'));
       } catch (e) {
         debugPrint("error: can not create persist cookie jar");
       }
@@ -90,7 +88,7 @@ class NeteaseRepository {
     });
   }
 
-  Completer<PersistCookieJar> _cookieJar = Completer();
+  final Completer<PersistCookieJar> _cookieJar = Completer();
 
   Future<List<Cookie>> _loadCookies() async {
     final jar = await _cookieJar.future;
@@ -98,7 +96,7 @@ class NeteaseRepository {
     return jar.loadForRequest(uri);
   }
 
-  void _saveCookies(List<Cookie> cookies) async {
+  Future<void> _saveCookies(List<Cookie> cookies) async {
     final jar = await _cookieJar.future;
     jar.saveFromResponse(Uri.parse('http://music.163.com'), cookies);
   }
@@ -201,15 +199,15 @@ class NeteaseRepository {
     final lyricCache = await _lyricCache();
     final key = _LyricCacheKey(id);
     //check cache first
-    String? cached = await lyricCache.get(key);
+    final String? cached = await lyricCache.get(key);
     if (cached != null) {
       return cached;
     }
-    var result = await doRequest('/lyric', {"id": id});
+    final result = await doRequest('/lyric', {"id": id});
     if (result.isError) {
       return Future.error(result.asError!.error);
     }
-    Map? lyc = result.asValue!.value["lrc"];
+    final Map? lyc = result.asValue!.value["lrc"];
     if (lyc == null) {
       return null;
     }
@@ -221,9 +219,9 @@ class NeteaseRepository {
 
   ///获取搜索热词
   Future<Result<List<String>>> searchHotWords() async {
-    var result = await doRequest("/search/hot", {"type": 1111});
+    final result = await doRequest("/search/hot", {"type": 1111});
     return _map(result, (dynamic t) {
-      List hots = (t["result"] as Map)["hots"];
+      final List hots = (t["result"] as Map)["hots"];
       return hots.cast<Map<String, dynamic>>().map((map) {
         return map["first"] as String;
       }).toList();
@@ -247,15 +245,15 @@ class NeteaseRepository {
     if (keyword == null || keyword.isEmpty || keyword.trim().isEmpty) {
       return Result.value(const []);
     }
-    keyword = keyword.trim();
     final response = await doRequest(
-        "https://music.163.com/weapi/search/suggest/keyword", {"s": keyword});
+        "https://music.163.com/weapi/search/suggest/keyword",
+        {"s": keyword.trim()});
     if (response.isError) {
       return Result.value(const []);
     }
     return _map(response, (dynamic t) {
-      List<Map>? match =
-          ((response.asValue!.value["result"]["allMatch"]) as List?)?.cast();
+      final List<Map>? match =
+          (response.asValue!.value["result"]["allMatch"] as List?)?.cast();
       if (match == null) {
         return [];
       }
@@ -299,7 +297,7 @@ class NeteaseRepository {
       PlaylistOperation operation, int playlistId, List<int?> musicIds) async {
     assert(musicIds.isNotEmpty);
 
-    var result = await doRequest(
+    final result = await doRequest(
         "https://music.163.com/weapi/playlist/manipulate/tracks", {
       "op": operation == PlaylistOperation.add ? "add" : "del",
       "pid": playlistId,
@@ -461,11 +459,9 @@ class NeteaseRepository {
       debugPrint('api response: ${result.status} ${result.body}');
       return true;
     }());
-    if (map == null) {
-      return Result.error('请求失败了');
-    } else if (map['code'] == _CODE_NEED_LOGIN) {
+    if (map['code'] == _kCodeNeedLogin) {
       return Result.error('需要登陆才能访问哦~');
-    } else if (map['code'] != _CODE_SUCCESS) {
+    } else if (map['code'] != _kCodeSuccess) {
       return Result.error(map['msg'] ?? '请求失败了~');
     }
     return Result.value(map as Map<String?, dynamic>);
@@ -474,9 +470,9 @@ class NeteaseRepository {
 
 Music mapJsonToMusic(Map song,
     {String artistKey = "artists", String albumKey = "album"}) {
-  Map album = song[albumKey] as Map;
+  final Map album = song[albumKey] as Map;
 
-  List<Artist> artists = (song[artistKey] as List).cast<Map>().map((e) {
+  final List<Artist> artists = (song[artistKey] as List).cast<Map>().map((e) {
     return Artist(
       name: e["name"],
       id: e["id"],
@@ -498,7 +494,7 @@ List<Music>? mapJsonListToMusicList(List? tracks,
   if (tracks == null) {
     return null;
   }
-  var list = tracks
+  final list = tracks
       .cast<Map>()
       .map((e) => mapJsonToMusic(e, artistKey: artistKey, albumKey: albumKey));
   return list.toList();
@@ -506,9 +502,9 @@ List<Music>? mapJsonListToMusicList(List? tracks,
 
 ///cache key for lyric
 class _LyricCacheKey implements CacheKey {
-  final int musicId;
-
   _LyricCacheKey(this.musicId);
+
+  final int musicId;
 
   @override
   String getKey() {
@@ -522,8 +518,8 @@ Future<_LyricCache> _lyricCache() async {
   if (__lyricCache != null) {
     return __lyricCache!;
   }
-  var temp = await getTemporaryDirectory();
-  var dir = Directory(temp.path + "/lyrics/");
+  final temp = await getTemporaryDirectory();
+  var dir = Directory("${temp.path}/lyrics/");
   if (!(await dir.exists())) {
     dir = await dir.create();
   }

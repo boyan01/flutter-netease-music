@@ -73,7 +73,7 @@ class PresetGridSection extends ConsumerWidget {
                     label: context.strings.collectionLike,
                     onTap: () {
                       context.secondaryNavigator!
-                          .pushNamed(ROUTE_MY_COLLECTION);
+                          .pushNamed(pageMyCollection);
                     },
                   ),
                   _PinnedTile(

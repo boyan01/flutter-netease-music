@@ -16,11 +16,11 @@ class CollectionArtists extends StatelessWidget {
               children: ListTile.divideTiles(
                   context: context,
                   tiles: data.cast<Map>().map((artist) => ListTile(
-                        leading: Container(
-                            height: 48,
-                            width: 48,
-                            child:
-                                Image(image: CachedImage(artist['img1v1Url']))),
+                        leading: SizedBox(
+                          height: 48,
+                          width: 48,
+                          child: Image(image: CachedImage(artist['img1v1Url'])),
+                        ),
                         title: Text(artist['name']),
                         subtitle: Text(
                             '专辑:${artist['albumSize']} MV:${artist['mvSize']}'),
