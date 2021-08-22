@@ -5,26 +5,12 @@ class _LandscapeMainPage extends StatefulWidget {
   _LandscapeMainPageState createState() => _LandscapeMainPageState();
 }
 
-const _navigationSearch = pageSearch;
-
-const _navigationMyPlaylist = "playlist";
-
-const _navigationCloud = "cloud";
-
-const _navigationFmPlayer = "fm";
-
-const _navigationSettings = "settings";
-
 class _LandscapeMainPageState extends State<_LandscapeMainPage>
     with NavigatorObserver {
-  static const double kDrawerWidth = 120.0;
+  static const double kDrawerWidth = 96.0;
 
   final GlobalKey<NavigatorState> _landscapeNavigatorKey =
       GlobalKey(debugLabel: "landscape_main_navigator");
-
-  final GlobalKey<NavigatorState> _landscapeSecondaryNavigatorKey = GlobalKey(
-    debugLabel: "landscape_secondary_navigator",
-  );
 
   String? _currentSubRouteName;
 
@@ -40,7 +26,6 @@ class _LandscapeMainPageState extends State<_LandscapeMainPage>
 
   void _onPageSelected(Route route) {
     final name = route.settings.name;
-    debugPrint("on landscape show : $name");
     WidgetsBinding.instance!.scheduleFrameCallback((timeStamp) {
       setState(() {
         _currentSubRouteName = name;
@@ -52,97 +37,42 @@ class _LandscapeMainPageState extends State<_LandscapeMainPage>
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      body: Column(
-        children: <Widget>[
-          Expanded(
-            child: DisableBottomController(
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Container(
-                    constraints:
-                        const BoxConstraints.tightFor(width: kDrawerWidth),
-                    decoration: BoxDecoration(
-                        border: BorderDirectional(
-                            end: BorderSide(
-                                color: Theme.of(context).dividerColor))),
-                    child: _LandscapeDrawer(
-                        selectedRouteName: _currentSubRouteName),
-                  ),
-                  Flexible(
-                    child: Container(
+      body: SafeArea(
+        bottom: false,
+        child: Column(
+          children: <Widget>[
+            Expanded(
+              child: DisableBottomController(
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Container(
+                      constraints:
+                          const BoxConstraints.tightFor(width: kDrawerWidth),
                       decoration: BoxDecoration(
                           border: BorderDirectional(
                               end: BorderSide(
                                   color: Theme.of(context).dividerColor))),
+                      child: _LandscapeDrawer(
+                          selectedRouteName: _currentSubRouteName),
+                    ),
+                    Expanded(
                       child: Navigator(
                         key: _landscapeNavigatorKey,
-                        initialRoute: _navigationMyPlaylist,
+                        initialRoute: pageMainMyMusic,
                         observers: [this],
-                        onGenerateRoute: _onGeneratePrimaryRoute,
+                        onGenerateRoute: onLandscapeBuildPrimaryRoute,
                       ),
                     ),
-                  ),
-                  Flexible(
-                    child: Navigator(
-                      key: _landscapeSecondaryNavigatorKey,
-                      onGenerateRoute: _onGenerateSecondaryRoute,
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
-          ),
-          _BottomPlayerBar(
-            paddingPageBottom: MediaQuery.of(context).viewInsets.bottom +
-                MediaQuery.of(context).padding.bottom,
-          ),
-        ],
+            const _BottomPlayerBar(),
+          ],
+        ),
       ),
     );
-  }
-
-  Route<dynamic> _onGeneratePrimaryRoute(RouteSettings settings) {
-    Widget? widget;
-    switch (settings.name) {
-      case _navigationMyPlaylist:
-        widget = Scaffold(
-          body: MainPageMy(),
-          primary: false,
-          resizeToAvoidBottomInset: false,
-        );
-        break;
-      case _navigationCloud:
-        widget = Scaffold(
-          body: MainPageDiscover(),
-          primary: false,
-          resizeToAvoidBottomInset: false,
-        );
-        break;
-      case _navigationSearch:
-        return SearchPageRoute(null);
-      case _navigationFmPlayer:
-        toast("页面未完成");
-        widget = Container();
-        break;
-      case _navigationSettings:
-        widget = SettingPage();
-        break;
-    }
-    assert(widget != null, "can not generate route for $settings");
-    return MaterialPageRoute(settings: settings, builder: (context) => widget!);
-  }
-
-  Route<dynamic>? _onGenerateSecondaryRoute(RouteSettings settings) {
-    if (settings.name == Navigator.defaultRouteName) {
-      return MaterialPageRoute(
-          settings: settings, builder: (context) => _SecondaryPlaceholder());
-    }
-    final builder = routes[settings.name!];
-    if (builder != null) {
-      return MaterialPageRoute(settings: settings, builder: builder);
-    }
-    return routeFactory(settings);
   }
 }
 
@@ -162,81 +92,51 @@ class _LandscapeDrawer extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             MainNavigationDrawerTile(
-                selected: _navigationSearch == selectedRouteName,
+                selected: pageSearch == selectedRouteName,
                 icon: const Icon(Icons.search),
-                title: const Text("搜索"),
+                title: Text(context.strings.search),
                 onTap: () {
-                  context.primaryNavigator!.pushNamed(_navigationSearch);
+                  context.push(pageSearch);
                 }),
             MainNavigationDrawerTile(
-                selected: _navigationMyPlaylist == selectedRouteName,
+                selected: pageMainMyMusic == selectedRouteName,
                 icon: const Icon(Icons.music_note),
-                title: const Text("我的音乐"),
+                title: Text(context.strings.myMusic),
                 onTap: () {
-                  context.primaryNavigator!.pushNamed(_navigationMyPlaylist);
+                  context.push(pageMainMyMusic);
                 }),
             MainNavigationDrawerTile(
-                selected: _navigationCloud == selectedRouteName,
+                selected: pageMainCloud == selectedRouteName,
                 icon: const Icon(Icons.cloud),
-                title: const Text("发现音乐"),
+                title: Text(context.strings.discover),
                 onTap: () {
-                  context.primaryNavigator!.pushNamed(_navigationCloud);
+                  context.push(pageMainCloud);
                 }),
             MainNavigationDrawerTile(
-                selected: _navigationFmPlayer == selectedRouteName,
+                selected: pageFmPlaying == selectedRouteName,
                 icon: const Icon(Icons.radio),
-                title: const Text("私人FM"),
+                title: Text(context.strings.personalFM),
                 onTap: () {
-                  context.primaryNavigator!.pushNamed(_navigationFmPlayer);
+                  context.push(pageFmPlaying);
                 }),
             const Spacer(),
             MainNavigationDrawerTile(
               icon: const Icon(Icons.settings),
               title: Container(),
               onTap: () {
-                context.primaryNavigator!.pushNamed(_navigationSettings);
+                context.push(pageSetting);
               },
             ),
             MainNavigationDrawerTile(
                 icon: const Icon(Icons.account_circle),
-                title: const Text("我的"),
+                title: Text(context.strings.my),
                 onTap: () {
                   if (!ref.read(userProvider).isLogin) {
-                    context.rootNavigator.pushNamed(pageLogin);
+                    context.push(pageLogin);
                     return;
                   }
-                  context.primaryNavigator!.push(
-                    MaterialPageRoute(
-                      builder: (context) => UserDetailPage(
-                        userId: ref.read(userProvider).userId,
-                      ),
-                    ),
-                  );
+                  context.push(pageProfileMy);
                 }),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-// Default page for secondary navigator
-class _SecondaryPlaceholder extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            const Text("仿网易云音乐"),
-            InkWell(
-              onTap: () {
-                launch("https://github.com/boyan01/flutter-netease-music");
-              },
-              child: Text("https://github.com/boyan01/flutter-netease-music",
-                  style: TextStyle(color: Theme.of(context).accentColor)),
-            ),
           ],
         ),
       ),
@@ -246,18 +146,18 @@ class _SecondaryPlaceholder extends StatelessWidget {
 
 /// Bottom player bar for landscape
 class _BottomPlayerBar extends StatelessWidget {
-  const _BottomPlayerBar({Key? key, this.paddingPageBottom}) : super(key: key);
-
-  final double? paddingPageBottom;
+  const _BottomPlayerBar({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final current = context.listenPlayerValue.current;
+    final paddingPageBottom = MediaQuery.of(context).viewInsets.bottom +
+        MediaQuery.of(context).padding.bottom;
     if (current == null) {
       return SizedBox(height: paddingPageBottom);
     }
     return BottomControllerBar(
-      bottomPadding: paddingPageBottom!,
+      bottomPadding: paddingPageBottom,
     );
   }
 }

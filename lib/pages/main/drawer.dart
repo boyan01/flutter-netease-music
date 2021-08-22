@@ -85,12 +85,14 @@ class MainNavigationDrawerTile extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 IconTheme(
-                  data: IconThemeData(size: 36, color: foreground),
+                  data: IconThemeData(size: 32, color: foreground),
                   child: icon,
                 ),
                 const SizedBox(height: 8),
                 DefaultTextStyle(
-                    style: TextStyle(color: foreground), child: title),
+                  style: context.textTheme.caption!.copyWith(color: foreground),
+                  child: title,
+                ),
               ],
             ),
           ),

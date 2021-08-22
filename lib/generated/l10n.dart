@@ -351,6 +351,36 @@ class S {
       args: [],
     );
   }
+
+  /// `Search`
+  String get search {
+    return Intl.message(
+      'Search',
+      name: 'search',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `My Music`
+  String get myMusic {
+    return Intl.message(
+      'My Music',
+      name: 'myMusic',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Personal FM`
+  String get personalFM {
+    return Intl.message(
+      'Personal FM',
+      name: 'personalFM',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

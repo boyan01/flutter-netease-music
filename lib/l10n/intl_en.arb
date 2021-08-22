@@ -28,5 +28,8 @@
     "playInNext": "play in next",
     "skipLogin": "Skip login",
     "copyRightOverlay": "Only used for personal study and research, commercial and illegal purposes are prohibited",
-    "projectDescription": "OpenSource project https://github.com/boyan01/flutter-netease-music"
+    "projectDescription": "OpenSource project https://github.com/boyan01/flutter-netease-music",
+    "search": "Search",
+    "myMusic": "My Music",
+    "personalFM": "Personal FM"
 }

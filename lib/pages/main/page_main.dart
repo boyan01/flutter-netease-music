@@ -1,14 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:overlay_support/overlay_support.dart';
+import 'package:provider/provider.dart';
 import 'package:quiet/component.dart';
 import 'package:quiet/component/global/orientation.dart';
-import 'package:quiet/pages/account/page_user_detail.dart';
+import 'package:quiet/material/landscape.dart';
 import 'package:quiet/pages/main/main_page_discover.dart';
 import 'package:quiet/pages/search/page_search.dart';
 import 'package:quiet/part/part.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import 'drawer.dart';
 import 'my/main_page_my.dart';
@@ -31,8 +30,8 @@ extension LandscapeMainContext on BuildContext {
           .currentState;
 
   /// Obtain the secondary navigator for landscape mode.
-  NavigatorState? get landscapeSecondaryNavigator =>
-      findAncestorStateOfType<_LandscapeMainPageState>()!
-          ._landscapeSecondaryNavigatorKey
-          .currentState;
+  NavigatorState? get landscapeSecondaryNavigator {
+    final key = read<LandscapeSecondaryKey>();
+    return key.currentState;
+  }
 }

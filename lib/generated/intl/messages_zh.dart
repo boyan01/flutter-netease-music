@@ -48,13 +48,16 @@ class MessageLookup extends MessageLookupByLibrary {
         "loginWithPhone": MessageLookupByLibrary.simpleMessage("手机号登录"),
         "my": MessageLookupByLibrary.simpleMessage("我的"),
         "myDjs": MessageLookupByLibrary.simpleMessage("我的电台"),
+        "myMusic": MessageLookupByLibrary.simpleMessage("我的音乐"),
         "nextStep": MessageLookupByLibrary.simpleMessage("下一步"),
+        "personalFM": MessageLookupByLibrary.simpleMessage("私人FM"),
         "playInNext": MessageLookupByLibrary.simpleMessage("下一首播放"),
         "playlistLoginDescription":
             MessageLookupByLibrary.simpleMessage("登录以加载你的私人播放列表。"),
         "playlistShareContent": m1,
         "projectDescription": MessageLookupByLibrary.simpleMessage(
             "开源项目 https://github.com/boyan01/flutter-netease-music"),
+        "search": MessageLookupByLibrary.simpleMessage("搜索"),
         "selectRegionDiaCode": MessageLookupByLibrary.simpleMessage("选择地区号码"),
         "shareContentCopied":
             MessageLookupByLibrary.simpleMessage("分享内容已复制到剪切板"),
