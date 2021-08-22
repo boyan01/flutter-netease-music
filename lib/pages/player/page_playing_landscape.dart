@@ -14,16 +14,19 @@ class LandscapePlayingPage extends StatelessWidget {
       body: Stack(
         children: <Widget>[
           BlurBackground(music: context.listenPlayerValue.requireCurrent),
-          Padding(
-            padding: EdgeInsets.only(
-              bottom: MediaQuery.of(context).padding.bottom +
-                  MediaQuery.of(context).viewInsets.bottom,
-            ),
-            child: Row(
-              children: <Widget>[
-                Flexible(child: _LayoutCover()),
-                Flexible(child: _LayoutLyric()),
-              ],
+          Material(
+            color: Colors.transparent,
+            child: Padding(
+              padding: EdgeInsets.only(
+                bottom: MediaQuery.of(context).padding.bottom +
+                    MediaQuery.of(context).viewInsets.bottom,
+              ),
+              child: Row(
+                children: <Widget>[
+                  Flexible(child: _LayoutCover()),
+                  Flexible(child: _LayoutLyric()),
+                ],
+              ),
             ),
           )
         ],
@@ -38,12 +41,16 @@ class _LayoutCover extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
-        AlbumCover(music: context.listenPlayerValue.requireCurrent),
-        Spacer(),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 40),
+          child: AlbumCover(music: context.listenPlayerValue.requireCurrent),
+        ),
+        const Spacer(),
+        const SizedBox(height: 20),
         PlayerControllerBar(),
-        SizedBox(height: 16),
+        const SizedBox(height: 20),
         DurationProgressBar(),
-        SizedBox(height: 16),
+        const SizedBox(height: 20),
       ],
     );
   }
@@ -56,9 +63,10 @@ class _LayoutLyric extends StatelessWidget {
       children: <Widget>[
         PlayingTitle(music: context.listenPlayerValue.requireCurrent),
         Expanded(
-            child: PlayingLyricView(music: context.listenPlayerValue.requireCurrent)),
+            child: PlayingLyricView(
+                music: context.listenPlayerValue.requireCurrent)),
         PlayingOperationBar(),
-        SizedBox(height: 16),
+        const SizedBox(height: 16),
       ],
     );
   }
