@@ -16,15 +16,16 @@ const String _keySkipWelcomePage = '$_prefix:skipWelcomePage';
 
 extension SettingsProvider on BuildContext {
   Settings get settings => ScopedModel.of(this, rebuildOnChange: true);
+
+  Settings get settingsR => ScopedModel.of(this, rebuildOnChange: false);
 }
 
 class Settings extends Model {
-
   Settings(this._preferences) {
     _themeMode = ThemeMode.values[
-    _preferences.getInt(_keyThemeMode) ?? 0]; /* default is system */
+        _preferences.getInt(_keyThemeMode) ?? 0]; /* default is system */
     _theme = quietThemes[
-    _preferences.getInt(_keyTheme) ?? 0]; /* default is NetEase Red */
+        _preferences.getInt(_keyTheme) ?? 0]; /* default is NetEase Red */
     _showCopyrightOverlay = _preferences.get(_keyCopyright) as bool?;
     _skipWelcomePage = _preferences.get(_keySkipWelcomePage) as bool? ?? false;
   }
@@ -78,5 +79,4 @@ class Settings extends Model {
     _preferences.setBool(_keySkipWelcomePage, true);
     notifyListeners();
   }
-
 }

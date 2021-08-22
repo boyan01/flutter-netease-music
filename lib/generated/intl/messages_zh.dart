@@ -33,6 +33,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "alreadyBuy": MessageLookupByLibrary.simpleMessage("收藏和赞"),
         "cloudMusic": MessageLookupByLibrary.simpleMessage("云盘"),
         "collectionLike": MessageLookupByLibrary.simpleMessage("已购"),
+        "copyRightOverlay":
+            MessageLookupByLibrary.simpleMessage("只用作个人学习研究，禁止用于商业及非法用途"),
         "createdSongList": MessageLookupByLibrary.simpleMessage("创建歌单"),
         "delete": MessageLookupByLibrary.simpleMessage("删除"),
         "discover": MessageLookupByLibrary.simpleMessage("发现"),
@@ -51,9 +53,12 @@ class MessageLookup extends MessageLookupByLibrary {
         "playlistLoginDescription":
             MessageLookupByLibrary.simpleMessage("登录以加载你的私人播放列表。"),
         "playlistShareContent": m1,
+        "projectDescription": MessageLookupByLibrary.simpleMessage(
+            "开源项目 https://github.com/boyan01/flutter-netease-music"),
         "selectRegionDiaCode": MessageLookupByLibrary.simpleMessage("选择地区号码"),
         "shareContentCopied":
             MessageLookupByLibrary.simpleMessage("分享内容已复制到剪切板"),
+        "skipLogin": MessageLookupByLibrary.simpleMessage("跳过登录"),
         "tipsAutoRegisterIfUserNotExist":
             MessageLookupByLibrary.simpleMessage("未注册手机号登陆后将自动创建账号"),
         "todo": MessageLookupByLibrary.simpleMessage("TBD")

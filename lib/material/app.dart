@@ -24,7 +24,7 @@ class CopyRightOverlay extends HookWidget {
 class _CopyrightPainter extends CustomPainter {
   final TextPainter _textPainter = TextPainter(
       text: TextSpan(
-        text: "只用作个人学习研究，禁止用于商业及非法用途     只用作个人学习研究，禁止用于商业及非法用途",
+        text: "只用作个人学习研究，禁止用于商业及非法用途 Only used for personal study and research, commercial and illegal purposes are prohibited",
         style: TextStyle(color: Colors.grey.withOpacity(0.3)),
       ),
       textDirection: TextDirection.ltr);

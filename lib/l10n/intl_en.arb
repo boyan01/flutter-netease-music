@@ -25,5 +25,8 @@
     "failedToDelete": "delete failed",
     "addToPlaylist": "add to playlist",
     "addToPlaylistFailed": "add to playlist failed",
-    "playInNext": "play in next"
+    "playInNext": "play in next",
+    "skipLogin": "Skip login",
+    "copyRightOverlay": "Only used for personal study and research, commercial and illegal purposes are prohibited",
+    "projectDescription": "OpenSource project https://github.com/boyan01/flutter-netease-music"
 }

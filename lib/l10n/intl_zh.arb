@@ -26,5 +26,8 @@
     "failedToDelete": "删除失败",
     "addToPlaylist": "加入歌单",
     "addToPlaylistFailed": "加入歌单失败",
-    "playInNext": "下一首播放"
+    "playInNext": "下一首播放",
+    "skipLogin": "跳过登录",
+    "copyRightOverlay": "只用作个人学习研究，禁止用于商业及非法用途",
+    "projectDescription": "开源项目 https://github.com/boyan01/flutter-netease-music"
 }

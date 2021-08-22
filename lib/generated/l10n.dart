@@ -321,6 +321,36 @@ class S {
       args: [],
     );
   }
+
+  /// `Skip login`
+  String get skipLogin {
+    return Intl.message(
+      'Skip login',
+      name: 'skipLogin',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Only used for personal study and research, commercial and illegal purposes are prohibited`
+  String get copyRightOverlay {
+    return Intl.message(
+      'Only used for personal study and research, commercial and illegal purposes are prohibited',
+      name: 'copyRightOverlay',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `OpenSource project https://github.com/boyan01/flutter-netease-music`
+  String get projectDescription {
+    return Intl.message(
+      'OpenSource project https://github.com/boyan01/flutter-netease-music',
+      name: 'projectDescription',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {
