@@ -103,7 +103,7 @@ class NeteaseRepository {
 
   ///使用手机号码登录
   Future<Result<Map>> login(String? phone, String password) async {
-    return await doRequest(
+    return doRequest(
         "/login/cellphone", {"phone": phone, "password": password});
   }
 
@@ -418,7 +418,7 @@ class NeteaseRepository {
     }
     return _map(
       result,
-      (t) => UserDetail.fromJsonMap((t as Map).cast()),
+      (t) => UserDetail.fromJsonMap((t! as Map).cast()),
     );
   }
 

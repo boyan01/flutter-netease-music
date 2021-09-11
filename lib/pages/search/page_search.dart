@@ -112,7 +112,7 @@ class _SearchPageState extends State<SearchPage> {
           indicator:
               const UnderlineTabIndicator(insets: EdgeInsets.only(bottom: 4)),
           indicatorSize: TabBarIndicatorSize.label,
-          tabs: SECTIONS.map((title) => Tab(child: Text(title))).toList());
+          tabs: kSections.map((title) => Tab(child: Text(title))).toList());
     }
 
     return ScopedModel<SearchHistory>(
@@ -120,7 +120,7 @@ class _SearchPageState extends State<SearchPage> {
       child: Stack(
         children: <Widget>[
           DefaultTabController(
-            length: SECTIONS.length,
+            length: kSections.length,
             child: Scaffold(
               appBar: AppBar(
                 backgroundColor: theme.primaryColor,

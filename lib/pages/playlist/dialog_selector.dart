@@ -130,12 +130,12 @@ class PlaylistSelectorDialog extends ConsumerWidget {
               children: <Widget>[
                 const Text("当前未登陆"),
                 const SizedBox(height: 16),
-                RaisedButton(
-                    color: Theme.of(context).primaryColor,
-                    onPressed: () {
-                      Navigator.of(context).pushNamed(pageLogin);
-                    },
-                    child: const Text("点击前往登陆页面")),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).pushNamed(pageLogin);
+                  },
+                  child: const Text("点击前往登陆页面"),
+                ),
                 const SizedBox(height: 32),
               ],
             ),
@@ -157,11 +157,12 @@ class PlaylistSelectorDialog extends ConsumerWidget {
                     child: Text(result.error.toString()),
                   ),
                   const SizedBox(height: 16),
-                  RaisedButton(
-                      onPressed: () {
-                        Loader.of(context)!.refresh();
-                      },
-                      child: const Text("重试")),
+                  ElevatedButton(
+                    onPressed: () {
+                      Loader.of(context)!.refresh();
+                    },
+                    child: const Text("重试"),
+                  ),
                   const SizedBox(height: 32),
                 ],
               ),

@@ -44,14 +44,15 @@ class SuggestionSection extends StatelessWidget {
                           .subtitle2!
                           .copyWith(fontWeight: FontWeight.bold, fontSize: 17)),
                 ),
-                onDeleteClicked == null
-                    ? Container()
-                    : IconButton(
-                        icon: Icon(
-                          Icons.delete_outline,
-                          color: Theme.of(context).iconTheme.color,
-                        ),
-                        onPressed: onDeleteClicked)
+                if (onDeleteClicked == null)
+                  Container()
+                else
+                  IconButton(
+                      icon: Icon(
+                        Icons.delete_outline,
+                        color: Theme.of(context).iconTheme.color,
+                      ),
+                      onPressed: onDeleteClicked)
               ],
             ),
           ),
@@ -63,9 +64,6 @@ class SuggestionSection extends StatelessWidget {
 }
 
 class SuggestionSectionContent extends StatelessWidget {
-  final List<String?> words;
-  final SuggestionSelectedCallback suggestionSelectedCallback;
-
   const SuggestionSectionContent({
     Key? key,
     required this.words,
@@ -80,6 +78,9 @@ class SuggestionSectionContent extends StatelessWidget {
       suggestionSelectedCallback: suggestionSelectedCallback!,
     );
   }
+
+  final List<String?> words;
+  final SuggestionSelectedCallback suggestionSelectedCallback;
 
   @override
   Widget build(BuildContext context) {
@@ -98,7 +99,8 @@ class SuggestionSectionContent extends StatelessWidget {
 
 ///搜索建议
 class SuggestionOverflow extends StatefulWidget {
-  SuggestionOverflow({required this.query, required this.onSuggestionSelected});
+  const SuggestionOverflow(
+      {required this.query, required this.onSuggestionSelected});
 
   final String query;
 
@@ -121,7 +123,7 @@ class _SuggestionOverflowState extends State<SuggestionOverflow> {
     _operationDelay?.cancel();
     _operationDelay = CancelableOperation.fromFuture(() async {
       //we should delay some time to load the suggest for query
-      await Future.delayed(Duration(milliseconds: 1000));
+      await Future.delayed(const Duration(milliseconds: 1000));
       return widget.query;
     }())
       ..value.then((keyword) {
@@ -161,9 +163,9 @@ class _SuggestionOverflowState extends State<SuggestionOverflow> {
               ),
               Loader<List<String>>(
                   key: Key("suggest_$_query"),
-                  loadTask: (() => neteaseRepository!
+                  loadTask: () => neteaseRepository!
                       .searchSuggest(_query)
-                      .then((value) => value!)),
+                      .then((value) => value!),
                   loadingBuilder: (context) {
                     return Container();
                   },

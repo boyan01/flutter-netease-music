@@ -21,8 +21,8 @@ class SettingGroup extends StatelessWidget {
         children: <Widget>[
           _SettingTitle(title: title),
           Column(
-            children: children,
             mainAxisSize: MainAxisSize.min,
+            children: children,
           )
         ],
       ),
@@ -31,18 +31,17 @@ class SettingGroup extends StatelessWidget {
 }
 
 class _SettingTitle extends StatelessWidget {
-  final String title;
-
   const _SettingTitle({Key? key, required this.title}) : super(key: key);
+  final String title;
 
   @override
   Widget build(BuildContext context) {
     return Container(
+      padding: const EdgeInsets.only(left: 8, top: 6, bottom: 6),
       child: Text(
         title,
-        style: TextStyle(color: const Color.fromARGB(255, 175, 175, 175)),
+        style: const TextStyle(color: Color.fromARGB(255, 175, 175, 175)),
       ),
-      padding: const EdgeInsets.only(left: 8, top: 6, bottom: 6),
     );
   }
 }

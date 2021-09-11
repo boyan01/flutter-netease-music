@@ -134,14 +134,14 @@ class _Header extends StatelessWidget {
       height: 48,
       child: Row(
         children: <Widget>[
-          FlatButton.icon(
+          TextButton.icon(
               onPressed: () {
                 context.transportControls.setPlayMode(playMode.next);
               },
               icon: Icon(playMode.icon),
               label: Text("${playMode.name}($count)")),
           const Spacer(),
-          FlatButton.icon(
+          TextButton.icon(
               onPressed: () async {
                 final ids = context.playList.queue
                     .map((m) => int.parse(m.mediaId))

@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 ///indicator that page is waiting for response
 Future<T> showLoaderOverlay<T>(BuildContext context, Future<T> data,
     {Duration timeout = const Duration(seconds: 5)}) {
-
   final Completer<T> completer = Completer.sync();
 
   final entry = OverlayEntry(builder: (context) {
@@ -15,8 +14,8 @@ Future<T> showLoaderOverlay<T>(BuildContext context, Future<T> data,
         child: Center(
           child: Container(
             height: 160,
-            padding: EdgeInsets.symmetric(horizontal: 24),
-            child: Center(
+            padding: const EdgeInsets.symmetric(horizontal: 24),
+            child: const Center(
               child: CircularProgressIndicator(),
             ),
           ),
@@ -47,25 +46,26 @@ Future<bool> showConfirmDialog(BuildContext context, Widget content,
   negativeLabel ??= "取消";
   positiveLabel ??= "确认";
 
-  bool? result = await showDialog(
+  final bool? result = await showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
           content: content,
           actions: <Widget>[
-            FlatButton(
-                onPressed: () {
-                  Navigator.pop(context, false);
-                },
-                child: Text(negativeLabel!)),
-            FlatButton(
-                onPressed: () {
-                  Navigator.pop(context, true);
-                },
-                child: Text(positiveLabel!)),
+            MaterialButton(
+              onPressed: () {
+                Navigator.pop(context, false);
+              },
+              child: Text(negativeLabel!),
+            ),
+            MaterialButton(
+              onPressed: () {
+                Navigator.pop(context, true);
+              },
+              child: Text(positiveLabel!),
+            ),
           ],
         );
       });
-  result ??= false;
-  return result;
+  return result ?? false;
 }

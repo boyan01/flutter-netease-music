@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:loader/loader.dart';
@@ -7,9 +5,8 @@ import 'package:quiet/part/part.dart';
 import 'package:quiet/repository/netease.dart';
 
 class AlbumsResultSection extends StatefulWidget {
-  final String? query;
-
   const AlbumsResultSection({Key? key, this.query}) : super(key: key);
+  final String? query;
 
   @override
   _AlbumsResultSectionState createState() => _AlbumsResultSectionState();
@@ -26,9 +23,9 @@ class _AlbumsResultSectionState extends State<AlbumsResultSection>
     return AutoLoadMoreList<Map>(loadMore: (offset) async {
       final result = await neteaseRepository!
           .search(widget.query, NeteaseSearchType.album, offset: offset);
-      if (result.isError)
-        return (result as Result<List>)
-            as FutureOr<Result<List<Map<dynamic, dynamic>>>>;
+      if (result.isError) {
+        return result.asError!;
+      }
       final list = result.asValue!.value["result"]["albums"] as List?;
       return LoadMoreResult(list?.cast<Map>() ?? const []);
     }, builder: (context, album) {
@@ -42,11 +39,11 @@ class _AlbumsResultSectionState extends State<AlbumsResultSection>
               .join("/");
           if (album["containedSong"] == null ||
               (album["containedSong"] as String).isEmpty) {
-            String publishTime = DateFormat("y.M.d").format(
+            final String publishTime = DateFormat("y.M.d").format(
                 DateTime.fromMillisecondsSinceEpoch(album["publishTime"]));
-            subTitle = subTitle + " $publishTime";
+            subTitle = "$subTitle $publishTime";
           } else {
-            subTitle = subTitle + " 包含单曲: ${album["containedSong"]}";
+            subTitle = "$subTitle 包含单曲: ${album["containedSong"]}";
           }
           return subTitle;
         },

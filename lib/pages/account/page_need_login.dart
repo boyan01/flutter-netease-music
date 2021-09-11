@@ -22,13 +22,13 @@ class PageNeedLogin extends ConsumerWidget {
           ButtonBar(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              FlatButton(
+              TextButton(
                   onPressed: () => Navigator.pop(context),
                   child: Text(
                     '取消',
                     style: TextStyle(color: Theme.of(context).errorColor),
                   )),
-              RaisedButton(
+              ElevatedButton(
                 onPressed: () => Navigator.pushNamed(context, pageLogin),
                 child: const Text('前往登陆页面'),
               )

@@ -48,15 +48,15 @@ class _DailyMusicList extends StatelessWidget {
     return CustomScrollView(
       slivers: <Widget>[
         SliverAppBar(
-          title: Text('每日推荐'),
+          title: const Text('每日推荐'),
           titleSpacing: 0,
           forceElevated: false,
           elevation: 0,
           actions: <Widget>[
             IconButton(
-                icon: Icon(Icons.help_outline),
+                icon: const Icon(Icons.help_outline),
                 onPressed: () {
-                  launch("http://music.163.com/m/topic/19193112",
+                  launch("https://music.163.com/m/topic/19193112",
                       forceWebView: true);
                 })
           ],
@@ -96,20 +96,21 @@ class _HeaderContent extends StatelessWidget {
             mainAxisSize: MainAxisSize.max,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Spacer(flex: 10),
+              const Spacer(flex: 10),
               Text.rich(TextSpan(children: [
                 TextSpan(
-                    text: date.day.toString().padLeft(2, '0'),
-                    style: TextStyle(fontSize: 23)),
-                TextSpan(text: ' / '),
+                  text: date.day.toString().padLeft(2, '0'),
+                  style: const TextStyle(fontSize: 23),
+                ),
+                const TextSpan(text: ' / '),
                 TextSpan(text: date.month.toString().padLeft(2, '0')),
               ])),
-              SizedBox(height: 4),
+              const SizedBox(height: 4),
               Text(
                 '根据你的音乐口味，为你推荐好音乐',
                 style: textTheme.caption,
               ),
-              Spacer(flex: 12),
+              const Spacer(flex: 12),
             ],
           ),
         ),

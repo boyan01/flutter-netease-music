@@ -58,7 +58,7 @@ class VideoPlayerModel extends Model {
 
   ///收藏或者取消收藏mv
   ///return: true: 操作成功
-  Future<bool> subscribe(bool subscribe) async {
+  Future<bool> subscribe({required bool subscribe}) async {
     if (subscribe == _subscribed) {
       return false;
     }
@@ -92,15 +92,17 @@ class VideoPlayerModel extends Model {
 }
 
 ///收藏或者取消收藏mv
-void subscribeOrUnSubscribeMv(BuildContext context) async {
+Future<void> subscribeOrUnSubscribeMv(BuildContext context) async {
   final model = VideoPlayerModel.of(context);
   if (model.subscribed! &&
       !await showConfirmDialog(context, const Text('确定要取消收藏吗？'),
           positiveLabel: '不再收藏')) {
     return;
   }
-  bool succeed =
-      await showLoaderOverlay(context, model.subscribe(!model.subscribed!));
+  final bool succeed = await showLoaderOverlay(
+    context,
+    model.subscribe(subscribe: !model.subscribed!),
+  );
   if (!succeed) {
     showSimpleNotification(Text('${model.subscribed! ? '取消收藏' : '收藏'}失败'));
   }

@@ -56,7 +56,7 @@ class VipRights {
         redVipAnnualCount = map["redVipAnnualCount"];
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['associator'] = associator == null ? null : associator!.toJson();
     data['musicPackage'] = musicPackage;
     data['redVipAnnualCount'] = redVipAnnualCount;
@@ -65,15 +65,15 @@ class VipRights {
 }
 
 class Associator {
-  int? vipCode;
-  bool? rights;
-
   Associator.fromJsonMap(Map<String, dynamic> map)
       : vipCode = map["vipCode"],
         rights = map["rights"];
 
+  int? vipCode;
+  bool? rights;
+
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['vipCode'] = vipCode;
     data['rights'] = rights;
     return data;

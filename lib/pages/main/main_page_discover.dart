@@ -125,7 +125,7 @@ class _ItemNavigator extends StatelessWidget {
                   ),
                 ),
               ),
-              Padding(padding: const EdgeInsets.only(top: 8)),
+              const Padding(padding: EdgeInsets.only(top: 8)),
               Text(text),
             ],
           ),
@@ -179,7 +179,7 @@ class _PlayListItemView extends StatelessWidget {
   Widget build(BuildContext context) {
     GestureLongPressCallback? onLongPress;
 
-    String? copyWrite = playlist["copywriter"];
+    final String? copyWrite = playlist["copywriter"];
     if (copyWrite != null && copyWrite.isNotEmpty) {
       onLongPress = () {
         showDialog(
@@ -209,11 +209,11 @@ class _PlayListItemView extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
         child: Column(
           children: <Widget>[
-            Container(
+            SizedBox(
               height: width,
               width: width,
               child: ClipRRect(
-                borderRadius: BorderRadius.all(Radius.circular(6)),
+                borderRadius: const BorderRadius.all(Radius.circular(6)),
                 child: AspectRatio(
                   aspectRatio: 1,
                   child: FadeInImage(
@@ -240,7 +240,7 @@ class _PlayListItemView extends StatelessWidget {
 
 class _SectionNewSongs extends StatelessWidget {
   Music _mapJsonToMusic(Map json) {
-    Map<String, Object> song = (json["song"] as Map).cast();
+    final Map<String, Object> song = (json["song"] as Map).cast();
     return mapJsonToMusic(song);
   }
 

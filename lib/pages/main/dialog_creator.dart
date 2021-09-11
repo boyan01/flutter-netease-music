@@ -51,14 +51,16 @@ class _PlaylistCreatorDialogState extends State<PlaylistCreatorDialog> {
         onFieldSubmitted: _create,
       ),
       actions: <Widget>[
-        FlatButton(
+        TextButton(
           onPressed: () {
             Navigator.of(context).pop();
           },
-          textColor: Theme.of(context).textTheme.caption!.color,
+          style: TextButton.styleFrom(
+            primary: Theme.of(context).textTheme.caption?.color,
+          ),
           child: const Text("取消"),
         ),
-        FlatButton(
+        TextButton(
           onPressed: () {
             if (!_formKey.currentState!.validate()) {
               return;

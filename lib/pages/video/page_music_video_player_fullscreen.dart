@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:overlay_support/overlay_support.dart';
+import 'package:quiet/component/i18n/strings.dart';
 import 'package:quiet/component/utils/utils.dart';
 import 'package:quiet/part/part.dart';
 import 'package:video_player/video_player.dart';
@@ -9,11 +11,11 @@ import 'video_player_model.dart';
 
 ///全屏播放界面
 class FullScreenMvPlayer extends StatefulWidget {
-  FullScreenMvPlayer({Key? key}) : super(key: key);
+  const FullScreenMvPlayer({Key? key}) : super(key: key);
 
   @override
   FullScreenMvPlayerState createState() {
-    return new FullScreenMvPlayerState();
+    return FullScreenMvPlayerState();
   }
 }
 
@@ -22,8 +24,10 @@ class FullScreenMvPlayerState extends State<FullScreenMvPlayer> {
   void dispose() {
     super.dispose();
     //re enable System UI
-    SystemChrome.setEnabledSystemUIOverlays(
-        const [SystemUiOverlay.top, SystemUiOverlay.bottom]);
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.leanBack, overlays: const [
+      SystemUiOverlay.top,
+      SystemUiOverlay.bottom,
+    ]);
   }
 
   @override
@@ -53,16 +57,19 @@ class _FullScreenController extends StatelessWidget {
     return AnimatedMvController(
       top: _buildTop(context),
       bottom: _buildBottom(context),
-      center: MvPlayPauseButton(),
+      center: const MvPlayPauseButton(),
       beforeChange: (show) {
         if (show) {
-          SystemChrome.setEnabledSystemUIOverlays(
-              const [SystemUiOverlay.top, SystemUiOverlay.bottom]);
+          SystemChrome.setEnabledSystemUIMode(SystemUiMode.leanBack,
+              overlays: const [SystemUiOverlay.top, SystemUiOverlay.bottom]);
         }
       },
       afterChange: (show) {
         if (!show) {
-          SystemChrome.setEnabledSystemUIOverlays(const []);
+          SystemChrome.setEnabledSystemUIMode(
+            SystemUiMode.leanBack,
+            overlays: const [],
+          );
         }
       },
     );
@@ -71,10 +78,15 @@ class _FullScreenController extends StatelessWidget {
   Widget _buildTop(BuildContext context) {
     return Container(
       decoration: const BoxDecoration(
-          gradient: const LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: const [Colors.black87, Colors.black12])),
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            Colors.black87,
+            Colors.black12,
+          ],
+        ),
+      ),
       child: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -82,8 +94,8 @@ class _FullScreenController extends StatelessWidget {
         title: Text(VideoPlayerModel.of(context).data.name!),
         actions: <Widget>[
           IconButton(
-            icon: Icon(Icons.thumb_up),
-            onPressed: () => notImplemented(context),
+            icon: const Icon(Icons.thumb_up),
+            onPressed: () => toast(context.strings.todo),
           ),
           IconButton(
             icon: Icon(VideoPlayerModel.of(context).subscribed!
@@ -92,11 +104,11 @@ class _FullScreenController extends StatelessWidget {
             onPressed: () => subscribeOrUnSubscribeMv(context),
           ),
           IconButton(
-            icon: Icon(Icons.share),
+            icon: const Icon(Icons.share),
             onPressed: () => notImplemented(context),
           ),
           IconButton(
-            icon: Icon(Icons.more_vert),
+            icon: const Icon(Icons.more_vert),
             onPressed: () => notImplemented(context),
           ),
         ],
@@ -112,10 +124,15 @@ class _FullScreenController extends StatelessWidget {
 
     return Container(
       decoration: const BoxDecoration(
-          gradient: const LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: const [Colors.black12, Colors.black87])),
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            Colors.black12,
+            Colors.black87,
+          ],
+        ),
+      ),
       child: DefaultTextStyle(
         style: Theme.of(context).primaryTextTheme.bodyText2!,
         child: Row(
@@ -134,26 +151,27 @@ class _FullScreenController extends StatelessWidget {
                       : null),
             ),
             Text(getTimeStamp(duration)),
-            SizedBox(width: 4),
+            const SizedBox(width: 4),
             PopupMenuButton<String>(
                 itemBuilder: (context) {
                   return VideoPlayerModel.of(context)
                       .imageResolutions!
                       .map((str) => PopupMenuItem<String>(
                             value: str,
-                            child: Container(child: Text('${str}P')),
+                            child: Text('${str}P'),
                           ))
                       .toList();
                 },
                 onSelected: (v) =>
                     VideoPlayerModel.of(context).currentImageResolution = v,
                 child: Container(
-                  padding: EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
                   child: Text(
                       '${VideoPlayerModel.of(context).currentImageResolution}P'),
                 )),
             IconButton(
-                icon: Icon(Icons.fullscreen_exit, color: Colors.white),
+                icon: const Icon(Icons.fullscreen_exit, color: Colors.white),
                 onPressed: () {
                   Navigator.pop(context);
                 })

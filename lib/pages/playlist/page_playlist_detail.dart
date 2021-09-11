@@ -104,7 +104,7 @@ class _PlayListDetailState extends State<PlaylistDetailPage> {
 
 ///body display the list of song item and a header of playlist
 class _PlaylistBody extends ConsumerStatefulWidget {
-  _PlaylistBody(this.playlist);
+  const _PlaylistBody(this.playlist);
 
   final PlaylistDetail playlist;
 
@@ -268,10 +268,10 @@ class _SubscribeButtonState extends State<_SubscribeButton> {
                   return AlertDialog(
                     content: const Text("确定不再收藏此歌单吗?"),
                     actions: <Widget>[
-                      FlatButton(
+                      TextButton(
                           onPressed: () => Navigator.pop(context),
                           child: const Text("取消")),
-                      FlatButton(
+                      TextButton(
                           onPressed: () => Navigator.pop(context, true),
                           child: const Text("不再收藏"))
                     ],

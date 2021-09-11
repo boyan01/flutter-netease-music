@@ -93,7 +93,7 @@ class _SecondaryPlaceholder extends StatelessWidget {
               child: Text(
                 "https://github.com/boyan01/flutter-netease-music",
                 style: TextStyle(
-                  color: Theme.of(context).accentColor,
+                  color: context.colorScheme.secondary,
                 ),
               ),
             ),

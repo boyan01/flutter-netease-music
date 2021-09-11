@@ -30,12 +30,12 @@ class _ItemTitle extends StatelessWidget {
                       return AlertDialog(
                         content: Text("开始播放 ${music.title} ?"),
                         actions: <Widget>[
-                          FlatButton(
+                          TextButton(
                               onPressed: () {
                                 Navigator.pop(context);
                               },
                               child: const Text("取消")),
-                          FlatButton(
+                          TextButton(
                               onPressed: () {
                                 Navigator.pop(context, true);
                               },

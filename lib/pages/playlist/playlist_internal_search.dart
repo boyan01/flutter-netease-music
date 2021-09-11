@@ -23,7 +23,7 @@ class PlaylistInternalSearchDelegate extends SearchDelegate {
 
   @override
   Widget buildLeading(BuildContext context) {
-    return BackButton();
+    return const BackButton();
   }
 
   @override
@@ -40,7 +40,7 @@ class PlaylistInternalSearchDelegate extends SearchDelegate {
     if (query.isEmpty) {
       return Container();
     }
-    var result = list
+    final result = list
         ?.where((m) => m.title!.contains(query) || m.subTitle.contains(query))
         .toList();
     if (result == null || result.isEmpty) {
@@ -58,7 +58,7 @@ class _EmptyResultSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.only(top: 50),
+      padding: const EdgeInsets.only(top: 50),
       child: Center(
         child: Text('未找到与"$query"相关的内容'),
       ),

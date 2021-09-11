@@ -180,21 +180,22 @@ class UserInfo extends ConsumerWidget {
                 const Text("登陆网易云音乐"),
                 const Text("手机电脑多端同步,尽享海量高品质音乐"),
                 const SizedBox(height: 8),
-                FlatButton(
-                    shape: RoundedRectangleBorder(
-                        side: BorderSide(
-                            color: Theme.of(context)
-                                .primaryTextTheme
-                                .bodyText2!
-                                .color!
-                                .withOpacity(0.3)),
-                        borderRadius: BorderRadius.circular(20)),
-                    padding: const EdgeInsets.symmetric(horizontal: 40),
+                ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                          side: BorderSide(
+                              color: Theme.of(context)
+                                  .primaryTextTheme
+                                  .bodyText2!
+                                  .color!
+                                  .withOpacity(0.3)),
+                          borderRadius: BorderRadius.circular(20)),
+                      padding: const EdgeInsets.symmetric(horizontal: 40),
+                      textStyle: context.primaryTextTheme.bodyText2,
+                    ),
                     onPressed: () {
                       Navigator.pushNamed(context, pageLogin);
                     },
-                    textColor:
-                        Theme.of(context).primaryTextTheme.bodyText2!.color,
                     child: const Text("立即登陆"))
               ],
             ),

@@ -432,7 +432,9 @@ class LyricContent {
   LyricContent.from(String text) {
     final List<String> lines = _kLineSplitter.convert(text);
     final Map map = <int, String>{};
-    lines.forEach((l) => LyricEntry.inflate(l, map as Map<int, String>));
+    for (final line in lines) {
+      LyricEntry.inflate(line, map as Map<int, String>);
+    }
 
     final List<int> keys = map.keys.toList() as List<int>..sort();
     for (var i = 0; i < keys.length; i++) {
@@ -486,7 +488,8 @@ class LyricContent {
       position = 0;
     }
     if (_getTimeStamp(position) > timeStamp) {
-      //look forward
+      // look forward
+      // ignore: invariant_booleans
       while (_getTimeStamp(position) > timeStamp) {
         position--;
         if (position <= 0) {

@@ -30,9 +30,9 @@ class _MainPageState extends State<_PortraitMainPage>
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      drawer: MainNavigationDrawer(),
+      drawer: const MainNavigationDrawer(),
       appBar: AppBar(
-        textTheme: Theme.of(context).textTheme,
+        toolbarTextStyle: context.textTheme.bodyText2,
         iconTheme: Theme.of(context).iconTheme,
         leading: IconButton(
             icon: const Icon(Icons.menu),
@@ -66,8 +66,7 @@ class _MainPageState extends State<_PortraitMainPage>
         actions: <Widget>[
           IconButton(
             onPressed: () {
-              Navigator.push(
-                  context, SearchPageRoute(transitionAnimation));
+              Navigator.push(context, SearchPageRoute(transitionAnimation));
             },
             icon: const Icon(Icons.search),
           )

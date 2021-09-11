@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:quiet/model/playlist_detail.dart';
-import 'package:quiet/repository/netease.dart';
 import 'package:quiet/part/part.dart';
+import 'package:quiet/repository/netease.dart';
 
 ///page for playlist edit
 class PlaylistEditPage extends StatefulWidget {
@@ -147,7 +147,7 @@ class _PlaylistNameEditPageState extends State<_PlaylistNameEditPage> {
         leading: const BackButton(),
         title: const Text("歌单名称"),
         actions: <Widget>[
-          FlatButton(
+          TextButton(
               onPressed: () async {
                 _focusNode.unfocus();
                 final name = widget.playlist!.name;
@@ -170,7 +170,6 @@ class _PlaylistNameEditPageState extends State<_PlaylistNameEditPage> {
                   });
                 }
               },
-              textColor: Theme.of(context).primaryTextTheme.bodyText2!.color,
               child: const Text("保存"))
         ],
       ),

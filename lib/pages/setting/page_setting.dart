@@ -13,7 +13,7 @@ class SettingPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('设置'),
+        title: const Text('设置'),
         titleSpacing: 0,
       ),
       body: ListView(
@@ -22,7 +22,7 @@ class SettingPage extends StatelessWidget {
             title: '通用',
             children: <Widget>[
               ListTile(
-                title: Text('更换主题'),
+                title: const Text('更换主题'),
                 onTap: () =>
                     context.secondaryNavigator!.pushNamed(pageSettingTheme),
               ),
@@ -33,7 +33,7 @@ class SettingPage extends StatelessWidget {
             title: "关于",
             children: [
               ListTile(
-                title: Text("关于我们"),
+                title: const Text("关于我们"),
                 onTap: () {
                   showDialog(
                       context: context,
@@ -63,7 +63,7 @@ class _CopyRightCheckBox extends StatelessWidget {
       onChanged: (value) {
         Settings.of(context).showCopyrightOverlay = value!;
       },
-      title: Text('隐藏版权浮层'),
+      title: const Text('隐藏版权浮层'),
     );
   }
 }

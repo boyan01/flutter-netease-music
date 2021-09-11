@@ -5,24 +5,24 @@ import 'package:quiet/part/part.dart';
 import 'package:quiet/repository/netease.dart';
 
 class RecordPage extends StatelessWidget {
+  const RecordPage({Key? key, required this.uid, this.username})
+      : super(key: key);
+
   ///user id
   final int? uid;
 
   ///could be null
   final String? username;
 
-  const RecordPage({Key? key, required this.uid, this.username})
-      : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
         length: 2,
-        child: new Scaffold(
+        child: Scaffold(
           appBar: AppBar(
             title: Text(username == null ? '听歌排行' : '$username的听歌排行'),
             bottom: TabBar(
-              tabs: [Tab(text: '最近一周'), Tab(text: '所有时间')],
+              tabs: const [Tab(text: '最近一周'), Tab(text: '所有时间')],
               indicator: PrimaryTabIndicator(),
               indicatorSize: TabBarIndicatorSize.label,
             ),
@@ -38,12 +38,12 @@ class RecordPage extends StatelessWidget {
 }
 
 class _RecordSection extends StatefulWidget {
-  final int? uid;
-  final int? type;
-
   const _RecordSection({Key? key, this.uid, this.type})
       : assert(type == 0 || type == 1),
         super(key: key);
+
+  final int? uid;
+  final int? type;
 
   @override
   _RecordSectionState createState() => _RecordSectionState();
@@ -63,10 +63,12 @@ class _RecordSectionState extends State<_RecordSection>
       loadTask: () => neteaseRepository!.getRecord(widget.uid, widget.type),
       builder: (context, result) {
         debugPrint('Record(${widget.type}) result : $result');
-        List data = result[_keys[widget.type!]];
+        final List data = result[_keys[widget.type!]];
         return _RecordMusicList(
-            type: widget.type,
-            recordList: data.cast<Map>().map(_RecordMusic.fromJson).toList());
+          type: widget.type,
+          recordList:
+              data.cast<Map>().map((e) => _RecordMusic.fromJson(e)).toList(),
+        );
       },
     );
   }
@@ -75,28 +77,20 @@ class _RecordSectionState extends State<_RecordSection>
 class _RecordMusic {
   _RecordMusic(this.score, this.playCount, this.music);
 
-  int? score;
-  int? playCount;
-  Music music;
-
-  static _RecordMusic fromJson(Map map) {
+  factory _RecordMusic.fromJson(Map map) {
     return _RecordMusic(
       map['score'],
       map['playCount'],
       mapJsonToMusic(map['song'], albumKey: 'al', artistKey: 'ar'),
     );
   }
+
+  int? score;
+  int? playCount;
+  Music music;
 }
 
 class _RecordMusicList extends StatelessWidget {
-  final List<_RecordMusic> recordList;
-
-  final List<Music?> musicList;
-
-  final Map<int?, _RecordMusic> _recordMap = Map();
-
-  final int? type;
-
   _RecordMusicList({Key? key, required this.recordList, this.type})
       : musicList = List.filled(recordList.length, null, growable: false),
         super(key: key) {
@@ -107,6 +101,14 @@ class _RecordMusicList extends StatelessWidget {
     }
   }
 
+  final List<_RecordMusic> recordList;
+
+  final List<Music?> musicList;
+
+  final Map<int?, _RecordMusic> _recordMap = {};
+
+  final int? type;
+
   @override
   Widget build(BuildContext context) {
     return MusicTileConfiguration(
@@ -116,12 +118,12 @@ class _RecordMusicList extends StatelessWidget {
       onMusicTap: MusicTileConfiguration.defaultOnTap,
       trailingBuilder: (context, music) {
         return Container(
-          padding: EdgeInsets.symmetric(horizontal: 16),
+          padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              Icon(Icons.play_circle_outline, size: 16),
-              SizedBox(width: 4),
+              const Icon(Icons.play_circle_outline, size: 16),
+              const SizedBox(width: 4),
               Text('${_recordMap[music.id]!.playCount}次'),
             ],
           ),

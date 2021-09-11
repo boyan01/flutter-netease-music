@@ -8,11 +8,13 @@ analyzer:
   exclude:
     - 'lib/generated/**'
     - '**.g.dart'
+    - 'test/**'
 
 linter:
   rules:
     always_put_required_named_parameters_first: false
     avoid_classes_with_only_static_members: false
+    avoid_redundant_argument_values: false
     always_specify_types: false
     sort_pub_dependencies: false
 

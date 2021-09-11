@@ -7,7 +7,7 @@ class SettingThemePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("主题设置")),
+      appBar: AppBar(title: const Text("主题设置")),
       body: ListView(
         children: <Widget>[
           SettingGroup(
@@ -17,19 +17,19 @@ class SettingThemePage extends StatelessWidget {
                 onChanged: (mode) => context.settings.themeMode = mode!,
                 groupValue: context.settings.themeMode,
                 value: ThemeMode.system,
-                title: Text("跟随系统"),
+                title: const Text("跟随系统"),
               ),
               RadioListTile<ThemeMode>(
                 onChanged: (mode) => context.settings.themeMode = mode!,
                 groupValue: context.settings.themeMode,
                 value: ThemeMode.light,
-                title: Text("亮色主题"),
+                title: const Text("亮色主题"),
               ),
               RadioListTile<ThemeMode>(
                 onChanged: (mode) => context.settings.themeMode = mode!,
                 groupValue: context.settings.themeMode,
                 value: ThemeMode.dark,
-                title: Text("暗色主题"),
+                title: const Text("暗色主题"),
               )
             ],
           ),
@@ -72,10 +72,9 @@ class _LightThemeSwitchGroup extends StatelessWidget {
 }
 
 class _RadioLightThemeTile extends StatelessWidget {
-  final ThemeData themeData;
-
   const _RadioLightThemeTile({Key? key, required this.themeData})
       : super(key: key);
+  final ThemeData themeData;
 
   @override
   Widget build(BuildContext context) {

@@ -254,9 +254,11 @@ class _SimpleVideoController extends StatelessWidget {
             splashColor: Colors.white,
             onTap: () async {
               final route = MaterialPageRoute(
-                  builder: (_) => ScopedModel<VideoPlayerModel>(
-                      model: ScopedModel.of<VideoPlayerModel>(context),
-                      child: FullScreenMvPlayer()));
+                builder: (_) => ScopedModel<VideoPlayerModel>(
+                  model: ScopedModel.of<VideoPlayerModel>(context),
+                  child: const FullScreenMvPlayer(),
+                ),
+              );
               SystemChrome.setPreferredOrientations(const [
                 DeviceOrientation.landscapeLeft,
                 DeviceOrientation.landscapeRight,
@@ -417,7 +419,7 @@ class _ActionsSection extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
-              FlatButton(
+              TextButton(
                   onPressed: () => notImplemented(context),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
@@ -429,7 +431,7 @@ class _ActionsSection extends StatelessWidget {
                     ],
                   )),
               _SubscribeButton(),
-              FlatButton(
+              TextButton(
                   onPressed: () => notImplemented(context),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
@@ -440,7 +442,7 @@ class _ActionsSection extends StatelessWidget {
                       Text('${data.commentCount}'),
                     ],
                   )),
-              FlatButton(
+              TextButton(
                   onPressed: () => notImplemented(context),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
@@ -463,7 +465,7 @@ class _SubscribeButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final model = VideoPlayerModel.of(context);
-    return FlatButton(
+    return TextButton(
         onPressed: () => subscribeOrUnSubscribeMv(context),
         child: Column(
           mainAxisSize: MainAxisSize.min,

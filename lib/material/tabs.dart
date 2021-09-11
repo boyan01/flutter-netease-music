@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:quiet/component/global/settings.dart';
 
 class PrimaryTabIndicator extends UnderlineTabIndicator {
   PrimaryTabIndicator({Color color = Colors.white})
@@ -20,7 +21,7 @@ class RoundedTabBar extends StatelessWidget implements PreferredSizeWidget {
         color: Theme.of(context).scaffoldBackgroundColor,
         child: TabBar(
             indicator:
-                PrimaryTabIndicator(color: Theme.of(context).accentColor),
+                PrimaryTabIndicator(color: context.colorScheme.secondary),
             indicatorSize: TabBarIndicatorSize.label,
             labelColor: Theme.of(context).textTheme.bodyText1!.color,
             tabs: tabs),
