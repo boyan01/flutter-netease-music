@@ -47,8 +47,9 @@ class FlexibleDetailBar extends StatelessWidget {
       top: -Tween<double>(begin: 0.0, end: deltaExtent / 4.0).transform(t),
       left: 0,
       right: 0,
-      height: settings.maxExtent,
-      child: background,
+      // to avoid one line gap between bottom and blow content.
+      bottom: 1,
+      child: ClipRect(child: background),
     ));
 
     //为content 添加 底部的 padding

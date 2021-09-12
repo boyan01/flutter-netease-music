@@ -45,7 +45,7 @@ class PlaylistTile extends StatelessWidget {
       onTap: () {
         context.secondaryNavigator!.push(MaterialPageRoute(
             builder: (context) =>
-                PlaylistDetailPage(playlist.id!, playlist: playlist)));
+                PlaylistDetailPage(playlist.id!, previewData: playlist)));
       },
       child: SizedBox(
         height: 60,

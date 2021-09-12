@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:quiet/component.dart';
@@ -20,91 +21,168 @@ import 'package:quiet/repository/netease.dart';
 import 'music_list.dart';
 import 'page_playlist_detail_selection.dart';
 import 'playlist_internal_search.dart';
+import 'playlist_loader.dart';
 
-///歌单详情信息 header 高度
 const double kHeaderHeight = 280 + kToolbarHeight;
 
-///page display a Playlist
+/// page display a Playlist
 ///
-///Playlist : a list of musics by user collected
-///
-///need [playlistId] to load data from network
-///
-///
-class PlaylistDetailPage extends StatefulWidget {
-  const PlaylistDetailPage(this.playlistId, {this.playlist});
+/// Playlist : a list of musics by user collected
+class PlaylistDetailPage extends HookWidget {
+  const PlaylistDetailPage(this.playlistId, {this.previewData});
 
-  ///playlist id，can not be null
   final int playlistId;
 
-  ///a simple playlist json obj , can be null
-  ///used to preview playlist information when loading
-  final PlaylistDetail? playlist;
+  /// Used to preview playlist information when loading
+  final PlaylistDetail? previewData;
 
   @override
-  State<StatefulWidget> createState() => _PlayListDetailState();
-}
+  Widget build(BuildContext context) {
+    assert(previewData == null || playlistId == previewData?.id);
 
-class _PlayListDetailState extends State<PlaylistDetailPage> {
-  ///build a preview stack for loading or error
-  Widget _buildPreview(BuildContext context, Widget content) {
-    return CustomScrollView(
-      slivers: <Widget>[
-        SliverAppBar(
-          automaticallyImplyLeading: false,
-          title: widget.playlist == null ? const Text('歌单') : null,
-          expandedHeight:
-              widget.playlist == null ? kToolbarHeight : kHeaderHeight,
-          flexibleSpace: widget.playlist == null
-              ? null
-              : _PlaylistDetailHeader(widget.playlist!),
-          bottom: widget.playlist == null
-              ? null
-              : MusicListHeader(widget.playlist!.trackCount),
+    final detail = usePlaylistDetail(playlistId, preview: previewData);
+
+    if (detail.hasError) {
+      return _PlaylistDetailScaffold.content(
+        playlistDetail: detail.data,
+        child: const SizedBox(
+          height: 200,
+          child: Center(
+            child: CircularProgressIndicator(),
+          ),
         ),
-        SliverList(delegate: SliverChildListDelegate([content]))
-      ],
+      );
+    }
+
+    if (!detail.hasData) {
+      return _PlaylistDetailScaffold.content(
+        playlistDetail: detail.data,
+        child: SizedBox(
+          height: 200,
+          child: Center(
+            child: Text(context.strings.failedToLoad),
+          ),
+        ),
+      );
+    }
+
+    return _PlaylistDetailScaffold(
+      playlistDetail: detail.data,
+      slivers: [_MusicList(detail.requireData)],
     );
   }
+}
 
-  Widget _buildLoading(BuildContext context) {
-    return _buildPreview(context,
-        const SizedBox(height: 200, child: Center(child: Text("加载中..."))));
-  }
+class _PlaylistDetailScaffold extends StatelessWidget {
+  const _PlaylistDetailScaffold({
+    Key? key,
+    this.playlistDetail,
+    required this.slivers,
+  }) : super(key: key);
+
+  factory _PlaylistDetailScaffold.content({
+    required Widget child,
+    PlaylistDetail? playlistDetail,
+  }) =>
+      _PlaylistDetailScaffold(
+        playlistDetail: playlistDetail,
+        slivers: [
+          SliverList(delegate: SliverChildListDelegate([child])),
+        ],
+      );
+
+  final PlaylistDetail? playlistDetail;
+
+  final List<Widget> slivers;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
-      body: BoxWithBottomPlayerController(
-        Loader<PlaylistDetail?>(
-            initialData: neteaseLocalData.getPlaylistDetail(widget.playlistId),
-            loadTask: () => neteaseRepository!
-                .playlistDetail(widget.playlistId)
-                .then((value) => value!),
-            loadingBuilder: (context) {
-              return _buildLoading(context);
-            },
-            errorBuilder: (context, result) {
-              return _buildPreview(
-                  context,
-                  const SizedBox(
-                    height: 200,
-                    child: Center(child: Text("加载失败")),
-                  ));
-            },
-            builder: (context, result) {
-              if (result == null) return _buildLoading(context);
-              return _PlaylistBody(result);
-            }),
-      ),
+        resizeToAvoidBottomInset: false,
+        backgroundColor: context.colorScheme.background,
+        body: BoxWithBottomPlayerController(
+          CustomScrollView(
+            slivers: <Widget>[
+              _Appbar(playlistDetail: playlistDetail),
+              ...slivers,
+            ],
+          ),
+        ));
+  }
+}
+
+class _Appbar extends ConsumerWidget {
+  const _Appbar({
+    Key? key,
+    this.playlistDetail,
+  }) : super(key: key);
+
+  final PlaylistDetail? playlistDetail;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final playlist = playlistDetail;
+    if (playlist == null) {
+      return const SliverAppBar(
+        elevation: 0,
+        pinned: true,
+        automaticallyImplyLeading: false,
+        expandedHeight: kToolbarHeight,
+        flexibleSpace: null,
+        bottom: null,
+      );
+    }
+
+    ///订阅与取消订阅歌单
+    Future<bool> _doSubscribeChanged(bool subscribe) async {
+      bool succeed;
+      try {
+        succeed = await showLoaderOverlay(
+            context,
+            neteaseRepository!.playlistSubscribe(
+              playlist.id,
+              subscribe: !subscribe,
+            ));
+      } catch (e) {
+        succeed = false;
+      }
+      final String action = !subscribe ? "收藏" : "取消收藏";
+      if (succeed) {
+        showSimpleNotification(Text("$action成功"));
+      } else {
+        showSimpleNotification(Text("$action失败"),
+            background: Theme.of(context).errorColor);
+      }
+      return succeed ? !subscribe : subscribe;
+    }
+
+    Widget? subscribeIcon;
+
+    final bool owner =
+        playlist.creator!["userId"] == ref.watch(userProvider).userId;
+    if (!owner) {
+      subscribeIcon = _SubscribeButton(
+        subscribed: playlist.subscribed,
+        subscribedCount: playlist.subscribedCount,
+        doSubscribeChanged: _doSubscribeChanged,
+      );
+    }
+
+    return SliverAppBar(
+      elevation: 0,
+      pinned: true,
+      automaticallyImplyLeading: false,
+      backgroundColor: Colors.transparent,
+      expandedHeight: kHeaderHeight,
+      bottom: MusicListHeader(playlist.musicList.length, tail: subscribeIcon),
+      flexibleSpace: _PlaylistDetailHeader(playlist),
     );
   }
 }
 
 ///body display the list of song item and a header of playlist
-class _PlaylistBody extends ConsumerStatefulWidget {
-  const _PlaylistBody(this.playlist);
+class _MusicList extends ConsumerStatefulWidget {
+  const _MusicList(this.playlist);
 
   final PlaylistDetail playlist;
 
@@ -116,7 +194,7 @@ class _PlaylistBody extends ConsumerStatefulWidget {
   }
 }
 
-class _PlaylistBodyState extends ConsumerState<_PlaylistBody> {
+class _PlaylistBodyState extends ConsumerState<_MusicList> {
   @override
   Widget build(BuildContext context) {
     return MusicTileConfiguration(
@@ -138,63 +216,13 @@ class _PlaylistBodyState extends ConsumerState<_PlaylistBody> {
       onMusicTap: MusicTileConfiguration.defaultOnTap,
       leadingBuilder: MusicTileConfiguration.indexedLeadingBuilder,
       trailingBuilder: MusicTileConfiguration.defaultTrailingBuilder,
-      child: CustomScrollView(
-        slivers: <Widget>[
-          SliverAppBar(
-            elevation: 0,
-            pinned: true,
-            automaticallyImplyLeading: false,
-            backgroundColor: Colors.transparent,
-            expandedHeight: kHeaderHeight,
-            bottom: _buildListHeader(context) as PreferredSizeWidget?,
-            flexibleSpace: _PlaylistDetailHeader(widget.playlist),
-          ),
-          SliverList(
-            delegate: SliverChildBuilderDelegate(
-              (context, index) => MusicTile(widget.musicList[index]),
-              childCount: widget.musicList.length,
-            ),
-          ),
-        ],
+      child: SliverList(
+        delegate: SliverChildBuilderDelegate(
+          (context, index) => MusicTile(widget.musicList[index]),
+          childCount: widget.musicList.length,
+        ),
       ),
     );
-  }
-
-  ///订阅与取消订阅歌单
-  Future<bool> _doSubscribeChanged(bool subscribe) async {
-    bool succeed;
-    try {
-      succeed = await showLoaderOverlay(
-          context,
-          neteaseRepository!.playlistSubscribe(
-            widget.playlist.id,
-            subscribe: !subscribe,
-          ));
-    } catch (e) {
-      succeed = false;
-    }
-    final String action = !subscribe ? "收藏" : "取消收藏";
-    if (succeed) {
-      showSimpleNotification(Text("$action成功"));
-    } else {
-      showSimpleNotification(Text("$action失败"),
-          background: Theme.of(context).errorColor);
-    }
-    return succeed ? !subscribe : subscribe;
-  }
-
-  Widget _buildListHeader(BuildContext context) {
-    final bool owner =
-        widget.playlist.creator!["userId"] == ref.watch(userProvider).userId;
-    Widget? tail;
-    if (!owner) {
-      tail = _SubscribeButton(
-        subscribed: widget.playlist.subscribed,
-        subscribedCount: widget.playlist.subscribedCount,
-        doSubscribeChanged: _doSubscribeChanged,
-      );
-    }
-    return MusicListHeader(widget.musicList.length, tail: tail);
   }
 }
 
@@ -364,9 +392,11 @@ class PlayListHeaderBackground extends StatelessWidget {
             fit: BoxFit.cover,
             width: 120,
             height: 1),
-        BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 24, sigmaY: 24),
-          child: Container(color: Colors.black.withOpacity(0.3)),
+        RepaintBoundary(
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 24, sigmaY: 24),
+            child: Container(color: Colors.black.withOpacity(0.3)),
+          ),
         ),
         Container(color: Colors.black.withOpacity(0.3))
       ],
@@ -439,24 +469,22 @@ class DetailHeader extends StatelessWidget {
 }
 
 ///a detail header describe playlist information
-class _PlaylistDetailHeader extends ConsumerWidget {
+class _PlaylistDetailHeader extends StatelessWidget {
   const _PlaylistDetailHeader(this.playlist);
 
   final PlaylistDetail playlist;
 
-  ///the music list
-  ///could be null if music list if not loaded
-  List<Music>? get musicList => playlist.musicList;
-
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     return FlexibleDetailBar(
       background: PlayListHeaderBackground(imageUrl: playlist.coverUrl),
-      content: _buildContent(context, ref),
+      content: _PlayListHeaderContent(playlist: playlist),
       builder: (context, t) => AppBar(
         leading: context.isLandscape ? null : const BackButton(),
         automaticallyImplyLeading: false,
-        title: Text(t > 0.5 ? playlist.name! : '歌单'),
+        title: Text(t > 0.5
+            ? playlist.name ?? context.strings.playlist
+            : context.strings.playlist),
         backgroundColor: Colors.transparent,
         elevation: 0,
         titleSpacing: 16,
@@ -480,10 +508,19 @@ class _PlaylistDetailHeader extends ConsumerWidget {
       ),
     );
   }
+}
 
-  Widget _buildContent(BuildContext context, WidgetRef ref) {
+class _PlayListHeaderContent extends ConsumerWidget {
+  const _PlayListHeaderContent({
+    Key? key,
+    required this.playlist,
+  }) : super(key: key);
+  final PlaylistDetail playlist;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
     final Map<String, dynamic> creator = playlist.creator!;
-
+    final musicList = playlist.musicList;
     return DetailHeader(
         commentCount: playlist.commentCount,
         shareCount: playlist.shareCount,
@@ -496,8 +533,8 @@ class _PlaylistDetailHeader extends ConsumerWidget {
           }));
         },
         onSelectionTap: () async {
-          if (musicList == null) {
-            showSimpleNotification(const Text("歌曲未加载,请加载后再试"));
+          if (musicList.isEmpty) {
+            toast(context.strings.noMusic);
           } else {
             await Navigator.push(context, MaterialPageRoute(builder: (context) {
               return PlaylistSelectionPage(
@@ -530,53 +567,7 @@ class _PlaylistDetailHeader extends ConsumerWidget {
           child: Row(
             children: <Widget>[
               const SizedBox(width: 16),
-              AspectRatio(
-                aspectRatio: 1,
-                child: ClipRRect(
-                  borderRadius: const BorderRadius.all(Radius.circular(3)),
-                  child: Stack(
-                    children: <Widget>[
-                      QuietHero(
-                        tag: playlist.heroTag,
-                        child: Image(
-                          fit: BoxFit.cover,
-                          image: CachedImage(playlist.coverUrl!),
-                        ),
-                      ),
-                      Container(
-                        padding: const EdgeInsets.all(4),
-                        decoration: const BoxDecoration(
-                            gradient: LinearGradient(
-                                begin: Alignment.topCenter,
-                                end: Alignment.bottomCenter,
-                                colors: [
-                              Colors.black54,
-                              Colors.black26,
-                              Colors.transparent,
-                              Colors.transparent,
-                            ])),
-                        child: Align(
-                          alignment: Alignment.topRight,
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: <Widget>[
-                              Icon(Icons.headset,
-                                  color:
-                                      Theme.of(context).primaryIconTheme.color,
-                                  size: 12),
-                              Text(getFormattedNumber(playlist.playCount!),
-                                  style: Theme.of(context)
-                                      .primaryTextTheme
-                                      .bodyText2!
-                                      .copyWith(fontSize: 11))
-                            ],
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-              ),
+              _PlaylistImage(playlist: playlist),
               const SizedBox(width: 16),
               Expanded(
                 child: Column(
@@ -636,5 +627,64 @@ class _PlaylistDetailHeader extends ConsumerWidget {
             ],
           ),
         ));
+  }
+}
+
+class _PlaylistImage extends StatelessWidget {
+  const _PlaylistImage({
+    Key? key,
+    required this.playlist,
+  }) : super(key: key);
+
+  final PlaylistDetail playlist;
+
+  @override
+  Widget build(BuildContext context) {
+    return AspectRatio(
+      aspectRatio: 1,
+      child: ClipRRect(
+        borderRadius: const BorderRadius.all(Radius.circular(3)),
+        child: Stack(
+          children: <Widget>[
+            QuietHero(
+              tag: playlist.heroTag,
+              child: Image(
+                fit: BoxFit.cover,
+                image: CachedImage(playlist.coverUrl!),
+              ),
+            ),
+            Container(
+              padding: const EdgeInsets.all(4),
+              decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                    Colors.black54,
+                    Colors.black26,
+                    Colors.transparent,
+                    Colors.transparent,
+                  ])),
+              child: Align(
+                alignment: Alignment.topRight,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Icon(Icons.headset,
+                        color: Theme.of(context).primaryIconTheme.color,
+                        size: 12),
+                    Text(getFormattedNumber(playlist.playCount!),
+                        style: Theme.of(context)
+                            .primaryTextTheme
+                            .bodyText2!
+                            .copyWith(fontSize: 11))
+                  ],
+                ),
+              ),
+            )
+          ],
+        ),
+      ),
+    );
   }
 }

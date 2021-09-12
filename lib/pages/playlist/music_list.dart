@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:music_player/music_player.dart';
 import 'package:overlay_support/overlay_support.dart';
+import 'package:quiet/component/global/settings.dart';
 import 'package:quiet/component/route.dart';
 import 'package:quiet/model/model.dart';
 import 'package:quiet/pages/artists/page_artist_detail.dart';
@@ -216,7 +217,7 @@ class MusicListHeader extends StatelessWidget implements PreferredSizeWidget {
     return ClipRRect(
       borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
       child: Material(
-        color: Theme.of(context).scaffoldBackgroundColor,
+        color: context.colorScheme.background,
         child: InkWell(
           onTap: () {
             final list = MusicTileConfiguration.of(context);

@@ -381,6 +381,46 @@ class S {
       args: [],
     );
   }
+
+  /// `failed to play music`
+  String get failedToPlayMusic {
+    return Intl.message(
+      'failed to play music',
+      name: 'failedToPlayMusic',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `no music`
+  String get noMusic {
+    return Intl.message(
+      'no music',
+      name: 'noMusic',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `PlayList`
+  String get playlist {
+    return Intl.message(
+      'PlayList',
+      name: 'playlist',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `failed to load`
+  String get failedToLoad {
+    return Intl.message(
+      'failed to load',
+      name: 'failedToLoad',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

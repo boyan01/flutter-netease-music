@@ -21,6 +21,7 @@ export 'package:async/async.dart' show ErrorResult;
 export 'cached_image.dart';
 export 'local_cache_data.dart';
 
+// TODO replace to Provider.
 NeteaseRepository? neteaseRepository;
 
 ///enum for [NeteaseRepository.search] param type
@@ -151,12 +152,10 @@ class NeteaseRepository {
   ///根据歌单id获取歌单详情，包括歌曲
   ///
   /// [s] 歌单最近的 s 个收藏者
-  Future<Result<PlaylistDetail>?> playlistDetail(int id, {int s = 5}) async {
+  Future<Result<PlaylistDetail>> playlistDetail(int id, {int s = 5}) async {
     final response = await doRequest("/playlist/detail", {"id": "$id", "s": s});
     return _map(response, (dynamic t) {
-      final result = PlaylistDetail.fromJson(t["playlist"]);
-      neteaseLocalData.updatePlaylistDetail(result);
-      return result;
+      return PlaylistDetail.fromJson(t["playlist"]);
     });
   }
 
@@ -284,11 +283,15 @@ class NeteaseRepository {
     });
   }
 
-  ///fetch music detail from id
-  Future<Result<Map<String, dynamic>>> getMusicDetail(int id) async {
-    final result = await doRequest("/song/detail", {"ids": "$id"});
-    return result.map((value) =>
-        ((value['songs'] as List)[0] as Map).cast<String, dynamic>());
+  Future<List<Music>> songDetails(List<int> ids) async {
+    final result = await doRequest("/song/detail", {"ids": ids.join(',')});
+    final songs = result.map((value) => value['songs'] as List);
+
+    final musics = songs.map((value) => value.map((e) => Music.fromJson(e)));
+    if (musics.isError) {
+      debugPrint('musics: ${musics.asError?.error}');
+    }
+    return musics.asValue?.value.toList() ?? const [];
   }
 
   ///edit playlist tracks

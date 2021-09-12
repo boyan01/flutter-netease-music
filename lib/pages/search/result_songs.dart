@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:loader/loader.dart';
-import 'package:overlay_support/overlay_support.dart';
 import 'package:quiet/pages/playlist/music_list.dart';
 import 'package:quiet/part/part.dart';
 import 'package:quiet/repository/netease.dart';
@@ -26,25 +25,10 @@ class SongsResultSectionState extends State<SongsResultSection>
     return MusicTileConfiguration(
       musics: const [],
       onMusicTap: (context, item) async {
-        // final playable = await neteaseRepository!.checkMusic(item.id);
-        // if (!playable) {
-        //   showDialog(
-        //       context: context, builder: (context) => DialogNoCopyRight());
-        //   return;
-        // }
-        final song = await neteaseRepository!.getMusicDetail(item.id);
-        if (song.isValue) {
-          final metadata = mapJsonToMusic(song.asValue!.value,
-                  artistKey: "ar", albumKey: "al")
-              .metadata;
-          context.player
-            ..insertToNext(metadata)
-            ..transportControls.playFromMediaId(metadata.mediaId);
-        } else {
-          showSimpleNotification(const Text("播放歌曲失败!"),
-              leading: const Icon(Icons.notification_important),
-              background: Theme.of(context).errorColor);
-        }
+        // TODO check music is playable?
+        context.player
+          ..insertToNext(item.metadata)
+          ..transportControls.playFromMediaId(item.metadata.mediaId);
       },
       child: AutoLoadMoreList(
         loadMore: (count) async {

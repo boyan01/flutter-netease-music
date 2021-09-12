@@ -31,5 +31,9 @@
     "projectDescription": "OpenSource project https://github.com/boyan01/flutter-netease-music",
     "search": "Search",
     "myMusic": "My Music",
-    "personalFM": "Personal FM"
+    "personalFM": "Personal FM",
+    "failedToPlayMusic": "failed to play music",
+    "noMusic": "no music",
+    "playlist": "PlayList",
+    "failedToLoad": "failed to load"
 }

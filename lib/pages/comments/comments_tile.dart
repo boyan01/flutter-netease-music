@@ -18,7 +18,7 @@ class _ItemTitle extends StatelessWidget {
                 final playlist = payload!.obj as PlaylistDetail;
                 return PlaylistDetailPage(
                   playlist.id!,
-                  playlist: playlist,
+                  previewData: playlist,
                 );
               }));
             } else if (commentThreadId.type == CommentType.song) {

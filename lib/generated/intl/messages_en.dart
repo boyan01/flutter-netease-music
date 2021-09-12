@@ -44,6 +44,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "errorToFetchData":
             MessageLookupByLibrary.simpleMessage("error to fetch data."),
         "failedToDelete": MessageLookupByLibrary.simpleMessage("delete failed"),
+        "failedToLoad": MessageLookupByLibrary.simpleMessage("failed to load"),
+        "failedToPlayMusic":
+            MessageLookupByLibrary.simpleMessage("failed to play music"),
         "favoriteSongList":
             MessageLookupByLibrary.simpleMessage("Favorite Song List"),
         "friends": MessageLookupByLibrary.simpleMessage("Friends"),
@@ -57,8 +60,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "myDjs": MessageLookupByLibrary.simpleMessage("Dj"),
         "myMusic": MessageLookupByLibrary.simpleMessage("My Music"),
         "nextStep": MessageLookupByLibrary.simpleMessage("next step"),
+        "noMusic": MessageLookupByLibrary.simpleMessage("no music"),
         "personalFM": MessageLookupByLibrary.simpleMessage("Personal FM"),
         "playInNext": MessageLookupByLibrary.simpleMessage("play in next"),
+        "playlist": MessageLookupByLibrary.simpleMessage("PlayList"),
         "playlistLoginDescription": MessageLookupByLibrary.simpleMessage(
             "Login to discover your playlists."),
         "playlistShareContent": m1,

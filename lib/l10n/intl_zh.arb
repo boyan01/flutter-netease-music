@@ -32,5 +32,9 @@
     "projectDescription": "开源项目 https://github.com/boyan01/flutter-netease-music",
     "search": "搜索",
     "myMusic": "我的音乐",
-    "personalFM": "私人FM"
+    "personalFM": "私人FM",
+    "failedToPlayMusic": "播放音乐失败",
+    "noMusic": "暂无音乐",
+    "playlist": "歌单",
+    "failedToLoad": "加载失败"
 }
