@@ -15,9 +15,17 @@ AsyncSnapshot<PlaylistDetail> usePlaylistDetail(
     if (local != null) {
       yield local;
     }
+
     final detailResult = await neteaseRepository!.playlistDetail(playlistId);
     final detail = detailResult.asValue?.value;
     if (detail != null) {
+      if (local != null && detail.trackUpdateTime == local.trackUpdateTime) {
+        detail.musicList = local.musicList;
+      } else if (detail.musicList.length != detail.trackIds.length) {
+        final musics = await neteaseRepository!
+            .songDetails(detail.trackIds.map((e) => e.id).toList());
+        detail.musicList = musics;
+      }
       neteaseLocalData.updatePlaylistDetail(detail);
       yield detail;
     }

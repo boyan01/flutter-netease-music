@@ -45,10 +45,10 @@ class PlaylistDetailPage extends HookWidget {
     if (detail.hasError) {
       return _PlaylistDetailScaffold.content(
         playlistDetail: detail.data,
-        child: const SizedBox(
+        child: SizedBox(
           height: 200,
           child: Center(
-            child: CircularProgressIndicator(),
+            child: Text(context.strings.failedToLoad),
           ),
         ),
       );
@@ -57,10 +57,13 @@ class PlaylistDetailPage extends HookWidget {
     if (!detail.hasData) {
       return _PlaylistDetailScaffold.content(
         playlistDetail: detail.data,
-        child: SizedBox(
-          height: 200,
-          child: Center(
-            child: Text(context.strings.failedToLoad),
+        child: const Padding(
+          padding: EdgeInsets.only(top: 80),
+          child: SizedBox(
+            height: 40,
+            child: Center(
+              child: CircularProgressIndicator(),
+            ),
           ),
         ),
       );
