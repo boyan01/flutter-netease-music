@@ -9,7 +9,7 @@ part 'music.g.dart';
 class Music {
   Music({
     required this.id,
-    this.title,
+    required this.title,
     this.url,
     this.album,
     this.artist,
@@ -26,18 +26,22 @@ class Music {
 
   final int id;
 
-  final String? title;
+  @JsonKey(name: 'name', defaultValue: '')
+  final String title;
 
   final String? url;
 
+  @JsonKey(name: 'al')
   final Album? album;
 
+  @JsonKey(name: 'ar')
   final List<Artist>? artist;
 
-  ///歌曲mv id,当其为0时,表示没有mv
+  // zero meanings no mv.
+  @JsonKey(name: 'mv')
   final int mvId;
 
-  String? get imageUrl => album!.coverImageUrl;
+  String? get imageUrl => album?.coverImageUrl;
 
   MusicMetadata? _metadata;
 

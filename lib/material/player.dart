@@ -103,7 +103,7 @@ class LikeButton extends ConsumerWidget {
   const LikeButton({Key? key, required this.music}) : super(key: key);
 
   factory LikeButton.current(BuildContext context) {
-    return LikeButton(music: context.listenPlayerValue.current!);
+    return LikeButton(music: context.watchPlayerValue.current!);
   }
 
   final Music music;

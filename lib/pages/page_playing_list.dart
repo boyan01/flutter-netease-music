@@ -41,8 +41,8 @@ class PlayingListDialogState extends State<PlayingListDialog> {
 
   @override
   Widget build(BuildContext context) {
-    final playingList = context.listenPlayerValue.playingList;
-    final music = context.listenPlayerValue.current;
+    final playingList = context.watchPlayerValue.playingList;
+    final music = context.watchPlayerValue.current;
 
     return _PlayingListContainer(
       child: Column(

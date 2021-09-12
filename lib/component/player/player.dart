@@ -52,21 +52,22 @@ extension QuitPlayerExt on BuildContext {
 
   TransportControls get transportControls => player.transportControls;
 
-  /// use [listenPlayerValue]
-  @Deprecated('use listenPlayerValue instead')
-  MusicPlayerValue get playerValue {
+  /// use [watchPlayerValue]
+  MusicPlayerValue get readPlayerValue {
+    return ScopedModel.of<QuietModel>(this, rebuildOnChange: false)
+        .player
+        .value;
+  }
+
+  MusicPlayerValue get watchPlayerValue {
     return ScopedModel.of<QuietModel>(this, rebuildOnChange: true).player.value;
   }
 
-  MusicPlayerValue get listenPlayerValue {
-    return ScopedModel.of<QuietModel>(this, rebuildOnChange: true).player.value;
-  }
+  PlaybackState get playbackState => watchPlayerValue.playbackState;
 
-  PlaybackState get playbackState => listenPlayerValue.playbackState;
+  PlayMode get playMode => watchPlayerValue.playMode;
 
-  PlayMode get playMode => listenPlayerValue.playMode;
-
-  PlayQueue get playList => listenPlayerValue.queue;
+  PlayQueue get playList => watchPlayerValue.queue;
 }
 
 extension PlayQueueExt on PlayQueue {

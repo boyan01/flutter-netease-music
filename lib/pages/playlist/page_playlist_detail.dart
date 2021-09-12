@@ -108,7 +108,7 @@ class _PlaylistBody extends ConsumerStatefulWidget {
 
   final PlaylistDetail playlist;
 
-  List<Music>? get musicList => playlist.musicList;
+  List<Music> get musicList => playlist.musicList;
 
   @override
   _PlaylistBodyState createState() {
@@ -121,7 +121,7 @@ class _PlaylistBodyState extends ConsumerState<_PlaylistBody> {
   Widget build(BuildContext context) {
     return MusicTileConfiguration(
       token: "playlist_${widget.playlist.id}",
-      musics: widget.musicList!,
+      musics: widget.musicList,
       remove: widget.playlist.creator!["userId"] !=
               ref.read(userProvider).userId
           ? null
@@ -130,7 +130,7 @@ class _PlaylistBodyState extends ConsumerState<_PlaylistBody> {
                   PlaylistOperation.remove, widget.playlist.id!, [music.id]);
               if (result) {
                 setState(() {
-                  widget.playlist.musicList!.remove(music);
+                  widget.playlist.musicList.remove(music);
                 });
               }
               toast(result ? '删除成功' : '删除失败');
@@ -151,8 +151,9 @@ class _PlaylistBodyState extends ConsumerState<_PlaylistBody> {
           ),
           SliverList(
             delegate: SliverChildBuilderDelegate(
-                (context, index) => MusicTile(widget.musicList![index]),
-                childCount: widget.musicList!.length),
+              (context, index) => MusicTile(widget.musicList[index]),
+              childCount: widget.musicList.length,
+            ),
           ),
         ],
       ),
@@ -189,7 +190,7 @@ class _PlaylistBodyState extends ConsumerState<_PlaylistBody> {
         doSubscribeChanged: _doSubscribeChanged,
       );
     }
-    return MusicListHeader(widget.musicList!.length, tail: tail);
+    return MusicListHeader(widget.musicList.length, tail: tail);
   }
 }
 
@@ -534,8 +535,9 @@ class _PlaylistDetailHeader extends ConsumerWidget {
                       QuietHero(
                         tag: playlist.heroTag,
                         child: Image(
-                            fit: BoxFit.cover,
-                            image: CachedImage(playlist.coverUrl!)),
+                          fit: BoxFit.cover,
+                          image: CachedImage(playlist.coverUrl!),
+                        ),
                       ),
                       Container(
                         padding: const EdgeInsets.all(4),

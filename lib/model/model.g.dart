@@ -8,14 +8,14 @@ part of 'model.dart';
 
 Album _$AlbumFromJson(Map json) {
   return Album(
-    coverImageUrl: json['coverImageUrl'] as String?,
+    coverImageUrl: json['picUrl'] as String?,
     name: json['name'] as String?,
     id: json['id'] as int?,
   );
 }
 
 Map<String, dynamic> _$AlbumToJson(Album instance) => <String, dynamic>{
-      'coverImageUrl': instance.coverImageUrl,
+      'picUrl': instance.coverImageUrl,
       'name': instance.name,
       'id': instance.id,
     };

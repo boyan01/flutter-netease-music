@@ -13,7 +13,7 @@ class LandscapePlayingPage extends StatelessWidget {
       resizeToAvoidBottomInset: false,
       body: Stack(
         children: <Widget>[
-          BlurBackground(music: context.listenPlayerValue.requireCurrent),
+          BlurBackground(music: context.watchPlayerValue.requireCurrent),
           Material(
             color: Colors.transparent,
             child: Padding(
@@ -43,7 +43,7 @@ class _LayoutCover extends StatelessWidget {
       children: <Widget>[
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 40),
-          child: AlbumCover(music: context.listenPlayerValue.requireCurrent),
+          child: AlbumCover(music: context.watchPlayerValue.requireCurrent),
         ),
         const Spacer(),
         const SizedBox(height: 20),
@@ -61,10 +61,10 @@ class _LayoutLyric extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
-        PlayingTitle(music: context.listenPlayerValue.requireCurrent),
+        PlayingTitle(music: context.watchPlayerValue.requireCurrent),
         Expanded(
             child: PlayingLyricView(
-                music: context.listenPlayerValue.requireCurrent)),
+                music: context.watchPlayerValue.requireCurrent)),
         PlayingOperationBar(),
         const SizedBox(height: 16),
       ],

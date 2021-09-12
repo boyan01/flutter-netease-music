@@ -44,7 +44,7 @@ class CachedImage extends ImageProvider<CachedImage> implements CacheKey {
 
   ///the id of this image
   ///netease image url has a unique id at url last part
-  String get id => url.substring(url.lastIndexOf('/'));
+  String get id => url.isEmpty ? '' : url.substring(url.lastIndexOf('/'));
 
   @override
   bool operator ==(Object other) =>
@@ -73,6 +73,11 @@ class CachedImage extends ImageProvider<CachedImage> implements CacheKey {
       return decode(Uint8List.fromList(image),
           cacheWidth: key.width, cacheHeight: null);
     }
+
+    if (key.url.isEmpty) {
+      throw Exception('image url is empty.');
+    }
+
     //request network source
     final Uri resolved = Uri.base.resolve(key.url);
     final HttpClientRequest request = await _httpClient.getUrl(resolved);

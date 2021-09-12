@@ -46,7 +46,7 @@ class LocalData {
   Future<T?> get<T>(dynamic key) async {
     final Database db = await getApplicationDatabase();
     final dynamic result = await StoreRef.main().record(key).get(db);
-    if (result is T) {
+    if (result is T?) {
       return result;
     }
     assert(false, "the result of $key is not subtype of $T. $result");
@@ -58,29 +58,33 @@ class LocalData {
     return StoreRef.main().record(key).put(db, value);
   }
 
-  Future<List<PlaylistDetail?>?> getUserPlaylist(int? userId) async {
+  Future<List<PlaylistDetail>> getUserPlaylist(int? userId) async {
     final data = await get("user_playlist_$userId");
     if (data == null) {
-      return null;
+      return const [];
     }
     final result = (data as List)
         .cast<Map>()
-        .map((m) => PlaylistDetail.fromMap(m))
+        .map((m) => PlaylistDetail.fromJson(m))
         .toList();
     return result;
   }
 
   void updateUserPlaylist(int? userId, List<PlaylistDetail?> list) {
-    _put(list.map((p) => p!.toMap()).toList(), "user_playlist_$userId");
+    _put(list.map((p) => p!.toJson()).toList(), "user_playlist_$userId");
   }
 
   Future<PlaylistDetail?> getPlaylistDetail(int playlistId) async {
-    final data = await get("playlist_detail_$playlistId");
-    return PlaylistDetail.fromMap(data);
+    final data = await get<Map>("playlist_detail_$playlistId");
+    if (data == null) {
+      return null;
+    }
+    return PlaylistDetail.fromJson(data);
   }
 
   //TODO 添加分页加载逻辑
   Future updatePlaylistDetail(PlaylistDetail playlistDetail) {
-    return _put(playlistDetail.toMap(), 'playlist_detail_${playlistDetail.id}');
+    return _put(
+        playlistDetail.toJson(), 'playlist_detail_${playlistDetail.id}');
   }
 }

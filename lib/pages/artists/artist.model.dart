@@ -19,25 +19,25 @@ class Artist extends model.Artist {
   num? publishTime;
   List<String>? alias;
 
-  Artist(
-      {this.img1v1Url,
-      this.picUrl,
-      this.trans,
-      this.briefDesc,
-      this.name,
-      this.picIdStr,
-      this.followed,
-      this.topicPerson,
-      this.musicSize,
-      this.albumSize,
-      this.id,
-      this.accountId,
-      this.mvSize,
-      this.img1v1Id,
-      this.picId,
-      this.publishTime,
-      this.alias})
-      : super(name: name, id: id, imageUrl: picUrl);
+  Artist({
+    this.img1v1Url,
+    this.picUrl,
+    this.trans,
+    this.briefDesc,
+    this.name,
+    this.picIdStr,
+    this.followed,
+    this.topicPerson,
+    this.musicSize,
+    this.albumSize,
+    this.id,
+    this.accountId,
+    this.mvSize,
+    this.img1v1Id,
+    this.picId,
+    this.publishTime,
+    this.alias,
+  }) : super(name: name, id: id, imageUrl: picUrl);
 
   Artist.fromJson(Map<String, dynamic> json) {
     img1v1Url = json['img1v1Url'];

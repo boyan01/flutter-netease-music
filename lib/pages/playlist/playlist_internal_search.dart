@@ -41,7 +41,7 @@ class PlaylistInternalSearchDelegate extends SearchDelegate {
       return Container();
     }
     final result = list
-        ?.where((m) => m.title!.contains(query) || m.subTitle.contains(query))
+        ?.where((m) => m.title.contains(query) || m.subTitle.contains(query))
         .toList();
     if (result == null || result.isEmpty) {
       return _EmptyResultSection(query);

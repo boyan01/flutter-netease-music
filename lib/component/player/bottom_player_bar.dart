@@ -66,8 +66,8 @@ class BottomControllerBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final music = context.listenPlayerValue.current;
-    final queue = context.listenPlayerValue.queue;
+    final music = context.watchPlayerValue.current;
+    final queue = context.watchPlayerValue.queue;
     if (music == null) {
       return Container();
     }
@@ -117,7 +117,7 @@ class BottomControllerBar extends StatelessWidget {
                     children: <Widget>[
                       const Spacer(),
                       Text(
-                        music.title!,
+                        music.title,
                         style: Theme.of(context).textTheme.bodyText2,
                       ),
                       const Padding(padding: EdgeInsets.only(top: 2)),

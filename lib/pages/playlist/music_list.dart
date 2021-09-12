@@ -75,7 +75,7 @@ class MusicTileConfiguration extends StatelessWidget {
   //return null if current music is not be playing
   static Widget? _buildPlayingLeading(BuildContext context, Music music) {
     if (MusicTileConfiguration.of(context).token == context.playList.queueId &&
-        music == context.playerValue.current) {
+        music == context.watchPlayerValue.current) {
       return Container(
         margin: const EdgeInsets.only(left: 8, right: 8),
         width: 40,
@@ -167,7 +167,7 @@ class MusicTile extends StatelessWidget {
 
 class _SimpleMusicTile extends StatelessWidget {
   const _SimpleMusicTile(this.music, {Key? key}) : super(key: key);
-  final Music? music;
+  final Music music;
 
   @override
   Widget build(BuildContext context) {
@@ -182,14 +182,14 @@ class _SimpleMusicTile extends StatelessWidget {
             children: <Widget>[
               const Spacer(),
               Text(
-                music!.title!,
+                music.title,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: Theme.of(context).textTheme.bodyText2,
               ),
               const Padding(padding: EdgeInsets.only(top: 3)),
               Text(
-                music!.subTitle,
+                music.subTitle,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: Theme.of(context).textTheme.caption,

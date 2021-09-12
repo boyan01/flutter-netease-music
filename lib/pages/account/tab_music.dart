@@ -19,9 +19,9 @@ class _TabMusicState extends State<TabMusic>
     return CachedLoader<List<PlaylistDetail>>(
       cacheKey: 'user_playlist_${widget.profile.userId}',
       loadTask: () => neteaseRepository!.userPlaylist(widget.profile.userId),
-      serialize: (list) => list.map((it) => it.toMap()).toList(),
+      serialize: (list) => list.map((it) => it.toJson()).toList(),
       deserialize: (list) => (list as List)
-          .map((it) => PlaylistDetail.fromMap(it))
+          .map((it) => PlaylistDetail.fromJson(it))
           .toList()
           .cast(),
       builder: (context, result) {

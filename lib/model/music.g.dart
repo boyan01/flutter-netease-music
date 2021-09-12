@@ -9,21 +9,21 @@ part of 'music.dart';
 Music _$MusicFromJson(Map json) {
   return Music(
     id: json['id'] as int,
-    title: json['title'] as String?,
+    title: json['name'] as String? ?? '',
     url: json['url'] as String?,
-    album: json['album'] == null ? null : Album.fromJson(json['album'] as Map),
-    artist: (json['artist'] as List<dynamic>?)
+    album: json['al'] == null ? null : Album.fromJson(json['al'] as Map),
+    artist: (json['ar'] as List<dynamic>?)
         ?.map((e) => Artist.fromJson(e as Map))
         .toList(),
-    mvId: json['mvId'] as int?,
+    mvId: json['mv'] as int?,
   );
 }
 
 Map<String, dynamic> _$MusicToJson(Music instance) => <String, dynamic>{
       'id': instance.id,
-      'title': instance.title,
+      'name': instance.title,
       'url': instance.url,
-      'album': instance.album?.toJson(),
-      'artist': instance.artist?.map((e) => e.toJson()).toList(),
-      'mvId': instance.mvId,
+      'al': instance.album?.toJson(),
+      'ar': instance.artist?.map((e) => e.toJson()).toList(),
+      'mv': instance.mvId,
     };

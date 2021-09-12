@@ -30,7 +30,7 @@ class DurationProgressBarState extends State<DurationProgressBar> {
     String? positionText;
 
     if (state.initialized) {
-      final duration = context.listenPlayerValue.metadata!.duration;
+      final duration = context.watchPlayerValue.metadata!.duration;
 
       final position =
           isUserTracking ? trackingPosition.round() : state.computedPosition;

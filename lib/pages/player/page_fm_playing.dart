@@ -14,7 +14,7 @@ import 'player_progress.dart';
 class PagePlayingFm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final current = context.listenPlayerValue.current;
+    final current = context.watchPlayerValue.current;
     if (current == null) {
       WidgetsBinding.instance!.scheduleFrameCallback((_) {
         Navigator.of(context).pop();
@@ -91,7 +91,7 @@ class _CenterSectionState extends State<_CenterSection> {
           child: _FmCover(),
         ),
         secondChild: PlayingLyricView(
-          music: context.listenPlayerValue.current!,
+          music: context.watchPlayerValue.current!,
           onTap: () {
             setState(() {
               _showLyric = !_showLyric;
@@ -106,7 +106,7 @@ class _CenterSectionState extends State<_CenterSection> {
 class _FmCover extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final music = context.listenPlayerValue.current!;
+    final music = context.watchPlayerValue.current!;
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
@@ -129,7 +129,7 @@ class _FmCover extends StatelessWidget {
           ),
         ),
         Text(
-          music.title ?? "",
+          music.title,
           style: Theme.of(context).primaryTextTheme.subtitle1,
         ),
         const SizedBox(height: 8),

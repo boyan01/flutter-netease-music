@@ -23,7 +23,7 @@ class _ItemTitle extends StatelessWidget {
               }));
             } else if (commentThreadId.type == CommentType.song) {
               final Music music = payload!.obj;
-              if (context.playerValue.current != music) {
+              if (context.watchPlayerValue.current != music) {
                 final dynamic result = await showDialog(
                     context: context,
                     builder: (context) {

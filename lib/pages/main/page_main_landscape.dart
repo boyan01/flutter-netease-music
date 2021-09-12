@@ -150,7 +150,7 @@ class _BottomPlayerBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final current = context.listenPlayerValue.current;
+    final current = context.watchPlayerValue.current;
     final paddingPageBottom = MediaQuery.of(context).viewInsets.bottom +
         MediaQuery.of(context).padding.bottom;
     if (current == null) {

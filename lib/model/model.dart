@@ -12,6 +12,7 @@ class Album {
     this.id,
   });
 
+  @JsonKey(name: 'picUrl')
   String? coverImageUrl;
 
   String? name;
