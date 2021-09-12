@@ -27,7 +27,17 @@ jobs:
         run: echo "y" | sudo ${ANDROID_HOME}/tools/bin/sdkmanager --install "ndk;21.0.6113669" --sdk_root=${ANDROID_SDK_ROOT}
 
       - run: flutter pub get
-# 跳过单元测试，因为项目重构改动过大，导致原有测试无法通过。目前没有时间去重写单测。
+      - run: flutter pub run build_runner build --delete-conflicting-outputs
+
+      # verify the use of 'dart format' on each commit.
+      - name: Verify formatting
+        run: flutter format --set-exit-if-changed .
+
+      # Consider passing '--fatal-infos' for slightly stricter analysis.
+      - name: Analyze project source
+        run: flutter analyze
+
+      # 跳过单元测试，因为项目重构改动过大，导致原有测试无法通过。目前没有时间去重写单测。
 #       - name: Flutter unit test
 #         run: flutter test --coverage --coverage-path=lcov.info
 
