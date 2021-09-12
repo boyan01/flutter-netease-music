@@ -7,23 +7,15 @@ const leaderBoard = {
       "creator": null,
       "artists": null,
       "tracks": [
-        {
-          "first": "Lovebird (Remix)",
-          "second": "Far East Movement/张艺兴"
-        },
-        {
-          "first": "Rescue Me",
-          "second": "OneRepublic"
-        },
-        {
-          "first": "Doin' Time",
-          "second": "Lana Del Rey"
-        }
+        {"first": "Lovebird (Remix)", "second": "Far East Movement/张艺兴"},
+        {"first": "Rescue Me", "second": "OneRepublic"},
+        {"first": "Doin' Time", "second": "Lana Del Rey"}
       ],
       "tags": [],
       "createTime": 1404115136883,
       "highQuality": false,
-      "coverImgUrl": "https://p1.music.126.net/DrRIg6CrgDfVLEph9SNh7w==/18696095720518497.jpg",
+      "coverImgUrl":
+          "https://p1.music.126.net/DrRIg6CrgDfVLEph9SNh7w==/18696095720518497.jpg",
       "status": 0,
       "subscribedCount": 1892491,
       "cloudTrackCount": 0,
@@ -55,23 +47,15 @@ const leaderBoard = {
       "creator": null,
       "artists": null,
       "tracks": [
-        {
-          "first": "四块五",
-          "second": "隔壁老樊"
-        },
-        {
-          "first": "晚安",
-          "second": "颜人中"
-        },
-        {
-          "first": "孤单心事",
-          "second": "颜人中"
-        }
+        {"first": "四块五", "second": "隔壁老樊"},
+        {"first": "晚安", "second": "颜人中"},
+        {"first": "孤单心事", "second": "颜人中"}
       ],
       "tags": [],
       "createTime": 1378721398225,
       "highQuality": false,
-      "coverImgUrl": "https://p1.music.126.net/N2HO5xfYEqyQ8q6oxCw8IQ==/18713687906568048.jpg",
+      "coverImgUrl":
+          "https://p1.music.126.net/N2HO5xfYEqyQ8q6oxCw8IQ==/18713687906568048.jpg",
       "status": 0,
       "subscribedCount": 1407380,
       "cloudTrackCount": 0,
@@ -103,30 +87,23 @@ const leaderBoard = {
       "creator": null,
       "artists": null,
       "tracks": [
-        {
-          "first": "超人",
-          "second": "王贰浪"
-        },
-        {
-          "first": "天南歌",
-          "second": "国风堂/KBShinya"
-        },
-        {
-          "first": "我们都是无名之辈",
-          "second": "解忧邵帅"
-        }
+        {"first": "超人", "second": "王贰浪"},
+        {"first": "天南歌", "second": "国风堂/KBShinya"},
+        {"first": "我们都是无名之辈", "second": "解忧邵帅"}
       ],
       "tags": [],
       "createTime": 1374732325894,
       "highQuality": false,
-      "coverImgUrl": "https://p1.music.126.net/sBzD11nforcuh1jdLSgX7g==/18740076185638788.jpg",
+      "coverImgUrl":
+          "https://p1.music.126.net/sBzD11nforcuh1jdLSgX7g==/18740076185638788.jpg",
       "status": 0,
       "subscribedCount": 443522,
       "cloudTrackCount": 0,
       "userId": 201586,
       "adType": 0,
       "trackNumberUpdateTime": 1557989847903,
-      "description": "云音乐独立原创音乐人作品官方榜单，以推荐优秀原创作品为目的。每周四网易云音乐首发。申请网易音乐人：http://music.163.com/nmusician/",
+      "description":
+          "云音乐独立原创音乐人作品官方榜单，以推荐优秀原创作品为目的。每周四网易云音乐首发。申请网易音乐人：http://music.163.com/nmusician/",
       "ordered": true,
       "updateTime": 1557989848013,
       "playCount": 286193984,
@@ -151,23 +128,15 @@ const leaderBoard = {
       "creator": null,
       "artists": null,
       "tracks": [
-        {
-          "first": "心如止水",
-          "second": "Ice Paper"
-        },
-        {
-          "first": "晚安",
-          "second": "颜人中"
-        },
-        {
-          "first": "多想在平庸的生活拥抱你",
-          "second": "隔壁老樊"
-        }
+        {"first": "心如止水", "second": "Ice Paper"},
+        {"first": "晚安", "second": "颜人中"},
+        {"first": "多想在平庸的生活拥抱你", "second": "隔壁老樊"}
       ],
       "tags": [],
       "createTime": 1378721406014,
       "highQuality": false,
-      "coverImgUrl": "https://p1.music.126.net/GhhuF6Ep5Tq9IEvLsyCN7w==/18708190348409091.jpg",
+      "coverImgUrl":
+          "https://p1.music.126.net/GhhuF6Ep5Tq9IEvLsyCN7w==/18708190348409091.jpg",
       "status": 0,
       "subscribedCount": 5600122,
       "cloudTrackCount": 0,
@@ -199,13 +168,11 @@ const leaderBoard = {
       "creator": null,
       "artists": null,
       "tracks": [],
-      "tags": [
-        "华语",
-        "流行"
-      ],
+      "tags": ["华语", "流行"],
       "createTime": 1547092729345,
       "highQuality": false,
-      "coverImgUrl": "https://p1.music.126.net/XbjRDARP1xv5a-40ZDOy6A==/109951163785427934.jpg",
+      "coverImgUrl":
+          "https://p1.music.126.net/XbjRDARP1xv5a-40ZDOy6A==/109951163785427934.jpg",
       "status": 0,
       "subscribedCount": 70029,
       "cloudTrackCount": 0,
@@ -236,20 +203,19 @@ const leaderBoard = {
       "creator": null,
       "artists": null,
       "tracks": [],
-      "tags": [
-        "华语",
-        "说唱"
-      ],
+      "tags": ["华语", "说唱"],
       "createTime": 1510290389440,
       "highQuality": false,
-      "coverImgUrl": "https://p1.music.126.net/TuGxihwbiPmoHoFGvIuu_w==/109951163781770038.jpg",
+      "coverImgUrl":
+          "https://p1.music.126.net/TuGxihwbiPmoHoFGvIuu_w==/109951163781770038.jpg",
       "status": 0,
       "subscribedCount": 302058,
       "cloudTrackCount": 0,
       "userId": 1,
       "adType": 0,
       "trackNumberUpdateTime": 1558059149325,
-      "description": "榜单介绍\n\n云音乐独立说唱音乐人作品官方榜单，以推荐中国优秀原创说唱音乐作品为目的。榜单选取全平台最近一周内，热度最高的50首音乐人原创说唱歌曲，每周五更新。申请网易音乐人：http://music.163.com/nmusician",
+      "description":
+          "榜单介绍\n\n云音乐独立说唱音乐人作品官方榜单，以推荐中国优秀原创说唱音乐作品为目的。榜单选取全平台最近一周内，热度最高的50首音乐人原创说唱歌曲，每周五更新。申请网易音乐人：http://music.163.com/nmusician",
       "ordered": true,
       "updateTime": 1558059149430,
       "playCount": 97550608,
@@ -273,12 +239,11 @@ const leaderBoard = {
       "creator": null,
       "artists": null,
       "tracks": [],
-      "tags": [
-        "古典"
-      ],
+      "tags": ["古典"],
       "createTime": 1430968920537,
       "highQuality": false,
-      "coverImgUrl": "https://p1.music.126.net/BzSxoj6O1LQPlFceDn-LKw==/18681802069355169.jpg",
+      "coverImgUrl":
+          "https://p1.music.126.net/BzSxoj6O1LQPlFceDn-LKw==/18681802069355169.jpg",
       "status": 0,
       "subscribedCount": 235842,
       "cloudTrackCount": 0,
@@ -309,12 +274,11 @@ const leaderBoard = {
       "creator": null,
       "artists": null,
       "tracks": [],
-      "tags": [
-        "电子"
-      ],
+      "tags": ["电子"],
       "createTime": 1510825632233,
       "highQuality": false,
-      "coverImgUrl": "https://p1.music.126.net/5tgOCD4jiPKBGt7znJl-2g==/18822539557941307.jpg",
+      "coverImgUrl":
+          "https://p1.music.126.net/5tgOCD4jiPKBGt7znJl-2g==/18822539557941307.jpg",
       "status": 0,
       "subscribedCount": 572083,
       "cloudTrackCount": 0,
@@ -345,12 +309,11 @@ const leaderBoard = {
       "creator": null,
       "artists": null,
       "tracks": [],
-      "tags": [
-        "榜单"
-      ],
+      "tags": ["榜单"],
       "createTime": 1527831892491,
       "highQuality": false,
-      "coverImgUrl": "https://p1.music.126.net/bZvjH5KTuvAT0YXlVa-RtQ==/109951163326845001.jpg",
+      "coverImgUrl":
+          "https://p1.music.126.net/bZvjH5KTuvAT0YXlVa-RtQ==/109951163326845001.jpg",
       "status": 0,
       "subscribedCount": 1298271,
       "cloudTrackCount": 0,
@@ -384,7 +347,8 @@ const leaderBoard = {
       "tags": [],
       "createTime": 1430968935040,
       "highQuality": false,
-      "coverImgUrl": "https://p1.music.126.net/vttjtRjL75Q4DEnjRsO8-A==/18752170813539664.jpg",
+      "coverImgUrl":
+          "https://p1.music.126.net/vttjtRjL75Q4DEnjRsO8-A==/18752170813539664.jpg",
       "status": 0,
       "subscribedCount": 154660,
       "cloudTrackCount": 0,
@@ -415,13 +379,11 @@ const leaderBoard = {
       "creator": null,
       "artists": null,
       "tracks": [],
-      "tags": [
-        "韩语",
-        "榜单"
-      ],
+      "tags": ["韩语", "榜单"],
       "createTime": 1496201691281,
       "highQuality": false,
-      "coverImgUrl": "https://p1.music.126.net/vs-cMh49e6qPEorHuhU07A==/18737877162497499.jpg",
+      "coverImgUrl":
+          "https://p1.music.126.net/vs-cMh49e6qPEorHuhU07A==/18737877162497499.jpg",
       "status": 0,
       "subscribedCount": 62162,
       "cloudTrackCount": 0,
@@ -452,20 +414,19 @@ const leaderBoard = {
       "creator": null,
       "artists": null,
       "tracks": [],
-      "tags": [
-        "电子",
-        "榜单"
-      ],
+      "tags": ["电子", "榜单"],
       "createTime": 1395988377813,
       "highQuality": false,
-      "coverImgUrl": "https://p1.music.126.net/8-GBrukQ3BHhs4CmK6qE4w==/109951163424197392.jpg",
+      "coverImgUrl":
+          "https://p1.music.126.net/8-GBrukQ3BHhs4CmK6qE4w==/109951163424197392.jpg",
       "status": 0,
       "subscribedCount": 211395,
       "cloudTrackCount": 0,
       "userId": 48102,
       "adType": 0,
       "trackNumberUpdateTime": 1558085971309,
-      "description": "▲▲▲本榜排名按作品发行时间顺序▲▲▲网易云音乐联合网易放刺、Loopy、加菲众、DJ WENGWENG（灯笼Club）、3ASiC（同步计划）、DJ Senders（沉睡电台）、Eiasn电音厂牌、电悦台（EDM Station） \n打造云音乐“国电榜” ! 每周五为大家带来网易电子音乐人优质新作！",
+      "description":
+          "▲▲▲本榜排名按作品发行时间顺序▲▲▲网易云音乐联合网易放刺、Loopy、加菲众、DJ WENGWENG（灯笼Club）、3ASiC（同步计划）、DJ Senders（沉睡电台）、Eiasn电音厂牌、电悦台（EDM Station） \n打造云音乐“国电榜” ! 每周五为大家带来网易电子音乐人优质新作！",
       "ordered": true,
       "updateTime": 1558086009661,
       "playCount": 62985388,
@@ -489,14 +450,11 @@ const leaderBoard = {
       "creator": null,
       "artists": null,
       "tracks": [],
-      "tags": [
-        "欧美",
-        "流行",
-        "英伦"
-      ],
+      "tags": ["欧美", "流行", "英伦"],
       "createTime": 1513838619821,
       "highQuality": false,
-      "coverImgUrl": "https://p2.music.126.net/0_6_Efe9m0D0NtghOxinUg==/109951163089272193.jpg",
+      "coverImgUrl":
+          "https://p2.music.126.net/0_6_Efe9m0D0NtghOxinUg==/109951163089272193.jpg",
       "status": 0,
       "subscribedCount": 17302,
       "cloudTrackCount": 0,
@@ -527,12 +485,11 @@ const leaderBoard = {
       "creator": null,
       "artists": null,
       "tracks": [],
-      "tags": [
-        "游戏"
-      ],
+      "tags": ["游戏"],
       "createTime": 1512703064327,
       "highQuality": false,
-      "coverImgUrl": "https://p2.music.126.net/CUqQp33MZf_m0BwH4u0V6A==/109951163078922993.jpg",
+      "coverImgUrl":
+          "https://p2.music.126.net/CUqQp33MZf_m0BwH4u0V6A==/109951163078922993.jpg",
       "status": 0,
       "subscribedCount": 56199,
       "cloudTrackCount": 0,
@@ -563,13 +520,11 @@ const leaderBoard = {
       "creator": null,
       "artists": null,
       "tracks": [],
-      "tags": [
-        "榜单",
-        "欧美"
-      ],
+      "tags": ["榜单", "欧美"],
       "createTime": 1361239766844,
       "highQuality": false,
-      "coverImgUrl": "https://p2.music.126.net/VQOMRRix9_omZbg4t-pVpw==/18930291695438269.jpg",
+      "coverImgUrl":
+          "https://p2.music.126.net/VQOMRRix9_omZbg4t-pVpw==/18930291695438269.jpg",
       "status": 0,
       "subscribedCount": 227728,
       "cloudTrackCount": 0,
@@ -600,14 +555,11 @@ const leaderBoard = {
       "creator": null,
       "artists": null,
       "tracks": [],
-      "tags": [
-        "流行",
-        "欧美",
-        "榜单"
-      ],
+      "tags": ["流行", "欧美", "榜单"],
       "createTime": 1358823076818,
       "highQuality": false,
-      "coverImgUrl": "https://p2.music.126.net/EBRqPmY8k8qyVHyF8AyjdQ==/18641120139148117.jpg",
+      "coverImgUrl":
+          "https://p2.music.126.net/EBRqPmY8k8qyVHyF8AyjdQ==/18641120139148117.jpg",
       "status": 0,
       "subscribedCount": 955674,
       "cloudTrackCount": 0,
@@ -638,14 +590,11 @@ const leaderBoard = {
       "creator": null,
       "artists": null,
       "tracks": [],
-      "tags": [
-        "欧美",
-        "电子",
-        "榜单"
-      ],
+      "tags": ["欧美", "电子", "榜单"],
       "createTime": 1378886589466,
       "highQuality": false,
-      "coverImgUrl": "https://p2.music.126.net/A61n94BjWAb-ql4xpwpYcg==/18613632348448741.jpg",
+      "coverImgUrl":
+          "https://p2.music.126.net/A61n94BjWAb-ql4xpwpYcg==/18613632348448741.jpg",
       "status": 0,
       "subscribedCount": 208676,
       "cloudTrackCount": 0,
@@ -676,19 +625,19 @@ const leaderBoard = {
       "creator": null,
       "artists": null,
       "tracks": [],
-      "tags": [
-        "榜单"
-      ],
+      "tags": ["榜单"],
       "createTime": 1409825013948,
       "highQuality": false,
-      "coverImgUrl": "https://p2.music.126.net/6O0ZEnO-I_RADBylVypprg==/109951162873641556.jpg",
+      "coverImgUrl":
+          "https://p2.music.126.net/6O0ZEnO-I_RADBylVypprg==/109951162873641556.jpg",
       "status": 0,
       "subscribedCount": 47705,
       "cloudTrackCount": 0,
       "userId": 5190793,
       "adType": 0,
       "trackNumberUpdateTime": 1558085585316,
-      "description": "法国NRJ电台（national Radio de Jeunes）成立于1981年，总部位于法国巴黎。是法国最受欢迎的音乐电台和听众最多的广播电台之一。NRJ音乐奖素有法国的“格莱美”之称。此榜单针对NRJ电台法国本土热门歌曲排行。【每周五更新】",
+      "description":
+          "法国NRJ电台（national Radio de Jeunes）成立于1981年，总部位于法国巴黎。是法国最受欢迎的音乐电台和听众最多的广播电台之一。NRJ音乐奖素有法国的“格莱美”之称。此榜单针对NRJ电台法国本土热门歌曲排行。【每周五更新】",
       "ordered": true,
       "updateTime": 1558085592347,
       "playCount": 16681126,
@@ -712,21 +661,19 @@ const leaderBoard = {
       "creator": null,
       "artists": null,
       "tracks": [],
-      "tags": [
-        "华语",
-        "KTV",
-        "榜单"
-      ],
+      "tags": ["华语", "KTV", "榜单"],
       "createTime": 1405653093230,
       "highQuality": false,
-      "coverImgUrl": "https://p2.music.126.net/H4Y7jxd_zwygcAmPMfwJnQ==/19174383276805159.jpg",
+      "coverImgUrl":
+          "https://p2.music.126.net/H4Y7jxd_zwygcAmPMfwJnQ==/19174383276805159.jpg",
       "status": 0,
       "subscribedCount": 167160,
       "cloudTrackCount": 0,
       "userId": 30728956,
       "adType": 0,
       "trackNumberUpdateTime": 1556874893649,
-      "description": "KTV唛榜是目前国内首个以全国超过200家KTV点歌平台真实数据的当红歌曲榜单。所涉及的KTV店铺覆盖全国近100多个城市，囊括一、二、三线各级城市及地区。在综合全国各地KTV点唱数据的前提下进行汇总与统计。为了保证信息的及时性，唛榜每周五更新。提供给K迷们最新和最准确的数据。",
+      "description":
+          "KTV唛榜是目前国内首个以全国超过200家KTV点歌平台真实数据的当红歌曲榜单。所涉及的KTV店铺覆盖全国近100多个城市，囊括一、二、三线各级城市及地区。在综合全国各地KTV点唱数据的前提下进行汇总与统计。为了保证信息的及时性，唛榜每周五更新。提供给K迷们最新和最准确的数据。",
       "ordered": true,
       "updateTime": 1558085222464,
       "playCount": 40877304,
@@ -750,12 +697,11 @@ const leaderBoard = {
       "creator": null,
       "artists": null,
       "tracks": [],
-      "tags": [
-        "榜单"
-      ],
+      "tags": ["榜单"],
       "createTime": 1398047444743,
       "highQuality": false,
-      "coverImgUrl": "https://p2.music.126.net/WTpbsVfxeB6qDs_3_rnQtg==/109951163601178881.jpg",
+      "coverImgUrl":
+          "https://p2.music.126.net/WTpbsVfxeB6qDs_3_rnQtg==/109951163601178881.jpg",
       "status": 0,
       "subscribedCount": 259788,
       "cloudTrackCount": 0,
@@ -786,13 +732,11 @@ const leaderBoard = {
       "creator": null,
       "artists": null,
       "tracks": [],
-      "tags": [
-        "榜单",
-        "日语"
-      ],
+      "tags": ["榜单", "日语"],
       "createTime": 1357635084874,
       "highQuality": false,
-      "coverImgUrl": "https://p2.music.126.net/Rgqbqsf4b3gNOzZKxOMxuw==/19029247741938160.jpg",
+      "coverImgUrl":
+          "https://p2.music.126.net/Rgqbqsf4b3gNOzZKxOMxuw==/19029247741938160.jpg",
       "status": 0,
       "subscribedCount": 102465,
       "cloudTrackCount": 0,
@@ -826,7 +770,8 @@ const leaderBoard = {
       "tags": [],
       "createTime": 1359703138872,
       "highQuality": false,
-      "coverImgUrl": "https://p2.music.126.net/54vZEZ-fCudWZm6GH7I55w==/19187577416338508.jpg",
+      "coverImgUrl":
+          "https://p2.music.126.net/54vZEZ-fCudWZm6GH7I55w==/19187577416338508.jpg",
       "status": 0,
       "subscribedCount": 92853,
       "cloudTrackCount": 0,
@@ -857,19 +802,19 @@ const leaderBoard = {
       "creator": null,
       "artists": null,
       "tracks": [],
-      "tags": [
-        "流行"
-      ],
+      "tags": ["流行"],
       "createTime": 1359690215675,
       "highQuality": false,
-      "coverImgUrl": "https://p2.music.126.net/wqi4TF4ILiTUUL5T7zhwsQ==/18646617697286899.jpg",
+      "coverImgUrl":
+          "https://p2.music.126.net/wqi4TF4ILiTUUL5T7zhwsQ==/18646617697286899.jpg",
       "status": 0,
       "subscribedCount": 27369,
       "cloudTrackCount": 0,
       "userId": 48174,
       "adType": 0,
       "trackNumberUpdateTime": 1557801538167,
-      "description": "資料來源統計： ※唱片行銷售量佔20%(含玫瑰大眾、g-music、五大、佳佳、博客來等各大唱片行) ※數位音樂下載佔30%(含 iTunes、KK box、myMusic、Omusic、各鈴聲下載榜) ※Hit Fm聯播網AIR PLAY電台播出率佔50%",
+      "description":
+          "資料來源統計： ※唱片行銷售量佔20%(含玫瑰大眾、g-music、五大、佳佳、博客來等各大唱片行) ※數位音樂下載佔30%(含 iTunes、KK box、myMusic、Omusic、各鈴聲下載榜) ※Hit Fm聯播網AIR PLAY電台播出率佔50%",
       "ordered": true,
       "updateTime": 1557801538223,
       "playCount": 9897462,
@@ -893,12 +838,11 @@ const leaderBoard = {
       "creator": null,
       "artists": null,
       "tracks": [],
-      "tags": [
-        "榜单"
-      ],
+      "tags": ["榜单"],
       "createTime": 1395305562352,
       "highQuality": false,
-      "coverImgUrl": "https://p2.music.126.net/YQsr07nkdkOyZrlAkf0SHA==/18976471183805915.jpg",
+      "coverImgUrl":
+          "https://p2.music.126.net/YQsr07nkdkOyZrlAkf0SHA==/18976471183805915.jpg",
       "status": 0,
       "subscribedCount": 75689,
       "cloudTrackCount": 0,
@@ -925,23 +869,12 @@ const leaderBoard = {
     }
   ],
   "artistToplist": {
-    "coverUrl": "https://p1.music.126.net/MJdmNzZwTCz0b4IpHJV6Wg==/109951162865487429.jpg",
+    "coverUrl":
+        "https://p1.music.126.net/MJdmNzZwTCz0b4IpHJV6Wg==/109951162865487429.jpg",
     "artists": [
-      {
-        "first": "花粥",
-        "second": "",
-        "third": 841956
-      },
-      {
-        "first": "隔壁老樊",
-        "second": "",
-        "third": 832940
-      },
-      {
-        "first": "陈雪凝",
-        "second": "",
-        "third": 806183
-      }
+      {"first": "花粥", "second": "", "third": 841956},
+      {"first": "隔壁老樊", "second": "", "third": 832940},
+      {"first": "陈雪凝", "second": "", "third": 806183}
     ],
     "name": "云音乐歌手榜",
     "upateFrequency": "每天更新",
@@ -949,7 +882,8 @@ const leaderBoard = {
     "updateFrequency": "每天更新"
   },
   "rewardToplist": {
-    "coverUrl": "https://p1.music.126.net/oQAa0mlQw5LKA-Z54IOp3g==/19008357021060580.jpg",
+    "coverUrl":
+        "https://p1.music.126.net/oQAa0mlQw5LKA-Z54IOp3g==/19008357021060580.jpg",
     "songs": [
       {
         "name": "断开的感情线",
@@ -968,8 +902,10 @@ const leaderBoard = {
             "picId": 0,
             "img1v1Id": 0,
             "briefDesc": "",
-            "picUrl": "http://p2.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
-            "img1v1Url": "http://p2.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+            "picUrl":
+                "http://p2.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+            "img1v1Url":
+                "http://p2.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
             "albumSize": 0,
             "alias": [],
             "trans": "",
@@ -983,10 +919,12 @@ const leaderBoard = {
           "type": "专辑",
           "size": 1,
           "picId": 109951163714185700,
-          "blurPicUrl": "http://p2.music.126.net/ivTc8cUy6T_YAuONcQEsBw==/109951163714185693.jpg",
+          "blurPicUrl":
+              "http://p2.music.126.net/ivTc8cUy6T_YAuONcQEsBw==/109951163714185693.jpg",
           "companyId": 0,
           "pic": 109951163714185700,
-          "picUrl": "http://p2.music.126.net/ivTc8cUy6T_YAuONcQEsBw==/109951163714185693.jpg",
+          "picUrl":
+              "http://p2.music.126.net/ivTc8cUy6T_YAuONcQEsBw==/109951163714185693.jpg",
           "publishTime": 1544106682016,
           "description": "",
           "tags": "",
@@ -998,8 +936,10 @@ const leaderBoard = {
             "picId": 0,
             "img1v1Id": 0,
             "briefDesc": "",
-            "picUrl": "http://p2.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
-            "img1v1Url": "http://p2.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+            "picUrl":
+                "http://p2.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+            "img1v1Url":
+                "http://p2.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
             "albumSize": 0,
             "alias": [],
             "trans": "",
@@ -1018,8 +958,10 @@ const leaderBoard = {
               "picId": 0,
               "img1v1Id": 0,
               "briefDesc": "",
-              "picUrl": "http://p2.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
-              "img1v1Url": "http://p2.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+              "picUrl":
+                  "http://p2.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+              "img1v1Url":
+                  "http://p2.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
               "albumSize": 0,
               "alias": [],
               "trans": "",
@@ -1116,8 +1058,10 @@ const leaderBoard = {
             "picId": 0,
             "img1v1Id": 0,
             "briefDesc": "",
-            "picUrl": "http://p2.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
-            "img1v1Url": "http://p2.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+            "picUrl":
+                "http://p2.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+            "img1v1Url":
+                "http://p2.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
             "albumSize": 0,
             "alias": [],
             "trans": "",
@@ -1131,10 +1075,12 @@ const leaderBoard = {
           "type": "专辑",
           "size": 1,
           "picId": 109951164060177800,
-          "blurPicUrl": "http://p2.music.126.net/KRqMFbWD8PpSEuEE0m2SQQ==/109951164060177788.jpg",
+          "blurPicUrl":
+              "http://p2.music.126.net/KRqMFbWD8PpSEuEE0m2SQQ==/109951164060177788.jpg",
           "companyId": 0,
           "pic": 109951164060177800,
-          "picUrl": "http://p2.music.126.net/KRqMFbWD8PpSEuEE0m2SQQ==/109951164060177788.jpg",
+          "picUrl":
+              "http://p2.music.126.net/KRqMFbWD8PpSEuEE0m2SQQ==/109951164060177788.jpg",
           "publishTime": 1557417600000,
           "description": "",
           "tags": "",
@@ -1146,8 +1092,10 @@ const leaderBoard = {
             "picId": 0,
             "img1v1Id": 0,
             "briefDesc": "",
-            "picUrl": "http://p2.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
-            "img1v1Url": "http://p2.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+            "picUrl":
+                "http://p2.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+            "img1v1Url":
+                "http://p2.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
             "albumSize": 0,
             "alias": [],
             "trans": "",
@@ -1166,8 +1114,10 @@ const leaderBoard = {
               "picId": 0,
               "img1v1Id": 0,
               "briefDesc": "",
-              "picUrl": "http://p2.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
-              "img1v1Url": "http://p2.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+              "picUrl":
+                  "http://p2.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+              "img1v1Url":
+                  "http://p2.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
               "albumSize": 0,
               "alias": [],
               "trans": "",
@@ -1264,8 +1214,10 @@ const leaderBoard = {
             "picId": 0,
             "img1v1Id": 0,
             "briefDesc": "",
-            "picUrl": "http://p2.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
-            "img1v1Url": "http://p2.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+            "picUrl":
+                "http://p2.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+            "img1v1Url":
+                "http://p2.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
             "albumSize": 0,
             "alias": [],
             "trans": "",
@@ -1279,10 +1231,12 @@ const leaderBoard = {
           "type": "专辑",
           "size": 3,
           "picId": 109951162990902420,
-          "blurPicUrl": "http://p2.music.126.net/iqpbqkFfUsyo1xyqZZ3HWQ==/109951162990902417.jpg",
+          "blurPicUrl":
+              "http://p2.music.126.net/iqpbqkFfUsyo1xyqZZ3HWQ==/109951162990902417.jpg",
           "companyId": 0,
           "pic": 109951162990902420,
-          "picUrl": "http://p2.music.126.net/iqpbqkFfUsyo1xyqZZ3HWQ==/109951162990902417.jpg",
+          "picUrl":
+              "http://p2.music.126.net/iqpbqkFfUsyo1xyqZZ3HWQ==/109951162990902417.jpg",
           "publishTime": 1418400000000,
           "description": "",
           "tags": "",
@@ -1294,8 +1248,10 @@ const leaderBoard = {
             "picId": 0,
             "img1v1Id": 0,
             "briefDesc": "",
-            "picUrl": "http://p2.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
-            "img1v1Url": "http://p2.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+            "picUrl":
+                "http://p2.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+            "img1v1Url":
+                "http://p2.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
             "albumSize": 0,
             "alias": [],
             "trans": "",
@@ -1314,8 +1270,10 @@ const leaderBoard = {
               "picId": 0,
               "img1v1Id": 0,
               "briefDesc": "",
-              "picUrl": "http://p2.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
-              "img1v1Url": "http://p2.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+              "picUrl":
+                  "http://p2.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
+              "img1v1Url":
+                  "http://p2.music.126.net/6y-UleORITEDbvrOLV0Q8A==/5639395138885805.jpg",
               "albumSize": 0,
               "alias": [],
               "trans": "",

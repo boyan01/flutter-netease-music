@@ -72,8 +72,7 @@ class PresetGridSection extends ConsumerWidget {
                     icon: Icons.star_border_rounded,
                     label: context.strings.collectionLike,
                     onTap: () {
-                      context.secondaryNavigator!
-                          .pushNamed(pageMyCollection);
+                      context.secondaryNavigator!.pushNamed(pageMyCollection);
                     },
                   ),
                   _PinnedTile(

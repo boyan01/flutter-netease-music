@@ -10,7 +10,4 @@ export 'component/route.dart';
 export 'component/user/favorite_musics.dart';
 export 'repository/cached_image.dart';
 
-
-void importComponent() {
-
-}
+void importComponent() {}
