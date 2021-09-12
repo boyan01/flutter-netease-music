@@ -162,7 +162,7 @@ class NeteaseRepository {
 
   ///id 歌单id
   ///return true if action success
-  Future<bool> playlistSubscribe(int? id, bool subscribe) async {
+  Future<bool> playlistSubscribe(int? id, {required bool subscribe}) async {
     final response = await doRequest(
         "/playlist/subscribe", {"id": id, 't': subscribe ? 1 : 2});
     return response.isValue;
@@ -353,7 +353,7 @@ class NeteaseRepository {
   }
 
   ///给歌曲加红心
-  Future<bool> like(int? musicId, bool like) async {
+  Future<bool> like(int? musicId, {required bool like}) async {
     final response = await doRequest("/like", {"id": musicId, "like": like});
     return response.isValue;
   }
@@ -395,7 +395,7 @@ class NeteaseRepository {
   }
 
   ///调用此接口,可收藏 MV
-  Future<bool> mvSubscribe(int? mvId, bool subscribe) async {
+  Future<bool> mvSubscribe(int? mvId, {required bool subscribe}) async {
     final result =
         await doRequest('/mv/sub', {'id': mvId, 't': subscribe ? '1' : '0'});
     return result.isValue;

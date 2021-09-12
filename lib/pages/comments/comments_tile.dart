@@ -252,7 +252,7 @@ class _ItemCommentState extends State<_ItemComment> {
                           Icons.thumb_up,
                           size: 15,
                           color: widget.comment.liked!
-                              ? Theme.of(context).accentColor
+                              ? context.colorScheme.secondary
                               : Theme.of(context).disabledColor,
                         ),
                       )

@@ -12,9 +12,7 @@ import 'package:quiet/repository/netease.dart';
 import '../../model/user_detail_bean.dart';
 
 part 'tab_about.dart';
-
 part 'tab_events.dart';
-
 part 'tab_music.dart';
 
 ///用户详情页

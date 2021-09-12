@@ -49,7 +49,8 @@ class LocalData {
     if (result is T?) {
       return result;
     }
-    assert(false, "the result of $key is not subtype of $T. $result");
+    assert(false,
+        "the result of $key is not subtype of $T. ${result.runtimeType}");
     return null;
   }
 

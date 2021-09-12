@@ -4,11 +4,11 @@ import 'package:quiet/material/flexible_app_bar.dart';
 import 'package:quiet/material/tabs.dart';
 import 'package:quiet/repository/netease.dart';
 
-import 'artist.model.dart';
+import 'artist_full.dart';
 
 class ArtistHeader extends StatelessWidget {
   const ArtistHeader({Key? key, required this.artist}) : super(key: key);
-  final Artist artist;
+  final ArtistFull artist;
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +37,7 @@ class ArtistHeader extends StatelessWidget {
 
 class _ArtistFlexHeader extends StatelessWidget {
   const _ArtistFlexHeader({Key? key, required this.artist}) : super(key: key);
-  final Artist artist;
+  final ArtistFull artist;
 
   @override
   Widget build(BuildContext context) {

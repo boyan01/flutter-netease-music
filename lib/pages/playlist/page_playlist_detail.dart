@@ -164,8 +164,12 @@ class _PlaylistBodyState extends ConsumerState<_PlaylistBody> {
   Future<bool> _doSubscribeChanged(bool subscribe) async {
     bool succeed;
     try {
-      succeed = await showLoaderOverlay(context,
-          neteaseRepository!.playlistSubscribe(widget.playlist.id, !subscribe));
+      succeed = await showLoaderOverlay(
+          context,
+          neteaseRepository!.playlistSubscribe(
+            widget.playlist.id,
+            subscribe: !subscribe,
+          ));
     } catch (e) {
       succeed = false;
     }

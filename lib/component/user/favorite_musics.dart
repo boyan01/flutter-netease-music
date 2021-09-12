@@ -20,7 +20,7 @@ class UserFavoriteMusicListNotifier extends CacheableStateNotifier<List<int>> {
 
   /// 红心歌曲
   Future<void> likeMusic(Music music) async {
-    final succeed = await neteaseRepository!.like(music.id, true);
+    final succeed = await neteaseRepository!.like(music.id, like: true);
     if (succeed) {
       state = [...state, music.id];
     }
@@ -28,7 +28,7 @@ class UserFavoriteMusicListNotifier extends CacheableStateNotifier<List<int>> {
 
   ///取消红心歌曲
   Future<void> dislikeMusic(Music music) async {
-    final succeed = await neteaseRepository!.like(music.id, false);
+    final succeed = await neteaseRepository!.like(music.id, like: false);
     if (succeed) {
       state = List.from(state)..remove(music.id);
     }

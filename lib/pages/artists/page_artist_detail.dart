@@ -8,7 +8,7 @@ import 'package:quiet/pages/playlist/page_playlist_detail_selection.dart';
 import 'package:quiet/part/part.dart';
 import 'package:quiet/repository/netease.dart';
 
-import 'artist.model.dart' as model;
+import 'artist_full.dart';
 
 export 'artists_selector.dart';
 
@@ -36,7 +36,7 @@ class ArtistDetailPage extends StatelessWidget {
           );
         },
         builder: (context, result) {
-          final artist = model.Artist.fromJson(result["artist"]);
+          final artist = ArtistFull.fromJson(result["artist"]);
           final List<Music> musicList = mapJsonListToMusicList(
               result["hotSongs"],
               artistKey: "ar",
@@ -113,14 +113,16 @@ class _PageHotSongsState extends State<_PageHotSongs>
                   const Icon(Icons.add_box),
                   const SizedBox(width: 8),
                   Expanded(child: Text("收藏热门${widget.musicList.length}单曲")),
-                  FlatButton(
-                      onPressed: () {
-                        Navigator.of(context)
-                            .push(MaterialPageRoute(builder: (context) {
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(builder: (context) {
                           return PlaylistSelectionPage(list: widget.musicList);
-                        }));
-                      },
-                      child: const Text("多选"))
+                        }),
+                      );
+                    },
+                    child: const Text("多选"),
+                  )
                 ],
               ),
             ),

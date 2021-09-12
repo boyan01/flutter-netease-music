@@ -308,16 +308,16 @@ class _IconMore extends StatelessWidget {
   final Music music;
 
   List<PopupMenuItem> _buildMenu(BuildContext context) {
-    const items = [
-      PopupMenuItem(
+    final items = [
+      const PopupMenuItem(
         value: _MusicAction.addToNext,
         child: Text("下一首播放"),
       ),
-      PopupMenuItem(
+      const PopupMenuItem(
         value: _MusicAction.addToPlaylist,
         child: Text("收藏到歌单"),
       ),
-      PopupMenuItem(
+      const PopupMenuItem(
         value: _MusicAction.comment,
         child: Text("评论"),
       ),

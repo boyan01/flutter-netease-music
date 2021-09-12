@@ -41,7 +41,7 @@ class CachedLoader<T> extends StatelessWidget {
     }());
     return Loader<T>(
       initialData: enableCache
-          ? neteaseLocalData.get<T>(cacheKey).then((cache) {
+          ? neteaseLocalData.get(cacheKey).then((cache) {
               return deserialize != null && cache != null
                   ? deserialize!(cache)
                   : cache;

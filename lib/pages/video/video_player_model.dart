@@ -62,7 +62,10 @@ class VideoPlayerModel extends Model {
     if (subscribe == _subscribed) {
       return false;
     }
-    final success = await neteaseRepository!.mvSubscribe(data.id, subscribe);
+    final success = await neteaseRepository!.mvSubscribe(
+      data.id,
+      subscribe: subscribe,
+    );
     if (success) {
       _subscribed = subscribe;
       notifyListeners();

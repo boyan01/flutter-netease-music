@@ -4,8 +4,7 @@ import 'package:quiet/pages/playlist/music_list.dart';
 import 'package:quiet/part/part.dart';
 
 class PlaylistInternalSearchDelegate extends SearchDelegate {
-  PlaylistInternalSearchDelegate(this.playlist)
-      : assert(playlist.musicList != null);
+  PlaylistInternalSearchDelegate(this.playlist);
 
   final PlaylistDetail playlist;
 

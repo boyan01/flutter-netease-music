@@ -4,6 +4,7 @@ import 'package:async/async.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:overlay_support/overlay_support.dart';
+import 'package:quiet/component/global/settings.dart';
 import 'package:quiet/component/utils/utils.dart';
 import 'package:quiet/model/playlist_detail.dart';
 import 'package:quiet/pages/account/page_user_detail.dart';
@@ -125,9 +126,9 @@ class Comment {
         isRemoveHotComment = map["isRemoveHotComment"];
 
   User user;
-  List<Object>? beReplied;
-  Object? pendantData;
-  Object? showFloorComment;
+  List<dynamic>? beReplied;
+  dynamic pendantData;
+  dynamic showFloorComment;
   int? status;
   int? commentLocationType;
   int? parentCommentId;
@@ -136,7 +137,7 @@ class Comment {
   bool? liked;
   int? commentId;
   int? time;
-  Object? expressionUrl;
+  dynamic expressionUrl;
   String? content;
   bool? isRemoveHotComment;
 
