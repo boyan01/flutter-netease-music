@@ -15,7 +15,7 @@ Imitation of [NeteaseMusic](https://music.163.com/#/download).
   ```
   2. install [Flutter](https://flutter.io/docs/get-started/install)
   
-      * require at least flutter 2.2.
+      * require latest flutter stable channel.
       
   3. build & run
  ```bash
