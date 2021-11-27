@@ -177,7 +177,7 @@ class _FmControllerBar extends StatelessWidget {
             color: color,
           ),
           onPressed: () {
-            context.transportControls.pause();
+            context.player.pause();
           }),
       pausing: IconButton(
           tooltip: "播放",
@@ -187,7 +187,7 @@ class _FmControllerBar extends StatelessWidget {
             color: color,
           ),
           onPressed: () {
-            context.transportControls.play();
+            context.player.play();
           }),
       buffering: const SizedBox(
         height: 56,
@@ -214,7 +214,7 @@ class _FmControllerBar extends StatelessWidget {
               ),
               onPressed: () {
                 toast('已加入不喜欢列表，以后将减少类似的推荐。');
-                context.transportControls.skipToNext();
+                context.player.skipToNext();
               }),
           LikeButton.current(context),
           iconPlayPause,
@@ -225,7 +225,7 @@ class _FmControllerBar extends StatelessWidget {
                 color: color,
               ),
               onPressed: () {
-                context.transportControls.skipToNext();
+                context.player.skipToNext();
               }),
           IconButton(
               tooltip: "当前播放列表",
@@ -237,7 +237,7 @@ class _FmControllerBar extends StatelessWidget {
                 context.secondaryNavigator!.push(MaterialPageRoute(
                     builder: (context) => CommentPage(
                           threadId: CommentThreadId(
-                            context.player.value.current!.id,
+                            int.parse(context.player.current!.id),
                             CommentType.song,
                             payload: CommentThreadPayload.music(
                                 context.player.value.current!),

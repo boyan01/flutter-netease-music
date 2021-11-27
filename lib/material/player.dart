@@ -3,8 +3,9 @@ import 'dart:async';
 import 'package:async/async.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:music_player/music_player.dart';
 import 'package:quiet/component/netease/netease.dart';
+import 'package:quiet/media/tracks/track.dart';
+import 'package:quiet/media/tracks/tracks_player.dart';
 import 'package:quiet/part/part.dart';
 
 import 'user.dart';
@@ -41,19 +42,19 @@ class _PlayingIndicatorState extends State<PlayingIndicator> {
 
   final _changeStateOperations = <CancelableOperation>[];
 
-  late MusicPlayer _player;
+  late TracksPlayer _player;
 
   @override
   void initState() {
     super.initState();
-    _player = context.player..addListener(_onMusicStateChanged);
+    _player = context.player..onTrackChanged.addListener(_onMusicStateChanged);
     _index = _playerState;
   }
 
   ///get current player state index
-  int get _playerState => _player.playbackState.isBuffering
+  int get _playerState => _player.isBuffering
       ? _indexBuffering
-      : _player.playbackState.isPlaying
+      : _player.isPlaying
           ? _indexPlaying
           : _indexPausing;
 
@@ -81,7 +82,7 @@ class _PlayingIndicatorState extends State<PlayingIndicator> {
 
   @override
   void dispose() {
-    _player.removeListener(_onMusicStateChanged);
+    _player.onTrackChanged.removeListener(_onMusicStateChanged);
     for (final o in _changeStateOperations) {
       o.cancel();
     }
@@ -106,7 +107,7 @@ class LikeButton extends ConsumerWidget {
     return LikeButton(music: context.watchPlayerValue.current!);
   }
 
-  final Music music;
+  final Track music;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

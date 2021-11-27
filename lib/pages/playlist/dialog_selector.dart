@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:quiet/model/playlist_detail.dart';
+import 'package:netease_api/src/ao/playlist_detail.dart';
 import 'package:quiet/pages/main/dialog_creator.dart';
 import 'package:quiet/part/part.dart';
 import 'package:quiet/repository/netease.dart';

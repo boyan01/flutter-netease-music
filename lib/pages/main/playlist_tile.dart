@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:quiet/material.dart';
-import 'package:quiet/model/playlist_detail.dart';
+import 'package:netease_api/src/ao/playlist_detail.dart';
 import 'package:quiet/pages/page_playlist_edit.dart';
 import 'package:quiet/pages/playlist/page_playlist_detail.dart';
 import 'package:quiet/part/part.dart';

@@ -1,5 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:quiet/model/model.dart';
+import 'package:quiet/media/tracks/track.dart';
 
 part 'music_video_detail.g.dart';
 

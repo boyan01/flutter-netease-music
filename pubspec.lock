@@ -204,6 +204,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "5.0.0"
+  equatable:
+    dependency: "direct main"
+    description:
+      name: equatable
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.3"
   fake_async:
     dependency: transitive
     description:
@@ -431,8 +438,15 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.0"
-  netease_music_api:
+  netease_api:
     dependency: "direct main"
+    description:
+      path: netease_api
+      relative: true
+    source: path
+    version: "0.0.1"
+  netease_music_api:
+    dependency: transitive
     description:
       path: "."
       ref: e007ba78565d9094959d9e50336ea734fc8d4f64
@@ -724,7 +738,7 @@ packages:
       name: test_api
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.4.3"
+    version: "0.4.7"
   timing:
     dependency: transitive
     description:
@@ -846,4 +860,4 @@ packages:
     version: "3.1.0"
 sdks:
   dart: ">=2.14.0 <3.0.0"
-  flutter: ">=2.0.0"
+  flutter: ">=2.5.0"

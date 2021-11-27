@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:quiet/model/model.dart';
+import 'package:quiet/media/tracks/track.dart';
 
 import 'page_artist_detail.dart';
 
@@ -12,7 +12,7 @@ Future<void> launchArtistDetailPage(
   }
   if (artists.length == 1) {
     Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-      return ArtistDetailPage(artistId: artists[0].id!);
+      return ArtistDetailPage(artistId: int.parse(artists[0].id));
     }));
   } else {
     final artist = await showDialog<Artist>(
@@ -22,7 +22,7 @@ Future<void> launchArtistDetailPage(
         });
     if (artist != null) {
       Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-        return ArtistDetailPage(artistId: artist.id!);
+        return ArtistDetailPage(artistId: int.parse(artist.id));
       }));
     }
   }
@@ -38,11 +38,11 @@ class ArtistSelectionDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final List<Widget> children = artists.map<Widget>((artist) {
-      final enabled = artist.id != 0;
+      final enabled = artist.id.isNotEmpty;
       return ListTile(
         title: Padding(
           padding: const EdgeInsets.only(left: 8),
-          child: Text(artist.name!,
+          child: Text(artist.name,
               style: Theme.of(context)
                   .textTheme
                   .bodyText2!

@@ -22,13 +22,13 @@ class _ItemTitle extends StatelessWidget {
                 );
               }));
             } else if (commentThreadId.type == CommentType.song) {
-              final Music music = payload!.obj;
-              if (context.watchPlayerValue.current != music) {
+              final Track music = payload!.obj;
+              if (context.player.current != music) {
                 final dynamic result = await showDialog(
                     context: context,
                     builder: (context) {
                       return AlertDialog(
-                        content: Text("开始播放 ${music.title} ?"),
+                        content: Text("开始播放 ${music.name} ?"),
                         actions: <Widget>[
                           TextButton(
                               onPressed: () {
@@ -46,9 +46,9 @@ class _ItemTitle extends StatelessWidget {
                 if (!(result is bool && result)) {
                   return;
                 }
-                context
-                  ..player.insertToNext(music.metadata)
-                  ..transportControls.playFromMediaId(music.metadata.mediaId);
+                context.player
+                  ..insertToNext(music)
+                  ..playFromMediaId(music.id);
               }
               Navigator.push(context, MaterialPageRoute(builder: (context) {
                 return PlayingPage();

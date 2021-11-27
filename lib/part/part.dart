@@ -12,7 +12,6 @@ export 'package:quiet/component/route.dart';
 export 'package:quiet/material/dialogs.dart';
 export 'package:quiet/material/dividers.dart';
 export 'package:quiet/material/tiles.dart';
-export 'package:quiet/model/model.dart';
 export 'package:quiet/pages/account/account.dart';
 export 'package:scoped_model/scoped_model.dart';
 

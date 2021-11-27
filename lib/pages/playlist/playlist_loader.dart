@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:quiet/model/playlist_detail.dart';
+import 'package:netease_api/src/ao/playlist_detail.dart';
 import 'package:quiet/repository.dart';
 
 AsyncSnapshot<PlaylistDetail> usePlaylistDetail(

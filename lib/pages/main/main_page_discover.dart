@@ -39,18 +39,19 @@ class _NavigationLine extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
           _ItemNavigator(Icons.radio, "私人FM", () {
-            if (context.player.queue.isPlayingFm) {
-              context.secondaryNavigator!.pushNamed(pageFmPlaying);
-              return;
-            }
-            showLoaderOverlay(context, neteaseRepository!.getPersonalFmMusics())
-                .then((musics) {
-              context.player.playFm(musics!);
-              context.secondaryNavigator!.pushNamed(pageFmPlaying);
-            }).catchError((error, stacktrace) {
-              debugPrint("error to play personal fm : $error $stacktrace");
-              toast('无法获取私人FM数据');
-            });
+            // TODO Play FM
+            // if (context.player.trackList.isPlayingFm) {
+            //   context.secondaryNavigator!.pushNamed(pageFmPlaying);
+            //   return;
+            // }
+            // showLoaderOverlay(context, neteaseRepository!.getPersonalFmMusics())
+            //     .then((musics) {
+            //   context.player.playFm(musics!);
+            //   context.secondaryNavigator!.pushNamed(pageFmPlaying);
+            // }).catchError((error, stacktrace) {
+            //   debugPrint("error to play personal fm : $error $stacktrace");
+            //   toast('无法获取私人FM数据');
+            // });
           }),
           _ItemNavigator(Icons.today, "每日推荐", () {
             context.secondaryNavigator!.pushNamed(pageDaily);

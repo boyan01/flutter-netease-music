@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:quiet/model/playlist_detail.dart';
+import 'package:netease_api/src/ao/playlist_detail.dart';
 import 'package:quiet/pages/playlist/music_list.dart';
 import 'package:quiet/part/part.dart';
 

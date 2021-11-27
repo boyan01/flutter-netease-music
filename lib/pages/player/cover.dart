@@ -1,15 +1,15 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:music_player/music_player.dart';
 import 'package:quiet/component/player/player.dart';
-import 'package:quiet/model/model.dart';
+import 'package:quiet/media/tracks/track.dart';
+import 'package:quiet/media/tracks/tracks_player.dart';
 import 'package:quiet/repository/cached_image.dart';
 
 ///播放页面歌曲封面
 class AlbumCover extends StatefulWidget {
   const AlbumCover({Key? key, required this.music}) : super(key: key);
-  final Music music;
+  final Track music;
 
   @override
   State createState() => _AlbumCoverState();
@@ -40,22 +40,22 @@ class _AlbumCoverState extends State<AlbumCover> with TickerProviderStateMixin {
   bool _previousNextDirty = true;
 
   ///滑动切换音乐效果上一个封面
-  Music? _previous;
+  Track? _previous;
 
   ///当前播放中的音乐
-  Music? _current;
+  Track? _current;
 
   ///滑动切换音乐效果下一个封面
-  Music? _next;
+  Track? _next;
 
-  late MusicPlayer _player;
+  late TracksPlayer _player;
 
   @override
   void initState() {
     super.initState();
 
     _player = context.player;
-    _needleAttachCover = _player.playbackState.isPlaying;
+    _needleAttachCover = _player.isPlaying;
     _needleController = AnimationController(
         /*preset need position*/
         value: _needleAttachCover ? 1.0 : 0.0,
@@ -67,7 +67,9 @@ class _AlbumCoverState extends State<AlbumCover> with TickerProviderStateMixin {
 
     _current = widget.music;
     _invalidatePn();
-    _player.addListener(_checkNeedleAndCoverStatus);
+    // TODO trigger more status
+    _player.onTrackChanged.addListener(_checkNeedleAndCoverStatus);
+    _player.onPlaybackStateChanged.addListener(_checkNeedleAndCoverStatus);
     _checkNeedleAndCoverStatus();
   }
 
@@ -78,8 +80,8 @@ class _AlbumCoverState extends State<AlbumCover> with TickerProviderStateMixin {
       return;
     }
     _previousNextDirty = false;
-    _previous = (await _player.getPreviousMusic(_current!.metadata)).toMusic();
-    _next = (await _player.getNextMusic(_current!.metadata)).toMusic();
+    _previous = await _player.getPreviousTrack();
+    _next = await _player.getNextTrack();
     if (mounted) {
       setState(() {});
     }
@@ -109,15 +111,13 @@ class _AlbumCoverState extends State<AlbumCover> with TickerProviderStateMixin {
 
   // update needle and cover for current player state
   void _checkNeedleAndCoverStatus() {
-    final state = _player.playbackState;
-
     // needle is should attach to cover
     final bool attachToCover =
-        state.isPlaying && !_beDragging && _translateController == null;
+        _player.isPlaying && !_beDragging && _translateController == null;
     _rotateNeedle(attachToCover);
 
     //handle album cover animation
-    final _isPlaying = state.isPlaying;
+    final _isPlaying = _player.isPlaying;
     setState(() {
       _coverRotating = _isPlaying && _needleAttachCover;
     });
@@ -138,7 +138,8 @@ class _AlbumCoverState extends State<AlbumCover> with TickerProviderStateMixin {
 
   @override
   void dispose() {
-    _player.removeListener(_checkNeedleAndCoverStatus);
+    _player.onTrackChanged.removeListener(_checkNeedleAndCoverStatus);
+    _player.onPlaybackStateChanged.removeListener(_checkNeedleAndCoverStatus);
     _needleController.dispose();
     _translateController?.dispose();
     _translateController = null;
@@ -221,10 +222,10 @@ class _AlbumCoverState extends State<AlbumCover> with TickerProviderStateMixin {
                   _coverTranslateX = 0;
                   if (des > 0) {
                     _current = _previous;
-                    context.transportControls.skipToPrevious();
+                    context.player.skipToPrevious();
                   } else {
                     _current = _next;
-                    context.transportControls.skipToNext();
+                    context.player.skipToNext();
                   }
                   _previousNextDirty = true;
                 });
@@ -296,12 +297,14 @@ class _AlbumCoverState extends State<AlbumCover> with TickerProviderStateMixin {
 }
 
 class _RotationCoverImage extends StatefulWidget {
-  const _RotationCoverImage(
-      {Key? key, required this.rotating, required this.music})
-      : super(key: key);
+  const _RotationCoverImage({
+    Key? key,
+    required this.rotating,
+    required this.music,
+  }) : super(key: key);
 
   final bool rotating;
-  final Music? music;
+  final Track? music;
 
   @override
   _RotationCoverImageState createState() => _RotationCoverImageState();

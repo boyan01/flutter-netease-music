@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:music_player/music_player.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:quiet/component/global/settings.dart';
 import 'package:quiet/component/route.dart';
-import 'package:quiet/model/model.dart';
+import 'package:quiet/extension.dart';
+import 'package:quiet/media/tracks/track.dart';
+import 'package:quiet/media/tracks/track_list.dart';
 import 'package:quiet/pages/artists/page_artist_detail.dart';
 import 'package:quiet/pages/comments/page_comment.dart';
 import 'package:quiet/part/part.dart';
@@ -12,18 +13,17 @@ import 'package:quiet/repository/netease.dart';
 import 'dialog_selector.dart';
 
 class MusicTileConfiguration extends StatelessWidget {
-  MusicTileConfiguration(
-      {Key? key,
-      this.token,
-      required this.musics,
-      this.onMusicTap,
-      this.child,
-      this.leadingBuilder,
-      this.trailingBuilder,
-      this.supportAlbumMenu = true,
-      this.remove})
-      : queue = musics.map((e) => e.metadata).toList(),
-        super(key: key);
+  const MusicTileConfiguration({
+    Key? key,
+    this.token,
+    required this.musics,
+    this.onMusicTap,
+    this.child,
+    this.leadingBuilder,
+    this.trailingBuilder,
+    this.supportAlbumMenu = true,
+    this.remove,
+  }) : super(key: key);
 
   static MusicTileConfiguration of(BuildContext context) {
     final list =
@@ -93,27 +93,21 @@ class MusicTileConfiguration extends StatelessWidget {
   static void defaultOnTap(BuildContext context, Music music) {
     final list = MusicTileConfiguration.of(context);
     final player = context.player;
-    final PlayQueue playList = player.value.queue;
-    if (playList.queueId == list.token &&
-        player.playbackState.isPlaying &&
-        player.metadata == music.metadata) {
+    if (player.trackList.id == list.token &&
+        player.isPlaying &&
+        player.current == music) {
       //open playing page
       Navigator.pushNamed(context, pagePlaying);
     } else {
-      context.player.playWithQueue(
-          PlayQueue(
-              queue: list.queue as List<MusicMetadata>,
-              queueId: list.token!,
-              queueTitle: list.token!),
-          metadata: music.metadata);
+      context.player
+        ..setTrackList(TrackList(id: list.token!, tracks: list.musics))
+        ..playFromMediaId(music.id);
     }
   }
 
   final String? token;
 
   final List<Music> musics;
-
-  final List<MusicMetadata?> queue;
 
   final void Function(BuildContext context, Music muisc)? onMusicTap;
 
@@ -183,14 +177,14 @@ class _SimpleMusicTile extends StatelessWidget {
             children: <Widget>[
               const Spacer(),
               Text(
-                music.title,
+                music.name,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: Theme.of(context).textTheme.bodyText2,
               ),
               const Padding(padding: EdgeInsets.only(top: 3)),
               Text(
-                music.subTitle,
+                music.displaySubtitle,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: Theme.of(context).textTheme.caption,
@@ -221,15 +215,14 @@ class MusicListHeader extends StatelessWidget implements PreferredSizeWidget {
         child: InkWell(
           onTap: () {
             final list = MusicTileConfiguration.of(context);
-            if (context.player.queue.queueId == list.token &&
-                context.player.playbackState.isPlaying) {
+            if (context.player.trackList.id == list.token &&
+                context.player.isPlaying) {
               //open playing page
               Navigator.pushNamed(context, pagePlaying);
             } else {
-              context.player.playWithQueue(PlayQueue(
-                  queue: list.queue as List<MusicMetadata>,
-                  queueId: list.token!,
-                  queueTitle: list.token!));
+              context.player
+                ..setTrackList(TrackList(id: list.token!, tracks: list.musics))
+                ..play();
             }
           },
           child: SizedBox.fromSize(
@@ -266,26 +259,14 @@ class MusicListHeader extends StatelessWidget implements PreferredSizeWidget {
   Size get preferredSize => const Size.fromHeight(50);
 }
 
-///歌曲item的mv icon
 class IconMV extends StatelessWidget {
   const IconMV(this.music, {Key? key}) : super(key: key);
   final Music music;
 
   @override
   Widget build(BuildContext context) {
-    if (music.mvId == 0) {
-      return Container();
-    }
-    return IconButton(
-        icon: const Icon(Icons.videocam),
-        tooltip: 'MV',
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => MusicVideoPlayerPage(music.mvId)),
-          );
-        });
+    // TODO add MV.
+    return Container();
   }
 }
 
@@ -325,9 +306,9 @@ class _IconMore extends StatelessWidget {
     ];
 
     items.add(PopupMenuItem(
-        enabled: music.artist!.fold(0, (dynamic c, ar) => c + ar.id) != 0,
+        enabled: music.artists.fold(0, (dynamic c, ar) => c + ar.id) != 0,
         value: _MusicAction.artists,
-        child: Text("歌手: ${music.artist!.map((a) => a.name).join('/')}",
+        child: Text("歌手: ${music.artists.map((a) => a.name).join('/')}",
             maxLines: 1)));
 
     if (MusicTileConfiguration.of(context).supportAlbumMenu) {
@@ -349,7 +330,7 @@ class _IconMore extends StatelessWidget {
       BuildContext context, _MusicAction type) async {
     switch (type) {
       case _MusicAction.addToNext:
-        context.player.insertToNext(music.metadata);
+        context.player.insertToNext(music);
         break;
       case _MusicAction.comment:
         Navigator.push(context, MaterialPageRoute(builder: (context) {
@@ -387,11 +368,11 @@ class _IconMore extends StatelessWidget {
         break;
       case _MusicAction.album:
         Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-          return AlbumDetailPage(albumId: music.album!.id!);
+          return AlbumDetailPage(albumId: music.album!.id.parseToInt());
         }));
         break;
       case _MusicAction.artists:
-        launchArtistDetailPage(context, music.artist);
+        launchArtistDetailPage(context, music.artists);
         break;
     }
   }

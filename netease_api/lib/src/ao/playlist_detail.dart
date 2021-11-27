@@ -1,5 +1,4 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:quiet/model/model.dart';
 
 part 'playlist_detail.g.dart';
 

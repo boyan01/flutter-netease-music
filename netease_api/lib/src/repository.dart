@@ -1,29 +1,13 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:async/async.dart';
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:netease_music_api/netease_cloud_music.dart' as api;
-import 'package:path_provider/path_provider.dart';
-import 'package:quiet/media/tracks/track.dart';
 import 'package:netease_api/src/ao/playlist_detail.dart';
-import 'package:quiet/model/user_detail_bean.dart';
-import 'package:quiet/pages/comments/page_comment.dart';
-import 'package:quiet/part/part.dart';
-import 'package:quiet/repository/objects/music_count.dart';
-import 'package:quiet/repository/objects/music_video_detail.dart';
+import 'package:netease_music_api/netease_cloud_music.dart' as api;
 
-import 'local_cache_data.dart';
-
-export 'package:async/async.dart' show Result;
-export 'package:async/async.dart' show ValueResult;
-export 'package:async/async.dart' show ErrorResult;
-
-export 'cached_image.dart';
-export 'local_cache_data.dart';
-
-// TODO replace to Provider.
-NeteaseRepository? neteaseRepository;
+export 'package:async/async.dart' show Result, ValueResult, ErrorResult;
 
 ///enum for [NeteaseRepository.search] param type
 class NeteaseSearchType {
@@ -76,13 +60,12 @@ extension _FutureMapExtension<T> on Future<Result<T>> {
   }
 }
 
-class NeteaseRepository {
-  NeteaseRepository() {
+class Repository {
+  Repository(String cookiePath) {
     scheduleMicrotask(() async {
       PersistCookieJar? cookieJar;
       try {
-        final path = (await getApplicationDocumentsDirectory()).path;
-        cookieJar = PersistCookieJar(storage: FileStorage('$path/.cookies/'));
+        cookieJar = PersistCookieJar(storage: FileStorage(cookiePath));
       } catch (e) {
         debugPrint("error: can not create persist cookie jar");
       }

@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quiet/component.dart';
-import 'package:quiet/model/model.dart';
+import 'package:quiet/media/tracks/track.dart';
 import 'package:quiet/part/part.dart';
 import 'package:quiet/repository/netease.dart';
 
@@ -19,7 +19,7 @@ class UserFavoriteMusicListNotifier extends CacheableStateNotifier<List<int>> {
   final int? userId;
 
   /// 红心歌曲
-  Future<void> likeMusic(Music music) async {
+  Future<void> likeMusic(Track music) async {
     final succeed = await neteaseRepository!.like(music.id, like: true);
     if (succeed) {
       state = [...state, music.id];
@@ -27,7 +27,7 @@ class UserFavoriteMusicListNotifier extends CacheableStateNotifier<List<int>> {
   }
 
   ///取消红心歌曲
-  Future<void> dislikeMusic(Music music) async {
+  Future<void> dislikeMusic(Track music) async {
     final succeed = await neteaseRepository!.like(music.id, like: false);
     if (succeed) {
       state = List.from(state)..remove(music.id);

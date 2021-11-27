@@ -4,7 +4,8 @@ import 'package:hive/hive.dart';
 import 'package:meta/meta.dart';
 import 'package:music_player/music_player.dart';
 import 'package:quiet/component/player/lryic.dart';
-import 'package:quiet/model/model.dart';
+import 'package:quiet/media/tracks/track.dart';
+import 'package:quiet/media/tracks/tracks_player.dart';
 import 'package:quiet/part/part.dart';
 import 'package:scoped_model/scoped_model.dart';
 
@@ -41,7 +42,7 @@ extension PlayModeGetNext on PlayMode {
 }
 
 extension QuitPlayerExt on BuildContext {
-  MusicPlayer get player {
+  TracksPlayer get player {
     try {
       return ScopedModel.of<QuietModel>(this).player;
     } catch (e, stacktrace) {
@@ -49,8 +50,6 @@ extension QuitPlayerExt on BuildContext {
       rethrow;
     }
   }
-
-  TransportControls get transportControls => player.transportControls;
 
   /// use [watchPlayerValue]
   MusicPlayerValue get readPlayerValue {
@@ -61,6 +60,11 @@ extension QuitPlayerExt on BuildContext {
 
   MusicPlayerValue get watchPlayerValue {
     return ScopedModel.of<QuietModel>(this, rebuildOnChange: true).player.value;
+  }
+
+  Track? get playingTrack {
+    // TODO
+    return player.current;
   }
 
   PlaybackState get playbackState => watchPlayerValue.playbackState;
@@ -111,40 +115,6 @@ extension PlaybackStateExt on PlaybackState {
   bool get initialized => state != PlayerState.None;
 }
 
-@visibleForTesting
-class QuietModel extends Model {
-  QuietModel(Box<Map>? data) {
-    player.addListener(() {
-      notifyListeners();
-    });
-    player.metadataListenable.addListener(() {
-      data!.saveCurrentMetadata(player.metadata!);
-    });
-    player.queueListenable.addListener(() {
-      data!.savePlayQueue(player.queue);
-    });
-    player.playModeListenable.addListener(() {
-      data!.savePlayMode(player.playMode);
-    });
-
-    player.isMusicServiceAvailable().then((available) {
-      if (available!) {
-        return;
-      }
-      final MusicMetadata? metadata = data!.restoreMetadata();
-      final PlayQueue? queue = data.restorePlayQueue();
-      if (metadata == null || queue == null) {
-        return;
-      }
-      player.setPlayQueue(queue);
-      player.transportControls.prepareFromMediaId(metadata.mediaId);
-      player.transportControls.setPlayMode(data.restorePlayMode());
-    });
-  }
-
-  MusicPlayer player = MusicPlayer();
-}
-
 class Quiet extends StatefulWidget {
   const Quiet({required this.child, Key? key, this.box}) : super(key: key);
 
@@ -157,25 +127,19 @@ class Quiet extends StatefulWidget {
 }
 
 class _QuietState extends State<Quiet> {
-  late QuietModel _quiet;
-
   late PlayingLyric _playingLyric;
 
   @override
   void initState() {
     super.initState();
-    _quiet = QuietModel(widget.box);
-    _playingLyric = PlayingLyric(_quiet.player);
+    _playingLyric = PlayingLyric();
   }
 
   @override
   Widget build(BuildContext context) {
     return ScopedModel(
-      model: _quiet,
-      child: ScopedModel(
-        model: _playingLyric,
-        child: widget.child,
-      ),
+      model: _playingLyric,
+      child: widget.child,
     );
   }
 }

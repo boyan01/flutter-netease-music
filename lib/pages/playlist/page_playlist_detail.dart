@@ -12,7 +12,7 @@ import 'package:quiet/component.dart';
 import 'package:quiet/component/utils/utils.dart';
 import 'package:quiet/material.dart';
 import 'package:quiet/material/flexible_app_bar.dart';
-import 'package:quiet/model/playlist_detail.dart';
+import 'package:netease_api/src/ao/playlist_detail.dart';
 import 'package:quiet/pages/account/page_user_detail.dart';
 import 'package:quiet/pages/comments/page_comment.dart';
 import 'package:quiet/part/part.dart';

@@ -18,6 +18,8 @@ import 'package:quiet/repository/netease.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'media/tracks/tracks_player_impl_mobile.dart';
+
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   neteaseRepository = NeteaseRepository();
@@ -57,11 +59,7 @@ void playerBackgroundService() {
   WidgetsFlutterBinding.ensureInitialized();
   // 获取播放地址需要使用云音乐 API, 所以需要为此 isolate 初始化一个 repository.
   neteaseRepository = NeteaseRepository();
-  runBackgroundService(
-    imageLoadInterceptor: BackgroundInterceptors.loadImageInterceptor,
-    playUriInterceptor: BackgroundInterceptors.playUriInterceptor,
-    playQueueInterceptor: QuietPlayQueueInterceptor(),
-  );
+  runMobileBackgroundService();
 }
 
 class MyApp extends ConsumerWidget {

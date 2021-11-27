@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:quiet/component.dart';
-import 'package:quiet/model/model.dart';
+import 'package:quiet/media/tracks/track.dart';
 import 'package:quiet/pages/playlist/music_list.dart';
 import 'package:quiet/part/part.dart';
 
@@ -19,7 +19,7 @@ class PlaylistSelectionPage extends StatefulWidget {
     this.onDelete,
   }) : super(key: key);
 
-  final List<Music>? list;
+  final List<Track>? list;
 
   ///null if do not track delete operation
   final MusicDeletionCallback? onDelete;
@@ -102,7 +102,7 @@ class PlaylistSelectionPageState extends State<PlaylistSelectionPage> {
           TextButton(
             onPressed: () async {
               await Stream.fromIterable(selectedList).forEach((e) {
-                context.player.insertToNext(e.metadata);
+                context.player.insertToNext(e);
               });
               showSimpleNotification(Text("已添加${selectedList.length}首歌曲"));
             },

@@ -5,8 +5,23 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 
 abstract class CacheKey {
+  factory CacheKey.fromString(String key) {
+    return _StringCacheKey(key);
+  }
+
   ///unique key to save or get a cache
   String getKey();
+}
+
+class _StringCacheKey implements CacheKey {
+  _StringCacheKey(this.key);
+
+  final String key;
+
+  @override
+  String getKey() {
+    return key;
+  }
 }
 
 ///base cache interface

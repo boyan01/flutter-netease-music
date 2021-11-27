@@ -28,11 +28,6 @@ dependencies:
       url: https://github.com/boyan01/loader.git
       ref: e1ef2d9957bc8615c7f19f989d4fcfc142e20e93
   encrypt: ^5.0.0
-  netease_music_api:
-    #    path: ../NeteaseCloudMusicApi
-    git:
-      url: https://github.com/boyan01/NeteaseCloudMusicApi.git
-      ref: e007ba78565d9094959d9e50336ea734fc8d4f64
   overlay_support: ^1.2.1
   music_player:
     git:
@@ -44,6 +39,9 @@ dependencies:
   hooks_riverpod: ^1.0.0-dev.6
   flutter_json_view: ^0.2.1
   flutter_hooks: ^0.18.0
+  equatable: ^2.0.3
+  netease_api:
+    path: netease_api/
 
 dev_dependencies:
   flutter_test:

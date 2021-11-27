@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:quiet/component/utils/utils.dart';
 import 'package:quiet/material/button.dart';
+import 'package:quiet/media/tracks/track.dart';
 import 'package:quiet/pages/artists/page_artist_detail.dart';
 import 'package:quiet/pages/comments/comments.dart';
 import 'package:quiet/pages/comments/page_comment.dart';
@@ -81,8 +82,8 @@ class _MvDetailPageState extends State<_MvDetailPage> {
     );
     _model.videoPlayerController.play();
     //TODO audio focus
-    if (context.player.playbackState.isPlaying) {
-      context.transportControls.pause();
+    if (context.player.isPlaying) {
+      context.player.pause();
       _pausedPlayingMusic = true;
     }
   }
@@ -93,7 +94,7 @@ class _MvDetailPageState extends State<_MvDetailPage> {
     _model.videoPlayerController.dispose();
     //try to resume paused music
     if (_pausedPlayingMusic) {
-      context.transportControls.play();
+      context.player.play();
     }
   }
 

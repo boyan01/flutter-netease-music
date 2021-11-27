@@ -1,7 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:quiet/model/playlist_detail.dart';
+import 'package:quiet/media/tracks/track.dart';
+import 'package:netease_api/src/ao/playlist_detail.dart';
 import 'package:quiet/pages/comments/comments.dart';
 import 'package:quiet/part/part.dart';
 import 'package:quiet/repository/netease.dart';
@@ -173,11 +174,11 @@ class CommentThreadId {
 }
 
 class CommentThreadPayload {
-  CommentThreadPayload.music(Music music)
+  CommentThreadPayload.music(Track music)
       : obj = music,
         coverImage = music.imageUrl?.toString(),
-        title = music.title,
-        subtitle = music.subTitle;
+        title = music.name,
+        subtitle = music.displaySubtitle;
 
   CommentThreadPayload.playlist(PlaylistDetail playlist)
       : obj = playlist,

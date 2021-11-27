@@ -2,9 +2,10 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:music_player/music_player.dart';
 import 'package:quiet/material.dart';
 import 'package:quiet/material/player.dart';
+import 'package:quiet/material/player/progress_track_container.dart';
+import 'package:quiet/media/tracks/track.dart';
 import 'package:quiet/pages/artists/page_artist_detail.dart';
 import 'package:quiet/pages/comments/page_comment.dart';
 import 'package:quiet/pages/page_playing_list.dart';
@@ -20,7 +21,7 @@ import 'player_progress.dart';
 class PlayingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final current = context.watchPlayerValue.current;
+    final current = context.playingTrack;
     if (current == null) {
       WidgetsBinding.instance!.scheduleFrameCallback((_) {
         Navigator.of(context).pop();
@@ -77,7 +78,7 @@ class PlayerControllerBar extends StatelessWidget {
             color: color,
           ),
           onPressed: () {
-            context.transportControls.pause();
+            context.player.pause();
           }),
       pausing: IconButton(
           tooltip: "播放",
@@ -87,7 +88,7 @@ class PlayerControllerBar extends StatelessWidget {
             color: color,
           ),
           onPressed: () {
-            context.transportControls.play();
+            context.player.play();
           }),
       buffering: const SizedBox(
         height: 56,
@@ -110,7 +111,8 @@ class PlayerControllerBar extends StatelessWidget {
           IconButton(
               icon: getPlayModeIcon(context, color),
               onPressed: () {
-                context.transportControls.setPlayMode(context.playMode.next);
+                // FIXME
+                // context.player.setPlayMode(context.playMode.next);
               }),
           IconButton(
               iconSize: 36,
@@ -119,7 +121,7 @@ class PlayerControllerBar extends StatelessWidget {
                 color: color,
               ),
               onPressed: () {
-                context.transportControls.skipToPrevious();
+                context.player.skipToPrevious();
               }),
           iconPlayPause,
           IconButton(
@@ -130,7 +132,7 @@ class PlayerControllerBar extends StatelessWidget {
                 color: color,
               ),
               onPressed: () {
-                context.transportControls.skipToNext();
+                context.player.skipToNext();
               }),
           IconButton(
               tooltip: "当前播放列表",
@@ -197,7 +199,7 @@ class PlayingOperationBar extends StatelessWidget {
 
 class _CenterSection extends StatefulWidget {
   const _CenterSection({Key? key, required this.music}) : super(key: key);
-  final Music music;
+  final Track music;
 
   @override
   State<StatefulWidget> createState() => _CenterSectionState();
@@ -255,7 +257,7 @@ class PlayingLyricView extends StatelessWidget {
       : super(key: key);
   final VoidCallback? onTap;
 
-  final Music music;
+  final Track music;
 
   @override
   Widget build(BuildContext context) {
@@ -318,7 +320,7 @@ class PlayingLyricView extends StatelessWidget {
 
 class PlayingTitle extends StatelessWidget {
   const PlayingTitle({Key? key, required this.music}) : super(key: key);
-  final Music music;
+  final Track music;
 
   @override
   Widget build(BuildContext context) {
@@ -344,12 +346,12 @@ class PlayingTitle extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             Text(
-              music.title,
+              music.name,
               style: const TextStyle(fontSize: 17),
             ),
             InkWell(
               onTap: () {
-                launchArtistDetailPage(context, music.artist);
+                launchArtistDetailPage(context, music.artists);
               },
               child: Row(
                 mainAxisSize: MainAxisSize.min,
@@ -357,7 +359,7 @@ class PlayingTitle extends StatelessWidget {
                   Container(
                     constraints: const BoxConstraints(maxWidth: 200),
                     child: Text(
-                      music.artistString,
+                      music.displaySubtitle,
                       style: Theme.of(context)
                           .primaryTextTheme
                           .bodyText2!

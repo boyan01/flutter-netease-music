@@ -20,7 +20,7 @@ PlaylistDetail _$PlaylistDetailFromJson(Map json) {
     coverUrl: json['coverImgUrl'] as String?,
     trackCount: json['trackCount'] as int,
     description: json['description'] as String?,
-    subscribed: json['subscribed'] as bool,
+    subscribed: json['subscribed'] as bool? ?? false,
     subscribedCount: json['subscribedCount'] as int?,
     commentCount: json['commentCount'] as int?,
     shareCount: json['shareCount'] as int?,
