@@ -46,6 +46,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "favoriteSongList": MessageLookupByLibrary.simpleMessage("收藏歌单"),
         "friends": MessageLookupByLibrary.simpleMessage("我的好友"),
         "latestPlayHistory": MessageLookupByLibrary.simpleMessage("最近播放"),
+        "library": MessageLookupByLibrary.simpleMessage("音乐库"),
         "localMusic": MessageLookupByLibrary.simpleMessage("本地音乐"),
         "login": MessageLookupByLibrary.simpleMessage("立即登录"),
         "loginWithPhone": MessageLookupByLibrary.simpleMessage("手机号登录"),
@@ -62,6 +63,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "playlistShareContent": m1,
         "projectDescription": MessageLookupByLibrary.simpleMessage(
             "开源项目 https://github.com/boyan01/flutter-netease-music"),
+        "recommendPlayLists": MessageLookupByLibrary.simpleMessage("推荐歌单"),
         "search": MessageLookupByLibrary.simpleMessage("搜索"),
         "selectRegionDiaCode": MessageLookupByLibrary.simpleMessage("选择地区号码"),
         "shareContentCopied":

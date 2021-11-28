@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -15,12 +16,12 @@ const String _keyCopyright = '$_prefix:copyright';
 const String _keySkipWelcomePage = '$_prefix:skipWelcomePage';
 
 extension SettingsProvider on BuildContext {
-  Settings get settings => ScopedModel.of(this, rebuildOnChange: true);
+  Settings get settings => watch<Settings>();
 
-  Settings get settingsR => ScopedModel.of(this, rebuildOnChange: false);
+  Settings get settingsR => read<Settings>();
 }
 
-class Settings extends Model {
+class Settings extends ChangeNotifier {
   Settings(this._preferences) {
     _themeMode = ThemeMode.values[
         _preferences.getInt(_keyThemeMode) ?? 0]; /* default is system */
@@ -29,12 +30,6 @@ class Settings extends Model {
     _showCopyrightOverlay = _preferences.get(_keyCopyright) as bool?;
     _skipWelcomePage = _preferences.get(_keySkipWelcomePage) as bool? ?? false;
   }
-
-  ///获取全局设置的实例
-  static Settings of(BuildContext context, {bool rebuildOnChange = true}) {
-    return ScopedModel.of(context, rebuildOnChange: rebuildOnChange);
-  }
-
   final SharedPreferences _preferences;
 
   ThemeData? _theme;

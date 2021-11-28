@@ -36,5 +36,6 @@
     "failedToPlayMusic": "播放音乐失败",
     "noMusic": "暂无音乐",
     "playlist": "歌单",
-    "failedToLoad": "加载失败"
+    "failedToLoad": "加载失败",
+    "library": "音乐库"
 }

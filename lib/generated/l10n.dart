@@ -421,6 +421,26 @@ class S {
       args: [],
     );
   }
+
+  /// `Library`
+  String get library {
+    return Intl.message(
+      'Library',
+      name: 'library',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Recommend PlayLists`
+  String get recommendPlayLists {
+    return Intl.message(
+      'Recommend PlayLists',
+      name: 'recommendPlayLists',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

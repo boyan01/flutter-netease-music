@@ -45,3 +45,7 @@ extension QuietAppTheme on BuildContext {
 
   ColorScheme get colorScheme => theme.colorScheme;
 }
+
+extension TextStyleExtesntion on TextStyle? {
+  TextStyle? get bold => this?.copyWith(fontWeight: FontWeight.bold);
+}

@@ -53,6 +53,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "friends": MessageLookupByLibrary.simpleMessage("Friends"),
         "latestPlayHistory":
             MessageLookupByLibrary.simpleMessage("Play History"),
+        "library": MessageLookupByLibrary.simpleMessage("Library"),
         "localMusic": MessageLookupByLibrary.simpleMessage("Local Music"),
         "login": MessageLookupByLibrary.simpleMessage("Login"),
         "loginWithPhone":
@@ -70,6 +71,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "playlistShareContent": m1,
         "projectDescription": MessageLookupByLibrary.simpleMessage(
             "OpenSource project https://github.com/boyan01/flutter-netease-music"),
+        "recommendPlayLists":
+            MessageLookupByLibrary.simpleMessage("Recommend PlayLists"),
         "search": MessageLookupByLibrary.simpleMessage("Search"),
         "selectRegionDiaCode":
             MessageLookupByLibrary.simpleMessage("select region code"),
