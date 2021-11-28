@@ -17,7 +17,6 @@ final userIdProvider = Provider.autoDispose<int?>((ref) {
   return ref.watch(userProvider)?.userId;
 });
 
-
 ///登录状态
 class UserAccount extends StateNotifier<User?> {
   UserAccount() : super(null);

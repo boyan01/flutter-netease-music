@@ -13,7 +13,8 @@ class MusicCount {
     this.subPlaylistCount = 0,
   });
 
-  factory MusicCount.fromJson(Map<String, dynamic> json) => _$MusicCountFromJson(json);
+  factory MusicCount.fromJson(Map<String, dynamic> json) =>
+      _$MusicCountFromJson(json);
 
   @JsonKey(defaultValue: 0)
   final int artistCount;
@@ -33,5 +34,5 @@ class MusicCount {
   @JsonKey(defaultValue: 0)
   final int subPlaylistCount;
 
-  Map<String,dynamic> toJson() => _$MusicCountToJson(this);
+  Map<String, dynamic> toJson() => _$MusicCountToJson(this);
 }

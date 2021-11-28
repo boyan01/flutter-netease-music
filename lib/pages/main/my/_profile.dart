@@ -23,8 +23,7 @@ class UserProfileSection extends ConsumerWidget {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) =>
-                  UserDetailPage(userId: detail.userId),
+              builder: (context) => UserDetailPage(userId: detail.userId),
             ),
           );
         },

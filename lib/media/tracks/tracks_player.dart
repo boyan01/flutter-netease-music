@@ -16,7 +16,6 @@ enum RepeatMode {
 }
 
 abstract class TracksPlayer {
-
   TracksPlayer();
 
   factory TracksPlayer.platform() {
