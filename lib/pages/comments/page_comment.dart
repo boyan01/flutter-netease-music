@@ -1,22 +1,25 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:quiet/media/tracks/track.dart';
-import 'package:netease_api/src/ao/playlist_detail.dart';
 import 'package:quiet/pages/comments/comments.dart';
 import 'package:quiet/part/part.dart';
-import 'package:quiet/repository/netease.dart';
+import 'package:quiet/repository.dart';
+import 'package:quiet/repository/data/track.dart';
 
 ///a single CommentPage for music or playlist or album
 class CommentPage extends StatelessWidget {
-  const CommentPage({Key? key, required this.threadId}) : super(key: key);
+  const CommentPage({
+    Key? key,
+    required this.threadId,
+    required this.payload,
+  }) : super(key: key);
 
   final CommentThreadId threadId;
+
+  final CommentThreadPayload? payload;
 
   @override
   Widget build(BuildContext context) {
     return ScopedModel<CommentList>(
-        model: CommentList(threadId),
+        model: CommentList(threadId, payload),
         child: Scaffold(
           appBar: AppBar(
             titleSpacing: 0,
@@ -43,136 +46,6 @@ class CommentPage extends StatelessWidget {
   }
 }
 
-class _CommentInput extends StatefulWidget {
-  const _CommentInput({Key? key, required this.threadId}) : super(key: key);
-
-  final CommentThreadId threadId;
-
-  @override
-  _CommentInputState createState() => _CommentInputState();
-}
-
-class _CommentInputState extends State<_CommentInput> {
-  TextEditingController? _controller;
-
-  FocusNode? _focusNode;
-
-  bool _isPosting = false;
-
-  String? _error;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = TextEditingController();
-    _focusNode = FocusNode();
-  }
-
-  @override
-  void dispose() {
-    _controller!.dispose();
-    _focusNode!.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-          border:
-              Border(top: BorderSide(color: Theme.of(context).dividerColor))),
-      child: Row(
-        children: <Widget>[
-          const Padding(padding: EdgeInsets.only(left: 10)),
-          Expanded(
-              child: TextField(
-            focusNode: _focusNode,
-            controller: _controller,
-            decoration:
-                InputDecoration(hintText: "随乐而起，有感而发", errorText: _error),
-          )),
-          IconButton(
-              icon: const Icon(Icons.send),
-              onPressed: () async {
-                if (_isPosting || _controller!.text.trim().isEmpty) {
-                  //do nothing..
-                  return;
-                }
-                _error = null;
-                _isPosting = true;
-                final result =
-                    await _postComment(_controller!.text, widget.threadId);
-                if (result.isValue) {
-                  _controller!.text = "";
-                  if (_focusNode!.hasFocus) {
-                    _focusNode!.unfocus();
-                  }
-                  Loader.of(context)!.refresh();
-                } else {
-                  setState(() {
-                    _error = "发送失败";
-                  });
-                }
-                _isPosting = false;
-              }),
-        ],
-      ),
-    );
-  }
-}
-
-class CommentThreadId {
-  CommentThreadId(this.id, this.type, {this.payload});
-
-  final int id;
-
-  final CommentType type;
-
-  final CommentThreadPayload? payload;
-
-  String get typePath {
-    switch (type) {
-      case CommentType.song:
-        return 'music';
-      case CommentType.mv:
-        return 'mv';
-      case CommentType.playlist:
-        return 'playlist';
-      case CommentType.album:
-        return 'album';
-      case CommentType.dj:
-        return 'dj';
-      case CommentType.video:
-        return 'video';
-    }
-  }
-
-  String get threadId {
-    late String prefix;
-    switch (type) {
-      case CommentType.song:
-        prefix = "R_SO_4_";
-        break;
-      case CommentType.mv:
-        prefix = "R_MV_5_";
-        break;
-      case CommentType.playlist:
-        prefix = "A_PL_0_";
-        break;
-      case CommentType.album:
-        prefix = "R_AL_3_";
-        break;
-      case CommentType.dj:
-        prefix = "A_DJ_1_";
-        break;
-      case CommentType.video:
-        prefix = "R_VI_62_";
-        break;
-    }
-    return prefix + id.toString();
-  }
-}
-
 class CommentThreadPayload {
   CommentThreadPayload.music(Track music)
       : obj = music,
@@ -184,54 +57,10 @@ class CommentThreadPayload {
       : obj = playlist,
         coverImage = playlist.coverUrl,
         title = playlist.name,
-        subtitle = playlist.creator!["nickname"];
+        subtitle = playlist.creator.nickname;
 
   final dynamic obj;
   final String? coverImage;
   final String? title;
   final String? subtitle;
 }
-
-enum CommentType {
-  ///song comments
-  song,
-
-  ///mv comments
-  mv,
-
-  ///playlist comments
-  playlist,
-
-  ///album comments
-  album,
-
-  ///dj radio comments
-  dj,
-
-  ///video comments
-  video
-}
-
-/////like or unlike a comment
-/////return true when operation succeed
-//Future<bool> _like(bool like, int commentId, CommentThreadId commentThread) async {
-//  String op = like ? "like" : "unlike";
-//  var result = await neteaseRepository.doRequest(
-//      "https://music.163.com/weapi/v1/comment/$op", {"threadId": commentThread.threadId, "commentId": commentId});
-//  return result.isValue;
-//}
-
-///post comment to a comment thread
-Future<Result<Map>> _postComment(
-    String content, CommentThreadId commentThread) async {
-  return neteaseRepository!.doRequest(
-      "https://music.163.com/weapi/resource/comments/add",
-      {"content": content, "threadId": commentThread.threadId});
-}
-
-//Future<bool> _deleteComment(CommentThreadId commentThread, int commentId) async {
-//  var result = await neteaseRepository.doRequest("https://music.163.com/weapi/resource/comments/delete",
-//      {"commentId": commentId, "threadId": commentThread.threadId});
-//  debugPrint("_deleteComment :$result");
-//  return result.isValue;
-//}

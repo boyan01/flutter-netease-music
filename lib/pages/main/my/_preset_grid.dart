@@ -46,10 +46,11 @@ class PresetGridSection extends ConsumerWidget {
                     icon: Icons.play_circle_outline,
                     label: context.strings.latestPlayHistory,
                     onTap: () {
-                      if (ref.read(userProvider).isLogin) {
+                      if (ref.read(isLoginProvider)) {
                         context.secondaryNavigator!
                             .push(MaterialPageRoute(builder: (context) {
-                          return RecordPage(uid: ref.read(userProvider).userId);
+                          return RecordPage(
+                              uid: ref.read(userProvider)!.userId);
                         }));
                       } else {
                         Navigator.of(context).pushNamed(pageLogin);

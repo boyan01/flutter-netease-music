@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quiet/component/netease/netease.dart';
 import 'package:quiet/part/part.dart';
+import 'package:quiet/repository.dart';
 import 'package:quiet/repository/netease.dart';
 
 ///我的电台页面
@@ -98,7 +99,7 @@ class _SectionSubscribed extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Loader<List<Map>>(
-      loadTask: () => neteaseRepository!.djSubList().then((value) => value!),
+      loadTask: () => neteaseRepository!.djSubList(),
       builder: (context, result) {
         return Column(
           mainAxisSize: MainAxisSize.min,
@@ -113,11 +114,9 @@ class _SectionSubscribed extends StatelessWidget {
 class _SectionMyCreated extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    if (ref.watch(userProvider).isLogin) {
+    if (ref.watch(isLoginProvider)) {
       return Loader<List<Map>>(
-          loadTask: () => neteaseRepository!
-              .userDj(ref.read(userProvider).userId)
-              .then((value) => value!),
+          loadTask: () => neteaseRepository!.userDj(ref.read(userIdProvider)),
           loadingBuilder: (context) {
             return Loader.buildSimpleLoadingWidget(context);
           },

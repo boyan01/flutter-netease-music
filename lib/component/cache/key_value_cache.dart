@@ -14,7 +14,7 @@ abstract class CacheKey {
 }
 
 class _StringCacheKey implements CacheKey {
-  _StringCacheKey(this.key);
+  const _StringCacheKey(this.key);
 
   final String key;
 
@@ -39,7 +39,7 @@ abstract class Cache<T> {
 class FileCacheProvider {
   FileCacheProvider(this.directory, {required this.maxSize});
 
-  final Directory directory;
+  final String directory;
 
   final int maxSize;
 
@@ -53,8 +53,7 @@ class FileCacheProvider {
     return _cacheFileForKey(key);
   }
 
-  File _cacheFileForKey(CacheKey key) =>
-      File('${directory.path}/${key.getKey()}');
+  File _cacheFileForKey(CacheKey key) => File('$directory/${key.getKey()}');
 
   void touchFile(File file) {
     file.setLastModified(DateTime.now()).catchError((e) {
@@ -67,9 +66,11 @@ class FileCacheProvider {
       return;
     }
     _calculating = true;
-    compute(_fileLru, {'path': directory.path, 'maxSize': maxSize},
-            debugLabel: 'file lru check size')
-        .whenComplete(() {
+    compute(
+      _fileLru,
+      {'path': directory, 'maxSize': maxSize},
+      debugLabel: 'file lru check size',
+    ).whenComplete(() {
       _calculating = false;
     });
   }

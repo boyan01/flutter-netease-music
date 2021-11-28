@@ -1,5 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:quiet/media/tracks/track.dart';
+
+import '../../netease_api.dart';
 
 part 'music_video_detail.g.dart';
 
@@ -15,7 +16,7 @@ class MusicVideoDetailResult {
     required this.code,
   });
 
-  factory MusicVideoDetailResult.fromJson(Map json) =>
+  factory MusicVideoDetailResult.fromJson(Map<String, dynamic> json) =>
       _$MusicVideoDetailResultFromJson(json);
 
   final String loadingPic;
@@ -31,6 +32,8 @@ class MusicVideoDetailResult {
   final MusicVideoDetail data;
 
   final int code;
+
+  Map<String, dynamic> toJson() => _$MusicVideoDetailResultToJson(this);
 }
 
 @JsonSerializable()
@@ -81,7 +84,7 @@ class MusicVideoDetail {
   ///key: video stream name
   ///value:video stream url
   Map? brs;
-  List<Artist> artists;
+  List<ArtistItem> artists;
   bool? isReward;
   String? commentThreadId;
 

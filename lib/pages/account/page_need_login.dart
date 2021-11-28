@@ -11,7 +11,7 @@ class PageNeedLogin extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    if (ref.watch(userProvider).isLogin) {
+    if (ref.watch(isLoginProvider)) {
       return builder!(context);
     }
     Widget widget = Center(

@@ -2,13 +2,12 @@ import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quiet/component.dart';
-import 'package:quiet/media/tracks/track.dart';
-import 'package:quiet/part/part.dart';
-import 'package:quiet/repository/netease.dart';
+import 'package:quiet/pages/account/account.dart';
+import 'package:quiet/repository.dart';
 
 final userFavoriteMusicListProvider =
     StateNotifierProvider<UserFavoriteMusicListNotifier, List<int>>(
-  (ref) => UserFavoriteMusicListNotifier(ref.watch(userProvider).userId),
+  (ref) => UserFavoriteMusicListNotifier(ref.watch(userProvider)?.userId),
 );
 
 class UserFavoriteMusicListNotifier extends CacheableStateNotifier<List<int>> {

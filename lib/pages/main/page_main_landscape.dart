@@ -131,7 +131,7 @@ class _LandscapeDrawer extends ConsumerWidget {
                 icon: const Icon(Icons.account_circle),
                 title: Text(context.strings.my),
                 onTap: () {
-                  if (!ref.read(userProvider).isLogin) {
+                  if (!ref.read(isLoginProvider)) {
                     context.push(pageLogin);
                     return;
                   }

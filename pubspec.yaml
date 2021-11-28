@@ -13,7 +13,7 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   cupertino_icons: ^1.0.3
-  json_annotation: any
+  json_annotation: ^4.3.0
   dio: 4.0.0
   dio_cookie_manager: 2.0.0
   path_provider: ^2.0.2
@@ -42,6 +42,10 @@ dependencies:
   equatable: ^2.0.3
   netease_api:
     path: netease_api/
+  path: ^1.8.0
+  async: ^2.8.0
+  riverpod: ^1.0.0
+  flutter_riverpod: ^1.0.0
 
 dev_dependencies:
   flutter_test:
@@ -49,7 +53,7 @@ dev_dependencies:
   build_runner: ^2.0.6
   mockito: ^5.0.11
   lint: ^1.5.3
-  json_serializable: any
+  json_serializable: ^6.0.1
 
 # The following section is specific to Flutter.
 flutter:

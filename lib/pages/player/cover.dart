@@ -2,9 +2,9 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:quiet/component/player/player.dart';
-import 'package:quiet/media/tracks/track.dart';
 import 'package:quiet/media/tracks/tracks_player.dart';
 import 'package:quiet/repository/cached_image.dart';
+import 'package:quiet/repository/data/track.dart';
 
 ///播放页面歌曲封面
 class AlbumCover extends StatefulWidget {
@@ -274,7 +274,7 @@ class _AlbumCoverState extends State<AlbumCover> with TickerProviderStateMixin {
         ),
         ClipRect(
           child: Align(
-            alignment: const Alignment(0, -1),
+            alignment: Alignment.topCenter,
             child: Transform.translate(
               offset: const Offset(40, -15),
               child: RotationTransition(

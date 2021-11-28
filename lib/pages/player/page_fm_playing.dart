@@ -4,8 +4,7 @@ import 'package:quiet/component.dart';
 import 'package:quiet/material.dart';
 import 'package:quiet/pages/artists/page_artist_detail.dart';
 import 'package:quiet/pages/comments/page_comment.dart';
-import 'package:quiet/repository/cached_image.dart';
-import 'package:quiet/repository/netease.dart';
+import 'package:quiet/repository.dart';
 
 import 'background.dart';
 import 'player_progress.dart';
@@ -129,13 +128,13 @@ class _FmCover extends StatelessWidget {
           ),
         ),
         Text(
-          music.title,
+          music.name,
           style: Theme.of(context).primaryTextTheme.subtitle1,
         ),
         const SizedBox(height: 8),
         InkWell(
           onTap: () {
-            launchArtistDetailPage(context, music.artist);
+            launchArtistDetailPage(context, music.artists);
           },
           child: Row(
             mainAxisSize: MainAxisSize.min,
@@ -143,7 +142,7 @@ class _FmCover extends StatelessWidget {
               Container(
                 constraints: const BoxConstraints(maxWidth: 200),
                 child: Text(
-                  music.artistString,
+                  music.displaySubtitle,
                   style: Theme.of(context)
                       .primaryTextTheme
                       .caption!
@@ -237,11 +236,11 @@ class _FmControllerBar extends StatelessWidget {
                 context.secondaryNavigator!.push(MaterialPageRoute(
                     builder: (context) => CommentPage(
                           threadId: CommentThreadId(
-                            int.parse(context.player.current!.id),
+                            context.player.current!.id,
                             CommentType.song,
-                            payload: CommentThreadPayload.music(
-                                context.player.value.current!),
                           ),
+                          payload: CommentThreadPayload.music(
+                              context.player.current!),
                         )));
               }),
         ],

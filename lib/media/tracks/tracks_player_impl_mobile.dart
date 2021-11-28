@@ -9,7 +9,7 @@ import 'package:music_player/music_player.dart';
 
 import '../../component.dart';
 import '../../repository.dart';
-import 'track.dart';
+import '../../repository/data/track.dart';
 import 'track_list.dart';
 import 'tracks_player.dart';
 
@@ -29,8 +29,8 @@ extension _Metadata on MusicMetadata {
       id: int.parse(mediaId),
       name: title ?? "",
       uri: mediaUri,
-      artists: artists.map((artist) => Artist.fromJson(artist)).toList(),
-      album: album == null ? null : Album.fromJson(album),
+      artists: artists.map((artist) => ArtistMini.fromJson(artist)).toList(),
+      album: album == null ? null : AlbumMini.fromJson(album),
       imageUrl: extras?['imageUrl'] as String,
     );
   }
@@ -228,7 +228,10 @@ class _PlayQueueInterceptor extends PlayQueueInterceptor {
       BackgroundPlayQueue queue, PlayMode playMode) async {
     if (queue.queueId == kFmPlayQueueId) {
       final musics = await neteaseRepository!.getPersonalFmMusics();
-      return musics!.map((m) => m.toMetadata()).toList();
+      if (musics.isError) {
+        return [];
+      }
+      return musics.asValue!.value.map((m) => m.toMetadata()).toList();
     }
     return super.fetchMoreMusic(queue, playMode);
   }

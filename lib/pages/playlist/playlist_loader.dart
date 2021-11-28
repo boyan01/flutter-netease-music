@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:netease_api/src/ao/playlist_detail.dart';
 import 'package:quiet/repository.dart';
 
 AsyncSnapshot<PlaylistDetail> usePlaylistDetail(
@@ -17,14 +16,15 @@ AsyncSnapshot<PlaylistDetail> usePlaylistDetail(
     }
 
     final detailResult = await neteaseRepository!.playlistDetail(playlistId);
-    final detail = detailResult.asValue?.value;
+    var detail = detailResult.asValue?.value;
     if (detail != null) {
       if (local != null && detail.trackUpdateTime == local.trackUpdateTime) {
-        detail.musicList = local.musicList;
-      } else if (detail.musicList.length != detail.trackIds.length) {
-        final musics = await neteaseRepository!
-            .songDetails(detail.trackIds.map((e) => e.id).toList());
-        detail.musicList = musics;
+        detail = detail.copyWith(tracks: local.tracks);
+      } else if (detail.tracks.length != detail.trackCount) {
+        final musics = await neteaseRepository!.songDetails(detail.trackIds);
+        if (musics.isValue) {
+          detail = detail.copyWith(tracks: musics.asValue!.value);
+        }
       }
       neteaseLocalData.updatePlaylistDetail(detail);
       yield detail;

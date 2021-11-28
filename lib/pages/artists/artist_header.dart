@@ -2,13 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:quiet/material/flexible_app_bar.dart';
 import 'package:quiet/material/tabs.dart';
-import 'package:quiet/repository/netease.dart';
-
-import 'artist_full.dart';
+import 'package:quiet/repository.dart';
 
 class ArtistHeader extends StatelessWidget {
   const ArtistHeader({Key? key, required this.artist}) : super(key: key);
-  final ArtistFull artist;
+  final Artist artist;
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +35,7 @@ class ArtistHeader extends StatelessWidget {
 
 class _ArtistFlexHeader extends StatelessWidget {
   const _ArtistFlexHeader({Key? key, required this.artist}) : super(key: key);
-  final ArtistFull artist;
+  final Artist artist;
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +45,7 @@ class _ArtistFlexHeader extends StatelessWidget {
       child: FlexibleDetailBar(
         background: FlexShadowBackground(
             child: Image(
-                image: CachedImage(artist.picUrl!),
+                image: CachedImage(artist.picUrl),
                 height: 300,
                 fit: BoxFit.cover)),
         content: Padding(
@@ -57,14 +55,14 @@ class _ArtistFlexHeader extends StatelessWidget {
               children: <Widget>[
                 const Spacer(),
                 Text(
-                    '${artist.name}${artist.alias!.isEmpty ? '' : '(${artist.alias![0]})'}',
+                    '${artist.name}${artist.alias.isEmpty ? '' : '(${artist.alias[0]})'}',
                     style: const TextStyle(fontSize: 20)),
                 Text('歌曲数量:${artist.musicSize}'),
               ]),
         ),
         builder: (context, t) {
           return AppBar(
-            title: Text(t > 0.5 ? artist.name! : ''),
+            title: Text(t > 0.5 ? artist.name : ''),
             backgroundColor: Colors.transparent,
             elevation: 0,
             titleSpacing: 0,

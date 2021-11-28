@@ -1,14 +1,17 @@
 import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:netease_api/netease_api.dart';
 import 'package:quiet/component.dart';
 import 'package:quiet/part/part.dart';
+import 'package:quiet/repository.dart';
 import 'package:quiet/repository/netease.dart';
-import 'package:quiet/repository/objects/music_count.dart';
+
+export 'package:netease_api/netease_api.dart' show MusicCount;
 
 final userMusicCountProvider =
     StateNotifierProvider<MusicCountNotifier, MusicCount>((ref) {
-  return MusicCountNotifier(login: ref.watch(userProvider).isLogin);
+  return MusicCountNotifier(login: ref.watch(isLoginProvider));
 });
 
 class MusicCountNotifier extends CacheableStateNotifier<MusicCount> {
@@ -32,7 +35,8 @@ class MusicCountNotifier extends CacheableStateNotifier<MusicCount> {
 
   @override
   Future<MusicCount?> loadFromCache() async {
-    final cache = await neteaseLocalData.get(_cacheKey) as Map?;
+    final cache =
+        await neteaseLocalData.get(_cacheKey) as Map<String, dynamic>?;
     if (cache == null) {
       return null;
     }

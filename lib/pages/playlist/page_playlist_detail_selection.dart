@@ -3,9 +3,9 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:quiet/component.dart';
-import 'package:quiet/media/tracks/track.dart';
 import 'package:quiet/pages/playlist/music_list.dart';
 import 'package:quiet/part/part.dart';
+import 'package:quiet/repository/data/track.dart';
 
 import 'dialog_selector.dart';
 

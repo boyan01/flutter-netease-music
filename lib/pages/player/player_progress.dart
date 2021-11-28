@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:music_player/music_player.dart';
 import 'package:quiet/component/utils/utils.dart';
+import 'package:quiet/material/player/progress_track_container.dart';
 import 'package:quiet/part/part.dart';
 
 /// A seek bar for current position.
@@ -22,7 +22,7 @@ class DurationProgressBarState extends State<DurationProgressBar> {
 
   Widget _buildBar(BuildContext context) {
     final theme = Theme.of(context).primaryTextTheme;
-    final state = context.playbackState;
+    final state = context.watchPlayerValue;
 
     Widget progressIndicator;
 
@@ -30,10 +30,11 @@ class DurationProgressBarState extends State<DurationProgressBar> {
     String? positionText;
 
     if (state.initialized) {
-      final duration = context.watchPlayerValue.metadata!.duration;
+      final duration = context.player.duration!.inMilliseconds;
 
-      final position =
-          isUserTracking ? trackingPosition.round() : state.computedPosition;
+      final position = isUserTracking
+          ? trackingPosition.round()
+          : context.player.position!.inMilliseconds;
 
       durationText = getTimeStamp(duration);
       positionText = getTimeStamp(position);
@@ -67,8 +68,8 @@ class DurationProgressBarState extends State<DurationProgressBar> {
             },
             onChangeEnd: (value) async {
               isUserTracking = false;
-              context.transportControls
-                ..seekTo(value.round())
+              context.player
+                ..seekTo(Duration(milliseconds: value.round()))
                 ..play();
             },
           ),

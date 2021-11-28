@@ -1,11 +1,15 @@
 part of 'comments.dart';
 
 class _ItemTitle extends StatelessWidget {
-  const _ItemTitle({Key? key, required this.commentThreadId}) : super(key: key);
+  const _ItemTitle({
+    Key? key,
+    required this.commentThreadId,
+    required this.payload,
+  }) : super(key: key);
 
   final CommentThreadId commentThreadId;
 
-  CommentThreadPayload? get payload => commentThreadId.payload;
+  final CommentThreadPayload? payload;
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +21,7 @@ class _ItemTitle extends StatelessWidget {
               Navigator.push(context, MaterialPageRoute(builder: (context) {
                 final playlist = payload!.obj as PlaylistDetail;
                 return PlaylistDetailPage(
-                  playlist.id!,
+                  playlist.id,
                   previewData: playlist,
                 );
               }));
@@ -171,14 +175,14 @@ class _ItemComment extends StatefulWidget {
 class _ItemCommentState extends State<_ItemComment> {
   @override
   Widget build(BuildContext context) {
-    final User user = widget.comment.user;
+    final user = widget.comment.user;
     return InkWell(
       onTap: () {
         showDialog(
             context: context,
             builder: (context) {
               return SimpleDialog(
-                contentPadding: const EdgeInsets.only(),
+                contentPadding: EdgeInsets.zero,
                 children: <Widget>[
                   ListTile(
                     title: const Text("复制"),

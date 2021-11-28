@@ -3,11 +3,12 @@ import 'package:overlay_support/overlay_support.dart';
 import 'package:quiet/component/global/settings.dart';
 import 'package:quiet/component/route.dart';
 import 'package:quiet/extension.dart';
-import 'package:quiet/media/tracks/track.dart';
 import 'package:quiet/media/tracks/track_list.dart';
 import 'package:quiet/pages/artists/page_artist_detail.dart';
 import 'package:quiet/pages/comments/page_comment.dart';
 import 'package:quiet/part/part.dart';
+import 'package:quiet/repository.dart';
+import 'package:quiet/repository/data/track.dart';
 import 'package:quiet/repository/netease.dart';
 
 import 'dialog_selector.dart';
@@ -75,8 +76,9 @@ class MusicTileConfiguration extends StatelessWidget {
 
   //return null if current music is not be playing
   static Widget? _buildPlayingLeading(BuildContext context, Music music) {
-    if (MusicTileConfiguration.of(context).token == context.playList.queueId &&
-        music == context.watchPlayerValue.current) {
+    if (MusicTileConfiguration.of(context).token ==
+            context.playingTrackList.id &&
+        music == context.playingTrack) {
       return Container(
         margin: const EdgeInsets.only(left: 8, right: 8),
         width: 40,
@@ -143,7 +145,7 @@ class MusicTile extends StatelessWidget {
       height: 56,
       child: InkWell(
         onTap: () {
-          if (list.onMusicTap != null) list.onMusicTap!(context, music);
+          list.onMusicTap?.call(context, music);
         },
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -335,8 +337,8 @@ class _IconMore extends StatelessWidget {
       case _MusicAction.comment:
         Navigator.push(context, MaterialPageRoute(builder: (context) {
           return CommentPage(
-            threadId: CommentThreadId(music.id, CommentType.song,
-                payload: CommentThreadPayload.music(music)),
+            threadId: CommentThreadId(music.id, CommentType.song),
+            payload: CommentThreadPayload.music(music),
           );
         }));
         break;

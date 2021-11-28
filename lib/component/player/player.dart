@@ -1,12 +1,14 @@
+import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:hive/hive.dart';
-import 'package:meta/meta.dart';
 import 'package:music_player/music_player.dart';
+import 'package:provider/provider.dart';
 import 'package:quiet/component/player/lryic.dart';
-import 'package:quiet/media/tracks/track.dart';
+import 'package:quiet/media/tracks/track_list.dart';
 import 'package:quiet/media/tracks/tracks_player.dart';
 import 'package:quiet/part/part.dart';
+import 'package:quiet/repository/data/track.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 export 'package:quiet/component/player/bottom_player_bar.dart';
@@ -42,36 +44,18 @@ extension PlayModeGetNext on PlayMode {
 }
 
 extension QuitPlayerExt on BuildContext {
-  TracksPlayer get player {
-    try {
-      return ScopedModel.of<QuietModel>(this).player;
-    } catch (e, stacktrace) {
-      debugPrint(stacktrace.toString());
-      rethrow;
-    }
-  }
+  TracksPlayer get player => read<TracksPlayer>();
 
-  /// use [watchPlayerValue]
-  MusicPlayerValue get readPlayerValue {
-    return ScopedModel.of<QuietModel>(this, rebuildOnChange: false)
-        .player
-        .value;
-  }
+  TracksPlayerState get watchPlayerValue =>
+      watch<ValueNotifier<TracksPlayerState>>().value;
 
-  MusicPlayerValue get watchPlayerValue {
-    return ScopedModel.of<QuietModel>(this, rebuildOnChange: true).player.value;
-  }
+  Track? get playingTrack => watchPlayerValue.current;
 
-  Track? get playingTrack {
-    // TODO
-    return player.current;
-  }
+  bool get isPlaying => watchPlayerValue.playing;
 
-  PlaybackState get playbackState => watchPlayerValue.playbackState;
+  PlayMode get playMode => PlayMode.sequence;
 
-  PlayMode get playMode => watchPlayerValue.playMode;
-
-  PlayQueue get playList => watchPlayerValue.queue;
+  TrackList get playingTrackList => watchPlayerValue.list;
 }
 
 extension PlayQueueExt on PlayQueue {
@@ -83,36 +67,6 @@ extension MusicPlayerExt on MusicPlayer {
   //FIXME is this logic right???
   bool get initialized =>
       value.metadata != null && value.metadata!.duration > 0;
-
-  /// 播放私人 FM
-  /// [musics] 初始化数据
-  void playFm(List<Music> musics) {
-    final queue = PlayQueue(
-        queueTitle: "私人FM",
-        queueId: kFmPlayQueueId,
-        queue: musics.toMetadataList());
-    playWithQueue(queue);
-  }
-}
-
-extension MusicPlayerValueExt on MusicPlayerValue {
-  Music? get current => metadata == null ? null : Music.fromMetadata(metadata!);
-
-  Music get requireCurrent => current!;
-
-  List<Music> get playingList =>
-      queue.queue.map((e) => Music.fromMetadata(e)).toList();
-}
-
-extension PlaybackStateExt on PlaybackState {
-  bool get hasError => state == PlayerState.Error;
-
-  bool get isPlaying => (state == PlayerState.Playing) && !hasError;
-
-  ///audio is buffering
-  bool get isBuffering => state == PlayerState.Buffering;
-
-  bool get initialized => state != PlayerState.None;
 }
 
 class Quiet extends StatefulWidget {
@@ -126,20 +80,80 @@ class Quiet extends StatefulWidget {
   State<StatefulWidget> createState() => _QuietState();
 }
 
+class TracksPlayerState with EquatableMixin {
+  const TracksPlayerState({
+    required this.playing,
+    required this.buffering,
+    required this.current,
+    required this.list,
+    required this.initialized,
+  });
+
+  final bool playing;
+  final bool buffering;
+  final Track? current;
+  final TrackList list;
+  final bool initialized;
+
+  @override
+  List<Object?> get props => [
+        playing,
+        buffering,
+        current,
+        list,
+        initialized,
+      ];
+}
+
 class _QuietState extends State<Quiet> {
   late PlayingLyric _playingLyric;
+
+  final _player = TracksPlayer.platform();
+
+  final _playState = ValueNotifier<TracksPlayerState>(const TracksPlayerState(
+    playing: false,
+    buffering: false,
+    current: null,
+    list: TrackList.empty(),
+    initialized: false,
+  ));
 
   @override
   void initState() {
     super.initState();
-    _playingLyric = PlayingLyric();
+    _playingLyric = PlayingLyric(_player);
+    _player.onTrackChanged.addListener(_notifyPlayState);
+    _player.onPlaybackStateChanged.addListener(_notifyPlayState);
+  }
+
+  void _notifyPlayState() {
+    _playState.value = TracksPlayerState(
+      playing: _player.isPlaying,
+      buffering: _player.isBuffering,
+      current: _player.current,
+      list: _player.trackList,
+      initialized: _player.duration != null,
+    );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _player.onTrackChanged.removeListener(_notifyPlayState);
+    _player.onPlaybackStateChanged.removeListener(_notifyPlayState);
   }
 
   @override
   Widget build(BuildContext context) {
-    return ScopedModel(
-      model: _playingLyric,
-      child: widget.child,
+    return Provider.value(
+      value: _player,
+      child: ChangeNotifierProvider<ValueNotifier<TracksPlayerState>>.value(
+        value: _playState,
+        child: ScopedModel(
+          model: _playingLyric,
+          child: widget.child,
+        ),
+      ),
     );
   }
 }

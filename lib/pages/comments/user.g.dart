@@ -6,23 +6,21 @@ part of 'user.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-User _$UserFromJson(Map json) {
-  return User(
-    locationInfo: json['locationInfo'],
-    userId: json['userId'] as int?,
-    remarkName: json['remarkName'],
-    expertTags: json['expertTags'],
-    nickname: json['nickname'] as String?,
-    userType: json['userType'] as int?,
-    vipRights: json['vipRights'] == null
-        ? null
-        : VipRights.fromJson(json['vipRights'] as Map),
-    vipType: json['vipType'] as int?,
-    authStatus: json['authStatus'] as int?,
-    avatarUrl: json['avatarUrl'] as String?,
-    experts: json['experts'],
-  );
-}
+User _$UserFromJson(Map json) => User(
+      locationInfo: json['locationInfo'],
+      userId: json['userId'] as int?,
+      remarkName: json['remarkName'],
+      expertTags: json['expertTags'],
+      nickname: json['nickname'] as String?,
+      userType: json['userType'] as int?,
+      vipRights: json['vipRights'] == null
+          ? null
+          : VipRights.fromJson(json['vipRights'] as Map),
+      vipType: json['vipType'] as int?,
+      authStatus: json['authStatus'] as int?,
+      avatarUrl: json['avatarUrl'] as String?,
+      experts: json['experts'],
+    );
 
 Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
       'locationInfo': instance.locationInfo,
@@ -38,15 +36,13 @@ Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
       'experts': instance.experts,
     };
 
-VipRights _$VipRightsFromJson(Map json) {
-  return VipRights(
-    associator: json['associator'] == null
-        ? null
-        : Associator.fromJson(json['associator'] as Map),
-    musicPackage: json['musicPackage'],
-    redVipAnnualCount: json['redVipAnnualCount'] as int?,
-  );
-}
+VipRights _$VipRightsFromJson(Map json) => VipRights(
+      associator: json['associator'] == null
+          ? null
+          : Associator.fromJson(json['associator'] as Map),
+      musicPackage: json['musicPackage'],
+      redVipAnnualCount: json['redVipAnnualCount'] as int?,
+    );
 
 Map<String, dynamic> _$VipRightsToJson(VipRights instance) => <String, dynamic>{
       'associator': instance.associator?.toJson(),
@@ -54,12 +50,10 @@ Map<String, dynamic> _$VipRightsToJson(VipRights instance) => <String, dynamic>{
       'redVipAnnualCount': instance.redVipAnnualCount,
     };
 
-Associator _$AssociatorFromJson(Map json) {
-  return Associator(
-    vipCode: json['vipCode'] as int?,
-    rights: json['rights'] as bool?,
-  );
-}
+Associator _$AssociatorFromJson(Map json) => Associator(
+      vipCode: json['vipCode'] as int?,
+      rights: json['rights'] as bool?,
+    );
 
 Map<String, dynamic> _$AssociatorToJson(Associator instance) =>
     <String, dynamic>{

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quiet/component.dart';
 import 'package:quiet/material.dart';
-import 'package:quiet/model.dart';
 import 'package:quiet/pages/account/account.dart';
 import 'package:quiet/pages/account/page_user_detail.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -113,7 +112,7 @@ class MainNavigationDrawerTile extends StatelessWidget {
 class UserInfo extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    if (ref.watch(userProvider).isLogin) {
+    if (ref.watch(isLoginProvider)) {
       return _buildHeader(context, ref);
     } else {
       return _buildHeaderNotLogin(context);
@@ -121,7 +120,7 @@ class UserInfo extends ConsumerWidget {
   }
 
   Widget _buildHeader(BuildContext context, WidgetRef ref) {
-    final UserProfile profile = ref.watch(userProvider).userDetail!.profile;
+    final profile = ref.watch(userProvider)!;
     return UserAccountsDrawerHeader(
       currentAccountPicture: InkResponse(
         onTap: () {
@@ -129,16 +128,16 @@ class UserInfo extends ConsumerWidget {
             context,
             MaterialPageRoute(
               builder: (context) => UserDetailPage(
-                userId: ref.read(userProvider).userId,
+                userId: ref.read(userProvider)?.userId,
               ),
             ),
           );
         },
         child: CircleAvatar(
-          backgroundImage: CachedImage(profile.avatarUrl!),
+          backgroundImage: CachedImage(profile.avatarUrl),
         ),
       ),
-      accountName: Text(profile.nickname!),
+      accountName: Text(profile.nickname),
       accountEmail: null,
       otherAccountsPictures: [
         Material(

@@ -5,12 +5,13 @@ import 'package:flutter/scheduler.dart';
 import 'package:quiet/material.dart';
 import 'package:quiet/material/player.dart';
 import 'package:quiet/material/player/progress_track_container.dart';
-import 'package:quiet/media/tracks/track.dart';
 import 'package:quiet/pages/artists/page_artist_detail.dart';
 import 'package:quiet/pages/comments/page_comment.dart';
 import 'package:quiet/pages/page_playing_list.dart';
 import 'package:quiet/pages/player/page_playing_landscape.dart';
 import 'package:quiet/part/part.dart';
+import 'package:quiet/repository.dart';
+import 'package:quiet/repository/data/track.dart';
 
 import 'background.dart';
 import 'cover.dart';
@@ -179,8 +180,8 @@ class PlayingOperationBar extends StatelessWidget {
               }
               Navigator.push(context, MaterialPageRoute(builder: (context) {
                 return CommentPage(
-                  threadId: CommentThreadId(music.id, CommentType.song,
-                      payload: CommentThreadPayload.music(music)),
+                  threadId: CommentThreadId(music.id, CommentType.song),
+                  payload: CommentThreadPayload.music(music),
                 );
               }));
             }),
@@ -298,14 +299,14 @@ class PlayingLyricView extends StatelessWidget {
               lyric: playingLyric.lyric!,
               lyricLineStyle: normalStyle,
               highlight: style.color,
-              position: context.playbackState.computedPosition,
+              position: context.player.position?.inMilliseconds,
               onTap: onTap,
               size: Size(
                   constraints.maxWidth,
                   constraints.maxHeight == double.infinity
                       ? 0
                       : constraints.maxHeight),
-              playing: context.playbackState.isPlaying,
+              playing: context.isPlaying,
             ),
           ),
         );

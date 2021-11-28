@@ -10,7 +10,7 @@ class CellphoneExistenceCheck {
     this.hasPassword,
   });
 
-  factory CellphoneExistenceCheck.fromJson(Map<String?, dynamic> map) =>
+  factory CellphoneExistenceCheck.fromJson(Map<String, dynamic> map) =>
       _$CellphoneExistenceCheckFromJson(map);
 
   final int? exist;

@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:logging/logging.dart';
 import 'package:quiet/component.dart';
-import 'package:netease_api/src/ao/playlist_detail.dart';
 import 'package:quiet/part/part.dart';
+import 'package:quiet/repository.dart';
 import 'package:quiet/repository/netease.dart';
 
 import '../playlist_tile.dart';
@@ -147,8 +146,6 @@ class UserPlayListSection extends ConsumerStatefulWidget {
 }
 
 class _UserPlayListSectionState extends ConsumerState<UserPlayListSection> {
-  final logger = Logger("_UserPlayListSectionState");
-
   final _dividerKey = GlobalKey();
 
   int _dividerIndex = -1;
@@ -199,7 +196,7 @@ class _UserPlayListSectionState extends ConsumerState<UserPlayListSection> {
 
   @override
   Widget build(BuildContext context) {
-    if (!ref.watch(userProvider).isLogin) {
+    if (!ref.watch(isLoginProvider)) {
       return _singleSliver(child: notLogin(context));
     }
     return Loader<List<PlaylistDetail>>(
@@ -214,9 +211,9 @@ class _UserPlayListSectionState extends ConsumerState<UserPlayListSection> {
         },
         builder: (context, result) {
           final created =
-              result.where((p) => p.creator!["userId"] == widget.userId);
+              result.where((p) => p.creator.userId == widget.userId);
           final subscribed =
-              result.where((p) => p.creator!["userId"] != widget.userId);
+              result.where((p) => p.creator.userId != widget.userId);
           _dividerIndex = 2 + created.length;
           return SliverList(
             key: PlayListSliverKey(

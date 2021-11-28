@@ -79,12 +79,12 @@ class _PhoneInputLayout extends HookConsumerWidget {
 
       final result = await showLoaderOverlay(
         context,
-        ref.read(loginApiProvider).checkPhoneExist(
-              text,
-              selectedRegion.value.dialCode!
-                  .replaceAll("+", "")
-                  .replaceAll(" ", ""),
-            ),
+        neteaseRepository!.checkPhoneExist(
+          text,
+          selectedRegion.value.dialCode!
+              .replaceAll("+", "")
+              .replaceAll(" ", ""),
+        ),
       );
       if (result.isError) {
         toast(result.asError!.error.toString());

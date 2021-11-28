@@ -1,7 +1,8 @@
 import 'package:flutter/foundation.dart';
 
-import 'track.dart';
+import '../../repository/data/track.dart';
 import 'track_list.dart';
+import 'tracks_player_impl_mobile.dart';
 
 enum RepeatMode {
   /// Repeat all the tracks.
@@ -15,6 +16,13 @@ enum RepeatMode {
 }
 
 abstract class TracksPlayer {
+
+  TracksPlayer();
+
+  factory TracksPlayer.platform() {
+    return TracksPlayerImplMobile();
+  }
+
   Future<void> play();
 
   Future<void> pause();
@@ -66,5 +74,4 @@ abstract class TracksPlayer {
   double get playbackSpeed;
 
   Listenable get onPlaybackStateChanged;
-
 }

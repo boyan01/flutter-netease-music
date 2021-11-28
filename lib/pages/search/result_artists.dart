@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:quiet/pages/artists/page_artist_detail.dart';
 import 'package:quiet/part/part.dart';
+import 'package:quiet/repository.dart';
 import 'package:quiet/repository/netease.dart';
 
 class ArtistsResultSection extends StatefulWidget {
@@ -18,7 +19,7 @@ class _ArtistsResultSectionState extends State<ArtistsResultSection>
     super.build(context);
     return AutoLoadMoreList(loadMore: (offset) async {
       final result = await neteaseRepository!
-          .search(widget.query, NeteaseSearchType.artist, offset: offset);
+          .search(widget.query, SearchType.artist, offset: offset);
       if (result.isValue) {
         return Result.value(
             (result.asValue!.value["result"]["artists"] as List?)!);

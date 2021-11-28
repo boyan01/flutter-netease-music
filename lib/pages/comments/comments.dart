@@ -6,21 +6,21 @@ import 'package:flutter/services.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:quiet/component/global/settings.dart';
 import 'package:quiet/component/utils/utils.dart';
-import 'package:quiet/media/tracks/track.dart';
-import 'package:netease_api/src/ao/playlist_detail.dart';
 import 'package:quiet/pages/account/page_user_detail.dart';
 import 'package:quiet/pages/comments/page_comment.dart';
 import 'package:quiet/part/part.dart';
+import 'package:quiet/repository.dart';
+import 'package:quiet/repository/data/track.dart';
 import 'package:quiet/repository/netease.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 import 'page_comment.dart';
-import 'user.dart';
+import 'user.dart' as comment;
 
 part 'comments_tile.dart';
 
 class CommentList extends Model with AutoLoadMoreMixin {
-  CommentList(this.threadId) {
+  CommentList(this.threadId, this.payload) {
     loadMore();
   }
 
@@ -31,6 +31,8 @@ class CommentList extends Model with AutoLoadMoreMixin {
   static const _typeTitle = 5;
 
   final CommentThreadId threadId;
+
+  final CommentThreadPayload? payload;
 
   int? total = 0;
 
@@ -48,7 +50,7 @@ class CommentList extends Model with AutoLoadMoreMixin {
       final list = [];
 
       //top addition bar
-      if (threadId.payload != null) {
+      if (payload != null) {
         list.add(Pair(_typeTitle, threadId));
       }
 
@@ -101,7 +103,11 @@ class CommentList extends Model with AutoLoadMoreMixin {
             ),
           );
         case CommentList._typeTitle:
-          return _ItemTitle(commentThreadId: item.last as CommentThreadId);
+          return _ItemTitle(
+            commentThreadId: item.last as CommentThreadId,
+            // FIXME payload.
+            payload: null,
+          );
       }
     }
     return super.buildItem(context, data, index);
@@ -110,7 +116,7 @@ class CommentList extends Model with AutoLoadMoreMixin {
 
 class Comment {
   Comment.fromJsonMap(Map<String, dynamic> map)
-      : user = User.fromJsonMap(map["user"]),
+      : user = comment.User.fromJsonMap(map["user"]),
         beReplied = map["beReplied"],
         pendantData = map["pendantData"],
         showFloorComment = map["showFloorComment"],
@@ -126,7 +132,7 @@ class Comment {
         content = map["content"],
         isRemoveHotComment = map["isRemoveHotComment"];
 
-  User user;
+  comment.User user;
   List<dynamic>? beReplied;
   dynamic pendantData;
   dynamic showFloorComment;

@@ -1,15 +1,20 @@
-import 'package:quiet/media/tracks/track.dart';
+import 'package:quiet/repository/data/track.dart';
 
 class TrackList {
-  TrackList({
+  const TrackList({
     required this.id,
     required this.tracks,
   }) : isFM = false;
 
-  TrackList.fm()
+  const TrackList.empty()
+      : id = '',
+        tracks = const [],
+        isFM = false;
+
+  const TrackList.fm()
       : isFM = true,
         id = 'fm',
-        tracks = <Track>[];
+        tracks = const [];
 
   final String id;
   final List<Track> tracks;

@@ -16,7 +16,9 @@ class CachedImage extends ImageProvider<CachedImage> implements CacheKey {
   /// Creates an object that fetches the image at the given URL.
   ///
   /// The arguments must not be null.
-  const CachedImage(this.url, {this.scale = 1.0, this.headers}) : _size = null;
+  CachedImage(this.url, {this.scale = 1.0, this.headers})
+      : _size = null,
+        assert(url.isNotEmpty);
 
   const CachedImage._internal(this.url, this._size,
       {this.scale = 1.0, this.headers});
@@ -142,7 +144,7 @@ Future<_ImageCache> _imageCache() async {
 class _ImageCache implements Cache<Uint8List?> {
   _ImageCache(Directory dir)
       : provider =
-            FileCacheProvider(dir, maxSize: 600 * 1024 * 1024 /* 600 Mb*/);
+            FileCacheProvider(dir.path, maxSize: 600 * 1024 * 1024 /* 600 Mb*/);
 
   final FileCacheProvider provider;
 

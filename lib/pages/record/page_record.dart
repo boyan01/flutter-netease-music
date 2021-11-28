@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:quiet/material/tabs.dart';
 import 'package:quiet/pages/playlist/music_list.dart';
 import 'package:quiet/part/part.dart';
+import 'package:quiet/repository.dart';
 import 'package:quiet/repository/netease.dart';
 
 class RecordPage extends StatelessWidget {
@@ -9,7 +10,7 @@ class RecordPage extends StatelessWidget {
       : super(key: key);
 
   ///user id
-  final int? uid;
+  final int uid;
 
   ///could be null
   final String? username;
@@ -38,12 +39,15 @@ class RecordPage extends StatelessWidget {
 }
 
 class _RecordSection extends StatefulWidget {
-  const _RecordSection({Key? key, this.uid, this.type})
-      : assert(type == 0 || type == 1),
+  const _RecordSection({
+    Key? key,
+    required this.uid,
+    required this.type,
+  })  : assert(type == 0 || type == 1),
         super(key: key);
 
-  final int? uid;
-  final int? type;
+  final int uid;
+  final int type;
 
   @override
   _RecordSectionState createState() => _RecordSectionState();
@@ -63,7 +67,7 @@ class _RecordSectionState extends State<_RecordSection>
       loadTask: () => neteaseRepository!.getRecord(widget.uid, widget.type),
       builder: (context, result) {
         debugPrint('Record(${widget.type}) result : $result');
-        final List data = result[_keys[widget.type!]];
+        final List data = result[_keys[widget.type]];
         return _RecordMusicList(
           type: widget.type,
           recordList:
@@ -81,7 +85,7 @@ class _RecordMusic {
     return _RecordMusic(
       map['score'],
       map['playCount'],
-      mapJsonToMusic(map['song'], albumKey: 'al', artistKey: 'ar'),
+      Music.fromJson(map['music']),
     );
   }
 
@@ -103,7 +107,7 @@ class _RecordMusicList extends StatelessWidget {
 
   final List<_RecordMusic> recordList;
 
-  final List<Music?> musicList;
+  final List<Track?> musicList;
 
   final Map<int?, _RecordMusic> _recordMap = {};
 

@@ -1,13 +1,13 @@
 import 'dart:async';
 
+import 'package:async/async.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:logging/logging.dart';
-import 'package:quiet/model/user_detail_bean.dart';
+import 'package:quiet/repository.dart';
 import 'package:quiet/repository/netease.dart';
 
 final userProvider =
-    StateNotifierProvider<UserAccount, UserDetail?>((ref) => UserAccount());
+    StateNotifierProvider<UserAccount, User?>((ref) => UserAccount());
 
 final isLoginProvider = Provider<bool>((ref) {
   return ref.watch(userProvider) != null;
@@ -17,31 +17,10 @@ final userIdProvider = Provider.autoDispose<int?>((ref) {
   return ref.watch(userProvider)?.userId;
 });
 
-extension UserDetailExt on UserDetail? {
-  UserDetail? get userDetail => this;
-
-  UserProfile get profile => userDetail!.profile;
-
-  ///当前是否已登录
-  bool get isLogin {
-    return this != null;
-  }
-
-  ///当前登录用户的id
-  ///null if not login
-  int? get userId {
-    if (!isLogin) {
-      return null;
-    }
-    return profile.userId;
-  }
-}
 
 ///登录状态
-class UserAccount extends StateNotifier<UserDetail?> {
+class UserAccount extends StateNotifier<User?> {
   UserAccount() : super(null);
-
-  final logger = Logger("UserAccount");
 
   ///get user info from persistence data
   static Future<Map?> getPersistenceUser() async {
@@ -78,9 +57,9 @@ class UserAccount extends StateNotifier<UserDetail?> {
     final user = await getPersistenceUser();
     if (user != null) {
       try {
-        state = UserDetail.fromJsonMap(user as Map<String, dynamic>);
+        state = User.fromJson(user as Map<String, dynamic>);
       } catch (e) {
-        logger.severe("can not read user: $e");
+        debugPrint("can not read user: $e");
         neteaseLocalData["neteaseLocalData"] = null;
       }
       //访问api，刷新登陆状态
@@ -101,10 +80,6 @@ class UserAccount extends StateNotifier<UserDetail?> {
     }
   }
 
-  UserDetail? get userDetail => state;
-
-  UserProfile get profile => userDetail!.profile;
-
   ///当前是否已登录
   bool get isLogin {
     return state != null;
@@ -116,6 +91,6 @@ class UserAccount extends StateNotifier<UserDetail?> {
     if (!isLogin) {
       return null;
     }
-    return state!.profile.userId;
+    return state!.userId;
   }
 }

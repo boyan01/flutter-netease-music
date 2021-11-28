@@ -67,17 +67,17 @@ class BottomControllerBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final music = context.watchPlayerValue.current;
-    final queue = context.watchPlayerValue.queue;
+    final queue = context.watchPlayerValue.list;
     if (music == null) {
       return Container();
     }
     return InkWell(
       onTap: () {
         context.rootNavigator
-            .pushNamed(queue.isPlayingFm ? pageFmPlaying : pagePlaying);
+            .pushNamed(queue.isFM ? pageFmPlaying : pagePlaying);
       },
       child: Card(
-        margin: const EdgeInsets.all(0),
+        margin: EdgeInsets.zero,
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
             topLeft: Radius.circular(4.0),
@@ -165,7 +165,7 @@ class _SubTitleOrLyric extends StatelessWidget {
       return Text(subtitle);
     }
     final line = playingLyric.lyric!
-        .getLineByTimeStamp(context.playbackState.computedPosition, 0)
+        .getLineByTimeStamp(context.player.position?.inMilliseconds ?? 0, 0)
         ?.line;
     if (line == null || line.isEmpty) {
       return Text(subtitle);

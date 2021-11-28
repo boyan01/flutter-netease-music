@@ -5,6 +5,7 @@ part 'track.g.dart';
 
 typedef Music = Track;
 
+@JsonSerializable()
 class Track with EquatableMixin {
   Track({
     required this.id,
@@ -15,15 +16,17 @@ class Track with EquatableMixin {
     required this.imageUrl,
   });
 
+  factory Track.fromJson(Map<String, dynamic> json) => _$TrackFromJson(json);
+
   final int id;
 
   final String? uri;
 
   final String name;
 
-  final List<Artist> artists;
+  final List<ArtistMini> artists;
 
-  final Album? album;
+  final AlbumMini? album;
 
   final String? imageUrl;
 
@@ -31,17 +34,20 @@ class Track with EquatableMixin {
 
   @override
   List<Object?> get props => [id, uri, name, artists, album, imageUrl];
+
+  Map<String, dynamic> toJson() => _$TrackToJson(this);
 }
 
 @JsonSerializable()
-class Artist with EquatableMixin {
-  Artist({
+class ArtistMini with EquatableMixin {
+  ArtistMini({
     required this.id,
     required this.name,
     required this.imageUrl,
   });
 
-  factory Artist.fromJson(Map<String, dynamic> json) => _$ArtistFromJson(json);
+  factory ArtistMini.fromJson(Map<String, dynamic> json) =>
+      _$ArtistMiniFromJson(json);
 
   @JsonKey(name: 'id')
   final String id;
@@ -53,18 +59,19 @@ class Artist with EquatableMixin {
   @override
   List<Object?> get props => [id, name, imageUrl];
 
-  Map<String, dynamic> toJson() => _$ArtistToJson(this);
+  Map<String, dynamic> toJson() => _$ArtistMiniToJson(this);
 }
 
 @JsonSerializable()
-class Album with EquatableMixin {
-  Album({
+class AlbumMini with EquatableMixin {
+  AlbumMini({
     required this.id,
     required this.picUri,
     required this.name,
   });
 
-  factory Album.fromJson(Map<String, dynamic> json) => _$AlbumFromJson(json);
+  factory AlbumMini.fromJson(Map<String, dynamic> json) =>
+      _$AlbumMiniFromJson(json);
 
   @JsonKey(name: 'id')
   final String id;
@@ -78,5 +85,5 @@ class Album with EquatableMixin {
   @override
   List<Object?> get props => [id, picUri, name];
 
-  Map<String, dynamic> toJson() => _$AlbumToJson(this);
+  Map<String, dynamic> toJson() => _$AlbumMiniToJson(this);
 }

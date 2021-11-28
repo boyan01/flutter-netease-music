@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:overlay_support/overlay_support.dart';
-import 'package:netease_api/src/ao/playlist_detail.dart';
-import 'package:quiet/part/part.dart';
-import 'package:quiet/repository/netease.dart';
+import 'package:quiet/repository.dart';
 
 ///page for playlist edit
 class PlaylistEditPage extends StatefulWidget {
   const PlaylistEditPage(this.playlist, {Key? key}) : super(key: key);
-  final PlaylistDetail? playlist;
+  final PlaylistDetail playlist;
 
   @override
   _PlaylistEditPageState createState() => _PlaylistEditPageState();
@@ -43,7 +41,7 @@ class _PlaylistEditPageState extends State<PlaylistEditPage> {
                   children: <Widget>[
                     Expanded(child: Text("更换封面", style: style)),
                     Image(
-                        image: CachedImage(widget.playlist!.coverUrl!),
+                        image: CachedImage(widget.playlist.coverUrl),
                         height: 56,
                         width: 56)
                   ],
@@ -64,7 +62,7 @@ class _PlaylistEditPageState extends State<PlaylistEditPage> {
                 child: Row(
                   children: <Widget>[
                     Expanded(child: Text("名称", style: style)),
-                    Text(widget.playlist!.name!)
+                    Text(widget.playlist.name)
                   ],
                 ),
               ),
@@ -98,7 +96,7 @@ class _PlaylistEditPageState extends State<PlaylistEditPage> {
                 child: Row(
                   children: <Widget>[
                     Expanded(child: Text("描述", style: style)),
-                    Text(widget.playlist!.name!)
+                    Text(widget.playlist.name)
                   ],
                 ),
               ),
@@ -149,26 +147,27 @@ class _PlaylistNameEditPageState extends State<_PlaylistNameEditPage> {
         actions: <Widget>[
           TextButton(
               onPressed: () async {
-                _focusNode.unfocus();
-                final name = widget.playlist!.name;
-                widget.playlist!.name = _controller!.text;
-                try {
-                  final bool succeed = await showLoaderOverlay(context,
-                      neteaseRepository!.updatePlaylist(widget.playlist!));
-                  if (succeed) {
-                    Navigator.pop(context, true);
-                  } else {
-                    setState(() {
-                      widget.playlist!.name = name;
-                      error = "修改失败";
-                    });
-                  }
-                } catch (msg) {
-                  setState(() {
-                    widget.playlist!.name = name;
-                    error = msg.toString();
-                  });
-                }
+                // TODO update playlist name
+                // _focusNode.unfocus();
+                // final name = widget.playlist!.name;
+                // widget.playlist!.name = _controller!.text;
+                // try {
+                //   final bool succeed = await showLoaderOverlay(context,
+                //       neteaseRepository!.updatePlaylist(widget.playlist!));
+                //   if (succeed) {
+                //     Navigator.pop(context, true);
+                //   } else {
+                //     setState(() {
+                //       widget.playlist!.name = name;
+                //       error = "修改失败";
+                //     });
+                //   }
+                // } catch (msg) {
+                //   setState(() {
+                //     widget.playlist!.name = name;
+                //     error = msg.toString();
+                //   });
+                // }
               },
               child: const Text("保存"))
         ],

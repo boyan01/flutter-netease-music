@@ -17,11 +17,12 @@ dependencies:
     git:
       url: https://github.com/boyan01/NeteaseCloudMusicApi.git
       ref: e007ba78565d9094959d9e50336ea734fc8d4f64
-  json_annotation: any
+  json_annotation: ^4.3.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^1.0.0
-  json_serializable: any
+  flutter_lints: ^1.0.4
+  build_runner: ^2.1.5
+  json_serializable: ^6.0.1
 

@@ -129,7 +129,7 @@ Route<dynamic> onLandscapeBuildPrimaryRoute(RouteSettings settings) {
     case pageProfileMy:
       widget = Consumer(builder: (context, ref, _) {
         return UserDetailPage(
-          userId: ref.read(userProvider).userId,
+          userId: ref.read(userProvider)?.userId,
         );
       });
   }

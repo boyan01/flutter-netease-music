@@ -5,6 +5,7 @@ import 'package:quiet/material/flexible_app_bar.dart';
 import 'package:quiet/pages/account/page_need_login.dart';
 import 'package:quiet/pages/playlist/music_list.dart';
 import 'package:quiet/part/part.dart';
+import 'package:quiet/repository.dart';
 import 'package:quiet/repository/netease.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -16,13 +17,9 @@ class DailyPlaylistPage extends StatelessWidget {
     return PageNeedLogin(
       builder: (context) => Scaffold(
         body: BoxWithBottomPlayerController(
-          Loader<Map>(
+          Loader<List<Track>>(
               loadTask: () => neteaseRepository!.recommendSongs(),
-              builder: (context, result) {
-                final list = (result["recommend"] as List)
-                    .cast<Map>()
-                    .map(mapJsonToMusic)
-                    .toList();
+              builder: (context, list) {
                 return MusicTileConfiguration(
                     token: 'playlist_daily_recommend',
                     musics: list,

@@ -1,7 +1,7 @@
 import 'dart:async';
 
+import 'package:async/async.dart';
 import 'package:flutter/widgets.dart';
-import 'package:quiet/repository/netease.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 class MyCollectionApi extends Model {
@@ -9,11 +9,13 @@ class MyCollectionApi extends Model {
     return ScopedModel.of<MyCollectionApi>(context);
   }
 
-  Future<Result<Map>> getAlbums() {
-    return neteaseRepository!.doRequest('/album/sublist');
+  Future<Result<Map>> getAlbums() async {
+    // FIXME
+    return Result.error('Not implemented');
   }
 
-  Future<Result<Map>> getArtists() {
-    return neteaseRepository!.doRequest('/artist/sublist');
+  Future<Result<Map>> getArtists() async {
+    // FIXME
+    return Result.error('Not implemented');
   }
 }

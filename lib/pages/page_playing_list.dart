@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:quiet/pages/playlist/dialog_selector.dart';
 import 'package:quiet/part/part.dart';
+import 'package:quiet/repository.dart';
 
 /// Current Playing List Dialog
 ///
@@ -33,15 +34,15 @@ class PlayingListDialogState extends State<PlayingListDialog> {
   @override
   void initState() {
     super.initState();
-    final playingList = context.player.value.playingList;
-    final music = context.player.value.current!;
-    final double offset = playingList.indexOf(music) * _kHeightMusicTile;
+    final playingList = context.player.trackList;
+    final music = context.player.current!;
+    final double offset = playingList.tracks.indexOf(music) * _kHeightMusicTile;
     _controller = ScrollController(initialScrollOffset: offset);
   }
 
   @override
   Widget build(BuildContext context) {
-    final playingList = context.watchPlayerValue.playingList;
+    final playingList = context.playingTrackList;
     final music = context.watchPlayerValue.current;
 
     return _PlayingListContainer(
@@ -56,9 +57,9 @@ class PlayingListDialogState extends State<PlayingListDialog> {
           Expanded(
             child: ListView.builder(
                 controller: _controller,
-                itemCount: playingList.length,
+                itemCount: playingList.tracks.length,
                 itemBuilder: (context, index) {
-                  final item = playingList[index];
+                  final item = playingList.tracks[index];
                   return _MusicTile(music: item, playing: item == music);
                 }),
           )
@@ -129,23 +130,23 @@ class _Header extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final playMode = context.playMode;
-    final count = context.playList.queue.length;
+    final count = context.playingTrackList.tracks.length;
     return SizedBox(
       height: 48,
       child: Row(
         children: <Widget>[
           TextButton.icon(
               onPressed: () {
-                context.transportControls.setPlayMode(playMode.next);
+                // FIXME
+                // context.player.setPlayMode(playMode.next);
               },
               icon: Icon(playMode.icon),
               label: Text("${playMode.name}($count)")),
           const Spacer(),
           TextButton.icon(
               onPressed: () async {
-                final ids = context.playList.queue
-                    .map((m) => int.parse(m.mediaId))
-                    .toList();
+                final ids =
+                    context.playingTrackList.tracks.map((m) => m.id).toList();
                 if (ids.isEmpty) {
                   return;
                 }
@@ -186,13 +187,14 @@ class _MusicTile extends StatelessWidget {
     this.playing = false,
   }) : super(key: key);
 
-  final Music music;
+  final Track music;
   final bool playing;
 
   @override
   Widget build(BuildContext context) {
     Widget leading;
-    Color? name, artist;
+    Color? name;
+    Color? artist;
     if (playing) {
       final Color color = Theme.of(context).primaryColorLight;
       leading = Container(
@@ -212,7 +214,7 @@ class _MusicTile extends StatelessWidget {
     }
     return InkWell(
       onTap: () {
-        context.transportControls.playFromMediaId(music.metadata.mediaId);
+        context.player.playFromMediaId(music.id);
       },
       child: Container(
         padding: const EdgeInsets.only(left: 8),
@@ -227,9 +229,9 @@ class _MusicTile extends StatelessWidget {
             Expanded(
                 child: Text.rich(
               TextSpan(children: [
-                TextSpan(text: music.title, style: TextStyle(color: name)),
+                TextSpan(text: music.name, style: TextStyle(color: name)),
                 TextSpan(
-                    text: " - ${music.artist!.map((a) => a.name).join('/')}",
+                    text: " - ${music.displaySubtitle}",
                     style: TextStyle(color: artist, fontSize: 12))
               ]),
               maxLines: 1,
@@ -238,7 +240,8 @@ class _MusicTile extends StatelessWidget {
             IconButton(
                 icon: const Icon(Icons.close),
                 onPressed: () {
-                  context.player.removeMusicItem(music.metadata);
+                  // TODO
+                  // context.player.removeMusicItem(music.metadata);
                 })
           ],
         ),

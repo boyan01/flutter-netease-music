@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:loader/loader.dart';
 import 'package:quiet/component/utils/utils.dart';
 import 'package:quiet/part/part.dart';
+import 'package:quiet/repository.dart';
 import 'package:quiet/repository/netease.dart';
 
 class PlaylistResultSection extends StatefulWidget {
@@ -22,7 +23,7 @@ class _PlaylistResultSectionState extends State<PlaylistResultSection>
     super.build(context);
     return AutoLoadMoreList(loadMore: (offset) async {
       final result = await neteaseRepository!
-          .search(widget.query, NeteaseSearchType.playlist, offset: offset);
+          .search(widget.query, SearchType.playlist, offset: offset);
       if (result.isValue) {
         return LoadMoreResult(result.asValue!.value["result"]["playlists"]);
       }

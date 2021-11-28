@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:overlay_support/overlay_support.dart';
-import 'package:quiet/material.dart';
-import 'package:netease_api/src/ao/playlist_detail.dart';
 import 'package:quiet/pages/page_playlist_edit.dart';
 import 'package:quiet/pages/playlist/page_playlist_detail.dart';
 import 'package:quiet/part/part.dart';
+import 'package:quiet/repository.dart';
 import 'package:quiet/repository/cached_image.dart';
 
 ///歌单列表元素
@@ -24,28 +23,22 @@ class PlaylistTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Widget cover = ClipRRect(
+    final Widget cover = ClipRRect(
       borderRadius: const BorderRadius.all(Radius.circular(4)),
       child: FadeInImage(
         placeholder: const AssetImage("assets/playlist_playlist.9.png"),
-        image: CachedImage(playlist.coverUrl ?? ''),
+        image: CachedImage(playlist.coverUrl),
         fit: BoxFit.cover,
         height: 50,
         width: 50,
       ),
     );
-    if (enableHero) {
-      cover = QuietHero(
-        tag: playlist.heroTag,
-        child: cover,
-      );
-    }
 
     return InkWell(
       onTap: () {
         context.secondaryNavigator!.push(MaterialPageRoute(
             builder: (context) =>
-                PlaylistDetailPage(playlist.id!, previewData: playlist)));
+                PlaylistDetailPage(playlist.id, previewData: playlist)));
       },
       child: SizedBox(
         height: 60,
@@ -60,7 +53,7 @@ class PlaylistTile extends StatelessWidget {
                 children: <Widget>[
                   const Spacer(),
                   Text(
-                    playlist.name!,
+                    playlist.name,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: const TextStyle(fontSize: 15),

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:quiet/media/tracks/track.dart';
+import 'package:quiet/repository/data/track.dart';
 
 import 'page_artist_detail.dart';
 
 ///quick launch [ArtistDetailPage] if have more than one id
 Future<void> launchArtistDetailPage(
-    BuildContext context, List<Artist>? artists) async {
+    BuildContext context, List<ArtistMini>? artists) async {
   debugPrint("to artist :$artists");
   if (artists == null || artists.isEmpty) {
     return;
@@ -15,7 +15,7 @@ Future<void> launchArtistDetailPage(
       return ArtistDetailPage(artistId: int.parse(artists[0].id));
     }));
   } else {
-    final artist = await showDialog<Artist>(
+    final artist = await showDialog<ArtistMini>(
         context: context,
         builder: (context) {
           return ArtistSelectionDialog(artists: artists);
@@ -29,11 +29,11 @@ Future<void> launchArtistDetailPage(
 }
 
 ///歌手选择弹窗
-///返回 [Artist]
+///返回 [ArtistMini]
 class ArtistSelectionDialog extends StatelessWidget {
   const ArtistSelectionDialog({Key? key, required this.artists})
       : super(key: key);
-  final List<Artist> artists;
+  final List<ArtistMini> artists;
 
   @override
   Widget build(BuildContext context) {
