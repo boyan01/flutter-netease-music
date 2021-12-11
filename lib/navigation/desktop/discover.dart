@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:quiet/component.dart';
+import 'package:quiet/navigation/source/play_records_source.dart';
 
 class DiscoverPage extends StatelessWidget {
   const DiscoverPage({Key? key}) : super(key: key);
@@ -38,7 +38,7 @@ class _Playlists extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _PlayRecordHeader(title: context.strings.recommendPlayLists),
+            _Header(title: context.strings.recommendPlayLists),
           ],
         ),
       ),
@@ -53,25 +53,27 @@ class _PlayRecord extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(20),
-      child: _Box(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _PlayRecordHeader(title: context.strings.latestPlayHistory),
-            const Expanded(
-              child: Center(
-                child: Text('records'),
+      child: PlayRecordsSource(builder: (context, snapshot) {
+        return _Box(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _Header(title: context.strings.latestPlayHistory),
+              const Expanded(
+                child: Center(
+                  child: Text('records'),
+                ),
               ),
-            ),
-          ],
-        ),
-      ),
+            ],
+          ),
+        );
+      }),
     );
   }
 }
 
-class _PlayRecordHeader extends StatelessWidget {
-  const _PlayRecordHeader({
+class _Header extends StatelessWidget {
+  const _Header({
     Key? key,
     required this.title,
   }) : super(key: key);

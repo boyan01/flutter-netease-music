@@ -8,43 +8,46 @@ class NavigationSideBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const SizedBox(height: 20),
-        NavigationTile(
-          icon: const Icon(Icons.compass_calibration_rounded),
-          title: Text(context.strings.discover),
-          isSelected: true,
-          onTap: () {},
-        ),
-        NavigationTile(
-          icon: const Icon(Icons.radio),
-          title: Text(context.strings.personalFM),
-          isSelected: false,
-          onTap: () {},
-        ),
-        _ItemTitle(title: context.strings.library),
-        NavigationTile(
-          icon: const Icon(Icons.history_rounded),
-          title: Text(context.strings.latestPlayHistory),
-          isSelected: false,
-          onTap: () {},
-        ),
-        NavigationTile(
-          icon: const Icon(Icons.cloud_upload_rounded),
-          title: Text(context.strings.cloudMusic),
-          isSelected: false,
-          onTap: () {},
-        ),
-        NavigationTile(
-          icon: const Icon(Icons.favorite_rounded),
-          title: Text(context.strings.favoriteSongList),
-          isSelected: false,
-          onTap: () {},
-        ),
-        _ItemTitle(title: context.strings.playlist),
-      ],
+    return Material(
+      color: context.colorScheme.surface,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const SizedBox(height: 20),
+          NavigationTile(
+            icon: const Icon(Icons.compass_calibration_rounded),
+            title: Text(context.strings.discover),
+            isSelected: true,
+            onTap: () {},
+          ),
+          NavigationTile(
+            icon: const Icon(Icons.radio),
+            title: Text(context.strings.personalFM),
+            isSelected: false,
+            onTap: () {},
+          ),
+          _ItemTitle(title: context.strings.library),
+          NavigationTile(
+            icon: const Icon(Icons.history_rounded),
+            title: Text(context.strings.latestPlayHistory),
+            isSelected: false,
+            onTap: () {},
+          ),
+          NavigationTile(
+            icon: const Icon(Icons.cloud_upload_rounded),
+            title: Text(context.strings.cloudMusic),
+            isSelected: false,
+            onTap: () {},
+          ),
+          NavigationTile(
+            icon: const Icon(Icons.favorite_rounded),
+            title: Text(context.strings.favoriteSongList),
+            isSelected: false,
+            onTap: () {},
+          ),
+          _ItemTitle(title: context.strings.playlist),
+        ],
+      ),
     );
   }
 }

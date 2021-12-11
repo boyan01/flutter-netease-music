@@ -6,7 +6,6 @@ import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:quiet/component/cache/cache.dart';
 import 'package:quiet/repository.dart';
-import 'package:quiet/repository/data/artist_detail.dart';
 
 export 'package:netease_api/netease_api.dart'
     show
@@ -200,7 +199,7 @@ class NetworkRepository {
 
   // FIXME
   Future<Result<Map>> getRecord(int userId, int type) async =>
-      Result.error('not implement');
+      _repository.getRecord(userId, type);
 
   // FIXME
   Future<Result<List<Map>>> djSubList() => _repository.djSubList();
