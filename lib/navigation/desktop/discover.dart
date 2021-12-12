@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quiet/component.dart';
+import 'package:quiet/component/utils/scroll_controller.dart';
 import 'package:quiet/extension.dart';
 import 'package:quiet/providers/personalized_playlist_provider.dart';
 import 'package:quiet/providers/play_records_provider.dart';
@@ -100,6 +101,7 @@ class _PlayRecord extends ConsumerWidget {
       data: (data) => builder(
         ListView.builder(
           itemCount: data.length,
+          controller: AppScrollController(),
           itemBuilder: (context, index) {
             final record = data[index];
             return TrackShortTile(
