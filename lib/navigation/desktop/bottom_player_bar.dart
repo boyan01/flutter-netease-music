@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:quiet/component.dart';
 
-import '../../pages/player/player_progress.dart';
+import '../common/player_progress.dart';
 
 class BottomPlayerBar extends StatelessWidget {
   const BottomPlayerBar({Key? key}) : super(key: key);

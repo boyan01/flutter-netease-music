@@ -6,8 +6,8 @@ import 'package:quiet/pages/artists/page_artist_detail.dart';
 import 'package:quiet/pages/comments/page_comment.dart';
 import 'package:quiet/repository.dart';
 
+import '../../navigation/common/player_progress.dart';
 import 'background.dart';
-import 'player_progress.dart';
 
 /// FM 播放页面
 class PagePlayingFm extends StatelessWidget {

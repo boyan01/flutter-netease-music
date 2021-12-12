@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:quiet/component/player/player.dart';
 import 'package:quiet/pages/player/cover.dart';
 
+import '../../navigation/common/player_progress.dart';
 import 'background.dart';
 import 'page_playing.dart';
-import 'player_progress.dart';
 
 class LandscapePlayingPage extends StatelessWidget {
   @override
