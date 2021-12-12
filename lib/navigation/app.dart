@@ -19,6 +19,7 @@ class QuietApp extends ConsumerWidget {
         S.delegate,
         GlobalWidgetsLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
       ],
       theme: context.settings.theme,
       darkTheme: context.settings.darkTheme,

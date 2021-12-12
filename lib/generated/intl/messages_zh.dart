@@ -39,6 +39,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "createdSongList": MessageLookupByLibrary.simpleMessage("创建歌单"),
         "delete": MessageLookupByLibrary.simpleMessage("删除"),
         "discover": MessageLookupByLibrary.simpleMessage("发现"),
+        "errorNotLogin": MessageLookupByLibrary.simpleMessage("未登录"),
         "errorToFetchData": MessageLookupByLibrary.simpleMessage("获取数据失败"),
         "failedToDelete": MessageLookupByLibrary.simpleMessage("删除失败"),
         "failedToLoad": MessageLookupByLibrary.simpleMessage("加载失败"),

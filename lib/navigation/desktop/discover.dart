@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quiet/component.dart';
-import 'package:quiet/navigation/source/play_records_source.dart';
+import 'package:quiet/extension.dart';
+import 'package:quiet/providers/play_records_provider.dart';
+
+import 'widgets/track_title_short.dart';
 
 class DiscoverPage extends StatelessWidget {
   const DiscoverPage({Key? key}) : super(key: key);
@@ -21,7 +25,7 @@ class DiscoverPage extends StatelessWidget {
             ],
           ),
         ),
-        const SizedBox(width: 320, child: _PlayRecord()),
+        const SizedBox(width: 400, child: _PlayRecord()),
       ],
     );
   }
@@ -46,28 +50,48 @@ class _Playlists extends StatelessWidget {
   }
 }
 
-class _PlayRecord extends StatelessWidget {
+class _PlayRecord extends ConsumerWidget {
   const _PlayRecord({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(20),
-      child: PlayRecordsSource(builder: (context, snapshot) {
-        return _Box(
+  Widget build(BuildContext context, WidgetRef ref) {
+    final records = ref.watch(allPlayRecordsProvider);
+    Widget builder(Widget child) {
+      return Padding(
+        padding: const EdgeInsets.all(20),
+        child: _Box(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _Header(title: context.strings.latestPlayHistory),
-              const Expanded(
-                child: Center(
-                  child: Text('records'),
-                ),
-              ),
+              const SizedBox(height: 20),
+              Expanded(child: child),
             ],
           ),
-        );
-      }),
+        ),
+      );
+    }
+
+    return records.when(
+      data: (data) => builder(
+        ListView.builder(
+          itemCount: data.length,
+          itemBuilder: (context, index) {
+            final record = data[index];
+            return TrackShortTile(
+              index: index,
+              track: record.song,
+              onTap: () {
+                // TODO
+              },
+            );
+          },
+        ),
+      ),
+      error: (error, stacktrace) => builder(
+        Center(child: Text(context.formattedError(error))),
+      ),
+      loading: () => builder(const Center(child: CircularProgressIndicator())),
     );
   }
 }

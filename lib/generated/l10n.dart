@@ -441,6 +441,16 @@ class S {
       args: [],
     );
   }
+
+  /// `Please login first.`
+  String get errorNotLogin {
+    return Intl.message(
+      'Please login first.',
+      name: 'errorNotLogin',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

@@ -3,13 +3,11 @@ import 'dart:convert';
 import 'dart:typed_data';
 import 'dart:ui';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:music_player/music_player.dart';
 
 import '../../component.dart';
 import '../../repository.dart';
-import '../../repository/data/track.dart';
 import 'track_list.dart';
 import 'tracks_player.dart';
 
@@ -32,6 +30,7 @@ extension _Metadata on MusicMetadata {
       artists: artists.map((artist) => ArtistMini.fromJson(artist)).toList(),
       album: album == null ? null : AlbumMini.fromJson(album),
       imageUrl: extras?['imageUrl'] as String,
+      duration: Duration(milliseconds: duration),
     );
   }
 }

@@ -14,6 +14,7 @@ class Track with EquatableMixin {
     required this.artists,
     required this.album,
     required this.imageUrl,
+    required this.duration,
   });
 
   factory Track.fromJson(Map<String, dynamic> json) => _$TrackFromJson(json);
@@ -30,10 +31,12 @@ class Track with EquatableMixin {
 
   final String? imageUrl;
 
+  final Duration duration;
+
   String get displaySubtitle => artists.map((artist) => artist.name).join(', ');
 
   @override
-  List<Object?> get props => [id, uri, name, artists, album, imageUrl];
+  List<Object?> get props => [id, uri, name, artists, album, imageUrl, duration];
 
   Map<String, dynamic> toJson() => _$TrackToJson(this);
 }

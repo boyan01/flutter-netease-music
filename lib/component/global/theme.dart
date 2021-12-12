@@ -25,15 +25,22 @@ final quietThemes = [
 
 final quietDarkTheme = ThemeData.dark().copyWith(
   backgroundColor: Colors.white12,
+  tooltipTheme: const TooltipThemeData(
+    waitDuration: Duration(milliseconds: 1000),
+  ),
 );
 
 ThemeData _buildTheme(Color primaryColor) {
   return ThemeData(
-      primaryColor: primaryColor,
-      dividerColor: const Color(0xfff5f5f5),
-      iconTheme: const IconThemeData(color: Color(0xFFb3b3b3)),
-      primaryColorLight: primaryColor,
-      backgroundColor: Colors.white);
+    primaryColor: primaryColor,
+    dividerColor: const Color(0xfff5f5f5),
+    iconTheme: const IconThemeData(color: Color(0xFFb3b3b3)),
+    primaryColorLight: primaryColor,
+    backgroundColor: Colors.white,
+    tooltipTheme: const TooltipThemeData(
+      waitDuration: Duration(milliseconds: 2000),
+    ),
+  );
 }
 
 extension QuietAppTheme on BuildContext {

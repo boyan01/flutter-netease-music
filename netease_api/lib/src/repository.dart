@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:async/async.dart';
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:netease_api/src/ao/play_records.dart';
 import 'package:netease_music_api/netease_cloud_music.dart' as api;
 
 import '../netease_api.dart';
@@ -28,6 +28,11 @@ class SearchType {
 }
 
 enum PlaylistOperation { add, remove }
+
+enum PlayRecordType {
+  allData,
+  weekData,
+}
 
 const _kCodeSuccess = 200;
 
@@ -383,11 +388,15 @@ class Repository {
     return result.isValue;
   }
 
-  ///获取用户播放记录
-  ///type : 0 all , 1 this week
-  Future<Result<Map>> getRecord(int? uid, int? type) {
-    assert(type == 0 || type == 1);
-    return doRequest('/user/record', {'uid': uid, 'type': type});
+  /// 获取用户播放记录
+  Future<Result<List<PlayRecord>>> getRecord(
+      int? uid, PlayRecordType type) async {
+    final result =
+        await doRequest('/user/record', {'uid': uid, 'type': type.index});
+    return result.map((value) {
+      final records = (value[type.name] as List).cast<Map<String, dynamic>>();
+      return records.map((json) => PlayRecord.fromJson(json)).toList();
+    });
   }
 
   ///获取用户详情

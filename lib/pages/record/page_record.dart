@@ -3,7 +3,6 @@ import 'package:quiet/material/tabs.dart';
 import 'package:quiet/pages/playlist/music_list.dart';
 import 'package:quiet/part/part.dart';
 import 'package:quiet/repository.dart';
-import 'package:quiet/repository/netease.dart';
 
 class RecordPage extends StatelessWidget {
   const RecordPage({Key? key, required this.uid, this.username})
@@ -64,7 +63,7 @@ class _RecordSectionState extends State<_RecordSection>
   Widget build(BuildContext context) {
     super.build(context);
     return Loader<Map>(
-      loadTask: () => neteaseRepository!.getRecord(widget.uid, widget.type),
+      loadTask: () => throw UnimplementedError(),
       builder: (context, result) {
         debugPrint('Record(${widget.type}) result : $result');
         final List data = result[_keys[widget.type]];

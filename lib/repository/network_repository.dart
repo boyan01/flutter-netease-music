@@ -14,7 +14,8 @@ export 'package:netease_api/netease_api.dart'
         CommentThreadId,
         CommentType,
         MusicCount,
-        CellphoneExistenceCheck;
+        CellphoneExistenceCheck,
+        PlayRecordType;
 
 class NetworkRepository {
   NetworkRepository(String cookiePath, this.cachePath)
@@ -197,9 +198,21 @@ class NetworkRepository {
   // FIXME
   Future<Result<Map>> topListDetail() async => Result.error('not implement');
 
-  // FIXME
-  Future<Result<Map>> getRecord(int userId, int type) async =>
-      _repository.getRecord(userId, type);
+  Future<Result<List<PlayRecord>>> getRecord(
+      int userId, api.PlayRecordType type) async {
+    final records = await _repository.getRecord(userId, type);
+    if (records.isError) {
+      return records.asError!;
+    }
+    final record = records.asValue!.value;
+    return Result.value(record
+        .map((e) => PlayRecord(
+              playCount: e.playCount,
+              score: e.score,
+              song: e.song.toTrack(),
+            ))
+        .toList());
+  }
 
   // FIXME
   Future<Result<List<Map>>> djSubList() => _repository.djSubList();
@@ -308,6 +321,7 @@ extension _FmTrackMapper on api.FmTrackItem {
         album: album.toAlbum(),
         imageUrl: album.picUrl,
         uri: 'http://music.163.com/song/media/outer/url?id=$id.mp3',
+        duration: Duration(milliseconds: duration),
       );
 }
 
@@ -358,6 +372,7 @@ extension _TrackMapper on api.TracksItem {
       album: al.toAlbum(),
       imageUrl: al.picUrl,
       uri: 'http://music.163.com/song/media/outer/url?id=$id.mp3',
+      duration: Duration(milliseconds: dt),
     );
   }
 }

@@ -1,0 +1,16 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:quiet/repository.dart';
+
+import '../pages/account/account.dart';
+
+final allPlayRecordsProvider = FutureProvider<List<PlayRecord>>((ref) async {
+  final userId = ref.watch(userIdProvider);
+  if (userId == null) {
+    throw Exception('not login');
+  }
+  final records = await neteaseRepository!.getRecord(
+    userId,
+    PlayRecordType.allData,
+  );
+  return records.asFuture;
+});

@@ -4,7 +4,6 @@ import 'package:async/async.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quiet/repository.dart';
-import 'package:quiet/repository/netease.dart';
 
 final userProvider =
     StateNotifierProvider<UserAccount, User?>((ref) => UserAccount());
@@ -13,7 +12,7 @@ final isLoginProvider = Provider<bool>((ref) {
   return ref.watch(userProvider) != null;
 });
 
-final userIdProvider = Provider.autoDispose<int?>((ref) {
+final userIdProvider = Provider<int?>((ref) {
   return ref.watch(userProvider)?.userId;
 });
 

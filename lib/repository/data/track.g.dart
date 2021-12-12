@@ -17,6 +17,7 @@ Track _$TrackFromJson(Map json) => Track(
           ? null
           : AlbumMini.fromJson(Map<String, dynamic>.from(json['album'] as Map)),
       imageUrl: json['imageUrl'] as String?,
+      duration: Duration(microseconds: json['duration'] as int),
     );
 
 Map<String, dynamic> _$TrackToJson(Track instance) => <String, dynamic>{
@@ -26,6 +27,7 @@ Map<String, dynamic> _$TrackToJson(Track instance) => <String, dynamic>{
       'artists': instance.artists.map((e) => e.toJson()).toList(),
       'album': instance.album?.toJson(),
       'imageUrl': instance.imageUrl,
+      'duration': instance.duration.inMicroseconds,
     };
 
 ArtistMini _$ArtistMiniFromJson(Map json) => ArtistMini(

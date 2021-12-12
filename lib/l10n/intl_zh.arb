@@ -37,5 +37,6 @@
     "noMusic": "暂无音乐",
     "playlist": "歌单",
     "failedToLoad": "加载失败",
-    "library": "音乐库"
+    "library": "音乐库",
+    "errorNotLogin": "未登录"
 }

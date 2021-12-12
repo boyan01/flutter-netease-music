@@ -37,5 +37,6 @@
     "playlist": "PlayList",
     "failedToLoad": "failed to load",
     "library": "Library",
-    "recommendPlayLists": "Recommend PlayLists"
+    "recommendPlayLists": "Recommend PlayLists",
+    "errorNotLogin": "Please login first."
 }

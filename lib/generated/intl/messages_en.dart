@@ -42,6 +42,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Created Song List"),
         "delete": MessageLookupByLibrary.simpleMessage("delete"),
         "discover": MessageLookupByLibrary.simpleMessage("Discover"),
+        "errorNotLogin":
+            MessageLookupByLibrary.simpleMessage("Please login first."),
         "errorToFetchData":
             MessageLookupByLibrary.simpleMessage("error to fetch data."),
         "failedToDelete": MessageLookupByLibrary.simpleMessage("delete failed"),
