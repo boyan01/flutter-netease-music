@@ -36,7 +36,8 @@ class Track with EquatableMixin {
   String get displaySubtitle => artists.map((artist) => artist.name).join(', ');
 
   @override
-  List<Object?> get props => [id, uri, name, artists, album, imageUrl, duration];
+  List<Object?> get props =>
+      [id, uri, name, artists, album, imageUrl, duration];
 
   Map<String, dynamic> toJson() => _$TrackToJson(this);
 }
