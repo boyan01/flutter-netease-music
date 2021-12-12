@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:async/async.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:overlay_support/overlay_support.dart';
@@ -10,9 +9,6 @@ import 'package:quiet/pages/account/page_user_detail.dart';
 import 'package:quiet/pages/comments/page_comment.dart';
 import 'package:quiet/part/part.dart';
 import 'package:quiet/repository.dart';
-import 'package:quiet/repository/data/track.dart';
-import 'package:quiet/repository/netease.dart';
-import 'package:scoped_model/scoped_model.dart';
 
 import 'page_comment.dart';
 import 'user.dart' as comment;

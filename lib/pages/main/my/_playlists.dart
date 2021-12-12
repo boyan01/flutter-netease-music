@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quiet/component.dart';
 import 'package:quiet/part/part.dart';
 import 'package:quiet/repository.dart';
-import 'package:quiet/repository/netease.dart';
 
 import '../playlist_tile.dart';
 

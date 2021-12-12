@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:quiet/pages/comments/comments.dart';
 import 'package:quiet/part/part.dart';
 import 'package:quiet/repository.dart';
-import 'package:quiet/repository/data/track.dart';
 
 ///a single CommentPage for music or playlist or album
 class CommentPage extends StatelessWidget {

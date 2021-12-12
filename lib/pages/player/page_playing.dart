@@ -1,9 +1,7 @@
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:quiet/material.dart';
-import 'package:quiet/material/player.dart';
 import 'package:quiet/material/player/progress_track_container.dart';
 import 'package:quiet/pages/artists/page_artist_detail.dart';
 import 'package:quiet/pages/comments/page_comment.dart';
@@ -11,7 +9,6 @@ import 'package:quiet/pages/page_playing_list.dart';
 import 'package:quiet/pages/player/page_playing_landscape.dart';
 import 'package:quiet/part/part.dart';
 import 'package:quiet/repository.dart';
-import 'package:quiet/repository/data/track.dart';
 
 import 'background.dart';
 import 'cover.dart';

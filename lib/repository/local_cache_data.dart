@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
-import 'package:sembast/sembast.dart';
 
 import 'data/playlist_detail.dart';
 import 'database.dart';

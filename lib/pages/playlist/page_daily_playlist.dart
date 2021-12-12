@@ -1,12 +1,9 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:quiet/material/flexible_app_bar.dart';
 import 'package:quiet/pages/account/page_need_login.dart';
 import 'package:quiet/pages/playlist/music_list.dart';
 import 'package:quiet/part/part.dart';
 import 'package:quiet/repository.dart';
-import 'package:quiet/repository/netease.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 ///每日推荐歌曲页面

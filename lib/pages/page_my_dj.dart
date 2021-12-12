@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quiet/component/netease/netease.dart';
 import 'package:quiet/part/part.dart';
 import 'package:quiet/repository.dart';
-import 'package:quiet/repository/netease.dart';
 
 ///我的电台页面
 class MyDjPage extends ConsumerWidget {

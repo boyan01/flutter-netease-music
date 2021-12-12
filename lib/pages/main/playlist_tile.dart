@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:quiet/pages/page_playlist_edit.dart';
-import 'package:quiet/pages/playlist/page_playlist_detail.dart';
 import 'package:quiet/part/part.dart';
 import 'package:quiet/repository.dart';
-import 'package:quiet/repository/cached_image.dart';
 
 ///歌单列表元素
 class PlaylistTile extends StatelessWidget {

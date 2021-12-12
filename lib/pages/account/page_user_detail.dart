@@ -7,7 +7,6 @@ import 'package:quiet/material/tabs.dart';
 import 'package:quiet/pages/main/playlist_tile.dart';
 import 'package:quiet/part/part.dart';
 import 'package:quiet/repository.dart';
-import 'package:quiet/repository/netease.dart';
 
 part 'tab_about.dart';
 part 'tab_events.dart';

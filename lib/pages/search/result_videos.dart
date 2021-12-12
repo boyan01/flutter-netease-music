@@ -3,7 +3,6 @@ import 'package:loader/loader.dart';
 import 'package:quiet/component/utils/utils.dart';
 import 'package:quiet/part/part.dart';
 import 'package:quiet/repository.dart';
-import 'package:quiet/repository/netease.dart';
 
 ///video list result
 class VideosResultSection extends StatefulWidget {

@@ -1,9 +1,7 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:provider/provider.dart';
 import 'package:quiet/component.dart';
-import 'package:quiet/component/global/orientation.dart';
 import 'package:quiet/material/landscape.dart';
 import 'package:quiet/pages/main/main_page_discover.dart';
 import 'package:quiet/pages/search/page_search.dart';

@@ -3,7 +3,6 @@ library player;
 import 'package:flutter/material.dart';
 import 'package:quiet/component/utils/utils.dart';
 import 'package:quiet/material.dart';
-import 'package:quiet/material/player.dart';
 import 'package:quiet/material/player/progress_track_container.dart';
 import 'package:quiet/pages/page_playing_list.dart';
 import 'package:quiet/part/part.dart';

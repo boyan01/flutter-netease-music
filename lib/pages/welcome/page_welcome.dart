@@ -1,10 +1,5 @@
-import 'dart:ui';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:quiet/component.dart';
-import 'package:quiet/component/global/settings.dart';
-import 'package:quiet/component/route.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class PageWelcome extends StatefulWidget {
