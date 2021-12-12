@@ -8,6 +8,7 @@ import 'package:quiet/media/tracks/track_list.dart';
 import 'package:quiet/providers/personalized_playlist_provider.dart';
 import 'package:quiet/providers/play_records_provider.dart';
 
+import './navigator.dart';
 import 'widgets/recommended_playlist_tile.dart';
 import 'widgets/track_title_short.dart';
 
@@ -65,7 +66,12 @@ class _Playlists extends ConsumerWidget {
           final playlist = playlists[index];
           return RecommendedPlaylistTile(
             playlist: playlist,
-            onTap: () {},
+            onTap: () {
+              DesktopNavigator.push(
+                context,
+                NavigationType.playlist(playlistId: playlist.id),
+              );
+            },
           );
         },
       )),
