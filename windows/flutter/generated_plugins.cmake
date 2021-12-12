@@ -3,6 +3,7 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
+  dart_vlc
   system_clock
   url_launcher_windows
 )

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:dart_vlc/dart_vlc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart' as rp;
 import 'package:hive/hive.dart';
@@ -18,6 +19,7 @@ import 'media/tracks/tracks_player_impl_mobile.dart';
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   NetworkRepository.initialize();
+  DartVLC.initialize();
   runZonedGuarded(() {
     runApp(rp.ProviderScope(
       child: PageSplash(

@@ -55,6 +55,7 @@ class DurationProgressBarState extends State<DurationProgressBar> {
             activeColor: theme.bodyText2!.color!.withOpacity(0.75),
             inactiveColor: theme.caption!.color!.withOpacity(0.3),
             max: duration.toDouble(),
+            semanticFormatterCallback: (value) => getTimeStamp(value.round()),
             onChangeStart: (value) {
               setState(() {
                 isUserTracking = true;
@@ -82,7 +83,9 @@ class DurationProgressBarState extends State<DurationProgressBar> {
 
     return SliderTheme(
       data: const SliderThemeData(
-          thumbShape: RoundSliderThumbShape(enabledThumbRadius: 6)),
+        thumbShape: RoundSliderThumbShape(enabledThumbRadius: 6),
+        showValueIndicator: ShowValueIndicator.always,
+      ),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: Row(

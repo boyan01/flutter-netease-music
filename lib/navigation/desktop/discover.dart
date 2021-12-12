@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:quiet/component.dart';
 import 'package:quiet/component/utils/scroll_controller.dart';
 import 'package:quiet/extension.dart';
+import 'package:quiet/media/tracks/track_list.dart';
 import 'package:quiet/providers/personalized_playlist_provider.dart';
 import 'package:quiet/providers/play_records_provider.dart';
 
@@ -108,7 +110,13 @@ class _PlayRecord extends ConsumerWidget {
               index: index,
               track: record.song,
               onTap: () {
-                // TODO
+                final trackList = TrackList(
+                  id: 'play_records',
+                  tracks: data.map((e) => e.song).toList(),
+                );
+                context.player
+                  ..setTrackList(trackList)
+                  ..playFromMediaId(record.song.id);
               },
             );
           },

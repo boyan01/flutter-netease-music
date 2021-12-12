@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'bottom_player_bar.dart';
 import 'discover.dart';
 import 'navigation_side_bar.dart';
 
@@ -9,10 +10,17 @@ class HomeWindow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      child: Row(
-        children: const [
-          SizedBox(width: 180, child: NavigationSideBar()),
-          Expanded(child: DiscoverPage()),
+      child: Column(
+        children: [
+          Expanded(
+            child: Row(
+              children: const [
+                SizedBox(width: 180, child: NavigationSideBar()),
+                Expanded(child: DiscoverPage()),
+              ],
+            ),
+          ),
+          const BottomPlayerBar(),
         ],
       ),
     );

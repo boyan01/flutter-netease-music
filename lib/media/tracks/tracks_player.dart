@@ -1,8 +1,11 @@
+import 'dart:io';
+
 import 'package:flutter/foundation.dart';
 
 import '../../repository/data/track.dart';
 import 'track_list.dart';
 import 'tracks_player_impl_mobile.dart';
+import 'tracks_player_impl_vlc.dart';
 
 enum RepeatMode {
   /// Repeat all the tracks.
@@ -19,6 +22,9 @@ abstract class TracksPlayer {
   TracksPlayer();
 
   factory TracksPlayer.platform() {
+    if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+      return TracksPlayerImplVlc();
+    }
     return TracksPlayerImplMobile();
   }
 

@@ -15,7 +15,7 @@ class MusicTileConfiguration extends StatelessWidget {
     Key? key,
     this.token,
     required this.musics,
-    this.onMusicTap,
+    this.onMusicTap = MusicTileConfiguration.defaultOnTap,
     this.child,
     this.leadingBuilder,
     this.trailingBuilder,
