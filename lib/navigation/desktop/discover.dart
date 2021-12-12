@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quiet/component.dart';
 import 'package:quiet/extension.dart';
+import 'package:quiet/providers/personalized_playlist_provider.dart';
 import 'package:quiet/providers/play_records_provider.dart';
 
+import 'widgets/recommended_playlist_tile.dart';
 import 'widgets/track_title_short.dart';
 
 class DiscoverPage extends StatelessWidget {
@@ -31,20 +33,42 @@ class DiscoverPage extends StatelessWidget {
   }
 }
 
-class _Playlists extends StatelessWidget {
+class _Playlists extends ConsumerWidget {
   const _Playlists({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 20, bottom: 20),
-      child: _Box(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _Header(title: context.strings.recommendPlayLists),
-          ],
+  Widget build(BuildContext context, WidgetRef ref) {
+    final playlists = ref.watch(homePlaylistProvider);
+    Widget builder(Widget child) {
+      return Padding(
+        padding: const EdgeInsets.only(left: 20, bottom: 20),
+        child: _Box(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _Header(title: context.strings.recommendPlayLists),
+              Expanded(child: child),
+            ],
+          ),
         ),
+      );
+    }
+
+    return playlists.when(
+      data: (playlists) => builder(ListView.builder(
+        itemCount: playlists.length,
+        scrollDirection: Axis.horizontal,
+        itemBuilder: (context, index) {
+          final playlist = playlists[index];
+          return RecommendedPlaylistTile(
+            playlist: playlist,
+            onTap: () {},
+          );
+        },
+      )),
+      loading: () => builder(const Center(child: CircularProgressIndicator())),
+      error: (error, stacktrace) => builder(
+        Center(child: Text(context.formattedError(error))),
       ),
     );
   }
