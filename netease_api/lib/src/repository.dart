@@ -140,9 +140,7 @@ class Repository {
   /// [s] 歌单最近的 s 个收藏者
   Future<Result<PlayListDetail>> playlistDetail(int id, {int s = 5}) async {
     final response = await doRequest("/playlist/detail", {"id": "$id", "s": s});
-    return _map(response, (dynamic t) {
-      return PlayListDetail.fromJson(t["playlist"]);
-    });
+    return _map(response, (t) => PlayListDetail.fromJson(t));
   }
 
   ///id 歌单id

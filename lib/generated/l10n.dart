@@ -451,6 +451,66 @@ class S {
       args: [],
     );
   }
+
+  /// `Track Count: {value}`
+  String playlistTrackCount(Object value) {
+    return Intl.message(
+      'Track Count: $value',
+      name: 'playlistTrackCount',
+      desc: '',
+      args: [value],
+    );
+  }
+
+  /// `Play Count: {value}`
+  String playlistPlayCount(Object value) {
+    return Intl.message(
+      'Play Count: $value',
+      name: 'playlistPlayCount',
+      desc: '',
+      args: [value],
+    );
+  }
+
+  /// `Music Name`
+  String get musicName {
+    return Intl.message(
+      'Music Name',
+      name: 'musicName',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Artists`
+  String get artists {
+    return Intl.message(
+      'Artists',
+      name: 'artists',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Album`
+  String get album {
+    return Intl.message(
+      'Album',
+      name: 'album',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Duration`
+  String get duration {
+    return Intl.message(
+      'Duration',
+      name: 'duration',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

@@ -10,7 +10,7 @@ import 'package:quiet/providers/play_records_provider.dart';
 
 import './navigator.dart';
 import 'widgets/recommended_playlist_tile.dart';
-import 'widgets/track_title_short.dart';
+import 'widgets/track_tile_short.dart';
 
 class DiscoverPage extends StatelessWidget {
   const DiscoverPage({Key? key}) : super(key: key);

@@ -38,5 +38,11 @@
     "playlist": "歌单",
     "failedToLoad": "加载失败",
     "library": "音乐库",
-    "errorNotLogin": "未登录"
+    "errorNotLogin": "未登录",
+    "playlistTrackCount": "歌曲数: {value}",
+    "playlistPlayCount": "播放数: {value}",
+    "musicName": "音乐标题",
+    "artists": "歌手",
+    "album": "专辑",
+    "duration": "时长"
 }

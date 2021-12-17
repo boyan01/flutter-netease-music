@@ -16,7 +16,7 @@ class HomeWindow extends StatelessWidget {
             child: Row(
               children: const [
                 SizedBox(width: 180, child: NavigationSideBar()),
-                Expanded(child: DesktopNavigator()),
+                Expanded(child: ClipRect(child: DesktopNavigator())),
               ],
             ),
           ),

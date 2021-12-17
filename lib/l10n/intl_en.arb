@@ -38,5 +38,11 @@
     "failedToLoad": "failed to load",
     "library": "Library",
     "recommendPlayLists": "Recommend PlayLists",
-    "errorNotLogin": "Please login first."
+    "errorNotLogin": "Please login first.",
+    "playlistTrackCount": "Track Count: {value}",
+    "playlistPlayCount": "Play Count: {value}",
+    "musicName": "Music Name",
+    "artists": "Artists",
+    "album": "Album",
+    "duration": "Duration"
 }
