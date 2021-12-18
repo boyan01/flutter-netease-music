@@ -31,14 +31,18 @@ final quietDarkTheme = ThemeData.dark().copyWith(
 );
 
 ThemeData _buildTheme(Color primaryColor) {
-  return ThemeData(
-    primaryColor: primaryColor,
-    dividerColor: const Color(0xfff5f5f5),
-    iconTheme: const IconThemeData(color: Color(0xFFb3b3b3)),
-    primaryColorLight: primaryColor,
-    backgroundColor: Colors.white,
+  final theme = ThemeData.from(
+    colorScheme: ColorScheme.fromSeed(
+      seedColor: primaryColor,
+    ),
+  );
+  return theme.copyWith(
     tooltipTheme: const TooltipThemeData(
-      waitDuration: Duration(milliseconds: 2000),
+      waitDuration: Duration(milliseconds: 1000),
+    ),
+    iconTheme: IconThemeData(
+      color: theme.iconTheme.color!.withOpacity(0.7),
+      size: 24,
     ),
   );
 }

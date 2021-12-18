@@ -10,7 +10,7 @@ abstract class NavigationType with EquatableMixin {
 
   factory NavigationType.discover() => NavigationTargetDiscover();
 
-  factory NavigationType.settings() => _Settings();
+  factory NavigationType.settings() => NavigationTargetSettings();
 
   factory NavigationType.playlist({required int playlistId}) =>
       NavigationTargetPlaylist(playlistId);
@@ -21,7 +21,7 @@ abstract class NavigationType with EquatableMixin {
 
 class NavigationTargetDiscover extends NavigationType {}
 
-class _Settings extends NavigationType {}
+class NavigationTargetSettings extends NavigationType {}
 
 class NavigationTargetPlaylist extends NavigationType {
   NavigationTargetPlaylist(this.playlistId);
@@ -48,7 +48,7 @@ MaterialPage<dynamic> _buildPage(NavigationType type) {
   final Widget page;
   if (type is NavigationTargetDiscover) {
     page = const DiscoverPage();
-  } else if (type is _Settings) {
+  } else if (type is NavigationTargetSettings) {
     page = const Text('Settings');
   } else if (type is NavigationTargetPlaylist) {
     page = PlaylistPage(playlistId: type.playlistId);
