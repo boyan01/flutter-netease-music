@@ -8,7 +8,89 @@ import 'package:quiet/pages/comments/page_comment.dart';
 import 'package:quiet/part/part.dart';
 import 'package:quiet/repository.dart';
 
-import 'dialog_selector.dart';
+import '../../../pages/playlist/dialog_selector.dart';
+
+enum PlayResult {
+  success,
+  alreadyPlaying,
+  fail,
+}
+
+class TrackTileContainer extends StatelessWidget {
+  factory TrackTileContainer.playlist({
+    required PlaylistDetail playlist,
+    required Widget child,
+    required BuildContext context,
+  }) {
+    final id = 'playlist_${playlist.id}';
+    final player = context.player;
+    return TrackTileContainer._private(
+      (track) {
+        if (player.trackList.id == id &&
+            player.isPlaying &&
+            player.current == track) {
+          return PlayResult.alreadyPlaying;
+        } else {
+          context.player
+            ..setTrackList(TrackList(id: id, tracks: playlist.tracks))
+            ..playFromMediaId(track.id);
+          return PlayResult.success;
+        }
+      },
+      (track) {
+        // TODO: remove track
+      },
+      tracks: playlist.tracks,
+      id: id,
+      child: child,
+    );
+  }
+
+  const TrackTileContainer._private(
+    this._playbackMusic,
+    this._deleteMusic, {
+    Key? key,
+    required this.tracks,
+    required this.id,
+    required this.child,
+  }) : super(key: key);
+
+  static PlayResult playTrack(
+    BuildContext context,
+    Track track,
+  ) {
+    final container =
+        context.findAncestorWidgetOfExactType<TrackTileContainer>();
+    assert(container != null, 'container is null');
+    if (container == null) {
+      return PlayResult.fail;
+    }
+    return container._playbackMusic(track);
+  }
+
+  static void deleteTrack(BuildContext context, Track track) {
+    final container =
+        context.findAncestorWidgetOfExactType<TrackTileContainer>();
+    assert(container != null, 'container is null');
+    if (container == null) {
+      return;
+    }
+    container._deleteMusic(track);
+  }
+
+  final List<Track> tracks;
+
+  final String id;
+
+  final Widget child;
+
+  final PlayResult Function(Track) _playbackMusic;
+
+  final void Function(Track) _deleteMusic;
+
+  @override
+  Widget build(BuildContext context) => child;
+}
 
 class MusicTileConfiguration extends StatelessWidget {
   const MusicTileConfiguration({
@@ -17,8 +99,8 @@ class MusicTileConfiguration extends StatelessWidget {
     required this.musics,
     this.onMusicTap = MusicTileConfiguration.defaultOnTap,
     this.child,
-    this.leadingBuilder,
-    this.trailingBuilder,
+    this.leadingBuilder = MusicTileConfiguration.indexedLeadingBuilder,
+    this.trailingBuilder = MusicTileConfiguration.defaultTrailingBuilder,
     this.supportAlbumMenu = true,
     this.remove,
   }) : super(key: key);
@@ -108,11 +190,11 @@ class MusicTileConfiguration extends StatelessWidget {
 
   final List<Music> musics;
 
-  final void Function(BuildContext context, Music muisc)? onMusicTap;
+  final void Function(BuildContext context, Music muisc) onMusicTap;
 
-  final Widget Function(BuildContext context, Music music)? leadingBuilder;
+  final Widget Function(BuildContext context, Music music) leadingBuilder;
 
-  final Widget Function(BuildContext context, Music music)? trailingBuilder;
+  final Widget Function(BuildContext context, Music music) trailingBuilder;
 
   final bool supportAlbumMenu;
 
@@ -131,10 +213,6 @@ class MusicTile extends StatelessWidget {
   const MusicTile(this.music, {Key? key}) : super(key: key);
   final Music music;
 
-  Widget _buildPadding(BuildContext context, Music? music) {
-    return const SizedBox(width: 8);
-  }
-
   @override
   Widget build(BuildContext context) {
     final list = MusicTileConfiguration.of(context);
@@ -142,16 +220,16 @@ class MusicTile extends StatelessWidget {
       height: 56,
       child: InkWell(
         onTap: () {
-          list.onMusicTap?.call(context, music);
+          list.onMusicTap.call(context, music);
         },
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            (list.leadingBuilder ?? _buildPadding)(context, music),
+            (list.leadingBuilder)(context, music),
             Expanded(
               child: _SimpleMusicTile(music),
             ),
-            (list.trailingBuilder ?? _buildPadding)(context, music),
+            (list.trailingBuilder)(context, music),
           ],
         ),
       ),

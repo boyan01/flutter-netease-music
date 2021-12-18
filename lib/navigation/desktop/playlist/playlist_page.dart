@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:overlay_support/overlay_support.dart';
 import 'package:quiet/component.dart';
 import 'package:quiet/extension.dart';
 import 'package:quiet/material.dart';
-import 'package:quiet/pages/account/account.dart';
 import 'package:quiet/providers/playlist_detail_provider.dart';
 import 'package:quiet/repository.dart';
 
 import '../../../component/utils/scroll_controller.dart';
-import '../../../pages/playlist/music_list.dart';
+import '../../common/playlist/music_list.dart';
 import '../widgets/track_tile_normal.dart';
 
 class PlaylistPage extends HookConsumerWidget {
@@ -109,11 +107,14 @@ class _PlaylistDetailHeader extends StatelessWidget {
           padding: const EdgeInsets.all(20),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(8),
-            child: Image(
-              image: CachedImage(playlist.coverUrl),
-              width: 160,
-              height: 160,
-              fit: BoxFit.cover,
+            child: AspectRatio(
+              aspectRatio: 1,
+              child: Image(
+                image: CachedImage(playlist.coverUrl),
+                width: 160,
+                height: 160,
+                fit: BoxFit.cover,
+              ),
             ),
           ),
         ),
@@ -167,24 +168,9 @@ class _PlaylistListView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return MusicTileConfiguration(
-      token: "playlist_${playlist.id}",
-      musics: playlist.tracks,
-      remove: playlist.creator.userId != ref.read(userIdProvider)
-          ? null
-          : (music) async {
-              final result = await neteaseRepository!.playlistTracksEdit(
-                PlaylistOperation.remove,
-                playlist.id,
-                [music.id],
-              );
-              if (result) {
-                // TODO: remove music from playlist
-              }
-              toast(result ? '删除成功' : '删除失败');
-            },
-      leadingBuilder: MusicTileConfiguration.indexedLeadingBuilder,
-      trailingBuilder: MusicTileConfiguration.defaultTrailingBuilder,
+    return TrackTileContainer.playlist(
+      playlist: playlist,
+      context: context,
       child: SliverList(
         delegate: SliverChildBuilderDelegate(
           (context, index) => TrackTile(

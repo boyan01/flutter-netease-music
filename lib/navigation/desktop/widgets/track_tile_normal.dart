@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:quiet/component.dart';
 import 'package:quiet/extension.dart';
+import 'package:quiet/navigation/common/playlist/music_list.dart';
 import 'package:quiet/repository.dart';
 
 class TrackTableContainer extends StatelessWidget {
@@ -250,53 +251,57 @@ class TrackTile extends StatelessWidget {
           color: index.isEven
               ? context.colorScheme.background
               : context.colorScheme.primary.withOpacity(0.01),
-          child: DefaultTextStyle(
-            style: const TextStyle(),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                SizedBox(
-                  width: 40,
-                  child: Text(
-                    index.toString().padLeft(2, '0'),
-                    style: context.textTheme.caption,
-                    textAlign: TextAlign.end,
+          child: InkWell(
+            onTap: () => TrackTileContainer.playTrack(context, track),
+            child: DefaultTextStyle(
+              style: const TextStyle(),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    width: 40,
+                    child: Text(
+                      index.toString().padLeft(2, '0'),
+                      style: context.textTheme.caption,
+                      textAlign: TextAlign.end,
+                    ),
                   ),
-                ),
-                const SizedBox(width: 20),
-                SizedBox(
-                  width: configuration.nameWidth,
-                  child: Text(
-                    track.name,
-                    overflow: TextOverflow.ellipsis,
-                    style: context.textTheme.bodyMedium?.copyWith(fontSize: 14),
+                  const SizedBox(width: 20),
+                  SizedBox(
+                    width: configuration.nameWidth,
+                    child: Text(
+                      track.name,
+                      overflow: TextOverflow.ellipsis,
+                      style:
+                          context.textTheme.bodyMedium?.copyWith(fontSize: 14),
+                    ),
                   ),
-                ),
-                SizedBox(
-                  width: configuration.artistWidth,
-                  child: Text(
-                    track.artists.map((e) => e.name).join(', '),
-                    style: context.textTheme.caption,
+                  SizedBox(
+                    width: configuration.artistWidth,
+                    child: Text(
+                      track.artists.map((e) => e.name).join(', '),
+                      style: context.textTheme.caption,
+                    ),
                   ),
-                ),
-                SizedBox(
-                  width: configuration.albumWidth,
-                  child: Text(
-                    track.album?.name ?? '',
-                    style: context.textTheme.caption,
+                  SizedBox(
+                    width: configuration.albumWidth,
+                    child: Text(
+                      track.album?.name ?? '',
+                      style: context.textTheme.caption,
+                    ),
                   ),
-                ),
-                SizedBox(
-                  width: configuration.durationWidth,
-                  child: Text(
-                    track.duration.timeStamp,
-                    style: context.textTheme.caption,
+                  SizedBox(
+                    width: configuration.durationWidth,
+                    child: Text(
+                      track.duration.timeStamp,
+                      style: context.textTheme.caption,
+                    ),
                   ),
-                ),
-                const SizedBox(width: 20),
-              ],
+                  const SizedBox(width: 20),
+                ],
+              ),
             ),
           ),
         ));

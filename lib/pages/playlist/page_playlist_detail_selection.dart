@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:quiet/component.dart';
-import 'package:quiet/pages/playlist/music_list.dart';
+import 'package:quiet/navigation/common/playlist/music_list.dart';
 import 'package:quiet/part/part.dart';
 import 'package:quiet/repository/data/track.dart';
 
@@ -189,7 +189,7 @@ class _SelectionItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () =>
-          MusicTileConfiguration.of(context).onMusicTap!(context, music),
+          MusicTileConfiguration.of(context).onMusicTap(context, music),
       child: IgnorePointer(
         child: Row(
           children: <Widget>[

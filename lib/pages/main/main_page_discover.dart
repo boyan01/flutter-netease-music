@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:quiet/pages/playlist/music_list.dart';
+import 'package:quiet/navigation/common/playlist/music_list.dart';
 import 'package:quiet/part/part.dart';
 import 'package:quiet/repository.dart';
 

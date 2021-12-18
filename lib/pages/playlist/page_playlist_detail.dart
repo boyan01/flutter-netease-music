@@ -14,7 +14,7 @@ import 'package:quiet/pages/comments/page_comment.dart';
 import 'package:quiet/part/part.dart';
 import 'package:quiet/repository.dart';
 
-import 'music_list.dart';
+import '../../navigation/common/playlist/music_list.dart';
 import 'page_playlist_detail_selection.dart';
 import 'playlist_internal_search.dart';
 import 'playlist_loader.dart';
