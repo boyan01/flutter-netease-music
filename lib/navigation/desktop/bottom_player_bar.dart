@@ -1,27 +1,38 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:quiet/component.dart';
 import 'package:quiet/extension.dart';
+import 'package:quiet/material/player/progress_track_container.dart';
 import 'package:quiet/navigation/desktop/navigator.dart';
 
-import '../common/player_progress.dart';
+import '../../component/utils/time.dart';
+import 'widgets/slider.dart';
 
 class BottomPlayerBar extends StatelessWidget {
   const BottomPlayerBar({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 72,
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: const [
-          Expanded(child: _PlayingItemWidget()),
-          SizedBox(width: 20),
-          SizedBox(width: 400, child: _CenterControllerWidget()),
-          SizedBox(width: 20),
-          Expanded(child: _PlayerControlWidget()),
-        ],
+    return Material(
+      elevation: 10,
+      child: SizedBox(
+        height: 64,
+        child: Stack(
+          children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: const [
+                Expanded(child: _PlayingItemWidget()),
+                SizedBox(width: 20),
+                _CenterControllerWidget(),
+                SizedBox(width: 20),
+                Expanded(child: _PlayerControlWidget()),
+              ],
+            ),
+            const Align(alignment: Alignment.topCenter, child: _ProgressBar()),
+          ],
+        ),
       ),
     );
   }
@@ -46,7 +57,7 @@ class _PlayingItemWidget extends StatelessWidget {
         }
       },
       child: Row(
-        mainAxisSize: MainAxisSize.min,
+        mainAxisSize: MainAxisSize.max,
         children: [
           const SizedBox(width: 20),
           ClipRRect(
@@ -58,20 +69,24 @@ class _PlayingItemWidget extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 20),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                track.name,
-                style: context.textTheme.titleSmall,
-              ),
-              const SizedBox(height: 4),
-              Text(
-                track.displaySubtitle,
-                style: context.textTheme.caption,
-              ),
-            ],
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  track.name,
+                  style: context.textTheme.titleSmall,
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  track.displaySubtitle,
+                  style: context.textTheme.caption,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
+            ),
           ),
         ],
       ),
@@ -104,7 +119,7 @@ class _CenterControllerWidget extends StatelessWidget {
               const SizedBox(width: 20),
               if (context.isPlaying)
                 IconButton(
-                  splashRadius: 32,
+                  splashRadius: 30,
                   padding: EdgeInsets.zero,
                   onPressed: () => context.player.pause(),
                   icon: const Icon(Icons.pause, size: 32),
@@ -125,10 +140,6 @@ class _CenterControllerWidget extends StatelessWidget {
               ),
             ],
           ),
-        ),
-        SizedBox(
-          height: 32,
-          child: DurationProgressBar(),
         ),
       ],
     );
@@ -170,6 +181,61 @@ class _PlayerControlWidget extends StatelessWidget {
         ),
         const SizedBox(width: 36),
       ],
+    );
+  }
+}
+
+class _ProgressBar extends HookWidget {
+  const _ProgressBar({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final userTrackingValue = useState<double?>(null);
+    final playingTrack = context.playingTrack;
+    final duration = context.player.duration;
+    if (playingTrack == null || duration == null) {
+      return const SizedBox.shrink();
+    }
+    return SizedBox(
+      height: 10,
+      child: FractionalTranslation(
+        translation: const Offset(0, -0.5),
+        child: SliderTheme(
+          data: const SliderThemeData(
+            trackHeight: 2,
+            thumbShape: RoundSliderThumbShape(
+              enabledThumbRadius: 6,
+              elevation: 0,
+            ),
+            trackShape: UnboundedRoundSliderTrackShape(),
+            overlayShape: RoundSliderOverlayShape(
+              overlayRadius: 10,
+            ),
+            showValueIndicator: ShowValueIndicator.always,
+          ),
+          child: ProgressTrackingContainer(
+            player: context.player,
+            builder: (context) {
+              final position =
+                  context.player.position?.inMilliseconds.toDouble() ?? 0.0;
+              return Slider(
+                max: duration.inMilliseconds.toDouble(),
+                value: userTrackingValue.value ?? position,
+                onChangeStart: (value) => userTrackingValue.value = value,
+                onChanged: (value) => userTrackingValue.value = value,
+                semanticFormatterCallback: (value) =>
+                    getTimeStamp(value.round()),
+                onChangeEnd: (value) {
+                  userTrackingValue.value = null;
+                  context.player
+                    ..seekTo(Duration(milliseconds: value.round()))
+                    ..play();
+                },
+              );
+            },
+          ),
+        ),
+      ),
     );
   }
 }
