@@ -510,7 +510,7 @@ class _LyricCache implements Cache<String?> {
     if (await file.exists()) {
       file.delete();
     }
-    file = await file.create();
+    file = await file.create(recursive: true);
     await file.writeAsString(t!);
     try {
       return await file.exists();

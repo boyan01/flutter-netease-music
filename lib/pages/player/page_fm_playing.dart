@@ -7,6 +7,7 @@ import 'package:quiet/pages/comments/page_comment.dart';
 import 'package:quiet/repository.dart';
 
 import '../../navigation/common/like_button.dart';
+import '../../navigation/common/player/lyric_view.dart';
 import '../../navigation/common/player_progress.dart';
 import 'background.dart';
 
@@ -92,6 +93,10 @@ class _CenterSectionState extends State<_CenterSection> {
         ),
         secondChild: PlayingLyricView(
           music: context.watchPlayerValue.current!,
+          textStyle: Theme.of(context)
+              .textTheme
+              .bodyText2!
+              .copyWith(height: 2, fontSize: 16, color: Colors.white),
           onTap: () {
             setState(() {
               _showLyric = !_showLyric;

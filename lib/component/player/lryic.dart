@@ -1,7 +1,7 @@
 import 'package:async/async.dart';
 import 'package:flutter/material.dart';
 import 'package:quiet/media/tracks/tracks_player.dart';
-import 'package:quiet/pages/player/lyric.dart';
+import 'package:quiet/navigation/common/player/lyric.dart';
 import 'package:quiet/part/part.dart';
 import 'package:quiet/repository/data/track.dart';
 import 'package:quiet/repository/netease.dart';

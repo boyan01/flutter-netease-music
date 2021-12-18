@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:quiet/component.dart';
+import 'package:quiet/extension.dart';
+import 'package:quiet/navigation/desktop/navigator.dart';
 
 import '../common/player_progress.dart';
 
@@ -34,33 +36,46 @@ class _PlayingItemWidget extends StatelessWidget {
     if (track == null) {
       return const SizedBox();
     }
-    return Row(children: [
-      const SizedBox(width: 20),
-      ClipRRect(
-        borderRadius: BorderRadius.circular(10),
-        child: Image(
-          image: CachedImage(track.imageUrl!),
-          width: 56,
-          height: 56,
-        ),
-      ),
-      const SizedBox(width: 20),
-      Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.center,
+    return GestureDetector(
+      onTap: () {
+        final controller = context.read<DesktopNavigatorController>();
+        if (controller.current is NavigationTargetPlaying) {
+          controller.back();
+        } else {
+          controller.navigate(NavigationTargetPlaying());
+        }
+      },
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
         children: [
-          Text(
-            track.name,
-            style: context.textTheme.titleSmall,
+          const SizedBox(width: 20),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(10),
+            child: Image(
+              image: CachedImage(track.imageUrl!),
+              width: 56,
+              height: 56,
+            ),
           ),
-          const SizedBox(height: 4),
-          Text(
-            track.displaySubtitle,
-            style: context.textTheme.caption,
+          const SizedBox(width: 20),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                track.name,
+                style: context.textTheme.titleSmall,
+              ),
+              const SizedBox(height: 4),
+              Text(
+                track.displaySubtitle,
+                style: context.textTheme.caption,
+              ),
+            ],
           ),
         ],
       ),
-    ]);
+    );
   }
 }
 

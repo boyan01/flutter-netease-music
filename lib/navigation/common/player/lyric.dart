@@ -1,6 +1,9 @@
 import 'dart:convert';
 import 'dart:ui' as ui;
+import 'dart:ui';
 
+import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:quiet/component/utils/utils.dart';
 
@@ -166,74 +169,144 @@ class LyricState extends State<Lyric> with TickerProviderStateMixin {
   Widget build(BuildContext _) {
     return Container(
       constraints: const BoxConstraints(minWidth: 300, minHeight: 120),
-      child: GestureDetector(
-        onTap: () {
-          if (!_consumeTap && widget.onTap != null) {
-            widget.onTap!();
-          } else {
-            _consumeTap = false;
-          }
+      child: _ScrollerListener(
+        onScroll: (delta) {
+          lyricPainter!.offsetScroll += -delta;
         },
-        onTapDown: (details) {
-          if (dragging) {
-            _consumeTap = true;
+        child: GestureDetector(
+          onTap: () {
+            if (!_consumeTap && widget.onTap != null) {
+              widget.onTap!();
+            } else {
+              _consumeTap = false;
+            }
+          },
+          onTapDown: (details) {
+            if (dragging) {
+              _consumeTap = true;
 
-            dragging = false;
+              dragging = false;
+              _flingController?.dispose();
+              _flingController = null;
+            }
+          },
+          onVerticalDragStart: (details) {
+            dragging = true;
             _flingController?.dispose();
             _flingController = null;
-          }
-        },
-        onVerticalDragStart: (details) {
-          dragging = true;
-          _flingController?.dispose();
-          _flingController = null;
-        },
-        onVerticalDragUpdate: (details) {
-          debugPrint("details.primaryDelta : ${details.primaryDelta}");
-          lyricPainter!.offsetScroll += details.primaryDelta!;
-        },
-        onVerticalDragEnd: (details) {
-          _flingController = AnimationController.unbounded(
-            vsync: this,
-            duration: const Duration(milliseconds: 300),
-          )
-            ..addListener(() {
-              double value = _flingController!.value;
+          },
+          onVerticalDragUpdate: (details) {
+            lyricPainter!.offsetScroll += details.primaryDelta!;
+          },
+          onVerticalDragEnd: (details) {
+            _flingController = AnimationController.unbounded(
+              vsync: this,
+              duration: const Duration(milliseconds: 300),
+            )
+              ..addListener(() {
+                double value = _flingController!.value;
 
-              if (value < -lyricPainter!.height || value >= 0) {
-                _flingController!.dispose();
-                _flingController = null;
-                dragging = false;
-                value = value.clamp(-lyricPainter!.height, 0.0);
-              }
-              lyricPainter!.offsetScroll = value;
-              lyricPainter!.repaint();
-            })
-            ..addStatusListener((status) {
-              if (status == AnimationStatus.completed ||
-                  status == AnimationStatus.dismissed) {
-                dragging = false;
-                _flingController?.dispose();
-                _flingController = null;
-              }
-            })
-            ..animateWith(ClampingScrollSimulation(
-                position: lyricPainter!.offsetScroll,
-                velocity: details.primaryVelocity!));
-        },
-        child: CustomPaint(
-          size: widget.size,
-          painter: lyricPainter,
+                if (value < -lyricPainter!.height || value >= 0) {
+                  _flingController!.dispose();
+                  _flingController = null;
+                  dragging = false;
+                  value = value.clamp(-lyricPainter!.height, 0.0);
+                }
+                lyricPainter!.offsetScroll = value;
+                lyricPainter!.repaint();
+              })
+              ..addStatusListener((status) {
+                if (status == AnimationStatus.completed ||
+                    status == AnimationStatus.dismissed) {
+                  dragging = false;
+                  _flingController?.dispose();
+                  _flingController = null;
+                }
+              })
+              ..animateWith(ClampingScrollSimulation(
+                  position: lyricPainter!.offsetScroll,
+                  velocity: details.primaryVelocity!));
+          },
+          child: CustomPaint(
+            size: widget.size,
+            painter: lyricPainter,
+          ),
         ),
       ),
     );
   }
 }
 
+class _ScrollerListener extends StatefulWidget {
+  const _ScrollerListener({
+    Key? key,
+    required this.child,
+    required this.onScroll,
+    this.axisDirection = AxisDirection.down,
+  }) : super(key: key);
+
+  final Widget child;
+
+  final void Function(double offset) onScroll;
+
+  final AxisDirection axisDirection;
+
+  @override
+  State<_ScrollerListener> createState() => _ScrollerListenerState();
+}
+
+class _ScrollerListenerState extends State<_ScrollerListener> {
+  @override
+  Widget build(BuildContext context) {
+    return Listener(
+      onPointerSignal: _receivedPointerSignal,
+      child: widget.child,
+    );
+  }
+
+  void _receivedPointerSignal(PointerSignalEvent event) {
+    if (event is PointerScrollEvent) {
+      if (_pointerSignalEventDelta(event) != 0.0) {
+        GestureBinding.instance!.pointerSignalResolver
+            .register(event, _handlePointerScroll);
+      }
+    }
+  }
+
+  void _handlePointerScroll(PointerEvent event) {
+    assert(event is PointerScrollEvent);
+    final double delta = _pointerSignalEventDelta(event as PointerScrollEvent);
+    final double scrollerScale;
+    if (defaultTargetPlatform == TargetPlatform.windows) {
+      scrollerScale = window.devicePixelRatio * 2;
+    } else if (defaultTargetPlatform == TargetPlatform.linux) {
+      scrollerScale = window.devicePixelRatio;
+    } else {
+      scrollerScale = 1;
+    }
+    widget.onScroll(delta * scrollerScale);
+  }
+
+  // Returns the delta that should result from applying [event] with axis and
+  // direction taken into account.
+  double _pointerSignalEventDelta(PointerScrollEvent event) {
+    double delta = event.scrollDelta.dy;
+
+    if (axisDirectionIsReversed(widget.axisDirection)) {
+      delta *= -1;
+    }
+    return delta;
+  }
+}
+
 class LyricPainter extends ChangeNotifier implements CustomPainter {
   ///param lyric must not be null
-  LyricPainter(TextStyle style, this.lyric,
-      {this.textAlign = TextAlign.center, Color? highlight = Colors.red}) {
+  LyricPainter(
+    TextStyle style,
+    this.lyric, {
+    this.textAlign = TextAlign.center,
+    Color? highlight = Colors.red,
+  }) {
     lyricPainters = [];
     for (int i = 0; i < lyric.size; i++) {
       final painter = TextPainter(

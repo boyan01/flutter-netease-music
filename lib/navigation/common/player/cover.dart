@@ -176,12 +176,13 @@ class _AlbumCoverState extends State<AlbumCover> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, constraints) {
       assert(constraints.maxWidth.isFinite,
-          "the width of cover layout should be constrainted!");
+          "the width of cover layout should be constrained!");
       return ClipRect(
-          child: Padding(
-        padding: const EdgeInsets.only(bottom: 20),
-        child: _build(context, constraints.maxWidth),
-      ));
+        child: Padding(
+          padding: const EdgeInsets.only(bottom: 20),
+          child: _build(context, constraints.maxWidth),
+        ),
+      );
     });
   }
 

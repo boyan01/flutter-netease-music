@@ -20,15 +20,19 @@ class HomeWindow extends HookWidget {
           children: [
             const HeaderBar(),
             Expanded(
-              child: Row(
-                children: [
-                  const SizedBox(width: 200, child: NavigationSideBar()),
-                  Expanded(
-                    child: ClipRect(
-                      child: DesktopNavigator(controller: navigatorController),
+              child: DesktopPlayingPageContainer(
+                controller: navigatorController,
+                child: Row(
+                  children: [
+                    const SizedBox(width: 200, child: NavigationSideBar()),
+                    Expanded(
+                      child: ClipRect(
+                        child:
+                            DesktopNavigator(controller: navigatorController),
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
             const BottomPlayerBar(),

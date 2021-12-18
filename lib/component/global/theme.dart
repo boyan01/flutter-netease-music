@@ -55,6 +55,8 @@ extension QuietAppTheme on BuildContext {
   TextTheme get primaryTextTheme => theme.primaryTextTheme;
 
   ColorScheme get colorScheme => theme.colorScheme;
+
+  IconThemeData get iconTheme => theme.iconTheme;
 }
 
 extension TextStyleExtesntion on TextStyle? {
