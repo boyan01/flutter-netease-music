@@ -64,8 +64,8 @@ class _PlayingItemWidget extends StatelessWidget {
             borderRadius: BorderRadius.circular(10),
             child: Image(
               image: CachedImage(track.imageUrl!),
-              width: 56,
-              height: 56,
+              width: 48,
+              height: 48,
             ),
           ),
           const SizedBox(width: 20),
@@ -218,9 +218,10 @@ class _ProgressBar extends HookWidget {
             builder: (context) {
               final position =
                   context.player.position?.inMilliseconds.toDouble() ?? 0.0;
+              final max = duration.inMilliseconds.toDouble();
               return Slider(
-                max: duration.inMilliseconds.toDouble(),
-                value: userTrackingValue.value ?? position,
+                max: max,
+                value: (userTrackingValue.value ?? position).clamp(0.0, max),
                 onChangeStart: (value) => userTrackingValue.value = value,
                 onChanged: (value) => userTrackingValue.value = value,
                 semanticFormatterCallback: (value) =>
