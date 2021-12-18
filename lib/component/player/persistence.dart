@@ -4,7 +4,7 @@ const _keyPlayQueue = "quiet_player_queue";
 const _keyCurrentPlaying = "quiet_current_playing";
 const _keyPlayMode = "quiet_play_mode";
 
-extension _PlayerPersistenceExtensions on Box<Map> {
+extension PlayerPersistenceExtensions on Box<Map> {
   void savePlayQueue(PlayQueue queue) {
     put(_keyPlayQueue, queue.toMap());
   }

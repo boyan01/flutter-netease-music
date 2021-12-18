@@ -3,9 +3,9 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:quiet/component.dart';
-import 'package:quiet/model/model.dart';
-import 'package:quiet/pages/playlist/music_list.dart';
+import 'package:quiet/navigation/common/playlist/music_list.dart';
 import 'package:quiet/part/part.dart';
+import 'package:quiet/repository/data/track.dart';
 
 import 'dialog_selector.dart';
 
@@ -19,7 +19,7 @@ class PlaylistSelectionPage extends StatefulWidget {
     this.onDelete,
   }) : super(key: key);
 
-  final List<Music>? list;
+  final List<Track>? list;
 
   ///null if do not track delete operation
   final MusicDeletionCallback? onDelete;
@@ -102,7 +102,7 @@ class PlaylistSelectionPageState extends State<PlaylistSelectionPage> {
           TextButton(
             onPressed: () async {
               await Stream.fromIterable(selectedList).forEach((e) {
-                context.player.insertToNext(e.metadata);
+                context.player.insertToNext(e);
               });
               showSimpleNotification(Text("已添加${selectedList.length}首歌曲"));
             },
@@ -189,7 +189,7 @@ class _SelectionItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () =>
-          MusicTileConfiguration.of(context).onMusicTap!(context, music),
+          MusicTileConfiguration.of(context).onMusicTap(context, music),
       child: IgnorePointer(
         child: Row(
           children: <Widget>[

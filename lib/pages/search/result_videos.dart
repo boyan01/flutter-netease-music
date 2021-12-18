@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:loader/loader.dart';
 import 'package:quiet/component/utils/utils.dart';
 import 'package:quiet/part/part.dart';
-import 'package:quiet/repository/netease.dart';
+import 'package:quiet/repository.dart';
 
 ///video list result
 class VideosResultSection extends StatefulWidget {
@@ -21,7 +21,7 @@ class _VideosResultSectionState extends State<VideosResultSection>
     super.build(context);
     return AutoLoadMoreList(loadMore: (offset) async {
       final result = await neteaseRepository!
-          .search(widget.query, NeteaseSearchType.video, offset: offset);
+          .search(widget.query, SearchType.video, offset: offset);
       if (result.isError) {
         return result.asError!;
       }

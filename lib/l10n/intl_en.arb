@@ -35,5 +35,14 @@
     "failedToPlayMusic": "failed to play music",
     "noMusic": "no music",
     "playlist": "PlayList",
-    "failedToLoad": "failed to load"
+    "failedToLoad": "failed to load",
+    "library": "Library",
+    "recommendPlayLists": "Recommend PlayLists",
+    "errorNotLogin": "Please login first.",
+    "playlistTrackCount": "Track Count: {value}",
+    "playlistPlayCount": "Play Count: {value}",
+    "musicName": "Music Name",
+    "artists": "Artists",
+    "album": "Album",
+    "duration": "Duration"
 }

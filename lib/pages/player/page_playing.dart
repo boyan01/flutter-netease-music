@@ -1,34 +1,26 @@
-import 'dart:ui' as ui;
-
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
-import 'package:music_player/music_player.dart';
 import 'package:quiet/material.dart';
-import 'package:quiet/material/player.dart';
 import 'package:quiet/pages/artists/page_artist_detail.dart';
-import 'package:quiet/pages/comments/page_comment.dart';
 import 'package:quiet/pages/page_playing_list.dart';
-import 'package:quiet/pages/player/page_playing_landscape.dart';
 import 'package:quiet/part/part.dart';
+import 'package:quiet/repository.dart';
 
+import '../../navigation/common/player/cover.dart';
+import '../../navigation/common/player/lyric_view.dart';
+import '../../navigation/common/player/player_actions.dart';
+import '../../navigation/common/player_progress.dart';
 import 'background.dart';
-import 'cover.dart';
-import 'lyric.dart';
-import 'player_progress.dart';
 
 ///歌曲播放页面
 class PlayingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final current = context.watchPlayerValue.current;
+    final current = context.playingTrack;
     if (current == null) {
       WidgetsBinding.instance!.scheduleFrameCallback((_) {
         Navigator.of(context).pop();
       });
       return Container();
-    }
-    if (context.isLandscape) {
-      return LandscapePlayingPage();
     }
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -41,7 +33,7 @@ class PlayingPage extends StatelessWidget {
               children: <Widget>[
                 PlayingTitle(music: current),
                 _CenterSection(music: current),
-                PlayingOperationBar(),
+                const PlayingOperationBar(),
                 DurationProgressBar(),
                 PlayerControllerBar(),
                 SizedBox(
@@ -77,7 +69,7 @@ class PlayerControllerBar extends StatelessWidget {
             color: color,
           ),
           onPressed: () {
-            context.transportControls.pause();
+            context.player.pause();
           }),
       pausing: IconButton(
           tooltip: "播放",
@@ -87,7 +79,7 @@ class PlayerControllerBar extends StatelessWidget {
             color: color,
           ),
           onPressed: () {
-            context.transportControls.play();
+            context.player.play();
           }),
       buffering: const SizedBox(
         height: 56,
@@ -110,7 +102,8 @@ class PlayerControllerBar extends StatelessWidget {
           IconButton(
               icon: getPlayModeIcon(context, color),
               onPressed: () {
-                context.transportControls.setPlayMode(context.playMode.next);
+                // FIXME
+                // context.player.setPlayMode(context.playMode.next);
               }),
           IconButton(
               iconSize: 36,
@@ -119,7 +112,7 @@ class PlayerControllerBar extends StatelessWidget {
                 color: color,
               ),
               onPressed: () {
-                context.transportControls.skipToPrevious();
+                context.player.skipToPrevious();
               }),
           iconPlayPause,
           IconButton(
@@ -130,7 +123,7 @@ class PlayerControllerBar extends StatelessWidget {
                 color: color,
               ),
               onPressed: () {
-                context.transportControls.skipToNext();
+                context.player.skipToNext();
               }),
           IconButton(
               tooltip: "当前播放列表",
@@ -147,57 +140,9 @@ class PlayerControllerBar extends StatelessWidget {
   }
 }
 
-class PlayingOperationBar extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    final iconColor = Theme.of(context).primaryIconTheme.color;
-
-    final music = context.watchPlayerValue.current;
-
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: <Widget>[
-        LikeButton.current(context),
-        IconButton(
-            icon: Icon(
-              Icons.file_download,
-              color: iconColor,
-            ),
-            onPressed: () {
-              notImplemented(context);
-            }),
-        IconButton(
-            icon: Icon(
-              Icons.comment,
-              color: iconColor,
-            ),
-            onPressed: () {
-              if (music == null) {
-                return;
-              }
-              Navigator.push(context, MaterialPageRoute(builder: (context) {
-                return CommentPage(
-                  threadId: CommentThreadId(music.id, CommentType.song,
-                      payload: CommentThreadPayload.music(music)),
-                );
-              }));
-            }),
-        IconButton(
-            icon: Icon(
-              Icons.share,
-              color: iconColor,
-            ),
-            onPressed: () {
-              notImplemented(context);
-            }),
-      ],
-    );
-  }
-}
-
 class _CenterSection extends StatefulWidget {
   const _CenterSection({Key? key, required this.music}) : super(key: key);
-  final Music music;
+  final Track music;
 
   @override
   State<StatefulWidget> createState() => _CenterSectionState();
@@ -239,6 +184,10 @@ class _CenterSectionState extends State<_CenterSection> {
         ),
         secondChild: PlayingLyricView(
           music: widget.music,
+          textStyle: Theme.of(context)
+              .textTheme
+              .bodyText2!
+              .copyWith(height: 2, fontSize: 16, color: Colors.white),
           onTap: () {
             setState(() {
               _showLyric = !_showLyric;
@@ -250,75 +199,9 @@ class _CenterSectionState extends State<_CenterSection> {
   }
 }
 
-class PlayingLyricView extends StatelessWidget {
-  const PlayingLyricView({Key? key, this.onTap, required this.music})
-      : super(key: key);
-  final VoidCallback? onTap;
-
-  final Music music;
-
-  @override
-  Widget build(BuildContext context) {
-    return ProgressTrackingContainer(
-        builder: _buildLyric, player: context.player);
-  }
-
-  Widget _buildLyric(BuildContext context) {
-    final TextStyle style = Theme.of(context)
-        .textTheme
-        .bodyText2!
-        .copyWith(height: 2, fontSize: 16, color: Colors.white);
-    final playingLyric = PlayingLyric.of(context);
-
-    if (playingLyric.hasLyric) {
-      return LayoutBuilder(builder: (context, constraints) {
-        final normalStyle =
-            style.copyWith(color: style.color!.withOpacity(0.7));
-        //歌词顶部与尾部半透明显示
-        return ShaderMask(
-          shaderCallback: (rect) {
-            return ui.Gradient.linear(Offset(rect.width / 2, 0),
-                Offset(rect.width / 2, constraints.maxHeight), [
-              const Color(0x00FFFFFF),
-              style.color!,
-              style.color!,
-              const Color(0x00FFFFFF),
-            ], [
-              0.0,
-              0.15,
-              0.85,
-              1
-            ]);
-          },
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Lyric(
-              lyric: playingLyric.lyric!,
-              lyricLineStyle: normalStyle,
-              highlight: style.color,
-              position: context.playbackState.computedPosition,
-              onTap: onTap,
-              size: Size(
-                  constraints.maxWidth,
-                  constraints.maxHeight == double.infinity
-                      ? 0
-                      : constraints.maxHeight),
-              playing: context.playbackState.isPlaying,
-            ),
-          ),
-        );
-      });
-    } else {
-      return Center(
-        child: Text(playingLyric.message!, style: style),
-      );
-    }
-  }
-}
-
 class PlayingTitle extends StatelessWidget {
   const PlayingTitle({Key? key, required this.music}) : super(key: key);
-  final Music music;
+  final Track music;
 
   @override
   Widget build(BuildContext context) {
@@ -344,12 +227,12 @@ class PlayingTitle extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             Text(
-              music.title,
+              music.name,
               style: const TextStyle(fontSize: 17),
             ),
             InkWell(
               onTap: () {
-                launchArtistDetailPage(context, music.artist);
+                launchArtistDetailPage(context, music.artists);
               },
               child: Row(
                 mainAxisSize: MainAxisSize.min,
@@ -357,7 +240,7 @@ class PlayingTitle extends StatelessWidget {
                   Container(
                     constraints: const BoxConstraints(maxWidth: 200),
                     child: Text(
-                      music.artistString,
+                      music.displaySubtitle,
                       style: Theme.of(context)
                           .primaryTextTheme
                           .bodyText2!

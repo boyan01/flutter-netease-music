@@ -23,8 +23,12 @@ class MessageLookup extends MessageLookupByLibrary {
   static String m0(artistName, albumName, albumId, sharedUserId) =>
       "The ${artistName}\'s album《${albumName}》: http://music.163.com/album/${albumId}/?userid=${sharedUserId} (From @NeteaseCouldMusic)";
 
-  static String m1(username, title, playlistId, userId, shareUserId) =>
+  static String m1(value) => "Play Count: ${value}";
+
+  static String m2(username, title, playlistId, userId, shareUserId) =>
       "The PlayList created by ${username}「${title}」: http://music.163.com/playlist/${playlistId}/${userId}/?userid=${shareUserId} (From @NeteaseCouldMusic)";
+
+  static String m3(value) => "Track Count: ${value}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -32,8 +36,10 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("add to playlist"),
         "addToPlaylistFailed":
             MessageLookupByLibrary.simpleMessage("add to playlist failed"),
+        "album": MessageLookupByLibrary.simpleMessage("Album"),
         "albumShareContent": m0,
         "alreadyBuy": MessageLookupByLibrary.simpleMessage("Payed"),
+        "artists": MessageLookupByLibrary.simpleMessage("Artists"),
         "cloudMusic": MessageLookupByLibrary.simpleMessage("Could Space"),
         "collectionLike": MessageLookupByLibrary.simpleMessage("Collections"),
         "copyRightOverlay": MessageLookupByLibrary.simpleMessage(
@@ -42,6 +48,9 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Created Song List"),
         "delete": MessageLookupByLibrary.simpleMessage("delete"),
         "discover": MessageLookupByLibrary.simpleMessage("Discover"),
+        "duration": MessageLookupByLibrary.simpleMessage("Duration"),
+        "errorNotLogin":
+            MessageLookupByLibrary.simpleMessage("Please login first."),
         "errorToFetchData":
             MessageLookupByLibrary.simpleMessage("error to fetch data."),
         "failedToDelete": MessageLookupByLibrary.simpleMessage("delete failed"),
@@ -53,10 +62,12 @@ class MessageLookup extends MessageLookupByLibrary {
         "friends": MessageLookupByLibrary.simpleMessage("Friends"),
         "latestPlayHistory":
             MessageLookupByLibrary.simpleMessage("Play History"),
+        "library": MessageLookupByLibrary.simpleMessage("Library"),
         "localMusic": MessageLookupByLibrary.simpleMessage("Local Music"),
         "login": MessageLookupByLibrary.simpleMessage("Login"),
         "loginWithPhone":
             MessageLookupByLibrary.simpleMessage("login with phone"),
+        "musicName": MessageLookupByLibrary.simpleMessage("Music Name"),
         "my": MessageLookupByLibrary.simpleMessage("My"),
         "myDjs": MessageLookupByLibrary.simpleMessage("Dj"),
         "myMusic": MessageLookupByLibrary.simpleMessage("My Music"),
@@ -67,9 +78,13 @@ class MessageLookup extends MessageLookupByLibrary {
         "playlist": MessageLookupByLibrary.simpleMessage("PlayList"),
         "playlistLoginDescription": MessageLookupByLibrary.simpleMessage(
             "Login to discover your playlists."),
-        "playlistShareContent": m1,
+        "playlistPlayCount": m1,
+        "playlistShareContent": m2,
+        "playlistTrackCount": m3,
         "projectDescription": MessageLookupByLibrary.simpleMessage(
             "OpenSource project https://github.com/boyan01/flutter-netease-music"),
+        "recommendPlayLists":
+            MessageLookupByLibrary.simpleMessage("Recommend PlayLists"),
         "search": MessageLookupByLibrary.simpleMessage("Search"),
         "selectRegionDiaCode":
             MessageLookupByLibrary.simpleMessage("select region code"),

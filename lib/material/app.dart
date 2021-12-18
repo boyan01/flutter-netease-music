@@ -15,7 +15,7 @@ class CopyRightOverlay extends HookWidget {
     final _painter = useMemoized(() => _CopyrightPainter());
     return CustomPaint(
       foregroundPainter:
-          Settings.of(context).showCopyrightOverlay ? null : _painter,
+          context.settings.showCopyrightOverlay ? null : _painter,
       child: child,
     );
   }

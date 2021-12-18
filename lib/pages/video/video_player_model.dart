@@ -1,11 +1,10 @@
 import 'dart:async';
 
 import 'package:flutter/widgets.dart';
+import 'package:netease_api/netease_api.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:quiet/part/part.dart';
-import 'package:quiet/repository/netease.dart';
-import 'package:quiet/repository/objects/music_video_detail.dart';
-import 'package:scoped_model/scoped_model.dart';
+import 'package:quiet/repository.dart';
 import 'package:video_player/video_player.dart';
 
 ///播放中mv的model

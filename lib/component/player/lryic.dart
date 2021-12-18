@@ -1,16 +1,17 @@
 import 'package:async/async.dart';
 import 'package:flutter/material.dart';
-import 'package:music_player/music_player.dart';
-import 'package:quiet/pages/player/lyric.dart';
+import 'package:quiet/media/tracks/tracks_player.dart';
+import 'package:quiet/navigation/common/player/lyric.dart';
 import 'package:quiet/part/part.dart';
+import 'package:quiet/repository/data/track.dart';
 import 'package:quiet/repository/netease.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 ///当前播放中的音乐的歌词
 class PlayingLyric extends Model {
-  PlayingLyric(MusicPlayer player) {
-    player.addListener(() {
-      _shouldLoadLyric(player.value.current);
+  PlayingLyric(TracksPlayer player) {
+    player.onTrackChanged.addListener(() {
+      _shouldLoadLyric(player.current);
     });
   }
 
@@ -33,9 +34,9 @@ class PlayingLyric extends Model {
 
   bool get hasLyric => lyric != null && lyric!.size > 0;
 
-  Music? _music;
+  Track? _music;
 
-  void _shouldLoadLyric(Music? music) {
+  void _shouldLoadLyric(Track? music) {
     if (_music == music) {
       return;
     }

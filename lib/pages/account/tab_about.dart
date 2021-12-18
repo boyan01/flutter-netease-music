@@ -2,7 +2,7 @@ part of 'page_user_detail.dart';
 
 class TabAbout extends StatefulWidget {
   const TabAbout(this.user, {Key? key}) : super(key: key);
-  final UserDetail? user;
+  final User user;
 
   @override
   _TabAboutState createState() => _TabAboutState();
@@ -22,7 +22,7 @@ class _TabAboutState extends State<TabAbout>
         _UserInformation(widget.user),
         const SizedBox(height: 10),
         const _Header(title: '个人介绍'),
-        _UserDescription(description: widget.user!.profile.description),
+        _UserDescription(description: widget.user.description),
       ],
     );
   }
@@ -32,7 +32,7 @@ class _TabAboutState extends State<TabAbout>
 class _UserInformation extends StatelessWidget {
   const _UserInformation(this.user);
 
-  final UserDetail? user;
+  final User user;
 
   @override
   Widget build(BuildContext context) {
@@ -44,11 +44,8 @@ class _UserInformation extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             const SizedBox(height: 4),
-            Text('等级: ${user!.level}'),
+            Text('等级: ${user.level}'),
             const SizedBox(height: 4),
-            Text('性别: ${user!.profile.gender}'),
-            const SizedBox(height: 4),
-            Text('地区: ${user!.profile.city}'),
           ],
         ),
       ),

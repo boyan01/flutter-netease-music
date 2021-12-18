@@ -2,12 +2,8 @@ import 'dart:async';
 
 import 'package:async/async.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:music_player/music_player.dart';
-import 'package:quiet/component/netease/netease.dart';
+import 'package:quiet/media/tracks/tracks_player.dart';
 import 'package:quiet/part/part.dart';
-
-import 'user.dart';
 
 ///
 /// an widget which indicator player is Playing/Pausing/Buffering
@@ -41,19 +37,19 @@ class _PlayingIndicatorState extends State<PlayingIndicator> {
 
   final _changeStateOperations = <CancelableOperation>[];
 
-  late MusicPlayer _player;
+  late TracksPlayer _player;
 
   @override
   void initState() {
     super.initState();
-    _player = context.player..addListener(_onMusicStateChanged);
+    _player = context.player..onTrackChanged.addListener(_onMusicStateChanged);
     _index = _playerState;
   }
 
   ///get current player state index
-  int get _playerState => _player.playbackState.isBuffering
+  int get _playerState => _player.isBuffering
       ? _indexBuffering
-      : _player.playbackState.isPlaying
+      : _player.isPlaying
           ? _indexPlaying
           : _indexPausing;
 
@@ -81,7 +77,7 @@ class _PlayingIndicatorState extends State<PlayingIndicator> {
 
   @override
   void dispose() {
-    _player.removeListener(_onMusicStateChanged);
+    _player.onTrackChanged.removeListener(_onMusicStateChanged);
     for (final o in _changeStateOperations) {
       o.cancel();
     }
@@ -94,38 +90,6 @@ class _PlayingIndicatorState extends State<PlayingIndicator> {
       index: _index,
       alignment: Alignment.center,
       children: <Widget>[widget.pausing!, widget.playing!, widget.buffering!],
-    );
-  }
-}
-
-/// 歌曲喜欢按钮
-class LikeButton extends ConsumerWidget {
-  const LikeButton({Key? key, required this.music}) : super(key: key);
-
-  factory LikeButton.current(BuildContext context) {
-    return LikeButton(music: context.watchPlayerValue.current!);
-  }
-
-  final Music music;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final isLiked = ref.watch(musicIsFavoriteProvider(music));
-    return IconButton(
-      icon: Icon(isLiked ? Icons.favorite : Icons.favorite_border),
-      onPressed: () async {
-        if (!ref.read(isLoginProvider)) {
-          final login = await showNeedLoginToast(context);
-          if (!login) {
-            return;
-          }
-        }
-        if (!isLiked) {
-          ref.read(userFavoriteMusicListProvider.notifier).likeMusic(music);
-        } else {
-          ref.read(userFavoriteMusicListProvider.notifier).dislikeMusic(music);
-        }
-      },
     );
   }
 }

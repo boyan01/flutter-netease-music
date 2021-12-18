@@ -4,11 +4,12 @@ import 'package:quiet/component.dart';
 import 'package:quiet/material.dart';
 import 'package:quiet/pages/artists/page_artist_detail.dart';
 import 'package:quiet/pages/comments/page_comment.dart';
-import 'package:quiet/repository/cached_image.dart';
-import 'package:quiet/repository/netease.dart';
+import 'package:quiet/repository.dart';
 
+import '../../navigation/common/like_button.dart';
+import '../../navigation/common/player/lyric_view.dart';
+import '../../navigation/common/player_progress.dart';
 import 'background.dart';
-import 'player_progress.dart';
 
 /// FM 播放页面
 class PagePlayingFm extends StatelessWidget {
@@ -92,6 +93,10 @@ class _CenterSectionState extends State<_CenterSection> {
         ),
         secondChild: PlayingLyricView(
           music: context.watchPlayerValue.current!,
+          textStyle: Theme.of(context)
+              .textTheme
+              .bodyText2!
+              .copyWith(height: 2, fontSize: 16, color: Colors.white),
           onTap: () {
             setState(() {
               _showLyric = !_showLyric;
@@ -129,13 +134,13 @@ class _FmCover extends StatelessWidget {
           ),
         ),
         Text(
-          music.title,
+          music.name,
           style: Theme.of(context).primaryTextTheme.subtitle1,
         ),
         const SizedBox(height: 8),
         InkWell(
           onTap: () {
-            launchArtistDetailPage(context, music.artist);
+            launchArtistDetailPage(context, music.artists);
           },
           child: Row(
             mainAxisSize: MainAxisSize.min,
@@ -143,7 +148,7 @@ class _FmCover extends StatelessWidget {
               Container(
                 constraints: const BoxConstraints(maxWidth: 200),
                 child: Text(
-                  music.artistString,
+                  music.displaySubtitle,
                   style: Theme.of(context)
                       .primaryTextTheme
                       .caption!
@@ -177,7 +182,7 @@ class _FmControllerBar extends StatelessWidget {
             color: color,
           ),
           onPressed: () {
-            context.transportControls.pause();
+            context.player.pause();
           }),
       pausing: IconButton(
           tooltip: "播放",
@@ -187,7 +192,7 @@ class _FmControllerBar extends StatelessWidget {
             color: color,
           ),
           onPressed: () {
-            context.transportControls.play();
+            context.player.play();
           }),
       buffering: const SizedBox(
         height: 56,
@@ -214,7 +219,7 @@ class _FmControllerBar extends StatelessWidget {
               ),
               onPressed: () {
                 toast('已加入不喜欢列表，以后将减少类似的推荐。');
-                context.transportControls.skipToNext();
+                context.player.skipToNext();
               }),
           LikeButton.current(context),
           iconPlayPause,
@@ -225,7 +230,7 @@ class _FmControllerBar extends StatelessWidget {
                 color: color,
               ),
               onPressed: () {
-                context.transportControls.skipToNext();
+                context.player.skipToNext();
               }),
           IconButton(
               tooltip: "当前播放列表",
@@ -237,11 +242,11 @@ class _FmControllerBar extends StatelessWidget {
                 context.secondaryNavigator!.push(MaterialPageRoute(
                     builder: (context) => CommentPage(
                           threadId: CommentThreadId(
-                            context.player.value.current!.id,
+                            context.player.current!.id,
                             CommentType.song,
-                            payload: CommentThreadPayload.music(
-                                context.player.value.current!),
                           ),
+                          payload: CommentThreadPayload.music(
+                              context.player.current!),
                         )));
               }),
         ],

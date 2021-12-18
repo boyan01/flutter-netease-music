@@ -2,10 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:quiet/model/playlist_detail.dart';
-import 'package:quiet/pages/main/dialog_creator.dart';
 import 'package:quiet/part/part.dart';
-import 'package:quiet/repository/netease.dart';
+import 'package:quiet/repository.dart';
 
 ///dialog for select current login user'playlist
 ///
@@ -121,7 +119,7 @@ class PlaylistSelectorDialog extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    if (!ref.watch(userProvider).isLogin) {
+    if (!ref.watch(isLoginProvider)) {
       return _buildDialog(
           context,
           Center(
@@ -141,7 +139,7 @@ class PlaylistSelectorDialog extends ConsumerWidget {
             ),
           ));
     }
-    final userId = ref.watch(userProvider).userId;
+    final userId = ref.watch(userProvider)!.userId;
     return Loader<List<PlaylistDetail?>>(
       loadTask: () =>
           neteaseRepository!.userPlaylist(userId).then((value) => value),
@@ -170,48 +168,19 @@ class PlaylistSelectorDialog extends ConsumerWidget {
       },
       builder: (context, result) {
         return Builder(builder: (context) {
-          final list = result
-            ..removeWhere((p) => p!.creator!["userId"] != userId);
+          final list = result..removeWhere((p) => p!.creator.userId != userId);
 
           final widgets = <Widget>[];
-
-          widgets.add(_buildTile(
-              context,
-              Container(
-                color: const Color(0xFFdedede),
-                child: Center(
-                  child: Icon(
-                    Icons.add,
-                    color: Theme.of(context).primaryColor,
-                  ),
-                ),
-              ),
-              const Text("新建歌单"),
-              null, () async {
-            PlaylistDetail? created = await showDialog(
-                context: context,
-                builder: (context) {
-                  return PlaylistCreatorDialog();
-                });
-            created = created;
-            if (created != null) {
-              // ignore: invalid_use_of_protected_member
-              Loader.of(context)!.setState(() {
-                result.insert(0, created);
-              });
-            }
-          }));
-
           widgets.addAll(list.map((p) {
             return _buildTile(
                 context,
                 FadeInImage(
-                  image: CachedImage(p!.coverUrl!),
+                  image: CachedImage(p!.coverUrl),
                   placeholder:
                       const AssetImage("assets/playlist_playlist.9.png"),
                   fit: BoxFit.cover,
                 ),
-                Text(p.name!),
+                Text(p.name),
                 Text("共${p.trackCount}首"), () {
               Navigator.of(context).pop(p.id);
             });

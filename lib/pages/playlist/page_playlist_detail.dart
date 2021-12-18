@@ -1,8 +1,6 @@
 import 'dart:async';
 import 'dart:ui';
 
-import 'package:flutter/foundation.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -11,14 +9,12 @@ import 'package:overlay_support/overlay_support.dart';
 import 'package:quiet/component.dart';
 import 'package:quiet/component/utils/utils.dart';
 import 'package:quiet/material.dart';
-import 'package:quiet/material/flexible_app_bar.dart';
-import 'package:quiet/model/playlist_detail.dart';
 import 'package:quiet/pages/account/page_user_detail.dart';
 import 'package:quiet/pages/comments/page_comment.dart';
 import 'package:quiet/part/part.dart';
-import 'package:quiet/repository/netease.dart';
+import 'package:quiet/repository.dart';
 
-import 'music_list.dart';
+import '../../navigation/common/playlist/music_list.dart';
 import 'page_playlist_detail_selection.dart';
 import 'playlist_internal_search.dart';
 import 'playlist_loader.dart';
@@ -153,8 +149,10 @@ class _Appbar extends ConsumerWidget {
       if (succeed) {
         showSimpleNotification(Text("$action成功"));
       } else {
-        showSimpleNotification(Text("$action失败"),
-            background: Theme.of(context).errorColor);
+        showSimpleNotification(
+          Text("$action失败"),
+          background: Theme.of(context).errorColor,
+        );
       }
       return succeed ? !subscribe : subscribe;
     }
@@ -162,7 +160,7 @@ class _Appbar extends ConsumerWidget {
     Widget? subscribeIcon;
 
     final bool owner =
-        playlist.creator!["userId"] == ref.watch(userProvider).userId;
+        playlist.creator.userId == ref.watch(userProvider)?.userId;
     if (!owner) {
       subscribeIcon = _SubscribeButton(
         subscribed: playlist.subscribed,
@@ -177,7 +175,7 @@ class _Appbar extends ConsumerWidget {
       automaticallyImplyLeading: false,
       backgroundColor: Colors.transparent,
       expandedHeight: kHeaderHeight,
-      bottom: MusicListHeader(playlist.musicList.length, tail: subscribeIcon),
+      bottom: MusicListHeader(playlist.tracks.length, tail: subscribeIcon),
       flexibleSpace: _PlaylistDetailHeader(playlist),
     );
   }
@@ -189,7 +187,7 @@ class _MusicList extends ConsumerStatefulWidget {
 
   final PlaylistDetail playlist;
 
-  List<Music> get musicList => playlist.musicList;
+  List<Music> get musicList => playlist.tracks;
 
   @override
   _PlaylistBodyState createState() {
@@ -203,15 +201,17 @@ class _PlaylistBodyState extends ConsumerState<_MusicList> {
     return MusicTileConfiguration(
       token: "playlist_${widget.playlist.id}",
       musics: widget.musicList,
-      remove: widget.playlist.creator!["userId"] !=
-              ref.read(userProvider).userId
+      remove: widget.playlist.creator.userId != ref.read(userProvider)?.userId
           ? null
           : (music) async {
               final result = await neteaseRepository!.playlistTracksEdit(
-                  PlaylistOperation.remove, widget.playlist.id!, [music.id]);
+                PlaylistOperation.remove,
+                widget.playlist.id,
+                [music.id],
+              );
               if (result) {
                 setState(() {
-                  widget.playlist.musicList.remove(music);
+                  widget.playlist.tracks.remove(music);
                 });
               }
               toast(result ? '删除成功' : '删除失败');
@@ -485,9 +485,7 @@ class _PlaylistDetailHeader extends StatelessWidget {
       builder: (context, t) => AppBar(
         leading: context.isLandscape ? null : const BackButton(),
         automaticallyImplyLeading: false,
-        title: Text(t > 0.5
-            ? playlist.name ?? context.strings.playlist
-            : context.strings.playlist),
+        title: Text(t > 0.5 ? playlist.name : context.strings.playlist),
         backgroundColor: Colors.transparent,
         elevation: 0,
         titleSpacing: 16,
@@ -522,16 +520,19 @@ class _PlayListHeaderContent extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final Map<String, dynamic> creator = playlist.creator!;
-    final musicList = playlist.musicList;
+    final creator = playlist.creator;
+    final musicList = playlist.tracks;
     return DetailHeader(
         commentCount: playlist.commentCount,
         shareCount: playlist.shareCount,
         onCommentTap: () {
           Navigator.push(context, MaterialPageRoute(builder: (context) {
             return CommentPage(
-              threadId: CommentThreadId(playlist.id!, CommentType.playlist,
-                  payload: CommentThreadPayload.playlist(playlist)),
+              threadId: CommentThreadId(
+                playlist.id,
+                CommentType.playlist,
+              ),
+              payload: CommentThreadPayload.playlist(playlist),
             );
           }));
         },
@@ -545,7 +546,7 @@ class _PlayListHeaderContent extends ConsumerWidget {
                   onDelete: (selected) async {
                     return neteaseRepository!.playlistTracksEdit(
                         PlaylistOperation.remove,
-                        playlist.id!,
+                        playlist.id,
                         selected.map((m) => m.id).toList());
                   });
             }));
@@ -555,11 +556,12 @@ class _PlayListHeaderContent extends ConsumerWidget {
           Clipboard.setData(
             ClipboardData(
               text: context.strings.playlistShareContent(
-                  playlist.creator!["nickname"],
-                  playlist.name!,
-                  playlist.id.toString(),
-                  playlist.creator!["userId"].toString(),
-                  ref.read(userProvider).userId.toString()),
+                playlist.creator.nickname,
+                playlist.name,
+                playlist.id.toString(),
+                playlist.creator.userId,
+                ref.read(userProvider)!.userId.toString(),
+              ),
             ),
           );
           toast(context.strings.shareContentCopied);
@@ -578,7 +580,7 @@ class _PlayListHeaderContent extends ConsumerWidget {
                   children: <Widget>[
                     const SizedBox(height: 10),
                     Text(
-                      playlist.name!,
+                      playlist.name,
                       style: Theme.of(context)
                           .primaryTextTheme
                           .headline6!
@@ -591,8 +593,7 @@ class _PlayListHeaderContent extends ConsumerWidget {
                       onTap: () {
                         Navigator.push(context,
                             MaterialPageRoute(builder: (context) {
-                          return UserDetailPage(
-                              userId: creator['userId'] as int?);
+                          return UserDetailPage(userId: creator.userId);
                         }));
                       },
                       child: Padding(
@@ -605,13 +606,12 @@ class _PlayListHeaderContent extends ConsumerWidget {
                               width: 24,
                               child: ClipOval(
                                 child: Image(
-                                    image: CachedImage(
-                                        creator["avatarUrl"] as String)),
+                                    image: CachedImage(creator.avatarUrl)),
                               ),
                             ),
                             const Padding(padding: EdgeInsets.only(left: 4)),
                             Text(
-                              creator["nickname"] as String,
+                              creator.nickname,
                               style:
                                   Theme.of(context).primaryTextTheme.bodyText2,
                             ),
@@ -649,12 +649,9 @@ class _PlaylistImage extends StatelessWidget {
         borderRadius: const BorderRadius.all(Radius.circular(3)),
         child: Stack(
           children: <Widget>[
-            QuietHero(
-              tag: playlist.heroTag,
-              child: Image(
-                fit: BoxFit.cover,
-                image: CachedImage(playlist.coverUrl!),
-              ),
+            Image(
+              fit: BoxFit.cover,
+              image: CachedImage(playlist.coverUrl),
             ),
             Container(
               padding: const EdgeInsets.all(4),
@@ -676,7 +673,7 @@ class _PlaylistImage extends StatelessWidget {
                     Icon(Icons.headset,
                         color: Theme.of(context).primaryIconTheme.color,
                         size: 12),
-                    Text(getFormattedNumber(playlist.playCount!),
+                    Text(getFormattedNumber(playlist.playCount),
                         style: Theme.of(context)
                             .primaryTextTheme
                             .bodyText2!

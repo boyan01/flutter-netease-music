@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:loader/loader.dart';
 import 'package:quiet/part/part.dart';
-import 'package:quiet/repository/netease.dart';
+import 'package:quiet/repository.dart';
 
 class AlbumsResultSection extends StatefulWidget {
   const AlbumsResultSection({Key? key, this.query}) : super(key: key);
@@ -22,7 +21,7 @@ class _AlbumsResultSectionState extends State<AlbumsResultSection>
     super.build(context);
     return AutoLoadMoreList<Map>(loadMore: (offset) async {
       final result = await neteaseRepository!
-          .search(widget.query, NeteaseSearchType.album, offset: offset);
+          .search(widget.query, SearchType.album, offset: offset);
       if (result.isError) {
         return result.asError!;
       }

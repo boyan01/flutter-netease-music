@@ -310,9 +310,7 @@ class AZRender extends RenderBox {
     final num index = ((position.dy / constraints.maxHeight) * _chars.length)
         .round()
         .clamp(0, _chars.length - 1);
-    if (onSelection != null) {
-      onSelection!(_chars[index as int]);
-    }
+    onSelection?.call(_chars[index as int]);
   }
 
   @override

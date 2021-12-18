@@ -25,15 +25,26 @@ final quietThemes = [
 
 final quietDarkTheme = ThemeData.dark().copyWith(
   backgroundColor: Colors.white12,
+  tooltipTheme: const TooltipThemeData(
+    waitDuration: Duration(milliseconds: 1000),
+  ),
 );
 
 ThemeData _buildTheme(Color primaryColor) {
-  return ThemeData(
-      primaryColor: primaryColor,
-      dividerColor: const Color(0xfff5f5f5),
-      iconTheme: const IconThemeData(color: Color(0xFFb3b3b3)),
-      primaryColorLight: primaryColor,
-      backgroundColor: Colors.white);
+  final theme = ThemeData.from(
+    colorScheme: ColorScheme.fromSeed(
+      seedColor: primaryColor,
+    ),
+  );
+  return theme.copyWith(
+    tooltipTheme: const TooltipThemeData(
+      waitDuration: Duration(milliseconds: 1000),
+    ),
+    iconTheme: IconThemeData(
+      color: theme.iconTheme.color!.withOpacity(0.7),
+      size: 24,
+    ),
+  );
 }
 
 extension QuietAppTheme on BuildContext {
@@ -44,4 +55,10 @@ extension QuietAppTheme on BuildContext {
   TextTheme get primaryTextTheme => theme.primaryTextTheme;
 
   ColorScheme get colorScheme => theme.colorScheme;
+
+  IconThemeData get iconTheme => theme.iconTheme;
+}
+
+extension TextStyleExtesntion on TextStyle? {
+  TextStyle? get bold => this?.copyWith(fontWeight: FontWeight.bold);
 }

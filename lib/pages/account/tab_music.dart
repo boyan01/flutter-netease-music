@@ -2,7 +2,7 @@ part of 'page_user_detail.dart';
 
 class TabMusic extends StatefulWidget {
   const TabMusic(this.profile, {Key? key}) : super(key: key);
-  final UserProfile profile;
+  final User profile;
 
   @override
   _TabMusicState createState() => _TabMusicState();
@@ -26,9 +26,9 @@ class _TabMusicState extends State<TabMusic>
           .cast(),
       builder: (context, result) {
         final created =
-            result.where((p) => p.creator!["userId"] == widget.profile.userId);
+            result.where((p) => p.creator.userId == widget.profile.userId);
         final subscribed =
-            result.where((p) => p.creator!["userId"] != widget.profile.userId);
+            result.where((p) => p.creator.userId != widget.profile.userId);
         return ListView(
           children: <Widget>[
             Row(

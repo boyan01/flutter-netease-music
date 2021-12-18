@@ -5,7 +5,7 @@ version: 1.0.0+1
 publish_to: none
 
 environment:
-  sdk: '>=2.14.0 <3.0.0'
+  sdk: '>=2.15.0 <3.0.0'
 
 dependencies:
   flutter:
@@ -13,8 +13,7 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   cupertino_icons: ^1.0.3
-  json_annotation: any
-  dio: 4.0.0
+  json_annotation: ^4.3.0
   dio_cookie_manager: 2.0.0
   path_provider: ^2.0.2
   shared_preferences: ^2.0.6
@@ -28,11 +27,6 @@ dependencies:
       url: https://github.com/boyan01/loader.git
       ref: e1ef2d9957bc8615c7f19f989d4fcfc142e20e93
   encrypt: ^5.0.0
-  netease_music_api:
-    #    path: ../NeteaseCloudMusicApi
-    git:
-      url: https://github.com/boyan01/NeteaseCloudMusicApi.git
-      ref: e007ba78565d9094959d9e50336ea734fc8d4f64
   overlay_support: ^1.2.1
   music_player:
     git:
@@ -44,6 +38,15 @@ dependencies:
   hooks_riverpod: ^1.0.0-dev.6
   flutter_json_view: ^0.2.1
   flutter_hooks: ^0.18.0
+  equatable: ^2.0.3
+  netease_api:
+    path: netease_api/
+  path: ^1.8.0
+  async: ^2.8.0
+  riverpod: ^1.0.0
+  flutter_riverpod: ^1.0.0
+  dart_vlc: ^0.1.8
+  collection: ^1.15.0
 
 dev_dependencies:
   flutter_test:
@@ -51,7 +54,7 @@ dev_dependencies:
   build_runner: ^2.0.6
   mockito: ^5.0.11
   lint: ^1.5.3
-  json_serializable: any
+  json_serializable: ^6.0.1
 
 # The following section is specific to Flutter.
 flutter:

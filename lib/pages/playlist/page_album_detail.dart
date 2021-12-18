@@ -5,13 +5,12 @@ import 'package:overlay_support/overlay_support.dart';
 import 'package:quiet/component.dart';
 import 'package:quiet/component/utils/utils.dart';
 import 'package:quiet/material.dart';
-import 'package:quiet/material/flexible_app_bar.dart';
 import 'package:quiet/pages/artists/page_artist_detail.dart';
 import 'package:quiet/pages/comments/page_comment.dart';
 import 'package:quiet/part/part.dart';
-import 'package:quiet/repository/netease.dart';
+import 'package:quiet/repository.dart';
 
-import 'music_list.dart';
+import '../../navigation/common/playlist/music_list.dart';
 import 'page_playlist_detail_selection.dart';
 
 class AlbumDetailPage extends ConsumerStatefulWidget {
@@ -29,14 +28,12 @@ class _AlbumDetailPageState extends ConsumerState<AlbumDetailPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Loader<Map>(
+      body: Loader<AlbumDetail>(
           loadTask: () => neteaseRepository!.albumDetail(widget.albumId),
           builder: (context, result) {
             return _AlbumBody(
-              album: result["album"] as Map,
-              musicList: mapJsonListToMusicList(result["songs"] as List?,
-                      artistKey: "ar", albumKey: "al") ??
-                  [],
+              album: result.album,
+              musicList: result.tracks,
             );
           }),
     );
@@ -47,13 +44,13 @@ class _AlbumBody extends StatelessWidget {
   const _AlbumBody({Key? key, required this.album, required this.musicList})
       : super(key: key);
 
-  final Map album;
+  final Album album;
   final List<Music> musicList;
 
   @override
   Widget build(BuildContext context) {
     return MusicTileConfiguration(
-        token: 'album_${album['id']}',
+        token: 'album_${album.id}',
         musics: musicList,
         onMusicTap: MusicTileConfiguration.defaultOnTap,
         leadingBuilder: MusicTileConfiguration.indexedLeadingBuilder,
@@ -81,18 +78,17 @@ class _AlbumDetailHeader extends ConsumerWidget {
   const _AlbumDetailHeader({Key? key, required this.album, this.musicList})
       : super(key: key);
 
-  final Map album;
+  final Album album;
   final List<Music>? musicList;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return FlexibleDetailBar(
-        background:
-            PlayListHeaderBackground(imageUrl: album['picUrl'] as String),
+        background: PlayListHeaderBackground(imageUrl: album.picUrl),
         content: _buildContent(context, ref),
         builder: (context, t) => AppBar(
               automaticallyImplyLeading: false,
-              title: Text(t > 0.5 ? album["name"] as String : '专辑'),
+              title: Text(t > 0.5 ? album.name : '专辑'),
               titleSpacing: 16,
               elevation: 0,
               backgroundColor: Colors.transparent,
@@ -105,19 +101,15 @@ class _AlbumDetailHeader extends ConsumerWidget {
   }
 
   Widget _buildContent(BuildContext context, WidgetRef ref) {
-    final artist = (album["artists"] as List)
-        .cast<Map>()
-        .map((m) =>
-            Artist(name: m["name"], id: m["id"], imageUrl: m["img1v1Url"]))
-        .toList(growable: false);
-
     return DetailHeader(
-        shareCount: album["info"]["shareCount"],
-        commentCount: album["info"]["commentCount"],
+        shareCount: album.shareCount,
+        commentCount: album.commentCount,
         onCommentTap: () {
           Navigator.of(context).push(MaterialPageRoute(builder: (context) {
             return CommentPage(
-                threadId: CommentThreadId(album["id"], CommentType.album));
+              threadId: CommentThreadId(album.id, CommentType.album),
+              payload: null,
+            );
           }));
         },
         onSelectionTap: () {
@@ -127,10 +119,10 @@ class _AlbumDetailHeader extends ConsumerWidget {
         },
         onShareTap: () {
           final content = context.strings.albumShareContent(
-              artist.map((e) => e.name).join(','),
-              album["name"],
-              album["id"].toString(),
-              ref.read(userProvider).userId.toString());
+              album.artist.name,
+              album.name,
+              album.id.toString(),
+              ref.read(userProvider)!.userId.toString());
           Clipboard.setData(ClipboardData(text: content));
           toast(context.strings.shareContentCopied);
         },
@@ -141,13 +133,15 @@ class _AlbumDetailHeader extends ConsumerWidget {
             children: <Widget>[
               const SizedBox(width: 32),
               QuietHero(
-                tag: "album_image_${album["id"]}",
+                tag: "album_image_${album.id}",
                 child: AspectRatio(
                   aspectRatio: 1,
                   child: ClipRRect(
                     borderRadius: const BorderRadius.all(Radius.circular(3)),
                     child: Image(
-                        fit: BoxFit.cover, image: CachedImage(album["picUrl"])),
+                      fit: BoxFit.cover,
+                      image: CachedImage(album.picUrl),
+                    ),
                   ),
                 ),
               ),
@@ -161,19 +155,18 @@ class _AlbumDetailHeader extends ConsumerWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     const SizedBox(height: 8),
-                    Text(album["name"], style: const TextStyle(fontSize: 17)),
+                    Text(album.name, style: const TextStyle(fontSize: 17)),
                     const SizedBox(height: 10),
                     InkWell(
                         onTap: () {
-                          launchArtistDetailPage(context, artist);
+                          launchArtistDetailPage(context, [album.artist]);
                         },
                         child: Padding(
                           padding: const EdgeInsets.only(top: 4, bottom: 4),
-                          child: Text(
-                              "歌手: ${artist.map((a) => a.name).join('/')}"),
+                          child: Text("歌手: ${album.artist.name}"),
                         )),
                     const SizedBox(height: 4),
-                    Text("发行时间：${getFormattedTime(album["publishTime"])}")
+                    Text("发行时间：${getFormattedTime(album.publishTime)}")
                   ],
                 ),
               ))

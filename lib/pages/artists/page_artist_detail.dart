@@ -1,14 +1,10 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:quiet/navigation/common/playlist/music_list.dart';
 import 'package:quiet/pages/artists/artist_header.dart';
 import 'package:quiet/pages/playlist/dialog_selector.dart';
-import 'package:quiet/pages/playlist/music_list.dart';
 import 'package:quiet/pages/playlist/page_playlist_detail_selection.dart';
 import 'package:quiet/part/part.dart';
-import 'package:quiet/repository/netease.dart';
-
-import 'artist_full.dart';
+import 'package:quiet/repository.dart';
 
 export 'artists_selector.dart';
 
@@ -21,60 +17,59 @@ class ArtistDetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Loader<Map>(
-        loadTask: () => neteaseRepository!.artistDetail(artistId),
-        loadingBuilder: (context) {
-          return Scaffold(
-            appBar: AppBar(title: const Text("歌手")),
-            body: Loader.buildSimpleLoadingWidget(context),
-          );
-        },
-        errorBuilder: (context, result) {
-          return Scaffold(
-            appBar: AppBar(title: const Text("歌手")),
-            body: Loader.buildSimpleFailedWidget(context, result),
-          );
-        },
-        builder: (context, result) {
-          final artist = ArtistFull.fromJson(result["artist"]);
-          final List<Music> musicList = mapJsonListToMusicList(
-              result["hotSongs"],
-              artistKey: "ar",
-              albumKey: "al")!;
-
-          return Scaffold(
-              body: BoxWithBottomPlayerController(
-            DefaultTabController(
-              length: 4,
-              child: NestedScrollView(
-                  headerSliverBuilder: (context, innerBoxIsScrolled) {
-                    return [
+    return Loader<ArtistDetail>(
+      loadTask: () => neteaseRepository!.artistDetail(artistId),
+      loadingBuilder: (context) {
+        return Scaffold(
+          appBar: AppBar(title: const Text("歌手")),
+          body: Loader.buildSimpleLoadingWidget(context),
+        );
+      },
+      errorBuilder: (context, result) {
+        return Scaffold(
+          appBar: AppBar(title: const Text("歌手")),
+          body: Loader.buildSimpleFailedWidget(context, result),
+        );
+      },
+      builder: (context, result) => Scaffold(
+        body: BoxWithBottomPlayerController(
+          DefaultTabController(
+            length: 4,
+            child: NestedScrollView(
+                headerSliverBuilder: (context, innerBoxIsScrolled) => [
                       SliverOverlapAbsorber(
                         handle: NestedScrollView.sliverOverlapAbsorberHandleFor(
                             context),
-                        sliver: ArtistHeader(artist: artist),
+                        sliver: ArtistHeader(artist: result.artist),
                       ),
-                    ];
-                  },
-                  body: SafeArea(
-                    child: Padding(
-                      padding: const EdgeInsets.only(
-                          top: kToolbarHeight + kTextTabBarHeight),
-                      child: TabBarView(
-                        children: [
-                          _PageHotSongs(
-                              musicList: musicList, artistId: artistId),
-                          _PageAlbums(artistId: artistId),
-                          _PageMVs(artistId: artistId, mvCount: artist.mvSize),
-                          _PageArtistIntroduction(
-                              artistId: artistId, artistName: artist.name),
-                        ],
-                      ),
+                    ],
+                body: SafeArea(
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                        top: kToolbarHeight + kTextTabBarHeight),
+                    child: TabBarView(
+                      children: [
+                        _PageHotSongs(
+                          musicList: result.hotSongs,
+                          artistId: artistId,
+                        ),
+                        _PageAlbums(artistId: artistId),
+                        _PageMVs(
+                          artistId: artistId,
+                          mvCount: result.artist.mvSize,
+                        ),
+                        _PageArtistIntroduction(
+                          artistId: artistId,
+                          artistName: result.artist.name,
+                        ),
+                      ],
                     ),
-                  )),
-            ),
-          ));
-        });
+                  ),
+                )),
+          ),
+        ),
+      ),
+    );
   }
 }
 
@@ -166,9 +161,7 @@ class _PageAlbums extends StatefulWidget {
   final int artistId;
 
   @override
-  _PageAlbumsState createState() {
-    return _PageAlbumsState();
-  }
+  _PageAlbumsState createState() => _PageAlbumsState();
 }
 
 class _PageAlbumsState extends State<_PageAlbums>

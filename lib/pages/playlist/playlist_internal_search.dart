@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:quiet/model/playlist_detail.dart';
-import 'package:quiet/pages/playlist/music_list.dart';
+import 'package:quiet/navigation/common/playlist/music_list.dart';
 import 'package:quiet/part/part.dart';
+import 'package:quiet/repository.dart';
 
 class PlaylistInternalSearchDelegate extends SearchDelegate {
   PlaylistInternalSearchDelegate(this.playlist);
 
   final PlaylistDetail playlist;
 
-  List<Music>? get list => playlist.musicList;
+  List<Music>? get list => playlist.tracks;
 
   @override
   List<Widget> buildActions(BuildContext context) {
@@ -40,7 +40,8 @@ class PlaylistInternalSearchDelegate extends SearchDelegate {
       return Container();
     }
     final result = list
-        ?.where((m) => m.title.contains(query) || m.subTitle.contains(query))
+        ?.where(
+            (m) => m.name.contains(query) || m.displaySubtitle.contains(query))
         .toList();
     if (result == null || result.isEmpty) {
       return _EmptyResultSection(query);
@@ -80,8 +81,8 @@ class _InternalResultSection extends StatelessWidget {
       musics: musics,
       onMusicTap: (_, music) {
         context.player
-          ..insertToNext(music.metadata)
-          ..transportControls.playFromMediaId(music.metadata.mediaId);
+          ..insertToNext(music)
+          ..playFromMediaId(music.id);
       },
       trailingBuilder: MusicTileConfiguration.defaultTrailingBuilder,
       child: ListView.builder(

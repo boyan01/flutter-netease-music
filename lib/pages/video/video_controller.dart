@@ -57,10 +57,10 @@ class _AnimatedMvControllerState extends State<AnimatedMvController>
     _controller.addListener(() => setState(() {}));
     _controller.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
-        if (widget.afterChange != null) widget.afterChange!(true);
+        widget.afterChange?.call(true);
         _hideDelay();
       } else if (status == AnimationStatus.dismissed) {
-        if (widget.afterChange != null) widget.afterChange!(false);
+        widget.afterChange?.call(false);
       }
     });
     _controller.forward(from: 0);
@@ -68,10 +68,10 @@ class _AnimatedMvControllerState extends State<AnimatedMvController>
 
   void _setUiVisibility(bool show) {
     if (show) {
-      if (widget.beforeChange != null) widget.beforeChange!(true);
+      widget.beforeChange?.call(true);
       _controller.forward(from: _controller.value);
     } else {
-      if (widget.beforeChange != null) widget.beforeChange!(false);
+      widget.beforeChange?.call(false);
       _controller.reverse(from: _controller.value);
     }
   }

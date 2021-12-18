@@ -1,13 +1,14 @@
 library player;
 
 import 'package:flutter/material.dart';
-import 'package:music_player/music_player.dart';
 import 'package:quiet/component/utils/utils.dart';
 import 'package:quiet/material.dart';
-import 'package:quiet/material/player.dart';
+import 'package:quiet/material/player/progress_track_container.dart';
 import 'package:quiet/pages/page_playing_list.dart';
 import 'package:quiet/part/part.dart';
 import 'package:quiet/repository/cached_image.dart';
+
+import '../../navigation/common/like_button.dart';
 
 @visibleForTesting
 class DisableBottomController extends StatelessWidget {
@@ -67,17 +68,17 @@ class BottomControllerBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final music = context.watchPlayerValue.current;
-    final queue = context.watchPlayerValue.queue;
+    final queue = context.watchPlayerValue.list;
     if (music == null) {
       return Container();
     }
     return InkWell(
       onTap: () {
         context.rootNavigator
-            .pushNamed(queue.isPlayingFm ? pageFmPlaying : pagePlaying);
+            .pushNamed(queue.isFM ? pageFmPlaying : pagePlaying);
       },
       child: Card(
-        margin: const EdgeInsets.all(0),
+        margin: EdgeInsets.zero,
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
             topLeft: Radius.circular(4.0),
@@ -117,7 +118,7 @@ class BottomControllerBar extends StatelessWidget {
                     children: <Widget>[
                       const Spacer(),
                       Text(
-                        music.title,
+                        music.name,
                         style: Theme.of(context).textTheme.bodyText2,
                       ),
                       const Padding(padding: EdgeInsets.only(top: 2)),
@@ -126,7 +127,7 @@ class BottomControllerBar extends StatelessWidget {
                         style: Theme.of(context).textTheme.caption!,
                         child: ProgressTrackingContainer(
                           builder: (context) =>
-                              _SubTitleOrLyric(music.subTitle),
+                              _SubTitleOrLyric(music.displaySubtitle),
                           player: context.player,
                         ),
                       ),
@@ -136,7 +137,7 @@ class BottomControllerBar extends StatelessWidget {
                 ),
               ),
               _PauseButton(),
-              if (context.player.queue.isPlayingFm)
+              if (context.player.trackList.isFM)
                 LikeButton.current(context)
               else
                 IconButton(
@@ -165,7 +166,7 @@ class _SubTitleOrLyric extends StatelessWidget {
       return Text(subtitle);
     }
     final line = playingLyric.lyric!
-        .getLineByTimeStamp(context.playbackState.computedPosition, 0)
+        .getLineByTimeStamp(context.player.position?.inMilliseconds ?? 0, 0)
         ?.line;
     if (line == null || line.isEmpty) {
       return Text(subtitle);
@@ -181,12 +182,12 @@ class _PauseButton extends StatelessWidget {
       playing: IconButton(
           icon: const Icon(Icons.pause),
           onPressed: () {
-            context.transportControls.pause();
+            context.player.pause();
           }),
       pausing: IconButton(
           icon: const Icon(Icons.play_arrow),
           onPressed: () {
-            context.transportControls.play();
+            context.player.play();
           }),
       buffering: Container(
         height: 24,

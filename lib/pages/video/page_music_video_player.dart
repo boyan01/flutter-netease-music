@@ -1,14 +1,14 @@
+// ignore_for_file: unnecessary_import
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:netease_api/netease_api.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:quiet/component/utils/utils.dart';
 import 'package:quiet/material/button.dart';
-import 'package:quiet/pages/artists/page_artist_detail.dart';
 import 'package:quiet/pages/comments/comments.dart';
-import 'package:quiet/pages/comments/page_comment.dart';
 import 'package:quiet/part/part.dart';
 import 'package:quiet/repository/netease.dart';
-import 'package:quiet/repository/objects/music_video_detail.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:video_player/video_player.dart';
 
@@ -81,8 +81,8 @@ class _MvDetailPageState extends State<_MvDetailPage> {
     );
     _model.videoPlayerController.play();
     //TODO audio focus
-    if (context.player.playbackState.isPlaying) {
-      context.transportControls.pause();
+    if (context.player.isPlaying) {
+      context.player.pause();
       _pausedPlayingMusic = true;
     }
   }
@@ -93,7 +93,7 @@ class _MvDetailPageState extends State<_MvDetailPage> {
     _model.videoPlayerController.dispose();
     //try to resume paused music
     if (_pausedPlayingMusic) {
-      context.transportControls.play();
+      context.player.play();
     }
   }
 
@@ -103,7 +103,7 @@ class _MvDetailPageState extends State<_MvDetailPage> {
     return ScopedModel<VideoPlayerModel>(
       model: _model,
       child: ScopedModel<CommentList>(
-        model: CommentList(commentId),
+        model: CommentList(commentId, null),
         child: Column(
           children: <Widget>[
             _SimpleMusicVideo(),
@@ -298,7 +298,7 @@ class MvPlayPauseButton extends StatelessWidget {
     return Center(
       child: GestureDetector(
         onTap: () async {
-          if (onInteracted != null) onInteracted!();
+          onInteracted?.call();
           if (isPlaying) {
             controller.pause();
           } else {
@@ -500,10 +500,11 @@ class _ArtistSection extends StatelessWidget {
     ]);
   }
 
-  Widget _buildArtistTile(BuildContext context, List<Artist> artist) {
+  Widget _buildArtistTile(BuildContext context, List<ArtistItem> artist) {
     return InkWell(
       onTap: () {
-        launchArtistDetailPage(context, artist);
+        // TODO FIXME
+        // launchArtistDetailPage(context, artist);
       },
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
@@ -523,7 +524,7 @@ class _ArtistSection extends StatelessWidget {
             ButtonTheme(
               minWidth: 30,
               height: 32,
-              padding: const EdgeInsets.all(0),
+              padding: EdgeInsets.zero,
               child: RaisedButtonWithIcon(
                 onPressed: () {
                   toast('收藏');

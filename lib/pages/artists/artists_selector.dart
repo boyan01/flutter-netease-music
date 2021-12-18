@@ -1,48 +1,48 @@
 import 'package:flutter/material.dart';
-import 'package:quiet/model/model.dart';
+import 'package:quiet/repository/data/track.dart';
 
 import 'page_artist_detail.dart';
 
 ///quick launch [ArtistDetailPage] if have more than one id
 Future<void> launchArtistDetailPage(
-    BuildContext context, List<Artist>? artists) async {
+    BuildContext context, List<ArtistMini>? artists) async {
   debugPrint("to artist :$artists");
   if (artists == null || artists.isEmpty) {
     return;
   }
   if (artists.length == 1) {
     Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-      return ArtistDetailPage(artistId: artists[0].id!);
+      return ArtistDetailPage(artistId: int.parse(artists[0].id));
     }));
   } else {
-    final artist = await showDialog<Artist>(
+    final artist = await showDialog<ArtistMini>(
         context: context,
         builder: (context) {
           return ArtistSelectionDialog(artists: artists);
         });
     if (artist != null) {
       Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-        return ArtistDetailPage(artistId: artist.id!);
+        return ArtistDetailPage(artistId: int.parse(artist.id));
       }));
     }
   }
 }
 
 ///歌手选择弹窗
-///返回 [Artist]
+///返回 [ArtistMini]
 class ArtistSelectionDialog extends StatelessWidget {
   const ArtistSelectionDialog({Key? key, required this.artists})
       : super(key: key);
-  final List<Artist> artists;
+  final List<ArtistMini> artists;
 
   @override
   Widget build(BuildContext context) {
     final List<Widget> children = artists.map<Widget>((artist) {
-      final enabled = artist.id != 0;
+      final enabled = artist.id.isNotEmpty;
       return ListTile(
         title: Padding(
           padding: const EdgeInsets.only(left: 8),
-          child: Text(artist.name!,
+          child: Text(artist.name,
               style: Theme.of(context)
                   .textTheme
                   .bodyText2!

@@ -1,8 +1,6 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quiet/component.dart';
-import 'package:quiet/model.dart';
 import 'package:quiet/pages/account/account.dart';
 import 'package:quiet/pages/account/page_user_detail.dart';
 
@@ -11,7 +9,7 @@ class UserProfileSection extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final UserDetail? detail = ref.watch(userProvider).userDetail;
+    final detail = ref.watch(userProvider);
     if (detail == null) {
       return userNotLogin(context);
     }
@@ -24,8 +22,7 @@ class UserProfileSection extends ConsumerWidget {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) =>
-                  UserDetailPage(userId: ref.read(userProvider).userId),
+              builder: (context) => UserDetailPage(userId: detail.userId),
             ),
           );
         },
@@ -35,7 +32,7 @@ class UserProfileSection extends ConsumerWidget {
             children: [
               const SizedBox(width: 8),
               CircleAvatar(
-                backgroundImage: CachedImage(detail.profile.avatarUrl!),
+                backgroundImage: CachedImage(detail.avatarUrl),
                 radius: 20,
               ),
               const SizedBox(width: 12),
@@ -44,7 +41,7 @@ class UserProfileSection extends ConsumerWidget {
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(detail.profile.nickname!),
+                    Text(detail.nickname),
                     const SizedBox(height: 4),
                     Row(
                       children: [

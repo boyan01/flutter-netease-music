@@ -1,7 +1,10 @@
+// ignore_for_file: unnecessary_import
+
 import 'package:flutter/material.dart';
 import 'package:loader/loader.dart';
-import 'package:quiet/pages/playlist/music_list.dart';
+import 'package:quiet/navigation/common/playlist/music_list.dart';
 import 'package:quiet/part/part.dart';
+import 'package:quiet/repository.dart';
 import 'package:quiet/repository/netease.dart';
 
 ///song list result
@@ -27,13 +30,13 @@ class SongsResultSectionState extends State<SongsResultSection>
       onMusicTap: (context, item) async {
         // TODO check music is playable?
         context.player
-          ..insertToNext(item.metadata)
-          ..transportControls.playFromMediaId(item.metadata.mediaId);
+          ..insertToNext(item)
+          ..playFromMediaId(item.id);
       },
       child: AutoLoadMoreList(
         loadMore: (count) async {
           final result = await neteaseRepository!
-              .search(widget.query, NeteaseSearchType.song, offset: count);
+              .search(widget.query, SearchType.song, offset: count);
           if (result.isValue) {
             return LoadMoreResult(
                 result.asValue!.value["result"]["songs"] ?? []);
@@ -41,7 +44,8 @@ class SongsResultSectionState extends State<SongsResultSection>
           return result as Result<List>;
         },
         builder: (context, dynamic item) {
-          return MusicTile(mapJsonToMusic(item as Map));
+          // FIXME search item handle.
+          return MusicTile(item);
         },
       ),
     );

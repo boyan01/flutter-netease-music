@@ -1,12 +1,11 @@
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
-import 'package:quiet/model/model.dart';
-import 'package:quiet/repository/netease.dart';
+import 'package:quiet/repository.dart';
 
 class BlurBackground extends StatelessWidget {
   const BlurBackground({Key? key, required this.music}) : super(key: key);
-  final Music music;
+  final Track music;
 
   @override
   Widget build(BuildContext context) {

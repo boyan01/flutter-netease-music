@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:overlay_support/overlay_support.dart';
-import 'package:quiet/pages/playlist/music_list.dart';
-import 'package:quiet/pages/playlist/page_playlist_detail.dart';
+import 'package:quiet/navigation/common/playlist/music_list.dart';
 import 'package:quiet/part/part.dart';
-import 'package:quiet/repository/netease.dart';
+import 'package:quiet/repository.dart';
 
 class MainPageDiscover extends StatefulWidget {
   @override
@@ -39,18 +37,19 @@ class _NavigationLine extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
           _ItemNavigator(Icons.radio, "私人FM", () {
-            if (context.player.queue.isPlayingFm) {
-              context.secondaryNavigator!.pushNamed(pageFmPlaying);
-              return;
-            }
-            showLoaderOverlay(context, neteaseRepository!.getPersonalFmMusics())
-                .then((musics) {
-              context.player.playFm(musics!);
-              context.secondaryNavigator!.pushNamed(pageFmPlaying);
-            }).catchError((error, stacktrace) {
-              debugPrint("error to play personal fm : $error $stacktrace");
-              toast('无法获取私人FM数据');
-            });
+            // TODO Play FM
+            // if (context.player.trackList.isPlayingFm) {
+            //   context.secondaryNavigator!.pushNamed(pageFmPlaying);
+            //   return;
+            // }
+            // showLoaderOverlay(context, neteaseRepository!.getPersonalFmMusics())
+            //     .then((musics) {
+            //   context.player.playFm(musics!);
+            //   context.secondaryNavigator!.pushNamed(pageFmPlaying);
+            // }).catchError((error, stacktrace) {
+            //   debugPrint("error to play personal fm : $error $stacktrace");
+            //   toast('无法获取私人FM数据');
+            // });
           }),
           _ItemNavigator(Icons.today, "每日推荐", () {
             context.secondaryNavigator!.pushNamed(pageDaily);
@@ -136,10 +135,9 @@ class _ItemNavigator extends StatelessWidget {
 class _SectionPlaylist extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Loader<Map>(
+    return Loader<List<RecommendedPlaylist>>(
       loadTask: () => neteaseRepository!.personalizedPlaylist(limit: 6),
-      builder: (context, result) {
-        final List<Map> list = (result["result"] as List).cast();
+      builder: (context, list) {
         return LayoutBuilder(builder: (context, constraints) {
           assert(constraints.maxWidth.isFinite,
               "can not layout playlist item in infinite width container.");
@@ -171,7 +169,7 @@ class _PlayListItemView extends StatelessWidget {
     required this.width,
   }) : super(key: key);
 
-  final Map playlist;
+  final RecommendedPlaylist playlist;
 
   final double width;
 
@@ -179,15 +177,14 @@ class _PlayListItemView extends StatelessWidget {
   Widget build(BuildContext context) {
     GestureLongPressCallback? onLongPress;
 
-    final String? copyWrite = playlist["copywriter"];
-    if (copyWrite != null && copyWrite.isNotEmpty) {
+    if (playlist.copywriter.isNotEmpty) {
       onLongPress = () {
         showDialog(
             context: context,
             builder: (context) {
               return AlertDialog(
                 content: Text(
-                  playlist["copywriter"],
+                  playlist.copywriter,
                   style: Theme.of(context).textTheme.bodyText1,
                 ),
               );
@@ -198,9 +195,7 @@ class _PlayListItemView extends StatelessWidget {
     return InkWell(
       onTap: () {
         context.secondaryNavigator!.push(MaterialPageRoute(builder: (context) {
-          return PlaylistDetailPage(
-            playlist["id"],
-          );
+          return PlaylistDetailPage(playlist.id);
         }));
       },
       onLongPress: onLongPress,
@@ -219,7 +214,7 @@ class _PlayListItemView extends StatelessWidget {
                   child: FadeInImage(
                     placeholder:
                         const AssetImage("assets/playlist_playlist.9.png"),
-                    image: CachedImage(playlist["picUrl"]),
+                    image: CachedImage(playlist.picUrl),
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -227,7 +222,7 @@ class _PlayListItemView extends StatelessWidget {
             ),
             const Padding(padding: EdgeInsets.only(top: 4)),
             Text(
-              playlist["name"],
+              playlist.name,
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
             ),
@@ -239,20 +234,11 @@ class _PlayListItemView extends StatelessWidget {
 }
 
 class _SectionNewSongs extends StatelessWidget {
-  Music _mapJsonToMusic(Map json) {
-    final Map<String, Object> song = (json["song"] as Map).cast();
-    return mapJsonToMusic(song);
-  }
-
   @override
   Widget build(BuildContext context) {
-    return Loader<Map>(
+    return Loader<List<Track>>(
       loadTask: () => neteaseRepository!.personalizedNewSong(),
-      builder: (context, result) {
-        final List<Music> songs = (result["result"] as List)
-            .cast<Map>()
-            .map(_mapJsonToMusic)
-            .toList();
+      builder: (context, songs) {
         return MusicTileConfiguration(
           musics: songs,
           token: 'playlist_main_newsong',

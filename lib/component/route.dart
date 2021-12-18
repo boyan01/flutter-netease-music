@@ -1,7 +1,10 @@
+// ignore_for_file: unnecessary_import
+
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:quiet/component.dart';
 import 'package:quiet/material.dart';
+import 'package:quiet/navigation/desktop/home_window.dart';
 import 'package:quiet/pages/account/account.dart';
 import 'package:quiet/pages/account/page_user_detail.dart';
 import 'package:quiet/pages/collection/page_collections.dart';
@@ -66,6 +69,8 @@ const pageSearch = "search";
 const pageProfile = "/profile";
 const pageProfileMy = "/profile/my";
 
+const pageDesktopMain = "desktop_main";
+
 ///app routers
 final Map<String, WidgetBuilder> routes = {
   pageMain: (context) => MainPage(),
@@ -79,6 +84,7 @@ final Map<String, WidgetBuilder> routes = {
   pageSettingTheme: (context) => SettingThemePage(),
   pageWelcome: (context) => PageWelcome(),
   pageFmPlaying: (context) => PagePlayingFm(),
+  pageDesktopMain: (context) => const HomeWindow(),
 };
 
 Route<dynamic>? routeFactory(RouteSettings settings) {
@@ -129,7 +135,7 @@ Route<dynamic> onLandscapeBuildPrimaryRoute(RouteSettings settings) {
     case pageProfileMy:
       widget = Consumer(builder: (context, ref, _) {
         return UserDetailPage(
-          userId: ref.read(userProvider).userId,
+          userId: ref.read(userProvider)?.userId,
         );
       });
   }

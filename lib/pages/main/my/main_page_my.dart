@@ -1,7 +1,5 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:logging/logging.dart';
 import 'package:quiet/part/part.dart';
 
 import '_playlists.dart';
@@ -16,8 +14,6 @@ class MainPageMy extends ConsumerStatefulWidget {
 
 class _MainPageMyState extends ConsumerState<MainPageMy>
     with AutomaticKeepAliveClientMixin, SingleTickerProviderStateMixin {
-  final Logger logger = Logger("_MainPlaylistState");
-
   final ScrollController _scrollController = ScrollController();
 
   TabController? _tabController;
@@ -34,7 +30,7 @@ class _MainPageMyState extends ConsumerState<MainPageMy>
   }
 
   void _onUserSelectedTab() {
-    logger.info("_onUserSelectedTab :"
+    debugPrint("_onUserSelectedTab :"
         " ${_tabController!.index} ${_tabController!.indexIsChanging}");
     if (_scrollerAnimating || _tabAnimating) {
       return;
@@ -51,7 +47,7 @@ class _MainPageMyState extends ConsumerState<MainPageMy>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    final userId = ref.watch(userProvider).userId;
+    final userId = ref.watch(userProvider)?.userId;
     return CustomScrollView(
       controller: _scrollController,
       slivers: [
@@ -110,7 +106,7 @@ class _MainPageMyState extends ConsumerState<MainPageMy>
     final PlayListSliverKey? sliverKey =
         playListSliver!.widget.key as PlayListSliverKey?;
     assert(playListSliver != null, "can not find sliver");
-    logger.info("sliverKey : created position:"
+    debugPrint("sliverKey : created position:"
         " ${sliverKey!.createdPosition} ${sliverKey.favoritePosition}");
 
     final List<Element> children = [];
@@ -125,7 +121,7 @@ class _MainPageMyState extends ConsumerState<MainPageMy>
     if (end <= start) {
       return;
     }
-    logger.info("position start - end -> $start - $end");
+    debugPrint("position start - end -> $start - $end");
     callback(sliverKey, children, start, end);
   }
 

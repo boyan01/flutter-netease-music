@@ -1,12 +1,26 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 
 abstract class CacheKey {
+  factory CacheKey.fromString(String key) {
+    return _StringCacheKey(key);
+  }
+
   ///unique key to save or get a cache
   String getKey();
+}
+
+class _StringCacheKey implements CacheKey {
+  const _StringCacheKey(this.key);
+
+  final String key;
+
+  @override
+  String getKey() {
+    return key;
+  }
 }
 
 ///base cache interface
@@ -24,7 +38,7 @@ abstract class Cache<T> {
 class FileCacheProvider {
   FileCacheProvider(this.directory, {required this.maxSize});
 
-  final Directory directory;
+  final String directory;
 
   final int maxSize;
 
@@ -38,8 +52,7 @@ class FileCacheProvider {
     return _cacheFileForKey(key);
   }
 
-  File _cacheFileForKey(CacheKey key) =>
-      File('${directory.path}/${key.getKey()}');
+  File _cacheFileForKey(CacheKey key) => File('$directory/${key.getKey()}');
 
   void touchFile(File file) {
     file.setLastModified(DateTime.now()).catchError((e) {
@@ -52,9 +65,11 @@ class FileCacheProvider {
       return;
     }
     _calculating = true;
-    compute(_fileLru, {'path': directory.path, 'maxSize': maxSize},
-            debugLabel: 'file lru check size')
-        .whenComplete(() {
+    compute(
+      _fileLru,
+      {'path': directory, 'maxSize': maxSize},
+      debugLabel: 'file lru check size',
+    ).whenComplete(() {
       _calculating = false;
     });
   }

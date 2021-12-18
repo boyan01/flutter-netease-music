@@ -1,3 +1,5 @@
+// ignore_for_file: unnecessary_import
+
 import 'package:flutter/material.dart';
 import 'package:quiet/component.dart';
 import 'package:quiet/component/global/settings.dart';
@@ -59,9 +61,9 @@ class _CopyRightCheckBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CheckboxListTile(
-      value: Settings.of(context).showCopyrightOverlay,
+      value: context.settings.showCopyrightOverlay,
       onChanged: (value) {
-        Settings.of(context).showCopyrightOverlay = value!;
+        context.settings.showCopyrightOverlay = value!;
       },
       title: const Text('隐藏版权浮层'),
     );

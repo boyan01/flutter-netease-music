@@ -1,9 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
-import 'package:quiet/model/playlist_detail.dart';
-import 'package:sembast/sembast.dart';
 
+import 'data/playlist_detail.dart';
 import 'database.dart';
 
 LocalData neteaseLocalData = LocalData._();
@@ -65,7 +64,7 @@ class LocalData {
       return const [];
     }
     final result = (data as List)
-        .cast<Map>()
+        .cast<Map<String, dynamic>>()
         .map((m) => PlaylistDetail.fromJson(m))
         .toList();
     return result;
@@ -76,7 +75,7 @@ class LocalData {
   }
 
   Future<PlaylistDetail?> getPlaylistDetail(int playlistId) async {
-    final data = await get<Map>("playlist_detail_$playlistId");
+    final data = await get<Map<String, dynamic>>("playlist_detail_$playlistId");
     if (data == null) {
       return null;
     }

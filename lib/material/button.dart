@@ -212,7 +212,7 @@ class IconButton2 extends StatelessWidget {
     );
 
     if (tooltip != null) {
-      result = Tooltip(message: tooltip!, child: result);
+      result = Tooltip(message: tooltip, child: result);
     }
     return InkResponse(
       onTap: onPressed,

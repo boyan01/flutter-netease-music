@@ -23,15 +23,21 @@ class MessageLookup extends MessageLookupByLibrary {
   static String m0(artistName, albumName, albumId, sharedUserId) =>
       "分享${artistName}的专辑《${albumName}》: http://music.163.com/album/${albumId}/?userid=${sharedUserId} (来自@网易云音乐)";
 
-  static String m1(username, title, playlistId, userId, shareUserId) =>
+  static String m1(value) => "播放数: ${value}";
+
+  static String m2(username, title, playlistId, userId, shareUserId) =>
       "分享${username}创建的歌单「${title}」: http://music.163.com/playlist/${playlistId}/${userId}/?userid=${shareUserId} (来自@网易云音乐)";
+
+  static String m3(value) => "歌曲数: ${value}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "addToPlaylist": MessageLookupByLibrary.simpleMessage("加入歌单"),
         "addToPlaylistFailed": MessageLookupByLibrary.simpleMessage("加入歌单失败"),
+        "album": MessageLookupByLibrary.simpleMessage("专辑"),
         "albumShareContent": m0,
         "alreadyBuy": MessageLookupByLibrary.simpleMessage("收藏和赞"),
+        "artists": MessageLookupByLibrary.simpleMessage("歌手"),
         "cloudMusic": MessageLookupByLibrary.simpleMessage("云盘"),
         "collectionLike": MessageLookupByLibrary.simpleMessage("已购"),
         "copyRightOverlay":
@@ -39,6 +45,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "createdSongList": MessageLookupByLibrary.simpleMessage("创建歌单"),
         "delete": MessageLookupByLibrary.simpleMessage("删除"),
         "discover": MessageLookupByLibrary.simpleMessage("发现"),
+        "duration": MessageLookupByLibrary.simpleMessage("时长"),
+        "errorNotLogin": MessageLookupByLibrary.simpleMessage("未登录"),
         "errorToFetchData": MessageLookupByLibrary.simpleMessage("获取数据失败"),
         "failedToDelete": MessageLookupByLibrary.simpleMessage("删除失败"),
         "failedToLoad": MessageLookupByLibrary.simpleMessage("加载失败"),
@@ -46,9 +54,11 @@ class MessageLookup extends MessageLookupByLibrary {
         "favoriteSongList": MessageLookupByLibrary.simpleMessage("收藏歌单"),
         "friends": MessageLookupByLibrary.simpleMessage("我的好友"),
         "latestPlayHistory": MessageLookupByLibrary.simpleMessage("最近播放"),
+        "library": MessageLookupByLibrary.simpleMessage("音乐库"),
         "localMusic": MessageLookupByLibrary.simpleMessage("本地音乐"),
         "login": MessageLookupByLibrary.simpleMessage("立即登录"),
         "loginWithPhone": MessageLookupByLibrary.simpleMessage("手机号登录"),
+        "musicName": MessageLookupByLibrary.simpleMessage("音乐标题"),
         "my": MessageLookupByLibrary.simpleMessage("我的"),
         "myDjs": MessageLookupByLibrary.simpleMessage("我的电台"),
         "myMusic": MessageLookupByLibrary.simpleMessage("我的音乐"),
@@ -59,9 +69,12 @@ class MessageLookup extends MessageLookupByLibrary {
         "playlist": MessageLookupByLibrary.simpleMessage("歌单"),
         "playlistLoginDescription":
             MessageLookupByLibrary.simpleMessage("登录以加载你的私人播放列表。"),
-        "playlistShareContent": m1,
+        "playlistPlayCount": m1,
+        "playlistShareContent": m2,
+        "playlistTrackCount": m3,
         "projectDescription": MessageLookupByLibrary.simpleMessage(
             "开源项目 https://github.com/boyan01/flutter-netease-music"),
+        "recommendPlayLists": MessageLookupByLibrary.simpleMessage("推荐歌单"),
         "search": MessageLookupByLibrary.simpleMessage("搜索"),
         "selectRegionDiaCode": MessageLookupByLibrary.simpleMessage("选择地区号码"),
         "shareContentCopied":

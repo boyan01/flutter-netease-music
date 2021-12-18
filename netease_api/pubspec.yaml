@@ -1,0 +1,28 @@
+name: netease_api
+description: the api wrapper of netease cloud music
+version: 0.0.1
+homepage: https://github.com/boyan01/flutter-netease-music
+
+publish_to: none
+
+environment:
+  sdk: ">=2.14.0 <3.0.0"
+  flutter: ">=2.5.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  dio_cookie_manager: 2.0.0
+  netease_music_api:
+    git:
+      url: https://github.com/boyan01/NeteaseCloudMusicApi.git
+      ref: e007ba78565d9094959d9e50336ea734fc8d4f64
+  json_annotation: ^4.3.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^1.0.4
+  build_runner: ^2.1.5
+  json_serializable: ^6.0.1
+
