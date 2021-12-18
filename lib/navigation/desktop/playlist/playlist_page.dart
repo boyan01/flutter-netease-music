@@ -21,11 +21,14 @@ class PlaylistPage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final playlistDetail = ref.watch(playlistDetailProvider(playlistId));
-    return playlistDetail.when(
-      data: (playlist) => _PlaylistDetailBody(playlist: playlist),
-      loading: () => const Center(child: CircularProgressIndicator()),
-      error: (e, stack) => Center(
-        child: Text(context.formattedError(e)),
+    return Material(
+      color: context.colorScheme.background,
+      child: playlistDetail.when(
+        data: (playlist) => _PlaylistDetailBody(playlist: playlist),
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (e, stack) => Center(
+          child: Text(context.formattedError(e)),
+        ),
       ),
     );
   }

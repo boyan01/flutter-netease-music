@@ -251,7 +251,7 @@ class TrackTile extends StatelessWidget {
         child: Material(
           color: index.isEven
               ? context.colorScheme.background
-              : context.colorScheme.primary.withOpacity(0.01),
+              : context.colorScheme.primary.withOpacity(0.04),
           child: InkWell(
             onTap: () => TrackTileContainer.playTrack(context, track),
             child: DefaultTextStyle(
