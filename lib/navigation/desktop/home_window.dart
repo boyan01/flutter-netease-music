@@ -22,7 +22,7 @@ class HomeWindow extends HookWidget {
             Expanded(
               child: Row(
                 children: [
-                  const SizedBox(width: 180, child: NavigationSideBar()),
+                  const SizedBox(width: 200, child: NavigationSideBar()),
                   Expanded(
                     child: ClipRect(
                       child: DesktopNavigator(controller: navigatorController),

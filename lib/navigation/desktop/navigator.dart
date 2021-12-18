@@ -1,37 +1,56 @@
+import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
 import './discover.dart';
 import 'playlist/playlist_page.dart';
 
-abstract class NavigationType {
+abstract class NavigationType with EquatableMixin {
   NavigationType();
 
-  factory NavigationType.discover() => _Discover();
+  factory NavigationType.discover() => NavigationTargetDiscover();
 
   factory NavigationType.settings() => _Settings();
 
   factory NavigationType.playlist({required int playlistId}) =>
-      _Playlist(playlistId);
+      NavigationTargetPlaylist(playlistId);
+
+  @override
+  List<Object?> get props => const [];
 }
 
-class _Discover extends NavigationType {}
+class NavigationTargetDiscover extends NavigationType {}
 
 class _Settings extends NavigationType {}
 
-class _Playlist extends NavigationType {
-  _Playlist(this.playlistId);
+class NavigationTargetPlaylist extends NavigationType {
+  NavigationTargetPlaylist(this.playlistId);
 
   final int playlistId;
+
+  @override
+  List<Object?> get props => [playlistId];
+}
+
+class _PageKey extends ValueKey<NavigationType> {
+  const _PageKey(NavigationType value) : super(value);
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other);
+  }
+
+  @override
+  int get hashCode => super.hashCode;
 }
 
 MaterialPage<dynamic> _buildPage(NavigationType type) {
   final Widget page;
-  if (type is _Discover) {
+  if (type is NavigationTargetDiscover) {
     page = const DiscoverPage();
   } else if (type is _Settings) {
     page = const Text('Settings');
-  } else if (type is _Playlist) {
+  } else if (type is NavigationTargetPlaylist) {
     page = PlaylistPage(playlistId: type.playlistId);
   } else {
     throw Exception('Unknown navigation type: $type');
@@ -39,7 +58,7 @@ MaterialPage<dynamic> _buildPage(NavigationType type) {
   return MaterialPage<dynamic>(
     child: page,
     name: type.runtimeType.toString(),
-    key: ValueKey(type),
+    key: _PageKey(type),
   );
 }
 
@@ -56,7 +75,14 @@ class DesktopNavigatorController with ChangeNotifier {
 
   bool get canForward => _popPages.isNotEmpty;
 
+  NavigationType get current =>
+      (_pages.last.key! as ValueKey<NavigationType>).value;
+
   void navigate(NavigationType type) {
+    if (_pages.isNotEmpty && current == type) {
+      debugPrint('Navigation: already on $type');
+      return;
+    }
     _pages.add(_buildPage(type));
     _popPages.clear();
     notifyListeners();

@@ -2,9 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:quiet/component.dart';
+import 'package:quiet/extension.dart';
 import 'package:quiet/navigation/desktop/login/login_dialog.dart';
+import 'package:quiet/navigation/desktop/playlist/user_playlists.dart';
 import 'package:quiet/navigation/desktop/widgets/navigation_tile.dart';
 import 'package:quiet/pages/account/account.dart';
+
+import 'navigator.dart';
 
 class NavigationSideBar extends StatelessWidget {
   const NavigationSideBar({Key? key}) : super(key: key);
@@ -13,6 +17,23 @@ class NavigationSideBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Material(
       color: context.colorScheme.surface,
+      child: const CustomScrollView(
+        slivers: [
+          _PresetItems(),
+          SliverSidebarUserPlaylist(),
+        ],
+      ),
+    );
+  }
+}
+
+class _PresetItems extends StatelessWidget {
+  const _PresetItems({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final navigator = context.watch<DesktopNavigatorController>();
+    return SliverToBoxAdapter(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -22,8 +43,8 @@ class NavigationSideBar extends StatelessWidget {
           NavigationTile(
             icon: const Icon(Icons.compass_calibration_rounded),
             title: Text(context.strings.discover),
-            isSelected: true,
-            onTap: () {},
+            isSelected: navigator.current is NavigationTargetDiscover,
+            onTap: () => navigator.navigate(NavigationTargetDiscover()),
           ),
           NavigationTile(
             icon: const Icon(Icons.radio),
@@ -31,7 +52,7 @@ class NavigationSideBar extends StatelessWidget {
             isSelected: false,
             onTap: () {},
           ),
-          _ItemTitle(title: context.strings.library),
+          NavigationTitle(title: context.strings.library),
           NavigationTile(
             icon: const Icon(Icons.history_rounded),
             title: Text(context.strings.latestPlayHistory),
@@ -44,29 +65,8 @@ class NavigationSideBar extends StatelessWidget {
             isSelected: false,
             onTap: () {},
           ),
-          NavigationTile(
-            icon: const Icon(Icons.favorite_rounded),
-            title: Text(context.strings.favoriteSongList),
-            isSelected: false,
-            onTap: () {},
-          ),
-          _ItemTitle(title: context.strings.playlist),
         ],
       ),
-    );
-  }
-}
-
-class _ItemTitle extends StatelessWidget {
-  const _ItemTitle({Key? key, required this.title}) : super(key: key);
-
-  final String title;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 20, right: 20, top: 28, bottom: 12),
-      child: Text(title, style: context.theme.textTheme.subtitle1.bold),
     );
   }
 }
