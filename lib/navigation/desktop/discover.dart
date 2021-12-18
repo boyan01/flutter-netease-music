@@ -67,10 +67,9 @@ class _Playlists extends ConsumerWidget {
           return RecommendedPlaylistTile(
             playlist: playlist,
             onTap: () {
-              DesktopNavigator.push(
-                context,
-                NavigationType.playlist(playlistId: playlist.id),
-              );
+              context
+                  .read<DesktopNavigatorController>()
+                  .navigate(NavigationType.playlist(playlistId: playlist.id));
             },
           );
         },

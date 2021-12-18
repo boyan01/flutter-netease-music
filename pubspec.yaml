@@ -46,6 +46,7 @@ dependencies:
   riverpod: ^1.0.0
   flutter_riverpod: ^1.0.0
   dart_vlc: ^0.1.8
+  collection: ^1.15.0
 
 dev_dependencies:
   flutter_test:

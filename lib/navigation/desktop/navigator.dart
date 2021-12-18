@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 
 import './discover.dart';
 import 'playlist/playlist_page.dart';
@@ -42,45 +43,56 @@ MaterialPage<dynamic> _buildPage(NavigationType type) {
   );
 }
 
-class DesktopNavigator extends StatefulWidget {
-  const DesktopNavigator({
-    Key? key,
-  }) : super(key: key);
+class DesktopNavigatorController with ChangeNotifier {
+  DesktopNavigatorController() {
+    navigate(NavigationType.discover());
+  }
 
-  @override
-  State<DesktopNavigator> createState() => _DesktopNavigatorState();
+  final _pages = <MaterialPage<dynamic>>[];
 
-  static void push(BuildContext context, NavigationType type) {
-    context.findAncestorStateOfType<_DesktopNavigatorState>()!._push(type);
+  final _popPages = <MaterialPage<dynamic>>[];
+
+  bool get canBack => _pages.length > 1;
+
+  bool get canForward => _popPages.isNotEmpty;
+
+  void navigate(NavigationType type) {
+    _pages.add(_buildPage(type));
+    _popPages.clear();
+    notifyListeners();
+  }
+
+  void forward() {
+    if (canForward) {
+      _pages.add(_popPages.removeLast());
+      notifyListeners();
+    }
+  }
+
+  void back() {
+    if (canBack) {
+      _popPages.add(_pages.removeLast());
+      notifyListeners();
+    }
   }
 }
 
-class _DesktopNavigatorState extends State<DesktopNavigator> {
-  final pages = <MaterialPage<dynamic>>[];
+class DesktopNavigator extends HookWidget {
+  const DesktopNavigator({Key? key, required this.controller})
+      : super(key: key);
 
-  @override
-  void initState() {
-    super.initState();
-    pages.add(_buildPage(NavigationType.discover()));
-  }
-
-  void _push(NavigationType type) {
-    setState(() {
-      pages.add(_buildPage(type));
-    });
-  }
+  final DesktopNavigatorController controller;
 
   @override
   Widget build(BuildContext context) {
+    useListenable(controller);
     return Navigator(
-      pages: List.of(pages),
+      pages: List.of(controller._pages),
       onPopPage: (route, result) {
         if (route.isFirst) {
           return false;
         }
-        setState(() {
-          pages.removeLast();
-        });
+        controller.back();
         return true;
       },
     );
