@@ -8,6 +8,8 @@ import 'package:quiet/pages/page_playing_list.dart';
 import 'package:quiet/part/part.dart';
 import 'package:quiet/repository/cached_image.dart';
 
+import '../../navigation/common/like_button.dart';
+
 @visibleForTesting
 class DisableBottomController extends StatelessWidget {
   const DisableBottomController({Key? key, this.child}) : super(key: key);

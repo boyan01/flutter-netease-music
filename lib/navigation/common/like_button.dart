@@ -1,0 +1,51 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../../component.dart';
+import '../../material/user.dart';
+import '../../pages/account/account.dart';
+import '../../repository.dart';
+
+/// 歌曲喜欢按钮
+class LikeButton extends ConsumerWidget {
+  const LikeButton({
+    Key? key,
+    required this.music,
+    this.iconSize,
+    this.padding = const EdgeInsets.all(8),
+  }) : super(key: key);
+
+  factory LikeButton.current(BuildContext context) {
+    return LikeButton(music: context.watchPlayerValue.current!);
+  }
+
+  final Track music;
+
+  final double? iconSize;
+
+  final EdgeInsetsGeometry padding;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isLiked = ref.watch(musicIsFavoriteProvider(music));
+    return IconButton(
+      icon: Icon(isLiked ? Icons.favorite : Icons.favorite_border),
+      iconSize: iconSize,
+      splashRadius: iconSize,
+      padding: padding,
+      onPressed: () async {
+        if (!ref.read(isLoginProvider)) {
+          final login = await showNeedLoginToast(context);
+          if (!login) {
+            return;
+          }
+        }
+        if (!isLiked) {
+          ref.read(userFavoriteMusicListProvider.notifier).likeMusic(music);
+        } else {
+          ref.read(userFavoriteMusicListProvider.notifier).dislikeMusic(music);
+        }
+      },
+    );
+  }
+}

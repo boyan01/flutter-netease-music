@@ -6,6 +6,7 @@ import 'package:quiet/pages/artists/page_artist_detail.dart';
 import 'package:quiet/pages/comments/page_comment.dart';
 import 'package:quiet/repository.dart';
 
+import '../../navigation/common/like_button.dart';
 import '../../navigation/common/player_progress.dart';
 import 'background.dart';
 

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:quiet/component.dart';
 import 'package:quiet/extension.dart';
+import 'package:quiet/navigation/common/like_button.dart';
 import 'package:quiet/navigation/common/playlist/music_list.dart';
 import 'package:quiet/repository.dart';
 
@@ -16,7 +17,7 @@ class TrackTableContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) => _TrackTableContainer(
-        width: constraints.maxWidth - 80,
+        width: constraints.maxWidth - 110,
         child: child,
       ),
     );
@@ -170,7 +171,7 @@ class TrackTableHeader extends StatelessWidget with PreferredSizeWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const SizedBox(width: 60),
+            const SizedBox(width: 80),
             SizedBox(
               width: _TrackTableConfiguration.of(context).nameWidth - 2,
               child: Text(context.strings.musicName),
@@ -262,13 +263,21 @@ class TrackTile extends StatelessWidget {
                 children: [
                   SizedBox(
                     width: 40,
-                    child: Text(
-                      index.toString().padLeft(2, '0'),
-                      style: context.textTheme.caption,
-                      textAlign: TextAlign.end,
+                    child: Align(
+                      alignment: AlignmentDirectional.centerEnd,
+                      child: _IndexOrPlayIcon(index: index, track: track),
                     ),
                   ),
-                  const SizedBox(width: 20),
+                  const SizedBox(width: 10),
+                  SizedBox(
+                    width: 20,
+                    child: LikeButton(
+                      music: track,
+                      iconSize: 16,
+                      padding: const EdgeInsets.all(2),
+                    ),
+                  ),
+                  const SizedBox(width: 10),
                   SizedBox(
                     width: configuration.nameWidth,
                     child: Text(
@@ -305,5 +314,34 @@ class TrackTile extends StatelessWidget {
             ),
           ),
         ));
+  }
+}
+
+class _IndexOrPlayIcon extends StatelessWidget {
+  const _IndexOrPlayIcon({
+    Key? key,
+    required this.index,
+    required this.track,
+  }) : super(key: key);
+
+  final int index;
+  final Track track;
+
+  @override
+  Widget build(BuildContext context) {
+    final isCurrent = TrackTileContainer.getPlaylistId(context) ==
+            context.playingTrackList.id &&
+        context.playingTrack == track;
+    final isPlaying = context.isPlaying;
+    if (isCurrent) {
+      return isPlaying
+          ? const Icon(Icons.volume_up, size: 16)
+          : const Icon(Icons.volume_mute, size: 16);
+    } else {
+      return Text(
+        index.toString().padLeft(2, '0'),
+        style: context.textTheme.caption,
+      );
+    }
   }
 }

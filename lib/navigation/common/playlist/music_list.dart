@@ -68,6 +68,16 @@ class TrackTileContainer extends StatelessWidget {
     return container._playbackMusic(track);
   }
 
+  static String getPlaylistId(BuildContext context) {
+    final container =
+        context.findAncestorWidgetOfExactType<TrackTileContainer>();
+    assert(container != null, 'container is null');
+    if (container == null) {
+      return '';
+    }
+    return container.id;
+  }
+
   static void deleteTrack(BuildContext context, Track track) {
     final container =
         context.findAncestorWidgetOfExactType<TrackTileContainer>();

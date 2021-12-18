@@ -10,6 +10,7 @@ import 'package:quiet/pages/player/page_playing_landscape.dart';
 import 'package:quiet/part/part.dart';
 import 'package:quiet/repository.dart';
 
+import '../../navigation/common/like_button.dart';
 import '../../navigation/common/player_progress.dart';
 import 'background.dart';
 import 'cover.dart';

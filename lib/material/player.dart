@@ -2,13 +2,8 @@ import 'dart:async';
 
 import 'package:async/async.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:quiet/component/netease/netease.dart';
 import 'package:quiet/media/tracks/tracks_player.dart';
 import 'package:quiet/part/part.dart';
-import 'package:quiet/repository/data/track.dart';
-
-import 'user.dart';
 
 ///
 /// an widget which indicator player is Playing/Pausing/Buffering
@@ -95,38 +90,6 @@ class _PlayingIndicatorState extends State<PlayingIndicator> {
       index: _index,
       alignment: Alignment.center,
       children: <Widget>[widget.pausing!, widget.playing!, widget.buffering!],
-    );
-  }
-}
-
-/// 歌曲喜欢按钮
-class LikeButton extends ConsumerWidget {
-  const LikeButton({Key? key, required this.music}) : super(key: key);
-
-  factory LikeButton.current(BuildContext context) {
-    return LikeButton(music: context.watchPlayerValue.current!);
-  }
-
-  final Track music;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final isLiked = ref.watch(musicIsFavoriteProvider(music));
-    return IconButton(
-      icon: Icon(isLiked ? Icons.favorite : Icons.favorite_border),
-      onPressed: () async {
-        if (!ref.read(isLoginProvider)) {
-          final login = await showNeedLoginToast(context);
-          if (!login) {
-            return;
-          }
-        }
-        if (!isLiked) {
-          ref.read(userFavoriteMusicListProvider.notifier).likeMusic(music);
-        } else {
-          ref.read(userFavoriteMusicListProvider.notifier).dislikeMusic(music);
-        }
-      },
     );
   }
 }
