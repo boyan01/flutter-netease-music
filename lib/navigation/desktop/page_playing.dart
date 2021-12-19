@@ -12,6 +12,7 @@ class PagePlaying extends StatelessWidget {
   Widget build(BuildContext context) {
     return Material(
       color: context.colorScheme.background,
+      elevation: 10,
       child: Row(
         children: [
           Flexible(flex: 5, child: _LayoutCover()),
