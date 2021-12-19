@@ -14,22 +14,34 @@ const lightSwatch = MaterialColor(0xFFdd4237, {
   50: Color(0xFFfeebee),
 });
 
-ThemeData get quietDarkTheme => ThemeData.dark().copyWith(
-      backgroundColor: Colors.white12,
-      tooltipTheme: const TooltipThemeData(
-        waitDuration: Duration(milliseconds: 1000),
-      ),
-    );
+ThemeData get quietDarkTheme {
+  final theme = ThemeData.from(
+    colorScheme: ColorScheme.dark(
+      background: Color.alphaBlend(Colors.black87, Colors.white),
+      onBackground: Color.alphaBlend(Colors.white54, Colors.black),
+      surface: Color.alphaBlend(Colors.black87, Colors.white),
+      onSurface: Color.alphaBlend(Colors.white70, Colors.black),
+      primary: lightSwatch,
+      secondary: lightSwatch[300]!,
+      tertiary: lightSwatch[100],
+    ),
+  );
+  return theme.copyWith(
+    toggleableActiveColor: lightSwatch,
+    tooltipTheme: const TooltipThemeData(
+      waitDuration: Duration(milliseconds: 1000),
+    ),
+  );
+}
 
 ThemeData get lightTheme => _buildTheme(lightSwatch);
 
 ThemeData _buildTheme(Color primaryColor) {
   final theme = ThemeData.from(
-    colorScheme: ColorScheme.fromSeed(
-      seedColor: primaryColor,
-    ),
+    colorScheme: const ColorScheme.light(primary: lightSwatch),
   );
   return theme.copyWith(
+    toggleableActiveColor: lightSwatch,
     tooltipTheme: const TooltipThemeData(
       waitDuration: Duration(milliseconds: 1000),
     ),
