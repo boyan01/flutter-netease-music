@@ -14,30 +14,28 @@ class HeaderBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return _MoveWindow(
-      child: Material(
-        color: context.colorScheme.background,
-        elevation: 10,
-        child: Padding(
-          padding: EdgeInsets.only(
-            top: defaultTargetPlatform == TargetPlatform.macOS ? 20 : 4,
-            bottom: 4,
-          ),
-          child: SizedBox(
-            height: 42,
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const SizedBox(width: 180, child: _HeaderNavigationButtons()),
-                const Spacer(),
-                const _MoveWindowBarrier(child: _SearchBar()),
-                const SizedBox(width: 10),
-                const _MoveWindowBarrier(child: _SettingButton()),
-                const SizedBox(width: 20),
-                if (defaultTargetPlatform == TargetPlatform.windows)
-                  const _MoveWindowBarrier(child: _WindowCaptionButtonGroup()),
-              ],
-            ),
+    return Material(
+      color: context.colorScheme.background,
+      elevation: 10,
+      child: Padding(
+        padding: EdgeInsets.only(
+          top: defaultTargetPlatform == TargetPlatform.macOS ? 20 : 4,
+          bottom: 4,
+        ),
+        child: SizedBox(
+          height: 42,
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const SizedBox(width: 180, child: _HeaderNavigationButtons()),
+              const Expanded(child: _MoveWindow.expand()),
+              const _SearchBar(),
+              const SizedBox(width: 10, child: _MoveWindow.expand()),
+              const _SettingButton(),
+              const SizedBox(width: 20, child: _MoveWindow.expand()),
+              if (defaultTargetPlatform == TargetPlatform.windows)
+                const _WindowCaptionButtonGroup(),
+            ],
           ),
         ),
       ),
@@ -51,30 +49,29 @@ class _HeaderNavigationButtons extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = context.watch<DesktopNavigatorController>();
-    return _MoveWindowBarrier(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          IconButton(
-            splashRadius: 20,
-            mouseCursor: controller.canBack
-                ? SystemMouseCursors.click
-                : SystemMouseCursors.basic,
-            iconSize: 24,
-            onPressed: controller.canBack ? controller.back : null,
-            icon: const Icon(Icons.navigate_before),
-          ),
-          IconButton(
-            splashRadius: 20,
-            mouseCursor: controller.canForward
-                ? SystemMouseCursors.click
-                : SystemMouseCursors.basic,
-            onPressed: controller.canForward ? controller.forward : null,
-            iconSize: 24,
-            icon: const Icon(Icons.navigate_next),
-          ),
-        ],
-      ),
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        const Expanded(child: _MoveWindow.expand()),
+        IconButton(
+          splashRadius: 20,
+          mouseCursor: controller.canBack
+              ? SystemMouseCursors.click
+              : SystemMouseCursors.basic,
+          iconSize: 24,
+          onPressed: controller.canBack ? controller.back : null,
+          icon: const Icon(Icons.navigate_before),
+        ),
+        IconButton(
+          splashRadius: 20,
+          mouseCursor: controller.canForward
+              ? SystemMouseCursors.click
+              : SystemMouseCursors.basic,
+          onPressed: controller.canForward ? controller.forward : null,
+          iconSize: 24,
+          icon: const Icon(Icons.navigate_next),
+        ),
+      ],
     );
   }
 }
@@ -202,6 +199,8 @@ class _WindowButton extends StatelessWidget {
 class _MoveWindow extends StatelessWidget {
   const _MoveWindow({Key? key, required this.child}) : super(key: key);
 
+  const _MoveWindow.expand() : child = const SizedBox.expand();
+
   final Widget child;
 
   @override
@@ -210,7 +209,7 @@ class _MoveWindow extends StatelessWidget {
       return child;
     }
     return GestureDetector(
-      behavior: HitTestBehavior.opaque,
+      behavior: HitTestBehavior.translucent,
       onPanStart: (details) {
         WindowManager.instance.startDragging();
       },
@@ -224,27 +223,6 @@ class _MoveWindow extends StatelessWidget {
       child: child,
     );
   }
-}
-
-class _MoveWindowBarrier extends StatelessWidget {
-  const _MoveWindowBarrier({
-    Key? key,
-    required this.child,
-    this.enable = true,
-  }) : super(key: key);
-
-  final Widget child;
-
-  final bool enable;
-
-  @override
-  Widget build(BuildContext context) => GestureDetector(
-      onPanStart: enable
-          ? (details) {
-              // do nothing, but we already intercept the events.
-            }
-          : null,
-      child: child);
 }
 
 class _CallbackWindowListener extends WindowListener {
