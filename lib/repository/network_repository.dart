@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:async/async.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:netease_api/netease_api.dart' as api;
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
@@ -129,7 +130,7 @@ class NetworkRepository {
     }
     final userPlayList = ret.asValue!.value;
     return Result.value(
-      userPlayList.playlist.map((e) => e.toPlaylistDetail()).toList(),
+      userPlayList.playlist.map((e) => e.toPlaylistDetail(const [])).toList(),
     );
   }
 
@@ -141,8 +142,8 @@ class NetworkRepository {
     if (ret.isError) {
       return ret.asError!;
     }
-    final playlist = ret.asValue!.value.playlist;
-    return Result.value(playlist.toPlaylistDetail());
+    final value = ret.asValue!.value;
+    return Result.value(value.playlist.toPlaylistDetail(value.privileges));
   }
 
   Future<Result<AlbumDetail>> albumDetail(int id) async {
@@ -153,7 +154,7 @@ class NetworkRepository {
     final albumDetail = ret.asValue!.value;
     return Result.value(AlbumDetail(
       album: albumDetail.album.toAlbum(),
-      tracks: albumDetail.songs.map((e) => e.toTrack()).toList(),
+      tracks: albumDetail.songs.map((e) => e.toTrack(null)).toList(),
     ));
   }
 
@@ -168,7 +169,7 @@ class NetworkRepository {
     final artistDetail = ret.asValue!.value;
     return Result.value(ArtistDetail(
       artist: artistDetail.artist.toArtist(),
-      hotSongs: artistDetail.hotSongs.map((e) => e.toTrack()).toList(),
+      hotSongs: artistDetail.hotSongs.map((e) => e.toTrack(null)).toList(),
       more: artistDetail.more,
     ));
   }
@@ -209,7 +210,7 @@ class NetworkRepository {
         .map((e) => PlayRecord(
               playCount: e.playCount,
               score: e.score,
-              song: e.song.toTrack(),
+              song: e.song.toTrack(null),
             ))
         .toList());
   }
@@ -227,7 +228,7 @@ class NetworkRepository {
     }
     final personalizedNewSong = ret.asValue!.value.result;
     return Result.value(
-      personalizedNewSong.map((e) => e.song.toTrack()).toList(),
+      personalizedNewSong.map((e) => e.song.toTrack(e.song.privilege)).toList(),
     );
   }
 
@@ -265,7 +266,7 @@ class NetworkRepository {
     }
     final songDetails = ret.asValue!.value.songs;
     return Result.value(
-      songDetails.map((e) => e.toTrack()).toList(),
+      songDetails.map((e) => e.toTrack(null)).toList(),
     );
   }
 
@@ -296,7 +297,7 @@ class NetworkRepository {
     }
     final recommendSongs = ret.asValue!.value.dailySongs;
     return Result.value(
-      recommendSongs.map((e) => e.toTrack()).toList(),
+      recommendSongs.map((e) => e.toTrack(null)).toList(),
     );
   }
 
@@ -309,12 +310,36 @@ class NetworkRepository {
       return ret.asError!;
     }
     final personalFm = ret.asValue!.value.data;
-    return Result.value(personalFm.map((e) => e.toTrack()).toList());
+    return Result.value(personalFm.map((e) => e.toTrack(e.privilege)).toList());
   }
 }
 
+TrackType _trackType({
+  required int fee,
+  required bool cs,
+  required int st,
+}) {
+  if (st == -200) {
+    return TrackType.noCopyright;
+  }
+  if (cs) {
+    return TrackType.cloud;
+  }
+  switch (fee) {
+    case 0:
+    case 8:
+      return TrackType.free;
+    case 4:
+      return TrackType.payAlbum;
+    case 1:
+      return TrackType.vip;
+  }
+  debugPrint('unknown fee: $fee');
+  return TrackType.free;
+}
+
 extension _FmTrackMapper on api.FmTrackItem {
-  Track toTrack() => Track(
+  Track toTrack(api.Privilege privilege) => Track(
         id: id,
         name: name,
         artists: artists.map((e) => e.toArtist()).toList(),
@@ -322,6 +347,7 @@ extension _FmTrackMapper on api.FmTrackItem {
         imageUrl: album.picUrl,
         uri: 'http://music.163.com/song/media/outer/url?id=$id.mp3',
         duration: Duration(milliseconds: duration),
+        type: _trackType(fee: privilege.fee, st: privilege.st, cs: privilege.cs),
       );
 }
 
@@ -342,8 +368,11 @@ extension _FmAlbumMapper on api.FmAlbum {
 }
 
 extension _PlayListMapper on api.Playlist {
-  PlaylistDetail toPlaylistDetail() {
+  PlaylistDetail toPlaylistDetail(List<api.PrivilegesItem> privileges) {
     assert(coverImgUrl.isNotEmpty, 'coverImgUrl is empty');
+    final privilegesMap = Map<int, api.PrivilegesItem>.fromEntries(
+      privileges.map((e) => MapEntry(e.id, e)),
+    );
     return PlaylistDetail(
       id: id,
       name: name,
@@ -354,7 +383,7 @@ extension _PlayListMapper on api.Playlist {
       creator: creator.toUser(),
       description: description,
       subscribed: subscribed,
-      tracks: tracks.map((e) => e.toTrack()).toList(),
+      tracks: tracks.map((e) => e.toTrack(privilegesMap[e.id])).toList(),
       commentCount: commentCount,
       shareCount: shareCount,
       trackUpdateTime: trackUpdateTime,
@@ -364,7 +393,7 @@ extension _PlayListMapper on api.Playlist {
 }
 
 extension _TrackMapper on api.TracksItem {
-  Track toTrack() {
+  Track toTrack(api.PrivilegesItem? privilege) {
     return Track(
       id: id,
       name: name,
@@ -373,6 +402,11 @@ extension _TrackMapper on api.TracksItem {
       imageUrl: al.picUrl,
       uri: 'http://music.163.com/song/media/outer/url?id=$id.mp3',
       duration: Duration(milliseconds: dt),
+      type: _trackType(
+        fee: privilege?.fee ?? fee,
+        cs: privilege?.cs ?? false,
+        st: privilege?.st ?? st,
+      ),
     );
   }
 }

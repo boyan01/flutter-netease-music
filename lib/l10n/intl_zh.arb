@@ -51,5 +51,6 @@
     "themeAuto": "跟随系统",
     "settings": "设置",
     "about": "关于",
-    "hideCopyrightOverlay": "隐藏版权浮层"
+    "hideCopyrightOverlay": "隐藏版权浮层",
+    "trackNoCopyright": "此音乐暂无版权"
 }

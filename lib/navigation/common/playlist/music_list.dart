@@ -30,7 +30,12 @@ class TrackTileContainer extends StatelessWidget {
           return PlayResult.alreadyPlaying;
         } else {
           context.player
-            ..setTrackList(TrackList(id: id, tracks: playlist.tracks))
+            ..setTrackList(TrackList(
+              id: id,
+              tracks: playlist.tracks
+                  .whereNot((e) => e.type == TrackType.noCopyright)
+                  .toList(),
+            ))
             ..playFromMediaId(track.id);
           return PlayResult.success;
         }

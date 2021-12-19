@@ -51,5 +51,6 @@
     "themeAuto": "Follow System",
     "settings": "Settings",
     "about": "About",
-    "hideCopyrightOverlay": "Hide Copyright Overlay"
+    "hideCopyrightOverlay": "Hide Copyright Overlay",
+    "trackNoCopyright": "Track No Copyright"
 }

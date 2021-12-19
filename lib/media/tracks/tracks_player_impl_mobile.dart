@@ -31,6 +31,7 @@ extension _Metadata on MusicMetadata {
       album: album == null ? null : AlbumMini.fromJson(album),
       imageUrl: extras?['imageUrl'] as String,
       duration: Duration(milliseconds: duration),
+      type: TrackType.values.byName(extras?['fee']),
     );
   }
 }
@@ -46,6 +47,7 @@ extension _Track on Track {
         'album': jsonEncode(album?.toJson()),
         'artists': jsonEncode(artists.map((e) => e.toJson()).toList()),
         'imageUrl': imageUrl,
+        'fee': type.name,
       },
     );
   }

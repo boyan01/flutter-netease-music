@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:overlay_support/overlay_support.dart';
 import 'package:quiet/extension.dart';
 import 'package:quiet/navigation/common/like_button.dart';
 import 'package:quiet/navigation/common/playlist/music_list.dart';
@@ -252,7 +253,13 @@ class TrackTile extends StatelessWidget {
               ? context.colorScheme.background
               : context.colorScheme.primary.withOpacity(0.04),
           child: InkWell(
-            onTap: () => TrackTileContainer.playTrack(context, track),
+            onTap: () {
+              if (track.type == TrackType.noCopyright) {
+                toast(context.strings.trackNoCopyright);
+                return;
+              }
+              TrackTileContainer.playTrack(context, track);
+            },
             child: DefaultTextStyle(
               style: const TextStyle(),
               maxLines: 1,
@@ -282,8 +289,12 @@ class TrackTile extends StatelessWidget {
                     child: Text(
                       track.name,
                       overflow: TextOverflow.ellipsis,
-                      style:
-                          context.textTheme.bodyMedium?.copyWith(fontSize: 14),
+                      style: context.textTheme.bodyMedium?.copyWith(
+                        fontSize: 14,
+                        color: track.type == TrackType.noCopyright
+                            ? context.theme.disabledColor
+                            : null,
+                      ),
                     ),
                   ),
                   SizedBox(

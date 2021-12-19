@@ -18,6 +18,7 @@ Track _$TrackFromJson(Map json) => Track(
           : AlbumMini.fromJson(Map<String, dynamic>.from(json['album'] as Map)),
       imageUrl: json['imageUrl'] as String?,
       duration: Duration(microseconds: json['duration'] as int),
+      type: $enumDecode(_$TrackTypeEnumMap, json['type']),
     );
 
 Map<String, dynamic> _$TrackToJson(Track instance) => <String, dynamic>{
@@ -28,7 +29,16 @@ Map<String, dynamic> _$TrackToJson(Track instance) => <String, dynamic>{
       'album': instance.album?.toJson(),
       'imageUrl': instance.imageUrl,
       'duration': instance.duration.inMicroseconds,
+      'type': _$TrackTypeEnumMap[instance.type],
     };
+
+const _$TrackTypeEnumMap = {
+  TrackType.free: 'free',
+  TrackType.payAlbum: 'payAlbum',
+  TrackType.vip: 'vip',
+  TrackType.cloud: 'cloud',
+  TrackType.noCopyright: 'noCopyright',
+};
 
 ArtistMini _$ArtistMiniFromJson(Map json) => ArtistMini(
       id: json['id'] as String,

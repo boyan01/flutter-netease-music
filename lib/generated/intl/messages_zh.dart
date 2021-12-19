@@ -89,6 +89,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "themeLight": MessageLookupByLibrary.simpleMessage("浅色主题"),
         "tipsAutoRegisterIfUserNotExist":
             MessageLookupByLibrary.simpleMessage("未注册手机号登陆后将自动创建账号"),
-        "todo": MessageLookupByLibrary.simpleMessage("TBD")
+        "todo": MessageLookupByLibrary.simpleMessage("TBD"),
+        "trackNoCopyright": MessageLookupByLibrary.simpleMessage("此音乐暂无版权")
       };
 }

@@ -5,6 +5,14 @@ part 'track.g.dart';
 
 typedef Music = Track;
 
+enum TrackType {
+  free,
+  payAlbum,
+  vip,
+  cloud,
+  noCopyright,
+}
+
 @JsonSerializable()
 class Track with EquatableMixin {
   Track({
@@ -15,6 +23,7 @@ class Track with EquatableMixin {
     required this.album,
     required this.imageUrl,
     required this.duration,
+    required this.type,
   });
 
   factory Track.fromJson(Map<String, dynamic> json) => _$TrackFromJson(json);
@@ -33,11 +42,21 @@ class Track with EquatableMixin {
 
   final Duration duration;
 
+  final TrackType type;
+
   String get displaySubtitle => artists.map((artist) => artist.name).join(', ');
 
   @override
-  List<Object?> get props =>
-      [id, uri, name, artists, album, imageUrl, duration];
+  List<Object?> get props => [
+        id,
+        uri,
+        name,
+        artists,
+        album,
+        imageUrl,
+        duration,
+        type,
+      ];
 
   Map<String, dynamic> toJson() => _$TrackToJson(this);
 }

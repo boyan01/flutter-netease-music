@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:dart_vlc/dart_vlc.dart';
 import 'package:flutter/foundation.dart';
 import 'package:quiet/extension.dart';
@@ -181,7 +183,18 @@ class TracksPlayerImplVlc extends TracksPlayer {
   double get volume => _player.general.volume;
 
   void _playTrack(Track track) {
-    _player.open(Media.network(track.uri), autoStart: true);
+    scheduleMicrotask(() async {
+      final url = await neteaseRepository!.getPlayUrl(track.id);
+      if (url.isError) {
+        debugPrint('Failed to get play url: ${url.asError!.error}');
+        return;
+      }
+      if (_current.value != track) {
+        // skip play. since the track is changed.
+        return;
+      }
+      _player.open(Media.network(url.asValue!.value), autoStart: true);
+    });
     _current.value = track;
   }
 }

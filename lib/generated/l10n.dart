@@ -581,6 +581,16 @@ class S {
       args: [],
     );
   }
+
+  /// `Track No Copyright`
+  String get trackNoCopyright {
+    return Intl.message(
+      'Track No Copyright',
+      name: 'trackNoCopyright',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {
