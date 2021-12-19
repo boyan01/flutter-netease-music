@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:quiet/extension.dart';
 import 'package:quiet/navigation/desktop/navigator.dart';
@@ -7,18 +8,23 @@ class HeaderBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 42,
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: const [
-          SizedBox(width: 180, child: _HeaderNavigationButtons()),
-          Spacer(),
-          _SearchBar(),
-          SizedBox(width: 10),
-          _SettingButton(),
-          SizedBox(width: 20),
-        ],
+    return Padding(
+      padding: EdgeInsets.only(
+        top: defaultTargetPlatform == TargetPlatform.macOS ? 20 : 0,
+      ),
+      child: SizedBox(
+        height: 42,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: const [
+            SizedBox(width: 180, child: _HeaderNavigationButtons()),
+            Spacer(),
+            _SearchBar(),
+            SizedBox(width: 10),
+            _SettingButton(),
+            SizedBox(width: 20),
+          ],
+        ),
       ),
     );
   }

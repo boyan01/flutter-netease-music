@@ -2,7 +2,6 @@ import 'playlist_detail.dart';
 import 'safe_convert.dart';
 
 class PlayRecord {
-
   PlayRecord({
     this.playCount = 0,
     this.score = 0,
@@ -18,7 +17,6 @@ class PlayRecord {
   final int playCount;
   final int score;
   final TracksItem song;
-
 
   Map<String, dynamic> toJson() => {
         'playCount': playCount,
