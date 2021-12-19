@@ -128,7 +128,6 @@ class BottomControllerBar extends StatelessWidget {
                         child: ProgressTrackingContainer(
                           builder: (context) =>
                               _SubTitleOrLyric(music.displaySubtitle),
-                          player: context.player,
                         ),
                       ),
                       const Spacer(),

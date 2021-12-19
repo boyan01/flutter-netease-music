@@ -26,8 +26,7 @@ class PlayingLyricView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ProgressTrackingContainer(
-        builder: _buildLyric, player: context.player);
+    return ProgressTrackingContainer(builder: _buildLyric);
   }
 
   Widget _buildLyric(BuildContext context) {

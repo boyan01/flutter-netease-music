@@ -16,8 +16,7 @@ class DurationProgressBarState extends State<DurationProgressBar> {
 
   @override
   Widget build(BuildContext context) {
-    return ProgressTrackingContainer(
-        builder: _buildBar, player: context.player);
+    return ProgressTrackingContainer(builder: _buildBar);
   }
 
   Widget _buildBar(BuildContext context) {

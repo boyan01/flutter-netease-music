@@ -191,8 +191,7 @@ class _ProgressBar extends HookWidget {
   Widget build(BuildContext context) {
     final userTrackingValue = useState<double?>(null);
     final playingTrack = context.playingTrack;
-    final duration = context.player.duration;
-    if (playingTrack == null || duration == null) {
+    if (playingTrack == null || context.player.duration == null) {
       return const SizedBox.shrink();
     }
     return SizedBox(
@@ -213,14 +212,17 @@ class _ProgressBar extends HookWidget {
             showValueIndicator: ShowValueIndicator.always,
           ),
           child: ProgressTrackingContainer(
-            player: context.player,
             builder: (context) {
               final position =
                   context.player.position?.inMilliseconds.toDouble() ?? 0.0;
-              final max = duration.inMilliseconds.toDouble();
+              final duration =
+                  context.player.duration?.inMilliseconds.toDouble() ?? 0.0;
               return Slider(
-                max: max,
-                value: (userTrackingValue.value ?? position).clamp(0.0, max),
+                max: duration,
+                value: (userTrackingValue.value ?? position).clamp(
+                  0.0,
+                  duration,
+                ),
                 onChangeStart: (value) => userTrackingValue.value = value,
                 onChanged: (value) => userTrackingValue.value = value,
                 semanticFormatterCallback: (value) =>
