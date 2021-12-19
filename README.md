@@ -27,12 +27,12 @@ Imitation of [NeteaseMusic](https://music.163.com/#/download).
 
 ## Dependency backend
 
-* Toast and InApp notification： [**
-  overlay_support**](https://github.com/boyan01/overlay_support)
-* music player:  [**
-  flutter-music-player**](https://github.com/boyan01/flutter-music-player)
-* netease api service: [**
-  NeteaseCloudMusicApi**](https://github.com/ziming1/NeteaseCloudMusicApi)
+* Toast and InApp notification：
+  [**overlay_support**](https://github.com/boyan01/overlay_support)
+* music player:  
+  [**flutter-music-player**](https://github.com/boyan01/flutter-music-player)
+* netease api service:
+  [**NeteaseCloudMusicApi**](https://github.com/ziming1/NeteaseCloudMusicApi)
 
 ## 交互效果
 
