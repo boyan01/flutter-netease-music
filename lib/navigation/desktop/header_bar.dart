@@ -8,22 +8,27 @@ class HeaderBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(
-        top: defaultTargetPlatform == TargetPlatform.macOS ? 20 : 0,
-      ),
-      child: SizedBox(
-        height: 42,
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: const [
-            SizedBox(width: 180, child: _HeaderNavigationButtons()),
-            Spacer(),
-            _SearchBar(),
-            SizedBox(width: 10),
-            _SettingButton(),
-            SizedBox(width: 20),
-          ],
+    return Material(
+      color: context.colorScheme.background,
+      elevation: 10,
+      child: Padding(
+        padding: EdgeInsets.only(
+          top: defaultTargetPlatform == TargetPlatform.macOS ? 20 : 0,
+          bottom: 4,
+        ),
+        child: SizedBox(
+          height: 42,
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: const [
+              SizedBox(width: 180, child: _HeaderNavigationButtons()),
+              Spacer(),
+              _SearchBar(),
+              SizedBox(width: 10),
+              _SettingButton(),
+              SizedBox(width: 20),
+            ],
+          ),
         ),
       ),
     );
@@ -74,7 +79,7 @@ class _SearchBar extends StatelessWidget {
         decoration: InputDecoration(
           contentPadding: const EdgeInsets.symmetric(vertical: 8),
           border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(4),
+            borderRadius: BorderRadius.circular(32),
             borderSide: BorderSide(
               color: context.colorScheme.onBackground.withOpacity(0.5),
               width: 1,

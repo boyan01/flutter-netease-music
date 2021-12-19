@@ -76,6 +76,8 @@ class _PlayingItemWidget extends StatelessWidget {
                 Text(
                   track.name,
                   style: context.textTheme.titleSmall,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
                 const SizedBox(height: 4),
                 Text(

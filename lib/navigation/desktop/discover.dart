@@ -16,22 +16,25 @@ class DiscoverPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: const [
-              Expanded(child: Center(child: Text('Discover'))),
-              SizedBox(
-                height: 240,
-                child: _Playlists(),
-              ),
-            ],
+    return Material(
+      color: context.colorScheme.background,
+      child: Row(
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: const [
+                Expanded(child: Center(child: Text('Discover'))),
+                SizedBox(
+                  height: 240,
+                  child: _Playlists(),
+                ),
+              ],
+            ),
           ),
-        ),
-        const SizedBox(width: 400, child: _PlayRecord()),
-      ],
+          const SizedBox(width: 400, child: _PlayRecord()),
+        ],
+      ),
     );
   }
 }
