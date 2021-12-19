@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:quiet/component.dart';
 import 'package:quiet/extension.dart';
 import 'package:quiet/repository.dart';
 

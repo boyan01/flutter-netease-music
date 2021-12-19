@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quiet/component.dart';
+import 'package:quiet/providers/settings_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class PageWelcome extends StatefulWidget {
@@ -22,13 +24,13 @@ class _PageWelcomeState extends State<PageWelcome> {
   }
 }
 
-class _WelcomeBody extends StatelessWidget {
+class _WelcomeBody extends ConsumerWidget {
   const _WelcomeBody({
     Key? key,
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Column(
       children: [
         _LeadingLayout(),
@@ -49,7 +51,7 @@ class _WelcomeBody extends StatelessWidget {
             const SizedBox(height: 8),
             OutlinedButton(
               onPressed: () {
-                context.settingsR.setSkipWelcomePage();
+                ref.read(settingStateProvider.notifier).setSkipWelcomePage();
                 //remove the all pages
                 Navigator.pushNamedAndRemoveUntil(
                     context, pageMain, (route) => false);

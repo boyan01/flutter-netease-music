@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:quiet/component.dart';
 import 'package:quiet/extension.dart';
 import 'package:quiet/navigation/common/like_button.dart';
 import 'package:quiet/navigation/common/playlist/music_list.dart';

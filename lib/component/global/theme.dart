@@ -1,7 +1,7 @@
-part of 'settings.dart';
-
 //网易红调色板
-const _swatchNeteaseRed = MaterialColor(0xFFdd4237, {
+import 'package:flutter/material.dart';
+
+const lightSwatch = MaterialColor(0xFFdd4237, {
   900: Color(0xFFae2a20),
   800: Color(0xFFbe332a),
   700: Color(0xFFcb3931),
@@ -14,21 +14,14 @@ const _swatchNeteaseRed = MaterialColor(0xFFdd4237, {
   50: Color(0xFFfeebee),
 });
 
-//app主题
-final quietThemes = [
-  _buildTheme(_swatchNeteaseRed),
-  _buildTheme(Colors.blue),
-  _buildTheme(Colors.green),
-  _buildTheme(Colors.amber),
-  _buildTheme(Colors.teal),
-];
+ThemeData get quietDarkTheme => ThemeData.dark().copyWith(
+      backgroundColor: Colors.white12,
+      tooltipTheme: const TooltipThemeData(
+        waitDuration: Duration(milliseconds: 1000),
+      ),
+    );
 
-final quietDarkTheme = ThemeData.dark().copyWith(
-  backgroundColor: Colors.white12,
-  tooltipTheme: const TooltipThemeData(
-    waitDuration: Duration(milliseconds: 1000),
-  ),
-);
+ThemeData get lightTheme => _buildTheme(lightSwatch);
 
 ThemeData _buildTheme(Color primaryColor) {
   final theme = ThemeData.from(

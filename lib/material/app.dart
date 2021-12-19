@@ -2,59 +2,83 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:quiet/component/global/settings.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:quiet/extension.dart';
 
-///版权说明浮层
-class CopyRightOverlay extends HookWidget {
+import '../providers/settings_provider.dart';
+
+class CopyRightOverlay extends HookConsumerWidget {
   const CopyRightOverlay({Key? key, this.child}) : super(key: key);
 
   final Widget? child;
 
   @override
-  Widget build(BuildContext context) {
-    final _painter = useMemoized(() => _CopyrightPainter());
+  Widget build(BuildContext context, WidgetRef ref) {
+    final copyRight = context.strings.copyRightOverlay;
+    final textStyle = context.textTheme.caption!.copyWith(
+      color: context.textTheme.caption!.color!.withOpacity(0.3),
+    );
+    final painter = useMemoized(
+      () => _CopyrightPainter(copyright: copyRight, style: textStyle),
+    );
+    useEffect(() {
+      painter.setText(copyRight, textStyle);
+    }, [copyRight, textStyle]);
     return CustomPaint(
       foregroundPainter:
-          context.settings.showCopyrightOverlay ? null : _painter,
+          ref.watch(settingStateProvider).copyright ? null : painter,
       child: child,
     );
   }
 }
 
 class _CopyrightPainter extends CustomPainter {
-  final TextPainter _textPainter = TextPainter(
-      text: TextSpan(
-        text:
-            "只用作个人学习研究，禁止用于商业及非法用途 Only used for personal study and research, commercial and illegal purposes are prohibited",
-        style: TextStyle(color: Colors.grey.withOpacity(0.3)),
-      ),
-      textDirection: TextDirection.ltr);
+  _CopyrightPainter({
+    required String copyright,
+    required TextStyle style,
+  }) : _textPainter = TextPainter(
+            text: TextSpan(
+              text: copyright,
+              style: style,
+            ),
+            textDirection: TextDirection.ltr);
+
+  final TextPainter _textPainter;
 
   bool _dirty = true;
 
-  static const double radius = math.pi / 4;
+  void setText(String text, TextStyle style) {
+    _textPainter.text = TextSpan(
+      text: text,
+      style: style,
+    );
+    _dirty = true;
+  }
 
   @override
   void paint(Canvas canvas, Size size) {
+    const double radius = math.pi / 4;
     if (_dirty) {
       _textPainter.layout();
       _dirty = false;
     }
     canvas.rotate(-radius);
+    canvas.translate(-size.width, 0);
 
     double dy = 0;
-    while (dy < size.height) {
-      canvas.save();
-      final double dx = dy * math.tan(radius);
-      canvas.translate(-dx, dy);
-      _textPainter.paint(canvas, Offset.zero);
+    while (dy < size.height * 1.5) {
+      double dx = 0;
+      while (dx < size.width * 1.5) {
+        _textPainter.paint(canvas, Offset(dx, dy));
+        dx += _textPainter.width * 1.5;
+      }
       dy += _textPainter.height * 3;
-      canvas.restore();
+      dx = 0;
     }
   }
 
   @override
-  bool shouldRepaint(CustomPainter oldDelegate) {
-    return true;
+  bool shouldRepaint(_CopyrightPainter oldDelegate) {
+    return _textPainter != oldDelegate._textPainter;
   }
 }

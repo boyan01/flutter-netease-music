@@ -32,6 +32,7 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+        "about": MessageLookupByLibrary.simpleMessage("关于"),
         "addToPlaylist": MessageLookupByLibrary.simpleMessage("加入歌单"),
         "addToPlaylistFailed": MessageLookupByLibrary.simpleMessage("加入歌单失败"),
         "album": MessageLookupByLibrary.simpleMessage("专辑"),
@@ -53,6 +54,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "failedToPlayMusic": MessageLookupByLibrary.simpleMessage("播放音乐失败"),
         "favoriteSongList": MessageLookupByLibrary.simpleMessage("收藏歌单"),
         "friends": MessageLookupByLibrary.simpleMessage("我的好友"),
+        "hideCopyrightOverlay": MessageLookupByLibrary.simpleMessage("隐藏版权浮层"),
         "latestPlayHistory": MessageLookupByLibrary.simpleMessage("最近播放"),
         "library": MessageLookupByLibrary.simpleMessage("音乐库"),
         "localMusic": MessageLookupByLibrary.simpleMessage("本地音乐"),
@@ -77,9 +79,14 @@ class MessageLookup extends MessageLookupByLibrary {
         "recommendPlayLists": MessageLookupByLibrary.simpleMessage("推荐歌单"),
         "search": MessageLookupByLibrary.simpleMessage("搜索"),
         "selectRegionDiaCode": MessageLookupByLibrary.simpleMessage("选择地区号码"),
+        "settings": MessageLookupByLibrary.simpleMessage("设置"),
         "shareContentCopied":
             MessageLookupByLibrary.simpleMessage("分享内容已复制到剪切板"),
         "skipLogin": MessageLookupByLibrary.simpleMessage("跳过登录"),
+        "theme": MessageLookupByLibrary.simpleMessage("主题"),
+        "themeAuto": MessageLookupByLibrary.simpleMessage("跟随系统"),
+        "themeDark": MessageLookupByLibrary.simpleMessage("深色主题"),
+        "themeLight": MessageLookupByLibrary.simpleMessage("浅色主题"),
         "tipsAutoRegisterIfUserNotExist":
             MessageLookupByLibrary.simpleMessage("未注册手机号登陆后将自动创建账号"),
         "todo": MessageLookupByLibrary.simpleMessage("TBD")

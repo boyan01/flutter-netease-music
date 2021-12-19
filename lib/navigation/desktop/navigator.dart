@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
 import './discover.dart';
-import 'playing_page.dart';
-import 'playlist/playlist_page.dart';
+import 'page_playing.dart';
+import 'page_setting.dart';
+import 'playlist/page_playlist.dart';
 
 abstract class NavigationType with EquatableMixin {
   NavigationType();
@@ -52,9 +53,9 @@ MaterialPage<dynamic> _buildPage(NavigationType type) {
   if (type is NavigationTargetDiscover) {
     page = const DiscoverPage();
   } else if (type is NavigationTargetSettings) {
-    page = const Text('Settings');
+    page = const PageSetting();
   } else if (type is NavigationTargetPlaylist) {
-    page = PlaylistPage(playlistId: type.playlistId);
+    page = PagePlaylist(playlistId: type.playlistId);
   } else {
     throw Exception('Unknown navigation type: $type');
   }
@@ -209,7 +210,7 @@ class _SlideAnimatedPlayingPage extends HookWidget {
     }
     return FractionalTranslation(
       translation: offset,
-      child: const PlayingPage(),
+      child: const PagePlaying(),
     );
   }
 }

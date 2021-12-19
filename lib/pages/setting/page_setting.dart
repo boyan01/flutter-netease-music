@@ -2,9 +2,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:quiet/component.dart';
-import 'package:quiet/component/global/settings.dart';
 import 'package:quiet/component/route.dart';
 
+import '../../navigation/common/settings.dart';
 import 'material.dart';
 
 export 'setting_theme_page.dart';
@@ -28,7 +28,7 @@ class SettingPage extends StatelessWidget {
                 onTap: () =>
                     context.secondaryNavigator!.pushNamed(pageSettingTheme),
               ),
-              _CopyRightCheckBox(),
+              const CopyRightOverlayCheckBox(),
             ],
           ),
           SettingGroup(
@@ -53,19 +53,6 @@ class SettingPage extends StatelessWidget {
           )
         ],
       ),
-    );
-  }
-}
-
-class _CopyRightCheckBox extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return CheckboxListTile(
-      value: context.settings.showCopyrightOverlay,
-      onChanged: (value) {
-        context.settings.showCopyrightOverlay = value!;
-      },
-      title: const Text('隐藏版权浮层'),
     );
   }
 }

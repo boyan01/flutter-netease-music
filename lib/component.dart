@@ -1,5 +1,5 @@
 export 'component/global/orientation.dart';
-export 'component/global/settings.dart';
+export 'component/global/theme.dart';
 export 'component/i18n/strings.dart';
 export 'component/netease/netease.dart';
 export 'component/player/player.dart';

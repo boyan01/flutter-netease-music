@@ -32,6 +32,7 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+        "about": MessageLookupByLibrary.simpleMessage("About"),
         "addToPlaylist":
             MessageLookupByLibrary.simpleMessage("add to playlist"),
         "addToPlaylistFailed":
@@ -60,6 +61,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "favoriteSongList":
             MessageLookupByLibrary.simpleMessage("Favorite Song List"),
         "friends": MessageLookupByLibrary.simpleMessage("Friends"),
+        "hideCopyrightOverlay":
+            MessageLookupByLibrary.simpleMessage("Hide Copyright Overlay"),
         "latestPlayHistory":
             MessageLookupByLibrary.simpleMessage("Play History"),
         "library": MessageLookupByLibrary.simpleMessage("Library"),
@@ -88,9 +91,14 @@ class MessageLookup extends MessageLookupByLibrary {
         "search": MessageLookupByLibrary.simpleMessage("Search"),
         "selectRegionDiaCode":
             MessageLookupByLibrary.simpleMessage("select region code"),
+        "settings": MessageLookupByLibrary.simpleMessage("Settings"),
         "shareContentCopied": MessageLookupByLibrary.simpleMessage(
             "Share content has copied to clipboard."),
         "skipLogin": MessageLookupByLibrary.simpleMessage("Skip login"),
+        "theme": MessageLookupByLibrary.simpleMessage("Theme"),
+        "themeAuto": MessageLookupByLibrary.simpleMessage("Follow System"),
+        "themeDark": MessageLookupByLibrary.simpleMessage("Dark"),
+        "themeLight": MessageLookupByLibrary.simpleMessage("Light"),
         "tipsAutoRegisterIfUserNotExist":
             MessageLookupByLibrary.simpleMessage("未注册手机号登陆后将自动创建账号"),
         "todo": MessageLookupByLibrary.simpleMessage("TBD")

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:overlay_support/overlay_support.dart';
-import 'package:quiet/component.dart';
 import 'package:quiet/extension.dart';
 import 'package:quiet/navigation/desktop/login/login_dialog.dart';
 import 'package:quiet/navigation/desktop/playlist/user_playlists.dart';

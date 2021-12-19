@@ -44,5 +44,12 @@
     "musicName": "Music Name",
     "artists": "Artists",
     "album": "Album",
-    "duration": "Duration"
+    "duration": "Duration",
+    "theme": "Theme",
+    "themeDark": "Dark",
+    "themeLight": "Light",
+    "themeAuto": "Follow System",
+    "settings": "Settings",
+    "about": "About",
+    "hideCopyrightOverlay": "Hide Copyright Overlay"
 }

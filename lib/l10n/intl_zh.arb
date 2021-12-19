@@ -44,5 +44,12 @@
     "musicName": "音乐标题",
     "artists": "歌手",
     "album": "专辑",
-    "duration": "时长"
+    "duration": "时长",
+    "theme": "主题",
+    "themeDark": "深色主题",
+    "themeLight": "浅色主题",
+    "themeAuto": "跟随系统",
+    "settings": "设置",
+    "about": "关于",
+    "hideCopyrightOverlay": "隐藏版权浮层"
 }

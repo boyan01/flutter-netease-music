@@ -6,13 +6,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart' as rp;
 import 'package:hive/hive.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:provider/provider.dart';
 import 'package:quiet/component.dart';
-import 'package:quiet/material/app.dart';
 import 'package:quiet/navigation/app.dart';
 import 'package:quiet/pages/splash/page_splash.dart';
 import 'package:quiet/repository.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import 'media/tracks/tracks_player_impl_mobile.dart';
 
@@ -24,7 +21,6 @@ void main() {
     runApp(rp.ProviderScope(
       child: PageSplash(
         futures: [
-          SharedPreferences.getInstance(),
           getApplicationDocumentsDirectory().then((dir) {
             Hive.init(dir.path);
             return Hive.openBox<Map>('player');
@@ -32,8 +28,7 @@ void main() {
         ],
         builder: (BuildContext context, List<dynamic> data) {
           return MyApp(
-            setting: Settings(data[0] as SharedPreferences),
-            player: data[1] as Box<Map>,
+            player: data[0] as Box<Map>,
           );
         },
       ),
@@ -54,28 +49,17 @@ void playerBackgroundService() {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({
-    Key? key,
-    required this.setting,
-    this.player,
-  }) : super(key: key);
-
-  final Settings setting;
+  const MyApp({Key? key, this.player}) : super(key: key);
 
   final Box<Map>? player;
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<Settings>.value(
-      value: setting,
-      child: Netease(
-        child: Quiet(
-          box: player,
-          child: const CopyRightOverlay(
-            child: OverlaySupport(
-              child: QuietApp(),
-            ),
-          ),
+    return Netease(
+      child: Quiet(
+        box: player,
+        child: const OverlaySupport(
+          child: QuietApp(),
         ),
       ),
     );

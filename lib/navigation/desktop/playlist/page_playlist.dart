@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:quiet/component.dart';
 import 'package:quiet/extension.dart';
 import 'package:quiet/material.dart';
 import 'package:quiet/providers/playlist_detail_provider.dart';
@@ -10,8 +9,8 @@ import '../../../component/utils/scroll_controller.dart';
 import '../../common/playlist/music_list.dart';
 import '../widgets/track_tile_normal.dart';
 
-class PlaylistPage extends HookConsumerWidget {
-  const PlaylistPage({
+class PagePlaylist extends HookConsumerWidget {
+  const PagePlaylist({
     Key? key,
     required this.playlistId,
   }) : super(key: key);

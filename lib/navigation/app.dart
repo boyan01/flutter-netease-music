@@ -3,7 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quiet/component.dart';
+import 'package:quiet/material.dart';
 import 'package:quiet/pages/account/account.dart';
+
+import '../providers/settings_provider.dart';
 
 class QuietApp extends ConsumerWidget {
   const QuietApp({Key? key}) : super(key: key);
@@ -21,13 +24,16 @@ class QuietApp extends ConsumerWidget {
         GlobalMaterialLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
-      theme: context.settings.theme,
-      darkTheme: context.settings.darkTheme,
-      themeMode: context.settings.themeMode,
+      theme: lightTheme,
+      darkTheme: quietDarkTheme,
+      themeMode: ref.watch(settingStateProvider).themeMode,
       initialRoute: getInitialRoute(
         ref,
-        skipWelcomePage: context.settings.skipWelcomePage,
+        skipWelcomePage: ref.read(settingStateProvider).skipWelcomePage,
       ),
+      builder: (context, child) {
+        return CopyRightOverlay(child: child);
+      },
     );
   }
 

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:quiet/component.dart';
 import 'package:quiet/extension.dart';
 import 'package:quiet/navigation/desktop/navigator.dart';
 import 'package:quiet/navigation/desktop/widgets/navigation_tile.dart';

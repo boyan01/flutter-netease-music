@@ -5,8 +5,8 @@ import '../common/player/cover.dart';
 import '../common/player/lyric_view.dart';
 import '../common/player/player_actions.dart';
 
-class PlayingPage extends StatelessWidget {
-  const PlayingPage({Key? key}) : super(key: key);
+class PagePlaying extends StatelessWidget {
+  const PagePlaying({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
