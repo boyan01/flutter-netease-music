@@ -3,9 +3,9 @@
 [![CI](https://github.com/boyan01/flutter-netease-music/workflows/CI/badge.svg)](https://github.com/boyan01/flutter-netease-music/actions)
 [![codecov](https://codecov.io/gh/boyan01/flutter-netease-music/branch/master/graph/badge.svg)](https://codecov.io/gh/boyan01/flutter-netease-music)
 
-仿[网易云音乐](https://music.163.com/#/download)。
+仿[网易云音乐](https://music.163.com/#/download), 支持全平台。
 
-Imitation of [NeteaseMusic](https://music.163.com/#/download).
+A Universal copy app of [NeteaseMusic](https://music.163.com/#/download)
 
 ## How to start (如何开始)
 
@@ -29,19 +29,21 @@ Imitation of [NeteaseMusic](https://music.163.com/#/download).
 
 * Toast and InApp notification：
   [**overlay_support**](https://github.com/boyan01/overlay_support)
-* music player:  
+* music player(mobile):
   [**flutter-music-player**](https://github.com/boyan01/flutter-music-player)
+* music player(desktop):
+  [**dar_vlc**](https://github.com/alexmercerind/dart_vlc)
 * netease api service:
   [**NeteaseCloudMusicApi**](https://github.com/ziming1/NeteaseCloudMusicApi)
 
-## 交互效果
+## Desktop Preview
 
-| playing                                                                                                   | playlist                                                             | lyric                                               |
-|-----------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------|-----------------------------------------------------|
-| ![playing](https://raw.githubusercontent.com/boyan01/boyan01.github.io/master/quiet/play_interaction.gif) | ![playlist](https://boyan01.github.io/quiet/interation_playlist.gif) | ![lyric](https://boyan01.github.io/quiet/lyric.gif) |
-| ![theme](https://boyan01.github.io/quiet/theme_switch.gif)                                                |                                                                      |                                                     |
+| light                                                           | dark                                                           |
+|-----------------------------------------------------------------|----------------------------------------------------------------|
+| ![playlist](https://boyan01.github.io/quiet/playlist_light.png) | ![playlist](https://boyan01.github.io/quiet/playlist_dark.png) |
+| ![playing](https://boyan01.github.io/quiet/playing_light.png)   | ![playing](https://boyan01.github.io/quiet/playing_dark.png)   |
 
-## 图片预览
+## Mobile Platforms Preview
 
 |   ![main_playlist](https://boyan01.github.io/quiet/main_playlist.png)   |    ![main_cloud](https://boyan01.github.io/quiet/main_playlist_dark.png)    |  ![main_cloud](https://boyan01.github.io/quiet/main_cloud.jpg)  | ![artist_detail](https://boyan01.github.io/quiet/artist_detail.jpg) |
 |:-----------------------------------------------------------------------:|:---------------------------------------------------------------------------:|:---------------------------------------------------------------:|:-------------------------------------------------------------------:|
