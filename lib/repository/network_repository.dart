@@ -314,6 +314,7 @@ class NetworkRepository {
   }
 }
 
+// https://github.com/Binaryify/NeteaseCloudMusicApi/issues/899#issuecomment-680002883
 TrackType _trackType({
   required int fee,
   required bool cs,
@@ -347,7 +348,8 @@ extension _FmTrackMapper on api.FmTrackItem {
         imageUrl: album.picUrl,
         uri: 'http://music.163.com/song/media/outer/url?id=$id.mp3',
         duration: Duration(milliseconds: duration),
-        type: _trackType(fee: privilege.fee, st: privilege.st, cs: privilege.cs),
+        type:
+            _trackType(fee: privilege.fee, st: privilege.st, cs: privilege.cs),
       );
 }
 
