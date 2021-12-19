@@ -3,11 +3,6 @@ import 'package:netease_api/src/ao/playlist_detail.dart';
 import 'safe_convert.dart';
 
 class AlbumDetail {
-  final bool resourceState;
-  final List<TracksItem> songs;
-  final int code;
-  final Album album;
-
   AlbumDetail({
     this.resourceState = false,
     required this.songs,
@@ -23,6 +18,11 @@ class AlbumDetail {
         album: Album.fromJson(asMap(json, 'album')),
       );
 
+  final bool resourceState;
+  final List<TracksItem> songs;
+  final int code;
+  final Album album;
+
   Map<String, dynamic> toJson() => {
         'resourceState': resourceState,
         'songs': songs.map((e) => e.toJson()),
@@ -32,34 +32,6 @@ class AlbumDetail {
 }
 
 class Album {
-  final List<dynamic> songs;
-  final bool paid;
-  final bool onSale;
-  final int mark;
-  final String description;
-  final int status;
-  final List<String> alias;
-  final List<AlbumArtistsItem> artists;
-  final int copyrightId;
-  final int picId;
-  final AlbumArtist artist;
-  final String briefDesc;
-  final int publishTime;
-  final String company;
-  final String picUrl;
-  final String commentThreadId;
-  final int pic;
-  final String blurPicUrl;
-  final int companyId;
-  final String tags;
-  final String subType;
-  final String name;
-  final int id;
-  final String type;
-  final int size;
-  final String picIdStr;
-  final AlbumInfo info;
-
   Album({
     required this.songs,
     this.paid = false,
@@ -122,6 +94,34 @@ class Album {
         info: AlbumInfo.fromJson(asMap(json, 'info')),
       );
 
+  final List<dynamic> songs;
+  final bool paid;
+  final bool onSale;
+  final int mark;
+  final String description;
+  final int status;
+  final List<String> alias;
+  final List<AlbumArtistsItem> artists;
+  final int copyrightId;
+  final int picId;
+  final AlbumArtist artist;
+  final String briefDesc;
+  final int publishTime;
+  final String company;
+  final String picUrl;
+  final String commentThreadId;
+  final int pic;
+  final String blurPicUrl;
+  final int companyId;
+  final String tags;
+  final String subType;
+  final String name;
+  final int id;
+  final String type;
+  final int size;
+  final String picIdStr;
+  final AlbumInfo info;
+
   Map<String, dynamic> toJson() => {
         'songs': songs.map((e) => e),
         'paid': paid,
@@ -154,21 +154,6 @@ class Album {
 }
 
 class AlbumArtistsItem {
-  final int img1v1Id;
-  final int topicPerson;
-  final List<dynamic> alias;
-  final int picId;
-  final int musicSize;
-  final int albumSize;
-  final String briefDesc;
-  final String picUrl;
-  final String img1v1Url;
-  final bool followed;
-  final String trans;
-  final String name;
-  final int id;
-  final String img1v1IdStr;
-
   AlbumArtistsItem({
     this.img1v1Id = 0,
     this.topicPerson = 0,
@@ -204,6 +189,21 @@ class AlbumArtistsItem {
         img1v1IdStr: asString(json, 'img1v1Id_str'),
       );
 
+  final int img1v1Id;
+  final int topicPerson;
+  final List<dynamic> alias;
+  final int picId;
+  final int musicSize;
+  final int albumSize;
+  final String briefDesc;
+  final String picUrl;
+  final String img1v1Url;
+  final bool followed;
+  final String trans;
+  final String name;
+  final int id;
+  final String img1v1IdStr;
+
   Map<String, dynamic> toJson() => {
         'img1v1Id': img1v1Id,
         'topicPerson': topicPerson,
@@ -223,22 +223,6 @@ class AlbumArtistsItem {
 }
 
 class AlbumArtist {
-  final int img1v1Id;
-  final int topicPerson;
-  final List<String> alias;
-  final int picId;
-  final int musicSize;
-  final int albumSize;
-  final String briefDesc;
-  final String picUrl;
-  final String img1v1Url;
-  final bool followed;
-  final String trans;
-  final String name;
-  final int id;
-  final String picIdStr;
-  final String img1v1IdStr;
-
   AlbumArtist({
     this.img1v1Id = 0,
     this.topicPerson = 0,
@@ -274,6 +258,21 @@ class AlbumArtist {
         picIdStr: asString(json, 'picId_str'),
         img1v1IdStr: asString(json, 'img1v1Id_str'),
       );
+  final int img1v1Id;
+  final int topicPerson;
+  final List<String> alias;
+  final int picId;
+  final int musicSize;
+  final int albumSize;
+  final String briefDesc;
+  final String picUrl;
+  final String img1v1Url;
+  final bool followed;
+  final String trans;
+  final String name;
+  final int id;
+  final String picIdStr;
+  final String img1v1IdStr;
 
   Map<String, dynamic> toJson() => {
         'img1v1Id': img1v1Id,
@@ -295,17 +294,6 @@ class AlbumArtist {
 }
 
 class AlbumInfo {
-  final CommentThread commentThread;
-  final dynamic latestLikedUsers;
-  final bool liked;
-  final dynamic comments;
-  final int resourceType;
-  final int resourceId;
-  final int commentCount;
-  final int likedCount;
-  final int shareCount;
-  final String threadId;
-
   AlbumInfo({
     required this.commentThread,
     this.latestLikedUsers,
@@ -332,6 +320,17 @@ class AlbumInfo {
         threadId: asString(json, 'threadId'),
       );
 
+  final CommentThread commentThread;
+  final dynamic latestLikedUsers;
+  final bool liked;
+  final dynamic comments;
+  final int resourceType;
+  final int resourceId;
+  final int commentCount;
+  final int likedCount;
+  final int shareCount;
+  final String threadId;
+
   Map<String, dynamic> toJson() => {
         'commentThread': commentThread.toJson(),
         'latestLikedUsers': latestLikedUsers,
@@ -347,18 +346,6 @@ class AlbumInfo {
 }
 
 class CommentThread {
-  final String id;
-  final ResourceInfo resourceInfo;
-  final int resourceType;
-  final int commentCount;
-  final int likedCount;
-  final int shareCount;
-  final int hotCount;
-  final dynamic latestLikedUsers;
-  final int resourceId;
-  final int resourceOwnerId;
-  final String resourceTitle;
-
   CommentThread({
     this.id = "",
     required this.resourceInfo,
@@ -386,6 +373,17 @@ class CommentThread {
         resourceOwnerId: asInt(json, 'resourceOwnerId'),
         resourceTitle: asString(json, 'resourceTitle'),
       );
+  final String id;
+  final ResourceInfo resourceInfo;
+  final int resourceType;
+  final int commentCount;
+  final int likedCount;
+  final int shareCount;
+  final int hotCount;
+  final dynamic latestLikedUsers;
+  final int resourceId;
+  final int resourceOwnerId;
+  final String resourceTitle;
 
   Map<String, dynamic> toJson() => {
         'id': id,
@@ -403,15 +401,6 @@ class CommentThread {
 }
 
 class ResourceInfo {
-  final int id;
-  final int userId;
-  final String name;
-  final String imgUrl;
-  final dynamic creator;
-  final dynamic encodedId;
-  final dynamic subTitle;
-  final dynamic webUrl;
-
   ResourceInfo({
     this.id = 0,
     this.userId = 0,
@@ -433,6 +422,14 @@ class ResourceInfo {
         subTitle: asString(json, 'subTitle'),
         webUrl: asString(json, 'webUrl'),
       );
+  final int id;
+  final int userId;
+  final String name;
+  final String imgUrl;
+  final dynamic creator;
+  final dynamic encodedId;
+  final dynamic subTitle;
+  final dynamic webUrl;
 
   Map<String, dynamic> toJson() => {
         'id': id,

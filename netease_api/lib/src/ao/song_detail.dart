@@ -2,10 +2,6 @@ import '../../netease_api.dart';
 import 'safe_convert.dart';
 
 class SongDetail {
-  final List<TracksItem> songs;
-  final List<PrivilegesItem> privileges;
-  final int code;
-
   SongDetail({
     required this.songs,
     required this.privileges,
@@ -20,6 +16,9 @@ class SongDetail {
             .toList(),
         code: asInt(json, 'code'),
       );
+  final List<TracksItem> songs;
+  final List<PrivilegesItem> privileges;
+  final int code;
 
   Map<String, dynamic> toJson() => {
         'songs': songs.map((e) => e.toJson()),

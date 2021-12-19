@@ -1,20 +1,6 @@
 import 'safe_convert.dart';
 
 class UserDetail {
-  final int level;
-  final int listenSongs;
-  final UserPoint userPoint;
-  final bool mobileSign;
-  final bool pcSign;
-  final Profile profile;
-  final bool peopleCanSeeMyPlayRecord;
-  final List<BindingsItem> bindings;
-  final bool adValid;
-  final int code;
-  final int createTime;
-  final int createDays;
-  final ProfileVillageInfo profileVillageInfo;
-
   UserDetail({
     this.level = 0,
     this.listenSongs = 0,
@@ -50,6 +36,20 @@ class UserDetail {
             ProfileVillageInfo.fromJson(asMap(json, 'profileVillageInfo')),
       );
 
+  final int level;
+  final int listenSongs;
+  final UserPoint userPoint;
+  final bool mobileSign;
+  final bool pcSign;
+  final Profile profile;
+  final bool peopleCanSeeMyPlayRecord;
+  final List<BindingsItem> bindings;
+  final bool adValid;
+  final int code;
+  final int createTime;
+  final int createDays;
+  final ProfileVillageInfo profileVillageInfo;
+
   Map<String, dynamic> toJson() => {
         'level': level,
         'listenSongs': listenSongs,
@@ -68,13 +68,6 @@ class UserDetail {
 }
 
 class UserPoint {
-  final int userId;
-  final int balance;
-  final int updateTime;
-  final int version;
-  final int status;
-  final int blockBalance;
-
   UserPoint({
     this.userId = 0,
     this.balance = 0,
@@ -93,6 +86,13 @@ class UserPoint {
         blockBalance: asInt(json, 'blockBalance'),
       );
 
+  final int userId;
+  final int balance;
+  final int updateTime;
+  final int version;
+  final int status;
+  final int blockBalance;
+
   Map<String, dynamic> toJson() => {
         'userId': userId,
         'balance': balance,
@@ -104,51 +104,6 @@ class UserPoint {
 }
 
 class Profile {
-  final PrivacyItemUnlimit privacyItemUnlimit;
-  final dynamic avatarDetail;
-  final int userId;
-  final String avatarUrl;
-  final int backgroundImgId;
-  final String backgroundUrl;
-  final int djStatus;
-  final int province;
-  final int vipType;
-  final bool followed;
-  final int city;
-  final int createTime;
-  final int userType;
-  final int authStatus;
-  final String detailDescription;
-  final Map<String, dynamic> experts;
-  final dynamic expertTags;
-  final bool defaultAvatar;
-  final String avatarImgIdStr;
-  final String description;
-  final String backgroundImgIdStr;
-  final bool mutual;
-  final dynamic remarkName;
-  final int avatarImgId;
-  final int birthday;
-  final int gender;
-  final String nickname;
-  final int accountStatus;
-  final String signature;
-  final int authority;
-  final int followeds;
-  final int follows;
-  final bool blacklist;
-  final int eventCount;
-  final int allSubscribedCount;
-  final int playlistBeSubscribedCount;
-  final dynamic followTime;
-  final bool followMe;
-  final List<dynamic> artistIdentity;
-  final int cCount;
-  final int sDJPCount;
-  final int playlistCount;
-  final int sCount;
-  final int newFollows;
-
   Profile({
     required this.privacyItemUnlimit,
     this.avatarDetail,
@@ -244,6 +199,51 @@ class Profile {
         newFollows: asInt(json, 'newFollows'),
       );
 
+  final PrivacyItemUnlimit privacyItemUnlimit;
+  final dynamic avatarDetail;
+  final int userId;
+  final String avatarUrl;
+  final int backgroundImgId;
+  final String backgroundUrl;
+  final int djStatus;
+  final int province;
+  final int vipType;
+  final bool followed;
+  final int city;
+  final int createTime;
+  final int userType;
+  final int authStatus;
+  final String detailDescription;
+  final Map<String, dynamic> experts;
+  final dynamic expertTags;
+  final bool defaultAvatar;
+  final String avatarImgIdStr;
+  final String description;
+  final String backgroundImgIdStr;
+  final bool mutual;
+  final dynamic remarkName;
+  final int avatarImgId;
+  final int birthday;
+  final int gender;
+  final String nickname;
+  final int accountStatus;
+  final String signature;
+  final int authority;
+  final int followeds;
+  final int follows;
+  final bool blacklist;
+  final int eventCount;
+  final int allSubscribedCount;
+  final int playlistBeSubscribedCount;
+  final dynamic followTime;
+  final bool followMe;
+  final List<dynamic> artistIdentity;
+  final int cCount;
+  final int sDJPCount;
+  final int playlistCount;
+  final int sCount;
+  final int newFollows;
+
   Map<String, dynamic> toJson() => {
         'privacyItemUnlimit': privacyItemUnlimit.toJson(),
         'avatarDetail': avatarDetail,
@@ -294,11 +294,6 @@ class Profile {
 }
 
 class PrivacyItemUnlimit {
-  final bool area;
-  final bool college;
-  final bool age;
-  final bool villageAge;
-
   PrivacyItemUnlimit({
     this.area = false,
     this.college = false,
@@ -314,6 +309,11 @@ class PrivacyItemUnlimit {
         villageAge: asBool(json, 'villageAge'),
       );
 
+  final bool area;
+  final bool college;
+  final bool age;
+  final bool villageAge;
+
   Map<String, dynamic> toJson() => {
         'area': area,
         'college': college,
@@ -323,16 +323,6 @@ class PrivacyItemUnlimit {
 }
 
 class BindingsItem {
-  final int userId;
-  final int expiresIn;
-  final int refreshTime;
-  final int bindingTime;
-  final dynamic tokenJsonStr;
-  final bool expired;
-  final String url;
-  final int id;
-  final int type;
-
   BindingsItem({
     this.userId = 0,
     this.expiresIn = 0,
@@ -357,6 +347,16 @@ class BindingsItem {
         type: asInt(json, 'type'),
       );
 
+  final int userId;
+  final int expiresIn;
+  final int refreshTime;
+  final int bindingTime;
+  final dynamic tokenJsonStr;
+  final bool expired;
+  final String url;
+  final int id;
+  final int type;
+
   Map<String, dynamic> toJson() => {
         'userId': userId,
         'expiresIn': expiresIn,
@@ -371,10 +371,6 @@ class BindingsItem {
 }
 
 class ProfileVillageInfo {
-  final String title;
-  final String imageUrl;
-  final String targetUrl;
-
   ProfileVillageInfo({
     this.title = "",
     this.imageUrl = "",
@@ -387,6 +383,9 @@ class ProfileVillageInfo {
         imageUrl: asString(json, 'imageUrl'),
         targetUrl: asString(json, 'targetUrl'),
       );
+  final String title;
+  final String imageUrl;
+  final String targetUrl;
 
   Map<String, dynamic> toJson() => {
         'title': title,

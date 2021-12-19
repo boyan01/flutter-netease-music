@@ -3,11 +3,6 @@ import 'package:netease_api/netease_api.dart';
 import 'safe_convert.dart';
 
 class ArtistDetail {
-  final Artist artist;
-  final List<TracksItem> hotSongs;
-  final bool more;
-  final int code;
-
   ArtistDetail({
     required this.artist,
     required this.hotSongs,
@@ -23,6 +18,10 @@ class ArtistDetail {
         more: asBool(json, 'more'),
         code: asInt(json, 'code'),
       );
+  final Artist artist;
+  final List<TracksItem> hotSongs;
+  final bool more;
+  final int code;
 
   Map<String, dynamic> toJson() => {
         'artist': artist.toJson(),
@@ -33,24 +32,6 @@ class ArtistDetail {
 }
 
 class Artist {
-  final int img1v1Id;
-  final int topicPerson;
-  final List<String> alias;
-  final int picId;
-  final String briefDesc;
-  final int musicSize;
-  final int albumSize;
-  final String picUrl;
-  final bool followed;
-  final String img1v1Url;
-  final String trans;
-  final String name;
-  final int id;
-  final int publishTime;
-  final String picIdStr;
-  final String img1v1IdStr;
-  final int mvSize;
-
   Artist({
     this.img1v1Id = 0,
     this.topicPerson = 0,
@@ -90,6 +71,23 @@ class Artist {
         img1v1IdStr: asString(json, 'img1v1Id_str'),
         mvSize: asInt(json, 'mvSize'),
       );
+  final int img1v1Id;
+  final int topicPerson;
+  final List<String> alias;
+  final int picId;
+  final String briefDesc;
+  final int musicSize;
+  final int albumSize;
+  final String picUrl;
+  final bool followed;
+  final String img1v1Url;
+  final String trans;
+  final String name;
+  final int id;
+  final int publishTime;
+  final String picIdStr;
+  final String img1v1IdStr;
+  final int mvSize;
 
   Map<String, dynamic> toJson() => {
         'img1v1Id': img1v1Id,

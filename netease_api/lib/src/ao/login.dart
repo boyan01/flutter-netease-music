@@ -2,14 +2,6 @@ import 'safe_convert.dart';
 import 'user_detail.dart';
 
 class Login {
-  final int loginType;
-  final int code;
-  final Account account;
-  final String token;
-  final Profile profile;
-  final List<BindingsItem> bindings;
-  final String cookie;
-
   Login({
     this.loginType = 0,
     this.code = 0,
@@ -31,6 +23,13 @@ class Login {
             .toList(),
         cookie: asString(json, 'cookie'),
       );
+  final int loginType;
+  final int code;
+  final Account account;
+  final String token;
+  final Profile profile;
+  final List<BindingsItem> bindings;
+  final String cookie;
 
   Map<String, dynamic> toJson() => {
         'loginType': loginType,
@@ -44,21 +43,6 @@ class Login {
 }
 
 class Account {
-  final int id;
-  final String userName;
-  final int type;
-  final int status;
-  final int whitelistAuthority;
-  final int createTime;
-  final String salt;
-  final int tokenVersion;
-  final int ban;
-  final int baoyueVersion;
-  final int donateVersion;
-  final int vipType;
-  final int viptypeVersion;
-  final bool anonimousUser;
-
   Account({
     this.id = 0,
     this.userName = "",
@@ -92,6 +76,20 @@ class Account {
         viptypeVersion: asInt(json, 'viptypeVersion'),
         anonimousUser: asBool(json, 'anonimousUser'),
       );
+  final int id;
+  final String userName;
+  final int type;
+  final int status;
+  final int whitelistAuthority;
+  final int createTime;
+  final String salt;
+  final int tokenVersion;
+  final int ban;
+  final int baoyueVersion;
+  final int donateVersion;
+  final int vipType;
+  final int viptypeVersion;
+  final bool anonimousUser;
 
   Map<String, dynamic> toJson() => {
         'id': id,

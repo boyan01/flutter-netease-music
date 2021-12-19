@@ -1,4 +1,4 @@
-include: package:lint/analysis_options.yaml
+include: package:flutter_lints/flutter.yaml
 
 analyzer:
   strong-mode:
@@ -29,3 +29,6 @@ linter:
     require_trailing_commas: false
     avoid_relative_lib_imports: false
     always_use_package_imports: false
+
+    # TODO(bin): remove this
+    use_key_in_widget_constructors: false

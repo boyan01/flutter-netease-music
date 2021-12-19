@@ -2,10 +2,6 @@ import '../../netease_api.dart';
 import 'safe_convert.dart';
 
 class PersonalFm {
-  final bool popAdjust;
-  final List<FmTrackItem> data;
-  final int code;
-
   PersonalFm({
     this.popAdjust = false,
     required this.data,
@@ -17,6 +13,9 @@ class PersonalFm {
         data: asList(json, 'data').map((e) => FmTrackItem.fromJson(e)).toList(),
         code: asInt(json, 'code'),
       );
+  final bool popAdjust;
+  final List<FmTrackItem> data;
+  final int code;
 
   Map<String, dynamic> toJson() => {
         'popAdjust': popAdjust,
@@ -26,52 +25,6 @@ class PersonalFm {
 }
 
 class FmTrackItem {
-  final String name;
-  final int id;
-  final int position;
-  final List<String> alias;
-  final int status;
-  final int fee;
-  final int copyrightId;
-  final String disc;
-  final int no;
-  final List<FmArtist> artists;
-  final FmAlbum album;
-  final bool starred;
-  final int popularity;
-  final int score;
-  final int starredNum;
-  final int duration;
-  final int playedNum;
-  final int dayPlays;
-  final int hearTime;
-  final String ringtone;
-  final dynamic crbt;
-  final dynamic audition;
-  final String copyFrom;
-  final String commentThreadId;
-  final dynamic rtUrl;
-  final int ftype;
-  final List<dynamic> rtUrls;
-  final int copyright;
-  final dynamic transName;
-  final dynamic sign;
-  final int mark;
-  final int originCoverType;
-  final dynamic originSongSimpleData;
-  final int single;
-  final dynamic noCopyrightRcmd;
-  final MusicRes hMusic;
-  final MusicRes mMusic;
-  final MusicRes lMusic;
-  final MusicRes bMusic;
-  final int mvid;
-  final dynamic mp3Url;
-  final int rtype;
-  final dynamic rurl;
-  final Privilege privilege;
-  final String alg;
-
   FmTrackItem({
     this.name = "",
     this.id = 0,
@@ -168,6 +121,51 @@ class FmTrackItem {
         privilege: Privilege.fromJson(asMap(json, 'privilege')),
         alg: asString(json, 'alg'),
       );
+  final String name;
+  final int id;
+  final int position;
+  final List<String> alias;
+  final int status;
+  final int fee;
+  final int copyrightId;
+  final String disc;
+  final int no;
+  final List<FmArtist> artists;
+  final FmAlbum album;
+  final bool starred;
+  final int popularity;
+  final int score;
+  final int starredNum;
+  final int duration;
+  final int playedNum;
+  final int dayPlays;
+  final int hearTime;
+  final String ringtone;
+  final dynamic crbt;
+  final dynamic audition;
+  final String copyFrom;
+  final String commentThreadId;
+  final dynamic rtUrl;
+  final int ftype;
+  final List<dynamic> rtUrls;
+  final int copyright;
+  final dynamic transName;
+  final dynamic sign;
+  final int mark;
+  final int originCoverType;
+  final dynamic originSongSimpleData;
+  final int single;
+  final dynamic noCopyrightRcmd;
+  final MusicRes hMusic;
+  final MusicRes mMusic;
+  final MusicRes lMusic;
+  final MusicRes bMusic;
+  final int mvid;
+  final dynamic mp3Url;
+  final int rtype;
+  final dynamic rurl;
+  final Privilege privilege;
+  final String alg;
 
   Map<String, dynamic> toJson() => {
         'name': name,
@@ -219,33 +217,6 @@ class FmTrackItem {
 }
 
 class FmAlbum {
-  final String name;
-  final int id;
-  final String type;
-  final int size;
-  final int picId;
-  final String blurPicUrl;
-  final int companyId;
-  final int pic;
-  final String picUrl;
-  final int publishTime;
-  final String description;
-  final String tags;
-  final String company;
-  final String briefDesc;
-  final FmArtist artist;
-  final List<dynamic> songs;
-  final List<dynamic> alias;
-  final int status;
-  final int copyrightId;
-  final String commentThreadId;
-  final List<FmArtist> artists;
-  final String subType;
-  final dynamic transName;
-  final bool onSale;
-  final int mark;
-  final String picIdStr;
-
   FmAlbum({
     this.name = "",
     this.id = 0,
@@ -305,6 +276,33 @@ class FmAlbum {
         picIdStr: asString(json, 'picId_str'),
       );
 
+  final String name;
+  final int id;
+  final String type;
+  final int size;
+  final int picId;
+  final String blurPicUrl;
+  final int companyId;
+  final int pic;
+  final String picUrl;
+  final int publishTime;
+  final String description;
+  final String tags;
+  final String company;
+  final String briefDesc;
+  final FmArtist artist;
+  final List<dynamic> songs;
+  final List<dynamic> alias;
+  final int status;
+  final int copyrightId;
+  final String commentThreadId;
+  final List<FmArtist> artists;
+  final String subType;
+  final dynamic transName;
+  final bool onSale;
+  final int mark;
+  final String picIdStr;
+
   Map<String, dynamic> toJson() => {
         'name': name,
         'id': id,
@@ -336,19 +334,6 @@ class FmAlbum {
 }
 
 class FmArtist {
-  final String name;
-  final int id;
-  final int picId;
-  final int img1v1Id;
-  final String briefDesc;
-  final String picUrl;
-  final String img1v1Url;
-  final int albumSize;
-  final List<String> alias;
-  final String trans;
-  final int musicSize;
-  final int topicPerson;
-
   FmArtist({
     this.name = "",
     this.id = 0,
@@ -379,6 +364,19 @@ class FmArtist {
         topicPerson: asInt(json, 'topicPerson'),
       );
 
+  final String name;
+  final int id;
+  final int picId;
+  final int img1v1Id;
+  final String briefDesc;
+  final String picUrl;
+  final String img1v1Url;
+  final int albumSize;
+  final List<String> alias;
+  final String trans;
+  final int musicSize;
+  final int topicPerson;
+
   Map<String, dynamic> toJson() => {
         'name': name,
         'id': id,
@@ -396,16 +394,6 @@ class FmArtist {
 }
 
 class MusicRes {
-  final dynamic name;
-  final int id;
-  final int size;
-  final String extension;
-  final int sr;
-  final int dfsId;
-  final int bitrate;
-  final int playTime;
-  final int volumeDelta;
-
   MusicRes({
     this.name,
     this.id = 0,
@@ -429,6 +417,15 @@ class MusicRes {
         playTime: asInt(json, 'playTime'),
         volumeDelta: asInt(json, 'volumeDelta'),
       );
+  final dynamic name;
+  final int id;
+  final int size;
+  final String extension;
+  final int sr;
+  final int dfsId;
+  final int bitrate;
+  final int playTime;
+  final int volumeDelta;
 
   Map<String, dynamic> toJson() => {
         'name': name,
@@ -444,27 +441,6 @@ class MusicRes {
 }
 
 class Privilege {
-  final int id;
-  final int fee;
-  final int payed;
-  final int st;
-  final int pl;
-  final int dl;
-  final int sp;
-  final int cp;
-  final int subp;
-  final bool cs;
-  final int maxbr;
-  final int fl;
-  final bool toast;
-  final int flag;
-  final bool preSell;
-  final int playMaxbr;
-  final int downloadMaxbr;
-  final dynamic rscl;
-  final FreeTrialPrivilege freeTrialPrivilege;
-  final List<ChargeInfoListItem> chargeInfoList;
-
   Privilege({
     this.id = 0,
     this.fee = 0,
@@ -513,6 +489,26 @@ class Privilege {
             .map((e) => ChargeInfoListItem.fromJson(e))
             .toList(),
       );
+  final int id;
+  final int fee;
+  final int payed;
+  final int st;
+  final int pl;
+  final int dl;
+  final int sp;
+  final int cp;
+  final int subp;
+  final bool cs;
+  final int maxbr;
+  final int fl;
+  final bool toast;
+  final int flag;
+  final bool preSell;
+  final int playMaxbr;
+  final int downloadMaxbr;
+  final dynamic rscl;
+  final FreeTrialPrivilege freeTrialPrivilege;
+  final List<ChargeInfoListItem> chargeInfoList;
 
   Map<String, dynamic> toJson() => {
         'id': id,

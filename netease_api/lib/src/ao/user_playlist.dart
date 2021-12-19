@@ -3,11 +3,6 @@ import 'package:netease_api/netease_api.dart';
 import 'safe_convert.dart';
 
 class UserPlayList {
-  final String version;
-  final bool more;
-  final List<Playlist> playlist;
-  final int code;
-
   UserPlayList({
     this.version = "",
     this.more = false,
@@ -22,6 +17,11 @@ class UserPlayList {
             asList(json, 'playlist').map((e) => Playlist.fromJson(e)).toList(),
         code: asInt(json, 'code'),
       );
+
+  final String version;
+  final bool more;
+  final List<Playlist> playlist;
+  final int code;
 
   Map<String, dynamic> toJson() => {
         'version': version,

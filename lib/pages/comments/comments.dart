@@ -74,8 +74,8 @@ class CommentList extends Model with AutoLoadMoreMixin {
   }
 
   @override
-  Widget? buildItem(BuildContext context, List data, int index) {
-    final item = data[index];
+  Widget? buildItem(BuildContext context, List list, int index) {
+    final item = list[index];
     if (item is Comment) {
       return _ItemComment(comment: item);
     }
@@ -106,7 +106,7 @@ class CommentList extends Model with AutoLoadMoreMixin {
           );
       }
     }
-    return super.buildItem(context, data, index);
+    return super.buildItem(context, list, index);
   }
 }
 

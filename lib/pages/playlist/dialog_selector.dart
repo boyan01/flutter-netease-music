@@ -10,6 +10,8 @@ import 'package:quiet/repository.dart';
 ///pop with a int value which represent selected id
 ///or null indicate selected nothing
 class PlaylistSelectorDialog extends ConsumerWidget {
+  const PlaylistSelectorDialog({Key? key}) : super(key: key);
+
   ///add songs to user playlist
   ///return :
   /// if success -> true
@@ -19,7 +21,7 @@ class PlaylistSelectorDialog extends ConsumerWidget {
     final playlistId = await showDialog<int>(
         context: context,
         builder: (context) {
-          return PlaylistSelectorDialog();
+          return const PlaylistSelectorDialog();
         });
     if (playlistId == null) {
       return null;

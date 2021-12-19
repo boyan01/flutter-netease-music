@@ -432,7 +432,7 @@ class _IconMore extends StatelessWidget {
         final id = await showDialog(
             context: context,
             builder: (context) {
-              return PlaylistSelectorDialog();
+              return const PlaylistSelectorDialog();
             });
         if (id != null) {
           final bool succeed = await neteaseRepository!

@@ -1,10 +1,6 @@
 import 'safe_convert.dart';
 
 class PlayListDetail {
-  final int code;
-  final Playlist playlist;
-  final List<PrivilegesItem> privileges;
-
   PlayListDetail({
     this.code = 0,
     required this.playlist,
@@ -18,6 +14,9 @@ class PlayListDetail {
             .map((e) => PrivilegesItem.fromJson(e))
             .toList(),
       );
+  final int code;
+  final Playlist playlist;
+  final List<PrivilegesItem> privileges;
 
   Map<String, dynamic> toJson() => {
         'code': code,
@@ -27,41 +26,6 @@ class PlayListDetail {
 }
 
 class Playlist {
-  final int id;
-  final String name;
-  final int coverImgId;
-  final String coverImgUrl;
-  final String coverImgIdStr;
-  final int adType;
-  final int userId;
-  final int createTime;
-  final int status;
-  final bool opRecommend;
-  final bool highQuality;
-  final bool newImported;
-  final int updateTime;
-  final int trackCount;
-  final int specialType;
-  final int privacy;
-  final int trackUpdateTime;
-  final String commentThreadId;
-  final int playCount;
-  final int trackNumberUpdateTime;
-  final int subscribedCount;
-  final int cloudTrackCount;
-  final bool ordered;
-  final String description;
-  final List<String> tags;
-  final int backgroundCoverId;
-  final int titleImage;
-  final List<SubscribersItem> subscribers;
-  final bool subscribed;
-  final Creator creator;
-  final List<TracksItem> tracks;
-  final List<TrackIdsItem> trackIds;
-  final int shareCount;
-  final int commentCount;
-
   Playlist({
     this.id = 0,
     this.name = "",
@@ -140,6 +104,40 @@ class Playlist {
         shareCount: asInt(json, 'shareCount'),
         commentCount: asInt(json, 'commentCount'),
       );
+  final int id;
+  final String name;
+  final int coverImgId;
+  final String coverImgUrl;
+  final String coverImgIdStr;
+  final int adType;
+  final int userId;
+  final int createTime;
+  final int status;
+  final bool opRecommend;
+  final bool highQuality;
+  final bool newImported;
+  final int updateTime;
+  final int trackCount;
+  final int specialType;
+  final int privacy;
+  final int trackUpdateTime;
+  final String commentThreadId;
+  final int playCount;
+  final int trackNumberUpdateTime;
+  final int subscribedCount;
+  final int cloudTrackCount;
+  final bool ordered;
+  final String description;
+  final List<String> tags;
+  final int backgroundCoverId;
+  final int titleImage;
+  final List<SubscribersItem> subscribers;
+  final bool subscribed;
+  final Creator creator;
+  final List<TracksItem> tracks;
+  final List<TrackIdsItem> trackIds;
+  final int shareCount;
+  final int commentCount;
 
   Map<String, dynamic> toJson() => {
         'id': id,
@@ -180,33 +178,6 @@ class Playlist {
 }
 
 class SubscribersItem {
-  final bool defaultAvatar;
-  final int province;
-  final int authStatus;
-  final bool followed;
-  final String avatarUrl;
-  final int accountStatus;
-  final int gender;
-  final int city;
-  final int birthday;
-  final int userId;
-  final int userType;
-  final String nickname;
-  final String signature;
-  final String description;
-  final String detailDescription;
-  final int avatarImgId;
-  final int backgroundImgId;
-  final String backgroundUrl;
-  final int authority;
-  final bool mutual;
-  final int djStatus;
-  final int vipType;
-  final int authenticationTypes;
-  final String avatarImgIdStr;
-  final String backgroundImgIdStr;
-  final bool anchor;
-
   SubscribersItem({
     this.defaultAvatar = false,
     this.province = 0,
@@ -266,6 +237,33 @@ class SubscribersItem {
         anchor: asBool(json, 'anchor'),
       );
 
+  final bool defaultAvatar;
+  final int province;
+  final int authStatus;
+  final bool followed;
+  final String avatarUrl;
+  final int accountStatus;
+  final int gender;
+  final int city;
+  final int birthday;
+  final int userId;
+  final int userType;
+  final String nickname;
+  final String signature;
+  final String description;
+  final String detailDescription;
+  final int avatarImgId;
+  final int backgroundImgId;
+  final String backgroundUrl;
+  final int authority;
+  final bool mutual;
+  final int djStatus;
+  final int vipType;
+  final int authenticationTypes;
+  final String avatarImgIdStr;
+  final String backgroundImgIdStr;
+  final bool anchor;
+
   Map<String, dynamic> toJson() => {
         'defaultAvatar': defaultAvatar,
         'province': province,
@@ -298,33 +296,6 @@ class SubscribersItem {
 }
 
 class Creator {
-  final bool defaultAvatar;
-  final int province;
-  final int authStatus;
-  final bool followed;
-  final String avatarUrl;
-  final int accountStatus;
-  final int gender;
-  final int city;
-  final int birthday;
-  final int userId;
-  final int userType;
-  final String nickname;
-  final String signature;
-  final String description;
-  final String detailDescription;
-  final int avatarImgId;
-  final int backgroundImgId;
-  final String backgroundUrl;
-  final int authority;
-  final bool mutual;
-  final int djStatus;
-  final int vipType;
-  final int authenticationTypes;
-  final String avatarImgIdStr;
-  final String backgroundImgIdStr;
-  final bool anchor;
-
   Creator({
     this.defaultAvatar = false,
     this.province = 0,
@@ -382,6 +353,32 @@ class Creator {
         backgroundImgIdStr: asString(json, 'backgroundImgIdStr'),
         anchor: asBool(json, 'anchor'),
       );
+  final bool defaultAvatar;
+  final int province;
+  final int authStatus;
+  final bool followed;
+  final String avatarUrl;
+  final int accountStatus;
+  final int gender;
+  final int city;
+  final int birthday;
+  final int userId;
+  final int userType;
+  final String nickname;
+  final String signature;
+  final String description;
+  final String detailDescription;
+  final int avatarImgId;
+  final int backgroundImgId;
+  final String backgroundUrl;
+  final int authority;
+  final bool mutual;
+  final int djStatus;
+  final int vipType;
+  final int authenticationTypes;
+  final String avatarImgIdStr;
+  final String backgroundImgIdStr;
+  final bool anchor;
 
   Map<String, dynamic> toJson() => {
         'defaultAvatar': defaultAvatar,
@@ -415,40 +412,6 @@ class Creator {
 }
 
 class TracksItem {
-  final String name;
-  final int id;
-  final int pst;
-  final int t;
-  final List<ArtistItem> ar;
-  final List<String> alia;
-  final int pop;
-  final int st;
-  final String rt;
-  final int fee;
-  final int v;
-  final String cf;
-  final AlbumItem al;
-  final int dt;
-  final H h;
-  final M m;
-  final L l;
-  final String cd;
-  final int no;
-  final int ftype;
-  final List<dynamic> rtUrls;
-  final int djId;
-  final int copyright;
-  final int sId;
-  final int mark;
-  final int originCoverType;
-  final int single;
-  final int mst;
-  final int cp;
-  final int mv;
-  final int rtype;
-  final int publishTime;
-  final List<String> tns;
-
   TracksItem({
     this.name = "",
     this.id = 0,
@@ -521,6 +484,40 @@ class TracksItem {
         tns: asList(json, 'tns').map((e) => e.toString()).toList(),
       );
 
+  final String name;
+  final int id;
+  final int pst;
+  final int t;
+  final List<ArtistItem> ar;
+  final List<String> alia;
+  final int pop;
+  final int st;
+  final String rt;
+  final int fee;
+  final int v;
+  final String cf;
+  final AlbumItem al;
+  final int dt;
+  final H h;
+  final M m;
+  final L l;
+  final String cd;
+  final int no;
+  final int ftype;
+  final List<dynamic> rtUrls;
+  final int djId;
+  final int copyright;
+  final int sId;
+  final int mark;
+  final int originCoverType;
+  final int single;
+  final int mst;
+  final int cp;
+  final int mv;
+  final int rtype;
+  final int publishTime;
+  final List<String> tns;
+
   Map<String, dynamic> toJson() => {
         'name': name,
         'id': id,
@@ -559,11 +556,6 @@ class TracksItem {
 }
 
 class ArtistItem {
-  final int id;
-  final String name;
-  final List<String> tns;
-  final List<String> alias;
-
   ArtistItem({
     this.id = 0,
     this.name = "",
@@ -577,6 +569,10 @@ class ArtistItem {
         tns: asList(json, 'tns').cast(),
         alias: asList(json, 'alias').cast(),
       );
+  final int id;
+  final String name;
+  final List<String> tns;
+  final List<String> alias;
 
   Map<String, dynamic> toJson() => {
         'id': id,
@@ -587,13 +583,6 @@ class ArtistItem {
 }
 
 class AlbumItem {
-  final int id;
-  final String name;
-  final String picUrl;
-  final List<String> tns;
-  final String picStr;
-  final int pic;
-
   AlbumItem({
     this.id = 0,
     this.name = "",
@@ -611,6 +600,12 @@ class AlbumItem {
         picStr: asString(json, 'pic_str'),
         pic: asInt(json, 'pic'),
       );
+  final int id;
+  final String name;
+  final String picUrl;
+  final List<String> tns;
+  final String picStr;
+  final int pic;
 
   Map<String, dynamic> toJson() => {
         'id': id,
@@ -623,11 +618,6 @@ class AlbumItem {
 }
 
 class H {
-  final int br;
-  final int fid;
-  final int size;
-  final int vd;
-
   H({
     this.br = 0,
     this.fid = 0,
@@ -642,6 +632,11 @@ class H {
         vd: asInt(json, 'vd'),
       );
 
+  final int br;
+  final int fid;
+  final int size;
+  final int vd;
+
   Map<String, dynamic> toJson() => {
         'br': br,
         'fid': fid,
@@ -651,11 +646,6 @@ class H {
 }
 
 class M {
-  final int br;
-  final int fid;
-  final int size;
-  final int vd;
-
   M({
     this.br = 0,
     this.fid = 0,
@@ -669,6 +659,10 @@ class M {
         size: asInt(json, 'size'),
         vd: asInt(json, 'vd'),
       );
+  final int br;
+  final int fid;
+  final int size;
+  final int vd;
 
   Map<String, dynamic> toJson() => {
         'br': br,
@@ -679,11 +673,6 @@ class M {
 }
 
 class L {
-  final int br;
-  final int fid;
-  final int size;
-  final int vd;
-
   L({
     this.br = 0,
     this.fid = 0,
@@ -697,6 +686,10 @@ class L {
         size: asInt(json, 'size'),
         vd: asInt(json, 'vd'),
       );
+  final int br;
+  final int fid;
+  final int size;
+  final int vd;
 
   Map<String, dynamic> toJson() => {
         'br': br,
@@ -707,13 +700,6 @@ class L {
 }
 
 class TrackIdsItem {
-  final int id;
-  final int v;
-  final int t;
-  final int at;
-  final int uid;
-  final String rcmdReason;
-
   TrackIdsItem({
     this.id = 0,
     this.v = 0,
@@ -731,6 +717,12 @@ class TrackIdsItem {
         uid: asInt(json, 'uid'),
         rcmdReason: asString(json, 'rcmdReason'),
       );
+  final int id;
+  final int v;
+  final int t;
+  final int at;
+  final int uid;
+  final String rcmdReason;
 
   Map<String, dynamic> toJson() => {
         'id': id,
@@ -743,28 +735,6 @@ class TrackIdsItem {
 }
 
 class PrivilegesItem {
-  final int id;
-  final int fee;
-  final int payed;
-  final int realPayed;
-  final int st;
-  final int pl;
-  final int dl;
-  final int sp;
-  final int cp;
-  final int subp;
-  final bool cs;
-  final int maxbr;
-  final int fl;
-  final bool toast;
-  final int flag;
-  final bool paidBigBang;
-  final bool preSell;
-  final int playMaxbr;
-  final int downloadMaxbr;
-  final FreeTrialPrivilege freeTrialPrivilege;
-  final List<ChargeInfoListItem> chargeInfoList;
-
   PrivilegesItem({
     this.id = 0,
     this.fee = 0,
@@ -815,6 +785,27 @@ class PrivilegesItem {
             .map((e) => ChargeInfoListItem.fromJson(e))
             .toList(),
       );
+  final int id;
+  final int fee;
+  final int payed;
+  final int realPayed;
+  final int st;
+  final int pl;
+  final int dl;
+  final int sp;
+  final int cp;
+  final int subp;
+  final bool cs;
+  final int maxbr;
+  final int fl;
+  final bool toast;
+  final int flag;
+  final bool paidBigBang;
+  final bool preSell;
+  final int playMaxbr;
+  final int downloadMaxbr;
+  final FreeTrialPrivilege freeTrialPrivilege;
+  final List<ChargeInfoListItem> chargeInfoList;
 
   Map<String, dynamic> toJson() => {
         'id': id,
@@ -842,9 +833,6 @@ class PrivilegesItem {
 }
 
 class FreeTrialPrivilege {
-  final bool resConsumable;
-  final bool userConsumable;
-
   FreeTrialPrivilege({
     this.resConsumable = false,
     this.userConsumable = false,
@@ -855,6 +843,8 @@ class FreeTrialPrivilege {
         resConsumable: asBool(json, 'resConsumable'),
         userConsumable: asBool(json, 'userConsumable'),
       );
+  final bool resConsumable;
+  final bool userConsumable;
 
   Map<String, dynamic> toJson() => {
         'resConsumable': resConsumable,
@@ -863,9 +853,6 @@ class FreeTrialPrivilege {
 }
 
 class ChargeInfoListItem {
-  final int rate;
-  final int chargeType;
-
   ChargeInfoListItem({
     this.rate = 0,
     this.chargeType = 0,
@@ -876,6 +863,8 @@ class ChargeInfoListItem {
         rate: asInt(json, 'rate'),
         chargeType: asInt(json, 'chargeType'),
       );
+  final int rate;
+  final int chargeType;
 
   Map<String, dynamic> toJson() => {
         'rate': rate,

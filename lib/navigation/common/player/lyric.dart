@@ -166,7 +166,7 @@ class LyricState extends State<Lyric> with TickerProviderStateMixin {
   }
 
   @override
-  Widget build(BuildContext _) {
+  Widget build(BuildContext context) {
     return Container(
       constraints: const BoxConstraints(minWidth: 300, minHeight: 120),
       child: _ScrollerListener(

@@ -2,10 +2,6 @@ import 'personal_fm.dart';
 import 'safe_convert.dart';
 
 class PersonalizedNewSong {
-  final int code;
-  final int category;
-  final List<SongItem> result;
-
   PersonalizedNewSong({
     this.code = 0,
     this.category = 0,
@@ -19,6 +15,9 @@ class PersonalizedNewSong {
         result:
             asList(json, 'result').map((e) => SongItem.fromJson(e)).toList(),
       );
+  final int code;
+  final int category;
+  final List<SongItem> result;
 
   Map<String, dynamic> toJson() => {
         'code': code,
@@ -28,16 +27,6 @@ class PersonalizedNewSong {
 }
 
 class SongItem {
-  final int id;
-  final int type;
-  final String name;
-  final dynamic copywriter;
-  final String picUrl;
-  final bool canDislike;
-  final dynamic trackNumberUpdateTime;
-  final FmTrackItem song;
-  final String alg;
-
   SongItem({
     this.id = 0,
     this.type = 0,
@@ -61,6 +50,15 @@ class SongItem {
         song: FmTrackItem.fromJson(asMap(json, 'song')),
         alg: asString(json, 'alg'),
       );
+  final int id;
+  final int type;
+  final String name;
+  final dynamic copywriter;
+  final String picUrl;
+  final bool canDislike;
+  final dynamic trackNumberUpdateTime;
+  final FmTrackItem song;
+  final String alg;
 
   Map<String, dynamic> toJson() => {
         'id': id,

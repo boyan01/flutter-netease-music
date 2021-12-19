@@ -1,11 +1,6 @@
 import 'safe_convert.dart';
 
 class Personalized {
-  final bool hasTaste;
-  final int code;
-  final int category;
-  final List<PersonalizedItem> result;
-
   Personalized({
     this.hasTaste = false,
     this.code = 0,
@@ -21,6 +16,10 @@ class Personalized {
             .map((e) => PersonalizedItem.fromJson(e))
             .toList(),
       );
+  final bool hasTaste;
+  final int code;
+  final int category;
+  final List<PersonalizedItem> result;
 
   Map<String, dynamic> toJson() => {
         'hasTaste': hasTaste,
@@ -31,18 +30,6 @@ class Personalized {
 }
 
 class PersonalizedItem {
-  final int id;
-  final int type;
-  final String name;
-  final String copywriter;
-  final String picUrl;
-  final bool canDislike;
-  final int trackNumberUpdateTime;
-  final int playCount;
-  final int trackCount;
-  final bool highQuality;
-  final String alg;
-
   PersonalizedItem({
     this.id = 0,
     this.type = 0,
@@ -71,6 +58,18 @@ class PersonalizedItem {
         highQuality: asBool(json, 'highQuality'),
         alg: asString(json, 'alg'),
       );
+
+  final int id;
+  final int type;
+  final String name;
+  final String copywriter;
+  final String picUrl;
+  final bool canDislike;
+  final int trackNumberUpdateTime;
+  final int playCount;
+  final int trackCount;
+  final bool highQuality;
+  final String alg;
 
   Map<String, dynamic> toJson() => {
         'id': id,
