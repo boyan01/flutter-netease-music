@@ -31,6 +31,7 @@ class QuietApp extends ConsumerWidget {
         ref,
         skipWelcomePage: ref.read(settingStateProvider).skipWelcomePage,
       ),
+      debugShowCheckedModeBanner: false,
       builder: (context, child) {
         return CopyRightOverlay(child: child);
       },

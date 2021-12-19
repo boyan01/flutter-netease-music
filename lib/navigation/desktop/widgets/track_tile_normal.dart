@@ -65,6 +65,18 @@ class _TrackTableContainerState extends State<_TrackTableContainer> {
     durationWidth = widget.width * .10;
   }
 
+  @override
+  void didUpdateWidget(covariant _TrackTableContainer oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.width != widget.width) {
+      final totalWidth = nameWidth + artistWidth + albumWidth + durationWidth;
+      nameWidth = widget.width * nameWidth / totalWidth;
+      artistWidth = widget.width * artistWidth / totalWidth;
+      albumWidth = widget.width * albumWidth / totalWidth;
+      durationWidth = widget.width * durationWidth / totalWidth;
+    }
+  }
+
   void offsetNameArtist(double? delta) {
     if (delta == null) {
       return;

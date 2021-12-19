@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:provider/provider.dart' as provider;
@@ -15,30 +17,58 @@ class HomeWindow extends HookWidget {
     final navigatorController = useMemoized(() => DesktopNavigatorController());
     return provider.ChangeNotifierProvider(
       create: (_) => navigatorController,
-      child: Material(
-        child: Column(
-          children: [
-            const HeaderBar(),
-            Expanded(
-              child: DesktopPlayingPageContainer(
-                controller: navigatorController,
-                child: Row(
-                  children: [
-                    const SizedBox(width: 200, child: NavigationSideBar()),
-                    Expanded(
-                      child: ClipRect(
-                        child:
-                            DesktopNavigator(controller: navigatorController),
-                      ),
+      child: ClipRect(
+        child: _OverflowBox(
+          child: Material(
+            child: Column(
+              children: [
+                const HeaderBar(),
+                Expanded(
+                  child: DesktopPlayingPageContainer(
+                    controller: navigatorController,
+                    child: Row(
+                      children: [
+                        const SizedBox(width: 200, child: NavigationSideBar()),
+                        Expanded(
+                          child: ClipRect(
+                            child: DesktopNavigator(
+                                controller: navigatorController),
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
-              ),
+                const BottomPlayerBar(),
+              ],
             ),
-            const BottomPlayerBar(),
-          ],
+          ),
         ),
       ),
     );
+  }
+}
+
+class _OverflowBox extends StatelessWidget {
+  const _OverflowBox({
+    Key? key,
+    required this.child,
+  }) : super(key: key);
+
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(builder: (context, constraints) {
+      final maxHeight = math.max(constraints.maxHeight, 720.0);
+      final maxWidth = math.max(constraints.maxWidth, 960.0);
+      return OverflowBox(
+        minHeight: 720,
+        maxHeight: maxHeight,
+        minWidth: 960,
+        maxWidth: maxWidth,
+        child: child,
+      );
+    });
   }
 }

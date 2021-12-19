@@ -6,6 +6,7 @@ list(APPEND FLUTTER_PLUGIN_LIST
   dart_vlc
   system_clock
   url_launcher_windows
+  window_manager
 )
 
 set(PLUGIN_BUNDLED_LIBRARIES)

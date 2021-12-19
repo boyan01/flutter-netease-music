@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:dart_vlc/dart_vlc.dart';
 import 'package:flutter/material.dart';
@@ -10,6 +11,7 @@ import 'package:quiet/component.dart';
 import 'package:quiet/navigation/app.dart';
 import 'package:quiet/pages/splash/page_splash.dart';
 import 'package:quiet/repository.dart';
+import 'package:window_manager/window_manager.dart';
 
 import 'media/tracks/tracks_player_impl_mobile.dart';
 
@@ -17,6 +19,7 @@ void main() {
   WidgetsFlutterBinding.ensureInitialized();
   NetworkRepository.initialize();
   DartVLC.initialize();
+  _initialDesktop();
   runZonedGuarded(() {
     runApp(rp.ProviderScope(
       child: PageSplash(
@@ -36,6 +39,14 @@ void main() {
   }, (error, stack) {
     debugPrint('uncaught error : $error $stack');
   });
+}
+
+void _initialDesktop() async {
+  if (!(Platform.isMacOS || Platform.isLinux || Platform.isWindows)) {
+    return;
+  }
+  await WindowManager.instance.ensureInitialized();
+  WindowManager.instance.setMinimumSize(const Size(960, 720));
 }
 
 /// The entry of dart background service

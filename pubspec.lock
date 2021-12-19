@@ -935,6 +935,15 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.3.1"
+  window_manager:
+    dependency: "direct main"
+    description:
+      path: "."
+      ref: "9d0763ad5a9087da0057f63f2c2c9cb9b16fbaec"
+      resolved-ref: "9d0763ad5a9087da0057f63f2c2c9cb9b16fbaec"
+      url: "https://github.com/boyan01/window_manager.git"
+    source: git
+    version: "0.1.1"
   xdg_directories:
     dependency: transitive
     description:
