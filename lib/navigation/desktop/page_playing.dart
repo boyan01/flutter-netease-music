@@ -60,6 +60,8 @@ class _LayoutLyric extends StatelessWidget {
           Text(
             playingTrack.name,
             style: context.textTheme.headline6.bold,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
           ),
           const SizedBox(height: 10),
           DefaultTextStyle(
@@ -68,16 +70,32 @@ class _LayoutLyric extends StatelessWidget {
               children: [
                 Text('${context.strings.album}:'),
                 const SizedBox(width: 4),
-                Text(
-                  playingTrack.album?.name ?? '',
-                  style: TextStyle(color: context.colorScheme.primary),
+                Flexible(
+                  child: Tooltip(
+                    message: playingTrack.album?.name,
+                    child: Text(
+                      playingTrack.album?.name ?? '',
+                      style: TextStyle(color: context.colorScheme.primary),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
                 ),
                 const SizedBox(width: 20),
                 Text('${context.strings.artists}:'),
                 const SizedBox(width: 4),
-                Text(playingTrack.artists
-                    .map((artist) => artist.name)
-                    .join('/')),
+                Flexible(
+                  child: Tooltip(
+                    message: playingTrack.artists.map((a) => a.name).join(', '),
+                    child: Text(
+                      playingTrack.artists
+                          .map((artist) => artist.name)
+                          .join('/'),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
