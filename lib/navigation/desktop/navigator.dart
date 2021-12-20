@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:quiet/navigation/desktop/player/page_fm_playing.dart';
 
 import './discover.dart';
 import '../common/navigation_target.dart';
-import 'page_playing.dart';
+import 'player/page_playing.dart';
 import 'page_setting.dart';
 import 'playlist/page_playlist.dart';
 
@@ -15,6 +16,8 @@ MaterialPage<dynamic> _buildPage(NavigationTarget target) {
     page = const PageSetting();
   } else if (target is NavigationTargetPlaylist) {
     page = PagePlaylist(playlistId: target.playlistId);
+  } else if (target is NavigationTargetFmPlaying) {
+    page = const PageFmPlaying();
   } else {
     throw Exception('Unknown navigation type: $target');
   }

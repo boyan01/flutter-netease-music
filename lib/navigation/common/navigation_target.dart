@@ -31,3 +31,5 @@ class NavigationTargetPlaylist extends NavigationTarget {
 }
 
 class NavigationTargetPlaying extends NavigationTarget {}
+
+class NavigationTargetFmPlaying extends NavigationTarget {}

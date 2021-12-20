@@ -1,53 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:quiet/component.dart';
+import 'package:quiet/extension.dart';
 
-import '../common/player/cover.dart';
-import '../common/player/lyric_view.dart';
-import '../common/player/player_actions.dart';
+import '../../common/player/lyric_view.dart';
 
-class PagePlaying extends StatelessWidget {
-  const PagePlaying({Key? key}) : super(key: key);
+class LyricLayout extends StatelessWidget {
+  const LyricLayout({Key? key}) : super(key: key);
 
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-      color: context.colorScheme.background,
-      elevation: 10,
-      child: Row(
-        children: [
-          Flexible(flex: 5, child: _LayoutCover()),
-          Flexible(flex: 4, child: _LayoutLyric()),
-        ],
-      ),
-    );
-  }
-}
-
-// left cover layout
-class _LayoutCover extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 20),
-      child: Column(
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 40),
-            child: IgnorePointer(
-              ignoring: true,
-              child: AlbumCover(music: context.playingTrack!),
-            ),
-          ),
-          const Spacer(),
-          PlayingOperationBar(iconColor: context.iconTheme.color),
-          const SizedBox(height: 60),
-        ],
-      ),
-    );
-  }
-}
-
-class _LayoutLyric extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final playingTrack = context.playingTrack!;

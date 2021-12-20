@@ -1,0 +1,50 @@
+import 'package:flutter/material.dart';
+import 'package:quiet/component.dart';
+
+import '../../common/player/cover.dart';
+import '../../common/player/player_actions.dart';
+import 'lyric_layout.dart';
+
+class PagePlaying extends StatelessWidget {
+  const PagePlaying({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: context.colorScheme.background,
+      elevation: 10,
+      child: Row(
+        children: const [
+          Flexible(flex: 5, child: _LayoutCover()),
+          Flexible(flex: 4, child: LyricLayout()),
+        ],
+      ),
+    );
+  }
+}
+
+// left cover layout
+class _LayoutCover extends StatelessWidget {
+  const _LayoutCover({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 20),
+      child: Column(
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 40),
+            child: IgnorePointer(
+              ignoring: true,
+              child: AlbumCover(music: context.playingTrack!),
+            ),
+          ),
+          const Spacer(),
+          PlayingOperationBar(iconColor: context.iconTheme.color),
+          const SizedBox(height: 60),
+        ],
+      ),
+    );
+  }
+}
