@@ -12,6 +12,8 @@ PODS:
   - url_launcher_macos (0.0.1):
     - FlutterMacOS
   - VLCKit (3.3.17)
+  - window_manager (0.1.0):
+    - FlutterMacOS
 
 DEPENDENCIES:
   - dart_vlc (from `Flutter/ephemeral/.symlinks/plugins/dart_vlc/macos`)
@@ -20,6 +22,7 @@ DEPENDENCIES:
   - shared_preferences_macos (from `Flutter/ephemeral/.symlinks/plugins/shared_preferences_macos/macos`)
   - system_clock (from `Flutter/ephemeral/.symlinks/plugins/system_clock/macos`)
   - url_launcher_macos (from `Flutter/ephemeral/.symlinks/plugins/url_launcher_macos/macos`)
+  - window_manager (from `Flutter/ephemeral/.symlinks/plugins/window_manager/macos`)
 
 SPEC REPOS:
   trunk:
@@ -38,6 +41,8 @@ EXTERNAL SOURCES:
     :path: Flutter/ephemeral/.symlinks/plugins/system_clock/macos
   url_launcher_macos:
     :path: Flutter/ephemeral/.symlinks/plugins/url_launcher_macos/macos
+  window_manager:
+    :path: Flutter/ephemeral/.symlinks/plugins/window_manager/macos
 
 SPEC CHECKSUMS:
   dart_vlc: 1dbcc77b4304a8826b1fceaa1eada263b02b2123
@@ -47,6 +52,7 @@ SPEC CHECKSUMS:
   system_clock: d5fdc00655b062d3b748b612ba32549ee8cb4ddb
   url_launcher_macos: 45af3d61de06997666568a7149c1be98b41c95d4
   VLCKit: 21651e881f19774ecf9a86ca2c2010859fe68a08
+  window_manager: db713621c322d52e96064336a4ba2b7e4e30c94f
 
 PODFILE CHECKSUM: 6eac6b3292e5142cfc23bdeb71848a40ec51c14c
 

@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quiet/component/exceptions.dart';
+import 'package:quiet/extension.dart';
 import 'package:quiet/repository.dart';
 
 import '../pages/account/account.dart';
@@ -14,4 +15,4 @@ final allPlayRecordsProvider = FutureProvider<List<PlayRecord>>((ref) async {
     PlayRecordType.allData,
   );
   return records.asFuture;
-});
+}).logErrorOnDebug();

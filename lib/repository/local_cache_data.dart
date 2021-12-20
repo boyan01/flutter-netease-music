@@ -79,7 +79,11 @@ class LocalData {
     if (data == null) {
       return null;
     }
-    return PlaylistDetail.fromJson(data);
+    try {
+      return PlaylistDetail.fromJson(data);
+    } catch (e) {
+      return null;
+    }
   }
 
   //TODO 添加分页加载逻辑
