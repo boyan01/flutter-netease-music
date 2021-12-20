@@ -205,7 +205,11 @@ class _MoveWindow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (defaultTargetPlatform != TargetPlatform.windows) {
+    final needMoveWindow = const [
+      TargetPlatform.windows,
+      TargetPlatform.macOS,
+    ].contains(defaultTargetPlatform);
+    if (!needMoveWindow) {
       return child;
     }
     return GestureDetector(
