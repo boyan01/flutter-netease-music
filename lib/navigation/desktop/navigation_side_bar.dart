@@ -8,6 +8,7 @@ import 'package:quiet/navigation/desktop/widgets/navigation_tile.dart';
 import 'package:quiet/pages/account/account.dart';
 
 import '../../component/utils/scroll_controller.dart';
+import '../common/navigation_target.dart';
 import 'navigator.dart';
 
 class NavigationSideBar extends StatelessWidget {

@@ -7,6 +7,7 @@ import 'package:quiet/extension.dart';
 import 'package:quiet/navigation/desktop/navigator.dart';
 import 'package:window_manager/window_manager.dart';
 
+import '../common/navigation_target.dart';
 import 'widgets/caption_icons.dart';
 
 class HeaderBar extends StatelessWidget {

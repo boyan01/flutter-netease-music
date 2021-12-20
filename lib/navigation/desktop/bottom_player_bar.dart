@@ -6,6 +6,7 @@ import 'package:quiet/material/player/progress_track_container.dart';
 import 'package:quiet/navigation/desktop/navigator.dart';
 
 import '../../component/utils/time.dart';
+import '../common/navigation_target.dart';
 import 'widgets/slider.dart';
 
 class BottomPlayerBar extends StatelessWidget {

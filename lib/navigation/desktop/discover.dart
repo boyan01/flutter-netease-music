@@ -7,6 +7,7 @@ import 'package:quiet/media/tracks/track_list.dart';
 import 'package:quiet/providers/personalized_playlist_provider.dart';
 import 'package:quiet/providers/play_records_provider.dart';
 
+import '../common/navigation_target.dart';
 import './navigator.dart';
 import 'widgets/recommended_playlist_tile.dart';
 import 'widgets/track_tile_short.dart';
@@ -71,7 +72,7 @@ class _Playlists extends ConsumerWidget {
             onTap: () {
               context
                   .read<DesktopNavigatorController>()
-                  .navigate(NavigationType.playlist(playlistId: playlist.id));
+                  .navigate(NavigationTarget.playlist(playlistId: playlist.id));
             },
           );
         },

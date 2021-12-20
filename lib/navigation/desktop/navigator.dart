@@ -1,74 +1,33 @@
-import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
 import './discover.dart';
+import '../common/navigation_target.dart';
 import 'page_playing.dart';
 import 'page_setting.dart';
 import 'playlist/page_playlist.dart';
 
-abstract class NavigationType with EquatableMixin {
-  NavigationType();
-
-  factory NavigationType.discover() => NavigationTargetDiscover();
-
-  factory NavigationType.settings() => NavigationTargetSettings();
-
-  factory NavigationType.playlist({required int playlistId}) =>
-      NavigationTargetPlaylist(playlistId);
-
-  @override
-  List<Object?> get props => const [];
-}
-
-class NavigationTargetDiscover extends NavigationType {}
-
-class NavigationTargetSettings extends NavigationType {}
-
-class NavigationTargetPlaylist extends NavigationType {
-  NavigationTargetPlaylist(this.playlistId);
-
-  final int playlistId;
-
-  @override
-  List<Object?> get props => [playlistId];
-}
-
-class NavigationTargetPlaying extends NavigationType {}
-
-class _PageKey extends ValueKey<NavigationType> {
-  const _PageKey(NavigationType value) : super(value);
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other);
-  }
-
-  @override
-  int get hashCode => super.hashCode;
-}
-
-MaterialPage<dynamic> _buildPage(NavigationType type) {
+MaterialPage<dynamic> _buildPage(NavigationTarget target) {
   final Widget page;
-  if (type is NavigationTargetDiscover) {
+  if (target is NavigationTargetDiscover) {
     page = const DiscoverPage();
-  } else if (type is NavigationTargetSettings) {
+  } else if (target is NavigationTargetSettings) {
     page = const PageSetting();
-  } else if (type is NavigationTargetPlaylist) {
-    page = PagePlaylist(playlistId: type.playlistId);
+  } else if (target is NavigationTargetPlaylist) {
+    page = PagePlaylist(playlistId: target.playlistId);
   } else {
-    throw Exception('Unknown navigation type: $type');
+    throw Exception('Unknown navigation type: $target');
   }
   return MaterialPage<dynamic>(
     child: page,
-    name: type.runtimeType.toString(),
-    key: _PageKey(type),
+    name: target.runtimeType.toString(),
+    key: ValueKey(target),
   );
 }
 
 class DesktopNavigatorController with ChangeNotifier {
   DesktopNavigatorController() {
-    _pages.add(_buildPage(NavigationType.discover()));
+    _pages.add(_buildPage(NavigationTarget.discover()));
   }
 
   final _pages = <MaterialPage<dynamic>>[];
@@ -79,27 +38,27 @@ class DesktopNavigatorController with ChangeNotifier {
 
   bool get canForward => _popPages.isNotEmpty;
 
-  NavigationType get current => _showPlayingPage != null
+  NavigationTarget get current => _showPlayingPage != null
       ? _showPlayingPage!
-      : (_pages.last.key! as ValueKey<NavigationType>).value;
+      : (_pages.last.key! as ValueKey<NavigationTarget>).value;
 
   NavigationTargetPlaying? _showPlayingPage;
 
-  void navigate(NavigationType type) {
+  void navigate(NavigationTarget target) {
     assert(_pages.isNotEmpty, 'Navigation stack is empty');
-    if (current == type) {
-      debugPrint('Navigation: already on $type');
+    if (current.isTheSameTarget(target)) {
+      debugPrint('Navigation: already on $target');
       return;
     }
-    if (type is NavigationTargetPlaying) {
-      _showPlayingPage = type;
+    if (target is NavigationTargetPlaying) {
+      _showPlayingPage = target;
     } else {
       _showPlayingPage = null;
-      if (current != type) {
-        _pages.add(_buildPage(type));
-        _popPages.clear();
+      if (!current.isTheSameTarget(target)) {
+        _pages.add(_buildPage(target));
       }
     }
+    _popPages.clear();
     notifyListeners();
   }
 

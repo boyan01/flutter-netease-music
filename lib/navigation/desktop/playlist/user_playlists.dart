@@ -7,6 +7,7 @@ import 'package:quiet/repository.dart';
 
 import '../../../pages/account/account.dart';
 import '../../../providers/user_playlists_provider.dart';
+import '../../common/navigation_target.dart';
 
 class SliverSidebarUserPlaylist extends ConsumerWidget {
   const SliverSidebarUserPlaylist({Key? key}) : super(key: key);
@@ -114,8 +115,8 @@ class _UserPlaylistItem extends StatelessWidget {
         child: Text(playlist.name),
       ),
       isSelected: current == playlist.id,
-      onTap: () =>
-          navigator.navigate(NavigationType.playlist(playlistId: playlist.id)),
+      onTap: () => navigator
+          .navigate(NavigationTarget.playlist(playlistId: playlist.id)),
     );
   }
 }
