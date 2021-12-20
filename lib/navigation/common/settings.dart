@@ -9,8 +9,10 @@ class ThemeSwitchRadios extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final themeMode = ref.watch(settingStateProvider).themeMode;
-    final notifier = ref.watch(settingStateProvider.notifier);
+    final themeMode = ref.watch(
+      settingStateProvider.select((value) => value.themeMode),
+    );
+    final notifier = ref.read(settingStateProvider.notifier);
     return Column(
       children: [
         RadioListTile<ThemeMode>(
@@ -42,7 +44,7 @@ class CopyRightOverlayCheckBox extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return CheckboxListTile(
-      value: ref.watch(settingStateProvider).copyright,
+      value: ref.watch(settingStateProvider.select((value) => value.copyright)),
       onChanged: (value) {
         ref
             .read(settingStateProvider.notifier)

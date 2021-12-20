@@ -26,7 +26,9 @@ class QuietApp extends ConsumerWidget {
       ],
       theme: lightTheme,
       darkTheme: quietDarkTheme,
-      themeMode: ref.watch(settingStateProvider).themeMode,
+      themeMode: ref.watch(
+        settingStateProvider.select((value) => value.themeMode),
+      ),
       initialRoute: getInitialRoute(
         ref,
         skipWelcomePage: ref.read(settingStateProvider).skipWelcomePage,
