@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quiet/component.dart';
 
+import '../../../providers/player_provider.dart';
 import '../../common/player/cover.dart';
 import '../../common/player/player_actions.dart';
 import 'lyric_layout.dart';
@@ -24,11 +26,11 @@ class PagePlaying extends StatelessWidget {
 }
 
 // left cover layout
-class _LayoutCover extends StatelessWidget {
+class _LayoutCover extends ConsumerWidget {
   const _LayoutCover({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Padding(
       padding: const EdgeInsets.only(left: 20),
       child: Column(
@@ -37,7 +39,7 @@ class _LayoutCover extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 40),
             child: IgnorePointer(
               ignoring: true,
-              child: AlbumCover(music: context.playingTrack!),
+              child: AlbumCover(music: ref.watch(playingTrackProvider)!),
             ),
           ),
           const Spacer(),

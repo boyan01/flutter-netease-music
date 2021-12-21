@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:quiet/extension.dart';
 import 'package:quiet/material.dart';
+import 'package:quiet/providers/player_provider.dart';
 import 'package:quiet/providers/playlist_detail_provider.dart';
 import 'package:quiet/repository.dart';
 
@@ -172,7 +173,7 @@ class _PlaylistListView extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return TrackTileContainer.playlist(
       playlist: playlist,
-      context: context,
+      player: ref.read(playerProvider),
       child: SliverList(
         delegate: SliverChildBuilderDelegate(
           (context, index) => TrackTile(

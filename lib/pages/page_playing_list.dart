@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:music_player/music_player.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:quiet/pages/playlist/dialog_selector.dart';
 import 'package:quiet/part/part.dart';
 import 'package:quiet/repository.dart';
+
+import '../providers/player_provider.dart';
 
 /// Current Playing List Dialog
 ///
@@ -11,7 +16,7 @@ import 'package:quiet/repository.dart';
 /// TODO: do no use [showModalBottomSheet]
 ///
 ///
-class PlayingListDialog extends StatefulWidget {
+class PlayingListDialog extends HookConsumerWidget {
   static void show(BuildContext context) {
     showModalBottomSheet(
         context: context,
@@ -23,27 +28,15 @@ class PlayingListDialog extends StatefulWidget {
   }
 
   @override
-  PlayingListDialogState createState() {
-    return PlayingListDialogState();
-  }
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final playingList = ref.watch(playingListProvider);
+    final music = ref.watch(playingTrackProvider);
 
-class PlayingListDialogState extends State<PlayingListDialog> {
-  ScrollController? _controller;
-
-  @override
-  void initState() {
-    super.initState();
-    final playingList = context.player.trackList;
-    final music = context.player.current!;
-    final double offset = playingList.tracks.indexOf(music) * _kHeightMusicTile;
-    _controller = ScrollController(initialScrollOffset: offset);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final playingList = context.playingTrackList;
-    final music = context.watchPlayerValue.current;
+    final controller = useMemoized(() {
+      final double offset =
+          playingList.tracks.indexOf(music!) * _kHeightMusicTile;
+      return ScrollController(initialScrollOffset: offset);
+    });
 
     return _PlayingListContainer(
       child: Column(
@@ -56,7 +49,7 @@ class PlayingListDialogState extends State<PlayingListDialog> {
           ),
           Expanded(
             child: ListView.builder(
-                controller: _controller,
+                controller: controller,
                 itemCount: playingList.tracks.length,
                 itemBuilder: (context, index) {
                   final item = playingList.tracks[index];
@@ -126,11 +119,12 @@ class _LandscapePlayingListContainer extends StatelessWidget {
   }
 }
 
-class _Header extends StatelessWidget {
+class _Header extends ConsumerWidget {
   @override
-  Widget build(BuildContext context) {
-    final playMode = context.playMode;
-    final count = context.playingTrackList.tracks.length;
+  Widget build(BuildContext context, WidgetRef ref) {
+    // TODO add play mode.
+    const playMode = PlayMode.shuffle;
+    final tracks = ref.watch(playingListProvider).tracks;
     return SizedBox(
       height: 48,
       child: Row(
@@ -141,12 +135,11 @@ class _Header extends StatelessWidget {
                 // context.player.setPlayMode(playMode.next);
               },
               icon: Icon(playMode.icon),
-              label: Text("${playMode.name}($count)")),
+              label: Text("${playMode.name}(${tracks.length})")),
           const Spacer(),
           TextButton.icon(
               onPressed: () async {
-                final ids =
-                    context.playingTrackList.tracks.map((m) => m.id).toList();
+                final ids = tracks.map((m) => m.id).toList();
                 if (ids.isEmpty) {
                   return;
                 }
@@ -180,7 +173,7 @@ class _Header extends StatelessWidget {
 
 const _kHeightMusicTile = 48.0;
 
-class _MusicTile extends StatelessWidget {
+class _MusicTile extends ConsumerWidget {
   const _MusicTile({
     Key? key,
     required this.music,
@@ -191,7 +184,7 @@ class _MusicTile extends StatelessWidget {
   final bool playing;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     Widget leading;
     Color? name;
     Color? artist;
@@ -214,7 +207,7 @@ class _MusicTile extends StatelessWidget {
     }
     return InkWell(
       onTap: () {
-        context.player.playFromMediaId(music.id);
+        ref.read(playerProvider).playFromMediaId(music.id);
       },
       child: Container(
         padding: const EdgeInsets.only(left: 8),

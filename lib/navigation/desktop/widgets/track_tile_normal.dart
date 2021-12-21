@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:quiet/extension.dart';
 import 'package:quiet/navigation/common/like_button.dart';
 import 'package:quiet/navigation/common/playlist/music_list.dart';
+import 'package:quiet/providers/player_provider.dart';
 import 'package:quiet/repository.dart';
 
 class TrackTableContainer extends StatelessWidget {
@@ -339,7 +341,7 @@ class TrackTile extends StatelessWidget {
   }
 }
 
-class _IndexOrPlayIcon extends StatelessWidget {
+class _IndexOrPlayIcon extends ConsumerWidget {
   const _IndexOrPlayIcon({
     Key? key,
     required this.index,
@@ -350,11 +352,13 @@ class _IndexOrPlayIcon extends StatelessWidget {
   final Track track;
 
   @override
-  Widget build(BuildContext context) {
-    final isCurrent = TrackTileContainer.getPlaylistId(context) ==
-            context.playingTrackList.id &&
-        context.playingTrack == track;
-    final isPlaying = context.isPlaying;
+  Widget build(BuildContext context, WidgetRef ref) {
+    final playingListId = ref.watch(playingListProvider).id;
+    final playingTrack = ref.watch(playingTrackProvider);
+    final isCurrent =
+        TrackTileContainer.getPlaylistId(context) == playingListId &&
+            playingTrack == track;
+    final isPlaying = ref.watch(isPlayingProvider);
     if (isCurrent) {
       return isPlaying
           ? const Icon(Icons.volume_up, size: 16)

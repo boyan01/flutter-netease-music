@@ -7,6 +7,7 @@ import 'package:quiet/pages/main/main_page_discover.dart';
 import 'package:quiet/pages/search/page_search.dart';
 import 'package:quiet/part/part.dart';
 
+import '../../providers/player_provider.dart';
 import 'drawer.dart';
 import 'my/main_page_my.dart';
 

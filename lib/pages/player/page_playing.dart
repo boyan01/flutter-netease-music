@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quiet/material.dart';
 import 'package:quiet/pages/artists/page_artist_detail.dart';
 import 'package:quiet/pages/page_playing_list.dart';
@@ -9,13 +10,14 @@ import '../../navigation/common/player/cover.dart';
 import '../../navigation/common/player/lyric_view.dart';
 import '../../navigation/common/player/player_actions.dart';
 import '../../navigation/common/player_progress.dart';
+import '../../providers/player_provider.dart';
 import 'background.dart';
 
 ///歌曲播放页面
-class PlayingPage extends StatelessWidget {
+class PlayingPage extends ConsumerWidget {
   @override
-  Widget build(BuildContext context) {
-    final current = context.playingTrack;
+  Widget build(BuildContext context, WidgetRef ref) {
+    final current = ref.read(playerStateProvider).playingTrack;
     if (current == null) {
       WidgetsBinding.instance!.scheduleFrameCallback((_) {
         Navigator.of(context).pop();
@@ -51,13 +53,14 @@ class PlayingPage extends StatelessWidget {
 
 ///player controller
 /// pause,play,play next,play previous...
-class PlayerControllerBar extends StatelessWidget {
+class PlayerControllerBar extends ConsumerWidget {
   Widget getPlayModeIcon(BuildContext context, Color? color) {
-    return Icon(context.playMode.icon, color: color);
+    // TODO: implement getPlayModeIcon
+    return Icon(Icons.shuffle, color: color);
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final color = Theme.of(context).primaryIconTheme.color;
 
     final iconPlayPause = PlayingIndicator(
@@ -69,7 +72,7 @@ class PlayerControllerBar extends StatelessWidget {
             color: color,
           ),
           onPressed: () {
-            context.player.pause();
+            ref.read(playerProvider).pause();
           }),
       pausing: IconButton(
           tooltip: "播放",
@@ -79,7 +82,7 @@ class PlayerControllerBar extends StatelessWidget {
             color: color,
           ),
           onPressed: () {
-            context.player.play();
+            ref.read(playerProvider).play();
           }),
       buffering: const SizedBox(
         height: 56,
@@ -112,7 +115,7 @@ class PlayerControllerBar extends StatelessWidget {
                 color: color,
               ),
               onPressed: () {
-                context.player.skipToPrevious();
+                ref.read(playerProvider).skipToPrevious();
               }),
           iconPlayPause,
           IconButton(
@@ -123,7 +126,7 @@ class PlayerControllerBar extends StatelessWidget {
                 color: color,
               ),
               onPressed: () {
-                context.player.skipToNext();
+                ref.read(playerProvider).skipToNext();
               }),
           IconButton(
               tooltip: "当前播放列表",

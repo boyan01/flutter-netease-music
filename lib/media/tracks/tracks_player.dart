@@ -1,6 +1,8 @@
 import 'dart:io';
 
+import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../repository/data/track.dart';
 import 'track_list.dart';
@@ -18,8 +20,40 @@ enum RepeatMode {
   none,
 }
 
-abstract class TracksPlayer {
-  TracksPlayer();
+class TracksPlayerState with EquatableMixin {
+  const TracksPlayerState({
+    required this.isBuffering,
+    required this.isPlaying,
+    required this.playingTrack,
+    required this.playingList,
+    required this.duration,
+  });
+
+  final bool isBuffering;
+  final bool isPlaying;
+  final Track? playingTrack;
+  final TrackList playingList;
+  final Duration? duration;
+
+  @override
+  List<Object?> get props => [
+        isPlaying,
+        isBuffering,
+        playingTrack,
+        playingList,
+        duration,
+      ];
+}
+
+abstract class TracksPlayer extends StateNotifier<TracksPlayerState> {
+  TracksPlayer()
+      : super(const TracksPlayerState(
+          isPlaying: false,
+          isBuffering: false,
+          playingTrack: null,
+          playingList: TrackList.empty(),
+          duration: null,
+        ));
 
   factory TracksPlayer.platform() {
     if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
@@ -58,8 +92,6 @@ abstract class TracksPlayer {
 
   Track? get current;
 
-  Listenable get onTrackChanged;
-
   TrackList get trackList;
 
   RepeatMode get repeatMode;
@@ -78,5 +110,14 @@ abstract class TracksPlayer {
 
   double get playbackSpeed;
 
-  Listenable get onPlaybackStateChanged;
+  @protected
+  void notifyPlayStateChanged() {
+    state = TracksPlayerState(
+      isPlaying: isPlaying,
+      isBuffering: isBuffering,
+      playingTrack: current,
+      playingList: trackList,
+      duration: duration,
+    );
+  }
 }

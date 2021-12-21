@@ -65,6 +65,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "myDjs": MessageLookupByLibrary.simpleMessage("我的电台"),
         "myMusic": MessageLookupByLibrary.simpleMessage("我的音乐"),
         "nextStep": MessageLookupByLibrary.simpleMessage("下一步"),
+        "noLyric": MessageLookupByLibrary.simpleMessage("暂无歌词"),
         "noMusic": MessageLookupByLibrary.simpleMessage("暂无音乐"),
         "personalFM": MessageLookupByLibrary.simpleMessage("私人FM"),
         "playInNext": MessageLookupByLibrary.simpleMessage("下一首播放"),

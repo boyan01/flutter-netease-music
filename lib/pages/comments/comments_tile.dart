@@ -1,6 +1,6 @@
 part of 'comments.dart';
 
-class _ItemTitle extends StatelessWidget {
+class _ItemTitle extends ConsumerWidget {
   const _ItemTitle({
     Key? key,
     required this.commentThreadId,
@@ -12,7 +12,7 @@ class _ItemTitle extends StatelessWidget {
   final CommentThreadPayload? payload;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Column(
       children: <Widget>[
         InkWell(
@@ -27,7 +27,8 @@ class _ItemTitle extends StatelessWidget {
               }));
             } else if (commentThreadId.type == CommentType.song) {
               final Track music = payload!.obj;
-              if (context.player.current != music) {
+              final player = ref.read(playerProvider);
+              if (player.current != music) {
                 final dynamic result = await showDialog(
                     context: context,
                     builder: (context) {
@@ -50,7 +51,7 @@ class _ItemTitle extends StatelessWidget {
                 if (!(result is bool && result)) {
                   return;
                 }
-                context.player
+                player
                   ..insertToNext(music)
                   ..playFromMediaId(music.id);
               }

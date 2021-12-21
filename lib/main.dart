@@ -66,12 +66,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Netease(
-      child: Quiet(
-        box: player,
-        child: const OverlaySupport(
-          child: QuietApp(),
-        ),
+    return const Netease(
+      child: OverlaySupport(
+        child: QuietApp(),
       ),
     );
   }

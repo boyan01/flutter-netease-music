@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:quiet/component.dart';
 import 'package:quiet/navigation/common/playlist/music_list.dart';
@@ -102,7 +103,7 @@ class PlaylistSelectionPageState extends State<PlaylistSelectionPage> {
           TextButton(
             onPressed: () async {
               await Stream.fromIterable(selectedList).forEach((e) {
-                context.player.insertToNext(e);
+                // TODO(bin): refactor
               });
               showSimpleNotification(Text("已添加${selectedList.length}首歌曲"));
             },
@@ -177,7 +178,7 @@ class PlaylistSelectionPageState extends State<PlaylistSelectionPage> {
   }
 }
 
-class _SelectionItem extends StatelessWidget {
+class _SelectionItem extends ConsumerWidget {
   const _SelectionItem({Key? key, required this.music, required this.selected})
       : super(key: key);
 
@@ -186,7 +187,7 @@ class _SelectionItem extends StatelessWidget {
   final bool selected;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return InkWell(
       onTap: () =>
           MusicTileConfiguration.of(context).onMusicTap(context, music),

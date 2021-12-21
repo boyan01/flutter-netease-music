@@ -1,21 +1,23 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:quiet/component/player/player.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:quiet/media/tracks/tracks_player.dart';
+import 'package:quiet/providers/player_provider.dart';
 import 'package:quiet/repository/cached_image.dart';
 import 'package:quiet/repository/data/track.dart';
 
 ///播放页面歌曲封面
-class AlbumCover extends StatefulWidget {
+class AlbumCover extends ConsumerStatefulWidget {
   const AlbumCover({Key? key, required this.music}) : super(key: key);
   final Track music;
 
   @override
-  State createState() => _AlbumCoverState();
+  ConsumerState createState() => _AlbumCoverState();
 }
 
-class _AlbumCoverState extends State<AlbumCover> with TickerProviderStateMixin {
+class _AlbumCoverState extends ConsumerState<AlbumCover>
+    with TickerProviderStateMixin {
   //cover needle controller
   late AnimationController _needleController;
 
@@ -50,11 +52,13 @@ class _AlbumCoverState extends State<AlbumCover> with TickerProviderStateMixin {
 
   late TracksPlayer _player;
 
+  RemoveListener? _removeListener;
+
   @override
   void initState() {
     super.initState();
-
-    _player = context.player;
+    // TODO(@bin): remove this.
+    _player = ref.read(playerProvider);
     _needleAttachCover = _player.isPlaying;
     _needleController = AnimationController(
         /*preset need position*/
@@ -67,10 +71,7 @@ class _AlbumCoverState extends State<AlbumCover> with TickerProviderStateMixin {
 
     _current = widget.music;
     _invalidatePn();
-    // TODO trigger more status
-    _player.onTrackChanged.addListener(_checkNeedleAndCoverStatus);
-    _player.onPlaybackStateChanged.addListener(_checkNeedleAndCoverStatus);
-    _checkNeedleAndCoverStatus();
+    _player.addListener((_) => _checkNeedleAndCoverStatus());
   }
 
   /// invalidate previous and next music cover...
@@ -138,8 +139,7 @@ class _AlbumCoverState extends State<AlbumCover> with TickerProviderStateMixin {
 
   @override
   void dispose() {
-    _player.onTrackChanged.removeListener(_checkNeedleAndCoverStatus);
-    _player.onPlaybackStateChanged.removeListener(_checkNeedleAndCoverStatus);
+    _removeListener?.call();
     _needleController.dispose();
     _translateController?.dispose();
     _translateController = null;
@@ -223,10 +223,10 @@ class _AlbumCoverState extends State<AlbumCover> with TickerProviderStateMixin {
                   _coverTranslateX = 0;
                   if (des > 0) {
                     _current = _previous;
-                    context.player.skipToPrevious();
+                    ref.read(playerProvider).skipToPrevious();
                   } else {
                     _current = _next;
-                    context.player.skipToNext();
+                    ref.read(playerProvider).skipToNext();
                   }
                   _previousNextDirty = true;
                 });

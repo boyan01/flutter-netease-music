@@ -29,9 +29,6 @@ class SongsResultSectionState extends State<SongsResultSection>
       musics: const [],
       onMusicTap: (context, item) async {
         // TODO check music is playable?
-        context.player
-          ..insertToNext(item)
-          ..playFromMediaId(item.id);
       },
       child: AutoLoadMoreList(
         loadMore: (count) async {

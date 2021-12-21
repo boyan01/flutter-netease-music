@@ -6,6 +6,7 @@ import 'package:quiet/extension.dart';
 import 'package:quiet/media/tracks/track_list.dart';
 import 'package:quiet/providers/personalized_playlist_provider.dart';
 import 'package:quiet/providers/play_records_provider.dart';
+import 'package:quiet/providers/player_provider.dart';
 
 import '../common/navigation_target.dart';
 import './navigator.dart';
@@ -122,7 +123,7 @@ class _PlayRecord extends ConsumerWidget {
                   id: 'play_records',
                   tracks: data.map((e) => e.song).toList(),
                 );
-                context.player
+                ref.read(playerProvider)
                   ..setTrackList(trackList)
                   ..playFromMediaId(record.song.id);
               },

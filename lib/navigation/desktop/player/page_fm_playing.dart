@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quiet/extension.dart';
 import 'package:quiet/navigation/common/like_button.dart';
+import 'package:quiet/providers/player_provider.dart';
 
 import 'lyric_layout.dart';
 
@@ -21,12 +23,12 @@ class PageFmPlaying extends StatelessWidget {
   }
 }
 
-class _CoverLayout extends StatelessWidget {
+class _CoverLayout extends ConsumerWidget {
   const _CoverLayout({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    final track = context.playingTrack!;
+  Widget build(BuildContext context, WidgetRef ref) {
+    final track = ref.watch(playingTrackProvider)!;
     return Column(
       children: [
         const SizedBox(height: 80),
@@ -46,16 +48,16 @@ class _CoverLayout extends StatelessWidget {
   }
 }
 
-class _FmButtonBars extends StatelessWidget {
+class _FmButtonBars extends ConsumerWidget {
   const _FmButtonBars({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         LikeButton(
-          music: context.playingTrack!,
+          music: ref.watch(playingTrackProvider)!,
           iconSize: 24,
         ),
         IconButton(

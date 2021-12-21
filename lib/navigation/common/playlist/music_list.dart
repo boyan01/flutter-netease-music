@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:quiet/extension.dart';
 import 'package:quiet/media/tracks/track_list.dart';
+import 'package:quiet/media/tracks/tracks_player.dart';
 import 'package:quiet/pages/artists/page_artist_detail.dart';
 import 'package:quiet/pages/comments/page_comment.dart';
+import 'package:quiet/providers/player_provider.dart';
 import 'package:quiet/repository.dart';
 
 import '../../../pages/playlist/dialog_selector.dart';
@@ -18,10 +21,9 @@ class TrackTileContainer extends StatelessWidget {
   factory TrackTileContainer.playlist({
     required PlaylistDetail playlist,
     required Widget child,
-    required BuildContext context,
+    required TracksPlayer player,
   }) {
     final id = 'playlist_${playlist.id}';
-    final player = context.player;
     return TrackTileContainer._private(
       (track) {
         if (player.trackList.id == id &&
@@ -29,7 +31,7 @@ class TrackTileContainer extends StatelessWidget {
             player.current == track) {
           return PlayResult.alreadyPlaying;
         } else {
-          context.player
+          player
             ..setTrackList(TrackList(
               id: id,
               tracks: playlist.tracks
@@ -168,35 +170,12 @@ class MusicTileConfiguration extends StatelessWidget {
 
   //return null if current music is not be playing
   static Widget? _buildPlayingLeading(BuildContext context, Music music) {
-    if (MusicTileConfiguration.of(context).token ==
-            context.playingTrackList.id &&
-        music == context.playingTrack) {
-      return Container(
-        margin: const EdgeInsets.only(left: 8, right: 8),
-        width: 40,
-        height: 40,
-        child: Center(
-          child:
-              Icon(Icons.volume_up, color: Theme.of(context).primaryColorLight),
-        ),
-      );
-    }
+    // TODO remove this.
     return null;
   }
 
   static void defaultOnTap(BuildContext context, Music music) {
-    final list = MusicTileConfiguration.of(context);
-    final player = context.player;
-    if (player.trackList.id == list.token &&
-        player.isPlaying &&
-        player.current == music) {
-      //open playing page
-      Navigator.pushNamed(context, pagePlaying);
-    } else {
-      context.player
-        ..setTrackList(TrackList(id: list.token!, tracks: list.musics))
-        ..playFromMediaId(music.id);
-    }
+    // TODO remove this.
   }
 
   final String? token;
@@ -289,7 +268,7 @@ class _SimpleMusicTile extends StatelessWidget {
 }
 
 /// The header view of MusicList
-class MusicListHeader extends StatelessWidget implements PreferredSizeWidget {
+class MusicListHeader extends ConsumerWidget implements PreferredSizeWidget {
   const MusicListHeader(this.count, {this.tail});
 
   final int? count;
@@ -297,20 +276,21 @@ class MusicListHeader extends StatelessWidget implements PreferredSizeWidget {
   final Widget? tail;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return ClipRRect(
       borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
       child: Material(
         color: context.colorScheme.background,
         child: InkWell(
           onTap: () {
+            final player = ref.read(playerProvider);
+            final state = ref.read(playerStateProvider);
             final list = MusicTileConfiguration.of(context);
-            if (context.player.trackList.id == list.token &&
-                context.player.isPlaying) {
+            if (state.playingList.id == list.token && state.isPlaying) {
               //open playing page
               Navigator.pushNamed(context, pagePlaying);
             } else {
-              context.player
+              player
                 ..setTrackList(TrackList(id: list.token!, tracks: list.musics))
                 ..play();
             }
@@ -375,7 +355,7 @@ enum _MusicAction {
   artists,
 }
 
-class _IconMore extends StatelessWidget {
+class _IconMore extends ConsumerWidget {
   const _IconMore(this.music, {Key? key}) : super(key: key);
   final Music music;
 
@@ -417,10 +397,13 @@ class _IconMore extends StatelessWidget {
   }
 
   Future<void> _handleMusicAction(
-      BuildContext context, _MusicAction type) async {
+    BuildContext context,
+    _MusicAction type,
+    WidgetRef ref,
+  ) async {
     switch (type) {
       case _MusicAction.addToNext:
-        context.player.insertToNext(music);
+        ref.read(playerProvider).insertToNext(music);
         break;
       case _MusicAction.comment:
         Navigator.push(context, MaterialPageRoute(builder: (context) {
@@ -468,11 +451,11 @@ class _IconMore extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return PopupMenuButton(
       icon: const Icon(Icons.more_vert),
       itemBuilder: _buildMenu,
-      onSelected: (dynamic type) => _handleMusicAction(context, type),
+      onSelected: (dynamic type) => _handleMusicAction(context, type, ref),
     );
   }
 }

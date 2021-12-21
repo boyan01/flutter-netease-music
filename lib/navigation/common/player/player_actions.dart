@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:quiet/component.dart';
+import 'package:quiet/providers/player_provider.dart';
 
 import '../../../pages/comments/page_comment.dart';
 import '../../../repository.dart';
 import '../like_button.dart';
 
-class PlayingOperationBar extends StatelessWidget {
+class PlayingOperationBar extends ConsumerWidget {
   const PlayingOperationBar({
     Key? key,
     this.iconColor,
@@ -15,9 +17,9 @@ class PlayingOperationBar extends StatelessWidget {
   final Color? iconColor;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final iconColor = this.iconColor ?? context.theme.primaryIconTheme.color;
-    final music = context.watchPlayerValue.current;
+    final music = ref.watch(playingTrackProvider);
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,

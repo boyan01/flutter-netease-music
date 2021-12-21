@@ -52,5 +52,6 @@
     "settings": "设置",
     "about": "关于",
     "hideCopyrightOverlay": "隐藏版权浮层",
-    "trackNoCopyright": "此音乐暂无版权"
+    "trackNoCopyright": "此音乐暂无版权",
+    "noLyric": "暂无歌词"
 }

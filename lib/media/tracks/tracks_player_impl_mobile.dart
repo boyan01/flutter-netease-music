@@ -54,6 +54,11 @@ extension _Track on Track {
 }
 
 class TracksPlayerImplMobile extends TracksPlayer {
+  TracksPlayerImplMobile() {
+    _player.metadataListenable.addListener(notifyPlayStateChanged);
+    _player.playbackStateListenable.addListener(notifyPlayStateChanged);
+  }
+
   final _player = MusicPlayer();
 
   @override
@@ -62,9 +67,6 @@ class TracksPlayerImplMobile extends TracksPlayer {
 
   @override
   Track? get current => _player.metadata?.toTrack();
-
-  @override
-  Listenable get onTrackChanged => _player.metadataListenable;
 
   @override
   Duration? get duration {
@@ -179,9 +181,6 @@ class TracksPlayerImplMobile extends TracksPlayer {
 
   @override
   bool get isBuffering => _player.playbackState.state == PlayerState.Buffering;
-
-  @override
-  Listenable get onPlaybackStateChanged => _player.playbackStateListenable;
 }
 
 void runMobileBackgroundService() {

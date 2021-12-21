@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quiet/extension.dart';
+import 'package:quiet/providers/player_provider.dart';
 
 import '../../common/player/lyric_view.dart';
 
-class LyricLayout extends StatelessWidget {
+class LyricLayout extends ConsumerWidget {
   const LyricLayout({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    final playingTrack = context.playingTrack!;
+  Widget build(BuildContext context, WidgetRef ref) {
+    final playingTrack = ref.watch(playingTrackProvider)!;
     return Padding(
       padding: const EdgeInsets.only(left: 20, right: 80),
       child: Column(

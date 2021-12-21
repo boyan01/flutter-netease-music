@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:quiet/extension.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:quiet/providers/player_provider.dart';
 
-class ProgressTrackingContainer extends HookWidget {
+class ProgressTrackingContainer extends HookConsumerWidget {
   const ProgressTrackingContainer({
     Key? key,
     required this.builder,
@@ -11,7 +12,7 @@ class ProgressTrackingContainer extends HookWidget {
   final WidgetBuilder builder;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final tickerProvider = useSingleTickerProvider();
     final state = useState<bool>(false);
     final ticker = useMemoized(
@@ -23,7 +24,7 @@ class ProgressTrackingContainer extends HookWidget {
       return ticker.dispose;
     }, [ticker]);
 
-    final needTrack = context.isPlaying;
+    final needTrack = ref.watch(isPlayingProvider);
     useEffect(() {
       if (ticker.isActive == needTrack) return;
       if (ticker.isActive) {

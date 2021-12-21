@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:quiet/extension.dart';
-import 'package:quiet/material/player/progress_track_container.dart';
 import 'package:quiet/navigation/desktop/navigator.dart';
+import 'package:quiet/providers/player_provider.dart';
 
-import '../../component/utils/time.dart';
 import '../common/navigation_target.dart';
+import '../common/player_progress.dart';
 import 'widgets/slider.dart';
 
 class BottomPlayerBar extends StatelessWidget {
@@ -38,12 +38,12 @@ class BottomPlayerBar extends StatelessWidget {
   }
 }
 
-class _PlayingItemWidget extends StatelessWidget {
+class _PlayingItemWidget extends ConsumerWidget {
   const _PlayingItemWidget({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    final track = context.playingTrack;
+  Widget build(BuildContext context, WidgetRef ref) {
+    final track = ref.watch(playingTrackProvider);
     if (track == null) {
       return const SizedBox();
     }
@@ -96,11 +96,11 @@ class _PlayingItemWidget extends StatelessWidget {
   }
 }
 
-class _CenterControllerWidget extends StatelessWidget {
+class _CenterControllerWidget extends ConsumerWidget {
   const _CenterControllerWidget({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.center,
@@ -115,29 +115,32 @@ class _CenterControllerWidget extends StatelessWidget {
               IconButton(
                 splashRadius: 24,
                 padding: EdgeInsets.zero,
-                onPressed: () => context.player.skipToPrevious(),
+                onPressed: () {
+                  ref.read(playerProvider).skipToPrevious();
+                },
                 icon: const Icon(Icons.skip_previous, size: 24),
               ),
               const SizedBox(width: 20),
-              if (context.isPlaying)
+              if (ref.watch(isPlayingProvider))
                 IconButton(
                   splashRadius: 30,
                   padding: EdgeInsets.zero,
-                  onPressed: () => context.player.pause(),
+                  onPressed: () => ref.read(playerProvider).pause(),
                   icon: const Icon(Icons.pause, size: 32),
                 )
               else
                 IconButton(
                   splashRadius: 32,
                   padding: EdgeInsets.zero,
-                  onPressed: () => context.player.play(),
+                  onPressed: () => ref.read(playerProvider).play(),
                   icon: const Icon(Icons.play_arrow, size: 32),
                 ),
               const SizedBox(width: 20),
               IconButton(
                 splashRadius: 24,
                 padding: EdgeInsets.zero,
-                onPressed: () => context.player.skipToNext(),
+                onPressed: () =>
+                    ref.read(playerProvider).skipToNext(),
                 icon: const Icon(Icons.skip_next, size: 24),
               ),
             ],
@@ -187,22 +190,21 @@ class _PlayerControlWidget extends StatelessWidget {
   }
 }
 
-class _ProgressBar extends HookWidget {
+class _ProgressBar extends ConsumerWidget {
   const _ProgressBar({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    final userTrackingValue = useState<double?>(null);
-    final playingTrack = context.playingTrack;
-    if (playingTrack == null || context.player.duration == null) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final playingTrack = ref.watch(playingTrackProvider);
+    if (playingTrack == null) {
       return const SizedBox.shrink();
     }
-    return SizedBox(
+    return const SizedBox(
       height: 10,
       child: FractionalTranslation(
-        translation: const Offset(0, -0.5),
+        translation: Offset(0, -0.5),
         child: SliderTheme(
-          data: const SliderThemeData(
+          data: SliderThemeData(
             trackHeight: 2,
             thumbShape: RoundSliderThumbShape(
               enabledThumbRadius: 6,
@@ -214,31 +216,7 @@ class _ProgressBar extends HookWidget {
             ),
             showValueIndicator: ShowValueIndicator.always,
           ),
-          child: ProgressTrackingContainer(
-            builder: (context) {
-              final position =
-                  context.player.position?.inMilliseconds.toDouble() ?? 0.0;
-              final duration =
-                  context.player.duration?.inMilliseconds.toDouble() ?? 0.0;
-              return Slider(
-                max: duration,
-                value: (userTrackingValue.value ?? position).clamp(
-                  0.0,
-                  duration,
-                ),
-                onChangeStart: (value) => userTrackingValue.value = value,
-                onChanged: (value) => userTrackingValue.value = value,
-                semanticFormatterCallback: (value) =>
-                    getTimeStamp(value.round()),
-                onChangeEnd: (value) {
-                  userTrackingValue.value = null;
-                  context.player
-                    ..seekTo(Duration(milliseconds: value.round()))
-                    ..play();
-                },
-              );
-            },
-          ),
+          child: PlayerProgressSlider(),
         ),
       ),
     );

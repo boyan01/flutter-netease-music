@@ -591,6 +591,16 @@ class S {
       args: [],
     );
   }
+
+  /// `No Lyric`
+  String get noLyric {
+    return Intl.message(
+      'No Lyric',
+      name: 'noLyric',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

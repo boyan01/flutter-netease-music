@@ -17,11 +17,10 @@ extension _SecondsToDuration on double {
 class TracksPlayerImplVlc extends TracksPlayer {
   TracksPlayerImplVlc() {
     _player.playbackStream.listen((event) {
-      // ignore: invalid_use_of_visible_for_testing_member, invalid_use_of_protected_member
-      _onPlaybackStateChanged.notifyListeners();
       if (event.isCompleted) {
         skipToNext();
       }
+      notifyPlayStateChanged();
     });
   }
 
@@ -32,11 +31,13 @@ class TracksPlayerImplVlc extends TracksPlayer {
 
   var _trackList = const TrackList.empty();
 
+  Track? _current;
+
   @override
   Duration? get bufferedPosition => _player.bufferingProgress.toDuration();
 
   @override
-  Track? get current => _current.value;
+  Track? get current => _current;
 
   @override
   Duration? get duration => _player.position.duration;
@@ -82,7 +83,7 @@ class TracksPlayerImplVlc extends TracksPlayer {
         _trackList.tracks.insert(nextIndex, track);
       }
     }
-    // TODO notify track list changed.
+    notifyPlayStateChanged();
   }
 
   @override
@@ -90,16 +91,6 @@ class TracksPlayerImplVlc extends TracksPlayer {
 
   @override
   bool get isPlaying => _player.playback.isPlaying;
-
-  final _onPlaybackStateChanged = ChangeNotifier();
-
-  @override
-  Listenable get onPlaybackStateChanged => _onPlaybackStateChanged;
-
-  final _current = ValueNotifier<Track?>(null);
-
-  @override
-  Listenable get onTrackChanged => _current;
 
   @override
   Future<void> pause() async {
@@ -189,12 +180,13 @@ class TracksPlayerImplVlc extends TracksPlayer {
         debugPrint('Failed to get play url: ${url.asError!.error}');
         return;
       }
-      if (_current.value != track) {
+      if (_current != track) {
         // skip play. since the track is changed.
         return;
       }
       _player.open(Media.network(url.asValue!.value), autoStart: true);
     });
-    _current.value = track;
+    _current = track;
+    notifyPlayStateChanged();
   }
 }

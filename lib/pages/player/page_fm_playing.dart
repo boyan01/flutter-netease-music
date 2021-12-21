@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:quiet/component.dart';
 import 'package:quiet/material.dart';
 import 'package:quiet/pages/artists/page_artist_detail.dart';
-import 'package:quiet/pages/comments/page_comment.dart';
+import 'package:quiet/providers/player_provider.dart';
 import 'package:quiet/repository.dart';
 
 import '../../navigation/common/like_button.dart';
@@ -12,10 +14,10 @@ import '../../navigation/common/player_progress.dart';
 import 'background.dart';
 
 /// FM 播放页面
-class PagePlayingFm extends StatelessWidget {
+class PagePlayingFm extends ConsumerWidget {
   @override
-  Widget build(BuildContext context) {
-    final current = context.watchPlayerValue.current;
+  Widget build(BuildContext context, WidgetRef ref) {
+    final current = ref.watch(playingTrackProvider);
     if (current == null) {
       WidgetsBinding.instance!.scheduleFrameCallback((_) {
         Navigator.of(context).pop();
@@ -50,22 +52,18 @@ class PagePlayingFm extends StatelessWidget {
   }
 }
 
-class _CenterSection extends StatefulWidget {
+class _CenterSection extends HookConsumerWidget {
   const _CenterSection({Key? key}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _CenterSectionState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final showLyric = useState(false);
 
-class _CenterSectionState extends State<_CenterSection> {
-  static bool _showLyric = false;
-
-  @override
-  Widget build(BuildContext context) {
     return Expanded(
       child: AnimatedCrossFade(
-        crossFadeState:
-            _showLyric ? CrossFadeState.showSecond : CrossFadeState.showFirst,
+        crossFadeState: showLyric.value
+            ? CrossFadeState.showSecond
+            : CrossFadeState.showFirst,
         layoutBuilder: (Widget topChild, Key topChildKey, Widget bottomChild,
             Key bottomChildKey) {
           return Stack(
@@ -84,34 +82,28 @@ class _CenterSectionState extends State<_CenterSection> {
         },
         duration: const Duration(milliseconds: 300),
         firstChild: GestureDetector(
-          onTap: () {
-            setState(() {
-              _showLyric = !_showLyric;
-            });
-          },
-          child: _FmCover(),
+          onTap: () => showLyric.value = !showLyric.value,
+          child: const _FmCover(),
         ),
         secondChild: PlayingLyricView(
-          music: context.watchPlayerValue.current!,
+          music: ref.watch(playingTrackProvider)!,
           textStyle: Theme.of(context)
               .textTheme
               .bodyText2!
               .copyWith(height: 2, fontSize: 16, color: Colors.white),
-          onTap: () {
-            setState(() {
-              _showLyric = !_showLyric;
-            });
-          },
+          onTap: () => showLyric.value = !showLyric.value,
         ),
       ),
     );
   }
 }
 
-class _FmCover extends StatelessWidget {
+class _FmCover extends ConsumerWidget {
+  const _FmCover({Key? key}) : super(key: key);
+
   @override
-  Widget build(BuildContext context) {
-    final music = context.watchPlayerValue.current!;
+  Widget build(BuildContext context, WidgetRef ref) {
+    final music = ref.watch(playingTrackProvider)!;
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
@@ -168,11 +160,10 @@ class _FmCover extends StatelessWidget {
   }
 }
 
-class _FmControllerBar extends StatelessWidget {
+class _FmControllerBar extends ConsumerWidget {
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final color = Theme.of(context).primaryIconTheme.color;
-
     final iconPlayPause = PlayingIndicator(
       playing: IconButton(
           tooltip: "暂停",
@@ -182,7 +173,7 @@ class _FmControllerBar extends StatelessWidget {
             color: color,
           ),
           onPressed: () {
-            context.player.pause();
+            ref.read(playerProvider).pause();
           }),
       pausing: IconButton(
           tooltip: "播放",
@@ -192,7 +183,7 @@ class _FmControllerBar extends StatelessWidget {
             color: color,
           ),
           onPressed: () {
-            context.player.play();
+            ref.read(playerProvider).play();
           }),
       buffering: const SizedBox(
         height: 56,
@@ -219,7 +210,7 @@ class _FmControllerBar extends StatelessWidget {
               ),
               onPressed: () {
                 toast('已加入不喜欢列表，以后将减少类似的推荐。');
-                context.player.skipToNext();
+                ref.read(playerProvider).skipToNext();
               }),
           LikeButton.current(context),
           iconPlayPause,
@@ -230,7 +221,7 @@ class _FmControllerBar extends StatelessWidget {
                 color: color,
               ),
               onPressed: () {
-                context.player.skipToNext();
+                ref.read(playerProvider).skipToNext();
               }),
           IconButton(
               tooltip: "当前播放列表",
@@ -239,15 +230,7 @@ class _FmControllerBar extends StatelessWidget {
                 color: color,
               ),
               onPressed: () {
-                context.secondaryNavigator!.push(MaterialPageRoute(
-                    builder: (context) => CommentPage(
-                          threadId: CommentThreadId(
-                            context.player.current!.id,
-                            CommentType.song,
-                          ),
-                          payload: CommentThreadPayload.music(
-                              context.player.current!),
-                        )));
+                // TODO
               }),
         ],
       ),

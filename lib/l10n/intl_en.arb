@@ -52,5 +52,6 @@
     "settings": "Settings",
     "about": "About",
     "hideCopyrightOverlay": "Hide Copyright Overlay",
-    "trackNoCopyright": "Track No Copyright"
+    "trackNoCopyright": "Track No Copyright",
+    "noLyric": "No Lyric"
 }

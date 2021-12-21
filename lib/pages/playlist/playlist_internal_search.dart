@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:quiet/navigation/common/playlist/music_list.dart';
 import 'package:quiet/part/part.dart';
+import 'package:quiet/providers/player_provider.dart';
 import 'package:quiet/repository.dart';
 
 class PlaylistInternalSearchDelegate extends SearchDelegate {
@@ -66,7 +68,7 @@ class _EmptyResultSection extends StatelessWidget {
   }
 }
 
-class _InternalResultSection extends StatelessWidget {
+class _InternalResultSection extends ConsumerWidget {
   const _InternalResultSection({
     Key? key,
     required this.musics,
@@ -76,11 +78,11 @@ class _InternalResultSection extends StatelessWidget {
   final List<Music> musics;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return MusicTileConfiguration(
       musics: musics,
       onMusicTap: (_, music) {
-        context.player
+        ref.read(playerProvider)
           ..insertToNext(music)
           ..playFromMediaId(music.id);
       },

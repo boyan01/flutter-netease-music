@@ -1,12 +1,14 @@
 library player;
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quiet/component/utils/utils.dart';
+import 'package:quiet/extension.dart';
 import 'package:quiet/material.dart';
-import 'package:quiet/material/player/progress_track_container.dart';
+import 'package:quiet/navigation/common/progress_track_container.dart';
 import 'package:quiet/pages/page_playing_list.dart';
-import 'package:quiet/part/part.dart';
-import 'package:quiet/repository/cached_image.dart';
+import 'package:quiet/providers/lyric_provider.dart';
+import 'package:quiet/providers/player_provider.dart';
 
 import '../../navigation/common/like_button.dart';
 
@@ -57,7 +59,7 @@ class BoxWithBottomPlayerController extends StatelessWidget {
 }
 
 ///底部当前音乐播放控制栏
-class BottomControllerBar extends StatelessWidget {
+class BottomControllerBar extends ConsumerWidget {
   const BottomControllerBar({
     Key? key,
     this.bottomPadding = 0,
@@ -66,9 +68,9 @@ class BottomControllerBar extends StatelessWidget {
   final double bottomPadding;
 
   @override
-  Widget build(BuildContext context) {
-    final music = context.watchPlayerValue.current;
-    final queue = context.watchPlayerValue.list;
+  Widget build(BuildContext context, WidgetRef ref) {
+    final music = ref.watch(playingTrackProvider);
+    final queue = ref.watch(playingListProvider);
     if (music == null) {
       return Container();
     }
@@ -136,7 +138,7 @@ class BottomControllerBar extends StatelessWidget {
                 ),
               ),
               _PauseButton(),
-              if (context.player.trackList.isFM)
+              if (queue.isFM)
                 LikeButton.current(context)
               else
                 IconButton(
@@ -153,20 +155,21 @@ class BottomControllerBar extends StatelessWidget {
   }
 }
 
-class _SubTitleOrLyric extends StatelessWidget {
+class _SubTitleOrLyric extends ConsumerWidget {
   const _SubTitleOrLyric(this.subtitle, {Key? key}) : super(key: key);
 
   final String subtitle;
 
   @override
-  Widget build(BuildContext context) {
-    final playingLyric = PlayingLyric.of(context);
-    if (!playingLyric.hasLyric) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final music = ref.watch(playingTrackProvider);
+    final playingLyric = ref.watch(lyricProvider(music!.id).stateOrNull());
+    if (playingLyric == null) {
       return Text(subtitle);
     }
-    final line = playingLyric.lyric!
-        .getLineByTimeStamp(context.player.position?.inMilliseconds ?? 0, 0)
-        ?.line;
+    final position = ref.read(playerStateProvider.notifier).position;
+    final line =
+        playingLyric.getLineByTimeStamp(position?.inMilliseconds ?? 0, 0)?.line;
     if (line == null || line.isEmpty) {
       return Text(subtitle);
     }
@@ -174,19 +177,19 @@ class _SubTitleOrLyric extends StatelessWidget {
   }
 }
 
-class _PauseButton extends StatelessWidget {
+class _PauseButton extends ConsumerWidget {
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return PlayingIndicator(
       playing: IconButton(
           icon: const Icon(Icons.pause),
           onPressed: () {
-            context.player.pause();
+            ref.read(playerStateProvider.notifier).pause();
           }),
       pausing: IconButton(
           icon: const Icon(Icons.play_arrow),
           onPressed: () {
-            context.player.play();
+            ref.read(playerStateProvider.notifier).play();
           }),
       buffering: Container(
         height: 24,

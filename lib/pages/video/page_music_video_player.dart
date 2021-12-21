@@ -2,12 +2,14 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:netease_api/netease_api.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:quiet/component/utils/utils.dart';
 import 'package:quiet/material/button.dart';
 import 'package:quiet/pages/comments/comments.dart';
 import 'package:quiet/part/part.dart';
+import 'package:quiet/providers/player_provider.dart';
 import 'package:quiet/repository/netease.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:video_player/video_player.dart';
@@ -53,7 +55,7 @@ class MusicVideoPlayerPage extends StatelessWidget {
   }
 }
 
-class _MvDetailPage extends StatefulWidget {
+class _MvDetailPage extends ConsumerStatefulWidget {
   const _MvDetailPage({
     Key? key,
     required this.musicVideoDetail,
@@ -67,7 +69,7 @@ class _MvDetailPage extends StatefulWidget {
   _MvDetailPageState createState() => _MvDetailPageState();
 }
 
-class _MvDetailPageState extends State<_MvDetailPage> {
+class _MvDetailPageState extends ConsumerState<_MvDetailPage> {
   late VideoPlayerModel _model;
 
   bool _pausedPlayingMusic = false;
@@ -81,10 +83,8 @@ class _MvDetailPageState extends State<_MvDetailPage> {
     );
     _model.videoPlayerController.play();
     //TODO audio focus
-    if (context.player.isPlaying) {
-      context.player.pause();
-      _pausedPlayingMusic = true;
-    }
+    _pausedPlayingMusic = ref.read(playerStateProvider).isPlaying;
+    ref.read(playerProvider).pause();
   }
 
   @override
@@ -93,7 +93,7 @@ class _MvDetailPageState extends State<_MvDetailPage> {
     _model.videoPlayerController.dispose();
     //try to resume paused music
     if (_pausedPlayingMusic) {
-      context.player.play();
+      ref.read(playerProvider).play();
     }
   }
 

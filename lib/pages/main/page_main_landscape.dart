@@ -145,12 +145,12 @@ class _LandscapeDrawer extends ConsumerWidget {
 }
 
 /// Bottom player bar for landscape
-class _BottomPlayerBar extends StatelessWidget {
+class _BottomPlayerBar extends ConsumerWidget {
   const _BottomPlayerBar({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    final current = context.watchPlayerValue.current;
+  Widget build(BuildContext context, WidgetRef ref) {
+    final current = ref.watch(playingTrackProvider);
     final paddingPageBottom = MediaQuery.of(context).viewInsets.bottom +
         MediaQuery.of(context).padding.bottom;
     if (current == null) {
