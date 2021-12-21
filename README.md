@@ -25,6 +25,14 @@ A Universal copy app of [NeteaseMusic](https://music.163.com/#/download)
  flutter run --profile
  ```
 
+### Linux requirement.
+   
+   debian: 
+   ```shell
+   sudo apt-get install vlc
+   sudo apt-get install libvlc-dev
+   ```
+
 ## Dependency backend
 
 * Toast and InApp notification：
