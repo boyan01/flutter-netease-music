@@ -46,7 +46,10 @@ void _initialDesktop() async {
     return;
   }
   await WindowManager.instance.ensureInitialized();
-  WindowManager.instance.setMinimumSize(const Size(960, 720));
+  if (Platform.isWindows) {
+    // only Windows need this.
+    WindowManager.instance.setMinimumSize(const Size(960, 720));
+  }
 }
 
 /// The entry of dart background service
