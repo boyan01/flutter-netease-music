@@ -4,6 +4,7 @@ import 'package:quiet/component.dart';
 import 'package:quiet/material.dart';
 import 'package:quiet/pages/account/account.dart';
 import 'package:quiet/pages/account/page_user_detail.dart';
+import 'package:quiet/repository.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class MainNavigationDrawer extends StatelessWidget {

@@ -6,6 +6,7 @@ import 'package:quiet/navigation/desktop/login/login_dialog.dart';
 import 'package:quiet/navigation/desktop/playlist/user_playlists.dart';
 import 'package:quiet/navigation/desktop/widgets/navigation_tile.dart';
 import 'package:quiet/pages/account/account.dart';
+import 'package:quiet/repository.dart';
 
 import '../../component/utils/scroll_controller.dart';
 import '../common/navigation_target.dart';

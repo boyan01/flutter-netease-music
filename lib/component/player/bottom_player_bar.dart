@@ -9,6 +9,7 @@ import 'package:quiet/navigation/common/progress_track_container.dart';
 import 'package:quiet/pages/page_playing_list.dart';
 import 'package:quiet/providers/lyric_provider.dart';
 import 'package:quiet/providers/player_provider.dart';
+import 'package:quiet/repository.dart';
 
 import '../../navigation/common/like_button.dart';
 

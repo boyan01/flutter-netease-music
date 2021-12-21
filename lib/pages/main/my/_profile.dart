@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quiet/component.dart';
 import 'package:quiet/pages/account/account.dart';
 import 'package:quiet/pages/account/page_user_detail.dart';
+import 'package:quiet/repository.dart';
 
 class UserProfileSection extends ConsumerWidget {
   const UserProfileSection({Key? key}) : super(key: key);

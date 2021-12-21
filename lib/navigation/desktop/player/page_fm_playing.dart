@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quiet/extension.dart';
 import 'package:quiet/navigation/common/like_button.dart';
 import 'package:quiet/providers/player_provider.dart';
+import 'package:quiet/repository.dart';
 
 import 'lyric_layout.dart';
 

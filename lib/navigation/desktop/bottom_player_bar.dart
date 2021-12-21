@@ -4,6 +4,7 @@ import 'package:overlay_support/overlay_support.dart';
 import 'package:quiet/extension.dart';
 import 'package:quiet/navigation/desktop/navigator.dart';
 import 'package:quiet/providers/player_provider.dart';
+import 'package:quiet/repository.dart';
 
 import '../common/navigation_target.dart';
 import '../common/player_progress.dart';
@@ -139,8 +140,7 @@ class _CenterControllerWidget extends ConsumerWidget {
               IconButton(
                 splashRadius: 24,
                 padding: EdgeInsets.zero,
-                onPressed: () =>
-                    ref.read(playerProvider).skipToNext(),
+                onPressed: () => ref.read(playerProvider).skipToNext(),
                 icon: const Icon(Icons.skip_next, size: 24),
               ),
             ],

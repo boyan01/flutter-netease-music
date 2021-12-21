@@ -3,7 +3,7 @@ import 'package:quiet/pages/collection/api.dart';
 import 'package:quiet/part/part.dart';
 import 'package:scoped_model/scoped_model.dart';
 
-export '../user/favorite_musics.dart';
+export '../../providers/favorite_tracks_provider.dart';
 export 'counter.dart';
 export 'netease_loader.dart';
 
