@@ -54,9 +54,12 @@ class MessageLookup extends MessageLookupByLibrary {
         "failedToPlayMusic": MessageLookupByLibrary.simpleMessage("播放音乐失败"),
         "favoriteSongList": MessageLookupByLibrary.simpleMessage("收藏歌单"),
         "friends": MessageLookupByLibrary.simpleMessage("我的好友"),
+        "functionDescription": MessageLookupByLibrary.simpleMessage("功能描述"),
         "hideCopyrightOverlay": MessageLookupByLibrary.simpleMessage("隐藏版权浮层"),
+        "keySpace": MessageLookupByLibrary.simpleMessage("空格"),
         "latestPlayHistory": MessageLookupByLibrary.simpleMessage("最近播放"),
         "library": MessageLookupByLibrary.simpleMessage("音乐库"),
+        "likeMusic": MessageLookupByLibrary.simpleMessage("喜欢歌曲"),
         "localMusic": MessageLookupByLibrary.simpleMessage("本地音乐"),
         "login": MessageLookupByLibrary.simpleMessage("立即登录"),
         "loginWithPhone": MessageLookupByLibrary.simpleMessage("手机号登录"),
@@ -69,6 +72,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "noMusic": MessageLookupByLibrary.simpleMessage("暂无音乐"),
         "personalFM": MessageLookupByLibrary.simpleMessage("私人FM"),
         "playInNext": MessageLookupByLibrary.simpleMessage("下一首播放"),
+        "playOrPause": MessageLookupByLibrary.simpleMessage("播放/暂停"),
         "playlist": MessageLookupByLibrary.simpleMessage("歌单"),
         "playlistLoginDescription":
             MessageLookupByLibrary.simpleMessage("登录以加载你的私人播放列表。"),
@@ -83,7 +87,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "settings": MessageLookupByLibrary.simpleMessage("设置"),
         "shareContentCopied":
             MessageLookupByLibrary.simpleMessage("分享内容已复制到剪切板"),
+        "shortcuts": MessageLookupByLibrary.simpleMessage("快捷键"),
         "skipLogin": MessageLookupByLibrary.simpleMessage("跳过登录"),
+        "skipToNext": MessageLookupByLibrary.simpleMessage("下一首"),
+        "skipToPrevious": MessageLookupByLibrary.simpleMessage("上一首"),
         "theme": MessageLookupByLibrary.simpleMessage("主题"),
         "themeAuto": MessageLookupByLibrary.simpleMessage("跟随系统"),
         "themeDark": MessageLookupByLibrary.simpleMessage("深色主题"),
@@ -91,6 +98,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "tipsAutoRegisterIfUserNotExist":
             MessageLookupByLibrary.simpleMessage("未注册手机号登陆后将自动创建账号"),
         "todo": MessageLookupByLibrary.simpleMessage("TBD"),
-        "trackNoCopyright": MessageLookupByLibrary.simpleMessage("此音乐暂无版权")
+        "trackNoCopyright": MessageLookupByLibrary.simpleMessage("此音乐暂无版权"),
+        "volumeDown": MessageLookupByLibrary.simpleMessage("音量-"),
+        "volumeUp": MessageLookupByLibrary.simpleMessage("音量+")
       };
 }

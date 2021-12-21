@@ -53,5 +53,14 @@
     "about": "关于",
     "hideCopyrightOverlay": "隐藏版权浮层",
     "trackNoCopyright": "此音乐暂无版权",
-    "noLyric": "暂无歌词"
+    "noLyric": "暂无歌词",
+    "shortcuts": "快捷键",
+    "playOrPause": "播放/暂停",
+    "skipToNext": "下一首",
+    "skipToPrevious": "上一首",
+    "volumeUp": "音量+",
+    "volumeDown": "音量-",
+    "likeMusic": "喜欢歌曲",
+    "functionDescription": "功能描述",
+    "keySpace": "空格"
 }

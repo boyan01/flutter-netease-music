@@ -61,11 +61,15 @@ class MessageLookup extends MessageLookupByLibrary {
         "favoriteSongList":
             MessageLookupByLibrary.simpleMessage("Favorite Song List"),
         "friends": MessageLookupByLibrary.simpleMessage("Friends"),
+        "functionDescription":
+            MessageLookupByLibrary.simpleMessage("Description"),
         "hideCopyrightOverlay":
             MessageLookupByLibrary.simpleMessage("Hide Copyright Overlay"),
+        "keySpace": MessageLookupByLibrary.simpleMessage("Space"),
         "latestPlayHistory":
             MessageLookupByLibrary.simpleMessage("Play History"),
         "library": MessageLookupByLibrary.simpleMessage("Library"),
+        "likeMusic": MessageLookupByLibrary.simpleMessage("Like Music"),
         "localMusic": MessageLookupByLibrary.simpleMessage("Local Music"),
         "login": MessageLookupByLibrary.simpleMessage("Login"),
         "loginWithPhone":
@@ -79,6 +83,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "noMusic": MessageLookupByLibrary.simpleMessage("no music"),
         "personalFM": MessageLookupByLibrary.simpleMessage("Personal FM"),
         "playInNext": MessageLookupByLibrary.simpleMessage("play in next"),
+        "playOrPause": MessageLookupByLibrary.simpleMessage("Play/Pause"),
         "playlist": MessageLookupByLibrary.simpleMessage("PlayList"),
         "playlistLoginDescription": MessageLookupByLibrary.simpleMessage(
             "Login to discover your playlists."),
@@ -95,7 +100,11 @@ class MessageLookup extends MessageLookupByLibrary {
         "settings": MessageLookupByLibrary.simpleMessage("Settings"),
         "shareContentCopied": MessageLookupByLibrary.simpleMessage(
             "Share content has copied to clipboard."),
+        "shortcuts": MessageLookupByLibrary.simpleMessage("Shortcuts"),
         "skipLogin": MessageLookupByLibrary.simpleMessage("Skip login"),
+        "skipToNext": MessageLookupByLibrary.simpleMessage("Skip to Next"),
+        "skipToPrevious":
+            MessageLookupByLibrary.simpleMessage("Skip to Previous"),
         "theme": MessageLookupByLibrary.simpleMessage("Theme"),
         "themeAuto": MessageLookupByLibrary.simpleMessage("Follow System"),
         "themeDark": MessageLookupByLibrary.simpleMessage("Dark"),
@@ -104,6 +113,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("未注册手机号登陆后将自动创建账号"),
         "todo": MessageLookupByLibrary.simpleMessage("TBD"),
         "trackNoCopyright":
-            MessageLookupByLibrary.simpleMessage("Track No Copyright")
+            MessageLookupByLibrary.simpleMessage("Track No Copyright"),
+        "volumeDown": MessageLookupByLibrary.simpleMessage("Volume Down"),
+        "volumeUp": MessageLookupByLibrary.simpleMessage("Volume Up")
       };
 }

@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:quiet/extension.dart';
 
@@ -28,6 +29,8 @@ class PageSetting extends StatelessWidget {
             const Divider(height: 40),
             const CopyRightOverlayCheckBox(),
             const Divider(height: 40),
+            const _HotkeyLayout(),
+            const Divider(height: 40),
             Text(context.strings.about, style: context.textTheme.bodyMedium),
             const SizedBox(height: 12),
             Text(
@@ -42,6 +45,106 @@ class PageSetting extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+class _HotkeyLayout extends StatelessWidget {
+  const _HotkeyLayout({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    const rowHeight = 36.0;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(context.strings.shortcuts, style: context.textTheme.bodyMedium),
+        const SizedBox(height: 12),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: DefaultTextStyle(
+            style: context.textTheme.bodyMedium!.copyWith(
+              fontSize: context.textTheme.caption!.fontSize,
+            ),
+            child: Table(
+              defaultColumnWidth: const FixedColumnWidth(180),
+              defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+              children: [
+                TableRow(
+                  children: [
+                    Text(
+                      context.strings.functionDescription,
+                      style: context.textTheme.caption,
+                    ),
+                    Text(
+                      context.strings.shortcuts,
+                      style: context.textTheme.caption,
+                    ),
+                    const SizedBox(height: rowHeight, width: 2),
+                  ],
+                ),
+                TableRow(
+                  children: [
+                    Text(context.strings.playOrPause),
+                    Text(context.strings.keySpace),
+                    const SizedBox(height: rowHeight, width: 2),
+                  ],
+                ),
+                TableRow(
+                  children: [
+                    Text(context.strings.skipToNext),
+                    if (defaultTargetPlatform == TargetPlatform.macOS)
+                      const Text('⌘ + →')
+                    else
+                      const Text('Ctrl + →'),
+                    const SizedBox(height: rowHeight, width: 2),
+                  ],
+                ),
+                TableRow(
+                  children: [
+                    Text(context.strings.skipToPrevious),
+                    if (defaultTargetPlatform == TargetPlatform.macOS)
+                      const Text('⌘ + ←')
+                    else
+                      const Text('Ctrl + ←'),
+                    const SizedBox(height: rowHeight, width: 2),
+                  ],
+                ),
+                TableRow(
+                  children: [
+                    Text(context.strings.volumeUp),
+                    if (defaultTargetPlatform == TargetPlatform.macOS)
+                      const Text('⌘ + ↑')
+                    else
+                      const Text('Ctrl + ↑'),
+                    const SizedBox(height: rowHeight, width: 2),
+                  ],
+                ),
+                TableRow(
+                  children: [
+                    Text(context.strings.volumeDown),
+                    if (defaultTargetPlatform == TargetPlatform.macOS)
+                      const Text('⌘ + ↓')
+                    else
+                      const Text('Ctrl + ↓'),
+                    const SizedBox(height: rowHeight, width: 2),
+                  ],
+                ),
+                TableRow(
+                  children: [
+                    Text(context.strings.likeMusic),
+                    if (defaultTargetPlatform == TargetPlatform.macOS)
+                      const Text('⌘ + L')
+                    else
+                      const Text('Ctrl + L'),
+                    const SizedBox(height: rowHeight, width: 2),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        )
+      ],
     );
   }
 }

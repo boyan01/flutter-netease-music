@@ -53,5 +53,14 @@
     "about": "About",
     "hideCopyrightOverlay": "Hide Copyright Overlay",
     "trackNoCopyright": "Track No Copyright",
-    "noLyric": "No Lyric"
+    "noLyric": "No Lyric",
+    "shortcuts": "Shortcuts",
+    "playOrPause": "Play/Pause",
+    "skipToNext": "Skip to Next",
+    "skipToPrevious": "Skip to Previous",
+    "volumeUp": "Volume Up",
+    "volumeDown": "Volume Down",
+    "likeMusic": "Like Music",
+    "functionDescription": "Description",
+    "keySpace": "Space"
 }

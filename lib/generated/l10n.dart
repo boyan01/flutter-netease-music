@@ -601,6 +601,96 @@ class S {
       args: [],
     );
   }
+
+  /// `Shortcuts`
+  String get shortcuts {
+    return Intl.message(
+      'Shortcuts',
+      name: 'shortcuts',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Play/Pause`
+  String get playOrPause {
+    return Intl.message(
+      'Play/Pause',
+      name: 'playOrPause',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Skip to Next`
+  String get skipToNext {
+    return Intl.message(
+      'Skip to Next',
+      name: 'skipToNext',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Skip to Previous`
+  String get skipToPrevious {
+    return Intl.message(
+      'Skip to Previous',
+      name: 'skipToPrevious',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Volume Up`
+  String get volumeUp {
+    return Intl.message(
+      'Volume Up',
+      name: 'volumeUp',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Volume Down`
+  String get volumeDown {
+    return Intl.message(
+      'Volume Down',
+      name: 'volumeDown',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Like Music`
+  String get likeMusic {
+    return Intl.message(
+      'Like Music',
+      name: 'likeMusic',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Description`
+  String get functionDescription {
+    return Intl.message(
+      'Description',
+      name: 'functionDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Space`
+  String get keySpace {
+    return Intl.message(
+      'Space',
+      name: 'keySpace',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {
