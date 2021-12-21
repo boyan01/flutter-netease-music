@@ -71,7 +71,7 @@ class _AlbumCoverState extends ConsumerState<AlbumCover>
 
     _current = widget.music;
     _invalidatePn();
-    _player.addListener((_) => _checkNeedleAndCoverStatus());
+    _removeListener = _player.addListener((_) => _checkNeedleAndCoverStatus());
   }
 
   /// invalidate previous and next music cover...

@@ -27,6 +27,7 @@ class TracksPlayerState with EquatableMixin {
     required this.playingTrack,
     required this.playingList,
     required this.duration,
+    required this.volume,
   });
 
   final bool isBuffering;
@@ -34,6 +35,7 @@ class TracksPlayerState with EquatableMixin {
   final Track? playingTrack;
   final TrackList playingList;
   final Duration? duration;
+  final double volume;
 
   @override
   List<Object?> get props => [
@@ -42,6 +44,7 @@ class TracksPlayerState with EquatableMixin {
         playingTrack,
         playingList,
         duration,
+        volume,
       ];
 }
 
@@ -53,6 +56,7 @@ abstract class TracksPlayer extends StateNotifier<TracksPlayerState> {
           playingTrack: null,
           playingList: TrackList.empty(),
           duration: null,
+          volume: 0.0,
         ));
 
   factory TracksPlayer.platform() {
@@ -118,6 +122,7 @@ abstract class TracksPlayer extends StateNotifier<TracksPlayerState> {
       playingTrack: current,
       playingList: trackList,
       duration: duration,
+      volume: volume,
     );
   }
 }

@@ -22,6 +22,7 @@ class TracksPlayerImplVlc extends TracksPlayer {
       }
       notifyPlayStateChanged();
     });
+    _player.generalStream.listen((event) => notifyPlayStateChanged());
   }
 
   final _player = Player(
@@ -144,6 +145,7 @@ class TracksPlayerImplVlc extends TracksPlayer {
   @override
   Future<void> setVolume(double volume) async {
     _player.setVolume(volume);
+    notifyPlayStateChanged();
   }
 
   @override

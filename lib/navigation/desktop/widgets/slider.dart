@@ -2,8 +2,8 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
-class UnboundedRoundSliderTrackShape extends RectangularSliderTrackShape {
-  const UnboundedRoundSliderTrackShape();
+class UnboundedRectangularSliderTrackShape extends RectangularSliderTrackShape {
+  const UnboundedRectangularSliderTrackShape();
 
   @override
   Rect getPreferredRect({

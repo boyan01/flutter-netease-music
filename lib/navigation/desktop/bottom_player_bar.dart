@@ -159,19 +159,8 @@ class _PlayerControlWidget extends StatelessWidget {
     return Row(
       children: [
         const Spacer(),
-        IconButton(
-          splashRadius: 24,
-          padding: EdgeInsets.zero,
-          onPressed: () {
-            // TODO: implement
-            toast(context.strings.todo);
-          },
-          icon: const Icon(
-            Icons.volume_up,
-            size: 24,
-          ),
-        ),
-        const SizedBox(width: 20),
+        const _VolumeControl(),
+        const SizedBox(width: 10),
         IconButton(
           splashRadius: 24,
           padding: EdgeInsets.zero,
@@ -185,6 +174,54 @@ class _PlayerControlWidget extends StatelessWidget {
           ),
         ),
         const SizedBox(width: 36),
+      ],
+    );
+  }
+}
+
+class _VolumeControl extends ConsumerWidget {
+  const _VolumeControl({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final volume =
+        ref.watch(playerStateProvider.select((value) => value.volume));
+    return Row(
+      children: [
+        if (volume <= 0.01)
+          const Icon(Icons.volume_mute, size: 24)
+        else if (volume < 0.5)
+          const Icon(Icons.volume_down, size: 24)
+        else
+          const Icon(Icons.volume_up, size: 24),
+        SizedBox(
+          width: 120,
+          child: SliderTheme(
+            data: const SliderThemeData(
+              thumbShape: RoundSliderThumbShape(
+                enabledThumbRadius: 6,
+                elevation: 0,
+              ),
+              trackHeight: 4,
+              trackShape: RoundedRectSliderTrackShape(),
+              overlayShape: RoundSliderOverlayShape(
+                overlayRadius: 10,
+              ),
+            ),
+            child: Slider(
+              value: volume * 100,
+              max: 100,
+              onChanged: (value) {
+                ref.read(playerProvider).setVolume(value / 100);
+              },
+              onChangeEnd: (value) {
+                ref.read(playerProvider).setVolume(value / 100);
+              },
+            ),
+          ),
+        ),
       ],
     );
   }
@@ -210,7 +247,7 @@ class _ProgressBar extends ConsumerWidget {
               enabledThumbRadius: 6,
               elevation: 0,
             ),
-            trackShape: UnboundedRoundSliderTrackShape(),
+            trackShape: UnboundedRectangularSliderTrackShape(),
             overlayShape: RoundSliderOverlayShape(
               overlayRadius: 10,
             ),
