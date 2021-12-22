@@ -9,9 +9,11 @@ import 'package:overlay_support/overlay_support.dart';
 import 'package:quiet/component.dart';
 import 'package:quiet/component/utils/utils.dart';
 import 'package:quiet/material.dart';
+import 'package:quiet/media/tracks/track_list.dart';
 import 'package:quiet/pages/account/page_user_detail.dart';
 import 'package:quiet/pages/comments/page_comment.dart';
 import 'package:quiet/part/part.dart';
+import 'package:quiet/providers/player_provider.dart';
 import 'package:quiet/repository.dart';
 
 import '../../navigation/common/playlist/music_list.dart';
@@ -216,7 +218,12 @@ class _PlaylistBodyState extends ConsumerState<_MusicList> {
               }
               toast(result ? '删除成功' : '删除失败');
             },
-      onMusicTap: MusicTileConfiguration.defaultOnTap,
+      onMusicTap: (context, music) {
+        ref.read(playerProvider)
+          ..setTrackList(TrackList(
+              id: 'playlist_${widget.playlist.id}', tracks: widget.musicList))
+          ..playFromMediaId(music.id);
+      },
       leadingBuilder: MusicTileConfiguration.indexedLeadingBuilder,
       trailingBuilder: MusicTileConfiguration.defaultTrailingBuilder,
       child: SliverList(

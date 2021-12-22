@@ -1,10 +1,13 @@
 import 'package:quiet/repository/data/track.dart';
 
+const kFmTrackListId = '_fm_playlist';
+
 class TrackList {
   const TrackList({
     required this.id,
     required this.tracks,
-  }) : isFM = false;
+  })  : assert(id != kFmTrackListId, 'id should not be $kFmTrackListId'),
+        isFM = false;
 
   const TrackList.empty()
       : id = '',
@@ -13,7 +16,7 @@ class TrackList {
 
   const TrackList.fm({required this.tracks})
       : isFM = true,
-        id = 'fm';
+        id = kFmTrackListId;
 
   final String id;
   final List<Track> tracks;

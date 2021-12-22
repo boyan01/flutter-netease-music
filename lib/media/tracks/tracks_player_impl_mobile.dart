@@ -53,6 +53,28 @@ extension _Track on Track {
   }
 }
 
+extension _TrackList on TrackList {
+  PlayQueue toPlayQueue() {
+    return PlayQueue(
+      queueId: id,
+      queueTitle: 'play_list',
+      queue: tracks.map((e) => e.toMetadata()).toList(),
+    );
+  }
+}
+
+extension _PlayQueue on PlayQueue {
+  TrackList toTrackList() {
+    if (queueId == kFmTrackListId) {
+      return TrackList.fm(tracks: queue.map((e) => e.toTrack()).toList());
+    }
+    return TrackList(
+      id: queueId,
+      tracks: queue.map((e) => e.toTrack()).toList(),
+    );
+  }
+}
+
 class TracksPlayerImplMobile extends TracksPlayer {
   TracksPlayerImplMobile() {
     _player.metadataListenable.addListener(notifyPlayStateChanged);
@@ -150,7 +172,9 @@ class TracksPlayerImplMobile extends TracksPlayer {
   }
 
   @override
-  void setTrackList(TrackList trackList) {}
+  void setTrackList(TrackList trackList) {
+    _player.setPlayQueue(trackList.toPlayQueue());
+  }
 
   @override
   Future<void> setVolume(double volume) async {
@@ -174,10 +198,10 @@ class TracksPlayerImplMobile extends TracksPlayer {
   }
 
   @override
-  TrackList get trackList => throw UnimplementedError();
+  TrackList get trackList => _player.queue.toTrackList();
 
   @override
-  double get volume => throw UnimplementedError();
+  double get volume => 1;
 
   @override
   bool get isBuffering => _player.playbackState.state == PlayerState.Buffering;
