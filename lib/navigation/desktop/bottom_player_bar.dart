@@ -186,8 +186,12 @@ class _VolumeControl extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final volume =
-        ref.watch(playerStateProvider.select((value) => value.volume));
+    final volume = ref.watch(
+      playerStateProvider.select((value) => value.volume),
+    );
+    final enable = ref.watch(
+      playerStateProvider.select((value) => value.playingTrack != null),
+    );
     return Row(
       children: [
         if (volume <= 0.01)
@@ -212,7 +216,7 @@ class _VolumeControl extends ConsumerWidget {
             ),
             child: Slider(
               value: volume * 100,
-              max: 100,
+              max: enable ? 100 : 0,
               onChanged: (value) {
                 ref.read(playerProvider).setVolume(value / 100);
               },
