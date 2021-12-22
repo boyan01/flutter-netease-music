@@ -54,7 +54,7 @@ class _PresetItems extends StatelessWidget {
           NavigationTile(
             icon: const Icon(Icons.radio),
             title: Text(context.strings.personalFM),
-            isSelected: false,
+            isSelected: navigator.current is NavigationTargetFmPlaying,
             onTap: () => navigator.navigate(NavigationTargetFmPlaying()),
           ),
           NavigationTitle(title: context.strings.library),

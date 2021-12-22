@@ -138,8 +138,13 @@ class TracksPlayerImplVlc extends TracksPlayer {
 
   @override
   void setTrackList(TrackList trackList) {
-    stop();
+    bool needStop = trackList.id != _trackList.id;
+    if (needStop) {
+      stop();
+      _current = null;
+    }
     _trackList = trackList;
+    notifyPlayStateChanged();
   }
 
   @override

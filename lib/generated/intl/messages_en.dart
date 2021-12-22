@@ -81,9 +81,14 @@ class MessageLookup extends MessageLookupByLibrary {
         "nextStep": MessageLookupByLibrary.simpleMessage("next step"),
         "noLyric": MessageLookupByLibrary.simpleMessage("No Lyric"),
         "noMusic": MessageLookupByLibrary.simpleMessage("no music"),
+        "pause": MessageLookupByLibrary.simpleMessage("Pause"),
         "personalFM": MessageLookupByLibrary.simpleMessage("Personal FM"),
+        "personalFmPlaying":
+            MessageLookupByLibrary.simpleMessage("Personal FM Playing"),
+        "play": MessageLookupByLibrary.simpleMessage("Play"),
         "playInNext": MessageLookupByLibrary.simpleMessage("play in next"),
         "playOrPause": MessageLookupByLibrary.simpleMessage("Play/Pause"),
+        "playingList": MessageLookupByLibrary.simpleMessage("Playing List"),
         "playlist": MessageLookupByLibrary.simpleMessage("PlayList"),
         "playlistLoginDescription": MessageLookupByLibrary.simpleMessage(
             "Login to discover your playlists."),

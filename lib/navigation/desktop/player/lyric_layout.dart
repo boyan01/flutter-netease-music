@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quiet/extension.dart';
-import 'package:quiet/providers/player_provider.dart';
+import 'package:quiet/repository.dart';
 
 import '../../common/player/lyric_view.dart';
 
-class LyricLayout extends ConsumerWidget {
-  const LyricLayout({Key? key}) : super(key: key);
+class LyricLayout extends StatelessWidget {
+  const LyricLayout({
+    Key? key,
+    required this.track,
+  }) : super(key: key);
+
+  final Track track;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final playingTrack = ref.watch(playingTrackProvider)!;
+  Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(left: 20, right: 80),
       child: Column(
@@ -18,7 +21,7 @@ class LyricLayout extends ConsumerWidget {
         children: <Widget>[
           const SizedBox(height: 20),
           Text(
-            playingTrack.name,
+            track.name,
             style: context.textTheme.headline6.bold,
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
@@ -32,9 +35,9 @@ class LyricLayout extends ConsumerWidget {
                 const SizedBox(width: 4),
                 Flexible(
                   child: Tooltip(
-                    message: playingTrack.album?.name,
+                    message: track.album?.name,
                     child: Text(
-                      playingTrack.album?.name ?? '',
+                      track.album?.name ?? '',
                       style: TextStyle(color: context.colorScheme.primary),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
@@ -46,11 +49,9 @@ class LyricLayout extends ConsumerWidget {
                 const SizedBox(width: 4),
                 Flexible(
                   child: Tooltip(
-                    message: playingTrack.artists.map((a) => a.name).join(', '),
+                    message: track.artists.map((a) => a.name).join(', '),
                     child: Text(
-                      playingTrack.artists
-                          .map((artist) => artist.name)
-                          .join('/'),
+                      track.artists.map((artist) => artist.name).join('/'),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -62,7 +63,7 @@ class LyricLayout extends ConsumerWidget {
           const SizedBox(height: 40),
           Expanded(
             child: PlayingLyricView(
-              music: playingTrack,
+              music: track,
               textStyle: context.textTheme.bodyMedium!
                   .copyWith(height: 2, fontSize: 14),
               textAlign: TextAlign.start,

@@ -11,10 +11,9 @@ class TrackList {
         tracks = const [],
         isFM = false;
 
-  const TrackList.fm()
+  const TrackList.fm({required this.tracks})
       : isFM = true,
-        id = 'fm',
-        tracks = const [];
+        id = 'fm';
 
   final String id;
   final List<Track> tracks;

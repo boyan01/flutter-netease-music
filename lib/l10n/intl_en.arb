@@ -62,5 +62,9 @@
     "volumeDown": "Volume Down",
     "likeMusic": "Like Music",
     "functionDescription": "Description",
-    "keySpace": "Space"
+    "keySpace": "Space",
+    "play": "Play",
+    "pause": "Pause",
+    "playingList": "Playing List",
+    "personalFmPlaying": "Personal FM Playing"
 }

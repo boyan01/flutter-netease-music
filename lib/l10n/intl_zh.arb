@@ -62,5 +62,9 @@
     "volumeDown": "音量-",
     "likeMusic": "喜欢歌曲",
     "functionDescription": "功能描述",
-    "keySpace": "空格"
+    "keySpace": "空格",
+    "play": "播放",
+    "pause": "暂停",
+    "playingList": "当前播放列表",
+    "personalFmPlaying": "私人FM播放中"
 }

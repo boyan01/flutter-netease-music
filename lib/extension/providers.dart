@@ -16,3 +16,9 @@ extension ProvidersException<State> on ProviderBase<AsyncValue<State>> {
     return select((value) => value.asData?.value);
   }
 }
+
+extension AutoRemover on RemoveListener {
+  void autoRemove(Ref ref) {
+    ref.onDispose(this);
+  }
+}

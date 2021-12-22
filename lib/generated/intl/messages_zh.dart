@@ -70,9 +70,13 @@ class MessageLookup extends MessageLookupByLibrary {
         "nextStep": MessageLookupByLibrary.simpleMessage("下一步"),
         "noLyric": MessageLookupByLibrary.simpleMessage("暂无歌词"),
         "noMusic": MessageLookupByLibrary.simpleMessage("暂无音乐"),
+        "pause": MessageLookupByLibrary.simpleMessage("暂停"),
         "personalFM": MessageLookupByLibrary.simpleMessage("私人FM"),
+        "personalFmPlaying": MessageLookupByLibrary.simpleMessage("私人FM播放中"),
+        "play": MessageLookupByLibrary.simpleMessage("播放"),
         "playInNext": MessageLookupByLibrary.simpleMessage("下一首播放"),
         "playOrPause": MessageLookupByLibrary.simpleMessage("播放/暂停"),
+        "playingList": MessageLookupByLibrary.simpleMessage("当前播放列表"),
         "playlist": MessageLookupByLibrary.simpleMessage("歌单"),
         "playlistLoginDescription":
             MessageLookupByLibrary.simpleMessage("登录以加载你的私人播放列表。"),

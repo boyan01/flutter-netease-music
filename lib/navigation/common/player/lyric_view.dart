@@ -10,7 +10,7 @@ import 'package:quiet/repository.dart';
 import '../progress_track_container.dart';
 import 'lyric.dart';
 
-class PlayingLyricView extends StatelessWidget {
+class PlayingLyricView extends ConsumerWidget {
   PlayingLyricView({
     Key? key,
     this.onTap,
@@ -28,7 +28,13 @@ class PlayingLyricView extends StatelessWidget {
   final TextStyle textStyle;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final currentPlaying = ref.watch(playingTrackProvider);
+
+    if (currentPlaying != music) {
+      return _LyricViewLoader(music, textAlign, textStyle, onTap);
+    }
+
     return ProgressTrackingContainer(
       builder: (context) => _LyricViewLoader(
         music,
@@ -70,6 +76,7 @@ class _LyricViewLoader extends ConsumerWidget {
             onTap: onTap,
             textStyle: textStyle,
             textAlign: textAlign,
+            track: music,
           );
         });
       },
@@ -94,6 +101,7 @@ class _LyricView extends ConsumerWidget {
     required this.onTap,
     required this.textAlign,
     required this.textStyle,
+    required this.track,
   }) : super(key: key);
 
   final LyricContent lyric;
@@ -106,13 +114,25 @@ class _LyricView extends ConsumerWidget {
 
   final TextStyle textStyle;
 
+  final Track track;
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final color = textStyle.color!;
     final normalStyle = textStyle.copyWith(color: color.withOpacity(0.7));
 
-    final playing = ref.read(playerStateProvider).isPlaying;
-    final position = ref.read(playerStateProvider.notifier).position;
+    final currentPlaying = ref.watch(playingTrackProvider);
+
+    final bool playing;
+    final Duration? position;
+
+    if (currentPlaying != track) {
+      playing = false;
+      position = null;
+    } else {
+      playing = ref.read(playerStateProvider).isPlaying;
+      position = ref.read(playerStateProvider.notifier).position;
+    }
 
     return ShaderMask(
       shaderCallback: (rect) {
@@ -133,7 +153,7 @@ class _LyricView extends ConsumerWidget {
         lyric: lyric,
         lyricLineStyle: normalStyle,
         highlight: color,
-        position: position?.inMilliseconds,
+        position: position?.inMilliseconds ?? 0,
         onTap: onTap,
         size: Size(
           viewportHeight,

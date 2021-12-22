@@ -691,6 +691,46 @@ class S {
       args: [],
     );
   }
+
+  /// `Play`
+  String get play {
+    return Intl.message(
+      'Play',
+      name: 'play',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Pause`
+  String get pause {
+    return Intl.message(
+      'Pause',
+      name: 'pause',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Playing List`
+  String get playingList {
+    return Intl.message(
+      'Playing List',
+      name: 'playingList',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Personal FM Playing`
+  String get personalFmPlaying {
+    return Intl.message(
+      'Personal FM Playing',
+      name: 'personalFmPlaying',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

@@ -50,11 +50,19 @@ class _PlayingItemWidget extends ConsumerWidget {
     }
     return GestureDetector(
       onTap: () {
+        final player = ref.read(playerProvider);
         final controller = context.read<DesktopNavigatorController>();
-        if (controller.current is NavigationTargetPlaying) {
-          controller.back();
+
+        if (player.trackList.isFM) {
+          if (controller.current is! NavigationTargetFmPlaying) {
+            controller.navigate(NavigationTargetFmPlaying());
+          }
         } else {
-          controller.navigate(NavigationTargetPlaying());
+          if (controller.current is NavigationTargetPlaying) {
+            controller.back();
+          } else {
+            controller.navigate(NavigationTargetPlaying());
+          }
         }
       },
       child: Row(
@@ -102,6 +110,9 @@ class _CenterControllerWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final playingFm = ref.watch(
+      playerStateProvider.select((value) => value.playingList.isFM),
+    );
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.center,
@@ -116,9 +127,14 @@ class _CenterControllerWidget extends ConsumerWidget {
               IconButton(
                 splashRadius: 24,
                 padding: EdgeInsets.zero,
-                onPressed: () {
-                  ref.read(playerProvider).skipToPrevious();
-                },
+                mouseCursor: playingFm
+                    ? SystemMouseCursors.basic
+                    : SystemMouseCursors.click,
+                onPressed: playingFm
+                    ? null
+                    : () {
+                        ref.read(playerProvider).skipToPrevious();
+                      },
                 icon: const Icon(Icons.skip_previous, size: 24),
               ),
               const SizedBox(width: 20),
@@ -157,24 +173,43 @@ class _PlayerControlWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      children: [
-        const Spacer(),
-        const _VolumeControl(),
-        const SizedBox(width: 10),
-        IconButton(
-          splashRadius: 24,
-          padding: EdgeInsets.zero,
-          onPressed: () {
-            // TODO: implement
-            toast(context.strings.todo);
-          },
-          icon: const Icon(
-            Icons.playlist_play,
-            size: 24,
-          ),
-        ),
-        const SizedBox(width: 36),
+      children: const [
+        Spacer(),
+        _VolumeControl(),
+        SizedBox(width: 10),
+        _PlayingListButton(),
+        SizedBox(width: 36),
       ],
+    );
+  }
+}
+
+class _PlayingListButton extends ConsumerWidget {
+  const _PlayingListButton({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final playingFm = ref.watch(
+      playerStateProvider.select((value) => value.playingList.isFM),
+    );
+    return IconButton(
+      tooltip: playingFm
+          ? context.strings.personalFmPlaying
+          : context.strings.playingList,
+      splashRadius: 24,
+      padding: EdgeInsets.zero,
+      mouseCursor:
+          !playingFm ? SystemMouseCursors.click : SystemMouseCursors.basic,
+      onPressed: playingFm
+          ? null
+          : () {
+              // TODO: implement
+              toast(context.strings.todo);
+            },
+      icon: Icon(
+        playingFm ? Icons.radio : Icons.playlist_play,
+        size: 24,
+      ),
     );
   }
 }
