@@ -20,10 +20,7 @@ class _ItemTitle extends ConsumerWidget {
             if (commentThreadId.type == CommentType.playlist) {
               Navigator.push(context, MaterialPageRoute(builder: (context) {
                 final playlist = payload!.obj as PlaylistDetail;
-                return PlaylistDetailPage(
-                  playlist.id,
-                  previewData: playlist,
-                );
+                return PlaylistDetailPage(playlist.id);
               }));
             } else if (commentThreadId.type == CommentType.song) {
               final Track music = payload!.obj;
@@ -215,7 +212,7 @@ class _ItemCommentState extends State<_ItemComment> {
                           context,
                           MaterialPageRoute(
                               builder: (context) =>
-                                  UserDetailPage(userId: user.userId)));
+                                  UserDetailPage(userId: user.userId!)));
                     },
                     child: Image(
                       image: CachedImage(user.avatarUrl!),

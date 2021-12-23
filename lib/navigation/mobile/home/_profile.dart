@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quiet/component.dart';
+import 'package:quiet/navigation/common/navigation_target.dart';
 import 'package:quiet/pages/account/account.dart';
-import 'package:quiet/pages/account/page_user_detail.dart';
+import 'package:quiet/providers/navigator_provider.dart';
 import 'package:quiet/repository.dart';
 
 class UserProfileSection extends ConsumerWidget {
@@ -19,14 +20,9 @@ class UserProfileSection extends ConsumerWidget {
       child: InkWell(
         customBorder:
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => UserDetailPage(userId: detail.userId),
-            ),
-          );
-        },
+        onTap: () => ref
+            .read(navigatorProvider.notifier)
+            .navigate(NavigationTargetUser(detail.userId)),
         child: SizedBox(
           height: 72,
           child: Row(

@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:overlay_support/overlay_support.dart';
+import 'package:quiet/navigation/common/navigation_target.dart';
 import 'package:quiet/pages/page_playlist_edit.dart';
 import 'package:quiet/part/part.dart';
+import 'package:quiet/providers/navigator_provider.dart';
 import 'package:quiet/repository.dart';
 
 ///歌单列表元素
-class PlaylistTile extends StatelessWidget {
+class PlaylistTile extends ConsumerWidget {
   const PlaylistTile({
     Key? key,
     required this.playlist,
@@ -20,7 +23,7 @@ class PlaylistTile extends StatelessWidget {
   final bool enableHero;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final Widget cover = ClipRRect(
       borderRadius: const BorderRadius.all(Radius.circular(4)),
       child: FadeInImage(
@@ -33,11 +36,9 @@ class PlaylistTile extends StatelessWidget {
     );
 
     return InkWell(
-      onTap: () {
-        context.secondaryNavigator!.push(MaterialPageRoute(
-            builder: (context) =>
-                PlaylistDetailPage(playlist.id, previewData: playlist)));
-      },
+      onTap: () => ref
+          .read(navigatorProvider.notifier)
+          .navigate(NavigationTargetPlaylist(playlist.id)),
       child: SizedBox(
         height: 60,
         child: Row(

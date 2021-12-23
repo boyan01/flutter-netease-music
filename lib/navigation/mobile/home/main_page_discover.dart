@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:quiet/extension.dart';
 import 'package:quiet/navigation/common/playlist/music_list.dart';
-import 'package:quiet/part/part.dart';
 import 'package:quiet/repository.dart';
+
+import '../../../providers/navigator_provider.dart';
+import '../../../providers/personalized_playlist_provider.dart';
+import '../../common/navigation_target.dart';
 
 class MainPageDiscover extends StatefulWidget {
   @override
@@ -28,29 +33,21 @@ class CloudPageState extends State<MainPageDiscover>
   }
 }
 
-class _NavigationLine extends StatelessWidget {
+class _NavigationLine extends ConsumerWidget {
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 16),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
-          _ItemNavigator(Icons.radio, "私人FM", () {
-            // TODO Play FM
-            // if (context.player.trackList.isPlayingFm) {
-            //   context.secondaryNavigator!.pushNamed(pageFmPlaying);
-            //   return;
-            // }
-            // showLoaderOverlay(context, neteaseRepository!.getPersonalFmMusics())
-            //     .then((musics) {
-            //   context.player.playFm(musics!);
-            //   context.secondaryNavigator!.pushNamed(pageFmPlaying);
-            // }).catchError((error, stacktrace) {
-            //   debugPrint("error to play personal fm : $error $stacktrace");
-            //   toast('无法获取私人FM数据');
-            // });
-          }),
+          _ItemNavigator(
+            Icons.radio,
+            "私人FM",
+            () => ref
+                .read(navigatorProvider.notifier)
+                .navigate(NavigationTargetFmPlaying()),
+          ),
           _ItemNavigator(Icons.today, "每日推荐", () {
             context.secondaryNavigator!.pushNamed(pageDaily);
           }),
@@ -132,12 +129,12 @@ class _ItemNavigator extends StatelessWidget {
   }
 }
 
-class _SectionPlaylist extends StatelessWidget {
+class _SectionPlaylist extends ConsumerWidget {
   @override
-  Widget build(BuildContext context) {
-    return Loader<List<RecommendedPlaylist>>(
-      loadTask: () => neteaseRepository!.personalizedPlaylist(limit: 6),
-      builder: (context, list) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final snapshot = ref.watch(homePlaylistProvider.logErrorOnDebug());
+    return snapshot.when(
+      data: (list) {
         return LayoutBuilder(builder: (context, constraints) {
           assert(constraints.maxWidth.isFinite,
               "can not layout playlist item in infinite width container.");
@@ -158,11 +155,28 @@ class _SectionPlaylist extends StatelessWidget {
           );
         });
       },
+      error: (error, stacktrace) {
+        return SizedBox(
+          height: 200,
+          child: Center(
+            child: Text(context.formattedError(error)),
+          ),
+        );
+      },
+      loading: () => const SizedBox(
+        height: 200,
+        child: Center(
+          child: SizedBox.square(
+            dimension: 24,
+            child: CircularProgressIndicator(),
+          ),
+        ),
+      ),
     );
   }
 }
 
-class _PlayListItemView extends StatelessWidget {
+class _PlayListItemView extends ConsumerWidget {
   const _PlayListItemView({
     Key? key,
     required this.playlist,
@@ -174,7 +188,7 @@ class _PlayListItemView extends StatelessWidget {
   final double width;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     GestureLongPressCallback? onLongPress;
 
     if (playlist.copywriter.isNotEmpty) {
@@ -193,11 +207,9 @@ class _PlayListItemView extends StatelessWidget {
     }
 
     return InkWell(
-      onTap: () {
-        context.secondaryNavigator!.push(MaterialPageRoute(builder: (context) {
-          return PlaylistDetailPage(playlist.id);
-        }));
-      },
+      onTap: () => ref
+          .read(navigatorProvider.notifier)
+          .navigate(NavigationTargetPlaylist(playlist.id)),
       onLongPress: onLongPress,
       child: Container(
         width: width,
@@ -233,12 +245,12 @@ class _PlayListItemView extends StatelessWidget {
   }
 }
 
-class _SectionNewSongs extends StatelessWidget {
+class _SectionNewSongs extends ConsumerWidget {
   @override
-  Widget build(BuildContext context) {
-    return Loader<List<Track>>(
-      loadTask: () => neteaseRepository!.personalizedNewSong(),
-      builder: (context, songs) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final snapshot = ref.watch(personalizedNewSongProvider.logErrorOnDebug());
+    return snapshot.when(
+      data: (songs) {
         return MusicTileConfiguration(
           musics: songs,
           token: 'playlist_main_newsong',
@@ -250,6 +262,23 @@ class _SectionNewSongs extends StatelessWidget {
           ),
         );
       },
+      error: (error, stacktrace) {
+        return SizedBox(
+          height: 200,
+          child: Center(
+            child: Text(context.formattedError(error)),
+          ),
+        );
+      },
+      loading: () => const SizedBox(
+        height: 200,
+        child: Center(
+          child: SizedBox.square(
+            dimension: 24,
+            child: CircularProgressIndicator(),
+          ),
+        ),
+      ),
     );
   }
 }

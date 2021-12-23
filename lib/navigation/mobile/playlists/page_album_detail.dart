@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -10,7 +12,7 @@ import 'package:quiet/pages/comments/page_comment.dart';
 import 'package:quiet/part/part.dart';
 import 'package:quiet/repository.dart';
 
-import '../../navigation/common/playlist/music_list.dart';
+import '../../common/playlist/music_list.dart';
 import 'page_playlist_detail_selection.dart';
 
 class AlbumDetailPage extends ConsumerStatefulWidget {
@@ -173,5 +175,143 @@ class _AlbumDetailHeader extends ConsumerWidget {
             ],
           ),
         ));
+  }
+}
+
+
+
+///action button for playlist header
+class _HeaderAction extends StatelessWidget {
+  const _HeaderAction(this.icon, this.action, this.onTap);
+
+  final IconData icon;
+
+  final String action;
+
+  final GestureTapCallback? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).primaryTextTheme;
+
+    return InkResponse(
+      onTap: onTap,
+      splashColor: textTheme.bodyText2!.color,
+      child: Opacity(
+        opacity: onTap == null ? 0.5 : 1,
+        child: Column(
+          children: <Widget>[
+            Icon(
+              icon,
+              color: textTheme.bodyText2!.color,
+            ),
+            const Padding(padding: EdgeInsets.only(top: 4)),
+            Text(
+              action,
+              style: textTheme.caption!.copyWith(fontSize: 13),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+///播放列表头部背景
+class PlayListHeaderBackground extends StatelessWidget {
+  const PlayListHeaderBackground({Key? key, required this.imageUrl})
+      : super(key: key);
+
+  final String? imageUrl;
+
+  @override
+  Widget build(BuildContext context) {
+    return ClipPath(
+      clipper: ShapeBorderClipper(
+          shape: ContinuousRectangleBorder(
+            borderRadius: BorderRadius.circular(100),
+          )),
+      child: Stack(
+        fit: StackFit.passthrough,
+        children: <Widget>[
+          Image(
+              image: CachedImage(imageUrl!),
+              fit: BoxFit.cover,
+              width: 120,
+              height: 1),
+          RepaintBoundary(
+            child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 24, sigmaY: 24),
+              child: Container(color: Colors.black.withOpacity(0.3)),
+            ),
+          ),
+          Container(color: Colors.black.withOpacity(0.3))
+        ],
+      ),
+    );
+  }
+}
+
+///header show list information
+class DetailHeader extends StatelessWidget {
+  const DetailHeader(
+      {Key? key,
+        required this.content,
+        this.onCommentTap,
+        this.onShareTap,
+        this.onSelectionTap,
+        int? commentCount = 0,
+        int? shareCount = 0,
+        this.background})
+      : commentCount = commentCount ?? 0,
+        shareCount = shareCount ?? 0,
+        super(key: key);
+
+  final Widget content;
+
+  final GestureTapCallback? onCommentTap;
+  final GestureTapCallback? onShareTap;
+  final GestureTapCallback? onSelectionTap;
+
+  final int commentCount;
+  final int shareCount;
+
+  final Widget? background;
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(children: [
+      if (background != null) background!,
+      Material(
+        color: Colors.transparent,
+        child: Container(
+          padding: EdgeInsets.only(
+              top: MediaQuery.of(context).padding.top + kToolbarHeight),
+          child: Column(
+            children: <Widget>[
+              content,
+              const SizedBox(height: 10),
+              const Spacer(),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  _HeaderAction(
+                      Icons.comment,
+                      commentCount > 0 ? commentCount.toString() : "评论",
+                      onCommentTap),
+                  _HeaderAction(
+                      Icons.share,
+                      shareCount > 0 ? shareCount.toString() : "分享",
+                      onShareTap),
+                  const _HeaderAction(Icons.file_download, '下载', null),
+                  _HeaderAction(Icons.check_box, "多选", onSelectionTap),
+                ],
+              ),
+              const Spacer(),
+            ],
+          ),
+        ),
+      ),
+    ]);
   }
 }

@@ -731,6 +731,26 @@ class S {
       args: [],
     );
   }
+
+  /// `Play All`
+  String get playAll {
+    return Intl.message(
+      'Play All',
+      name: 'playAll',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `{value} Music`
+  String musicCountFormat(Object value) {
+    return Intl.message(
+      '$value Music',
+      name: 'musicCountFormat',
+      desc: '',
+      args: [value],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

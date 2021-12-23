@@ -1,19 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:quiet/extension.dart';
 import 'package:quiet/material.dart';
 import 'package:quiet/pages/artists/page_artist_detail.dart';
 import 'package:quiet/pages/page_playing_list.dart';
-import 'package:quiet/part/part.dart';
 import 'package:quiet/repository.dart';
 
-import '../../navigation/common/player/cover.dart';
-import '../../navigation/common/player/lyric_view.dart';
-import '../../navigation/common/player/player_actions.dart';
-import '../../navigation/common/player_progress.dart';
-import '../../providers/player_provider.dart';
 import 'background.dart';
+import '../../../providers/player_provider.dart';
+import '../../common/player/cover.dart';
+import '../../common/player/lyric_view.dart';
+import '../../common/player/player_actions.dart';
+import '../../common/player_progress.dart';
 
-///歌曲播放页面
 class PlayingPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -103,6 +102,7 @@ class PlayerControllerBar extends ConsumerWidget {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
           IconButton(
+              splashRadius: 24,
               icon: getPlayModeIcon(context, color),
               onPressed: () {
                 // FIXME
@@ -110,6 +110,8 @@ class PlayerControllerBar extends ConsumerWidget {
               }),
           IconButton(
               iconSize: 36,
+              splashRadius: 24,
+              tooltip: context.strings.skipToPrevious,
               icon: Icon(
                 Icons.skip_previous,
                 color: color,
@@ -119,8 +121,9 @@ class PlayerControllerBar extends ConsumerWidget {
               }),
           iconPlayPause,
           IconButton(
-              tooltip: "下一曲",
+              tooltip: context.strings.skipToNext,
               iconSize: 36,
+              splashRadius: 24,
               icon: Icon(
                 Icons.skip_next,
                 color: color,
@@ -129,7 +132,8 @@ class PlayerControllerBar extends ConsumerWidget {
                 ref.read(playerProvider).skipToNext();
               }),
           IconButton(
-              tooltip: "当前播放列表",
+              tooltip: context.strings.playingList,
+              splashRadius: 24,
               icon: Icon(
                 Icons.menu,
                 color: color,
@@ -208,78 +212,40 @@ class PlayingTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      bottom: false,
-      child: AppBar(
-        elevation: 0,
-        primary: false,
-        leading: LandscapeWidgetSwitcher(
-          portrait: (context) {
-            return IconButton(
-                tooltip: '返回上一层',
-                icon: Icon(
-                  Icons.arrow_back,
-                  color: Theme.of(context).primaryIconTheme.color,
-                ),
-                onPressed: () => Navigator.pop(context));
-          },
-        ),
-        titleSpacing: 0,
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            Text(
-              music.name,
-              style: const TextStyle(fontSize: 17),
-            ),
-            InkWell(
-              onTap: () {
-                launchArtistDetailPage(context, music.artists);
-              },
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  Container(
-                    constraints: const BoxConstraints(maxWidth: 200),
-                    child: Text(
-                      music.displaySubtitle,
-                      style: Theme.of(context)
-                          .primaryTextTheme
-                          .bodyText2!
-                          .copyWith(fontSize: 13),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                  const Icon(Icons.chevron_right, size: 17),
-                ],
-              ),
-            )
-          ],
-        ),
-        backgroundColor: Colors.transparent,
-        actions: <Widget>[
-          PopupMenuButton(
-            itemBuilder: (context) {
-              return const [
-                PopupMenuItem(
-                  child: Text("下载"),
-                ),
-              ];
-            },
-            icon: Icon(
-              Icons.more_vert,
-              color: Theme.of(context).primaryIconTheme.color,
-            ),
+    return AppBar(
+      elevation: 0,
+      leading: const BackButton(),
+      titleSpacing: 0,
+      title: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            music.name,
+            style: context.primaryTextTheme.titleMedium,
           ),
-          LandscapeWidgetSwitcher(landscape: (context) {
-            return CloseButton(onPressed: () {
-              context.rootNavigator.maybePop();
-            });
-          })
+          InkWell(
+            onTap: () {
+              launchArtistDetailPage(context, music.artists);
+            },
+            child: Row(
+              mainAxisSize: MainAxisSize.max,
+              children: <Widget>[
+                Flexible(
+                  child: Text(
+                    music.displaySubtitle,
+                    style: context.primaryTextTheme.caption,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                const Icon(Icons.chevron_right, size: 17),
+              ],
+            ),
+          )
         ],
       ),
+      backgroundColor: Colors.transparent,
     );
   }
 }

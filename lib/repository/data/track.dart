@@ -44,7 +44,10 @@ class Track with EquatableMixin {
 
   final TrackType type;
 
-  String get displaySubtitle => artists.map((artist) => artist.name).join(', ');
+  String get displaySubtitle {
+    final artist = artists.map((artist) => artist.name).join('/');
+    return '$artist - ${album?.name ?? ''}';
+  }
 
   @override
   List<Object?> get props => [

@@ -1,3 +1,10 @@
+const kMobileHomeTabs = [
+  NavigationTargetDiscover,
+  NavigationTargetLibrary,
+  NavigationTargetMy,
+  NavigationTargetSearch,
+];
+
 abstract class NavigationTarget {
   NavigationTarget();
 
@@ -11,6 +18,8 @@ abstract class NavigationTarget {
   bool isTheSameTarget(NavigationTarget other) {
     return other.runtimeType == runtimeType;
   }
+
+  bool isMobileHomeTab() => kMobileHomeTabs.contains(runtimeType);
 }
 
 class NavigationTargetDiscover extends NavigationTarget {
@@ -40,4 +49,29 @@ class NavigationTargetPlaying extends NavigationTarget {
 
 class NavigationTargetFmPlaying extends NavigationTarget {
   NavigationTargetFmPlaying();
+}
+
+class NavigationTargetLibrary extends NavigationTarget {
+  NavigationTargetLibrary();
+}
+
+class NavigationTargetMy extends NavigationTarget {
+  NavigationTargetMy();
+}
+
+class NavigationTargetSearch extends NavigationTarget {
+  NavigationTargetSearch();
+}
+
+class NavigationTargetUser extends NavigationTarget {
+  NavigationTargetUser(this.userId);
+
+  final int userId;
+
+  @override
+  bool isTheSameTarget(NavigationTarget other) {
+    return super.isTheSameTarget(other) &&
+        other is NavigationTargetUser &&
+        other.userId == userId;
+  }
 }

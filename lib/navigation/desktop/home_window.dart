@@ -55,7 +55,7 @@ class _ContentLayout extends StatelessWidget {
             SizedBox(width: 200, child: NavigationSideBar()),
             Expanded(
               child: ClipRect(
-                child: DesktopNavigator(),
+                child: AppNavigator(),
               ),
             ),
           ],

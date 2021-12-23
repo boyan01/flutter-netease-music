@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:quiet/navigation/common/playlist/music_list.dart';
 import 'package:quiet/pages/artists/artist_header.dart';
-import 'package:quiet/pages/playlist/dialog_selector.dart';
-import 'package:quiet/pages/playlist/page_playlist_detail_selection.dart';
+import 'package:quiet/navigation/mobile/playlists/dialog_selector.dart';
+import 'package:quiet/navigation/mobile/playlists/page_playlist_detail_selection.dart';
 import 'package:quiet/part/part.dart';
 import 'package:quiet/repository.dart';
 

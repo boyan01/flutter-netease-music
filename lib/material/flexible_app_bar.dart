@@ -7,6 +7,7 @@ class FlexibleDetailBar extends StatelessWidget {
     required this.content,
     this.builder,
     required this.background,
+    this.customBuilder,
   }) : super(key: key);
 
   ///the content of bar
@@ -18,8 +19,14 @@ class FlexibleDetailBar extends StatelessWidget {
   final Widget background;
 
   ///custom content interaction with t
-  ///[t] 0.0 -> Expanded  1.0 -> Collapsed to toolbar
+  ///[bottom] 0.0 -> Expanded  1.0 -> Collapsed to toolbar
   final Widget Function(BuildContext context, double t)? builder;
+
+  final Widget Function(
+    BuildContext context,
+    double contentHeight,
+    double height,
+  )? customBuilder;
 
   static double percentage(BuildContext context) {
     final _FlexibleDetail? value =
@@ -42,17 +49,17 @@ class FlexibleDetailBar extends StatelessWidget {
         (1.0 - (settings.currentExtent - settings.minExtent) / deltaExtent)
             .clamp(0.0, 1.0);
 
-    //背景添加视差滚动效果
+    // add parallax effect to background.
     children.add(Positioned(
       top: -Tween<double>(begin: 0.0, end: deltaExtent / 4.0).transform(t),
       left: 0,
       right: 0,
       // to avoid one line gap between bottom and blow content.
-      bottom: 1,
+      bottom: 0,
       child: ClipRect(child: background),
     ));
 
-    //为content 添加 底部的 padding
+    // need add a padding to avoid overlap the bottom widget.
     double bottomPadding = 0;
     final SliverAppBar? sliverBar =
         context.findAncestorWidgetOfExactType<SliverAppBar>();
@@ -80,6 +87,22 @@ class FlexibleDetailBar extends StatelessWidget {
 
     if (builder != null) {
       children.add(Column(children: <Widget>[builder!(context, t)]));
+    }
+    if (customBuilder != null) {
+      children.add(Positioned(
+        top: settings.currentExtent - settings.maxExtent,
+        left: 0,
+        right: 0,
+        height: settings.maxExtent,
+        child: Padding(
+          padding: EdgeInsets.only(bottom: bottomPadding),
+          child: customBuilder!(
+            context,
+            settings.currentExtent - settings.minExtent,
+            settings.maxExtent - settings.minExtent,
+          ),
+        ),
+      ));
     }
 
     return _FlexibleDetail(t,

@@ -23,12 +23,14 @@ class MessageLookup extends MessageLookupByLibrary {
   static String m0(artistName, albumName, albumId, sharedUserId) =>
       "分享${artistName}的专辑《${albumName}》: http://music.163.com/album/${albumId}/?userid=${sharedUserId} (来自@网易云音乐)";
 
-  static String m1(value) => "播放数: ${value}";
+  static String m1(value) => "共${value}首";
 
-  static String m2(username, title, playlistId, userId, shareUserId) =>
+  static String m2(value) => "播放数: ${value}";
+
+  static String m3(username, title, playlistId, userId, shareUserId) =>
       "分享${username}创建的歌单「${title}」: http://music.163.com/playlist/${playlistId}/${userId}/?userid=${shareUserId} (来自@网易云音乐)";
 
-  static String m3(value) => "歌曲数: ${value}";
+  static String m4(value) => "歌曲数: ${value}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -63,6 +65,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "localMusic": MessageLookupByLibrary.simpleMessage("本地音乐"),
         "login": MessageLookupByLibrary.simpleMessage("立即登录"),
         "loginWithPhone": MessageLookupByLibrary.simpleMessage("手机号登录"),
+        "musicCountFormat": m1,
         "musicName": MessageLookupByLibrary.simpleMessage("音乐标题"),
         "my": MessageLookupByLibrary.simpleMessage("我的"),
         "myDjs": MessageLookupByLibrary.simpleMessage("我的电台"),
@@ -74,15 +77,16 @@ class MessageLookup extends MessageLookupByLibrary {
         "personalFM": MessageLookupByLibrary.simpleMessage("私人FM"),
         "personalFmPlaying": MessageLookupByLibrary.simpleMessage("私人FM播放中"),
         "play": MessageLookupByLibrary.simpleMessage("播放"),
+        "playAll": MessageLookupByLibrary.simpleMessage("全部播放"),
         "playInNext": MessageLookupByLibrary.simpleMessage("下一首播放"),
         "playOrPause": MessageLookupByLibrary.simpleMessage("播放/暂停"),
         "playingList": MessageLookupByLibrary.simpleMessage("当前播放列表"),
         "playlist": MessageLookupByLibrary.simpleMessage("歌单"),
         "playlistLoginDescription":
             MessageLookupByLibrary.simpleMessage("登录以加载你的私人播放列表。"),
-        "playlistPlayCount": m1,
-        "playlistShareContent": m2,
-        "playlistTrackCount": m3,
+        "playlistPlayCount": m2,
+        "playlistShareContent": m3,
+        "playlistTrackCount": m4,
         "projectDescription": MessageLookupByLibrary.simpleMessage(
             "开源项目 https://github.com/boyan01/flutter-netease-music"),
         "recommendPlayLists": MessageLookupByLibrary.simpleMessage("推荐歌单"),

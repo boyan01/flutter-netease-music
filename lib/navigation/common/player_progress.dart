@@ -9,6 +9,8 @@ import 'package:quiet/providers/player_provider.dart';
 
 /// A seek bar for current position.
 class DurationProgressBar extends ConsumerWidget {
+  const DurationProgressBar({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final player = ref.read(playerProvider);

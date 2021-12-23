@@ -2,45 +2,59 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:overlay_support/overlay_support.dart';
-import 'package:quiet/material.dart';
+import 'package:quiet/extension.dart';
 import 'package:quiet/pages/artists/page_artist_detail.dart';
 import 'package:quiet/providers/player_provider.dart';
 import 'package:quiet/repository.dart';
 
-import '../../navigation/common/like_button.dart';
-import '../../navigation/common/player/lyric_view.dart';
-import '../../navigation/common/player_progress.dart';
+import '../../../media/tracks/track_list.dart';
+import '../../../providers/fm_playlist_provider.dart';
+import '../../common/like_button.dart';
+import '../../common/player/lyric_view.dart';
+import '../../common/player_progress.dart';
 import 'background.dart';
 
 /// FM 播放页面
 class PagePlayingFm extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final current = ref.watch(playingTrackProvider);
-    if (current == null) {
-      WidgetsBinding.instance!.scheduleFrameCallback((_) {
-        Navigator.of(context).pop();
-      });
-      return Container();
+    final fmPlaylist = ref.watch(fmPlaylistProvider);
+    final playingList = ref.watch(playingListProvider);
+    final Track? track;
+    if (playingList.isFM) {
+      track = ref.watch(playingTrackProvider);
+    } else {
+      track = fmPlaylist.firstOrNull;
+    }
+
+    if (track == null) {
+      return const Scaffold(
+        body: Center(
+          child: SizedBox.square(
+            dimension: 24,
+            child: CircularProgressIndicator(),
+          ),
+        ),
+      );
     }
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Stack(
         children: <Widget>[
-          BlurBackground(music: current),
+          BlurBackground(music: track),
           Material(
             color: Colors.transparent,
             child: Column(
               children: <Widget>[
                 AppBar(
-                  title: const Text("私人FM"),
+                  title: Text(context.strings.personalFM),
                   elevation: 0,
                   backgroundColor: Colors.transparent,
                 ),
-                const _CenterSection(),
+                _CenterSection(track: track),
                 const SizedBox(height: 8),
-                DurationProgressBar(),
-                _FmControllerBar(),
+                const DurationProgressBar(),
+                _FmControllerBar(track: track),
                 SizedBox(height: MediaQuery.of(context).viewInsets.bottom),
               ],
             ),
@@ -52,7 +66,12 @@ class PagePlayingFm extends ConsumerWidget {
 }
 
 class _CenterSection extends HookConsumerWidget {
-  const _CenterSection({Key? key}) : super(key: key);
+  const _CenterSection({
+    Key? key,
+    required this.track,
+  }) : super(key: key);
+
+  final Track track;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -82,10 +101,10 @@ class _CenterSection extends HookConsumerWidget {
         duration: const Duration(milliseconds: 300),
         firstChild: GestureDetector(
           onTap: () => showLyric.value = !showLyric.value,
-          child: const _FmCover(),
+          child: _FmCover(track: track),
         ),
         secondChild: PlayingLyricView(
-          music: ref.watch(playingTrackProvider)!,
+          music: track,
           textStyle: Theme.of(context)
               .textTheme
               .bodyText2!
@@ -98,11 +117,12 @@ class _CenterSection extends HookConsumerWidget {
 }
 
 class _FmCover extends ConsumerWidget {
-  const _FmCover({Key? key}) : super(key: key);
+  const _FmCover({Key? key, required this.track}) : super(key: key);
+
+  final Track track;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final music = ref.watch(playingTrackProvider)!;
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
@@ -113,7 +133,7 @@ class _FmCover extends ConsumerWidget {
             child: AspectRatio(
               aspectRatio: 1.0,
               child: Image(
-                image: CachedImage(music.imageUrl!),
+                image: CachedImage(track.imageUrl!),
                 loadingBuilder: (context, child, loadingProgress) {
                   if (loadingProgress != null) {
                     child = Container(child: child);
@@ -125,13 +145,13 @@ class _FmCover extends ConsumerWidget {
           ),
         ),
         Text(
-          music.name,
+          track.name,
           style: Theme.of(context).primaryTextTheme.subtitle1,
         ),
         const SizedBox(height: 8),
         InkWell(
           onTap: () {
-            launchArtistDetailPage(context, music.artists);
+            launchArtistDetailPage(context, track.artists);
           },
           child: Row(
             mainAxisSize: MainAxisSize.min,
@@ -139,7 +159,7 @@ class _FmCover extends ConsumerWidget {
               Container(
                 constraints: const BoxConstraints(maxWidth: 200),
                 child: Text(
-                  music.displaySubtitle,
+                  track.displaySubtitle,
                   style: Theme.of(context)
                       .primaryTextTheme
                       .caption!
@@ -160,42 +180,40 @@ class _FmCover extends ConsumerWidget {
 }
 
 class _FmControllerBar extends ConsumerWidget {
+  const _FmControllerBar({Key? key, required this.track}) : super(key: key);
+
+  final Track track;
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final color = Theme.of(context).primaryIconTheme.color;
-    final iconPlayPause = PlayingIndicator(
-      playing: IconButton(
-          tooltip: "暂停",
-          iconSize: 40,
-          icon: Icon(
-            Icons.pause_circle_outline,
-            color: color,
-          ),
-          onPressed: () {
-            ref.read(playerProvider).pause();
-          }),
-      pausing: IconButton(
-          tooltip: "播放",
-          iconSize: 40,
-          icon: Icon(
-            Icons.play_circle_outline,
-            color: color,
-          ),
-          onPressed: () {
-            ref.read(playerProvider).play();
-          }),
-      buffering: const SizedBox(
-        height: 56,
-        width: 56,
-        child: Center(
-          child: SizedBox(
-            height: 24,
-            width: 24,
-            child: CircularProgressIndicator(),
-          ),
+    final color = context.theme.primaryIconTheme.color;
+
+    final isFmPlaying = ref
+        .watch(playerStateProvider.select((value) => value.playingList.isFM));
+    final isPlaying = ref.watch(isPlayingProvider);
+
+    final playing = isFmPlaying && isPlaying;
+
+    final iconPlayPause = IconButton(
+        tooltip: playing ? context.strings.pause : context.strings.play,
+        iconSize: 40,
+        icon: Icon(
+          playing ? Icons.pause_rounded : Icons.play_arrow_rounded,
+          color: color,
         ),
-      ),
-    );
+        onPressed: () {
+          final player = ref.read(playerProvider);
+          if (playing) {
+            player.pause();
+          } else if (isFmPlaying) {
+            player.play();
+          } else {
+            final fmPlaylist = ref.read(fmPlaylistProvider);
+            player
+              ..setTrackList(TrackList.fm(tracks: fmPlaylist))
+              ..playFromMediaId(track.id);
+          }
+        });
 
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 10),
@@ -211,10 +229,10 @@ class _FmControllerBar extends ConsumerWidget {
                 toast('已加入不喜欢列表，以后将减少类似的推荐。');
                 ref.read(playerProvider).skipToNext();
               }),
-          LikeButton.current(context),
+          LikeButton(music: track, color: color),
           iconPlayPause,
           IconButton(
-              tooltip: "下一曲",
+              tooltip: context.strings.skipToNext,
               icon: Icon(
                 Icons.skip_next,
                 color: color,
@@ -223,7 +241,6 @@ class _FmControllerBar extends ConsumerWidget {
                 ref.read(playerProvider).skipToNext();
               }),
           IconButton(
-              tooltip: "当前播放列表",
               icon: Icon(
                 Icons.comment,
                 color: color,

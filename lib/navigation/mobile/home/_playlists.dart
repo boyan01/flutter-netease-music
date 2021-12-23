@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:quiet/component.dart';
+import 'package:quiet/extension.dart';
 import 'package:quiet/part/part.dart';
+import 'package:quiet/providers/user_playlists_provider.dart';
 import 'package:quiet/repository.dart';
 
-import '../playlist_tile.dart';
+import 'playlist_tile.dart';
 
 enum PlayListType { created, favorite }
 
@@ -198,39 +199,34 @@ class _UserPlayListSectionState extends ConsumerState<UserPlayListSection> {
     if (!ref.watch(isLoginProvider)) {
       return _singleSliver(child: notLogin(context));
     }
-    return Loader<List<PlaylistDetail>>(
-        initialData: neteaseLocalData.getUserPlaylist(widget.userId),
-        loadTask: () => neteaseRepository!.userPlaylist(widget.userId),
-        loadingBuilder: (context) {
-          return _singleSliver(child: Container());
-        },
-        errorBuilder: (context, result) {
-          return _singleSliver(
-              child: Loader.buildSimpleFailedWidget(context, result));
-        },
-        builder: (context, result) {
-          final created =
-              result.where((p) => p.creator.userId == widget.userId);
-          final subscribed =
-              result.where((p) => p.creator.userId != widget.userId);
-          _dividerIndex = 2 + created.length;
-          return SliverList(
-            key: PlayListSliverKey(
-                createdPosition: 1, favoritePosition: 3 + created.length),
-            delegate: SliverChildListDelegate.fixed([
-              const SizedBox(height: _kPlayListDividerHeight),
-              PlayListsGroupHeader(
-                  name: context.strings.createdSongList, count: created.length),
-              ..._playlistWidget(created.toList()),
-              SizedBox(height: _kPlayListDividerHeight, key: _dividerKey),
-              PlayListsGroupHeader(
-                  name: context.strings.favoriteSongList,
-                  count: subscribed.length),
-              ..._playlistWidget(subscribed.toList()),
-              const SizedBox(height: _kPlayListDividerHeight),
-            ], addAutomaticKeepAlives: false),
-          );
-        });
+    final playlists = ref.watch(userPlaylistsProvider(widget.userId!));
+    return playlists.when(
+      data: (result) {
+        final created = result.where((p) => p.creator.userId == widget.userId);
+        final subscribed =
+            result.where((p) => p.creator.userId != widget.userId);
+        _dividerIndex = 2 + created.length;
+        return SliverList(
+          key: PlayListSliverKey(
+              createdPosition: 1, favoritePosition: 3 + created.length),
+          delegate: SliverChildListDelegate.fixed([
+            const SizedBox(height: _kPlayListDividerHeight),
+            PlayListsGroupHeader(
+                name: context.strings.createdSongList, count: created.length),
+            ..._playlistWidget(created.toList()),
+            SizedBox(height: _kPlayListDividerHeight, key: _dividerKey),
+            PlayListsGroupHeader(
+                name: context.strings.favoriteSongList,
+                count: subscribed.length),
+            ..._playlistWidget(subscribed.toList()),
+            const SizedBox(height: _kPlayListDividerHeight),
+          ], addAutomaticKeepAlives: false),
+        );
+      },
+      error: (error, stackTrace) =>
+          _singleSliver(child: Text(context.formattedError(error))),
+      loading: () => _singleSliver(child: Container()),
+    );
   }
 
   Widget notLogin(BuildContext context) {

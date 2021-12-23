@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:overlay_support/overlay_support.dart';
-import 'package:quiet/component/netease/netease.dart';
+import 'package:quiet/extension.dart';
 import 'package:quiet/material/flexible_app_bar.dart';
 import 'package:quiet/material/images.dart';
 import 'package:quiet/material/tabs.dart';
-import 'package:quiet/pages/main/playlist_tile.dart';
-import 'package:quiet/part/part.dart';
+import 'package:quiet/navigation/mobile/home/playlist_tile.dart';
+import 'package:quiet/providers/user_detail_provider.dart';
 import 'package:quiet/repository.dart';
 
 part 'tab_about.dart';
@@ -13,24 +14,29 @@ part 'tab_events.dart';
 part 'tab_music.dart';
 
 ///用户详情页
-class UserDetailPage extends StatelessWidget {
+class UserDetailPage extends ConsumerWidget {
   const UserDetailPage({Key? key, required this.userId}) : super(key: key);
 
   ///用户ID
-  final int? userId;
+  final int userId;
 
   @override
-  Widget build(BuildContext context) {
-    return Loader<User>(
-      initialData: neteaseLocalData
-          .get<Map<String, dynamic>>('user_detail_$userId')
-          .then(
-            (value) => value == null ? null : User.fromJson(value),
-          ),
-      loadTask: () => neteaseRepository!.getUserDetail(userId!),
-      builder: (BuildContext context, User user) {
-        return _DetailPage(user: user);
-      },
+  Widget build(BuildContext context, WidgetRef ref) {
+    final snapshot = ref.watch(userDetailProvider(userId).logErrorOnDebug());
+    return snapshot.when(
+      data: (user) => _DetailPage(user: user),
+      error: (error, stack) => Scaffold(
+        appBar: AppBar(title: Text(userId.toString())),
+        body: Center(
+          child: Text(context.formattedError(error)),
+        ),
+      ),
+      loading: () => Scaffold(
+        appBar: AppBar(title: Text(userId.toString())),
+        body: const Center(
+          child: CircularProgressIndicator(),
+        ),
+      ),
     );
   }
 }

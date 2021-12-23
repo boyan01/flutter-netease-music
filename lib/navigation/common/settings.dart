@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quiet/extension.dart';
 
+import '../../providers/navigator_provider.dart';
 import '../../providers/settings_provider.dart';
 
 class ThemeSwitchRadios extends ConsumerWidget {
@@ -52,6 +53,36 @@ class CopyRightOverlayCheckBox extends ConsumerWidget {
       },
       controlAffinity: ListTileControlAffinity.leading,
       title: Text(context.strings.hideCopyrightOverlay),
+    );
+  }
+}
+
+class DebugPlatformNavigationRadios extends ConsumerWidget {
+  const DebugPlatformNavigationRadios({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final platform = ref.watch(debugNavigatorPlatformProvider);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        RadioListTile<NavigationPlatform>(
+          onChanged: (mode) =>
+              ref.read(debugNavigatorPlatformProvider.notifier).state = mode!,
+          groupValue: platform,
+          value: NavigationPlatform.desktop,
+          title: Text(NavigationPlatform.desktop.name),
+        ),
+        RadioListTile<NavigationPlatform>(
+          onChanged: (mode) =>
+              ref.read(debugNavigatorPlatformProvider.notifier).state = mode!,
+          groupValue: platform,
+          value: NavigationPlatform.mobile,
+          title: Text(NavigationPlatform.mobile.name),
+        ),
+      ],
     );
   }
 }

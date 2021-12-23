@@ -3,23 +3,36 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:meta/meta.dart';
+import 'package:quiet/extension.dart';
 import 'package:quiet/navigation/common/navigation_target.dart';
 
-import '../navigation/desktop/discover.dart';
-import '../navigation/desktop/page_setting.dart';
-import '../navigation/desktop/player/page_fm_playing.dart';
-import '../navigation/desktop/playlist/page_playlist.dart';
+import '../navigation/desktop/navigator.dart';
+import '../navigation/mobile/navigator.dart';
+
+enum NavigationPlatform {
+  desktop,
+  mobile,
+}
+
+final debugNavigatorPlatformProvider = StateProvider<NavigationPlatform>(
+  (ref) {
+    if (defaultTargetPlatform.isDesktop()) {
+      return NavigationPlatform.desktop;
+    } else {
+      return NavigationPlatform.mobile;
+    }
+  },
+);
 
 final navigatorProvider =
     StateNotifierProvider<NavigatorController, NavigatorState>(
   (ref) {
-    final isDesktop = defaultTargetPlatform == TargetPlatform.windows ||
-        defaultTargetPlatform == TargetPlatform.macOS ||
-        defaultTargetPlatform == TargetPlatform.linux;
-    if (isDesktop) {
-      return DesktopNavigatorController();
-    } else {
-      return MobileNavigatorController();
+    final platform = ref.watch(debugNavigatorPlatformProvider);
+    switch (platform) {
+      case NavigationPlatform.desktop:
+        return DesktopNavigatorController();
+      case NavigationPlatform.mobile:
+        return MobileNavigatorController();
     }
   },
 );
@@ -77,140 +90,5 @@ abstract class NavigatorController extends StateNotifier<NavigatorState> {
       canForward: canForward,
       current: current,
     );
-  }
-}
-
-class DesktopNavigatorController extends NavigatorController {
-  DesktopNavigatorController() {
-    _pages.add(_buildPage(NavigationTarget.discover()));
-    notifyListeners();
-  }
-
-  final _pages = <MaterialPage<dynamic>>[];
-
-  final _popPages = <MaterialPage<dynamic>>[];
-
-  @override
-  bool get canBack => _pages.length > 1 || _showPlayingPage != null;
-
-  @override
-  bool get canForward => _popPages.isNotEmpty;
-
-  @override
-  NavigationTarget get current => _showPlayingPage != null
-      ? _showPlayingPage!
-      : (_pages.last.key! as ValueKey<NavigationTarget>).value;
-
-  NavigationTargetPlaying? _showPlayingPage;
-
-  @override
-  void navigate(NavigationTarget target) {
-    assert(_pages.isNotEmpty, 'Navigation stack is empty');
-    if (current.isTheSameTarget(target)) {
-      debugPrint('Navigation: already on $target');
-      return;
-    }
-    if (target is NavigationTargetPlaying) {
-      _showPlayingPage = target;
-    } else {
-      _showPlayingPage = null;
-      if (!current.isTheSameTarget(target)) {
-        _pages.add(_buildPage(target));
-      }
-    }
-    _popPages.clear();
-    notifyListeners();
-  }
-
-  @override
-  void forward() {
-    if (canForward) {
-      _pages.add(_popPages.removeLast());
-      notifyListeners();
-    }
-  }
-
-  @override
-  void back() {
-    if (_showPlayingPage != null) {
-      _showPlayingPage = null;
-      notifyListeners();
-      return;
-    }
-    if (canBack) {
-      _popPages.add(_pages.removeLast());
-      notifyListeners();
-    }
-  }
-
-  @override
-  List<Page> get pages => _pages;
-
-  MaterialPage<dynamic> _buildPage(NavigationTarget target) {
-    final Widget page;
-    if (target is NavigationTargetDiscover) {
-      page = const DiscoverPage();
-    } else if (target is NavigationTargetSettings) {
-      page = const PageSetting();
-    } else if (target is NavigationTargetPlaylist) {
-      page = PagePlaylist(playlistId: target.playlistId);
-    } else if (target is NavigationTargetFmPlaying) {
-      page = const PageFmPlaying();
-    } else {
-      throw Exception('Unknown navigation type: $target');
-    }
-    return MaterialPage<dynamic>(
-      child: page,
-      name: target.runtimeType.toString(),
-      key: ValueKey(target),
-    );
-  }
-}
-
-class MobileNavigatorController extends NavigatorController {
-  MobileNavigatorController() {
-    _pages.add(_buildPage(NavigationTarget.discover()));
-    notifyListeners();
-  }
-
-  final _pages = <MaterialPage<dynamic>>[];
-
-  @override
-  void back() {
-    if (canBack) {
-      _pages.removeLast();
-      notifyListeners();
-    }
-  }
-
-  @override
-  bool get canBack => _pages.length > 1;
-
-  @override
-  bool get canForward => false;
-
-  @override
-  void forward() => throw UnimplementedError('Forward is not supported');
-
-  @override
-  NavigationTarget get current =>
-      (_pages.last.key! as ValueKey<NavigationTarget>).value;
-
-  @override
-  void navigate(NavigationTarget target) {
-    if (current.isTheSameTarget(target)) {
-      debugPrint('Navigation: already on $target');
-      return;
-    }
-    _pages.add(_buildPage(target));
-    notifyListeners();
-  }
-
-  @override
-  List<Page> get pages => _pages;
-
-  MaterialPage<dynamic> _buildPage(NavigationTarget target) {
-    // TODO: implement _buildPage
-    throw UnimplementedError();
   }
 }

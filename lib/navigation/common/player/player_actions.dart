@@ -4,8 +4,6 @@ import 'package:overlay_support/overlay_support.dart';
 import 'package:quiet/component.dart';
 import 'package:quiet/providers/player_provider.dart';
 
-import '../../../pages/comments/page_comment.dart';
-import '../../../repository.dart';
 import '../like_button.dart';
 
 class PlayingOperationBar extends ConsumerWidget {
@@ -19,36 +17,20 @@ class PlayingOperationBar extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final iconColor = this.iconColor ?? context.theme.primaryIconTheme.color;
-    final music = ref.watch(playingTrackProvider);
+    final music = ref.watch(playingTrackProvider)!;
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: <Widget>[
-        LikeButton.current(context),
+        LikeButton(music: music, color: iconColor),
         IconButton(
-            icon: Icon(
-              Icons.comment,
-              color: iconColor,
-            ),
-            onPressed: () {
-              if (music == null) {
-                return;
-              }
-              Navigator.push(context, MaterialPageRoute(builder: (context) {
-                return CommentPage(
-                  threadId: CommentThreadId(music.id, CommentType.song),
-                  payload: CommentThreadPayload.music(music),
-                );
-              }));
-            }),
+          icon: Icon(Icons.comment, color: iconColor),
+          onPressed: () => toast(context.strings.todo),
+        ),
         IconButton(
-            icon: Icon(
-              Icons.share,
-              color: iconColor,
-            ),
-            onPressed: () {
-              toast(context.strings.todo);
-            }),
+          icon: Icon(Icons.share, color: iconColor),
+          onPressed: () => toast(context.strings.todo),
+        ),
       ],
     );
   }

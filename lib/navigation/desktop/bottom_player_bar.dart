@@ -227,6 +227,7 @@ class _VolumeControl extends ConsumerWidget {
     final enable = ref.watch(
       playerStateProvider.select((value) => value.playingTrack != null),
     );
+    final max = enable ? 100.0 : 0.0;
     return Row(
       children: [
         if (volume <= 0.01)
@@ -250,8 +251,8 @@ class _VolumeControl extends ConsumerWidget {
               ),
             ),
             child: Slider(
-              value: volume * 100,
-              max: enable ? 100 : 0,
+              value: (volume * 100).clamp(0.0, max),
+              max: max,
               onChanged: (value) {
                 ref.read(playerProvider).setVolume(value / 100);
               },

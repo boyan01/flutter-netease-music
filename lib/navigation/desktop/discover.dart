@@ -10,7 +10,7 @@ import 'package:quiet/providers/player_provider.dart';
 
 import '../../providers/navigator_provider.dart';
 import '../common/navigation_target.dart';
-import 'widgets/recommended_playlist_tile.dart';
+import '../common/recommended_playlist_tile.dart';
 import 'widgets/track_tile_short.dart';
 
 class DiscoverPage extends StatelessWidget {
@@ -70,6 +70,7 @@ class _Playlists extends ConsumerWidget {
           final playlist = playlists[index];
           return RecommendedPlaylistTile(
             playlist: playlist,
+            width: 120,
             onTap: () => ref
                 .read(navigatorProvider.notifier)
                 .navigate(NavigationTarget.playlist(playlistId: playlist.id)),

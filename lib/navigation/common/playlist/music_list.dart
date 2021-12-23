@@ -9,7 +9,7 @@ import 'package:quiet/pages/comments/page_comment.dart';
 import 'package:quiet/providers/player_provider.dart';
 import 'package:quiet/repository.dart';
 
-import '../../../pages/playlist/dialog_selector.dart';
+import '../../mobile/playlists/dialog_selector.dart';
 
 enum PlayResult {
   success,
@@ -271,54 +271,50 @@ class _SimpleMusicTile extends StatelessWidget {
 class MusicListHeader extends ConsumerWidget implements PreferredSizeWidget {
   const MusicListHeader(this.count, {this.tail});
 
-  final int? count;
+  final int count;
 
   final Widget? tail;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return ClipRRect(
-      borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
-      child: Material(
-        color: context.colorScheme.background,
-        child: InkWell(
-          onTap: () {
-            final player = ref.read(playerProvider);
-            final state = ref.read(playerStateProvider);
-            final list = MusicTileConfiguration.of(context);
-            if (state.playingList.id == list.token && state.isPlaying) {
-              //open playing page
-              Navigator.pushNamed(context, pagePlaying);
-            } else {
-              player
-                ..setTrackList(TrackList(id: list.token!, tracks: list.musics))
-                ..play();
-            }
-          },
-          child: SizedBox.fromSize(
-            size: preferredSize,
-            child: Row(
-              children: (<Widget?>[
-                const Padding(padding: EdgeInsets.only(left: 16)),
-                Icon(
-                  Icons.play_circle_outline,
-                  color: Theme.of(context).iconTheme.color,
-                ),
-                const Padding(padding: EdgeInsets.only(left: 4)),
-                Text(
-                  "播放全部",
-                  style: Theme.of(context).textTheme.bodyText2,
-                ),
-                const Padding(padding: EdgeInsets.only(left: 2)),
-                Text(
-                  "(共$count首)",
-                  style: Theme.of(context).textTheme.caption,
-                ),
-                const Spacer(),
-                tail,
-              ]..removeWhere((v) => v == null))
-                  .cast(),
-            ),
+    return Material(
+      color: context.colorScheme.background,
+      child: InkWell(
+        onTap: () {
+          final player = ref.read(playerProvider);
+          final state = ref.read(playerStateProvider);
+          final list = MusicTileConfiguration.of(context);
+          if (state.playingList.id == list.token && state.isPlaying) {
+            //open playing page
+            Navigator.pushNamed(context, pagePlaying);
+          } else {
+            player
+              ..setTrackList(TrackList(id: list.token!, tracks: list.musics))
+              ..play();
+          }
+        },
+        child: SizedBox.fromSize(
+          size: preferredSize,
+          child: Row(
+            children: [
+              const SizedBox(width: 16),
+              Icon(
+                Icons.play_circle_rounded,
+                color: context.colorScheme.primary,
+              ),
+              const SizedBox(width: 8),
+              Text(
+                context.strings.playAll,
+                style: context.textTheme.titleSmall,
+              ),
+              const SizedBox(width: 6),
+              Text(
+                '(${context.strings.musicCountFormat(count)})',
+                style: Theme.of(context).textTheme.caption,
+              ),
+              const Spacer(),
+              if (tail != null) tail!,
+            ],
           ),
         ),
       ),

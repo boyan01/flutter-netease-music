@@ -6,7 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:quiet/component/utils/utils.dart';
 import 'package:quiet/extension.dart';
-import 'package:quiet/pages/account/page_user_detail.dart';
+import 'package:quiet/navigation/mobile/user/page_user_detail.dart';
 import 'package:quiet/pages/comments/page_comment.dart';
 import 'package:quiet/part/part.dart';
 import 'package:quiet/providers/player_provider.dart';

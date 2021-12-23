@@ -27,6 +27,7 @@ class PageSetting extends StatelessWidget {
             const SizedBox(height: 12),
             const ThemeSwitchRadios(),
             const Divider(height: 40),
+            if (!kReleaseMode) const _DebugSetting(),
             const CopyRightOverlayCheckBox(),
             const Divider(height: 40),
             const _HotkeyLayout(),
@@ -144,6 +145,24 @@ class _HotkeyLayout extends StatelessWidget {
             ),
           ),
         )
+      ],
+    );
+  }
+}
+
+class _DebugSetting extends StatelessWidget {
+  const _DebugSetting({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('Navigation Platform (Developer options)',
+            style: context.textTheme.bodyMedium),
+        const SizedBox(height: 12),
+        const DebugPlatformNavigationRadios(),
+        const Divider(height: 20),
       ],
     );
   }

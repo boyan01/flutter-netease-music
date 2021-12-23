@@ -6,11 +6,17 @@ class RecommendedPlaylistTile extends StatelessWidget {
     Key? key,
     required this.playlist,
     required this.onTap,
+    required this.width,
+    this.imageSize = 80,
   }) : super(key: key);
 
   final RecommendedPlaylist playlist;
 
   final VoidCallback onTap;
+
+  final double width;
+
+  final double imageSize;
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +24,7 @@ class RecommendedPlaylistTile extends StatelessWidget {
       onTap: onTap,
       borderRadius: BorderRadius.circular(8),
       child: Container(
-        width: 120,
+        width: width,
         padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -30,8 +36,8 @@ class RecommendedPlaylistTile extends StatelessWidget {
                 child: Image(
                   image: CachedImage(playlist.picUrl),
                   fit: BoxFit.cover,
-                  width: 80,
-                  height: 80,
+                  width: imageSize,
+                  height: imageSize,
                 ),
               ),
             ),

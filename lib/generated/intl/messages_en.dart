@@ -23,12 +23,14 @@ class MessageLookup extends MessageLookupByLibrary {
   static String m0(artistName, albumName, albumId, sharedUserId) =>
       "The ${artistName}\'s album《${albumName}》: http://music.163.com/album/${albumId}/?userid=${sharedUserId} (From @NeteaseCouldMusic)";
 
-  static String m1(value) => "Play Count: ${value}";
+  static String m1(value) => "${value} Music";
 
-  static String m2(username, title, playlistId, userId, shareUserId) =>
+  static String m2(value) => "Play Count: ${value}";
+
+  static String m3(username, title, playlistId, userId, shareUserId) =>
       "The PlayList created by ${username}「${title}」: http://music.163.com/playlist/${playlistId}/${userId}/?userid=${shareUserId} (From @NeteaseCouldMusic)";
 
-  static String m3(value) => "Track Count: ${value}";
+  static String m4(value) => "Track Count: ${value}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -74,6 +76,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "login": MessageLookupByLibrary.simpleMessage("Login"),
         "loginWithPhone":
             MessageLookupByLibrary.simpleMessage("login with phone"),
+        "musicCountFormat": m1,
         "musicName": MessageLookupByLibrary.simpleMessage("Music Name"),
         "my": MessageLookupByLibrary.simpleMessage("My"),
         "myDjs": MessageLookupByLibrary.simpleMessage("Dj"),
@@ -86,15 +89,16 @@ class MessageLookup extends MessageLookupByLibrary {
         "personalFmPlaying":
             MessageLookupByLibrary.simpleMessage("Personal FM Playing"),
         "play": MessageLookupByLibrary.simpleMessage("Play"),
+        "playAll": MessageLookupByLibrary.simpleMessage("Play All"),
         "playInNext": MessageLookupByLibrary.simpleMessage("play in next"),
         "playOrPause": MessageLookupByLibrary.simpleMessage("Play/Pause"),
         "playingList": MessageLookupByLibrary.simpleMessage("Playing List"),
         "playlist": MessageLookupByLibrary.simpleMessage("PlayList"),
         "playlistLoginDescription": MessageLookupByLibrary.simpleMessage(
             "Login to discover your playlists."),
-        "playlistPlayCount": m1,
-        "playlistShareContent": m2,
-        "playlistTrackCount": m3,
+        "playlistPlayCount": m2,
+        "playlistShareContent": m3,
+        "playlistTrackCount": m4,
         "projectDescription": MessageLookupByLibrary.simpleMessage(
             "OpenSource project https://github.com/boyan01/flutter-netease-music"),
         "recommendPlayLists":
