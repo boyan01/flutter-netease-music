@@ -2,36 +2,28 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:provider/provider.dart' as provider;
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:quiet/navigation/desktop/player/page_playing.dart';
 import 'package:quiet/navigation/desktop/widgets/hotkeys.dart';
 
+import '../../providers/navigator_provider.dart';
+import '../common/navigation_target.dart';
+import '../common/navigator.dart';
 import 'bottom_player_bar.dart';
 import 'header_bar.dart';
 import 'navigation_side_bar.dart';
-import 'navigator.dart';
 
-class HomeWindow extends HookWidget {
+class HomeWindow extends StatelessWidget {
   const HomeWindow({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final navigatorController = useMemoized(() => DesktopNavigatorController());
-    return provider.ChangeNotifierProvider(
-      create: (_) => navigatorController,
-      child: GlobalHotkeys(
-        child: _WindowLayout(navigatorController: navigatorController),
-      ),
-    );
+    return const GlobalHotkeys(child: _WindowLayout());
   }
 }
 
 class _WindowLayout extends StatelessWidget {
-  const _WindowLayout({
-    Key? key,
-    required this.navigatorController,
-  }) : super(key: key);
-
-  final DesktopNavigatorController navigatorController;
+  const _WindowLayout({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -39,10 +31,10 @@ class _WindowLayout extends StatelessWidget {
       child: _OverflowBox(
         child: Material(
           child: Column(
-            children: [
-              const HeaderBar(),
-              _ContentLayout(navigatorController: navigatorController),
-              const BottomPlayerBar(),
+            children: const [
+              HeaderBar(),
+              _ContentLayout(),
+              BottomPlayerBar(),
             ],
           ),
         ),
@@ -52,24 +44,18 @@ class _WindowLayout extends StatelessWidget {
 }
 
 class _ContentLayout extends StatelessWidget {
-  const _ContentLayout({
-    Key? key,
-    required this.navigatorController,
-  }) : super(key: key);
-
-  final DesktopNavigatorController navigatorController;
+  const _ContentLayout({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Expanded(
       child: DesktopPlayingPageContainer(
-        controller: navigatorController,
         child: Row(
-          children: [
-            const SizedBox(width: 200, child: NavigationSideBar()),
+          children: const [
+            SizedBox(width: 200, child: NavigationSideBar()),
             Expanded(
               child: ClipRect(
-                child: DesktopNavigator(controller: navigatorController),
+                child: DesktopNavigator(),
               ),
             ),
           ],
@@ -100,5 +86,72 @@ class _OverflowBox extends StatelessWidget {
         child: child,
       );
     });
+  }
+}
+
+class DesktopPlayingPageContainer extends ConsumerWidget {
+  const DesktopPlayingPageContainer({
+    Key? key,
+    required this.child,
+  }) : super(key: key);
+
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final playingPage = ref.watch(navigatorProvider
+        .select((value) => value.current is NavigationTargetPlaying));
+    return Stack(
+      children: [
+        child,
+        ClipRect(child: _SlideAnimatedPlayingPage(visible: playingPage)),
+      ],
+    );
+  }
+}
+
+class _SlideAnimatedPlayingPage extends HookWidget {
+  const _SlideAnimatedPlayingPage({
+    Key? key,
+    required this.visible,
+  }) : super(key: key);
+
+  final bool visible;
+
+  @override
+  Widget build(BuildContext context) {
+    final controller = useAnimationController(
+      duration: const Duration(milliseconds: 300),
+      initialValue: visible ? 1.0 : 0.0,
+    );
+    useEffect(() {
+      if (visible) {
+        controller.forward();
+      } else {
+        controller.reverse();
+      }
+    }, [visible]);
+
+    final animation = useMemoized(() {
+      final tween = Tween<Offset>(
+        begin: const Offset(0.0, 1.0),
+        end: Offset.zero,
+      );
+      return tween.animate(
+        CurvedAnimation(
+          parent: controller,
+          curve: Curves.easeInOut,
+        ),
+      );
+    }, [controller]);
+    final offset = useAnimation(animation);
+
+    if (controller.isDismissed) {
+      return const SizedBox.shrink();
+    }
+    return FractionalTranslation(
+      translation: offset,
+      child: const PagePlaying(),
+    );
   }
 }

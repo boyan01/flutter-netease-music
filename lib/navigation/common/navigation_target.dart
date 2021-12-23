@@ -13,9 +13,13 @@ abstract class NavigationTarget {
   }
 }
 
-class NavigationTargetDiscover extends NavigationTarget {}
+class NavigationTargetDiscover extends NavigationTarget {
+  NavigationTargetDiscover();
+}
 
-class NavigationTargetSettings extends NavigationTarget {}
+class NavigationTargetSettings extends NavigationTarget {
+  NavigationTargetSettings();
+}
 
 class NavigationTargetPlaylist extends NavigationTarget {
   NavigationTargetPlaylist(this.playlistId);
@@ -30,6 +34,10 @@ class NavigationTargetPlaylist extends NavigationTarget {
   }
 }
 
-class NavigationTargetPlaying extends NavigationTarget {}
+class NavigationTargetPlaying extends NavigationTarget {
+  NavigationTargetPlaying();
+}
 
-class NavigationTargetFmPlaying extends NavigationTarget {}
+class NavigationTargetFmPlaying extends NavigationTarget {
+  NavigationTargetFmPlaying();
+}

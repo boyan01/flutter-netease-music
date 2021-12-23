@@ -6,11 +6,11 @@ import 'package:quiet/navigation/desktop/login/login_dialog.dart';
 import 'package:quiet/navigation/desktop/playlist/user_playlists.dart';
 import 'package:quiet/navigation/desktop/widgets/navigation_tile.dart';
 import 'package:quiet/pages/account/account.dart';
+import 'package:quiet/providers/navigator_provider.dart';
 import 'package:quiet/repository.dart';
 
 import '../../component/utils/scroll_controller.dart';
 import '../common/navigation_target.dart';
-import 'navigator.dart';
 
 class NavigationSideBar extends StatelessWidget {
   const NavigationSideBar({Key? key}) : super(key: key);
@@ -32,12 +32,15 @@ class NavigationSideBar extends StatelessWidget {
   }
 }
 
-class _PresetItems extends StatelessWidget {
+class _PresetItems extends ConsumerWidget {
   const _PresetItems({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    final navigator = context.watch<DesktopNavigatorController>();
+  Widget build(BuildContext context, WidgetRef ref) {
+    final currentPage = ref.watch(
+      navigatorProvider.select((value) => value.current),
+    );
+    final navigator = ref.read(navigatorProvider.notifier);
     return SliverToBoxAdapter(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -48,13 +51,13 @@ class _PresetItems extends StatelessWidget {
           NavigationTile(
             icon: const Icon(Icons.compass_calibration_rounded),
             title: Text(context.strings.discover),
-            isSelected: navigator.current is NavigationTargetDiscover,
+            isSelected: currentPage is NavigationTargetDiscover,
             onTap: () => navigator.navigate(NavigationTargetDiscover()),
           ),
           NavigationTile(
             icon: const Icon(Icons.radio),
             title: Text(context.strings.personalFM),
-            isSelected: navigator.current is NavigationTargetFmPlaying,
+            isSelected: currentPage is NavigationTargetFmPlaying,
             onTap: () => navigator.navigate(NavigationTargetFmPlaying()),
           ),
           NavigationTitle(title: context.strings.library),

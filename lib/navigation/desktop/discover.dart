@@ -8,8 +8,8 @@ import 'package:quiet/providers/personalized_playlist_provider.dart';
 import 'package:quiet/providers/play_records_provider.dart';
 import 'package:quiet/providers/player_provider.dart';
 
+import '../../providers/navigator_provider.dart';
 import '../common/navigation_target.dart';
-import './navigator.dart';
 import 'widgets/recommended_playlist_tile.dart';
 import 'widgets/track_tile_short.dart';
 
@@ -70,11 +70,9 @@ class _Playlists extends ConsumerWidget {
           final playlist = playlists[index];
           return RecommendedPlaylistTile(
             playlist: playlist,
-            onTap: () {
-              context
-                  .read<DesktopNavigatorController>()
-                  .navigate(NavigationTarget.playlist(playlistId: playlist.id));
-            },
+            onTap: () => ref
+                .read(navigatorProvider.notifier)
+                .navigate(NavigationTarget.playlist(playlistId: playlist.id)),
           );
         },
       )),

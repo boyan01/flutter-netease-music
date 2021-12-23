@@ -71,6 +71,8 @@ const pageProfileMy = "/profile/my";
 
 const pageDesktopMain = "desktop_main";
 
+const pageMobileMain = "mobile_main";
+
 ///app routers
 final Map<String, WidgetBuilder> routes = {
   pageMain: (context) => MainPage(),
@@ -85,6 +87,7 @@ final Map<String, WidgetBuilder> routes = {
   pageWelcome: (context) => PageWelcome(),
   pageFmPlaying: (context) => PagePlayingFm(),
   pageDesktopMain: (context) => const HomeWindow(),
+  pageMobileMain: (context) => const HomeWindow(),
 };
 
 Route<dynamic>? routeFactory(RouteSettings settings) {

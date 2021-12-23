@@ -1,7 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:quiet/extension.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 const String _prefix = 'quiet:settings:';
@@ -16,12 +15,6 @@ final settingStateProvider =
     StateNotifierProvider<Settings, SettingState>((ref) {
   return Settings();
 });
-
-extension SettingsProvider on BuildContext {
-  Settings get settings => watch<Settings>();
-
-  Settings get settingsR => read<Settings>();
-}
 
 class SettingState with EquatableMixin {
   const SettingState({

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quiet/extension.dart';
-import 'package:quiet/navigation/desktop/navigator.dart';
 import 'package:quiet/navigation/desktop/widgets/navigation_tile.dart';
+import 'package:quiet/providers/navigator_provider.dart';
 import 'package:quiet/repository.dart';
 
 import '../../../pages/account/account.dart';
@@ -94,7 +94,7 @@ class _UserPlaylist extends StatelessWidget {
   }
 }
 
-class _UserPlaylistItem extends StatelessWidget {
+class _UserPlaylistItem extends ConsumerWidget {
   const _UserPlaylistItem({
     Key? key,
     required this.playlist,
@@ -103,11 +103,11 @@ class _UserPlaylistItem extends StatelessWidget {
   final PlaylistDetail playlist;
 
   @override
-  Widget build(BuildContext context) {
-    final navigator = context.watch<DesktopNavigatorController>();
-    final current = navigator.current is NavigationTargetPlaylist
-        ? (navigator.current as NavigationTargetPlaylist).playlistId
-        : null;
+  Widget build(BuildContext context, WidgetRef ref) {
+    final current = ref.watch(navigatorProvider.select((value) =>
+        value.current is NavigationTargetPlaylist
+            ? (value.current as NavigationTargetPlaylist).playlistId
+            : null));
     return NavigationTile(
       icon: const Icon(Icons.playlist_play),
       title: Tooltip(
@@ -115,7 +115,8 @@ class _UserPlaylistItem extends StatelessWidget {
         child: Text(playlist.name),
       ),
       isSelected: current == playlist.id,
-      onTap: () => navigator
+      onTap: () => ref
+          .read(navigatorProvider.notifier)
           .navigate(NavigationTarget.playlist(playlistId: playlist.id)),
     );
   }

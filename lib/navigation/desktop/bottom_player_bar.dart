@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:quiet/extension.dart';
-import 'package:quiet/navigation/desktop/navigator.dart';
 import 'package:quiet/providers/player_provider.dart';
 import 'package:quiet/repository.dart';
 
+import '../../providers/navigator_provider.dart';
 import '../common/navigation_target.dart';
 import '../common/player_progress.dart';
 import 'widgets/slider.dart';
@@ -51,7 +51,7 @@ class _PlayingItemWidget extends ConsumerWidget {
     return GestureDetector(
       onTap: () {
         final player = ref.read(playerProvider);
-        final controller = context.read<DesktopNavigatorController>();
+        final controller = ref.read(navigatorProvider.notifier);
 
         if (player.trackList.isFM) {
           if (controller.current is! NavigationTargetFmPlaying) {

@@ -3,8 +3,9 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quiet/extension.dart';
-import 'package:quiet/navigation/desktop/navigator.dart';
+import 'package:quiet/providers/navigator_provider.dart';
 import 'package:window_manager/window_manager.dart';
 
 import '../common/navigation_target.dart';
@@ -44,31 +45,32 @@ class HeaderBar extends StatelessWidget {
   }
 }
 
-class _HeaderNavigationButtons extends StatelessWidget {
+class _HeaderNavigationButtons extends ConsumerWidget {
   const _HeaderNavigationButtons({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    final controller = context.watch<DesktopNavigatorController>();
+  Widget build(BuildContext context, WidgetRef ref) {
+    final navigatorState = ref.watch(navigatorProvider);
+    final navigator = ref.read(navigatorProvider.notifier);
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
         const Expanded(child: _MoveWindow.expand()),
         IconButton(
           splashRadius: 20,
-          mouseCursor: controller.canBack
+          mouseCursor: navigatorState.canBack
               ? SystemMouseCursors.click
               : SystemMouseCursors.basic,
           iconSize: 24,
-          onPressed: controller.canBack ? controller.back : null,
+          onPressed: navigatorState.canBack ? navigator.back : null,
           icon: const Icon(Icons.navigate_before),
         ),
         IconButton(
           splashRadius: 20,
-          mouseCursor: controller.canForward
+          mouseCursor: navigatorState.canForward
               ? SystemMouseCursors.click
               : SystemMouseCursors.basic,
-          onPressed: controller.canForward ? controller.forward : null,
+          onPressed: navigatorState.canForward ? navigator.forward : null,
           iconSize: 24,
           icon: const Icon(Icons.navigate_next),
         ),
@@ -108,19 +110,21 @@ class _SearchBar extends StatelessWidget {
   }
 }
 
-class _SettingButton extends StatelessWidget {
+class _SettingButton extends ConsumerWidget {
   const _SettingButton({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    final controller = context.watch<DesktopNavigatorController>();
-    final selected = controller.current is NavigationTargetSettings;
+  Widget build(BuildContext context, WidgetRef ref) {
+    final selected = ref.watch(navigatorProvider
+        .select((value) => value.current is NavigationTargetSettings));
     return IconButton(
       icon: const Icon(Icons.settings),
       iconSize: 20,
       splashRadius: 20,
       color: selected ? context.colorScheme.primary : null,
-      onPressed: () => controller.navigate(NavigationTargetSettings()),
+      onPressed: () => ref
+          .read(navigatorProvider.notifier)
+          .navigate(NavigationTargetSettings()),
     );
   }
 }
