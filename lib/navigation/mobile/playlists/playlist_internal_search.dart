@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:quiet/navigation/common/playlist/music_list.dart';
-import 'package:quiet/part/part.dart';
 import 'package:quiet/providers/player_provider.dart';
 import 'package:quiet/repository.dart';
 
@@ -29,7 +28,7 @@ class PlaylistInternalSearchDelegate extends SearchDelegate {
 
   @override
   Widget buildResults(BuildContext context) {
-    return BoxWithBottomPlayerController(buildSection(context));
+    return buildSection(context);
   }
 
   @override

@@ -18,10 +18,7 @@ class _ItemTitle extends ConsumerWidget {
         InkWell(
           onTap: () async {
             if (commentThreadId.type == CommentType.playlist) {
-              Navigator.push(context, MaterialPageRoute(builder: (context) {
-                final playlist = payload!.obj as PlaylistDetail;
-                return PlaylistDetailPage(playlist.id);
-              }));
+              // TODO: open playlist
             } else if (commentThreadId.type == CommentType.song) {
               final Track music = payload!.obj;
               final player = ref.read(playerProvider);
@@ -52,9 +49,7 @@ class _ItemTitle extends ConsumerWidget {
                   ..insertToNext(music)
                   ..playFromMediaId(music.id);
               }
-              Navigator.push(context, MaterialPageRoute(builder: (context) {
-                return PlayingPage();
-              }));
+              // TODO open song
             }
           },
           child: Container(

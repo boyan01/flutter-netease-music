@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:loader/loader.dart';
 import 'package:quiet/material/flexible_app_bar.dart';
 import 'package:quiet/navigation/common/playlist/music_list.dart';
 import 'package:quiet/pages/account/page_need_login.dart';
-import 'package:quiet/part/part.dart';
 import 'package:quiet/repository.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -13,20 +13,18 @@ class DailyPlaylistPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return PageNeedLogin(
       builder: (context) => Scaffold(
-        body: BoxWithBottomPlayerController(
-          Loader<List<Track>>(
-              loadTask: () => neteaseRepository!.recommendSongs(),
-              builder: (context, list) {
-                return MusicTileConfiguration(
-                    token: 'playlist_daily_recommend',
-                    musics: list,
-                    trailingBuilder:
-                        MusicTileConfiguration.defaultTrailingBuilder,
-                    leadingBuilder: MusicTileConfiguration.coverLeadingBuilder,
-                    onMusicTap: MusicTileConfiguration.defaultOnTap,
-                    child: _DailyMusicList());
-              }),
-        ),
+        body: Loader<List<Track>>(
+            loadTask: () => neteaseRepository!.recommendSongs(),
+            builder: (context, list) {
+              return MusicTileConfiguration(
+                  token: 'playlist_daily_recommend',
+                  musics: list,
+                  trailingBuilder:
+                      MusicTileConfiguration.defaultTrailingBuilder,
+                  leadingBuilder: MusicTileConfiguration.coverLeadingBuilder,
+                  onMusicTap: MusicTileConfiguration.defaultOnTap,
+                  child: _DailyMusicList());
+            }),
       ),
     );
   }

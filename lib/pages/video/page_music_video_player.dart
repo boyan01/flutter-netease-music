@@ -1,8 +1,7 @@
-// ignore_for_file: unnecessary_import
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:loader/loader.dart';
 import 'package:netease_api/netease_api.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:quiet/component/utils/utils.dart';
@@ -14,6 +13,7 @@ import 'package:quiet/repository/netease.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:video_player/video_player.dart';
 
+import '../../material/dividers.dart';
 import 'page_music_video_player_fullscreen.dart';
 import 'video_controller.dart';
 import 'video_player_model.dart';

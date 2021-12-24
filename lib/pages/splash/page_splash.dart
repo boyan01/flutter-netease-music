@@ -2,9 +2,9 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:quiet/providers/account.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../providers/account_provider.dart';
 import '../../providers/settings_provider.dart';
 
 ///used to build application widget

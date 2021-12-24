@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:loader/loader.dart';
 import 'package:quiet/material/tabs.dart';
 import 'package:quiet/navigation/common/playlist/music_list.dart';
-import 'package:quiet/part/part.dart';
 import 'package:quiet/repository.dart';
 
 class RecordPage extends StatelessWidget {
@@ -27,12 +27,10 @@ class RecordPage extends StatelessWidget {
               indicatorSize: TabBarIndicatorSize.label,
             ),
           ),
-          body: BoxWithBottomPlayerController(
-            TabBarView(children: [
-              _RecordSection(uid: uid, type: 1),
-              _RecordSection(uid: uid, type: 0),
-            ]),
-          ),
+          body: TabBarView(children: [
+            _RecordSection(uid: uid, type: 1),
+            _RecordSection(uid: uid, type: 0),
+          ]),
         ));
   }
 }

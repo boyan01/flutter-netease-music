@@ -2,8 +2,9 @@ import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quiet/component.dart';
-import 'package:quiet/providers/account.dart';
 import 'package:quiet/repository.dart';
+
+import 'account_provider.dart';
 
 final userFavoriteMusicListProvider =
     StateNotifierProvider<UserFavoriteMusicListNotifier, List<int>>(

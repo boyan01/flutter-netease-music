@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:quiet/component/netease/netease.dart';
-import 'package:quiet/part/part.dart';
+
+import '../../material/tiles.dart';
 import 'api.dart';
 
 class CollectionAlbums extends StatelessWidget {

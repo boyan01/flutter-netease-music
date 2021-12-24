@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:loader/loader.dart';
 import 'package:quiet/component/utils/utils.dart';
 import 'package:quiet/pages/search/model_search_history.dart';
-import 'package:quiet/part/part.dart';
 import 'package:quiet/repository/netease.dart';
+import 'package:scoped_model/scoped_model.dart';
 
+import '../../component/route.dart';
 import 'search_result_page.dart';
 import 'search_suggestion.dart';
 
@@ -146,10 +148,10 @@ class _SearchPageState extends State<SearchPage> {
                 bottom: tabs as PreferredSizeWidget?,
               ),
               resizeToAvoidBottomInset: false,
-              body: BoxWithBottomPlayerController(initialState
+              body: initialState
                   ? _EmptyQuerySuggestionSection(
                       suggestionSelectedCallback: (query) => _search(query))
-                  : SearchResultPage(query: _searchedQuery)),
+                  : SearchResultPage(query: _searchedQuery),
             ),
           ),
           SafeArea(

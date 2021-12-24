@@ -3,15 +3,17 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:loader/loader.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:quiet/component/utils/utils.dart';
 import 'package:quiet/extension.dart';
 import 'package:quiet/navigation/mobile/user/page_user_detail.dart';
 import 'package:quiet/pages/comments/page_comment.dart';
-import 'package:quiet/part/part.dart';
 import 'package:quiet/providers/player_provider.dart';
 import 'package:quiet/repository.dart';
+import 'package:scoped_model/scoped_model.dart';
 
+import '../../material/dividers.dart';
 import 'page_comment.dart';
 import 'user.dart' as comment;
 

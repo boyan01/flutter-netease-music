@@ -3,7 +3,6 @@ import 'package:quiet/pages/collection/albums.dart';
 import 'package:quiet/pages/collection/articles.dart';
 import 'package:quiet/pages/collection/artists.dart';
 import 'package:quiet/pages/collection/videos.dart';
-import 'package:quiet/part/part.dart';
 
 ///我的收藏页面
 class MyCollectionPage extends StatelessWidget {
@@ -26,14 +25,12 @@ class MyCollectionPage extends StatelessWidget {
             indicatorSize: TabBarIndicatorSize.label,
           ),
         ),
-        body: BoxWithBottomPlayerController(
-          TabBarView(children: [
-            CollectionAlbums(),
-            CollectionArtists(),
-            CollectionVideos(),
-            CollectionArticles(),
-          ]),
-        ),
+        body: TabBarView(children: [
+          CollectionAlbums(),
+          CollectionArtists(),
+          CollectionVideos(),
+          CollectionArticles(),
+        ]),
       ),
     );
   }

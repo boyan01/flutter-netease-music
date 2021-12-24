@@ -5,6 +5,7 @@ import 'package:quiet/providers/album_detail_provider.dart';
 import 'package:quiet/repository.dart';
 
 import '../../common/playlist/music_list.dart';
+import 'page_playlist_detail.dart';
 import 'playlist_flexible_app_bar.dart';
 
 class AlbumDetailPage extends ConsumerWidget {

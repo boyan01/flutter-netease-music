@@ -9,7 +9,6 @@ import 'package:overlay_support/overlay_support.dart';
 import 'package:quiet/component.dart';
 import 'package:quiet/material/dialogs.dart';
 import 'package:quiet/model/region_flag.dart';
-import 'package:quiet/part/part.dart';
 import 'package:quiet/repository.dart';
 
 import 'login_sub_navigation.dart';

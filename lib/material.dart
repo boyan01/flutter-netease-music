@@ -7,7 +7,6 @@ export 'material/dividers.dart';
 export 'material/flexible_app_bar.dart';
 export 'material/hero.dart';
 export 'material/images.dart';
-export 'material/landscape.dart';
 export 'material/player.dart';
 export 'material/tabs.dart';
 export 'material/tiles.dart';

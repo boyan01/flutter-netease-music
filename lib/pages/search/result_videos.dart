@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:loader/loader.dart';
 import 'package:quiet/component/utils/utils.dart';
-import 'package:quiet/part/part.dart';
 import 'package:quiet/repository.dart';
 
 ///video list result

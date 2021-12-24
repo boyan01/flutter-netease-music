@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:loader/loader.dart';
 import 'package:quiet/component/netease/netease.dart';
 import 'package:quiet/part/part.dart';
 import 'package:quiet/repository.dart';
+
+import '../material/dividers.dart';
+import '../providers/account_provider.dart';
 
 ///我的电台页面
 class MyDjPage extends ConsumerWidget {

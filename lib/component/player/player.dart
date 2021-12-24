@@ -1,11 +1,6 @@
-// ignore_for_file: unnecessary_import
-
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:hive/hive.dart';
 import 'package:music_player/music_player.dart';
-
-export 'package:quiet/component/player/bottom_player_bar.dart';
 
 part 'persistence.dart';
 

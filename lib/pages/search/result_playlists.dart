@@ -1,11 +1,7 @@
-// ignore_for_file: unnecessary_import
-
 import 'package:flutter/material.dart';
 import 'package:loader/loader.dart';
 import 'package:quiet/component/utils/utils.dart';
-import 'package:quiet/part/part.dart';
 import 'package:quiet/repository.dart';
-import 'package:quiet/repository/netease.dart';
 
 class PlaylistResultSection extends StatefulWidget {
   const PlaylistResultSection({Key? key, this.query}) : super(key: key);
@@ -47,9 +43,7 @@ class _PlayListTile extends StatelessWidget {
         "播放${getFormattedNumber(item["playCount"])}次";
     return InkWell(
       onTap: () {
-        Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-          return PlaylistDetailPage(item["id"]);
-        }));
+        // TODO navigate to playlist detail
       },
       child: SizedBox(
         height: 64,

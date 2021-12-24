@@ -1,10 +1,7 @@
-// ignore_for_file: unnecessary_import
-
 import 'package:flutter/material.dart';
+import 'package:loader/loader.dart';
 import 'package:quiet/navigation/mobile/artists/page_artist_detail.dart';
-import 'package:quiet/part/part.dart';
 import 'package:quiet/repository.dart';
-import 'package:quiet/repository/netease.dart';
 
 class ArtistsResultSection extends StatefulWidget {
   const ArtistsResultSection({Key? key, this.query}) : super(key: key);

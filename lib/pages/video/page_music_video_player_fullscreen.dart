@@ -6,6 +6,7 @@ import 'package:quiet/component/utils/utils.dart';
 import 'package:quiet/part/part.dart';
 import 'package:video_player/video_player.dart';
 
+import 'page_music_video_player.dart';
 import 'video_controller.dart';
 import 'video_player_model.dart';
 

@@ -3,7 +3,7 @@ import 'package:quiet/component/exceptions.dart';
 import 'package:quiet/extension.dart';
 import 'package:quiet/repository.dart';
 
-import 'account.dart';
+import 'account_provider.dart';
 
 final allPlayRecordsProvider = FutureProvider<List<PlayRecord>>((ref) async {
   final userId = ref.watch(userIdProvider);

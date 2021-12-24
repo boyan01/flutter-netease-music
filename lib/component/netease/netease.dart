@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:quiet/pages/collection/api.dart';
-import 'package:quiet/part/part.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 export '../../providers/favorite_tracks_provider.dart';

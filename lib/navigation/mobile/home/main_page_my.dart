@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:quiet/part/part.dart';
 
+import '../../../providers/account_provider.dart';
 import '_playlists.dart';
 import '_preset_grid.dart';
 import '_profile.dart';

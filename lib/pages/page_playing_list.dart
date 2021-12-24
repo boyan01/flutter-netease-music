@@ -3,8 +3,8 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:music_player/music_player.dart';
 import 'package:overlay_support/overlay_support.dart';
+import 'package:quiet/extension.dart';
 import 'package:quiet/navigation/mobile/playlists/dialog_selector.dart';
-import 'package:quiet/part/part.dart';
 import 'package:quiet/repository.dart';
 
 import '../providers/player_provider.dart';

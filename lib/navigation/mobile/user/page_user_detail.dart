@@ -10,7 +10,9 @@ import 'package:quiet/providers/user_detail_provider.dart';
 import 'package:quiet/repository.dart';
 
 part 'tab_about.dart';
+
 part 'tab_events.dart';
+
 part 'tab_music.dart';
 
 ///用户详情页
@@ -51,29 +53,30 @@ class _DetailPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: BoxWithBottomPlayerController(DefaultTabController(
-            length: 3,
-            child: NestedScrollView(
-              headerSliverBuilder: (context, _) {
-                return [
-                  SliverOverlapAbsorber(
-                      handle: NestedScrollView.sliverOverlapAbsorberHandleFor(
-                          context),
-                      sliver: _UserDetailAppBar(user))
-                ];
-              },
-              body: SafeArea(
-                child: Padding(
-                  padding: const EdgeInsets.only(
-                      top: kToolbarHeight + kTextTabBarHeight),
-                  child: TabBarView(children: <Widget>[
-                    TabMusic(user),
-                    TabEvents(),
-                    TabAbout(user),
-                  ]),
-                ),
+      body: DefaultTabController(
+          length: 3,
+          child: NestedScrollView(
+            headerSliverBuilder: (context, _) {
+              return [
+                SliverOverlapAbsorber(
+                    handle: NestedScrollView.sliverOverlapAbsorberHandleFor(
+                        context),
+                    sliver: _UserDetailAppBar(user))
+              ];
+            },
+            body: SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.only(
+                    top: kToolbarHeight + kTextTabBarHeight),
+                child: TabBarView(children: <Widget>[
+                  TabMusic(user),
+                  TabEvents(),
+                  TabAbout(user),
+                ]),
               ),
-            ))));
+            ),
+          )),
+    );
   }
 }
 

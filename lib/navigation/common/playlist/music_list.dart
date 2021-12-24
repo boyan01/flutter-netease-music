@@ -4,7 +4,9 @@ import 'package:overlay_support/overlay_support.dart';
 import 'package:quiet/extension.dart';
 import 'package:quiet/media/tracks/track_list.dart';
 import 'package:quiet/media/tracks/tracks_player.dart';
+import 'package:quiet/navigation/common/navigation_target.dart';
 import 'package:quiet/pages/comments/page_comment.dart';
+import 'package:quiet/providers/navigator_provider.dart';
 import 'package:quiet/providers/player_provider.dart';
 import 'package:quiet/repository.dart';
 
@@ -284,8 +286,9 @@ class MusicListHeader extends ConsumerWidget implements PreferredSizeWidget {
           final state = ref.read(playerStateProvider);
           final list = MusicTileConfiguration.of(context);
           if (state.playingList.id == list.token && state.isPlaying) {
-            //open playing page
-            Navigator.pushNamed(context, pagePlaying);
+            ref
+                .read(navigatorProvider.notifier)
+                .navigate(NavigationTargetPlaying());
           } else {
             player
               ..setTrackList(TrackList(id: list.token!, tracks: list.musics))

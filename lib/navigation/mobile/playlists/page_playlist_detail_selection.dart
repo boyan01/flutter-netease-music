@@ -5,9 +5,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:quiet/component.dart';
 import 'package:quiet/navigation/common/playlist/music_list.dart';
-import 'package:quiet/part/part.dart';
 import 'package:quiet/repository/data/track.dart';
 
+import '../../../material/dialogs.dart';
 import 'dialog_selector.dart';
 
 typedef MusicDeletionCallback = Future<bool> Function(List<Music> selected);
