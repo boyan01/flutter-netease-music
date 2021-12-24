@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
-import 'package:quiet/component/route.dart';
+import 'package:quiet/providers/navigator_provider.dart';
 import 'package:quiet/repository/cached_image.dart';
 
-class AlbumTile extends StatelessWidget {
+import '../navigation/common/navigation_target.dart';
+
+class AlbumTile extends ConsumerWidget {
   const AlbumTile({Key? key, required this.album, this.subtitle})
       : super(key: key);
 
@@ -19,14 +22,12 @@ class AlbumTile extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final String subtitle = (this.subtitle ?? _defaultSubtitle)(album);
     return InkWell(
-      onTap: () {
-        Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-          return AlbumDetailPage(albumId: album["id"], album: album);
-        }));
-      },
+      onTap: () => ref
+          .read(navigatorProvider.notifier)
+          .navigate(NavigationTargetAlbumDetail(album["id"])),
       child: SizedBox(
         height: 64,
         child: Row(

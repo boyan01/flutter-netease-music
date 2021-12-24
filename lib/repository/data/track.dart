@@ -76,7 +76,7 @@ class ArtistMini with EquatableMixin {
       _$ArtistMiniFromJson(json);
 
   @JsonKey(name: 'id')
-  final String id;
+  final int id;
   @JsonKey(name: 'name')
   final String name;
   @JsonKey(name: 'imageUrl')

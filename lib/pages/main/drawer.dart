@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quiet/component.dart';
 import 'package:quiet/material.dart';
 import 'package:quiet/navigation/mobile/user/page_user_detail.dart';
-import 'package:quiet/pages/account/account.dart';
+import 'package:quiet/providers/account.dart';
 import 'package:quiet/repository.dart';
 import 'package:url_launcher/url_launcher.dart';
 

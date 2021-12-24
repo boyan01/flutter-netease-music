@@ -4,7 +4,7 @@ import 'package:quiet/providers/player_provider.dart';
 
 import '../../component.dart';
 import '../../material/user.dart';
-import '../../pages/account/account.dart';
+import '../../providers/account.dart';
 import '../../repository.dart';
 
 /// 歌曲喜欢按钮

@@ -6,8 +6,10 @@ import 'package:quiet/navigation/mobile/widgets/slide_up_page_route.dart';
 
 import '../../providers/navigator_provider.dart';
 import '../common/navigation_target.dart';
+import 'artists/page_artist_detail.dart';
 import 'login/login_sub_navigation.dart';
 import 'player/page_fm_playing.dart';
+import 'playlists/page_album_detail.dart';
 import 'playlists/page_playlist_detail.dart';
 import 'user/page_user_detail.dart';
 
@@ -87,6 +89,16 @@ class MobileNavigatorController extends NavigatorController {
         break;
       case NavigationTargetLogin:
         page = const LoginNavigator();
+        break;
+      case NavigationTargetArtistDetail:
+        page = ArtistDetailPage(
+          artistId: (target as NavigationTargetArtistDetail).artistId,
+        );
+        break;
+      case NavigationTargetAlbumDetail:
+        page = AlbumDetailPage(
+          albumId: (target as NavigationTargetAlbumDetail).albumId,
+        );
         break;
       default:
         throw Exception('Unknown navigation type: $target');

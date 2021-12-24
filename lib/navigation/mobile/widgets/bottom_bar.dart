@@ -88,7 +88,11 @@ class AnimatedAppBottomBar extends HookConsumerWidget {
           left: 0,
           right: 0,
           bottom: height,
-          child: child,
+          child: MediaQuery.removePadding(
+            context: context,
+            removeBottom: !hidePlayerBar || !hideNavigationBar,
+            child: child,
+          ),
           curve: Curves.easeInOut,
         ),
         AnimatedPositioned(

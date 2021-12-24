@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quiet/component/route.dart';
-import 'package:quiet/pages/account/account.dart';
+import 'package:quiet/providers/account.dart';
 
 ///包裹页面，表示当前页面需要登陆才能正常显示
 class PageNeedLogin extends ConsumerWidget {

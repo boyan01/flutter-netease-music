@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:quiet/material/dialogs.dart';
-import 'package:quiet/pages/account/account.dart';
+import 'package:quiet/providers/account.dart';
 import 'package:quiet/providers/navigator_provider.dart';
 
 import '../../../pages/welcome/page_welcome.dart';

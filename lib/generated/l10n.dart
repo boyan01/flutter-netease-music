@@ -751,6 +751,16 @@ class S {
       args: [value],
     );
   }
+
+  /// `Select the artist`
+  String get selectTheArtist {
+    return Intl.message(
+      'Select the artist',
+      name: 'selectTheArtist',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

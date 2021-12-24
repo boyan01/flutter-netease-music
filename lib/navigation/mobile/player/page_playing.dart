@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quiet/extension.dart';
 import 'package:quiet/material.dart';
-import 'package:quiet/pages/artists/page_artist_detail.dart';
 import 'package:quiet/pages/page_playing_list.dart';
 import 'package:quiet/repository.dart';
 
-import 'background.dart';
+import '../../../providers/navigator_provider.dart';
 import '../../../providers/player_provider.dart';
 import '../../common/player/cover.dart';
 import '../../common/player/lyric_view.dart';
 import '../../common/player/player_actions.dart';
 import '../../common/player_progress.dart';
+import 'background.dart';
 
 class PlayingPage extends ConsumerWidget {
   @override
@@ -31,7 +31,7 @@ class PlayingPage extends ConsumerWidget {
           Material(
             color: Colors.transparent,
             child: Column(
-              children: <Widget>[
+              children: [
                 PlayingTitle(music: current),
                 _CenterSection(music: current),
                 const PlayingOperationBar(),
@@ -206,12 +206,12 @@ class _CenterSectionState extends State<_CenterSection> {
   }
 }
 
-class PlayingTitle extends StatelessWidget {
+class PlayingTitle extends ConsumerWidget {
   const PlayingTitle({Key? key, required this.music}) : super(key: key);
   final Track music;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return AppBar(
       elevation: 0,
       leading: const BackButton(),
@@ -225,9 +225,10 @@ class PlayingTitle extends StatelessWidget {
             style: context.primaryTextTheme.titleMedium,
           ),
           InkWell(
-            onTap: () {
-              launchArtistDetailPage(context, music.artists);
-            },
+            onTap: () => ref
+                .read(navigatorProvider.notifier)
+                .navigateToArtistDetail(
+                    context: context, artists: music.artists),
             child: Row(
               mainAxisSize: MainAxisSize.max,
               children: <Widget>[

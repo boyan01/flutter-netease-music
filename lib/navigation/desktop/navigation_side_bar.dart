@@ -5,7 +5,7 @@ import 'package:quiet/extension.dart';
 import 'package:quiet/navigation/desktop/login/login_dialog.dart';
 import 'package:quiet/navigation/desktop/playlist/user_playlists.dart';
 import 'package:quiet/navigation/desktop/widgets/navigation_tile.dart';
-import 'package:quiet/pages/account/account.dart';
+import 'package:quiet/providers/account.dart';
 import 'package:quiet/providers/navigator_provider.dart';
 import 'package:quiet/repository.dart';
 

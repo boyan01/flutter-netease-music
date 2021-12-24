@@ -1,32 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:quiet/extension.dart';
 import 'package:quiet/repository/data/track.dart';
-
-import 'page_artist_detail.dart';
-
-///quick launch [ArtistDetailPage] if have more than one id
-Future<void> launchArtistDetailPage(
-    BuildContext context, List<ArtistMini>? artists) async {
-  debugPrint("to artist :$artists");
-  if (artists == null || artists.isEmpty) {
-    return;
-  }
-  if (artists.length == 1) {
-    Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-      return ArtistDetailPage(artistId: int.parse(artists[0].id));
-    }));
-  } else {
-    final artist = await showDialog<ArtistMini>(
-        context: context,
-        builder: (context) {
-          return ArtistSelectionDialog(artists: artists);
-        });
-    if (artist != null) {
-      Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-        return ArtistDetailPage(artistId: int.parse(artist.id));
-      }));
-    }
-  }
-}
 
 ///歌手选择弹窗
 ///返回 [ArtistMini]
@@ -38,7 +12,7 @@ class ArtistSelectionDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final List<Widget> children = artists.map<Widget>((artist) {
-      final enabled = artist.id.isNotEmpty;
+      final enabled = artist.id != 0;
       return ListTile(
         title: Padding(
           padding: const EdgeInsets.only(left: 8),
@@ -61,8 +35,9 @@ class ArtistSelectionDialog extends StatelessWidget {
         child: SimpleDialog(
           title: Container(
             constraints: BoxConstraints(
-                minWidth: MediaQuery.of(context).size.width * 0.8),
-            child: const Text("请选择要查看的歌手"),
+              minWidth: MediaQuery.of(context).size.width * 0.8,
+            ),
+            child: Text(context.strings.selectTheArtist),
           ),
           children: children,
         ),

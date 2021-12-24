@@ -79,3 +79,29 @@ class NavigationTargetUser extends NavigationTarget {
 class NavigationTargetLogin extends NavigationTarget {
   NavigationTargetLogin();
 }
+
+class NavigationTargetArtistDetail extends NavigationTarget {
+  NavigationTargetArtistDetail(this.artistId);
+
+  final int artistId;
+
+  @override
+  bool isTheSameTarget(NavigationTarget other) {
+    return super.isTheSameTarget(other) &&
+        other is NavigationTargetArtistDetail &&
+        other.artistId == artistId;
+  }
+}
+
+class NavigationTargetAlbumDetail extends NavigationTarget {
+  NavigationTargetAlbumDetail(this.albumId);
+
+  final int albumId;
+
+  @override
+  bool isTheSameTarget(NavigationTarget other) {
+    return super.isTheSameTarget(other) &&
+        other is NavigationTargetAlbumDetail &&
+        other.albumId == albumId;
+  }
+}

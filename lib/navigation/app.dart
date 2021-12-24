@@ -25,7 +25,6 @@ class QuietApp extends ConsumerWidget {
         break;
     }
     return MaterialApp(
-      onGenerateRoute: routeFactory,
       title: 'Quiet',
       supportedLocales: const [Locale("en"), Locale("zh")],
       localizationsDelegates: const [

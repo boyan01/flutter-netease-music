@@ -106,6 +106,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "search": MessageLookupByLibrary.simpleMessage("Search"),
         "selectRegionDiaCode":
             MessageLookupByLibrary.simpleMessage("select region code"),
+        "selectTheArtist":
+            MessageLookupByLibrary.simpleMessage("Select the artist"),
         "settings": MessageLookupByLibrary.simpleMessage("Settings"),
         "shareContentCopied": MessageLookupByLibrary.simpleMessage(
             "Share content has copied to clipboard."),

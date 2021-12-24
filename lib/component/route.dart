@@ -13,7 +13,7 @@ import 'package:quiet/navigation/mobile/player/page_playing.dart';
 import 'package:quiet/navigation/mobile/playlists/page_daily_playlist.dart';
 import 'package:quiet/navigation/mobile/settings/page_setting.dart';
 import 'package:quiet/navigation/mobile/user/page_user_detail.dart';
-import 'package:quiet/pages/account/account.dart';
+import 'package:quiet/providers/account.dart';
 import 'package:quiet/pages/collection/page_collections.dart';
 import 'package:quiet/pages/leaderboard/page_leaderboard.dart';
 import 'package:quiet/pages/main/page_main.dart';

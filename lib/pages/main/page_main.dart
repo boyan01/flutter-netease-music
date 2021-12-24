@@ -7,9 +7,9 @@ import 'package:quiet/navigation/mobile/home/main_page_discover.dart';
 import 'package:quiet/pages/search/page_search.dart';
 import 'package:quiet/part/part.dart';
 
+import '../../navigation/mobile/home/main_page_my.dart';
 import '../../providers/player_provider.dart';
 import 'drawer.dart';
-import '../../navigation/mobile/home/main_page_my.dart';
 
 part 'page_main_landscape.dart';
 part 'page_main_portrait.dart';

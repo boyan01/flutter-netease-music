@@ -41,7 +41,7 @@ const _$TrackTypeEnumMap = {
 };
 
 ArtistMini _$ArtistMiniFromJson(Map json) => ArtistMini(
-      id: json['id'] as String,
+      id: json['id'] as int,
       name: json['name'] as String,
       imageUrl: json['imageUrl'] as String?,
     );

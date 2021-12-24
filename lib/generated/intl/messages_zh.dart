@@ -92,6 +92,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "recommendPlayLists": MessageLookupByLibrary.simpleMessage("推荐歌单"),
         "search": MessageLookupByLibrary.simpleMessage("搜索"),
         "selectRegionDiaCode": MessageLookupByLibrary.simpleMessage("选择地区号码"),
+        "selectTheArtist": MessageLookupByLibrary.simpleMessage("请选择要查看的歌手"),
         "settings": MessageLookupByLibrary.simpleMessage("设置"),
         "shareContentCopied":
             MessageLookupByLibrary.simpleMessage("分享内容已复制到剪切板"),

@@ -4,7 +4,6 @@ import 'package:overlay_support/overlay_support.dart';
 import 'package:quiet/extension.dart';
 import 'package:quiet/media/tracks/track_list.dart';
 import 'package:quiet/media/tracks/tracks_player.dart';
-import 'package:quiet/pages/artists/page_artist_detail.dart';
 import 'package:quiet/pages/comments/page_comment.dart';
 import 'package:quiet/providers/player_provider.dart';
 import 'package:quiet/repository.dart';
@@ -436,12 +435,12 @@ class _IconMore extends ConsumerWidget {
         }
         break;
       case _MusicAction.album:
-        Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-          return AlbumDetailPage(albumId: music.album!.id.parseToInt());
-        }));
+        // Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+        //   return AlbumDetailPage(albumId: music.album!.id.parseToInt());
+        // }));
         break;
       case _MusicAction.artists:
-        launchArtistDetailPage(context, music.artists);
+        // launchArtistDetailPage(context, music.artists);
         break;
     }
   }

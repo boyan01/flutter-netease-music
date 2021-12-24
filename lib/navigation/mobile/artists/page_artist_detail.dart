@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:quiet/navigation/common/playlist/music_list.dart';
-import 'package:quiet/pages/artists/artist_header.dart';
 import 'package:quiet/navigation/mobile/playlists/dialog_selector.dart';
 import 'package:quiet/navigation/mobile/playlists/page_playlist_detail_selection.dart';
 import 'package:quiet/part/part.dart';
 import 'package:quiet/repository.dart';
 
-export 'artists_selector.dart';
+import 'artist_header.dart';
 
 ///歌手详情页
 class ArtistDetailPage extends StatelessWidget {
@@ -32,41 +31,39 @@ class ArtistDetailPage extends StatelessWidget {
         );
       },
       builder: (context, result) => Scaffold(
-        body: BoxWithBottomPlayerController(
-          DefaultTabController(
-            length: 4,
-            child: NestedScrollView(
-                headerSliverBuilder: (context, innerBoxIsScrolled) => [
-                      SliverOverlapAbsorber(
-                        handle: NestedScrollView.sliverOverlapAbsorberHandleFor(
-                            context),
-                        sliver: ArtistHeader(artist: result.artist),
+        body: DefaultTabController(
+          length: 4,
+          child: NestedScrollView(
+              headerSliverBuilder: (context, innerBoxIsScrolled) => [
+                    SliverOverlapAbsorber(
+                      handle: NestedScrollView.sliverOverlapAbsorberHandleFor(
+                          context),
+                      sliver: ArtistHeader(artist: result.artist),
+                    ),
+                  ],
+              body: SafeArea(
+                child: Padding(
+                  padding: const EdgeInsets.only(
+                      top: kToolbarHeight + kTextTabBarHeight),
+                  child: TabBarView(
+                    children: [
+                      _PageHotSongs(
+                        musicList: result.hotSongs,
+                        artistId: artistId,
+                      ),
+                      _PageAlbums(artistId: artistId),
+                      _PageMVs(
+                        artistId: artistId,
+                        mvCount: result.artist.mvSize,
+                      ),
+                      _PageArtistIntroduction(
+                        artistId: artistId,
+                        artistName: result.artist.name,
                       ),
                     ],
-                body: SafeArea(
-                  child: Padding(
-                    padding: const EdgeInsets.only(
-                        top: kToolbarHeight + kTextTabBarHeight),
-                    child: TabBarView(
-                      children: [
-                        _PageHotSongs(
-                          musicList: result.hotSongs,
-                          artistId: artistId,
-                        ),
-                        _PageAlbums(artistId: artistId),
-                        _PageMVs(
-                          artistId: artistId,
-                          mvCount: result.artist.mvSize,
-                        ),
-                        _PageArtistIntroduction(
-                          artistId: artistId,
-                          artistName: result.artist.name,
-                        ),
-                      ],
-                    ),
                   ),
-                )),
-          ),
+                ),
+              )),
         ),
       ),
     );

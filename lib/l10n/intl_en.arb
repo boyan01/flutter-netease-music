@@ -68,5 +68,6 @@
   "playingList": "Playing List",
   "personalFmPlaying": "Personal FM Playing",
   "playAll": "Play All",
-  "musicCountFormat": "{value} Music"
+  "musicCountFormat": "{value} Music",
+  "selectTheArtist": "Select the artist"
 }
