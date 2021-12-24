@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:quiet/pages/welcome/login_sub_navigation.dart';
+import 'package:quiet/navigation/mobile/login/login_sub_navigation.dart';
 
 Future<bool> showLoginDialog({
   required BuildContext context,

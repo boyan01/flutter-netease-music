@@ -13,7 +13,7 @@ class UserProfileSection extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final detail = ref.watch(userProvider);
     if (detail == null) {
-      return userNotLogin(context);
+      return const _NotLogin();
     }
     return Padding(
       padding: const EdgeInsets.only(bottom: 8, left: 16, right: 16),
@@ -70,16 +70,21 @@ class UserProfileSection extends ConsumerWidget {
       ),
     );
   }
+}
 
-  Widget userNotLogin(BuildContext context) {
+class _NotLogin extends ConsumerWidget {
+  const _NotLogin({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 8, left: 16, right: 16),
       child: InkWell(
         customBorder:
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-        onTap: () {
-          Navigator.of(context).pushNamed(pageLogin);
-        },
+        onTap: () => ref
+            .read(navigatorProvider.notifier)
+            .navigate(NavigationTargetLogin()),
         child: SizedBox(
           height: 72,
           child: Row(

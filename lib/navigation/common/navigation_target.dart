@@ -75,3 +75,7 @@ class NavigationTargetUser extends NavigationTarget {
         other.userId == userId;
   }
 }
+
+class NavigationTargetLogin extends NavigationTarget {
+  NavigationTargetLogin();
+}

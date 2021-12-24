@@ -19,7 +19,7 @@ import 'package:quiet/pages/leaderboard/page_leaderboard.dart';
 import 'package:quiet/pages/main/page_main.dart';
 import 'package:quiet/pages/page_my_dj.dart';
 import 'package:quiet/pages/search/page_search.dart';
-import 'package:quiet/pages/welcome/login_sub_navigation.dart';
+import 'package:quiet/navigation/mobile/login/login_sub_navigation.dart';
 import 'package:quiet/pages/welcome/page_welcome.dart';
 
 export 'package:quiet/navigation/mobile/player/page_playing.dart';

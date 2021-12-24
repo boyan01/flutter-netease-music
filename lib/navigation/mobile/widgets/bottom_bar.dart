@@ -43,15 +43,17 @@ class AnimatedAppBottomBar extends HookConsumerWidget {
 
     assert(kMobileHomeTabs.contains(currentTab.runtimeType));
 
-    final navigationBarHeight =
-        kBottomNavigationBarHeight + MediaQuery.of(context).padding.bottom + 2;
+    const navigationBarHeight = kBottomNavigationBarHeight + 2;
+
+    final bottomPadding = MediaQuery.of(context).padding.bottom;
 
     final music = ref.watch(playingTrackProvider);
 
     const kNoPlayerBarPages = {
       NavigationTargetPlaying,
       NavigationTargetFmPlaying,
-      NavigationTargetSettings
+      NavigationTargetSettings,
+      NavigationTargetLogin,
     };
     const playerBarHeight = kBottomPlayerBarHeight;
     final hidePlayerBar =
@@ -65,17 +67,17 @@ class AnimatedAppBottomBar extends HookConsumerWidget {
       navigationBarBottom = -playerBarHeight - navigationBarHeight;
       playerBarBottom = -playerBarHeight;
     } else if (hidePlayerBar) {
-      height = navigationBarHeight;
-      navigationBarBottom = 0;
+      height = navigationBarHeight + bottomPadding;
+      navigationBarBottom = bottomPadding;
       playerBarBottom = -playerBarHeight;
     } else if (hideNavigationBar) {
-      height = playerBarHeight;
+      height = playerBarHeight + bottomPadding;
       navigationBarBottom = -navigationBarHeight;
-      playerBarBottom = 0;
+      playerBarBottom = bottomPadding;
     } else {
-      navigationBarBottom = 0;
-      playerBarBottom = navigationBarHeight;
-      height = playerBarHeight + navigationBarHeight;
+      navigationBarBottom = bottomPadding;
+      playerBarBottom = navigationBarHeight + bottomPadding;
+      height = playerBarHeight + navigationBarHeight + bottomPadding;
     }
 
     return Stack(
@@ -115,9 +117,22 @@ class AnimatedAppBottomBar extends HookConsumerWidget {
             opacity: hideNavigationBar ? 0 : 1,
             curve: Curves.easeIn,
             child: ClipRect(
-              child: HomeBottomNavigationBar(currentTab: currentTab),
+              child: MediaQuery.removePadding(
+                removeBottom: true,
+                context: context,
+                child: HomeBottomNavigationBar(currentTab: currentTab),
+              ),
             ),
           ),
+        ),
+        AnimatedPositioned(
+          child: const Material(elevation: 8),
+          duration: const Duration(milliseconds: 300),
+          bottom: 0,
+          left: 0,
+          right: 0,
+          curve: Curves.easeInOut,
+          height: hidePlayerBar && hideNavigationBar ? 0 : bottomPadding,
         ),
       ],
     );

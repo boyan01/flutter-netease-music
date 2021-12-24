@@ -3,8 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:quiet/material/dialogs.dart';
 import 'package:quiet/pages/account/account.dart';
+import 'package:quiet/providers/navigator_provider.dart';
 
-import 'page_welcome.dart';
+import '../../../pages/welcome/page_welcome.dart';
 
 ///登录流程: 密码输入
 class PageLoginPassword extends ConsumerStatefulWidget {
@@ -71,8 +72,8 @@ class _PageLoginPasswordState extends ConsumerState<PageLoginPassword> {
     final result =
         await showLoaderOverlay(context, account.login(widget.phone, password));
     if (result.isValue) {
-      //退出登录流程,表示我们登录成功了
-      Navigator.of(context, rootNavigator: true).pop(true);
+      // close login page.
+      ref.read(navigatorProvider.notifier).back();
     } else {
       toast('登录失败:${result.asError!.error}');
     }
