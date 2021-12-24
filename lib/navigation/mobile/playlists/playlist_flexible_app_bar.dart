@@ -120,7 +120,7 @@ class _OverlappedActionButtons extends StatelessWidget {
             curve: Curves.easeInOut,
             duration: const Duration(milliseconds: 150),
             child: Material(
-              elevation: 2,
+              elevation: 4,
               color: context.colorScheme.background,
               borderRadius: BorderRadius.circular(24),
               child: SizedBox(

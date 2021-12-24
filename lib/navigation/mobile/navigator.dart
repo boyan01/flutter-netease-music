@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:quiet/navigation/mobile/home/page_home.dart';
 import 'package:quiet/navigation/mobile/player/page_playing.dart';
 import 'package:quiet/navigation/mobile/settings/page_setting.dart';
+import 'package:quiet/navigation/mobile/widgets/slide_up_page_route.dart';
 
 import '../../providers/navigator_provider.dart';
 import '../common/navigation_target.dart';
@@ -54,8 +55,9 @@ class MobileNavigatorController extends NavigatorController {
   List<Page> get pages =>
       _pages.map((e) => _buildPage(e)).toList(growable: false);
 
-  MaterialPage<dynamic> _buildPage(NavigationTarget target) {
+  Page<dynamic> _buildPage(NavigationTarget target) {
     final Widget page;
+    bool slideUp = false;
     switch (target.runtimeType) {
       case NavigationTargetDiscover:
       case NavigationTargetMy:
@@ -73,15 +75,23 @@ class MobileNavigatorController extends NavigatorController {
         break;
       case NavigationTargetPlaying:
         page = PlayingPage();
+        slideUp = true;
         break;
       case NavigationTargetFmPlaying:
         page = PagePlayingFm();
+        slideUp = true;
         break;
       case NavigationTargetUser:
         page = UserDetailPage(userId: (target as NavigationTargetUser).userId);
         break;
       default:
         throw Exception('Unknown navigation type: $target');
+    }
+    if (slideUp) {
+      return SlideUpPage(
+        child: page,
+        name: target.runtimeType.toString(),
+      );
     }
     return MaterialPage<dynamic>(
       child: page,

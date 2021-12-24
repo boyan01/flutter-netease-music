@@ -130,17 +130,16 @@ class _FmCover extends ConsumerWidget {
           padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 16),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(4),
-            child: AspectRatio(
-              aspectRatio: 1.0,
-              child: Image(
-                image: CachedImage(track.imageUrl!),
-                loadingBuilder: (context, child, loadingProgress) {
-                  if (loadingProgress != null) {
-                    child = Container(child: child);
-                  }
-                  return child;
-                },
-              ),
+            child: Image(
+              image: CachedImage(track.imageUrl!),
+              loadingBuilder: (context, child, loadingProgress) {
+                if (loadingProgress != null) {
+                  child = Container(child: child);
+                }
+                return child;
+              },
+              width: 240,
+              height: 240,
             ),
           ),
         ),

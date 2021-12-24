@@ -3,10 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:quiet/extension.dart';
-import 'package:quiet/providers/navigator_provider.dart';
 import 'package:window_manager/window_manager.dart';
 
+import '../../providers/navigator_provider.dart';
 import '../common/navigator.dart';
+import 'widgets/bottom_bar.dart';
 
 class MobileWindow extends StatelessWidget {
   const MobileWindow({Key? key}) : super(key: key);
@@ -15,10 +16,26 @@ class MobileWindow extends StatelessWidget {
   Widget build(BuildContext context) {
     if (defaultTargetPlatform.isDesktop()) {
       return const _MobileWindowOnDesktopWrapper(
-        child: AppNavigator(),
+        child: _MobileWindowLayout(),
       );
     }
-    return const AppNavigator();
+    return const _MobileWindowLayout();
+  }
+}
+
+class _MobileWindowLayout extends StatelessWidget {
+  const _MobileWindowLayout({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: context.colorScheme.background,
+      child: const AnimatedAppBottomBar(
+        child: AppNavigator(),
+      ),
+    );
   }
 }
 

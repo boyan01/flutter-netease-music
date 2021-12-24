@@ -178,8 +178,6 @@ class _AlbumDetailHeader extends ConsumerWidget {
   }
 }
 
-
-
 ///action button for playlist header
 class _HeaderAction extends StatelessWidget {
   const _HeaderAction(this.icon, this.action, this.onTap);
@@ -229,8 +227,8 @@ class PlayListHeaderBackground extends StatelessWidget {
     return ClipPath(
       clipper: ShapeBorderClipper(
           shape: ContinuousRectangleBorder(
-            borderRadius: BorderRadius.circular(100),
-          )),
+        borderRadius: BorderRadius.circular(100),
+      )),
       child: Stack(
         fit: StackFit.passthrough,
         children: <Widget>[
@@ -256,13 +254,13 @@ class PlayListHeaderBackground extends StatelessWidget {
 class DetailHeader extends StatelessWidget {
   const DetailHeader(
       {Key? key,
-        required this.content,
-        this.onCommentTap,
-        this.onShareTap,
-        this.onSelectionTap,
-        int? commentCount = 0,
-        int? shareCount = 0,
-        this.background})
+      required this.content,
+      this.onCommentTap,
+      this.onShareTap,
+      this.onSelectionTap,
+      int? commentCount = 0,
+      int? shareCount = 0,
+      this.background})
       : commentCount = commentCount ?? 0,
         shareCount = shareCount ?? 0,
         super(key: key);

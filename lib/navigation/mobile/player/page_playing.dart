@@ -35,7 +35,7 @@ class PlayingPage extends ConsumerWidget {
                 PlayingTitle(music: current),
                 _CenterSection(music: current),
                 const PlayingOperationBar(),
-                DurationProgressBar(),
+                const DurationProgressBar(),
                 PlayerControllerBar(),
                 SizedBox(
                   height: MediaQuery.of(context).viewInsets.bottom +
