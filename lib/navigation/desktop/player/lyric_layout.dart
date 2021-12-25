@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quiet/extension.dart';
+import 'package:quiet/navigation/common/navigation_target.dart';
+import 'package:quiet/providers/navigator_provider.dart';
 import 'package:quiet/repository.dart';
 
 import '../../common/player/lyric_view.dart';
+import '../widgets/highlight_clickable_text.dart';
 
-class LyricLayout extends StatelessWidget {
+class LyricLayout extends ConsumerWidget {
   const LyricLayout({
     Key? key,
     required this.track,
@@ -13,7 +17,7 @@ class LyricLayout extends StatelessWidget {
   final Track track;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Padding(
       padding: const EdgeInsets.only(left: 20, right: 80),
       child: Column(
@@ -27,38 +31,64 @@ class LyricLayout extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
           ),
           const SizedBox(height: 10),
-          DefaultTextStyle(
-            style: context.textTheme.caption!,
-            child: Row(
-              children: [
-                Text('${context.strings.album}:'),
-                const SizedBox(width: 4),
-                Flexible(
-                  child: Tooltip(
-                    message: track.album?.name,
-                    child: Text(
-                      track.album?.name ?? '',
-                      style: TextStyle(color: context.colorScheme.primary),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
+          Row(
+            children: [
+              Flexible(
+                child: MouseHighlightText(
+                  style: context.textTheme.caption,
+                  highlightStyle: context.textTheme.caption!.copyWith(
+                    color: context.textTheme.bodyMedium!.color,
                   ),
-                ),
-                const SizedBox(width: 20),
-                Text('${context.strings.artists}:'),
-                const SizedBox(width: 4),
-                Flexible(
-                  child: Tooltip(
-                    message: track.artists.map((a) => a.name).join(', '),
-                    child: Text(
-                      track.artists.map((artist) => artist.name).join('/'),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  children: [
+                    MouseHighlightSpan.normal(
+                        text: '${context.strings.album}:'),
+                    MouseHighlightSpan.widget(widget: const SizedBox(width: 4)),
+                    MouseHighlightSpan.highlight(
+                      text: track.album?.name ?? '',
+                      onTap: () {
+                        final id = track.album?.id;
+                        if (id == null) {
+                          return;
+                        }
+                        ref
+                            .read(navigatorProvider.notifier)
+                            .navigate(NavigationTargetAlbumDetail(id));
+                      },
                     ),
-                  ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+              const SizedBox(width: 20),
+              Flexible(
+                child: MouseHighlightText(
+                  style: context.textTheme.caption,
+                  highlightStyle: context.textTheme.caption!.copyWith(
+                    color: context.textTheme.bodyMedium!.color,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  children: [
+                    MouseHighlightSpan.normal(
+                        text: '${context.strings.artists}:'),
+                    MouseHighlightSpan.widget(widget: const SizedBox(width: 4)),
+                    ...track.artists
+                        .map((artist) => MouseHighlightSpan.highlight(
+                              text: artist.name,
+                              onTap: () {
+                                if (artist.id == 0) {
+                                  return;
+                                }
+                                ref.read(navigatorProvider.notifier).navigate(
+                                    NavigationTargetArtistDetail(artist.id));
+                              },
+                            ))
+                        .separated(MouseHighlightSpan.normal(text: '/')),
+                  ],
+                ),
+              ),
+            ],
           ),
           const SizedBox(height: 40),
           Expanded(
