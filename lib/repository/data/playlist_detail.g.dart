@@ -24,6 +24,7 @@ PlaylistDetail _$PlaylistDetailFromJson(Map json) => PlaylistDetail(
       commentCount: json['commentCount'] as int,
       trackIds:
           (json['trackIds'] as List<dynamic>).map((e) => e as int).toList(),
+      createTime: DateTime.parse(json['createTime'] as String),
     );
 
 Map<String, dynamic> _$PlaylistDetailToJson(PlaylistDetail instance) =>
@@ -42,4 +43,5 @@ Map<String, dynamic> _$PlaylistDetailToJson(PlaylistDetail instance) =>
       'description': instance.description,
       'commentCount': instance.commentCount,
       'trackIds': instance.trackIds,
+      'createTime': instance.createTime.toIso8601String(),
     };

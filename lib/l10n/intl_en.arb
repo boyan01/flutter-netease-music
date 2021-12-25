@@ -69,5 +69,9 @@
   "personalFmPlaying": "Personal FM Playing",
   "playAll": "Play All",
   "musicCountFormat": "{value} Music",
-  "selectTheArtist": "Select the artist"
+  "selectTheArtist": "Select the artist",
+  "createdDate": "Created at {value}",
+  "subscribe": "Subscribe",
+  "share": "Share",
+  "searchPlaylistSongs": "Search Songs"
 }

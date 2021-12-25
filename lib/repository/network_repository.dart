@@ -390,6 +390,7 @@ extension _PlayListMapper on api.Playlist {
       shareCount: shareCount,
       trackUpdateTime: trackUpdateTime,
       trackIds: trackIds.map((e) => e.id).toList(),
+      createTime: DateTime.fromMillisecondsSinceEpoch(createTime),
     );
   }
 }

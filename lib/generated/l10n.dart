@@ -761,6 +761,46 @@ class S {
       args: [],
     );
   }
+
+  /// `Created at {value}`
+  String createdDate(Object value) {
+    return Intl.message(
+      'Created at $value',
+      name: 'createdDate',
+      desc: '',
+      args: [value],
+    );
+  }
+
+  /// `Subscribe`
+  String get subscribe {
+    return Intl.message(
+      'Subscribe',
+      name: 'subscribe',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Share`
+  String get share {
+    return Intl.message(
+      'Share',
+      name: 'share',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Search Songs`
+  String get searchPlaylistSongs {
+    return Intl.message(
+      'Search Songs',
+      name: 'searchPlaylistSongs',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

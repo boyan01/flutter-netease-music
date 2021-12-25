@@ -24,6 +24,7 @@ ThemeData get quietDarkTheme {
       primary: lightSwatch,
       secondary: lightSwatch[300]!,
       tertiary: lightSwatch[100],
+      onPrimary: const Color(0xFFDDDDDD),
     ),
   );
   return theme.copyWith(

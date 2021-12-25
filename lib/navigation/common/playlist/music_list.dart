@@ -27,19 +27,28 @@ class TrackTileContainer extends StatelessWidget {
     final id = 'playlist_${playlist.id}';
     return TrackTileContainer._private(
       (track) {
-        if (player.trackList.id == id &&
-            player.isPlaying &&
-            player.current == track) {
-          return PlayResult.alreadyPlaying;
+        if (player.trackList.id == id && player.current == track) {
+          if (player.isPlaying) {
+            return PlayResult.alreadyPlaying;
+          }
+          player.play();
+          return PlayResult.success;
         } else {
+          final list = TrackList(
+            id: id,
+            tracks: playlist.tracks
+                .whereNot((e) => e.type == TrackType.noCopyright)
+                .toList(),
+          );
+          if (list.tracks.isEmpty) {
+            return PlayResult.fail;
+          }
+          final toPlay = track ??
+              (player.trackList.id == id ? player.current : null) ??
+              list.tracks.first;
           player
-            ..setTrackList(TrackList(
-              id: id,
-              tracks: playlist.tracks
-                  .whereNot((e) => e.type == TrackType.noCopyright)
-                  .toList(),
-            ))
-            ..playFromMediaId(track.id);
+            ..setTrackList(list)
+            ..playFromMediaId(toPlay.id);
           return PlayResult.success;
         }
       },
@@ -63,7 +72,7 @@ class TrackTileContainer extends StatelessWidget {
 
   static PlayResult playTrack(
     BuildContext context,
-    Track track,
+    Track? track,
   ) {
     final container =
         context.findAncestorWidgetOfExactType<TrackTileContainer>();
@@ -100,7 +109,7 @@ class TrackTileContainer extends StatelessWidget {
 
   final Widget child;
 
-  final PlayResult Function(Track) _playbackMusic;
+  final PlayResult Function(Track?) _playbackMusic;
 
   final void Function(Track) _deleteMusic;
 

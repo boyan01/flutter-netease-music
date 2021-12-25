@@ -23,6 +23,7 @@ class PlaylistDetail with EquatableMixin {
     required this.description,
     required this.commentCount,
     required this.trackIds,
+    required this.createTime,
   });
 
   factory PlaylistDetail.fromJson(Map<String, dynamic> json) =>
@@ -56,6 +57,8 @@ class PlaylistDetail with EquatableMixin {
 
   final List<int> trackIds;
 
+  final DateTime createTime;
+
   @override
   List<Object?> get props => [
         id,
@@ -72,6 +75,7 @@ class PlaylistDetail with EquatableMixin {
         description,
         commentCount,
         trackIds,
+        createTime,
       ];
 
   Map<String, dynamic> toJson() => _$PlaylistDetailToJson(this);
@@ -90,6 +94,7 @@ class PlaylistDetail with EquatableMixin {
     String? description,
     int? commentCount,
     List<int>? trackIds,
+    DateTime? createTime,
   }) {
     return PlaylistDetail(
       id: id,
@@ -106,6 +111,7 @@ class PlaylistDetail with EquatableMixin {
       description: description ?? this.description,
       commentCount: commentCount ?? this.commentCount,
       trackIds: trackIds ?? this.trackIds,
+      createTime: createTime ?? this.createTime,
     );
   }
 }

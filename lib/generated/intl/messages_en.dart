@@ -23,14 +23,16 @@ class MessageLookup extends MessageLookupByLibrary {
   static String m0(artistName, albumName, albumId, sharedUserId) =>
       "The ${artistName}\'s album《${albumName}》: http://music.163.com/album/${albumId}/?userid=${sharedUserId} (From @NeteaseCouldMusic)";
 
-  static String m1(value) => "${value} Music";
+  static String m1(value) => "Created at ${value}";
 
-  static String m2(value) => "Play Count: ${value}";
+  static String m2(value) => "${value} Music";
 
-  static String m3(username, title, playlistId, userId, shareUserId) =>
+  static String m3(value) => "Play Count: ${value}";
+
+  static String m4(username, title, playlistId, userId, shareUserId) =>
       "The PlayList created by ${username}「${title}」: http://music.163.com/playlist/${playlistId}/${userId}/?userid=${shareUserId} (From @NeteaseCouldMusic)";
 
-  static String m4(value) => "Track Count: ${value}";
+  static String m5(value) => "Track Count: ${value}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -47,6 +49,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "collectionLike": MessageLookupByLibrary.simpleMessage("Collections"),
         "copyRightOverlay": MessageLookupByLibrary.simpleMessage(
             "Only used for personal study and research, commercial and illegal purposes are prohibited"),
+        "createdDate": m1,
         "createdSongList":
             MessageLookupByLibrary.simpleMessage("Created Song List"),
         "delete": MessageLookupByLibrary.simpleMessage("delete"),
@@ -76,7 +79,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "login": MessageLookupByLibrary.simpleMessage("Login"),
         "loginWithPhone":
             MessageLookupByLibrary.simpleMessage("login with phone"),
-        "musicCountFormat": m1,
+        "musicCountFormat": m2,
         "musicName": MessageLookupByLibrary.simpleMessage("Music Name"),
         "my": MessageLookupByLibrary.simpleMessage("My"),
         "myDjs": MessageLookupByLibrary.simpleMessage("Dj"),
@@ -96,19 +99,22 @@ class MessageLookup extends MessageLookupByLibrary {
         "playlist": MessageLookupByLibrary.simpleMessage("PlayList"),
         "playlistLoginDescription": MessageLookupByLibrary.simpleMessage(
             "Login to discover your playlists."),
-        "playlistPlayCount": m2,
-        "playlistShareContent": m3,
-        "playlistTrackCount": m4,
+        "playlistPlayCount": m3,
+        "playlistShareContent": m4,
+        "playlistTrackCount": m5,
         "projectDescription": MessageLookupByLibrary.simpleMessage(
             "OpenSource project https://github.com/boyan01/flutter-netease-music"),
         "recommendPlayLists":
             MessageLookupByLibrary.simpleMessage("Recommend PlayLists"),
         "search": MessageLookupByLibrary.simpleMessage("Search"),
+        "searchPlaylistSongs":
+            MessageLookupByLibrary.simpleMessage("Search Songs"),
         "selectRegionDiaCode":
             MessageLookupByLibrary.simpleMessage("select region code"),
         "selectTheArtist":
             MessageLookupByLibrary.simpleMessage("Select the artist"),
         "settings": MessageLookupByLibrary.simpleMessage("Settings"),
+        "share": MessageLookupByLibrary.simpleMessage("Share"),
         "shareContentCopied": MessageLookupByLibrary.simpleMessage(
             "Share content has copied to clipboard."),
         "shortcuts": MessageLookupByLibrary.simpleMessage("Shortcuts"),
@@ -116,6 +122,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "skipToNext": MessageLookupByLibrary.simpleMessage("Skip to Next"),
         "skipToPrevious":
             MessageLookupByLibrary.simpleMessage("Skip to Previous"),
+        "subscribe": MessageLookupByLibrary.simpleMessage("Subscribe"),
         "theme": MessageLookupByLibrary.simpleMessage("Theme"),
         "themeAuto": MessageLookupByLibrary.simpleMessage("Follow System"),
         "themeDark": MessageLookupByLibrary.simpleMessage("Dark"),

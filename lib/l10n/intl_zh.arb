@@ -69,5 +69,9 @@
   "personalFmPlaying": "私人FM播放中",
   "playAll": "全部播放",
   "musicCountFormat": "共{value}首",
-  "selectTheArtist": "请选择要查看的歌手"
+  "selectTheArtist": "请选择要查看的歌手",
+  "createdDate": "{value}创建",
+  "subscribe": "收藏",
+  "share": "分享",
+  "searchPlaylistSongs": "搜索歌单歌曲"
 }
