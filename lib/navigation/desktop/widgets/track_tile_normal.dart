@@ -4,8 +4,12 @@ import 'package:overlay_support/overlay_support.dart';
 import 'package:quiet/extension.dart';
 import 'package:quiet/navigation/common/like_button.dart';
 import 'package:quiet/navigation/common/playlist/music_list.dart';
+import 'package:quiet/providers/navigator_provider.dart';
 import 'package:quiet/providers/player_provider.dart';
 import 'package:quiet/repository.dart';
+
+import '../../common/navigation_target.dart';
+import 'highlight_clickable_text.dart';
 
 class TrackTableContainer extends StatelessWidget {
   const TrackTableContainer({
@@ -246,7 +250,7 @@ class TrackTableHeader extends StatelessWidget with PreferredSizeWidget {
   Size get preferredSize => const Size.fromHeight(40);
 }
 
-class TrackTile extends StatelessWidget {
+class TrackTile extends ConsumerWidget {
   const TrackTile({
     Key? key,
     required this.track,
@@ -258,7 +262,7 @@ class TrackTile extends StatelessWidget {
   final int index;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final configuration = _TrackTableConfiguration.of(context);
     return SizedBox(
         height: 36,
@@ -302,14 +306,17 @@ class TrackTile extends StatelessWidget {
                   const SizedBox(width: 10),
                   SizedBox(
                     width: configuration.nameWidth,
-                    child: Text(
-                      track.name,
-                      overflow: TextOverflow.ellipsis,
-                      style: context.textTheme.bodyMedium?.copyWith(
-                        fontSize: 14,
-                        color: track.type == TrackType.noCopyright
-                            ? context.theme.disabledColor
-                            : null,
+                    child: Align(
+                      alignment: AlignmentDirectional.centerStart,
+                      child: Text(
+                        track.name,
+                        overflow: TextOverflow.ellipsis,
+                        style: context.textTheme.bodyMedium?.copyWith(
+                          fontSize: 14,
+                          color: track.type == TrackType.noCopyright
+                              ? context.theme.disabledColor
+                              : null,
+                        ),
                       ),
                     ),
                   ),
@@ -322,9 +329,24 @@ class TrackTile extends StatelessWidget {
                   ),
                   SizedBox(
                     width: configuration.albumWidth,
-                    child: Text(
-                      track.album?.name ?? '',
-                      style: context.textTheme.caption,
+                    child: Align(
+                      alignment: AlignmentDirectional.centerStart,
+                      child: HighlightClickableText(
+                        text: track.album?.name ?? '',
+                        onTap: () {
+                          final albumId = track.album?.id;
+                          if (albumId == null) {
+                            return;
+                          }
+                          ref
+                              .read(navigatorProvider.notifier)
+                              .navigate(NavigationTargetAlbumDetail(albumId));
+                        },
+                        style: context.textTheme.caption,
+                        highlightStyle: context.textTheme.caption?.copyWith(
+                          color: context.textTheme.bodyMedium?.color,
+                        ),
+                      ),
                     ),
                   ),
                   SizedBox(

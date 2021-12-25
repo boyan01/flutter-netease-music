@@ -18,7 +18,54 @@ enum PlayResult {
   fail,
 }
 
+extension _TracksPlayer on TracksPlayer {
+  PlayResult playWithList(
+    String listId,
+    List<Track> tracks, {
+    Track? track,
+  }) {
+    if (trackList.id == listId && current == track) {
+      if (isPlaying) {
+        return PlayResult.alreadyPlaying;
+      }
+      play();
+      return PlayResult.success;
+    } else {
+      final list = TrackList(
+        id: listId,
+        tracks:
+            tracks.whereNot((e) => e.type == TrackType.noCopyright).toList(),
+      );
+      if (list.tracks.isEmpty) {
+        return PlayResult.fail;
+      }
+      final toPlay = track ??
+          (trackList.id == listId ? current : null) ??
+          list.tracks.first;
+      setTrackList(list);
+      playFromMediaId(toPlay.id);
+      return PlayResult.success;
+    }
+  }
+}
+
 class TrackTileContainer extends StatelessWidget {
+  factory TrackTileContainer.album({
+    required Album album,
+    required List<Track> tracks,
+    required Widget child,
+    required TracksPlayer player,
+  }) {
+    final id = 'album_${album.id}';
+    return TrackTileContainer._private(
+      (track) => player.playWithList(id, tracks, track: track),
+      (track) => throw UnimplementedError('album not support delete track.'),
+      id: id,
+      tracks: tracks,
+      child: child,
+    );
+  }
+
   factory TrackTileContainer.playlist({
     required PlaylistDetail playlist,
     required Widget child,
@@ -26,32 +73,7 @@ class TrackTileContainer extends StatelessWidget {
   }) {
     final id = 'playlist_${playlist.id}';
     return TrackTileContainer._private(
-      (track) {
-        if (player.trackList.id == id && player.current == track) {
-          if (player.isPlaying) {
-            return PlayResult.alreadyPlaying;
-          }
-          player.play();
-          return PlayResult.success;
-        } else {
-          final list = TrackList(
-            id: id,
-            tracks: playlist.tracks
-                .whereNot((e) => e.type == TrackType.noCopyright)
-                .toList(),
-          );
-          if (list.tracks.isEmpty) {
-            return PlayResult.fail;
-          }
-          final toPlay = track ??
-              (player.trackList.id == id ? player.current : null) ??
-              list.tracks.first;
-          player
-            ..setTrackList(list)
-            ..playFromMediaId(toPlay.id);
-          return PlayResult.success;
-        }
-      },
+      (track) => player.playWithList(id, playlist.tracks, track: track),
       (track) {
         // TODO: remove track
       },

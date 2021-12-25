@@ -48,7 +48,7 @@ class Album with EquatableMixin {
   final int id;
 
   final String briefDesc;
-  final int publishTime;
+  final DateTime publishTime;
   final String company;
   final String picUrl;
 

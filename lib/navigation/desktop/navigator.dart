@@ -6,6 +6,7 @@ import 'package:quiet/navigation/desktop/playlist/page_playlist.dart';
 import '../../providers/navigator_provider.dart';
 import '../common/navigation_target.dart';
 import 'discover.dart';
+import 'playlist/page_album_detail.dart';
 
 class DesktopNavigatorController extends NavigatorController {
   DesktopNavigatorController() {
@@ -83,6 +84,8 @@ class DesktopNavigatorController extends NavigatorController {
       page = PagePlaylist(playlistId: target.playlistId);
     } else if (target is NavigationTargetFmPlaying) {
       page = const PageFmPlaying();
+    } else if (target is NavigationTargetAlbumDetail) {
+      page = PageAlbumDetail(albumId: target.albumId);
     } else {
       throw Exception('Unknown navigation type: $target');
     }

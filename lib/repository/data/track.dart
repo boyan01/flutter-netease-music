@@ -100,7 +100,7 @@ class AlbumMini with EquatableMixin {
       _$AlbumMiniFromJson(json);
 
   @JsonKey(name: 'id')
-  final String id;
+  final int id;
 
   @JsonKey(name: 'picUrl')
   final String? picUri;

@@ -16,9 +16,9 @@ import 'package:stream_transform/stream_transform.dart';
 import '../../../component/hooks.dart';
 import '../../../component/utils/scroll_controller.dart';
 import '../../../providers/navigator_provider.dart';
-import '../../common/icons.dart';
 import '../../common/navigation_target.dart';
 import '../../common/playlist/music_list.dart';
+import '../widgets/playlist_collapsed_title.dart';
 import '../widgets/track_tile_normal.dart';
 
 class PagePlaylist extends HookConsumerWidget {
@@ -109,59 +109,11 @@ class _PlaylistSliverBar extends StatelessWidget {
             if (t <= 0.5) {
               return const SizedBox();
             }
-            return _CollapsedTitle(playlist: playlist);
+            return PlaylistCollapsedTitle(text: playlist.name);
           },
         ),
       ),
       bottom: const TrackTableHeader(),
-    );
-  }
-}
-
-class _CollapsedTitle extends StatelessWidget {
-  const _CollapsedTitle({
-    Key? key,
-    required this.playlist,
-  }) : super(key: key);
-
-  final PlaylistDetail playlist;
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: 56,
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          const SizedBox(width: 20),
-          Flexible(
-            child: Text(
-              playlist.name,
-              style: context.primaryTextTheme.titleLarge,
-            ),
-          ),
-          const SizedBox(width: 8),
-          Consumer(builder: (context, ref, child) {
-            return IconButton(
-              splashRadius: 20,
-              tooltip: context.strings.playAll,
-              icon: const PlayIcon(),
-              color: context.colorScheme.primary,
-              onPressed: () {
-                final id = TrackTileContainer.getPlaylistId(context);
-                final state = ref.read(playerStateProvider);
-                if (state.playingList.id == id && state.isPlaying) {
-                  ref
-                      .read(navigatorProvider.notifier)
-                      .navigate(NavigationTargetPlaying());
-                } else {
-                  TrackTileContainer.playTrack(context, null);
-                }
-              },
-            );
-          }),
-        ],
-      ),
     );
   }
 }

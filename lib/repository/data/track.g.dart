@@ -54,7 +54,7 @@ Map<String, dynamic> _$ArtistMiniToJson(ArtistMini instance) =>
     };
 
 AlbumMini _$AlbumMiniFromJson(Map json) => AlbumMini(
-      id: json['id'] as String,
+      id: json['id'] as int,
       picUri: json['picUrl'] as String?,
       name: json['name'] as String,
     );

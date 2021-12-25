@@ -363,7 +363,7 @@ extension _FmArtistMapper on api.FmArtist {
 
 extension _FmAlbumMapper on api.FmAlbum {
   AlbumMini toAlbum() => AlbumMini(
-        id: id.toString(),
+        id: id,
         name: name,
         picUri: picUrl,
       );
@@ -445,7 +445,7 @@ extension _ArtistMapper on api.Artist {
 extension _AlbumItemMapper on api.AlbumItem {
   AlbumMini toAlbum() {
     return AlbumMini(
-      id: id.toString(),
+      id: id,
       name: name,
       picUri: picUrl,
     );
@@ -459,7 +459,7 @@ extension _AlbumMapper on api.Album {
       name: name,
       description: description,
       briefDesc: briefDesc,
-      publishTime: publishTime,
+      publishTime: DateTime.fromMillisecondsSinceEpoch(publishTime),
       paid: paid,
       artist: ArtistMini(
         id: artist.id,

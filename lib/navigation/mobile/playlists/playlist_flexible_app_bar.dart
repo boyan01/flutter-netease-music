@@ -370,7 +370,8 @@ class _AlbumHeaderContent extends ConsumerWidget {
                           child: Text("歌手: ${album.artist.name}"),
                         )),
                     const SizedBox(height: 4),
-                    Text("发行时间：${getFormattedTime(album.publishTime)}")
+                    Text(
+                        "发行时间：${getFormattedTime(album.publishTime.millisecondsSinceEpoch)}")
                   ],
                 ),
               ))
