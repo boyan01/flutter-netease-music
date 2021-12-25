@@ -295,6 +295,8 @@ class TrackTile extends StatelessWidget {
                       music: track,
                       iconSize: 16,
                       padding: const EdgeInsets.all(2),
+                      likedColor: context.colorScheme.primary,
+                      color: context.textTheme.caption?.color,
                     ),
                   ),
                   const SizedBox(width: 10),
@@ -360,9 +362,15 @@ class _IndexOrPlayIcon extends ConsumerWidget {
             playingTrack == track;
     final isPlaying = ref.watch(isPlayingProvider);
     if (isCurrent) {
-      return isPlaying
-          ? const Icon(Icons.volume_up, size: 16)
-          : const Icon(Icons.volume_mute, size: 16);
+      return IconTheme(
+        data: IconThemeData(
+          color: context.colorScheme.primary,
+          size: 16,
+        ),
+        child: isPlaying
+            ? const Icon(Icons.volume_up)
+            : const Icon(Icons.volume_mute),
+      );
     } else {
       return Text(
         index.toString().padLeft(2, '0'),

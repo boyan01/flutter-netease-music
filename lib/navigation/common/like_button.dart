@@ -15,6 +15,7 @@ class LikeButton extends ConsumerWidget {
     this.iconSize,
     this.padding = const EdgeInsets.all(8),
     this.color,
+    this.likedColor,
   }) : super(key: key);
 
   static Widget current(BuildContext context) {
@@ -33,6 +34,8 @@ class LikeButton extends ConsumerWidget {
 
   final Color? color;
 
+  final Color? likedColor;
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isLiked = ref.watch(musicIsFavoriteProvider(music));
@@ -40,7 +43,7 @@ class LikeButton extends ConsumerWidget {
       icon: Icon(isLiked ? Icons.favorite : Icons.favorite_border),
       iconSize: iconSize,
       splashRadius: iconSize,
-      color: color,
+      color: isLiked ? likedColor : color,
       padding: padding,
       onPressed: () async {
         if (!ref.read(isLoginProvider)) {
