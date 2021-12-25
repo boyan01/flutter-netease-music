@@ -44,7 +44,10 @@ class _LayoutCover extends ConsumerWidget {
             padding: const EdgeInsets.symmetric(horizontal: 40),
             child: IgnorePointer(
               ignoring: true,
-              child: AlbumCover(music: ref.watch(playingTrackProvider)!),
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 420),
+                child: AlbumCover(music: ref.watch(playingTrackProvider)!),
+              ),
             ),
           ),
           const Spacer(),
