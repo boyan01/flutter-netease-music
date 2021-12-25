@@ -34,11 +34,11 @@ AsyncSnapshot<T> useMemoizedFutureResult<T>(
 }
 
 AsyncSnapshot<T> useMemoizedStream<T>(
-    Stream<T> Function() valueBuilder, {
-      List<Object?> keys = const <Object>[],
-      T? initialData,
-      bool preserveState = true,
-    }) {
+  Stream<T> Function() valueBuilder, {
+  List<Object?> keys = const <Object>[],
+  T? initialData,
+  bool preserveState = true,
+}) {
   final stream = useMemoized(valueBuilder, keys);
   return useStream(
     stream,
