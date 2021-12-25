@@ -74,7 +74,8 @@ final _commonShortcuts = <ShortcutActivator, Intent>{
     control: defaultTargetPlatform != TargetPlatform.macOS,
     meta: defaultTargetPlatform == TargetPlatform.macOS,
   ): const _VolumeDownIntent(),
-  const SingleActivator(LogicalKeyboardKey.space): const _PlayPauseIntent(),
+  // FIXME this block text filed space.
+  // const SingleActivator(LogicalKeyboardKey.space): const _PlayPauseIntent(),
   SingleActivator(
     LogicalKeyboardKey.arrowRight,
     control: defaultTargetPlatform != TargetPlatform.macOS,
