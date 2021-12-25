@@ -70,10 +70,21 @@ class TrackTileContainer extends StatelessWidget {
     required PlaylistDetail playlist,
     required Widget child,
     required TracksPlayer player,
+    required bool skipAccompaniment,
   }) {
     final id = 'playlist_${playlist.id}';
     return TrackTileContainer._private(
-      (track) => player.playWithList(id, playlist.tracks, track: track),
+      (track) {
+        final List<Track> tracks;
+        if (skipAccompaniment) {
+          tracks = playlist.tracks
+              .whereNot((value) => value.name.contains('伴奏'))
+              .toList();
+        } else {
+          tracks = playlist.tracks;
+        }
+        return player.playWithList(id, tracks, track: track);
+      },
       (track) {
         // TODO: remove track
       },

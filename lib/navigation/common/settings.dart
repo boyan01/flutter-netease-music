@@ -86,3 +86,21 @@ class DebugPlatformNavigationRadios extends ConsumerWidget {
     );
   }
 }
+
+class SkipAccompanimentCheckBox extends ConsumerWidget {
+  const SkipAccompanimentCheckBox({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return CheckboxListTile(
+      value: ref.watch(
+        settingStateProvider.select((value) => value.skipAccompaniment),
+      ),
+      onChanged: (value) => ref
+          .read(settingStateProvider.notifier)
+          .setSkipAccompaniment(skip: value ?? false),
+      controlAffinity: ListTileControlAffinity.leading,
+      title: Text(context.strings.skipAccompaniment),
+    );
+  }
+}

@@ -102,6 +102,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "shareContentCopied":
             MessageLookupByLibrary.simpleMessage("分享内容已复制到剪切板"),
         "shortcuts": MessageLookupByLibrary.simpleMessage("快捷键"),
+        "skipAccompaniment":
+            MessageLookupByLibrary.simpleMessage("播放歌单时跳过包含伴奏的歌曲"),
         "skipLogin": MessageLookupByLibrary.simpleMessage("跳过登录"),
         "skipToNext": MessageLookupByLibrary.simpleMessage("下一首"),
         "skipToPrevious": MessageLookupByLibrary.simpleMessage("上一首"),

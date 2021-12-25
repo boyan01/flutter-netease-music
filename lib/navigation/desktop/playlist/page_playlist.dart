@@ -9,6 +9,7 @@ import 'package:quiet/extension.dart';
 import 'package:quiet/material.dart';
 import 'package:quiet/providers/player_provider.dart';
 import 'package:quiet/providers/playlist_detail_provider.dart';
+import 'package:quiet/providers/settings_provider.dart';
 import 'package:quiet/repository.dart';
 import 'package:quiet/utils/track_list_filter.dart';
 import 'package:stream_transform/stream_transform.dart';
@@ -62,6 +63,9 @@ class _PlaylistDetailBody extends HookConsumerWidget {
       child: TrackTileContainer.playlist(
         playlist: playlist,
         player: ref.read(playerProvider),
+        skipAccompaniment: ref.watch(
+          settingStateProvider.select((value) => value.skipAccompaniment),
+        ),
         child: CustomScrollView(
           controller: AppScrollController(),
           slivers: [

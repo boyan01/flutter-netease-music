@@ -73,5 +73,6 @@
   "createdDate": "Created at {value}",
   "subscribe": "Subscribe",
   "share": "Share",
-  "searchPlaylistSongs": "Search Songs"
+  "searchPlaylistSongs": "Search Songs",
+  "skipAccompaniment": "Skip accompaniment when play playlist."
 }

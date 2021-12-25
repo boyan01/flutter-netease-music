@@ -5,6 +5,7 @@ import 'package:quiet/providers/player_provider.dart';
 import 'package:quiet/providers/playlist_detail_provider.dart';
 import 'package:quiet/repository.dart';
 
+import '../../../providers/settings_provider.dart';
 import '../../common/playlist/music_list.dart';
 import '../widgets/track_title.dart';
 import 'playlist_flexible_app_bar.dart';
@@ -77,6 +78,9 @@ class _MusicList extends ConsumerWidget {
     return TrackTileContainer.playlist(
       playlist: playlist,
       player: ref.read(playerProvider),
+      skipAccompaniment: ref.watch(
+        settingStateProvider.select((value) => value.skipAccompaniment),
+      ),
       child: SliverList(
         delegate: SliverChildBuilderDelegate(
           (context, index) => TrackTile(

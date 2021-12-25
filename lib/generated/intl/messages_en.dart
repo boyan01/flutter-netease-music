@@ -118,6 +118,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "shareContentCopied": MessageLookupByLibrary.simpleMessage(
             "Share content has copied to clipboard."),
         "shortcuts": MessageLookupByLibrary.simpleMessage("Shortcuts"),
+        "skipAccompaniment": MessageLookupByLibrary.simpleMessage(
+            "Skip accompaniment when play playlist."),
         "skipLogin": MessageLookupByLibrary.simpleMessage("Skip login"),
         "skipToNext": MessageLookupByLibrary.simpleMessage("Skip to Next"),
         "skipToPrevious":

@@ -801,6 +801,16 @@ class S {
       args: [],
     );
   }
+
+  /// `Skip accompaniment when play playlist.`
+  String get skipAccompaniment {
+    return Intl.message(
+      'Skip accompaniment when play playlist.',
+      name: 'skipAccompaniment',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

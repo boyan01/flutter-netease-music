@@ -73,5 +73,6 @@
   "createdDate": "{value}创建",
   "subscribe": "收藏",
   "share": "分享",
-  "searchPlaylistSongs": "搜索歌单歌曲"
+  "searchPlaylistSongs": "搜索歌单歌曲",
+  "skipAccompaniment": "播放歌单时跳过包含伴奏的歌曲"
 }
