@@ -3,6 +3,16 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+class SimpleStateNotifier<T> extends StateNotifier<T> {
+  SimpleStateNotifier(T state) : super(state);
+
+  @override
+  set state(T value) => super.state = value;
+
+  @override
+  T get state => super.state;
+}
+
 abstract class CacheableStateNotifier<T> extends StateNotifier<T> {
   CacheableStateNotifier(T state) : super(state) {
     scheduleMicrotask(() async {

@@ -52,6 +52,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "createdDate": m1,
         "createdSongList":
             MessageLookupByLibrary.simpleMessage("Created Song List"),
+        "currentPlaying":
+            MessageLookupByLibrary.simpleMessage("Current Playing"),
         "dailyRecommend":
             MessageLookupByLibrary.simpleMessage("Daily Recommend"),
         "dailyRecommendDescription": MessageLookupByLibrary.simpleMessage(

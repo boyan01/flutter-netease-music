@@ -2,6 +2,15 @@ import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+
+AppScrollController useAppScrollController() {
+  final controller = useMemoized(() => AppScrollController());
+  useEffect(() {
+    return controller.dispose;
+  }, [controller]);
+  return controller;
+}
 
 class AppScrollController extends ScrollController {
   @override

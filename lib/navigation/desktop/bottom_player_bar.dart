@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:overlay_support/overlay_support.dart';
 import 'package:quiet/extension.dart';
 import 'package:quiet/providers/player_provider.dart';
 import 'package:quiet/repository.dart';
@@ -8,6 +7,7 @@ import 'package:quiet/repository.dart';
 import '../../providers/navigator_provider.dart';
 import '../common/navigation_target.dart';
 import '../common/player_progress.dart';
+import 'player/page_playing_list.dart';
 import 'widgets/slider.dart';
 
 class BottomPlayerBar extends StatelessWidget {
@@ -197,14 +197,13 @@ class _PlayingListButton extends ConsumerWidget {
           ? context.strings.personalFmPlaying
           : context.strings.playingList,
       splashRadius: 24,
-      padding: EdgeInsets.zero,
       mouseCursor:
           !playingFm ? SystemMouseCursors.click : SystemMouseCursors.basic,
       onPressed: playingFm
           ? null
           : () {
-              // TODO: implement
-              toast(context.strings.todo);
+              final state = ref.read(showPlayingListProvider.notifier).state;
+              ref.read(showPlayingListProvider.notifier).state = !state;
             },
       icon: Icon(
         playingFm ? Icons.radio : Icons.playlist_play,
