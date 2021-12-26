@@ -5,7 +5,7 @@ import 'package:quiet/extension.dart';
 import 'package:quiet/providers/player_provider.dart';
 import 'package:windows_taskbar/windows_taskbar.dart';
 
-import '../../../repository.dart';
+import '../../../media/tracks/tracks_player.dart';
 
 class WindowsTaskBar extends StatelessWidget {
   const WindowsTaskBar({Key? key, required this.child}) : super(key: key);
@@ -31,11 +31,8 @@ class _WindowsTaskBar extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    ref.listen<MapEntry<Track?, bool>>(
-        playerStateProvider
-            .select((value) => MapEntry(value.playingTrack, value.isPlaying)),
-        (previous, next) {
-      if (next.key == null) {
+    ref.listen<TracksPlayerState>(playerStateProvider, (previous, next) {
+      if (next.playingTrack == null) {
         WindowsTaskbar.clearThumbnailToolbar();
       } else {
         WindowsTaskbar.setThumbnailToolbar([
@@ -46,8 +43,11 @@ class _WindowsTaskBar extends ConsumerWidget {
             () {
               ref.read(playerProvider).skipToPrevious();
             },
+            mode: next.playingList.isFM
+                ? ThumbnailToolbarButtonMode.disabled
+                : 0x0,
           ),
-          if (next.value)
+          if (next.isPlaying)
             ThumbnailToolbarButton(
               ThumbnailToolbarAssetIcon(
                   'assets/icons/baseline_pause_white_24dp.ico'),

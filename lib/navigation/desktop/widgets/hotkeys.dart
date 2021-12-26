@@ -36,6 +36,9 @@ class GlobalHotkeys extends ConsumerWidget {
           player.skipToNext();
           break;
         case _SkipToPreviousIntent:
+          if (player.trackList.isFM) {
+            return;
+          }
           player.skipToPrevious();
           break;
         case _LikeTrackIntent:
