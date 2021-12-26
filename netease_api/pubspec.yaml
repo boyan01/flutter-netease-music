@@ -16,7 +16,7 @@ dependencies:
   netease_music_api:
     git:
       url: https://github.com/boyan01/NeteaseCloudMusicApi.git
-      ref: e007ba78565d9094959d9e50336ea734fc8d4f64
+      ref: a9f8e61e02ae5b973d6d6ccf252aa9f468434234
   json_annotation: ^4.3.0
 
 dev_dependencies:
