@@ -53,6 +53,7 @@ dependencies:
       ref: 9d0763ad5a9087da0057f63f2c2c9cb9b16fbaec
   lpinyin: ^2.0.3
   stream_transform: ^2.0.0
+  windows_taskbar: ^0.0.1
 
 dev_dependencies:
   flutter_test:
@@ -61,6 +62,14 @@ dev_dependencies:
   mockito: ^5.0.11
   json_serializable: ^6.0.1
   flutter_lints: ^1.0.4
+
+dependency_overrides:
+  ## TODO remove this when below has been merged.
+  ## https://github.com/alexmercerind/windows_taskbar/pull/3
+  windows_taskbar:
+    git:
+      url: https://github.com/boyan01/windows_taskbar.git
+      ref: 920387b0a9c680dbdb8ffaf88676eb920756f051
 
 # The following section is specific to Flutter.
 flutter:
@@ -72,6 +81,7 @@ flutter:
 
   assets:
     - assets/
+    - assets/icons/
   # To add custom fonts to your application, add a fonts section here,
   # in this "flutter" section. Each entry in this list should have a
   # "family" key with the font family name, and a "fonts" key with a

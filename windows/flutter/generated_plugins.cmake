@@ -7,6 +7,7 @@ list(APPEND FLUTTER_PLUGIN_LIST
   system_clock
   url_launcher_windows
   window_manager
+  windows_taskbar
 )
 
 set(PLUGIN_BUNDLED_LIBRARIES)

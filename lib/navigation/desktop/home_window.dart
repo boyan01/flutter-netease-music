@@ -12,13 +12,14 @@ import '../common/navigator.dart';
 import 'bottom_player_bar.dart';
 import 'header_bar.dart';
 import 'navigation_side_bar.dart';
+import 'widgets/windows_task_bar.dart';
 
 class HomeWindow extends StatelessWidget {
   const HomeWindow({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return const GlobalHotkeys(child: _WindowLayout());
+    return const WindowsTaskBar(child: GlobalHotkeys(child: _WindowLayout()));
   }
 }
 

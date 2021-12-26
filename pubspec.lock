@@ -951,6 +951,15 @@ packages:
       url: "https://github.com/boyan01/window_manager.git"
     source: git
     version: "0.1.1"
+  windows_taskbar:
+    dependency: "direct main"
+    description:
+      path: "."
+      ref: "920387b0a9c680dbdb8ffaf88676eb920756f051"
+      resolved-ref: "920387b0a9c680dbdb8ffaf88676eb920756f051"
+      url: "https://github.com/boyan01/windows_taskbar.git"
+    source: git
+    version: "0.0.1"
   xdg_directories:
     dependency: transitive
     description:
