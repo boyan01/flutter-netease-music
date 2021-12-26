@@ -49,6 +49,9 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("只用作个人学习研究，禁止用于商业及非法用途"),
         "createdDate": m1,
         "createdSongList": MessageLookupByLibrary.simpleMessage("创建歌单"),
+        "dailyRecommend": MessageLookupByLibrary.simpleMessage("每日推荐"),
+        "dailyRecommendDescription":
+            MessageLookupByLibrary.simpleMessage("网易云音乐每日推荐歌曲，每天 6:00 更新。"),
         "delete": MessageLookupByLibrary.simpleMessage("删除"),
         "discover": MessageLookupByLibrary.simpleMessage("发现"),
         "duration": MessageLookupByLibrary.simpleMessage("时长"),

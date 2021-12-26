@@ -66,6 +66,23 @@ class TrackTileContainer extends StatelessWidget {
     );
   }
 
+  factory TrackTileContainer.daily({
+    required List<Track> tracks,
+    required DateTime dateTime,
+    required Widget child,
+    required TracksPlayer player,
+  }) {
+    final id =
+        'daily_playlist_${dateTime.year}_${dateTime.month}_${dateTime.day}';
+    return TrackTileContainer._private(
+      (track) => player.playWithList(id, tracks, track: track),
+      (track) => throw UnimplementedError('daily not support delete track.'),
+      id: id,
+      tracks: tracks,
+      child: child,
+    );
+  }
+
   factory TrackTileContainer.playlist({
     required PlaylistDetail playlist,
     required Widget child,

@@ -52,6 +52,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "createdDate": m1,
         "createdSongList":
             MessageLookupByLibrary.simpleMessage("Created Song List"),
+        "dailyRecommend":
+            MessageLookupByLibrary.simpleMessage("Daily Recommend"),
+        "dailyRecommendDescription": MessageLookupByLibrary.simpleMessage(
+            "Daily recommend music from Netease cloud music. Refresh every day at 06:00."),
         "delete": MessageLookupByLibrary.simpleMessage("delete"),
         "discover": MessageLookupByLibrary.simpleMessage("Discover"),
         "duration": MessageLookupByLibrary.simpleMessage("Duration"),

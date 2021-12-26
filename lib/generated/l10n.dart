@@ -811,6 +811,26 @@ class S {
       args: [],
     );
   }
+
+  /// `Daily Recommend`
+  String get dailyRecommend {
+    return Intl.message(
+      'Daily Recommend',
+      name: 'dailyRecommend',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Daily recommend music from Netease cloud music. Refresh every day at 06:00.`
+  String get dailyRecommendDescription {
+    return Intl.message(
+      'Daily recommend music from Netease cloud music. Refresh every day at 06:00.',
+      name: 'dailyRecommendDescription',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

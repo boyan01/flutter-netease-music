@@ -1,6 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 
-import 'playlist_detail.dart';
+import 'personal_fm.dart';
 
 part 'daily_recommend_songs.g.dart';
 
@@ -14,8 +14,8 @@ class DailyRecommendSongs {
   factory DailyRecommendSongs.fromJson(Map<String, dynamic> json) =>
       _$DailyRecommendSongsFromJson(json);
 
-  final List<TracksItem> dailySongs;
-  final List<RecommendReason> recommendReasons;
+  final List<FmTrackItem> dailySongs;
+  final List<RecommendReason>? recommendReasons;
 
   Map<String, dynamic> toJson() => _$DailyRecommendSongsToJson(this);
 }

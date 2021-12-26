@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:cookie_jar/cookie_jar.dart';
@@ -443,7 +444,7 @@ class Repository {
     }
     assert(() {
       debugPrint('api request: $path $param');
-      debugPrint('api response: ${result.status} ${result.body}');
+      debugPrint('api response: ${result.status} ${jsonEncode(result.body)}');
       return true;
     }());
     if (map['code'] == _kCodeNeedLogin) {

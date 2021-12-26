@@ -297,7 +297,7 @@ class NetworkRepository {
     }
     final recommendSongs = ret.asValue!.value.dailySongs;
     return Result.value(
-      recommendSongs.map((e) => e.toTrack(null)).toList(),
+      recommendSongs.map((e) => e.toTrack(e.privilege)).toList(),
     );
   }
 

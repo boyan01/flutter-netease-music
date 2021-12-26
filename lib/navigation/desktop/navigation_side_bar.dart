@@ -54,6 +54,13 @@ class _PresetItems extends ConsumerWidget {
             isSelected: currentPage is NavigationTargetDiscover,
             onTap: () => navigator.navigate(NavigationTargetDiscover()),
           ),
+          if (ref.watch(isLoginProvider))
+            NavigationTile(
+              icon: const Icon(Icons.today),
+              title: Text(context.strings.dailyRecommend),
+              isSelected: currentPage is NavigationTargetDailyRecommend,
+              onTap: () => navigator.navigate(NavigationTargetDailyRecommend()),
+            ),
           NavigationTile(
             icon: const Icon(Icons.radio),
             title: Text(context.strings.personalFM),

@@ -9,10 +9,10 @@ part of 'daily_recommend_songs.dart';
 DailyRecommendSongs _$DailyRecommendSongsFromJson(Map<String, dynamic> json) =>
     DailyRecommendSongs(
       dailySongs: (json['dailySongs'] as List<dynamic>)
-          .map((e) => TracksItem.fromJson(e as Map<String, dynamic>?))
+          .map((e) => FmTrackItem.fromJson(e as Map<String, dynamic>?))
           .toList(),
-      recommendReasons: (json['recommendReasons'] as List<dynamic>)
-          .map((e) => RecommendReason.fromJson(e as Map<String, dynamic>))
+      recommendReasons: (json['recommendReasons'] as List<dynamic>?)
+          ?.map((e) => RecommendReason.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
 

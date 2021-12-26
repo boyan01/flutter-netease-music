@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:quiet/navigation/desktop/page_setting.dart';
 import 'package:quiet/navigation/desktop/player/page_fm_playing.dart';
+import 'package:quiet/navigation/desktop/playlist/page_daily_playlist.dart';
 import 'package:quiet/navigation/desktop/playlist/page_playlist.dart';
 
 import '../../providers/navigator_provider.dart';
@@ -89,6 +90,8 @@ class DesktopNavigatorController extends NavigatorController {
       page = PageAlbumDetail(albumId: target.albumId);
     } else if (target is NavigationTargetArtistDetail) {
       page = PageArtistDetail(artistId: target.artistId);
+    } else if (target is NavigationTargetDailyRecommend) {
+      page = const PageDailyPlaylist();
     } else {
       throw Exception('Unknown navigation type: $target');
     }

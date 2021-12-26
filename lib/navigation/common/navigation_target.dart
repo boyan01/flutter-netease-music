@@ -105,3 +105,7 @@ class NavigationTargetAlbumDetail extends NavigationTarget {
         other.albumId == albumId;
   }
 }
+
+class NavigationTargetDailyRecommend extends NavigationTarget {
+  NavigationTargetDailyRecommend();
+}
