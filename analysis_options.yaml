@@ -9,6 +9,8 @@ analyzer:
     - 'lib/generated/**'
     - '**.g.dart'
     - 'test/**'
+  errors:
+    body_might_complete_normally_nullable: false
 
 linter:
   rules:
