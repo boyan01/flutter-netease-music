@@ -9,6 +9,8 @@ import 'package:quiet/navigation/mobile/home/playlist_tile.dart';
 import 'package:quiet/providers/user_detail_provider.dart';
 import 'package:quiet/repository.dart';
 
+import '../../../component/netease/netease_loader.dart';
+
 part 'tab_about.dart';
 
 part 'tab_events.dart';

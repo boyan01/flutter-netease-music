@@ -1,15 +1,15 @@
+import 'package:async/async.dart';
 import 'package:flutter/material.dart';
-import 'package:quiet/component/netease/netease.dart';
 import 'package:quiet/navigation/mobile/artists/page_artist_detail.dart';
 import 'package:quiet/repository.dart';
 
-import 'api.dart';
+import '../../component/netease/netease_loader.dart';
 
 class CollectionArtists extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CachedLoader<Map>(
-        loadTask: MyCollectionApi.of(context).getArtists,
+        loadTask: () => Future.value(Result.error('unimplemented')),
         builder: (context, result) {
           final data = result['data'] as List;
           return ListView(

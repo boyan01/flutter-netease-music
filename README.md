@@ -26,8 +26,9 @@ A Universal copy app of [NeteaseMusic](https://music.163.com/#/download)
  ```
 
 ### Linux requirement.
-   
-   debian: 
+
+debian:
+
    ```shell
    sudo apt-get install vlc
    sudo apt-get install libvlc-dev
@@ -53,9 +54,9 @@ A Universal copy app of [NeteaseMusic](https://music.163.com/#/download)
 
 ## Mobile Platforms Preview
 
-|   ![main_playlist](https://boyan01.github.io/quiet/main_playlist.png)   |    ![main_cloud](https://boyan01.github.io/quiet/main_playlist_dark.png)    |  ![main_cloud](https://boyan01.github.io/quiet/main_cloud.jpg)  | ![artist_detail](https://boyan01.github.io/quiet/artist_detail.jpg) |
-|:-----------------------------------------------------------------------:|:---------------------------------------------------------------------------:|:---------------------------------------------------------------:|:-------------------------------------------------------------------:|
-| ![playlist_detail](https://boyan01.github.io/quiet/playlist_detail.png) |      ![page_comment](https://boyan01.github.io/quiet/page_comment.png)      |     ![playing](https://boyan01.github.io/quiet/playing.png)     |        ![search](https://boyan01.github.io/quiet/search.jpg)        |
-| ![music_selection](https://boyan01.github.io/quiet/music_selection.png) | ![playlist_selector](https://boyan01.github.io/quiet/playlist_selector.jpg) | ![music video](https://boyan01.github.io/quiet/music_video.png) |     ![每日推荐](https://boyan01.github.io/quiet/daily_playlist.png)     |
-|     ![ios](https://boyan01.github.io/quiet/ios_playlist_detail.jpg)     |           ![ios](https://boyan01.github.io/quiet/user_detail.png)           |                                                                 |                                                                     |
+|   ![main_playlist](https://boyan01.github.io/quiet/main_playlist.png)   |    ![main_cloud](https://boyan01.github.io/quiet/main_playlist_dark.png)    | ![main_cloud](https://boyan01.github.io/quiet/main_cloud.jpg) | ![artist_detail](https://boyan01.github.io/quiet/artist_detail.jpg) |
+|:-----------------------------------------------------------------------:|:---------------------------------------------------------------------------:|:-------------------------------------------------------------:|:-------------------------------------------------------------------:|
+| ![playlist_detail](https://boyan01.github.io/quiet/playlist_detail.png) |                                                                             |    ![playing](https://boyan01.github.io/quiet/playing.png)    |        ![search](https://boyan01.github.io/quiet/search.jpg)        |
+| ![music_selection](https://boyan01.github.io/quiet/music_selection.png) | ![playlist_selector](https://boyan01.github.io/quiet/playlist_selector.jpg) |                                                               |     ![每日推荐](https://boyan01.github.io/quiet/daily_playlist.png)     |
+|     ![ios](https://boyan01.github.io/quiet/ios_playlist_detail.jpg)     |           ![ios](https://boyan01.github.io/quiet/user_detail.png)           |                                                               |                                                                     |
 

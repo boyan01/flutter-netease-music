@@ -7,7 +7,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart' as rp;
 import 'package:hive/hive.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:quiet/component.dart';
 import 'package:quiet/navigation/app.dart';
 import 'package:quiet/pages/splash/page_splash.dart';
 import 'package:quiet/repository.dart';
@@ -80,10 +79,8 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Netease(
-      child: OverlaySupport(
-        child: QuietApp(),
-      ),
+    return const OverlaySupport(
+      child: QuietApp(),
     );
   }
 }

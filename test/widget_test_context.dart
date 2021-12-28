@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:music_player/music_player.dart';
 import 'package:quiet/component/player/player.dart';
-import 'package:scoped_model/scoped_model.dart';
 
 ///配置一些通用用于测试的Widget上下文
 class TestContext extends StatefulWidget {
