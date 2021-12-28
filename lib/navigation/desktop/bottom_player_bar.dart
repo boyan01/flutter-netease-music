@@ -5,6 +5,7 @@ import 'package:quiet/providers/player_provider.dart';
 import 'package:quiet/repository.dart';
 
 import '../../providers/navigator_provider.dart';
+import '../common/buttons.dart';
 import '../common/navigation_target.dart';
 import '../common/player_progress.dart';
 import 'player/page_playing_list.dart';
@@ -113,6 +114,7 @@ class _CenterControllerWidget extends ConsumerWidget {
     final playingFm = ref.watch(
       playerStateProvider.select((value) => value.playingList.isFM),
     );
+    final hasTrack = ref.watch(playingTrackProvider) != null;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.center,
@@ -124,40 +126,39 @@ class _CenterControllerWidget extends ConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              IconButton(
-                splashRadius: 24,
+              AppIconButton(
+                size: 24,
+                onPressed: () {
+                  ref.read(playerProvider).skipToPrevious();
+                },
+                enable: hasTrack && !playingFm,
+                icon: Icons.skip_previous,
                 padding: EdgeInsets.zero,
-                mouseCursor: playingFm
-                    ? SystemMouseCursors.basic
-                    : SystemMouseCursors.click,
-                onPressed: playingFm
-                    ? null
-                    : () {
-                        ref.read(playerProvider).skipToPrevious();
-                      },
-                icon: const Icon(Icons.skip_previous, size: 24),
               ),
               const SizedBox(width: 20),
               if (ref.watch(isPlayingProvider))
-                IconButton(
-                  splashRadius: 30,
-                  padding: EdgeInsets.zero,
+                AppIconButton(
+                  size: 30,
+                  enable: hasTrack,
                   onPressed: () => ref.read(playerProvider).pause(),
-                  icon: const Icon(Icons.pause, size: 32),
+                  icon: Icons.pause,
+                  padding: EdgeInsets.zero,
                 )
               else
-                IconButton(
-                  splashRadius: 32,
-                  padding: EdgeInsets.zero,
+                AppIconButton(
+                  size: 32,
+                  enable: hasTrack,
                   onPressed: () => ref.read(playerProvider).play(),
-                  icon: const Icon(Icons.play_arrow, size: 32),
+                  icon: Icons.play_arrow,
+                  padding: EdgeInsets.zero,
                 ),
               const SizedBox(width: 20),
-              IconButton(
-                splashRadius: 24,
-                padding: EdgeInsets.zero,
+              AppIconButton(
+                size: 24,
+                enable: hasTrack,
                 onPressed: () => ref.read(playerProvider).skipToNext(),
-                icon: const Icon(Icons.skip_next, size: 24),
+                padding: EdgeInsets.zero,
+                icon: Icons.skip_next,
               ),
             ],
           ),
@@ -192,23 +193,18 @@ class _PlayingListButton extends ConsumerWidget {
     final playingFm = ref.watch(
       playerStateProvider.select((value) => value.playingList.isFM),
     );
-    return IconButton(
+    final hasTrack = ref.watch(playingTrackProvider) != null;
+    return AppIconButton(
       tooltip: playingFm
           ? context.strings.personalFmPlaying
           : context.strings.playingList,
-      splashRadius: 24,
-      mouseCursor:
-          !playingFm ? SystemMouseCursors.click : SystemMouseCursors.basic,
-      onPressed: playingFm
-          ? null
-          : () {
-              final state = ref.read(showPlayingListProvider.notifier).state;
-              ref.read(showPlayingListProvider.notifier).state = !state;
-            },
-      icon: Icon(
-        playingFm ? Icons.radio : Icons.playlist_play,
-        size: 24,
-      ),
+      size: 24,
+      enable: hasTrack && !playingFm,
+      onPressed: () {
+        final state = ref.read(showPlayingListProvider.notifier).state;
+        ref.read(showPlayingListProvider.notifier).state = !state;
+      },
+      icon: playingFm ? Icons.radio : Icons.playlist_play,
     );
   }
 }
@@ -223,10 +219,7 @@ class _VolumeControl extends ConsumerWidget {
     final volume = ref.watch(
       playerStateProvider.select((value) => value.volume),
     );
-    final enable = ref.watch(
-      playerStateProvider.select((value) => value.playingTrack != null),
-    );
-    final max = enable ? 100.0 : 0.0;
+    final enable = ref.watch(playingTrackProvider) != null;
     return Row(
       children: [
         if (volume <= 0.01)
@@ -250,14 +243,18 @@ class _VolumeControl extends ConsumerWidget {
               ),
             ),
             child: Slider(
-              value: (volume * 100).clamp(0.0, max),
-              max: max,
-              onChanged: (value) {
-                ref.read(playerProvider).setVolume(value / 100);
-              },
-              onChangeEnd: (value) {
-                ref.read(playerProvider).setVolume(value / 100);
-              },
+              value: (volume * 100).clamp(0.0, 100.0),
+              max: 100.0,
+              onChanged: enable
+                  ? (value) {
+                      ref.read(playerProvider).setVolume(value / 100);
+                    }
+                  : null,
+              onChangeEnd: enable
+                  ? (value) {
+                      ref.read(playerProvider).setVolume(value / 100);
+                    }
+                  : null,
             ),
           ),
         ),

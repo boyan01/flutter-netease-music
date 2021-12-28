@@ -1,7 +1,6 @@
 library meterial;
 
 export 'material/app.dart';
-export 'material/button.dart';
 export 'material/dialogs.dart';
 export 'material/dividers.dart';
 export 'material/flexible_app_bar.dart';
