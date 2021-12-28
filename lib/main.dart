@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:dart_vlc/dart_vlc.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart' as rp;
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive/hive.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:path_provider/path_provider.dart';
@@ -20,7 +20,7 @@ void main() {
   DartVLC.initialize();
   _initialDesktop();
   runZonedGuarded(() {
-    runApp(rp.ProviderScope(
+    runApp(ProviderScope(
       child: PageSplash(
         futures: [
           getApplicationDocumentsDirectory().then((dir) {

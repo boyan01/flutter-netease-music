@@ -27,7 +27,7 @@ class PlaylistCollapsedTitle extends StatelessWidget {
           Flexible(
             child: Text(
               text,
-              style: context.primaryTextTheme.titleLarge,
+              style: context.textTheme.titleLarge,
             ),
           ),
           const SizedBox(width: 8),

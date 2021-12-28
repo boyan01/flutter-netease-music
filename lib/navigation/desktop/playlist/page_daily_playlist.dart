@@ -8,6 +8,7 @@ import 'package:quiet/providers/daily_playlist_provider.dart';
 import 'package:quiet/repository.dart';
 
 import '../../../providers/player_provider.dart';
+import '../widgets/playlist_collapsed_title.dart';
 import '../widgets/track_tile_normal.dart';
 
 class PageDailyPlaylist extends ConsumerWidget {
@@ -146,6 +147,12 @@ class _DailyHeader extends StatelessWidget {
               const SizedBox(height: 8),
             ],
           ),
+          builder: (context, t) {
+            if (t <= 0.5) {
+              return const SizedBox();
+            }
+            return PlaylistCollapsedTitle(text: context.strings.dailyRecommend);
+          },
         ),
       ),
       bottom: const TrackTableHeader(),
