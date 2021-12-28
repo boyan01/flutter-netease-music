@@ -397,6 +397,7 @@ extension _PlayListMapper on api.Playlist {
 
 extension _TrackMapper on api.TracksItem {
   Track toTrack(api.PrivilegesItem? privilege) {
+    final p = privilege ?? this.privilege;
     return Track(
       id: id,
       name: name,
@@ -406,9 +407,9 @@ extension _TrackMapper on api.TracksItem {
       uri: 'http://music.163.com/song/media/outer/url?id=$id.mp3',
       duration: Duration(milliseconds: dt),
       type: _trackType(
-        fee: privilege?.fee ?? fee,
-        cs: privilege?.cs ?? false,
-        st: privilege?.st ?? st,
+        fee: p?.fee ?? fee,
+        cs: p?.cs ?? false,
+        st: p?.st ?? st,
       ),
     );
   }

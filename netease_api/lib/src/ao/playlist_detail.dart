@@ -446,6 +446,7 @@ class TracksItem {
     this.rtype = 0,
     this.publishTime = 0,
     required this.tns,
+    this.privilege,
   });
 
   factory TracksItem.fromJson(Map<String, dynamic>? json) => TracksItem(
@@ -482,6 +483,7 @@ class TracksItem {
         rtype: asInt(json, 'rtype'),
         publishTime: asInt(json, 'publishTime'),
         tns: asList(json, 'tns').map((e) => e.toString()).toList(),
+        privilege: PrivilegesItem.fromJson(asMap(json, 'privilege')),
       );
 
   final String name;
@@ -517,6 +519,7 @@ class TracksItem {
   final int rtype;
   final int publishTime;
   final List<String> tns;
+  final PrivilegesItem? privilege;
 
   Map<String, dynamic> toJson() => {
         'name': name,
@@ -552,6 +555,7 @@ class TracksItem {
         'rtype': rtype,
         'publishTime': publishTime,
         'tns': tns.map((e) => e),
+        'privilege': privilege?.toJson(),
       };
 }
 
