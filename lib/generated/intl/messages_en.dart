@@ -34,6 +34,8 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m5(value) => "Track Count: ${value}";
 
+  static String m6(value) => "Find ${value} music";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "about": MessageLookupByLibrary.simpleMessage("About"),
@@ -113,6 +115,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "recommendPlayLists":
             MessageLookupByLibrary.simpleMessage("Recommend PlayLists"),
         "search": MessageLookupByLibrary.simpleMessage("Search"),
+        "searchMusicResultCount": m6,
         "searchPlaylistSongs":
             MessageLookupByLibrary.simpleMessage("Search Songs"),
         "selectRegionDiaCode":
@@ -130,6 +133,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "skipToNext": MessageLookupByLibrary.simpleMessage("Skip to Next"),
         "skipToPrevious":
             MessageLookupByLibrary.simpleMessage("Skip to Previous"),
+        "songs": MessageLookupByLibrary.simpleMessage("Songs"),
         "subscribe": MessageLookupByLibrary.simpleMessage("Subscribe"),
         "theme": MessageLookupByLibrary.simpleMessage("Theme"),
         "themeAuto": MessageLookupByLibrary.simpleMessage("Follow System"),

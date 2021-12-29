@@ -18,11 +18,12 @@ enum PlayResult {
 }
 
 extension _TracksPlayer on TracksPlayer {
-  PlayResult playWithList(String listId,
-      List<Track> tracks, {
-        Track? track,
-      }) {
-    if (trackList.id == listId && current == track) {
+  PlayResult playWithList(
+    String listId,
+    List<Track> tracks, {
+    Track? track,
+  }) {
+    if (!trackList.isFM && trackList.id == listId && current == track) {
       if (isPlaying) {
         return PlayResult.alreadyPlaying;
       }
@@ -32,7 +33,7 @@ extension _TracksPlayer on TracksPlayer {
       final list = TrackList(
         id: listId,
         tracks:
-        tracks.whereNot((e) => e.type == TrackType.noCopyright).toList(),
+            tracks.whereNot((e) => e.type == TrackType.noCopyright).toList(),
       );
       if (list.tracks.isEmpty) {
         return PlayResult.fail;
@@ -56,9 +57,8 @@ class TrackTileContainer extends StatelessWidget {
   }) {
     final id = 'album_${album.id}';
     return TrackTileContainer._private(
-          (track) => player.playWithList(id, tracks, track: track),
-          (track) =>
-      throw UnimplementedError('album not support delete track.'),
+      (track) => player.playWithList(id, tracks, track: track),
+      (track) => throw UnimplementedError('album not support delete track.'),
       id: id,
       tracks: tracks,
       child: child,
@@ -74,9 +74,8 @@ class TrackTileContainer extends StatelessWidget {
     final id =
         'daily_playlist_${dateTime.year}_${dateTime.month}_${dateTime.day}';
     return TrackTileContainer._private(
-          (track) => player.playWithList(id, tracks, track: track),
-          (track) =>
-      throw UnimplementedError('daily not support delete track.'),
+      (track) => player.playWithList(id, tracks, track: track),
+      (track) => throw UnimplementedError('daily not support delete track.'),
       id: id,
       tracks: tracks,
       child: child,
@@ -91,7 +90,7 @@ class TrackTileContainer extends StatelessWidget {
   }) {
     final id = 'playlist_${playlist.id}';
     return TrackTileContainer._private(
-          (track) {
+      (track) {
         final List<Track> tracks;
         if (skipAccompaniment) {
           tracks = playlist.tracks
@@ -102,7 +101,7 @@ class TrackTileContainer extends StatelessWidget {
         }
         return player.playWithList(id, tracks, track: track);
       },
-          (track) {
+      (track) {
         // TODO: remove track
       },
       tracks: playlist.tracks,
@@ -111,18 +110,49 @@ class TrackTileContainer extends StatelessWidget {
     );
   }
 
-  const TrackTileContainer._private(this._playbackMusic,
-      this._deleteMusic, {
-        Key? key,
-        required this.tracks,
-        required this.id,
-        required this.child,
-      }) : super(key: key);
+  factory TrackTileContainer.simpleList({
+    required List<Track> tracks,
+    required Widget child,
+    required TracksPlayer player,
+  }) {
+    return TrackTileContainer._private(
+      (track) {
+        assert(track != null);
+        if (track == null) {
+          return PlayResult.fail;
+        }
+        if (player.trackList.isFM) {
+          return player.playWithList('', [track], track: track);
+        } else {
+          player
+            ..insertToNext(track)
+            ..playFromMediaId(track.id);
+          return PlayResult.success;
+        }
+      },
+      (track) =>
+          throw UnimplementedError('simpleList not support delete track.'),
+      tracks: tracks,
+      id: '',
+      child: child,
+    );
+  }
 
-  static PlayResult playTrack(BuildContext context,
-      Track? track,) {
+  const TrackTileContainer._private(
+    this._playbackMusic,
+    this._deleteMusic, {
+    Key? key,
+    required this.tracks,
+    required this.id,
+    required this.child,
+  }) : super(key: key);
+
+  static PlayResult playTrack(
+    BuildContext context,
+    Track? track,
+  ) {
     final container =
-    context.findAncestorWidgetOfExactType<TrackTileContainer>();
+        context.findAncestorWidgetOfExactType<TrackTileContainer>();
     assert(container != null, 'container is null');
     if (container == null) {
       return PlayResult.fail;
@@ -132,7 +162,7 @@ class TrackTileContainer extends StatelessWidget {
 
   static String getPlaylistId(BuildContext context) {
     final container =
-    context.findAncestorWidgetOfExactType<TrackTileContainer>();
+        context.findAncestorWidgetOfExactType<TrackTileContainer>();
     assert(container != null, 'container is null');
     if (container == null) {
       return '';
@@ -142,7 +172,7 @@ class TrackTileContainer extends StatelessWidget {
 
   static void deleteTrack(BuildContext context, Track track) {
     final container =
-    context.findAncestorWidgetOfExactType<TrackTileContainer>();
+        context.findAncestorWidgetOfExactType<TrackTileContainer>();
     assert(container != null, 'container is null');
     if (container == null) {
       return;
@@ -179,7 +209,7 @@ class MusicTileConfiguration extends StatelessWidget {
 
   static MusicTileConfiguration of(BuildContext context) {
     final list =
-    context.findAncestorWidgetOfExactType<MusicTileConfiguration>();
+        context.findAncestorWidgetOfExactType<MusicTileConfiguration>();
     assert(list != null, 'you can only use [MusicTile] inside MusicList scope');
     return list!;
   }
@@ -193,10 +223,7 @@ class MusicTileConfiguration extends StatelessWidget {
 
   static Widget indexedLeadingBuilder(BuildContext context, Music music) {
     final int index =
-        MusicTileConfiguration
-            .of(context)
-            .musics
-            .indexOf(music) + 1;
+        MusicTileConfiguration.of(context).musics.indexOf(music) + 1;
     return _buildPlayingLeading(context, music) ??
         Container(
           margin: const EdgeInsets.only(left: 8, right: 8),
@@ -205,10 +232,7 @@ class MusicTileConfiguration extends StatelessWidget {
           child: Center(
             child: Text(
               index.toString(),
-              style: Theme
-                  .of(context)
-                  .textTheme
-                  .bodyText1,
+              style: Theme.of(context).textTheme.bodyText1,
             ),
           ),
         );
@@ -304,32 +328,26 @@ class _SimpleMusicTile extends StatelessWidget {
         children: <Widget>[
           Expanded(
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                  const Spacer(),
-                  Text(
-                    music.name,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: Theme
-                        .of(context)
-                        .textTheme
-                        .bodyText2,
-                  ),
-                  const Padding(padding: EdgeInsets.only(top: 3)),
-                  Text(
-                    music.displaySubtitle,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: Theme
-                        .of(context)
-                        .textTheme
-                        .caption,
-                  ),
-                  const Spacer(),
-                ],
-              )),
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              const Spacer(),
+              Text(
+                music.name,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: Theme.of(context).textTheme.bodyText2,
+              ),
+              const Padding(padding: EdgeInsets.only(top: 3)),
+              Text(
+                music.displaySubtitle,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: Theme.of(context).textTheme.caption,
+              ),
+              const Spacer(),
+            ],
+          )),
         ],
       ),
     );
@@ -380,10 +398,7 @@ class MusicListHeader extends ConsumerWidget implements PreferredSizeWidget {
               const SizedBox(width: 6),
               Text(
                 '(${context.strings.musicCountFormat(count)})',
-                style: Theme
-                    .of(context)
-                    .textTheme
-                    .caption,
+                style: Theme.of(context).textTheme.caption,
               ),
               const Spacer(),
               if (tail != null) tail!,
@@ -445,17 +460,13 @@ class _IconMore extends ConsumerWidget {
         child: Text("歌手: ${music.artists.map((a) => a.name).join('/')}",
             maxLines: 1)));
 
-    if (MusicTileConfiguration
-        .of(context)
-        .supportAlbumMenu) {
+    if (MusicTileConfiguration.of(context).supportAlbumMenu) {
       items.add(const PopupMenuItem(
         value: _MusicAction.album,
         child: Text("专辑"),
       ));
     }
-    if (MusicTileConfiguration
-        .of(context)
-        .remove != null) {
+    if (MusicTileConfiguration.of(context).remove != null) {
       items.add(const PopupMenuItem(
         value: _MusicAction.delete,
         child: Text("删除"),
@@ -464,9 +475,11 @@ class _IconMore extends ConsumerWidget {
     return items;
   }
 
-  Future<void> _handleMusicAction(BuildContext context,
-      _MusicAction type,
-      WidgetRef ref,) async {
+  Future<void> _handleMusicAction(
+    BuildContext context,
+    _MusicAction type,
+    WidgetRef ref,
+  ) async {
     switch (type) {
       case _MusicAction.addToNext:
         ref.read(playerProvider).insertToNext(music);
@@ -493,19 +506,17 @@ class _IconMore extends ConsumerWidget {
           } else {
             showSimpleNotification(const Text("收藏歌曲失败!"),
                 leading: const Icon(Icons.error),
-                background: Theme
-                    .of(context)
-                    .errorColor);
+                background: Theme.of(context).errorColor);
           }
         }
         break;
       case _MusicAction.album:
-      // Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-      //   return AlbumDetailPage(albumId: music.album!.id.parseToInt());
-      // }));
+        // Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+        //   return AlbumDetailPage(albumId: music.album!.id.parseToInt());
+        // }));
         break;
       case _MusicAction.artists:
-      // launchArtistDetailPage(context, music.artists);
+        // launchArtistDetailPage(context, music.artists);
         break;
     }
   }

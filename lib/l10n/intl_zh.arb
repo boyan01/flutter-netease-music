@@ -77,5 +77,7 @@
   "skipAccompaniment": "播放歌单时跳过包含伴奏的歌曲",
   "dailyRecommend": "每日推荐",
   "dailyRecommendDescription": "网易云音乐每日推荐歌曲，每天 6:00 更新。",
-  "currentPlaying": "当前播放"
+  "currentPlaying": "当前播放",
+  "searchMusicResultCount": "找到 {value} 首歌曲",
+  "songs": "歌曲"
 }

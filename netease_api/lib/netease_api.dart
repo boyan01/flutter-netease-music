@@ -11,6 +11,7 @@ export 'src/ao/personalized.dart';
 export 'src/ao/personalized_new_song.dart';
 export 'src/ao/play_records.dart';
 export 'src/ao/playlist_detail.dart';
+export 'src/ao/search_result_songs.dart';
 export 'src/ao/song_detail.dart';
 export 'src/ao/user_detail.dart';
 export 'src/ao/user_playlist.dart';

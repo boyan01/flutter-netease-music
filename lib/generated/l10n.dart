@@ -841,6 +841,26 @@ class S {
       args: [],
     );
   }
+
+  /// `Find {value} music`
+  String searchMusicResultCount(Object value) {
+    return Intl.message(
+      'Find $value music',
+      name: 'searchMusicResultCount',
+      desc: '',
+      args: [value],
+    );
+  }
+
+  /// `Songs`
+  String get songs {
+    return Intl.message(
+      'Songs',
+      name: 'songs',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

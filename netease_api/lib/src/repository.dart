@@ -210,12 +210,19 @@ class Repository {
   ///search by keyword
   Future<Result<Map>> search(String? keyword, SearchType type,
       {int limit = 20, int offset = 0}) {
-    return doRequest("/search", {
+    return doRequest("/search/cloud", {
       "keywords": keyword,
       "type": type.type,
       "limit": limit,
       "offset": offset
     });
+  }
+
+  Future<Result<SearchResultSongs>> searchSongs(String keyword,
+      {int limit = 20, int offset = 0}) async {
+    final result =
+        await search(keyword, SearchType.song, limit: limit, offset: offset);
+    return result.map((t) => SearchResultSongs.fromJson(t['result']));
   }
 
   ///搜索建议

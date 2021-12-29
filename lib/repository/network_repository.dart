@@ -7,6 +7,7 @@ import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'package:quiet/component/cache/cache.dart';
 import 'package:quiet/repository.dart';
+import 'package:quiet/repository/data/search_result.dart';
 
 export 'package:netease_api/netease_api.dart'
     show
@@ -65,6 +66,24 @@ class NetworkRepository {
     int offset = 0,
   }) =>
       _repository.search(keyword, type, limit: limit, offset: offset);
+
+  Future<SearchResult<List<Track>>> searchMusics(
+    String keyword, {
+    int limit = 20,
+    int offset = 0,
+  }) async {
+    final ret = await _repository.searchSongs(
+      keyword,
+      limit: limit,
+      offset: offset,
+    );
+    final result = await ret.asFuture;
+    return (SearchResult<List<Track>>(
+      result: result.songs.map((e) => e.toTrack(e.privilege)).toList(),
+      hasMore: result.hasMore,
+      totalCount: result.songCount,
+    ));
+  }
 
   Future<Result<List<String>>> searchSuggest(String? keyword) =>
       _repository.searchSuggest(keyword);

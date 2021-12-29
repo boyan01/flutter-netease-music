@@ -109,3 +109,42 @@ class NavigationTargetAlbumDetail extends NavigationTarget {
 class NavigationTargetDailyRecommend extends NavigationTarget {
   NavigationTargetDailyRecommend();
 }
+
+class NavigationTargetSearchMusicResult extends NavigationTarget {
+  NavigationTargetSearchMusicResult(this.keyword);
+
+  final String keyword;
+
+  @override
+  bool isTheSameTarget(NavigationTarget other) {
+    return super.isTheSameTarget(other) &&
+        other is NavigationTargetSearchMusicResult &&
+        other.keyword == keyword;
+  }
+}
+
+class NavigationTargetSearchArtistResult extends NavigationTarget {
+  NavigationTargetSearchArtistResult(this.keyword);
+
+  final String keyword;
+
+  @override
+  bool isTheSameTarget(NavigationTarget other) {
+    return super.isTheSameTarget(other) &&
+        other is NavigationTargetSearchArtistResult &&
+        other.keyword == keyword;
+  }
+}
+
+class NavigationTargetSearchAlbumResult extends NavigationTarget {
+  NavigationTargetSearchAlbumResult(this.keyword);
+
+  final String keyword;
+
+  @override
+  bool isTheSameTarget(NavigationTarget other) {
+    return super.isTheSameTarget(other) &&
+        other is NavigationTargetSearchAlbumResult &&
+        other.keyword == keyword;
+  }
+}

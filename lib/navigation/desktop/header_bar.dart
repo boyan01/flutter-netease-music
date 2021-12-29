@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:quiet/extension.dart';
 import 'package:quiet/providers/navigator_provider.dart';
 import 'package:window_manager/window_manager.dart';
@@ -79,31 +79,48 @@ class _HeaderNavigationButtons extends ConsumerWidget {
   }
 }
 
-class _SearchBar extends StatelessWidget {
+class _SearchBar extends HookConsumerWidget {
   const _SearchBar({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final textEditingController = useTextEditingController();
     return SizedBox(
-      height: 32,
-      width: 180,
-      child: TextField(
-        decoration: InputDecoration(
-          contentPadding: const EdgeInsets.symmetric(vertical: 8),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(32),
-            borderSide: BorderSide(
-              color: context.colorScheme.onBackground.withOpacity(0.5),
-              width: 1,
+      height: 24,
+      width: 128,
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(32),
+          border: Border.all(
+            color: context.colorScheme.onBackground.withOpacity(0.5),
+            width: 1,
+          ),
+          color: context.colorScheme.surface,
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            const SizedBox(width: 10, child: _MoveWindow.expand()),
+            const Icon(Icons.search, size: 16),
+            const SizedBox(width: 4, child: _MoveWindow.expand()),
+            Expanded(
+              child: TextField(
+                cursorHeight: 12,
+                controller: textEditingController,
+                style: const TextStyle(fontSize: 14),
+                decoration: InputDecoration.collapsed(
+                  hintText: context.strings.search,
+                  hintStyle: TextStyle(
+                    fontSize: 14,
+                    color: context.textTheme.caption!.color,
+                  ),
+                ),
+                onSubmitted: (value) => ref
+                    .read(navigatorProvider.notifier)
+                    .navigate(NavigationTargetSearchMusicResult(value.trim())),
+              ),
             ),
-          ),
-          prefixIconColor: context.colorScheme.onBackground,
-          hintText: context.strings.search,
-          prefixIcon: const Icon(Icons.search, size: 20),
-          hintStyle: TextStyle(
-            fontSize: 14,
-            color: Theme.of(context).textTheme.caption!.color,
-          ),
+          ],
         ),
       ),
     );

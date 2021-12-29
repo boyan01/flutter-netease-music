@@ -3,6 +3,7 @@ import 'package:quiet/navigation/desktop/page_setting.dart';
 import 'package:quiet/navigation/desktop/player/page_fm_playing.dart';
 import 'package:quiet/navigation/desktop/playlist/page_daily_playlist.dart';
 import 'package:quiet/navigation/desktop/playlist/page_playlist.dart';
+import 'package:quiet/navigation/desktop/search/page_search.dart';
 
 import '../../providers/navigator_provider.dart';
 import '../common/navigation_target.dart';
@@ -92,6 +93,10 @@ class DesktopNavigatorController extends NavigatorController {
       page = PageArtistDetail(artistId: target.artistId);
     } else if (target is NavigationTargetDailyRecommend) {
       page = const PageDailyPlaylist();
+    } else if (target is NavigationTargetSearchMusicResult ||
+        target is NavigationTargetSearchArtistResult ||
+        target is NavigationTargetSearchAlbumResult) {
+      page = PageSearch(target: target);
     } else {
       throw Exception('Unknown navigation type: $target');
     }

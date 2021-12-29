@@ -34,6 +34,8 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m5(value) => "歌曲数: ${value}";
 
+  static String m6(value) => "找到 ${value} 首歌曲";
+
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "about": MessageLookupByLibrary.simpleMessage("关于"),
@@ -98,6 +100,7 @@ class MessageLookup extends MessageLookupByLibrary {
             "开源项目 https://github.com/boyan01/flutter-netease-music"),
         "recommendPlayLists": MessageLookupByLibrary.simpleMessage("推荐歌单"),
         "search": MessageLookupByLibrary.simpleMessage("搜索"),
+        "searchMusicResultCount": m6,
         "searchPlaylistSongs": MessageLookupByLibrary.simpleMessage("搜索歌单歌曲"),
         "selectRegionDiaCode": MessageLookupByLibrary.simpleMessage("选择地区号码"),
         "selectTheArtist": MessageLookupByLibrary.simpleMessage("请选择要查看的歌手"),
@@ -111,6 +114,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "skipLogin": MessageLookupByLibrary.simpleMessage("跳过登录"),
         "skipToNext": MessageLookupByLibrary.simpleMessage("下一首"),
         "skipToPrevious": MessageLookupByLibrary.simpleMessage("上一首"),
+        "songs": MessageLookupByLibrary.simpleMessage("歌曲"),
         "subscribe": MessageLookupByLibrary.simpleMessage("收藏"),
         "theme": MessageLookupByLibrary.simpleMessage("主题"),
         "themeAuto": MessageLookupByLibrary.simpleMessage("跟随系统"),

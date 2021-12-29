@@ -77,5 +77,7 @@
   "skipAccompaniment": "Skip accompaniment when play playlist.",
   "dailyRecommend": "Daily Recommend",
   "dailyRecommendDescription": "Daily recommend music from Netease cloud music. Refresh every day at 06:00.",
-  "currentPlaying": "Current Playing"
+  "currentPlaying": "Current Playing",
+  "searchMusicResultCount": "Find {value} music",
+  "songs": "Songs"
 }
