@@ -14,10 +14,9 @@ dependencies:
     sdk: flutter
   dio_cookie_manager: 2.0.0
   netease_music_api:
-    path: ../../NeteaseCloudMusicApi
-#    git:
-#      url: https://github.com/boyan01/NeteaseCloudMusicApi.git
-#      ref: a9f8e61e02ae5b973d6d6ccf252aa9f468434234
+    git:
+      url: https://github.com/boyan01/NeteaseCloudMusicApi.git
+      ref: 8bdb36f3efda3cefa57efc8e2190c188d9a05a86
   json_annotation: ^4.3.0
 
 dev_dependencies:
