@@ -79,5 +79,7 @@
   "dailyRecommendDescription": "网易云音乐每日推荐歌曲，每天 6:00 更新。",
   "currentPlaying": "当前播放",
   "searchMusicResultCount": "找到 {value} 首歌曲",
-  "songs": "歌曲"
+  "songs": "歌曲",
+  "cloudMusicUsage": "云盘容量",
+  "cloudMusicFileDropDescription": "将音乐文件拖放到这里进行上传"
 }

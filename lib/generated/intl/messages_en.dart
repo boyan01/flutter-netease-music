@@ -48,6 +48,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "alreadyBuy": MessageLookupByLibrary.simpleMessage("Payed"),
         "artists": MessageLookupByLibrary.simpleMessage("Artists"),
         "cloudMusic": MessageLookupByLibrary.simpleMessage("Could Space"),
+        "cloudMusicFileDropDescription": MessageLookupByLibrary.simpleMessage(
+            "Drop your music file to here to upload."),
+        "cloudMusicUsage": MessageLookupByLibrary.simpleMessage("Cloud Usage"),
         "collectionLike": MessageLookupByLibrary.simpleMessage("Collections"),
         "copyRightOverlay": MessageLookupByLibrary.simpleMessage(
             "Only used for personal study and research, commercial and illegal purposes are prohibited"),

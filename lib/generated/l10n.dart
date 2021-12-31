@@ -861,6 +861,26 @@ class S {
       args: [],
     );
   }
+
+  /// `Cloud Usage`
+  String get cloudMusicUsage {
+    return Intl.message(
+      'Cloud Usage',
+      name: 'cloudMusicUsage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Drop your music file to here to upload.`
+  String get cloudMusicFileDropDescription {
+    return Intl.message(
+      'Drop your music file to here to upload.',
+      name: 'cloudMusicFileDropDescription',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

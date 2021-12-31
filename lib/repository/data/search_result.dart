@@ -10,5 +10,4 @@ class SearchResult<T> {
   final bool hasMore;
 
   final int totalCount;
-
 }

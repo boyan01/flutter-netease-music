@@ -51,6 +51,9 @@ dependencies:
   lpinyin: ^2.0.3
   stream_transform: ^2.0.0
   windows_taskbar: ^0.0.1
+  filesize: ^2.0.1
+  desktop_drop: ^0.3.0
+  dotted_border: ^2.0.0+2
 
 dev_dependencies:
   flutter_test:

@@ -331,6 +331,17 @@ class NetworkRepository {
     final personalFm = ret.asValue!.value.data;
     return Result.value(personalFm.map((e) => e.toTrack(e.privilege)).toList());
   }
+
+  Future<CloudTracksDetail> getUserCloudTracks() async {
+    final ret = await _repository.getUserCloudMusic();
+    final value = await ret.asFuture;
+    return CloudTracksDetail(
+      maxSize: int.tryParse(value.maxSize) ?? 0,
+      size: int.tryParse(value.size) ?? 0,
+      trackCount: value.count,
+      tracks: value.data.map((e) => e.toTrack()).toList(),
+    );
+  }
 }
 
 // https://github.com/Binaryify/NeteaseCloudMusicApi/issues/899#issuecomment-680002883
@@ -356,6 +367,34 @@ TrackType _trackType({
   }
   debugPrint('unknown fee: $fee');
   return TrackType.free;
+}
+
+extension _CloudTrackMapper on api.CloudSongItem {
+  Track toTrack() {
+    final album = AlbumMini(
+      id: simpleSong.al.id,
+      picUri: simpleSong.al.picUrl,
+      name: simpleSong.al.name is String ? simpleSong.al.name : '',
+    );
+    ArtistMini mapArtist(api.SimpleSongArtistItem item) {
+      return ArtistMini(
+        id: item.id,
+        name: item.name is String ? item.name : '',
+        imageUrl: '',
+      );
+    }
+
+    return Track(
+      id: songId,
+      name: songName,
+      album: album,
+      duration: Duration(milliseconds: simpleSong.dt),
+      type: _trackType(fee: simpleSong.fee, cs: true, st: simpleSong.st),
+      artists: simpleSong.ar.map(mapArtist).toList(),
+      uri: '',
+      imageUrl: album.picUri,
+    );
+  }
 }
 
 extension _FmTrackMapper on api.FmTrackItem {

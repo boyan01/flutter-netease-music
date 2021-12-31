@@ -82,6 +82,23 @@ class TrackTileContainer extends StatelessWidget {
     );
   }
 
+  factory TrackTileContainer.cloudTracks({
+    required List<Track> tracks,
+    required Widget child,
+    required TracksPlayer player,
+  }) {
+    const id = 'user_cloud_tracks';
+    return TrackTileContainer._private(
+      (track) => player.playWithList(id, tracks, track: track),
+      (track) {
+        // TODO
+      },
+      id: id,
+      tracks: tracks,
+      child: child,
+    );
+  }
+
   factory TrackTileContainer.playlist({
     required PlaylistDetail playlist,
     required Widget child,

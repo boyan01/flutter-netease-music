@@ -418,6 +418,14 @@ class Repository {
     return _map(result, (t) => PersonalFm.fromJson(t));
   }
 
+  Future<Result<CloudMusicDetail>> getUserCloudMusic() async {
+    final result = await doRequest(
+      '/user/cloud',
+      {'limit': 200},
+    );
+    return result.map((value) => CloudMusicDetail.fromJson(value));
+  }
+
   Future<Result<CellphoneExistenceCheck>> checkPhoneExist(
       String phone, String countryCode) async {
     final result = await doRequest(

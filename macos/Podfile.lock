@@ -2,6 +2,8 @@ PODS:
   - dart_vlc (0.0.1):
     - FlutterMacOS
     - VLCKit (~> 3.3)
+  - desktop_drop (0.0.1):
+    - FlutterMacOS
   - FlutterMacOS (1.0.0)
   - path_provider_macos (0.0.1):
     - FlutterMacOS
@@ -17,6 +19,7 @@ PODS:
 
 DEPENDENCIES:
   - dart_vlc (from `Flutter/ephemeral/.symlinks/plugins/dart_vlc/macos`)
+  - desktop_drop (from `Flutter/ephemeral/.symlinks/plugins/desktop_drop/macos`)
   - FlutterMacOS (from `Flutter/ephemeral`)
   - path_provider_macos (from `Flutter/ephemeral/.symlinks/plugins/path_provider_macos/macos`)
   - shared_preferences_macos (from `Flutter/ephemeral/.symlinks/plugins/shared_preferences_macos/macos`)
@@ -31,6 +34,8 @@ SPEC REPOS:
 EXTERNAL SOURCES:
   dart_vlc:
     :path: Flutter/ephemeral/.symlinks/plugins/dart_vlc/macos
+  desktop_drop:
+    :path: Flutter/ephemeral/.symlinks/plugins/desktop_drop/macos
   FlutterMacOS:
     :path: Flutter/ephemeral
   path_provider_macos:
@@ -46,6 +51,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   dart_vlc: 1dbcc77b4304a8826b1fceaa1eada263b02b2123
+  desktop_drop: 69eeff437544aa619c8db7f4481b3a65f7696898
   FlutterMacOS: 57701585bf7de1b3fc2bb61f6378d73bbdea8424
   path_provider_macos: 160cab0d5461f0c0e02995469a98f24bdb9a3f1f
   shared_preferences_macos: 480ce071d0666e37cef23fe6c702293a3d21799e

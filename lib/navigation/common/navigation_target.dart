@@ -148,3 +148,7 @@ class NavigationTargetSearchAlbumResult extends NavigationTarget {
         other.keyword == keyword;
   }
 }
+
+class NavigationTargetCloudMusic extends NavigationTarget {
+  NavigationTargetCloudMusic();
+}

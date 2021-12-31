@@ -78,7 +78,7 @@ class _PresetItems extends ConsumerWidget {
             icon: const Icon(Icons.cloud_upload_rounded),
             title: Text(context.strings.cloudMusic),
             isSelected: false,
-            onTap: () {},
+            onTap: () => navigator.navigate(NavigationTargetCloudMusic()),
           ),
         ],
       ),

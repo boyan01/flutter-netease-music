@@ -46,6 +46,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "alreadyBuy": MessageLookupByLibrary.simpleMessage("收藏和赞"),
         "artists": MessageLookupByLibrary.simpleMessage("歌手"),
         "cloudMusic": MessageLookupByLibrary.simpleMessage("云盘"),
+        "cloudMusicFileDropDescription":
+            MessageLookupByLibrary.simpleMessage("将音乐文件拖放到这里进行上传"),
+        "cloudMusicUsage": MessageLookupByLibrary.simpleMessage("云盘容量"),
         "collectionLike": MessageLookupByLibrary.simpleMessage("已购"),
         "copyRightOverlay":
             MessageLookupByLibrary.simpleMessage("只用作个人学习研究，禁止用于商业及非法用途"),

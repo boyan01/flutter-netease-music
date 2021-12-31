@@ -16,9 +16,7 @@ class CachedImage extends ImageProvider<CachedImage> implements CacheKey {
   /// Creates an object that fetches the image at the given URL.
   ///
   /// The arguments must not be null.
-  CachedImage(this.url, {this.scale = 1.0, this.headers})
-      : _size = null,
-        assert(url.isNotEmpty);
+  CachedImage(this.url, {this.scale = 1.0, this.headers}) : _size = null;
 
   const CachedImage._internal(this.url, this._size,
       {this.scale = 1.0, this.headers});

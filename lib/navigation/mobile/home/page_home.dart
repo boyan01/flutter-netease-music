@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quiet/navigation/mobile/home/main_page_discover.dart';
 import 'package:quiet/navigation/mobile/home/main_page_my.dart';
+import 'package:quiet/navigation/mobile/home/tab_search.dart';
 
 import '../../../providers/navigator_provider.dart';
 import '../../common/navigation_target.dart';
@@ -27,15 +28,14 @@ class PageHome extends StatelessWidget {
       case NavigationTargetLibrary:
         body = MainPageDiscover();
         break;
+      case NavigationTargetSearch:
+        body = const HomeTabSearch();
+        break;
       default:
-        body = Center(
-          child: Text(
-            selectedTab.runtimeType.toString(),
-            style: Theme.of(context).textTheme.headline4,
-          ),
-        );
+        assert(false, 'unsupported tab: $selectedTab');
+        body = MainPageMy();
+        break;
     }
-
     return Scaffold(appBar: const _AppBar(), body: body);
   }
 }

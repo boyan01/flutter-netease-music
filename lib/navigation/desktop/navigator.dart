@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:quiet/navigation/desktop/page_setting.dart';
 import 'package:quiet/navigation/desktop/player/page_fm_playing.dart';
+import 'package:quiet/navigation/desktop/playlist/page_cloud_tracks.dart';
 import 'package:quiet/navigation/desktop/playlist/page_daily_playlist.dart';
 import 'package:quiet/navigation/desktop/playlist/page_playlist.dart';
 import 'package:quiet/navigation/desktop/search/page_search.dart';
@@ -97,6 +98,8 @@ class DesktopNavigatorController extends NavigatorController {
         target is NavigationTargetSearchArtistResult ||
         target is NavigationTargetSearchAlbumResult) {
       page = PageSearch(target: target);
+    } else if (target is NavigationTargetCloudMusic) {
+      page = const PageCloudTracks();
     } else {
       throw Exception('Unknown navigation type: $target');
     }
