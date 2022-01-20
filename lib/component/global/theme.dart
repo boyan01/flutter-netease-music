@@ -1,5 +1,6 @@
 //网易红调色板
 import 'package:flutter/material.dart';
+import 'package:quiet/utils/system/system_fonts.dart';
 
 const lightSwatch = MaterialColor(0xFFdd4237, {
   900: Color(0xFFae2a20),
@@ -27,12 +28,14 @@ ThemeData get quietDarkTheme {
       onPrimary: const Color(0xFFDDDDDD),
     ),
   );
-  return theme.copyWith(
-    toggleableActiveColor: lightSwatch,
-    tooltipTheme: const TooltipThemeData(
-      waitDuration: Duration(milliseconds: 1000),
-    ),
-  );
+  return theme
+      .copyWith(
+        toggleableActiveColor: lightSwatch,
+        tooltipTheme: const TooltipThemeData(
+          waitDuration: Duration(milliseconds: 1000),
+        ),
+      )
+      .applyAppFonts();
 }
 
 ThemeData get lightTheme => _buildTheme(lightSwatch);
@@ -41,16 +44,18 @@ ThemeData _buildTheme(Color primaryColor) {
   final theme = ThemeData.from(
     colorScheme: const ColorScheme.light(primary: lightSwatch),
   );
-  return theme.copyWith(
-    toggleableActiveColor: lightSwatch,
-    tooltipTheme: const TooltipThemeData(
-      waitDuration: Duration(milliseconds: 1000),
-    ),
-    iconTheme: IconThemeData(
-      color: theme.iconTheme.color!.withOpacity(0.7),
-      size: 24,
-    ),
-  );
+  return theme
+      .copyWith(
+        toggleableActiveColor: lightSwatch,
+        tooltipTheme: const TooltipThemeData(
+          waitDuration: Duration(milliseconds: 1000),
+        ),
+        iconTheme: IconThemeData(
+          color: theme.iconTheme.color!.withOpacity(0.7),
+          size: 24,
+        ),
+      )
+      .applyAppFonts();
 }
 
 extension QuietAppTheme on BuildContext {
@@ -67,4 +72,71 @@ extension QuietAppTheme on BuildContext {
 
 extension TextStyleExtesntion on TextStyle? {
   TextStyle? get bold => this?.copyWith(fontWeight: FontWeight.bold);
+}
+
+extension _ThemeExt on ThemeData {
+  ThemeData applyAppFonts() {
+    final fallbackFontFamily = getFallbackFontFamily();
+    if (fallbackFontFamily == null) {
+      return this;
+    }
+    return _applyFonts(fontFamilyFallback: [fallbackFontFamily]);
+  }
+
+  ThemeData _applyFonts(
+      {String? fontFamily, List<String>? fontFamilyFallback}) {
+    if (fontFamily == null && fontFamilyFallback?.isEmpty == true) {
+      return this;
+    }
+    return copyWith(
+      textTheme: textTheme.applyFonts(
+        fontFamily,
+        fontFamilyFallback,
+      ),
+      primaryTextTheme: primaryTextTheme.applyFonts(
+        fontFamily,
+        fontFamilyFallback,
+      ),
+    );
+  }
+}
+
+extension _TextTheme on TextTheme {
+  TextTheme applyFonts(String? fontFamily, List<String>? fontFamilyFallback) {
+    if (fontFamily == null && fontFamilyFallback?.isEmpty == true) {
+      return this;
+    }
+    return copyWith(
+      displayLarge: displayLarge?.copyWith(
+          fontFamily: fontFamily, fontFamilyFallback: fontFamilyFallback),
+      displayMedium: displayMedium?.copyWith(
+          fontFamily: fontFamily, fontFamilyFallback: fontFamilyFallback),
+      displaySmall: displaySmall?.copyWith(
+          fontFamily: fontFamily, fontFamilyFallback: fontFamilyFallback),
+      headlineLarge: headlineLarge?.copyWith(
+          fontFamily: fontFamily, fontFamilyFallback: fontFamilyFallback),
+      headlineMedium: headlineMedium?.copyWith(
+          fontFamily: fontFamily, fontFamilyFallback: fontFamilyFallback),
+      headlineSmall: headlineSmall?.copyWith(
+          fontFamily: fontFamily, fontFamilyFallback: fontFamilyFallback),
+      titleLarge: titleLarge?.copyWith(
+          fontFamily: fontFamily, fontFamilyFallback: fontFamilyFallback),
+      titleMedium: titleMedium?.copyWith(
+          fontFamily: fontFamily, fontFamilyFallback: fontFamilyFallback),
+      titleSmall: titleSmall?.copyWith(
+          fontFamily: fontFamily, fontFamilyFallback: fontFamilyFallback),
+      bodyLarge: bodyLarge?.copyWith(
+          fontFamily: fontFamily, fontFamilyFallback: fontFamilyFallback),
+      bodyMedium: bodyMedium?.copyWith(
+          fontFamily: fontFamily, fontFamilyFallback: fontFamilyFallback),
+      bodySmall: bodySmall?.copyWith(
+          fontFamily: fontFamily, fontFamilyFallback: fontFamilyFallback),
+      labelLarge: labelLarge?.copyWith(
+          fontFamily: fontFamily, fontFamilyFallback: fontFamilyFallback),
+      labelMedium: labelMedium?.copyWith(
+          fontFamily: fontFamily, fontFamilyFallback: fontFamilyFallback),
+      labelSmall: labelSmall?.copyWith(
+          fontFamily: fontFamily, fontFamilyFallback: fontFamilyFallback),
+    );
+  }
 }

@@ -13,9 +13,11 @@ import 'package:quiet/repository.dart';
 import 'package:window_manager/window_manager.dart';
 
 import 'media/tracks/tracks_player_impl_mobile.dart';
+import 'utils/system/system_fonts.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await loadFallbackFonts();
   NetworkRepository.initialize();
   DartVLC.initialize();
   _initialDesktop();
