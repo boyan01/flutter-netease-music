@@ -11,6 +11,7 @@ analyzer:
     - 'test/**'
   errors:
     body_might_complete_normally_nullable: false
+    unused_element: ignore
 
 linter:
   rules:
