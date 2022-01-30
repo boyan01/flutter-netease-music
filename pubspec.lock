@@ -924,21 +924,17 @@ packages:
   window_manager:
     dependency: "direct main"
     description:
-      path: "."
-      ref: "9d0763ad5a9087da0057f63f2c2c9cb9b16fbaec"
-      resolved-ref: "9d0763ad5a9087da0057f63f2c2c9cb9b16fbaec"
-      url: "https://github.com/boyan01/window_manager.git"
-    source: git
-    version: "0.1.1"
+      name: window_manager
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.5"
   windows_taskbar:
     dependency: "direct main"
     description:
-      path: "."
-      ref: "920387b0a9c680dbdb8ffaf88676eb920756f051"
-      resolved-ref: "920387b0a9c680dbdb8ffaf88676eb920756f051"
-      url: "https://github.com/boyan01/windows_taskbar.git"
-    source: git
-    version: "0.0.1"
+      name: windows_taskbar
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.0"
   xdg_directories:
     dependency: transitive
     description:

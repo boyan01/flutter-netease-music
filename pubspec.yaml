@@ -44,13 +44,10 @@ dependencies:
   hooks_riverpod: ^1.0.3
   dart_vlc: ^0.1.8
   collection: ^1.15.0
-  window_manager:
-    git:
-      url: https://github.com/boyan01/window_manager.git
-      ref: 9d0763ad5a9087da0057f63f2c2c9cb9b16fbaec
+  window_manager: ^0.1.5
   lpinyin: ^2.0.3
   stream_transform: ^2.0.0
-  windows_taskbar: ^0.0.1
+  windows_taskbar: ^1.0.0
   filesize: ^2.0.1
   desktop_drop: ^0.3.0
   dotted_border: ^2.0.0+2
@@ -61,14 +58,6 @@ dev_dependencies:
   build_runner: ^2.0.6
   json_serializable: ^6.0.1
   flutter_lints: ^1.0.4
-
-dependency_overrides:
-  ## TODO remove this when below has been merged.
-  ## https://github.com/alexmercerind/windows_taskbar/pull/3
-  windows_taskbar:
-    git:
-      url: https://github.com/boyan01/windows_taskbar.git
-      ref: 920387b0a9c680dbdb8ffaf88676eb920756f051
 
 # The following section is specific to Flutter.
 flutter:
