@@ -91,7 +91,7 @@ class LyricState extends State<Lyric> with TickerProviderStateMixin {
   /// scroll lyric to current playing position
   void _scrollToCurrentPosition(int? milliseconds, {bool animate = true}) {
     if (lyricPainter!.height == -1) {
-      WidgetsBinding.instance!.addPostFrameCallback((d) {
+      WidgetsBinding.instance.addPostFrameCallback((d) {
 //        debugPrint("try to init scroll to position ${widget.position.value},"
 //            "but lyricPainter is unavaiable, so scroll(without animate) on next frame $d");
         //TODO maybe cause bad performance
@@ -267,7 +267,7 @@ class _ScrollerListenerState extends State<_ScrollerListener> {
   void _receivedPointerSignal(PointerSignalEvent event) {
     if (event is PointerScrollEvent) {
       if (_pointerSignalEventDelta(event) != 0.0) {
-        GestureBinding.instance!.pointerSignalResolver
+        GestureBinding.instance.pointerSignalResolver
             .register(event, _handlePointerScroll);
       }
     }

@@ -230,7 +230,7 @@ Future<Uint8List> _loadImageInterceptor(MusicMetadata metadata) async {
   final ImageStream stream =
       CachedImage(metadata.iconUri.toString()).resolve(ImageConfiguration(
     size: const Size(150, 150),
-    devicePixelRatio: WidgetsBinding.instance!.window.devicePixelRatio,
+    devicePixelRatio: WidgetsBinding.instance.window.devicePixelRatio,
   ));
   final image = Completer<ImageInfo>();
   stream.addListener(ImageStreamListener((info, a) {

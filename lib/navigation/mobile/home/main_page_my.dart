@@ -150,7 +150,7 @@ class _MainPageMyState extends ConsumerState<MainPageMy>
           curve: Curves.linear,
         )
             .then((_) {
-          WidgetsBinding.instance!.scheduleFrameCallback((timeStamp) {
+          WidgetsBinding.instance.scheduleFrameCallback((timeStamp) {
             _scrollToPlayList(type);
           });
         });
@@ -162,7 +162,7 @@ class _MainPageMyState extends ConsumerState<MainPageMy>
           curve: Curves.linear,
         )
             .then((_) {
-          WidgetsBinding.instance!.scheduleFrameCallback((timeStamp) {
+          WidgetsBinding.instance.scheduleFrameCallback((timeStamp) {
             _scrollToPlayList(type);
           });
         });
