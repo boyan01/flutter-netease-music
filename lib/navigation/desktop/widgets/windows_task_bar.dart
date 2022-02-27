@@ -33,7 +33,7 @@ class _WindowsTaskBar extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     ref.listen<TracksPlayerState>(playerStateProvider, (previous, next) {
       if (next.playingTrack == null) {
-        WindowsTaskbar.clearThumbnailToolbar();
+        WindowsTaskbar.resetThumbnailToolbar();
       } else {
         WindowsTaskbar.setThumbnailToolbar([
           ThumbnailToolbarButton(
