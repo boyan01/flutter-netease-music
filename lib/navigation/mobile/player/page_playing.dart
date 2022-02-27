@@ -18,7 +18,7 @@ class PlayingPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final current = ref.read(playerStateProvider).playingTrack;
     if (current == null) {
-      WidgetsBinding.instance.scheduleFrameCallback((_) {
+      WidgetsBinding.instance!.scheduleFrameCallback((_) {
         Navigator.of(context).pop();
       });
       return Container();
