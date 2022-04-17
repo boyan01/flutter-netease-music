@@ -142,7 +142,7 @@ class UserPlayListSection extends ConsumerStatefulWidget {
   final ScrollController? scrollController;
 
   @override
-  _UserPlayListSectionState createState() => _UserPlayListSectionState();
+  ConsumerState<UserPlayListSection> createState() => _UserPlayListSectionState();
 }
 
 class _UserPlayListSectionState extends ConsumerState<UserPlayListSection> {

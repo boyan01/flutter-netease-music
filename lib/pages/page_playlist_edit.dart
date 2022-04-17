@@ -8,7 +8,7 @@ class PlaylistEditPage extends StatefulWidget {
   final PlaylistDetail playlist;
 
   @override
-  _PlaylistEditPageState createState() => _PlaylistEditPageState();
+  State<PlaylistEditPage> createState() => _PlaylistEditPageState();
 }
 
 class _PlaylistEditPageState extends State<PlaylistEditPage> {

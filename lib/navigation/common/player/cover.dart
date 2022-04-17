@@ -118,9 +118,9 @@ class _AlbumCoverState extends ConsumerState<AlbumCover>
     _rotateNeedle(attachToCover);
 
     //handle album cover animation
-    final _isPlaying = _player.isPlaying;
+    final isPlaying = _player.isPlaying;
     setState(() {
-      _coverRotating = _isPlaying && _needleAttachCover;
+      _coverRotating = isPlaying && _needleAttachCover;
     });
   }
 

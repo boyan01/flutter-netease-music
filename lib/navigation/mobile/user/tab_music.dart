@@ -5,7 +5,7 @@ class TabMusic extends StatefulWidget {
   final User profile;
 
   @override
-  _TabMusicState createState() => _TabMusicState();
+  State<TabMusic> createState() => _TabMusicState();
 }
 
 class _TabMusicState extends State<TabMusic>

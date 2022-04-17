@@ -10,7 +10,7 @@ class AlbumsResultSection extends StatefulWidget {
   final String? query;
 
   @override
-  _AlbumsResultSectionState createState() => _AlbumsResultSectionState();
+  State<AlbumsResultSection> createState() => _AlbumsResultSectionState();
 }
 
 class _AlbumsResultSectionState extends State<AlbumsResultSection>

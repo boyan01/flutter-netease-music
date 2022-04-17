@@ -10,7 +10,7 @@ class VideosResultSection extends StatefulWidget {
   final String? query;
 
   @override
-  _VideosResultSectionState createState() => _VideosResultSectionState();
+  State<VideosResultSection> createState() => _VideosResultSectionState();
 }
 
 class _VideosResultSectionState extends State<VideosResultSection>

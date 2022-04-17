@@ -88,12 +88,12 @@ class AnimatedAppBottomBar extends HookConsumerWidget {
           left: 0,
           right: 0,
           bottom: height,
+          curve: Curves.easeInOut,
           child: MediaQuery.removePadding(
             context: context,
             removeBottom: !hidePlayerBar || !hideNavigationBar,
             child: child,
           ),
-          curve: Curves.easeInOut,
         ),
         AnimatedPositioned(
           height: playerBarHeight,
@@ -130,13 +130,13 @@ class AnimatedAppBottomBar extends HookConsumerWidget {
           ),
         ),
         AnimatedPositioned(
-          child: const Material(elevation: 8),
           duration: const Duration(milliseconds: 300),
           bottom: 0,
           left: 0,
           right: 0,
           curve: Curves.easeInOut,
           height: hidePlayerBar && hideNavigationBar ? 0 : bottomPadding,
+          child: const Material(elevation: 8),
         ),
       ],
     );

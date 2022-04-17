@@ -9,7 +9,7 @@ import '_profile.dart';
 ///the first page display in page_main
 class MainPageMy extends ConsumerStatefulWidget {
   @override
-  _MainPageMyState createState() => _MainPageMyState();
+  ConsumerState<MainPageMy> createState() => _MainPageMyState();
 }
 
 class _MainPageMyState extends ConsumerState<MainPageMy>

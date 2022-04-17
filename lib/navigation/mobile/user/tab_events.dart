@@ -2,7 +2,7 @@ part of 'page_user_detail.dart';
 
 class TabEvents extends StatefulWidget {
   @override
-  _TabEventsState createState() => _TabEventsState();
+  State<TabEvents> createState() => _TabEventsState();
 }
 
 class _TabEventsState extends State<TabEvents>

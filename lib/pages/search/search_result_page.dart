@@ -17,7 +17,7 @@ class SearchResultPage extends StatefulWidget {
   final String? query;
 
   @override
-  _SearchResultPageState createState() {
+  State<SearchResultPage> createState() {
     return _SearchResultPageState();
   }
 }

@@ -34,8 +34,8 @@ class _SlideUpPageRouter<T> extends PageRoute<T>
   Widget buildTransitions(BuildContext context, Animation<double> animation,
       Animation<double> secondaryAnimation, Widget child) {
     return _FadeUpwardsPageTransition(
-      child: child,
       routeAnimation: animation,
+      child: child,
     );
   }
 }

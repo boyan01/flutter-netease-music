@@ -6,7 +6,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 class PageWelcome extends StatefulWidget {
   @override
-  _PageWelcomeState createState() => _PageWelcomeState();
+  State<PageWelcome> createState() => _PageWelcomeState();
 }
 
 class _PageWelcomeState extends State<PageWelcome> {

@@ -5,7 +5,7 @@ class TabAbout extends StatefulWidget {
   final User user;
 
   @override
-  _TabAboutState createState() => _TabAboutState();
+  State<TabAbout> createState() => _TabAboutState();
 }
 
 class _TabAboutState extends State<TabAbout>

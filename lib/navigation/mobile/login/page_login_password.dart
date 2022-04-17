@@ -15,7 +15,7 @@ class PageLoginPassword extends ConsumerStatefulWidget {
   final String? phone;
 
   @override
-  _PageLoginPasswordState createState() => _PageLoginPasswordState();
+  ConsumerState<PageLoginPassword> createState() => _PageLoginPasswordState();
 }
 
 class _PageLoginPasswordState extends ConsumerState<PageLoginPassword> {

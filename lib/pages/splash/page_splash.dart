@@ -22,7 +22,7 @@ class PageSplash extends ConsumerStatefulWidget {
   final AppBuilder builder;
 
   @override
-  _PageSplashState createState() => _PageSplashState();
+  ConsumerState<PageSplash> createState() => _PageSplashState();
 }
 
 class _PageSplashState extends ConsumerState<PageSplash> {

@@ -88,7 +88,7 @@ class _UserCloudInformation extends StatelessWidget {
           const SizedBox(width: 20),
           Text(context.strings.cloudMusicUsage),
           const SizedBox(width: 8),
-          Text(filesize(detail.size) + '/' + filesize(detail.maxSize)),
+          Text('${filesize(detail.size)}/${filesize(detail.maxSize)}'),
           const SizedBox(width: 20),
         ],
       ),
@@ -107,6 +107,14 @@ class _DropUploadArea extends HookConsumerWidget {
         .select((value) => value.current is NavigationTargetCloudMusic));
     final dragging = useState(false);
     return DropTarget(
+      enable: enable,
+      onDragEntered: (details) => dragging.value = true,
+      onDragExited: (details) => dragging.value = false,
+      onDragDone: (details) {
+        dragging.value = false;
+        // TODO upload file.
+        debugPrint('onDragDone: ${details.files.length}');
+      },
       child: Stack(
         children: [
           child,
@@ -130,14 +138,6 @@ class _DropUploadArea extends HookConsumerWidget {
             ),
         ],
       ),
-      enable: enable,
-      onDragEntered: (details) => dragging.value = true,
-      onDragExited: (details) => dragging.value = false,
-      onDragDone: (details) {
-        dragging.value = false;
-        // TODO upload file.
-        debugPrint('onDragDone: ${details.files.length}');
-      },
     );
   }
 }

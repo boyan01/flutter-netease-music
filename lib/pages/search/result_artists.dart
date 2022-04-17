@@ -8,7 +8,7 @@ class ArtistsResultSection extends StatefulWidget {
   final String? query;
 
   @override
-  _ArtistsResultSectionState createState() => _ArtistsResultSectionState();
+  State<ArtistsResultSection> createState() => _ArtistsResultSectionState();
 }
 
 class _ArtistsResultSectionState extends State<ArtistsResultSection>

@@ -8,7 +8,7 @@ class PlaylistResultSection extends StatefulWidget {
   final String? query;
 
   @override
-  _PlaylistResultSectionState createState() => _PlaylistResultSectionState();
+  State<PlaylistResultSection> createState() => _PlaylistResultSectionState();
 }
 
 class _PlaylistResultSectionState extends State<PlaylistResultSection>
