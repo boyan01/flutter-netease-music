@@ -3,14 +3,17 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:quiet/extension.dart';
+import 'package:quiet/navigation/common/navigation_target.dart';
 import 'package:quiet/navigation/common/playlist/music_list.dart';
 import 'package:quiet/navigation/desktop/widgets/track_tile_normal.dart';
+import 'package:quiet/providers/navigator_provider.dart';
 import 'package:quiet/repository.dart';
 
 import '../../../component/utils/scroll_controller.dart';
 import '../../../providers/artist_provider.dart';
 import '../../../providers/player_provider.dart';
 import '../../common/buttons.dart';
+import '../widgets/highlight_clickable_text.dart';
 
 class PageArtistDetail extends ConsumerWidget {
   const PageArtistDetail({Key? key, required this.artistId}) : super(key: key);
@@ -51,6 +54,8 @@ class _ArtistDetailScaffold extends HookWidget {
           tracks: artist.hotSongs,
           artist: artist.artist,
         ),
+        const SizedBox(height: 20),
+        _ArtistAlbums(artistId: artist.artist.id),
         const SizedBox(height: 32),
       ],
     );
@@ -140,28 +145,143 @@ class _TopSongs extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    return TrackTileContainer.trackList(
+      tracks: tracks,
+      player: ref.read(playerProvider),
+      id: 'artist-${artist.id}-top-songs',
+      child: _CoverTrackListWidget(
+        title: Text(context.strings.topSongs),
+        cover: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(8),
+            color: context.colorScheme.primary,
+          ),
+          child: Center(
+            child: Text.rich(
+              const TextSpan(children: [
+                TextSpan(text: 'TOP\n'),
+                TextSpan(text: '50', style: TextStyle(fontSize: 50)),
+              ]),
+              style: context.primaryTextTheme.headlineLarge.bold,
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ),
+        onAddAllTap: () {
+          // TODO add all
+          toast(context.strings.todo);
+        },
+        tracks: tracks,
+      ),
+    );
+  }
+}
+
+class _ArtistAlbums extends ConsumerWidget {
+  const _ArtistAlbums({
+    Key? key,
+    required this.artistId,
+  }) : super(key: key);
+
+  final int artistId;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final artist = ref.watch(artistAlbumsProvider(artistId).logErrorOnDebug());
+    return artist.when(
+      data: (data) {
+        if (data.isEmpty) {
+          return const SizedBox();
+        }
+        return Column(
+          children: [
+            for (final album in data)
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 32),
+                child: _AlbumItemWidget(album: album),
+              ),
+          ],
+        );
+      },
+      error: (error, _) => const SizedBox(),
+      loading: () => const SizedBox(
+        height: 56,
+        child: Center(
+          child: SizedBox.square(
+            dimension: 24,
+            child: CircularProgressIndicator(),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _AlbumItemWidget extends ConsumerWidget {
+  const _AlbumItemWidget({
+    Key? key,
+    required this.album,
+  }) : super(key: key);
+
+  final AlbumDetail album;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return TrackTileContainer.album(
+      album: album.album,
+      tracks: album.tracks,
+      player: ref.read(playerProvider),
+      child: _CoverTrackListWidget(
+        title: HighlightClickableText(
+          text: album.album.name,
+          onTap: () {
+            ref
+                .read(navigatorProvider.notifier)
+                .navigate(NavigationTargetAlbumDetail(album.album.id));
+          },
+        ),
+        cover: ClipRRect(
+          borderRadius: BorderRadius.circular(8),
+          child: Image(
+            image: CachedImage(album.album.picUrl),
+            fit: BoxFit.cover,
+          ),
+        ),
+        tracks: album.tracks,
+        onAddAllTap: () {
+          // TODO add all
+          toast(context.strings.todo);
+        },
+      ),
+    );
+  }
+}
+
+class _CoverTrackListWidget extends StatelessWidget {
+  const _CoverTrackListWidget({
+    Key? key,
+    required this.cover,
+    required this.tracks,
+    required this.onAddAllTap,
+    required this.title,
+  }) : super(key: key);
+
+  final Widget cover;
+  final List<Track> tracks;
+
+  final VoidCallback onAddAllTap;
+
+  final Widget title;
+
+  @override
+  Widget build(BuildContext context) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const SizedBox(width: 20),
         SizedBox.square(
           dimension: 180,
-          child: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(8),
-              color: context.colorScheme.primary,
-            ),
-            child: Center(
-              child: Text.rich(
-                const TextSpan(children: [
-                  TextSpan(text: 'TOP\n'),
-                  TextSpan(text: '50', style: TextStyle(fontSize: 50)),
-                ]),
-                style: context.primaryTextTheme.headlineLarge.bold,
-                textAlign: TextAlign.center,
-              ),
-            ),
-          ),
+          child: cover,
         ),
         const SizedBox(width: 16),
         Expanded(
@@ -173,51 +293,33 @@ class _TopSongs extends ConsumerWidget {
               Row(
                 children: [
                   const SizedBox(width: 20),
-                  Text(
-                    context.strings.topSongs,
+                  DefaultTextStyle.merge(
                     style: context.textTheme.headline6,
+                    child: title,
                   ),
                   const SizedBox(width: 20),
                   AppIconButton(
                     icon: Icons.play_circle_outline_rounded,
                     tooltip: context.strings.playAll,
                     onPressed: () {
-                      // TODO play all
-                      toast(context.strings.todo);
+                      TrackTileContainer.playTrack(context, null);
                     },
                   ),
                   AppIconButton(
                     icon: Icons.playlist_add_rounded,
                     tooltip: context.strings.addToPlaylist,
-                    onPressed: () {
-                      // TODO add all
-                      toast(context.strings.todo);
-                    },
+                    onPressed: onAddAllTap,
                   ),
                 ],
               ),
               const SizedBox(height: 8),
-              TrackTileContainer.trackList(
-                tracks: tracks,
-                player: ref.read(playerProvider),
-                id: 'artist-${artist.id}-top-songs',
-                child: _TrackList(tracks: tracks),
-              ),
+              _TrackList(tracks: tracks),
             ],
           ),
         ),
         const SizedBox(width: 20),
       ],
     );
-  }
-}
-
-class _ArtistAlbums extends StatelessWidget {
-  const _ArtistAlbums({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container();
   }
 }
 

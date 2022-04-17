@@ -193,14 +193,19 @@ class NetworkRepository {
     ));
   }
 
-  // FIXME
-  Future<Result<Map>> artistAlbums(int artistId,
-          {int limit = 10, int offset = 0}) =>
-      _repository.artistAlbums(
-        artistId,
-        limit: limit,
-        offset: offset,
-      );
+  Future<Result<List<Album>>> artistAlbums(int artistId,
+      {int limit = 10, int offset = 0}) async {
+    final ret = await _repository.artistAlbums(
+      artistId,
+      limit: limit,
+      offset: offset,
+    );
+    if (ret.isError) {
+      return ret.asError!;
+    }
+    final albumList = ret.asValue!.value;
+    return Result.value(albumList.map((e) => e.toAlbum()).toList());
+  }
 
   // FIXME
   Future<Result<Map>> artistMvs(int artistId,

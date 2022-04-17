@@ -8,3 +8,20 @@ final artistProvider = FutureProvider.family<ArtistDetail, int>(
     return album;
   },
 );
+
+final artistAlbumsProvider = FutureProvider.family<List<AlbumDetail>, int>(
+  (ref, artistId) async {
+    final result = await neteaseRepository!.artistAlbums(artistId);
+    final albums = await result.asFuture;
+
+    final List<AlbumDetail> albumsList = [];
+
+    for (var album in albums) {
+      final albumDetail = await neteaseRepository!.albumDetail(album.id);
+      if (albumDetail.isValue) {
+        albumsList.add(albumDetail.asValue!.value);
+      }
+    }
+    return albumsList;
+  },
+);
