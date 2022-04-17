@@ -1,4 +1,6 @@
 //网易红调色板
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:quiet/utils/system/system_fonts.dart';
 
@@ -78,6 +80,13 @@ extension _ThemeExt on ThemeData {
   ThemeData applyAppFonts() {
     final fallbackFontFamily = getFallbackFontFamily();
     if (fallbackFontFamily == null) {
+      if (Platform.isWindows) {
+        return copyWith(
+          textTheme: textTheme.applyFonts(null, ['Microsoft Yahei']),
+          primaryTextTheme:
+              primaryTextTheme.applyFonts(null, ['Microsoft Yahei']),
+        );
+      }
       return this;
     }
     return _applyFonts(fontFamilyFallback: [fallbackFontFamily]);
