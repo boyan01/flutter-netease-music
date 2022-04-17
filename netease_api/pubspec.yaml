@@ -12,6 +12,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  cookie_jar: ^3.0.1
   dio_cookie_manager: 2.0.0
   netease_music_api:
     git:
