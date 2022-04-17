@@ -310,19 +310,26 @@ class Repository {
   }
 
   ///获取歌手信息和单曲
-  Future<Result<ArtistDetail>> artistDetail(int artistId) async {
+  Future<Result<ArtistDetail>> artist(int artistId) async {
     final result = await doRequest("/artists", {'id': artistId});
     return _map(result, (t) => ArtistDetail.fromJson(t));
   }
 
   ///获取歌手的专辑列表
-  Future<Result<Map>> artistAlbums(int artistId,
+  Future<Result<List<Album>>> artistAlbums(int artistId,
       {int limit = 10, int offset = 0}) async {
-    return doRequest("/artist/album", {
+    final result = await doRequest("/artist/album", {
       'id': artistId,
       "limit": limit,
       "offset": offset,
       "total": true,
+    });
+    return _map(result, (t) {
+      final hotAlbums = t['hotAlbums'] as List;
+      return hotAlbums
+          .cast<Map<String, dynamic>>()
+          .map((e) => Album.fromJson(e))
+          .toList();
     });
   }
 

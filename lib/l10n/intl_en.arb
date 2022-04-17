@@ -81,5 +81,9 @@
   "searchMusicResultCount": "Find {value} music",
   "songs": "Songs",
   "cloudMusicUsage": "Cloud Usage",
-  "cloudMusicFileDropDescription": "Drop your music file to here to upload."
+  "cloudMusicFileDropDescription": "Drop your music file to here to upload.",
+  "artistAlbumCount": "Album count: {value}",
+  "personalProfile": "Personal profile",
+  "topSongs": "Top Songs",
+  "showAllHotSongs": "Show all hot songs >"
 }

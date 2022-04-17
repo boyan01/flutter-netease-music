@@ -881,6 +881,46 @@ class S {
       args: [],
     );
   }
+
+  /// `Album count: {value}`
+  String artistAlbumCount(Object value) {
+    return Intl.message(
+      'Album count: $value',
+      name: 'artistAlbumCount',
+      desc: '',
+      args: [value],
+    );
+  }
+
+  /// `Personal profile`
+  String get personalProfile {
+    return Intl.message(
+      'Personal profile',
+      name: 'personalProfile',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Top Songs`
+  String get topSongs {
+    return Intl.message(
+      'Top Songs',
+      name: 'topSongs',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Show all hot songs >`
+  String get showAllHotSongs {
+    return Intl.message(
+      'Show all hot songs >',
+      name: 'showAllHotSongs',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

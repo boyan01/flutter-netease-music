@@ -21,7 +21,7 @@ class ArtistDetailPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Loader<ArtistDetail>(
-      loadTask: () => neteaseRepository!.artistDetail(artistId),
+      loadTask: () => neteaseRepository!.artist(artistId),
       loadingBuilder: (context) {
         return Scaffold(
           appBar: AppBar(title: const Text("歌手")),
@@ -168,9 +168,7 @@ class _PageAlbums extends StatefulWidget {
 class _PageAlbumsState extends State<_PageAlbums>
     with AutomaticKeepAliveClientMixin {
   Future<Result<List<Map>>> _delegate(offset) async {
-    final result =
-        await neteaseRepository!.artistAlbums(widget.artistId, offset: offset);
-    return ValueResult((result.asValue!.value["hotAlbums"] as List).cast());
+    return ErrorResult('unimplemented');
   }
 
   @override

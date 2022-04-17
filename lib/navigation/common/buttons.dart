@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:quiet/component.dart';
 
 class AppIconButton extends StatelessWidget {
   const AppIconButton({
@@ -37,4 +38,56 @@ class AppIconButton extends StatelessWidget {
             enable ? SystemMouseCursors.click : SystemMouseCursors.basic,
         padding: padding,
       );
+}
+
+class PlaylistIconTextButton extends StatelessWidget {
+  const PlaylistIconTextButton({
+    Key? key,
+    required this.icon,
+    required this.text,
+    this.onTap,
+  }) : super(key: key);
+
+  final Widget icon;
+  final Widget text;
+
+  final VoidCallback? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 40,
+      decoration: BoxDecoration(
+        border: Border.all(color: Theme.of(context).dividerColor, width: 1),
+        borderRadius: BorderRadius.circular(24),
+      ),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(24),
+        onTap: onTap,
+        mouseCursor:
+            onTap != null ? SystemMouseCursors.click : SystemMouseCursors.basic,
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const SizedBox(width: 12),
+            IconTheme.merge(
+              data: IconThemeData(
+                size: 16,
+                color: Theme.of(context).textTheme.bodyText1?.color,
+              ),
+              child: icon,
+            ),
+            const SizedBox(width: 8),
+            DefaultTextStyle.merge(
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: context.textTheme.bodyText1,
+              child: text,
+            ),
+            const SizedBox(width: 16),
+          ],
+        ),
+      ),
+    );
+  }
 }
