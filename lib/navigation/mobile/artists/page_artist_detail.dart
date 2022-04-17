@@ -21,7 +21,7 @@ class ArtistDetailPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Loader<ArtistDetail>(
-      loadTask: () => neteaseRepository!.artistDetail(artistId),
+      loadTask: () => neteaseRepository!.artist(artistId),
       loadingBuilder: (context) {
         return Scaffold(
           appBar: AppBar(title: const Text("歌手")),

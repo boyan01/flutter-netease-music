@@ -65,6 +65,21 @@ class TrackTileContainer extends StatelessWidget {
     );
   }
 
+  factory TrackTileContainer.trackList({
+    required List<Track> tracks,
+    required Widget child,
+    required TracksPlayer player,
+    required String id,
+  }) {
+    return TrackTileContainer._private(
+      (track) => player.playWithList(id, tracks, track: track),
+      (track) => throw UnimplementedError('$id not support delete track.'),
+      id: id,
+      tracks: tracks,
+      child: child,
+    );
+  }
+
   factory TrackTileContainer.daily({
     required List<Track> tracks,
     required DateTime dateTime,
@@ -73,11 +88,10 @@ class TrackTileContainer extends StatelessWidget {
   }) {
     final id =
         'daily_playlist_${dateTime.year}_${dateTime.month}_${dateTime.day}';
-    return TrackTileContainer._private(
-      (track) => player.playWithList(id, tracks, track: track),
-      (track) => throw UnimplementedError('daily not support delete track.'),
-      id: id,
+    return TrackTileContainer.trackList(
       tracks: tracks,
+      player: player,
+      id: id,
       child: child,
     );
   }
@@ -87,16 +101,8 @@ class TrackTileContainer extends StatelessWidget {
     required Widget child,
     required TracksPlayer player,
   }) {
-    const id = 'user_cloud_tracks';
-    return TrackTileContainer._private(
-      (track) => player.playWithList(id, tracks, track: track),
-      (track) {
-        // TODO
-      },
-      id: id,
-      tracks: tracks,
-      child: child,
-    );
+    return TrackTileContainer.trackList(
+        tracks: tracks, player: player, id: 'user_cloud_tracks', child: child);
   }
 
   factory TrackTileContainer.playlist({

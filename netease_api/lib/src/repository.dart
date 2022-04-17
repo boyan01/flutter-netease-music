@@ -310,7 +310,7 @@ class Repository {
   }
 
   ///获取歌手信息和单曲
-  Future<Result<ArtistDetail>> artistDetail(int artistId) async {
+  Future<Result<ArtistDetail>> artist(int artistId) async {
     final result = await doRequest("/artists", {'id': artistId});
     return _map(result, (t) => ArtistDetail.fromJson(t));
   }

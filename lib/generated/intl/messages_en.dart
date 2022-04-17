@@ -23,18 +23,20 @@ class MessageLookup extends MessageLookupByLibrary {
   static String m0(artistName, albumName, albumId, sharedUserId) =>
       "The ${artistName}\'s album《${albumName}》: http://music.163.com/album/${albumId}/?userid=${sharedUserId} (From @NeteaseCouldMusic)";
 
-  static String m1(value) => "Created at ${value}";
+  static String m1(value) => "Album count: ${value}";
 
-  static String m2(value) => "${value} Music";
+  static String m2(value) => "Created at ${value}";
 
-  static String m3(value) => "Play Count: ${value}";
+  static String m3(value) => "${value} Music";
 
-  static String m4(username, title, playlistId, userId, shareUserId) =>
+  static String m4(value) => "Play Count: ${value}";
+
+  static String m5(username, title, playlistId, userId, shareUserId) =>
       "The PlayList created by ${username}「${title}」: http://music.163.com/playlist/${playlistId}/${userId}/?userid=${shareUserId} (From @NeteaseCouldMusic)";
 
-  static String m5(value) => "Track Count: ${value}";
+  static String m6(value) => "Track Count: ${value}";
 
-  static String m6(value) => "Find ${value} music";
+  static String m7(value) => "Find ${value} music";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -46,6 +48,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "album": MessageLookupByLibrary.simpleMessage("Album"),
         "albumShareContent": m0,
         "alreadyBuy": MessageLookupByLibrary.simpleMessage("Payed"),
+        "artistAlbumCount": m1,
         "artists": MessageLookupByLibrary.simpleMessage("Artists"),
         "cloudMusic": MessageLookupByLibrary.simpleMessage("Could Space"),
         "cloudMusicFileDropDescription": MessageLookupByLibrary.simpleMessage(
@@ -54,7 +57,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "collectionLike": MessageLookupByLibrary.simpleMessage("Collections"),
         "copyRightOverlay": MessageLookupByLibrary.simpleMessage(
             "Only used for personal study and research, commercial and illegal purposes are prohibited"),
-        "createdDate": m1,
+        "createdDate": m2,
         "createdSongList":
             MessageLookupByLibrary.simpleMessage("Created Song List"),
         "currentPlaying":
@@ -90,7 +93,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "login": MessageLookupByLibrary.simpleMessage("Login"),
         "loginWithPhone":
             MessageLookupByLibrary.simpleMessage("login with phone"),
-        "musicCountFormat": m2,
+        "musicCountFormat": m3,
         "musicName": MessageLookupByLibrary.simpleMessage("Music Name"),
         "my": MessageLookupByLibrary.simpleMessage("My"),
         "myDjs": MessageLookupByLibrary.simpleMessage("Dj"),
@@ -102,6 +105,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "personalFM": MessageLookupByLibrary.simpleMessage("Personal FM"),
         "personalFmPlaying":
             MessageLookupByLibrary.simpleMessage("Personal FM Playing"),
+        "personalProfile":
+            MessageLookupByLibrary.simpleMessage("Personal profile"),
         "play": MessageLookupByLibrary.simpleMessage("Play"),
         "playAll": MessageLookupByLibrary.simpleMessage("Play All"),
         "playInNext": MessageLookupByLibrary.simpleMessage("play in next"),
@@ -110,15 +115,15 @@ class MessageLookup extends MessageLookupByLibrary {
         "playlist": MessageLookupByLibrary.simpleMessage("PlayList"),
         "playlistLoginDescription": MessageLookupByLibrary.simpleMessage(
             "Login to discover your playlists."),
-        "playlistPlayCount": m3,
-        "playlistShareContent": m4,
-        "playlistTrackCount": m5,
+        "playlistPlayCount": m4,
+        "playlistShareContent": m5,
+        "playlistTrackCount": m6,
         "projectDescription": MessageLookupByLibrary.simpleMessage(
             "OpenSource project https://github.com/boyan01/flutter-netease-music"),
         "recommendPlayLists":
             MessageLookupByLibrary.simpleMessage("Recommend PlayLists"),
         "search": MessageLookupByLibrary.simpleMessage("Search"),
-        "searchMusicResultCount": m6,
+        "searchMusicResultCount": m7,
         "searchPlaylistSongs":
             MessageLookupByLibrary.simpleMessage("Search Songs"),
         "selectRegionDiaCode":
@@ -130,6 +135,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "shareContentCopied": MessageLookupByLibrary.simpleMessage(
             "Share content has copied to clipboard."),
         "shortcuts": MessageLookupByLibrary.simpleMessage("Shortcuts"),
+        "showAllHotSongs":
+            MessageLookupByLibrary.simpleMessage("Show all hot songs >"),
         "skipAccompaniment": MessageLookupByLibrary.simpleMessage(
             "Skip accompaniment when play playlist."),
         "skipLogin": MessageLookupByLibrary.simpleMessage("Skip login"),
@@ -145,6 +152,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "tipsAutoRegisterIfUserNotExist":
             MessageLookupByLibrary.simpleMessage("未注册手机号登陆后将自动创建账号"),
         "todo": MessageLookupByLibrary.simpleMessage("TBD"),
+        "topSongs": MessageLookupByLibrary.simpleMessage("Top Songs"),
         "trackNoCopyright":
             MessageLookupByLibrary.simpleMessage("Track No Copyright"),
         "volumeDown": MessageLookupByLibrary.simpleMessage("Volume Down"),

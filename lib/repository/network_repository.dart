@@ -180,8 +180,8 @@ class NetworkRepository {
   Future<Result<api.MusicVideoDetailResult>> mvDetail(int mvId) =>
       _repository.mvDetail(mvId);
 
-  Future<Result<ArtistDetail>> artistDetail(int id) async {
-    final ret = await _repository.artistDetail(id);
+  Future<Result<ArtistDetail>> artist(int id) async {
+    final ret = await _repository.artist(id);
     if (ret.isError) {
       return ret.asError!;
     }

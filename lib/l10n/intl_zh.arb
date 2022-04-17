@@ -81,5 +81,9 @@
   "searchMusicResultCount": "找到 {value} 首歌曲",
   "songs": "歌曲",
   "cloudMusicUsage": "云盘容量",
-  "cloudMusicFileDropDescription": "将音乐文件拖放到这里进行上传"
+  "cloudMusicFileDropDescription": "将音乐文件拖放到这里进行上传",
+  "artistAlbumCount": "专辑数：{value}",
+  "personalProfile": "个人主页",
+  "topSongs": "热门歌曲",
+  "showAllHotSongs": "查看所有热门歌曲 >"
 }
