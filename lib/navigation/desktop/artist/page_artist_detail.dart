@@ -150,6 +150,7 @@ class _TopSongs extends ConsumerWidget {
       player: ref.read(playerProvider),
       id: 'artist-${artist.id}-top-songs',
       child: _CoverTrackListWidget(
+        canCollapse: true,
         title: Text(context.strings.topSongs),
         cover: Container(
           decoration: BoxDecoration(
@@ -232,6 +233,7 @@ class _AlbumItemWidget extends ConsumerWidget {
       tracks: album.tracks,
       player: ref.read(playerProvider),
       child: _CoverTrackListWidget(
+        canCollapse: false,
         title: HighlightClickableText(
           text: album.album.name,
           onTap: () {
@@ -264,6 +266,7 @@ class _CoverTrackListWidget extends StatelessWidget {
     required this.tracks,
     required this.onAddAllTap,
     required this.title,
+    required this.canCollapse,
   }) : super(key: key);
 
   final Widget cover;
@@ -272,6 +275,7 @@ class _CoverTrackListWidget extends StatelessWidget {
   final VoidCallback onAddAllTap;
 
   final Widget title;
+  final bool canCollapse;
 
   @override
   Widget build(BuildContext context) {
@@ -313,7 +317,7 @@ class _CoverTrackListWidget extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 8),
-              _TrackList(tracks: tracks),
+              _TrackList(tracks: tracks, canCollapse: canCollapse),
             ],
           ),
         ),
@@ -323,21 +327,28 @@ class _CoverTrackListWidget extends StatelessWidget {
   }
 }
 
+const _maxInitialCount = 10;
+
 class _TrackList extends HookWidget {
-  const _TrackList({Key? key, required this.tracks}) : super(key: key);
+  const _TrackList({
+    Key? key,
+    required this.tracks,
+    required bool canCollapse,
+  })  : canCollapse = canCollapse && tracks.length > _maxInitialCount,
+        super(key: key);
 
   final List<Track> tracks;
 
+  final bool canCollapse;
+
   @override
   Widget build(BuildContext context) {
-    const maxInitialCount = 10;
-    final bool canCollapse = tracks.length > maxInitialCount;
     final collapsed = useState(canCollapse);
     return TrackTableContainer(
       child: Column(
         children: [
           for (var i = 0;
-              i < (collapsed.value ? maxInitialCount : tracks.length);
+              i < (collapsed.value ? _maxInitialCount : tracks.length);
               i += 1)
             TrackTile(track: tracks[i], index: i + 1),
           if (collapsed.value && canCollapse)
