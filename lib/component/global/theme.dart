@@ -37,7 +37,8 @@ ThemeData get quietDarkTheme {
           waitDuration: Duration(milliseconds: 1000),
         ),
       )
-      .applyAppFonts();
+      .applyAppFonts()
+      .applyCommon();
 }
 
 ThemeData get lightTheme => _buildTheme(lightSwatch);
@@ -57,7 +58,8 @@ ThemeData _buildTheme(Color primaryColor) {
           size: 24,
         ),
       )
-      .applyAppFonts();
+      .applyAppFonts()
+      .applyCommon();
 }
 
 extension QuietAppTheme on BuildContext {
@@ -77,6 +79,20 @@ extension TextStyleExtesntion on TextStyle? {
 }
 
 extension _ThemeExt on ThemeData {
+  ThemeData applyCommon() {
+    return copyWith(
+      pageTransitionsTheme: const PageTransitionsTheme(
+        builders: <TargetPlatform, PageTransitionsBuilder>{
+          TargetPlatform.android: ZoomPageTransitionsBuilder(),
+          TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+          TargetPlatform.macOS: ZoomPageTransitionsBuilder(),
+          TargetPlatform.linux: ZoomPageTransitionsBuilder(),
+          TargetPlatform.windows: ZoomPageTransitionsBuilder(),
+        },
+      ),
+    );
+  }
+
   ThemeData applyAppFonts() {
     final fallbackFontFamily = getFallbackFontFamily();
     if (fallbackFontFamily == null) {

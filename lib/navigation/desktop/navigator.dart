@@ -18,9 +18,9 @@ class DesktopNavigatorController extends NavigatorController {
     notifyListeners();
   }
 
-  final _pages = <MaterialPage<dynamic>>[];
+  final _pages = <Page<dynamic>>[];
 
-  final _popPages = <MaterialPage<dynamic>>[];
+  final _popPages = <Page<dynamic>>[];
 
   @override
   bool get canBack => _pages.length > 1 || _showPlayingPage != null;
@@ -78,7 +78,7 @@ class DesktopNavigatorController extends NavigatorController {
   @override
   List<Page> get pages => _pages;
 
-  MaterialPage<dynamic> _buildPage(NavigationTarget target) {
+  Page<dynamic> _buildPage(NavigationTarget target) {
     final Widget page;
     if (target is NavigationTargetDiscover) {
       page = const DiscoverPage();
