@@ -14,7 +14,7 @@ PODS:
   - url_launcher_macos (0.0.1):
     - FlutterMacOS
   - VLCKit (3.3.17)
-  - window_manager (0.1.0):
+  - window_manager (0.2.0):
     - FlutterMacOS
 
 DEPENDENCIES:
@@ -50,16 +50,16 @@ EXTERNAL SOURCES:
     :path: Flutter/ephemeral/.symlinks/plugins/window_manager/macos
 
 SPEC CHECKSUMS:
-  dart_vlc: 1dbcc77b4304a8826b1fceaa1eada263b02b2123
+  dart_vlc: 82c35bcab4e7cafe02b0f821c0de9eeb4aa9e9ed
   desktop_drop: 69eeff437544aa619c8db7f4481b3a65f7696898
   FlutterMacOS: 57701585bf7de1b3fc2bb61f6378d73bbdea8424
   path_provider_macos: 160cab0d5461f0c0e02995469a98f24bdb9a3f1f
-  shared_preferences_macos: 480ce071d0666e37cef23fe6c702293a3d21799e
+  shared_preferences_macos: a64dc611287ed6cbe28fd1297898db1336975727
   system_clock: d5fdc00655b062d3b748b612ba32549ee8cb4ddb
-  url_launcher_macos: 45af3d61de06997666568a7149c1be98b41c95d4
+  url_launcher_macos: 597e05b8e514239626bcf4a850fcf9ef5c856ec3
   VLCKit: 21651e881f19774ecf9a86ca2c2010859fe68a08
-  window_manager: db713621c322d52e96064336a4ba2b7e4e30c94f
+  window_manager: 3a1844359a6295ab1e47659b1a777e36773cd6e8
 
 PODFILE CHECKSUM: 6eac6b3292e5142cfc23bdeb71848a40ec51c14c
 
-COCOAPODS: 1.11.2
+COCOAPODS: 1.11.3

@@ -60,6 +60,12 @@ dev_dependencies:
   json_serializable: ^6.0.1
   flutter_lints: ^2.0.0
 
+dependency_overrides:
+  dart_vlc:
+    git:
+      url: https://github.com/boyan01/dart_vlc.git
+      ref: 8ab75e644698ae410bf4f020a929cc0e36d0d220
+
 # The following section is specific to Flutter.
 flutter:
 

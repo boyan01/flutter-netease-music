@@ -193,17 +193,21 @@ packages:
   dart_vlc:
     dependency: "direct main"
     description:
-      name: dart_vlc
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.1.9"
+      path: "."
+      ref: "8ab75e644698ae410bf4f020a929cc0e36d0d220"
+      resolved-ref: "8ab75e644698ae410bf4f020a929cc0e36d0d220"
+      url: "https://github.com/boyan01/dart_vlc.git"
+    source: git
+    version: "0.1.8"
   dart_vlc_ffi:
     dependency: transitive
     description:
-      name: dart_vlc_ffi
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.1.5+1"
+      path: ffi
+      ref: "1cfc838d7b6d1b7adba2541e31a03b147b6981dd"
+      resolved-ref: "1cfc838d7b6d1b7adba2541e31a03b147b6981dd"
+      url: "https://github.com/boyan01/dart_vlc.git"
+    source: git
+    version: "0.1.5"
   desktop_drop:
     dependency: "direct main"
     description:
