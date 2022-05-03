@@ -31,6 +31,8 @@ jobs:
           flutter doctor
 
       - run: flutter pub get
+      - run: cd netease_api && flutter pub get && cd ..
+
       - run: flutter pub run build_runner build --delete-conflicting-outputs
 
       # verify the use of 'dart format' on each commit.
