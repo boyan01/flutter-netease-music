@@ -2,13 +2,12 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:async/async.dart' show Result;
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:netease_music_api/netease_cloud_music.dart' as api;
 
 import '../netease_api.dart';
-
-export 'package:async/async.dart' show Result, ValueResult, ErrorResult;
 
 ///enum for [NeteaseRepository.search] param type
 class SearchType {
