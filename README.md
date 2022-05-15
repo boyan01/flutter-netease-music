@@ -50,7 +50,7 @@ debian:
 * music player(mobile):
   [**flutter-music-player**](https://github.com/boyan01/flutter-music-player)
 * music player(desktop):
-  [**dart_vlc**](https://github.com/alexmercerind/dart_vlc)
+  [**lychee_player**](https://github.com/boyan01/lychee_player)
 * netease api service:
   [**NeteaseCloudMusicApi**](https://github.com/ziming1/NeteaseCloudMusicApi)
 
