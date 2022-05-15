@@ -15,6 +15,8 @@ extension _SecondsExt on double {
 }
 
 class TracksPlayerImplLychee extends TracksPlayer {
+  TracksPlayerImplLychee();
+
   var _trackList = const TrackList.empty();
 
   Track? _current;
@@ -181,8 +183,16 @@ class TracksPlayerImplLychee extends TracksPlayer {
         // skip play. since the track is changed.
         return;
       }
-      _player = LycheeAudioPlayer(url.asValue!.value);
-      _player?.playWhenReady = true;
+      _player?.dispose();
+      _player = LycheeAudioPlayer(url.asValue!.value)
+        ..playWhenReady = true
+        ..onPlayWhenReadyChanged.addListener(notifyPlayStateChanged)
+        ..state.addListener(() {
+          if (_player?.state.value == PlayerState.end) {
+            skipToNext();
+          }
+          notifyPlayStateChanged();
+        });
     });
     _current = track;
     notifyPlayStateChanged();
