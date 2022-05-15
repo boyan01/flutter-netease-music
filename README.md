@@ -25,6 +25,15 @@ A Universal copy app of [NeteaseMusic](https://music.163.com/#/download)
  flutter run --profile
  ```
 
+## Development (开发)
+
+### generate l10n
+
+```shell
+flutter pub global activate intl_utils
+flutter pub global run intl_utils:generate
+```
+
 ### Linux requirement.
 
 debian:

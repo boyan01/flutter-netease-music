@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:dart_vlc/dart_vlc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive/hive.dart';
@@ -19,7 +18,6 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await loadFallbackFonts();
   NetworkRepository.initialize();
-  DartVLC.initialize();
   _initialDesktop();
   runZonedGuarded(() {
     runApp(ProviderScope(

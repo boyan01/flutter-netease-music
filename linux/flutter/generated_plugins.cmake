@@ -3,7 +3,6 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
-  dart_vlc
   desktop_drop
   system_clock
   url_launcher_linux
@@ -11,6 +10,7 @@ list(APPEND FLUTTER_PLUGIN_LIST
 )
 
 list(APPEND FLUTTER_FFI_PLUGIN_LIST
+  lychee_player
 )
 
 set(PLUGIN_BUNDLED_LIBRARIES)

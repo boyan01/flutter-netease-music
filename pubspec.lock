@@ -36,13 +36,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.9.0"
-  audio_video_progress_bar:
-    dependency: transitive
-    description:
-      name: audio_video_progress_bar
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.10.0"
   boolean_selector:
     dependency: transitive
     description:
@@ -112,7 +105,7 @@ packages:
       name: characters
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.2.0"
+    version: "1.2.1"
   charcode:
     dependency: transitive
     description:
@@ -190,24 +183,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.2.3"
-  dart_vlc:
-    dependency: "direct main"
-    description:
-      path: "."
-      ref: "8ab75e644698ae410bf4f020a929cc0e36d0d220"
-      resolved-ref: "8ab75e644698ae410bf4f020a929cc0e36d0d220"
-      url: "https://github.com/boyan01/dart_vlc.git"
-    source: git
-    version: "0.1.8"
-  dart_vlc_ffi:
-    dependency: transitive
-    description:
-      path: ffi
-      ref: "1cfc838d7b6d1b7adba2541e31a03b147b6981dd"
-      resolved-ref: "1cfc838d7b6d1b7adba2541e31a03b147b6981dd"
-      url: "https://github.com/boyan01/dart_vlc.git"
-    source: git
-    version: "0.1.5"
   desktop_drop:
     dependency: "direct main"
     description:
@@ -263,7 +238,7 @@ packages:
       name: ffi
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.1.2"
+    version: "1.2.1"
   file:
     dependency: transitive
     description:
@@ -440,6 +415,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.3"
+  lychee_player:
+    dependency: "direct main"
+    description:
+      name: lychee_player
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.0"
   matcher:
     dependency: transitive
     description:
@@ -756,7 +738,7 @@ packages:
       name: source_span
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.8.2"
+    version: "1.9.0"
   stack_trace:
     dependency: transitive
     description:
@@ -791,7 +773,7 @@ packages:
       name: string_scanner
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.1.0"
+    version: "1.1.1"
   synchronized:
     dependency: transitive
     description:
@@ -947,5 +929,5 @@ packages:
     source: hosted
     version: "3.1.0"
 sdks:
-  dart: ">=2.17.0-206.0.dev <3.0.0"
-  flutter: ">=2.10.0"
+  dart: ">=2.17.0 <3.0.0"
+  flutter: ">=3.0.0"
