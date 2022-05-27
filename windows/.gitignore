@@ -17,3 +17,5 @@ x86/
 !*.[Cc]ache/
 
 cmake-build-*/
+
+/.vs
