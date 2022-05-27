@@ -5,6 +5,7 @@
 #include "resource.h"
 
 #include <cmath>
+#include <algorithm>
 
 namespace {
 
