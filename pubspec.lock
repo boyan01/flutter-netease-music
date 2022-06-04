@@ -193,21 +193,17 @@ packages:
   dart_vlc:
     dependency: "direct main"
     description:
-      path: "."
-      ref: "8ab75e644698ae410bf4f020a929cc0e36d0d220"
-      resolved-ref: "8ab75e644698ae410bf4f020a929cc0e36d0d220"
-      url: "https://github.com/boyan01/dart_vlc.git"
-    source: git
-    version: "0.1.8"
+      name: dart_vlc
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.2.1"
   dart_vlc_ffi:
     dependency: transitive
     description:
-      path: ffi
-      ref: "1cfc838d7b6d1b7adba2541e31a03b147b6981dd"
-      resolved-ref: "1cfc838d7b6d1b7adba2541e31a03b147b6981dd"
-      url: "https://github.com/boyan01/dart_vlc.git"
-    source: git
-    version: "0.1.5"
+      name: dart_vlc_ffi
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.8"
   desktop_drop:
     dependency: "direct main"
     description:
@@ -309,6 +305,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_native_view:
+    dependency: transitive
+    description:
+      name: flutter_native_view
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.2"
   flutter_riverpod:
     dependency: "direct main"
     description:
@@ -647,6 +650,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.0-nullsafety.0"
+  screen_retriever:
+    dependency: transitive
+    description:
+      name: screen_retriever
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.2"
   scrollable_positioned_list:
     dependency: "direct main"
     description:
@@ -924,7 +934,7 @@ packages:
       name: window_manager
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.2.1"
+    version: "0.2.5"
   windows_taskbar:
     dependency: "direct main"
     description:
@@ -947,5 +957,5 @@ packages:
     source: hosted
     version: "3.1.0"
 sdks:
-  dart: ">=2.17.0-206.0.dev <3.0.0"
+  dart: ">=2.17.0 <3.0.0"
   flutter: ">=2.10.0"
