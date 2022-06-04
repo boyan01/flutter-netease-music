@@ -5,7 +5,7 @@ version: 1.0.0+1
 publish_to: none
 
 environment:
-  sdk: '>=2.14.0 <3.0.0'
+  sdk: '>=2.17.0 <3.0.0'
 
 dependencies:
   flutter:
@@ -38,11 +38,11 @@ dependencies:
   netease_api:
     path: netease_api/
   path: ^1.8.0
-  async: ^2.8.0
+  async: ^2.9.0
   riverpod: ^1.0.3
   flutter_riverpod: ^1.0.3
   hooks_riverpod: ^1.0.3
-  dart_vlc: ^0.1.8
+  dart_vlc: ^0.2.1
   collection: ^1.15.0
   window_manager: ^0.2.1
   lpinyin: ^2.0.3
@@ -61,10 +61,7 @@ dev_dependencies:
   flutter_lints: ^2.0.0
 
 dependency_overrides:
-  dart_vlc:
-    git:
-      url: https://github.com/boyan01/dart_vlc.git
-      ref: 8ab75e644698ae410bf4f020a929cc0e36d0d220
+  async: ^2.9.0
 
 # The following section is specific to Flutter.
 flutter:
