@@ -49,7 +49,18 @@ void _initialDesktop() async {
   await WindowManager.instance.ensureInitialized();
   if (Platform.isWindows) {
     // only Windows need this.
-    WindowManager.instance.setMinimumSize(const Size(960, 720));
+    WindowOptions windowOptions = const WindowOptions(
+      size: Size(1080, 720),
+      center: true,
+      minimumSize: Size(960, 720),
+      backgroundColor: Colors.transparent,
+      skipTaskbar: false,
+      titleBarStyle: TitleBarStyle.hidden,
+    );
+    windowManager.waitUntilReadyToShow(windowOptions, () async {
+      await windowManager.show();
+      await windowManager.focus();
+    });
   }
 
   assert(() {

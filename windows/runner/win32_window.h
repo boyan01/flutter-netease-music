@@ -86,10 +86,6 @@ class Win32Window {
   // Retrieves a class instance pointer for |window|
   static Win32Window* GetThisFromHandle(HWND const window) noexcept;
 
-
-
-  static void ClipOrCenterRectToMonitor(LPRECT prc, UINT flags);
-
   bool quit_on_close_ = false;
 
   // window handle for top level window.

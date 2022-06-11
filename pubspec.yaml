@@ -44,7 +44,7 @@ dependencies:
   hooks_riverpod: ^1.0.3
   dart_vlc: ^0.2.1
   collection: ^1.15.0
-  window_manager: ^0.2.1
+  window_manager: ^0.2.5
   lpinyin: ^2.0.3
   stream_transform: ^2.0.0
   windows_taskbar: ^1.0.0
