@@ -26,12 +26,12 @@ dependencies:
       url: https://github.com/boyan01/loader.git
       ref: e1ef2d9957bc8615c7f19f989d4fcfc142e20e93
   encrypt: ^5.0.0
-  overlay_support: ^1.2.1
+  overlay_support: ^2.0.1
   music_player:
     git:
       url: https://github.com/boyan01/flutter-music-player.git
-      ref: 7ba0513153853f769e3789b37f9ef630c85740f6
-  scrollable_positioned_list: ^0.2.0-nullsafety.0
+      ref: fd425d55d43f121b5ab3bc9ab878e20448fe3e61
+  scrollable_positioned_list: ^0.3.2
   hive: ^2.0.4
   flutter_hooks: ^0.18.0
   equatable: ^2.0.3
