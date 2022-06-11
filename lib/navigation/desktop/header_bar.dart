@@ -22,8 +22,8 @@ class HeaderBar extends StatelessWidget {
       elevation: 10,
       child: Padding(
         padding: EdgeInsets.only(
-          top: defaultTargetPlatform == TargetPlatform.macOS ? 20 : 4,
-          bottom: 4,
+          top: defaultTargetPlatform == TargetPlatform.macOS ? 20 : 0,
+          bottom: 0,
         ),
         child: SizedBox(
           height: 42,
@@ -210,11 +210,16 @@ class _WindowButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return IconButton(
-      icon: icon,
-      iconSize: 24,
-      splashRadius: 20,
-      onPressed: onTap,
+    return InkWell(
+      radius: 20,
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: SizedBox.square(
+          dimension: 24,
+          child: icon,
+        ),
+      ),
     );
   }
 }
