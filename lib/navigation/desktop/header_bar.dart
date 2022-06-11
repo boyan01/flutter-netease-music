@@ -8,6 +8,7 @@ import 'package:quiet/extension.dart';
 import 'package:quiet/providers/navigator_provider.dart';
 import 'package:window_manager/window_manager.dart';
 
+import '../../utils/callback_window_listener.dart';
 import '../common/navigation_target.dart';
 import 'widgets/caption_icons.dart';
 
@@ -156,7 +157,7 @@ class _WindowCaptionButtonGroup extends HookWidget {
       isMaximized.value = await WindowManager.instance.isMaximized();
     });
     useEffect(() {
-      final listener = _CallbackWindowListener(onWindowMaximized: () {
+      final listener = CallbackWindowListener(onWindowMaximized: () {
         isMaximized.value = true;
       }, onWindowRestored: () {
         isMaximized.value = false;
@@ -248,46 +249,5 @@ class _MoveWindow extends StatelessWidget {
       },
       child: child,
     );
-  }
-}
-
-class _CallbackWindowListener extends WindowListener {
-  _CallbackWindowListener({
-    this.onWindowMinimized,
-    this.onWindowMaximized,
-    this.onWindowRestored,
-    this.onWindowResizeCallback,
-    this.onWindowMoveCallback,
-  });
-
-  final VoidCallback? onWindowMinimized;
-  final VoidCallback? onWindowMaximized;
-  final VoidCallback? onWindowRestored;
-  final VoidCallback? onWindowResizeCallback;
-  final VoidCallback? onWindowMoveCallback;
-
-  @override
-  void onWindowMaximize() {
-    onWindowMaximized?.call();
-  }
-
-  @override
-  void onWindowMinimize() {
-    onWindowMinimized?.call();
-  }
-
-  @override
-  void onWindowRestore() {
-    onWindowRestored?.call();
-  }
-
-  @override
-  void onWindowResize() {
-    onWindowResizeCallback?.call();
-  }
-
-  @override
-  void onWindowMove() {
-    onWindowMoveCallback?.call();
   }
 }

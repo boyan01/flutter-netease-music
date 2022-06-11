@@ -9,10 +9,13 @@ import 'package:overlay_support/overlay_support.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:quiet/navigation/app.dart';
 import 'package:quiet/pages/splash/page_splash.dart';
+import 'package:quiet/providers/preference_provider.dart';
 import 'package:quiet/repository.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:window_manager/window_manager.dart';
 
 import 'media/tracks/tracks_player_impl_mobile.dart';
+import 'utils/callback_window_listener.dart';
 import 'utils/system/system_fonts.dart';
 
 void main() async {
@@ -20,9 +23,13 @@ void main() async {
   await loadFallbackFonts();
   NetworkRepository.initialize();
   DartVLC.initialize();
-  _initialDesktop();
+  final preferences = await SharedPreferences.getInstance();
+  _initialDesktop(preferences);
   runZonedGuarded(() {
     runApp(ProviderScope(
+      overrides: [
+        sharedPreferenceProvider.overrideWithValue(preferences),
+      ],
       child: PageSplash(
         futures: [
           getApplicationDocumentsDirectory().then((dir) {
@@ -42,17 +49,17 @@ void main() async {
   });
 }
 
-void _initialDesktop() async {
+void _initialDesktop(SharedPreferences preferences) async {
   if (!(Platform.isMacOS || Platform.isLinux || Platform.isWindows)) {
     return;
   }
   await WindowManager.instance.ensureInitialized();
   if (Platform.isWindows) {
-    // only Windows need this.
-    WindowOptions windowOptions = const WindowOptions(
-      size: Size(1080, 720),
+    final size = preferences.getWindowSize();
+    WindowOptions windowOptions = WindowOptions(
+      size: size ?? const Size(1080, 720),
       center: true,
-      minimumSize: Size(960, 720),
+      minimumSize: const Size(960, 720),
       backgroundColor: Colors.transparent,
       skipTaskbar: false,
       titleBarStyle: TitleBarStyle.hidden,
@@ -61,6 +68,12 @@ void _initialDesktop() async {
       await windowManager.show();
       await windowManager.focus();
     });
+    windowManager.addListener(
+      CallbackWindowListener(onWindowResizeCallback: () async {
+        final size = await windowManager.getSize();
+        preferences.setWindowSize(size);
+      }),
+    );
   }
 
   assert(() {
