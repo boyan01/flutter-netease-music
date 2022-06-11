@@ -4,7 +4,7 @@ import 'package:quiet/material/flexible_app_bar.dart';
 import 'package:quiet/navigation/common/playlist/music_list.dart';
 import 'package:quiet/pages/account/page_need_login.dart';
 import 'package:quiet/repository.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 ///每日推荐歌曲页面
 ///NOTE：需要登陆
@@ -48,8 +48,10 @@ class _DailyMusicList extends StatelessWidget {
             IconButton(
                 icon: const Icon(Icons.help_outline),
                 onPressed: () {
-                  launch("https://music.163.com/m/topic/19193112",
-                      forceWebView: true);
+                  launchUrlString(
+                    "https://music.163.com/m/topic/19193112",
+                    mode: LaunchMode.inAppWebView,
+                  );
                 })
           ],
           flexibleSpace: _HeaderContent(),

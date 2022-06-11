@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:quiet/component.dart';
 import 'package:quiet/providers/settings_provider.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class PageWelcome extends StatefulWidget {
   @override
@@ -63,7 +63,7 @@ class _WelcomeBody extends ConsumerWidget {
         const SizedBox(height: 20),
         InkWell(
           onTap: () {
-            launch('https://github.com/boyan01/flutter-netease-music');
+            launchUrlString('https://github.com/boyan01/flutter-netease-music');
           },
           child: Padding(
             padding: const EdgeInsets.all(8.0),
