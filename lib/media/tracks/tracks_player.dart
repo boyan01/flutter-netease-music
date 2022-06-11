@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:quiet/model/persistence_player_state.dart';
 
 import '../../repository/data/track.dart';
 import 'track_list.dart';
@@ -93,6 +94,8 @@ abstract class TracksPlayer extends StateNotifier<TracksPlayerState> {
   Future<Track?> getPreviousTrack();
 
   Future<void> insertToNext(Track track);
+
+  void restoreFromPersistence(PersistencePlayerState state);
 
   Track? get current;
 

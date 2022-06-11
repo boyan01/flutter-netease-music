@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:dart_vlc/dart_vlc.dart';
 import 'package:flutter/foundation.dart';
 import 'package:quiet/extension.dart';
+import 'package:quiet/model/persistence_player_state.dart';
 import 'package:quiet/repository.dart';
 
 import 'track_list.dart';
@@ -23,6 +24,7 @@ class TracksPlayerImplVlc extends TracksPlayer {
       notifyPlayStateChanged();
     });
     _player.generalStream.listen((event) => notifyPlayStateChanged());
+    _player.pause();
   }
 
   final _player = Player(
@@ -180,7 +182,7 @@ class TracksPlayerImplVlc extends TracksPlayer {
   @override
   double get volume => _player.general.volume;
 
-  void _playTrack(Track track) {
+  void _playTrack(Track track, {bool autoStart = true}) {
     scheduleMicrotask(() async {
       final url = await neteaseRepository!.getPlayUrl(track.id);
       if (url.isError) {
@@ -191,9 +193,19 @@ class TracksPlayerImplVlc extends TracksPlayer {
         // skip play. since the track is changed.
         return;
       }
-      _player.open(Media.network(url.asValue!.value), autoStart: true);
+      _player.open(Media.network(url.asValue!.value), autoStart: autoStart);
     });
     _current = track;
+    notifyPlayStateChanged();
+  }
+
+  @override
+  void restoreFromPersistence(PersistencePlayerState state) {
+    _trackList = state.playingList;
+    if (state.playingTrack != null) {
+      _playTrack(state.playingTrack!, autoStart: false);
+    }
+    setVolume(state.volume);
     notifyPlayStateChanged();
   }
 }

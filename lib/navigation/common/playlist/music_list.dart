@@ -30,7 +30,7 @@ extension _TracksPlayer on TracksPlayer {
       play();
       return PlayResult.success;
     } else {
-      final list = TrackList(
+      final list = TrackList.playlist(
         id: listId,
         tracks:
             tracks.whereNot((e) => e.type == TrackType.noCopyright).toList(),
@@ -400,7 +400,8 @@ class MusicListHeader extends ConsumerWidget implements PreferredSizeWidget {
                 .navigate(NavigationTargetPlaying());
           } else {
             player
-              ..setTrackList(TrackList(id: list.token!, tracks: list.musics))
+              ..setTrackList(
+                  TrackList.playlist(id: list.token!, tracks: list.musics))
               ..play();
           }
         },

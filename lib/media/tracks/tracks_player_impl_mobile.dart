@@ -5,6 +5,7 @@ import 'dart:ui';
 
 import 'package:flutter/widgets.dart';
 import 'package:music_player/music_player.dart';
+import 'package:quiet/model/persistence_player_state.dart';
 
 import '../../component.dart';
 import '../../repository.dart';
@@ -68,7 +69,7 @@ extension _PlayQueue on PlayQueue {
     if (queueId == kFmTrackListId) {
       return TrackList.fm(tracks: queue.map((e) => e.toTrack()).toList());
     }
-    return TrackList(
+    return TrackList.playlist(
       id: queueId,
       tracks: queue.map((e) => e.toTrack()).toList(),
     );
@@ -205,6 +206,15 @@ class TracksPlayerImplMobile extends TracksPlayer {
 
   @override
   bool get isBuffering => _player.playbackState.state == PlayerState.Buffering;
+
+  @override
+  void restoreFromPersistence(PersistencePlayerState state) {
+    _player.setPlayQueue(state.playingList.toPlayQueue());
+    if (state.playingTrack != null) {
+      _player.transportControls
+          .prepareFromMediaId(state.playingTrack!.id.toString());
+    }
+  }
 }
 
 void runMobileBackgroundService() {

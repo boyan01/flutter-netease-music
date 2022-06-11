@@ -118,7 +118,7 @@ class _PlayRecord extends ConsumerWidget {
               index: index,
               track: record.song,
               onTap: () {
-                final trackList = TrackList(
+                final trackList = TrackList.playlist(
                   id: 'play_records',
                   tracks: data.map((e) => e.song).toList(),
                 );
