@@ -52,6 +52,7 @@ dependencies:
   desktop_drop: ^0.3.0
   dotted_border: ^2.0.0+2
   meta: ^1.7.0
+  fluentui_system_icons: ^1.1.170
 
 dev_dependencies:
   flutter_test:

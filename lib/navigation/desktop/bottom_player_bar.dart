@@ -1,3 +1,4 @@
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:quiet/extension.dart';
@@ -120,48 +121,38 @@ class _CenterControllerWidget extends ConsumerWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       mainAxisSize: MainAxisSize.max,
       children: [
-        SizedBox(
-          height: 32,
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            AppIconButton(
+              onPressed: () {
+                ref.read(playerProvider).skipToPrevious();
+              },
+              enable: hasTrack && !playingFm,
+              icon: FluentIcons.previous_16_filled,
+            ),
+            const SizedBox(width: 20),
+            if (ref.watch(isPlayingProvider))
               AppIconButton(
-                size: 24,
-                onPressed: () {
-                  ref.read(playerProvider).skipToPrevious();
-                },
-                enable: hasTrack && !playingFm,
-                icon: Icons.skip_previous,
-                padding: EdgeInsets.zero,
-              ),
-              const SizedBox(width: 20),
-              if (ref.watch(isPlayingProvider))
-                AppIconButton(
-                  size: 30,
-                  enable: hasTrack,
-                  onPressed: () => ref.read(playerProvider).pause(),
-                  icon: Icons.pause,
-                  padding: EdgeInsets.zero,
-                )
-              else
-                AppIconButton(
-                  size: 32,
-                  enable: hasTrack,
-                  onPressed: () => ref.read(playerProvider).play(),
-                  icon: Icons.play_arrow,
-                  padding: EdgeInsets.zero,
-                ),
-              const SizedBox(width: 20),
-              AppIconButton(
-                size: 24,
                 enable: hasTrack,
-                onPressed: () => ref.read(playerProvider).skipToNext(),
-                padding: EdgeInsets.zero,
-                icon: Icons.skip_next,
+                onPressed: () => ref.read(playerProvider).pause(),
+                icon: FluentIcons.pause_16_filled,
+              )
+            else
+              AppIconButton(
+                enable: hasTrack,
+                onPressed: () => ref.read(playerProvider).play(),
+                icon: FluentIcons.play_20_filled,
               ),
-            ],
-          ),
+            const SizedBox(width: 20),
+            AppIconButton(
+              enable: hasTrack,
+              onPressed: () => ref.read(playerProvider).skipToNext(),
+              padding: EdgeInsets.zero,
+              icon: FluentIcons.next_20_filled,
+            ),
+          ],
         ),
       ],
     );
@@ -204,7 +195,7 @@ class _PlayingListButton extends ConsumerWidget {
         final state = ref.read(showPlayingListProvider.notifier).state;
         ref.read(showPlayingListProvider.notifier).state = !state;
       },
-      icon: playingFm ? Icons.radio : Icons.playlist_play,
+      icon: playingFm ? Icons.radio : FluentIcons.list_16_regular,
     );
   }
 }
@@ -223,11 +214,11 @@ class _VolumeControl extends ConsumerWidget {
     return Row(
       children: [
         if (volume <= 0.01)
-          const Icon(Icons.volume_mute, size: 24)
+          const Icon(FluentIcons.speaker_0_16_regular, size: 24)
         else if (volume < 0.5)
-          const Icon(Icons.volume_down, size: 24)
+          const Icon(FluentIcons.speaker_1_16_regular, size: 24)
         else
-          const Icon(Icons.volume_up, size: 24),
+          const Icon(FluentIcons.speaker_2_16_regular, size: 24),
         SizedBox(
           width: 120,
           child: SliderTheme(
