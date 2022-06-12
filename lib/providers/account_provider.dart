@@ -61,20 +61,23 @@ class UserAccount extends StateNotifier<User?> {
         neteaseLocalData['neteaseLocalData'] = null;
       }
       //访问api，刷新登陆状态
-      await neteaseRepository!.refreshLogin().then((login) async {
-        if (!login || state == null) {
-          logout();
-        } else {
-          // refresh user
-          final result = await neteaseRepository!.getUserDetail(userId!);
-          if (result.isValue) {
-            state = result.asValue!.value;
-            neteaseLocalData[_persistenceKey] = state!.toJson();
+      await neteaseRepository!.refreshLogin().then(
+        (login) async {
+          if (!login || state == null) {
+            logout();
+          } else {
+            // refresh user
+            final result = await neteaseRepository!.getUserDetail(userId!);
+            if (result.isValue) {
+              state = result.asValue!.value;
+              neteaseLocalData[_persistenceKey] = state!.toJson();
+            }
           }
-        }
-      }, onError: (e) {
-        debugPrint('refresh login status failed \n $e');
-      },);
+        },
+        onError: (e) {
+          debugPrint('refresh login status failed \n $e');
+        },
+      );
     }
   }
 

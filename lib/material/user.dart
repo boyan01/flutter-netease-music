@@ -6,35 +6,39 @@ import '../component.dart';
 
 Future<bool> showNeedLoginToast(BuildContext context) async {
   final completer = Completer();
-  showOverlay((context, t) {
-    return Opacity(
+  showOverlay(
+    (context, t) {
+      return Opacity(
         opacity: t,
         child: _Toast(
-            child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Text('需要登录。'),
-            InkWell(
-              onTap: () async {
-                OverlaySupportEntry.of(context)!.dismiss();
-                final loginResult =
-                    await Navigator.pushNamed(context, pageLogin);
-                completer.complete(loginResult == true);
-              },
-              child: Text(
-                '点击前往登录页面',
-                style: Theme.of(context)
-                    .textTheme
-                    .bodyText1!
-                    .copyWith(color: Colors.blue),
-              ),
-            )
-          ],
-        ),),);
-  },
-      curve: Curves.ease,
-      key: const ValueKey('overlay_need_login'),
-      duration: const Duration(milliseconds: 2000),);
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text('需要登录。'),
+              InkWell(
+                onTap: () async {
+                  OverlaySupportEntry.of(context)!.dismiss();
+                  final loginResult =
+                      await Navigator.pushNamed(context, pageLogin);
+                  completer.complete(loginResult == true);
+                },
+                child: Text(
+                  '点击前往登录页面',
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyText1!
+                      .copyWith(color: Colors.blue),
+                ),
+              )
+            ],
+          ),
+        ),
+      );
+    },
+    curve: Curves.ease,
+    key: const ValueKey('overlay_need_login'),
+    duration: const Duration(milliseconds: 2000),
+  );
   return await (completer.future as FutureOr<bool>);
 }
 

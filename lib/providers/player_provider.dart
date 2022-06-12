@@ -17,18 +17,21 @@ final playerStateProvider =
         player.restoreFromPersistence(state);
       }
       PersistencePlayerState? lastState;
-      player.addListener((state) {
-        final newState = PersistencePlayerState(
-          volume: state.volume,
-          playingTrack: state.playingTrack,
-          playingList: state.playingList,
-        );
-        if (newState == lastState) {
-          return;
-        }
-        lastState = newState;
-        ref.read(sharedPreferenceProvider).setPlayerState(newState);
-      }, fireImmediately: false,);
+      player.addListener(
+        (state) {
+          final newState = PersistencePlayerState(
+            volume: state.volume,
+            playingTrack: state.playingTrack,
+            playingList: state.playingList,
+          );
+          if (newState == lastState) {
+            return;
+          }
+          lastState = newState;
+          ref.read(sharedPreferenceProvider).setPlayerState(newState);
+        },
+        fireImmediately: false,
+      );
     });
 
     return player;

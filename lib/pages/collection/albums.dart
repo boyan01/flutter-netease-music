@@ -17,8 +17,9 @@ class CollectionAlbums extends StatelessWidget {
         return ListView(
           children: data
               .cast<Map>()
-              .map((album) =>
-                  AlbumTile(album: album, subtitle: _getAlbumSubtitle),)
+              .map(
+                (album) => AlbumTile(album: album, subtitle: _getAlbumSubtitle),
+              )
               .toList(),
         );
       },

@@ -20,7 +20,10 @@ abstract class CacheableStateNotifier<T> extends StateNotifier<T> {
       if (cache != null) {
         state = cache;
       }
-      addListener(saveToCache, fireImmediately: false,);
+      addListener(
+        saveToCache,
+        fireImmediately: false,
+      );
       await _load();
     });
   }

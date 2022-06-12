@@ -63,20 +63,22 @@ class _Playlists extends ConsumerWidget {
     }
 
     return playlists.when(
-      data: (playlists) => builder(ListView.builder(
-        itemCount: playlists.length,
-        scrollDirection: Axis.horizontal,
-        itemBuilder: (context, index) {
-          final playlist = playlists[index];
-          return RecommendedPlaylistTile(
-            playlist: playlist,
-            width: 120,
-            onTap: () => ref
-                .read(navigatorProvider.notifier)
-                .navigate(NavigationTarget.playlist(playlistId: playlist.id)),
-          );
-        },
-      ),),
+      data: (playlists) => builder(
+        ListView.builder(
+          itemCount: playlists.length,
+          scrollDirection: Axis.horizontal,
+          itemBuilder: (context, index) {
+            final playlist = playlists[index];
+            return RecommendedPlaylistTile(
+              playlist: playlist,
+              width: 120,
+              onTap: () => ref
+                  .read(navigatorProvider.notifier)
+                  .navigate(NavigationTarget.playlist(playlistId: playlist.id)),
+            );
+          },
+        ),
+      ),
       loading: () => builder(const Center(child: CircularProgressIndicator())),
       error: (error, stacktrace) => builder(
         Center(child: Text(context.formattedError(error))),

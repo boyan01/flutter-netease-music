@@ -31,8 +31,12 @@ class _SlideUpPageRouter<T> extends PageRoute<T>
   }
 
   @override
-  Widget buildTransitions(BuildContext context, Animation<double> animation,
-      Animation<double> secondaryAnimation, Widget child,) {
+  Widget buildTransitions(
+    BuildContext context,
+    Animation<double> animation,
+    Animation<double> secondaryAnimation,
+    Widget child,
+  ) {
     return _FadeUpwardsPageTransition(
       routeAnimation: animation,
       child: child,

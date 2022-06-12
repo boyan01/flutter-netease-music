@@ -46,7 +46,10 @@ class _WelcomeBody extends ConsumerWidget {
                 if (result == true) {
                   //remove the all pages
                   await Navigator.pushNamedAndRemoveUntil(
-                      context, pageMain, (route) => false,);
+                    context,
+                    pageMain,
+                    (route) => false,
+                  );
                 }
               },
               child: Text(context.strings.loginWithPhone),
@@ -57,7 +60,10 @@ class _WelcomeBody extends ConsumerWidget {
                 ref.read(settingStateProvider.notifier).setSkipWelcomePage();
                 //remove the all pages
                 Navigator.pushNamedAndRemoveUntil(
-                    context, pageMain, (route) => false,);
+                  context,
+                  pageMain,
+                  (route) => false,
+                );
               },
               child: Text(context.strings.skipLogin),
             ),
@@ -122,7 +128,9 @@ class StretchButton extends StatelessWidget {
           color: foreground,
         ),
         shape: RoundedRectangleBorder(
-            side: border, borderRadius: BorderRadius.circular(20),),
+          side: border,
+          borderRadius: BorderRadius.circular(20),
+        ),
         padding: const EdgeInsets.symmetric(vertical: 16),
       ),
       onPressed: onTap,

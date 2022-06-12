@@ -21,9 +21,12 @@ class CopyRightOverlay extends HookConsumerWidget {
     final painter = useMemoized(
       () => _CopyrightPainter(copyright: copyRight, style: textStyle),
     );
-    useEffect(() {
-      painter.setText(copyRight, textStyle);
-    }, [copyRight, textStyle],);
+    useEffect(
+      () {
+        painter.setText(copyRight, textStyle);
+      },
+      [copyRight, textStyle],
+    );
     return CustomPaint(
       foregroundPainter:
           ref.watch(settingStateProvider.select((value) => value.copyright))
@@ -39,11 +42,12 @@ class _CopyrightPainter extends CustomPainter {
     required String copyright,
     required TextStyle style,
   }) : _textPainter = TextPainter(
-            text: TextSpan(
-              text: copyright,
-              style: style,
-            ),
-            textDirection: TextDirection.ltr,);
+          text: TextSpan(
+            text: copyright,
+            style: style,
+          ),
+          textDirection: TextDirection.ltr,
+        );
 
   final TextPainter _textPainter;
 

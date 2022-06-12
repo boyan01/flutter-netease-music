@@ -12,23 +12,26 @@ List<Track> useFilteredTracks(List<Track> tracks, String filter) {
           const {};
 
   final filteredTracks = useState(tracks);
-  useEffect(() {
-    if (filter.isEmpty) {
-      filteredTracks.value = tracks;
-      return;
-    }
-    if (pinyinData.isEmpty) {
-      filteredTracks.value = tracks.where((track) {
-        return track.toString().toLowerCase().contains(filter.toLowerCase());
-      }).toList();
-    } else {
-      filteredTracks.value = tracks.where((track) {
-        final pinyin = pinyinData[track.id];
-        return (pinyin != null && pinyin.contains(filter.toLowerCase())) ||
-            track.toString().toLowerCase().contains(filter.toLowerCase());
-      }).toList();
-    }
-  }, [tracks, filter, pinyinData],);
+  useEffect(
+    () {
+      if (filter.isEmpty) {
+        filteredTracks.value = tracks;
+        return;
+      }
+      if (pinyinData.isEmpty) {
+        filteredTracks.value = tracks.where((track) {
+          return track.toString().toLowerCase().contains(filter.toLowerCase());
+        }).toList();
+      } else {
+        filteredTracks.value = tracks.where((track) {
+          final pinyin = pinyinData[track.id];
+          return (pinyin != null && pinyin.contains(filter.toLowerCase())) ||
+              track.toString().toLowerCase().contains(filter.toLowerCase());
+        }).toList();
+      }
+    },
+    [tracks, filter, pinyinData],
+  );
   return filteredTracks.value;
 }
 

@@ -103,8 +103,10 @@ class _DropUploadArea extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final enable = ref.watch(navigatorProvider
-        .select((value) => value.current is NavigationTargetCloudMusic),);
+    final enable = ref.watch(
+      navigatorProvider
+          .select((value) => value.current is NavigationTargetCloudMusic),
+    );
     final dragging = useState(false);
     return DropTarget(
       enable: enable,

@@ -17,8 +17,9 @@ extension NavigatorControllerExt on NavigatorController {
       navigate(NavigationTargetArtistDetail(artists.single.id));
     } else {
       final artist = await showDialog<ArtistMini>(
-          context: context,
-          builder: (context) => ArtistSelectionDialog(artists: artists),);
+        context: context,
+        builder: (context) => ArtistSelectionDialog(artists: artists),
+      );
       if (artist != null) {
         navigate(NavigationTargetArtistDetail(artist.id));
       }

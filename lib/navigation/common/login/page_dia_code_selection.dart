@@ -116,12 +116,13 @@ class _DiaCodeListState extends State<_DiaCodeList> {
           Padding(
             padding: const EdgeInsets.only(right: 16),
             child: ScrollablePositionedList.builder(
-                itemScrollController: _scrollController,
-                itemCount: _sortedRegions.length,
-                itemBuilder: (context, index) {
-                  final region = _sortedRegions[index];
-                  return _RegionTile(region: region);
-                },),
+              itemScrollController: _scrollController,
+              itemCount: _sortedRegions.length,
+              itemBuilder: (context, index) {
+                final region = _sortedRegions[index];
+                return _RegionTile(region: region);
+              },
+            ),
           ),
           if (_query.isNotEmpty)
             Opacity(
@@ -146,9 +147,12 @@ class _DiaCodeListState extends State<_DiaCodeList> {
           AZSelection(
             onSelection: (selection) {
               _currentShowingEntry?.dismiss(animate: false);
-              _currentShowingEntry = showOverlay((_, progress) {
-                return _AzSelectionOverlay(content: selection);
-              }, duration: const Duration(milliseconds: 500),);
+              _currentShowingEntry = showOverlay(
+                (_, progress) {
+                  return _AzSelectionOverlay(content: selection);
+                },
+                duration: const Duration(milliseconds: 500),
+              );
               _jumpToAlphabet(selection.toLowerCase());
             },
             textStyle: Theme.of(context).textTheme.bodyText1,
@@ -232,7 +236,9 @@ class AZSelection extends SingleChildRenderObjectWidget {
 
   @override
   void updateRenderObject(
-      BuildContext context, covariant AZRender renderObject,) {
+    BuildContext context,
+    covariant AZRender renderObject,
+  ) {
     renderObject
       ..onSelection = onSelection
       ..textStyle = textStyle ?? Theme.of(context).textTheme.bodyText1;
@@ -260,12 +266,14 @@ class AZRender extends RenderBox {
   @override
   void performLayout() {
     super.performLayout();
-    assert(() {
-      if (!hasSize) {
-        throw FlutterError('RenderBox was not laid out: ${toString()}');
-      }
-      return true;
-    }(),);
+    assert(
+      () {
+        if (!hasSize) {
+          throw FlutterError('RenderBox was not laid out: ${toString()}');
+        }
+        return true;
+      }(),
+    );
     final lineHeight = constraints.maxHeight / _chars.length;
     _offsets.clear();
     for (var i = 0; i < _chars.length; i++) {
@@ -319,7 +327,11 @@ class AZRender extends RenderBox {
       return false;
     }
     final rect = Rect.fromLTWH(
-        constraints.maxWidth - width, 0, width, constraints.maxHeight,);
+      constraints.maxWidth - width,
+      0,
+      width,
+      constraints.maxHeight,
+    );
     if (rect.contains(position)) {
       result.add(BoxHitTestEntry(this, position));
       return true;

@@ -25,9 +25,12 @@ class ArtistHeader extends StatelessWidget {
       ),
       actions: <Widget>[
         IconButton(
-            icon: Icon(Icons.share,
-                color: Theme.of(context).primaryIconTheme.color,),
-            onPressed: null,)
+          icon: Icon(
+            Icons.share,
+            color: Theme.of(context).primaryIconTheme.color,
+          ),
+          onPressed: null,
+        )
       ],
     );
   }
@@ -44,21 +47,25 @@ class _ArtistFlexHeader extends StatelessWidget {
       maxLines: 1,
       child: FlexibleDetailBar(
         background: FlexShadowBackground(
-            child: Image(
-                image: CachedImage(artist.picUrl),
-                height: 300,
-                fit: BoxFit.cover,),),
+          child: Image(
+            image: CachedImage(artist.picUrl),
+            height: 300,
+            fit: BoxFit.cover,
+          ),
+        ),
         content: Padding(
           padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
           child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                const Spacer(),
-                Text(
-                    '${artist.name}${artist.alias.isEmpty ? '' : '(${artist.alias[0]})'}',
-                    style: const TextStyle(fontSize: 20),),
-                Text('歌曲数量:${artist.musicSize}'),
-              ],),
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              const Spacer(),
+              Text(
+                '${artist.name}${artist.alias.isEmpty ? '' : '(${artist.alias[0]})'}',
+                style: const TextStyle(fontSize: 20),
+              ),
+              Text('歌曲数量:${artist.musicSize}'),
+            ],
+          ),
         ),
         builder: (context, t) {
           return AppBar(
@@ -68,11 +75,12 @@ class _ArtistFlexHeader extends StatelessWidget {
             titleSpacing: 0,
             actions: <Widget>[
               IconButton(
-                  icon: const Icon(Icons.share),
-                  tooltip: '分享',
-                  onPressed: () {
-                    toast('分享');
-                  },)
+                icon: const Icon(Icons.share),
+                tooltip: '分享',
+                onPressed: () {
+                  toast('分享');
+                },
+              )
             ],
           );
         },

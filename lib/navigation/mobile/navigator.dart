@@ -55,8 +55,7 @@ class MobileNavigatorController extends NavigatorController {
   }
 
   @override
-  List<Page> get pages =>
-      _pages.map(_buildPage).toList(growable: false);
+  List<Page> get pages => _pages.map(_buildPage).toList(growable: false);
 
   Page<dynamic> _buildPage(NavigationTarget target) {
     final Widget page;

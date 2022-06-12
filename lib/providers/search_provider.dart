@@ -30,12 +30,15 @@ class SearchResultState<T> with EquatableMixin {
 abstract class SearchResultStateNotify<T>
     extends StateNotifier<SearchResultState<T>> {
   SearchResultStateNotify(this.query)
-      : super(SearchResultState<T>(
+      : super(
+          SearchResultState<T>(
             value: const AsyncValue.loading(),
             page: 1,
             totalPageCount: 0,
             totalItemCount: 0,
-            query: query,),) {
+            query: query,
+          ),
+        ) {
     _loadQuery(1);
   }
 

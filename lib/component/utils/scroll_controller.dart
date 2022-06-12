@@ -6,16 +6,22 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 
 AppScrollController useAppScrollController() {
   final controller = useMemoized(AppScrollController.new);
-  useEffect(() {
-    return controller.dispose;
-  }, [controller],);
+  useEffect(
+    () {
+      return controller.dispose;
+    },
+    [controller],
+  );
   return controller;
 }
 
 class AppScrollController extends ScrollController {
   @override
-  ScrollPosition createScrollPosition(ScrollPhysics physics,
-      ScrollContext context, ScrollPosition? oldPosition,) {
+  ScrollPosition createScrollPosition(
+    ScrollPhysics physics,
+    ScrollContext context,
+    ScrollPosition? oldPosition,
+  ) {
     return _ScrollPositionWithSingleContext(
       physics: physics,
       context: context,

@@ -22,8 +22,7 @@ Future<List<RegionFlag>> _getRegions() async {
   final jsonStr =
       await rootBundle.loadString('assets/emoji-flags.json', cache: false);
   final flags = json.decode(jsonStr) as List;
-  final result =
-      flags.cast<Map>().map(RegionFlag.fromMap).where((flag) {
+  final result = flags.cast<Map>().map(RegionFlag.fromMap).where((flag) {
     return flag.dialCode != null && flag.dialCode!.trim().isNotEmpty;
   }).toList();
   return result;
@@ -82,12 +81,16 @@ class _PhoneInputLayout extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final inputController = useTextEditingController();
 
-    final selectedRegion = useState<RegionFlag>(useMemoized(() {
-      // initial to select system default region.
-      final countryCode = window.locale.countryCode;
-      return regions.firstWhere((region) => region.code == countryCode,
-          orElse: () => regions[0],);
-    }),);
+    final selectedRegion = useState<RegionFlag>(
+      useMemoized(() {
+        // initial to select system default region.
+        final countryCode = window.locale.countryCode;
+        return regions.firstWhere(
+          (region) => region.code == countryCode,
+          orElse: () => regions[0],
+        );
+      }),
+    );
 
     Future<void> onNextClick() async {
       final text = inputController.text;
@@ -118,8 +121,11 @@ class _PhoneInputLayout extends HookConsumerWidget {
         toast('无密码登录流程的开发未完成,欢迎提出PR贡献代码...');
         return;
       }
-      await Navigator.pushNamed(context, pageLoginPassword,
-          arguments: {'phone': text},);
+      await Navigator.pushNamed(
+        context,
+        pageLoginPassword,
+        arguments: {'phone': text},
+      );
     }
 
     return Padding(
@@ -140,9 +146,11 @@ class _PhoneInputLayout extends HookConsumerWidget {
               onPrefixTap: () async {
                 final region = await Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) {
-                    return RegionSelectionPage(regions: regions);
-                  },),
+                  MaterialPageRoute(
+                    builder: (context) {
+                      return RegionSelectionPage(regions: regions);
+                    },
+                  ),
                 );
                 if (region != null) {
                   selectedRegion.value = region;
@@ -207,9 +215,7 @@ class _PhoneInput extends HookWidget {
             ),
           ),
         ),
-        prefixIconConstraints: const BoxConstraints(
-          
-        ),
+        prefixIconConstraints: const BoxConstraints(),
       ),
     );
   }

@@ -37,19 +37,23 @@ class _Leaderboard extends StatelessWidget {
       widgets.add(_ItemLeaderboard1(data[i]));
     }
     widgets.add(const _ItemTitle('全球榜'));
-    widgets.add(GridView.builder(
+    widgets.add(
+      GridView.builder(
         padding: const EdgeInsets.symmetric(horizontal: 8),
         shrinkWrap: true,
         itemCount: data.length - 4,
         physics: const NeverScrollableScrollPhysics(),
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 3,
-            childAspectRatio: 10 / 13.5,
-            mainAxisSpacing: 4,
-            crossAxisSpacing: 8,),
+          crossAxisCount: 3,
+          childAspectRatio: 10 / 13.5,
+          mainAxisSpacing: 4,
+          crossAxisSpacing: 8,
+        ),
         itemBuilder: (context, int i) {
           return _ItemLeaderBoard2(data[i + 4]);
-        },),);
+        },
+      ),
+    );
     return ListView(
       children: widgets,
     );
@@ -85,9 +89,14 @@ class _ItemLeaderBoard2 extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        Navigator.push(context, MaterialPageRoute(builder: (context) {
-          return PlaylistDetailPage(row['id']);
-        },),);
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) {
+              return PlaylistDetailPage(row['id']);
+            },
+          ),
+        );
       },
       child: SizedBox(
         height: 130,
@@ -108,10 +117,12 @@ class _ItemLeaderBoard2 extends StatelessWidget {
                         height: 24,
                         width: double.infinity,
                         decoration: const BoxDecoration(
-                            gradient: LinearGradient(
-                                begin: Alignment.topCenter,
-                                end: Alignment.bottomCenter,
-                                colors: [Colors.transparent, Colors.black45],),),
+                          gradient: LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: [Colors.transparent, Colors.black45],
+                          ),
+                        ),
                         child: Row(
                           children: <Widget>[
                             const Spacer(),
@@ -149,9 +160,14 @@ class _ItemLeaderboard1 extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        Navigator.push(context, MaterialPageRoute(builder: (context) {
-          return PlaylistDetailPage(row['id']);
-        },),);
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) {
+              return PlaylistDetailPage(row['id']);
+            },
+          ),
+        );
       },
       child: Container(
         height: 130,
@@ -171,10 +187,12 @@ class _ItemLeaderboard1 extends StatelessWidget {
                         height: 24,
                         width: double.infinity,
                         decoration: const BoxDecoration(
-                            gradient: LinearGradient(
-                                begin: Alignment.topCenter,
-                                end: Alignment.bottomCenter,
-                                colors: [Colors.transparent, Colors.black45],),),
+                          gradient: LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: [Colors.transparent, Colors.black45],
+                          ),
+                        ),
                         child: Row(
                           children: <Widget>[
                             const Spacer(),

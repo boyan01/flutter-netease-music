@@ -54,9 +54,10 @@ class _AlbumBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MusicTileConfiguration(
-        token: 'album_${album.id}',
-        musics: musicList,
-        child: CustomScrollView(slivers: [
+      token: 'album_${album.id}',
+      musics: musicList,
+      child: CustomScrollView(
+        slivers: [
           SliverAppBar(
             automaticallyImplyLeading: false,
             expandedHeight: kHeaderHeight,
@@ -67,9 +68,13 @@ class _AlbumBody extends StatelessWidget {
             bottom: MusicListHeader(musicList.length),
           ),
           SliverList(
-              delegate: SliverChildBuilderDelegate(
-                  (context, index) => MusicTile(musicList[index]),
-                  childCount: musicList.length,),),
-        ],),);
+            delegate: SliverChildBuilderDelegate(
+              (context, index) => MusicTile(musicList[index]),
+              childCount: musicList.length,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

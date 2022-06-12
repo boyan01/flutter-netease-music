@@ -53,9 +53,13 @@ class LikeButton extends ConsumerWidget {
           }
         }
         if (!isLiked) {
-          await ref.read(userFavoriteMusicListProvider.notifier).likeMusic(music);
+          await ref
+              .read(userFavoriteMusicListProvider.notifier)
+              .likeMusic(music);
         } else {
-          await ref.read(userFavoriteMusicListProvider.notifier).dislikeMusic(music);
+          await ref
+              .read(userFavoriteMusicListProvider.notifier)
+              .dislikeMusic(music);
         }
       },
     );

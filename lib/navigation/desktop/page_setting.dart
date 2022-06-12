@@ -165,8 +165,10 @@ class _DebugSetting extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Navigation Platform (Developer options)',
-            style: context.textTheme.bodyMedium,),
+        Text(
+          'Navigation Platform (Developer options)',
+          style: context.textTheme.bodyMedium,
+        ),
         const SizedBox(height: 12),
         const DebugPlatformNavigationRadios(),
         const Divider(height: 20),

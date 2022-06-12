@@ -122,7 +122,8 @@ class _PageHotSongsState extends State<_PageHotSongs>
                         MaterialPageRoute(
                           builder: (context) {
                             return PlaylistSelectionPage(
-                                list: widget.musicList,);
+                              list: widget.musicList,
+                            );
                           },
                         ),
                       );

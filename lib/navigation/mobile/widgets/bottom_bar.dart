@@ -157,9 +157,11 @@ class BottomPlayerBar extends ConsumerWidget {
     return Material(
       elevation: 8,
       child: InkWell(
-        onTap: () => ref.read(navigatorProvider.notifier).navigate(queue.isFM
-            ? NavigationTargetFmPlaying()
-            : NavigationTargetPlaying(),),
+        onTap: () => ref.read(navigatorProvider.notifier).navigate(
+              queue.isFM
+                  ? NavigationTargetFmPlaying()
+                  : NavigationTargetPlaying(),
+            ),
         child: SizedBox(
           height: kBottomPlayerBarHeight,
           child: Row(
@@ -249,15 +251,17 @@ class _PauseButton extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return PlayingIndicator(
       playing: IconButton(
-          icon: const Icon(Icons.pause),
-          onPressed: () {
-            ref.read(playerStateProvider.notifier).pause();
-          },),
+        icon: const Icon(Icons.pause),
+        onPressed: () {
+          ref.read(playerStateProvider.notifier).pause();
+        },
+      ),
       pausing: IconButton(
-          icon: const Icon(Icons.play_arrow),
-          onPressed: () {
-            ref.read(playerStateProvider.notifier).play();
-          },),
+        icon: const Icon(Icons.play_arrow),
+        onPressed: () {
+          ref.read(playerStateProvider.notifier).play();
+        },
+      ),
       buffering: Container(
         height: 24,
         width: 24,

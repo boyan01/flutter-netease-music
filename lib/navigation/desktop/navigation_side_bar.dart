@@ -110,28 +110,29 @@ class _ProfileTile extends HookConsumerWidget {
           toast(context.strings.todo);
         },
         child: SizedBox(
-            height: 72,
-            child: Row(
-              children: [
-                const SizedBox(width: 4),
-                ClipOval(
-                  child: Image(
-                    image: CachedImage(user.avatarUrl),
-                    width: 32,
-                    height: 32,
-                  ),
+          height: 72,
+          child: Row(
+            children: [
+              const SizedBox(width: 4),
+              ClipOval(
+                child: Image(
+                  image: CachedImage(user.avatarUrl),
+                  width: 32,
+                  height: 32,
                 ),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: Text(
-                    user.nickname,
-                    style: context.theme.textTheme.bodyText2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Text(
+                  user.nickname,
+                  style: context.theme.textTheme.bodyText2,
+                  overflow: TextOverflow.ellipsis,
                 ),
-                const SizedBox(width: 4),
-              ],
-            ),),
+              ),
+              const SizedBox(width: 4),
+            ],
+          ),
+        ),
       ),
     );
   }

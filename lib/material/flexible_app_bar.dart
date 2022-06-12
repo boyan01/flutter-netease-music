@@ -29,8 +29,7 @@ class FlexibleDetailBar extends StatelessWidget {
   )? customBuilder;
 
   static double percentage(BuildContext context) {
-    final value =
-        context.dependOnInheritedWidgetOfExactType<_FlexibleDetail>();
+    final value = context.dependOnInheritedWidgetOfExactType<_FlexibleDetail>();
     assert(value != null, 'ooh , can not find');
     return value!.t;
   }
@@ -50,69 +49,79 @@ class FlexibleDetailBar extends StatelessWidget {
             .clamp(0.0, 1.0);
 
     // add parallax effect to background.
-    children.add(Positioned(
-      top: -Tween<double>(begin: 0, end: deltaExtent / 4.0).transform(t),
-      left: 0,
-      right: 0,
-      // to avoid one line gap between bottom and blow content.
-      bottom: 0,
-      child: ClipRect(child: background),
-    ),);
+    children.add(
+      Positioned(
+        top: -Tween<double>(begin: 0, end: deltaExtent / 4.0).transform(t),
+        left: 0,
+        right: 0,
+        // to avoid one line gap between bottom and blow content.
+        bottom: 0,
+        child: ClipRect(child: background),
+      ),
+    );
 
     // need add a padding to avoid overlap the bottom widget.
     var bottomPadding = 0.0;
-    final sliverBar =
-        context.findAncestorWidgetOfExactType<SliverAppBar>();
+    final sliverBar = context.findAncestorWidgetOfExactType<SliverAppBar>();
     if (sliverBar != null && sliverBar.bottom != null) {
       bottomPadding = sliverBar.bottom!.preferredSize.height;
     }
-    children.add(Positioned(
-      top: settings.currentExtent - settings.maxExtent,
-      left: 0,
-      right: 0,
-      height: settings.maxExtent,
-      child: Opacity(
-        opacity: 1 - t,
-        child: Padding(
-          padding: EdgeInsets.only(bottom: bottomPadding),
-          child: Material(
-            color: Colors.transparent,
-            child: DefaultTextStyle(
+    children.add(
+      Positioned(
+        top: settings.currentExtent - settings.maxExtent,
+        left: 0,
+        right: 0,
+        height: settings.maxExtent,
+        child: Opacity(
+          opacity: 1 - t,
+          child: Padding(
+            padding: EdgeInsets.only(bottom: bottomPadding),
+            child: Material(
+              color: Colors.transparent,
+              child: DefaultTextStyle(
                 style: Theme.of(context).primaryTextTheme.bodyText2!,
-                child: content,),
+                child: content,
+              ),
+            ),
           ),
         ),
       ),
-    ),);
+    );
 
     if (builder != null) {
       children.add(Column(children: <Widget>[builder!(context, t)]));
     }
     if (customBuilder != null) {
-      children.add(Positioned(
-        top: settings.currentExtent - settings.maxExtent,
-        left: 0,
-        right: 0,
-        height: settings.maxExtent,
-        child: Padding(
-          padding: EdgeInsets.only(bottom: bottomPadding),
-          child: customBuilder!(
-            context,
-            settings.currentExtent - settings.minExtent,
-            settings.maxExtent - settings.minExtent,
+      children.add(
+        Positioned(
+          top: settings.currentExtent - settings.maxExtent,
+          left: 0,
+          right: 0,
+          height: settings.maxExtent,
+          child: Padding(
+            padding: EdgeInsets.only(bottom: bottomPadding),
+            child: customBuilder!(
+              context,
+              settings.currentExtent - settings.minExtent,
+              settings.maxExtent - settings.minExtent,
+            ),
           ),
         ),
-      ),);
+      );
     }
 
-    return _FlexibleDetail(t,
-        child: ClipRect(
-            child: DefaultTextStyle(
-                style: Theme.of(context).primaryTextTheme.bodyText2!,
-                child: Stack(
-                  fit: StackFit.expand,
-                  children: children,
-                ),),),);
+    return _FlexibleDetail(
+      t,
+      child: ClipRect(
+        child: DefaultTextStyle(
+          style: Theme.of(context).primaryTextTheme.bodyText2!,
+          child: Stack(
+            fit: StackFit.expand,
+            children: children,
+          ),
+        ),
+      ),
+    );
   }
 }
 

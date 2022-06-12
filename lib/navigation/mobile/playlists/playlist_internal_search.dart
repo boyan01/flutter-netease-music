@@ -43,7 +43,8 @@ class PlaylistInternalSearchDelegate extends SearchDelegate {
     }
     final result = list
         ?.where(
-            (m) => m.name.contains(query) || m.displaySubtitle.contains(query),)
+          (m) => m.name.contains(query) || m.displaySubtitle.contains(query),
+        )
         .toList();
     if (result == null || result.isEmpty) {
       return _EmptyResultSection(query);
@@ -87,10 +88,11 @@ class _InternalResultSection extends ConsumerWidget {
           ..playFromMediaId(music.id);
       },
       child: ListView.builder(
-          itemCount: musics.length,
-          itemBuilder: (context, index) {
-            return MusicTile(musics[index]);
-          },),
+        itemCount: musics.length,
+        itemBuilder: (context, index) {
+          return MusicTile(musics[index]);
+        },
+      ),
     );
   }
 }

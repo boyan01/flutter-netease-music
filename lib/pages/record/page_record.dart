@@ -16,21 +16,24 @@ class RecordPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-        length: 2,
-        child: Scaffold(
-          appBar: AppBar(
-            title: Text(username == null ? '听歌排行' : '$username的听歌排行'),
-            bottom: TabBar(
-              tabs: const [Tab(text: '最近一周'), Tab(text: '所有时间')],
-              indicator: PrimaryTabIndicator(),
-              indicatorSize: TabBarIndicatorSize.label,
-            ),
+      length: 2,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(username == null ? '听歌排行' : '$username的听歌排行'),
+          bottom: TabBar(
+            tabs: const [Tab(text: '最近一周'), Tab(text: '所有时间')],
+            indicator: PrimaryTabIndicator(),
+            indicatorSize: TabBarIndicatorSize.label,
           ),
-          body: TabBarView(children: [
+        ),
+        body: TabBarView(
+          children: [
             _RecordSection(uid: uid, type: 1),
             _RecordSection(uid: uid, type: 0),
-          ],),
-        ),);
+          ],
+        ),
+      ),
+    );
   }
 }
 
@@ -39,7 +42,7 @@ class _RecordSection extends StatefulWidget {
     super.key,
     required this.uid,
     required this.type,
-  })  : assert(type == 0 || type == 1);
+  }) : assert(type == 0 || type == 1);
 
   final int uid;
   final int type;
@@ -65,8 +68,7 @@ class _RecordSectionState extends State<_RecordSection>
         final List data = result[_keys[widget.type]];
         return _RecordMusicList(
           type: widget.type,
-          recordList:
-              data.cast<Map>().map(_RecordMusic.fromJson).toList(),
+          recordList: data.cast<Map>().map(_RecordMusic.fromJson).toList(),
         );
       },
     );
@@ -126,10 +128,11 @@ class _RecordMusicList extends StatelessWidget {
         );
       },
       child: ListView.builder(
-          itemCount: musicList.length,
-          itemBuilder: (context, index) {
-            return MusicTile(musicList[index]!);
-          },),
+        itemCount: musicList.length,
+        itemBuilder: (context, index) {
+          return MusicTile(musicList[index]!);
+        },
+      ),
     );
   }
 }

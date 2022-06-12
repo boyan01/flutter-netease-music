@@ -60,12 +60,15 @@ class _UserDescription extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DefaultTextStyle(
-        style: Theme.of(context).textTheme.caption!.copyWith(fontSize: 14),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Text(description == null || description!.isEmpty
+      style: Theme.of(context).textTheme.caption!.copyWith(fontSize: 14),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        child: Text(
+          description == null || description!.isEmpty
               ? '还没有填写个人介绍'
-              : description!,),
-        ),);
+              : description!,
+        ),
+      ),
+    );
   }
 }

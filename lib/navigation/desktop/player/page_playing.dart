@@ -20,9 +20,11 @@ class PagePlaying extends StatelessWidget {
           const Flexible(flex: 5, child: _LayoutCover()),
           Flexible(
             flex: 4,
-            child: Consumer(builder: (context, ref, child) {
-              return LyricLayout(track: ref.watch(playingTrackProvider)!);
-            },),
+            child: Consumer(
+              builder: (context, ref, child) {
+                return LyricLayout(track: ref.watch(playingTrackProvider)!);
+              },
+            ),
           ),
         ],
       ),

@@ -104,10 +104,13 @@ class _UserPlaylistItem extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final current = ref.watch(navigatorProvider.select((value) =>
-        value.current is NavigationTargetPlaylist
+    final current = ref.watch(
+      navigatorProvider.select(
+        (value) => value.current is NavigationTargetPlaylist
             ? (value.current as NavigationTargetPlaylist).playlistId
-            : null,),);
+            : null,
+      ),
+    );
     return NavigationTile(
       icon: const Icon(Icons.playlist_play),
       title: Tooltip(

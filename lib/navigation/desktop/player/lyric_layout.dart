@@ -43,7 +43,8 @@ class LyricLayout extends ConsumerWidget {
                   overflow: TextOverflow.ellipsis,
                   children: [
                     MouseHighlightSpan.normal(
-                        text: '${context.strings.album}:',),
+                      text: '${context.strings.album}:',
+                    ),
                     MouseHighlightSpan.widget(widget: const SizedBox(width: 4)),
                     MouseHighlightSpan.highlight(
                       text: track.album?.name ?? '',
@@ -71,19 +72,23 @@ class LyricLayout extends ConsumerWidget {
                   overflow: TextOverflow.ellipsis,
                   children: [
                     MouseHighlightSpan.normal(
-                        text: '${context.strings.artists}:',),
+                      text: '${context.strings.artists}:',
+                    ),
                     MouseHighlightSpan.widget(widget: const SizedBox(width: 4)),
                     ...track.artists
-                        .map((artist) => MouseHighlightSpan.highlight(
-                              text: artist.name,
-                              onTap: () {
-                                if (artist.id == 0) {
-                                  return;
-                                }
-                                ref.read(navigatorProvider.notifier).navigate(
-                                    NavigationTargetArtistDetail(artist.id),);
-                              },
-                            ),)
+                        .map(
+                          (artist) => MouseHighlightSpan.highlight(
+                            text: artist.name,
+                            onTap: () {
+                              if (artist.id == 0) {
+                                return;
+                              }
+                              ref.read(navigatorProvider.notifier).navigate(
+                                    NavigationTargetArtistDetail(artist.id),
+                                  );
+                            },
+                          ),
+                        )
                         .separated(MouseHighlightSpan.normal(text: '/')),
                   ],
                 ),

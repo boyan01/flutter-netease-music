@@ -38,24 +38,30 @@ class AlbumTile extends ConsumerWidget {
                 child: AspectRatio(
                   aspectRatio: 1,
                   child: Image(
-                      image: CachedImage(album['picUrl']), fit: BoxFit.cover,),
+                    image: CachedImage(album['picUrl']),
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
             ),
             const Padding(padding: EdgeInsets.only(left: 4)),
             Expanded(
-                child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                const Spacer(),
-                Text(album['name'], maxLines: 1),
-                const Spacer(),
-                Text(subtitle,
-                    maxLines: 1, style: Theme.of(context).textTheme.caption,),
-                const Spacer(),
-                const Divider(height: 0)
-              ],
-            ),)
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  const Spacer(),
+                  Text(album['name'], maxLines: 1),
+                  const Spacer(),
+                  Text(
+                    subtitle,
+                    maxLines: 1,
+                    style: Theme.of(context).textTheme.caption,
+                  ),
+                  const Spacer(),
+                  const Divider(height: 0)
+                ],
+              ),
+            )
           ],
         ),
       ),

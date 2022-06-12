@@ -118,31 +118,37 @@ class MouseHighlightText extends HookWidget {
 
     children.forEachIndexed((index, child) {
       if (child is _Highlight) {
-        spans.add(TextSpan(
-          text: child.text,
-          style: hovered.value.contains(index)
-              ? (child.highlightStyle ?? highlightStyle)
-              : child.style,
-          onEnter: (event) {
-            hovered.value.add(index);
-            refreshObject.value = !refreshObject.value;
-          },
-          onExit: (event) {
-            hovered.value.remove(index);
-            refreshObject.value = !refreshObject.value;
-          },
-          recognizer: TapGestureRecognizer()..onTap = child.onTap,
-        ),);
+        spans.add(
+          TextSpan(
+            text: child.text,
+            style: hovered.value.contains(index)
+                ? (child.highlightStyle ?? highlightStyle)
+                : child.style,
+            onEnter: (event) {
+              hovered.value.add(index);
+              refreshObject.value = !refreshObject.value;
+            },
+            onExit: (event) {
+              hovered.value.remove(index);
+              refreshObject.value = !refreshObject.value;
+            },
+            recognizer: TapGestureRecognizer()..onTap = child.onTap,
+          ),
+        );
       } else if (child is _Normal) {
-        spans.add(TextSpan(
-          text: child.text,
-          style: child.style,
-        ),);
+        spans.add(
+          TextSpan(
+            text: child.text,
+            style: child.style,
+          ),
+        );
       } else if (child is _Widget) {
-        spans.add(WidgetSpan(
-          child: child.widget,
-          alignment: child.alignment,
-        ),);
+        spans.add(
+          WidgetSpan(
+            child: child.widget,
+            alignment: child.alignment,
+          ),
+        );
       } else {
         throw Exception('Unknown child type: ${child.runtimeType}');
       }

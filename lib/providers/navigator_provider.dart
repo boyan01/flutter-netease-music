@@ -60,13 +60,15 @@ class NavigatorState with EquatableMixin {
 @sealed
 abstract class NavigatorController extends StateNotifier<NavigatorState> {
   NavigatorController()
-      : super(NavigatorState(
-          pages: const [],
-          canBack: false,
-          canForward: false,
-          // no meaning, just for init
-          current: NavigationTargetDiscover(),
-        ),);
+      : super(
+          NavigatorState(
+            pages: const [],
+            canBack: false,
+            canForward: false,
+            // no meaning, just for init
+            current: NavigationTargetDiscover(),
+          ),
+        );
 
   List<Page> get pages;
 

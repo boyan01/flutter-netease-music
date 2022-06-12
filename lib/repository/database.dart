@@ -13,5 +13,6 @@ Database? _db;
 ///Quiet application database
 Future<Database> getApplicationDatabase() async {
   return _db ??= await databaseFactoryIo.openDatabase(
-      join((await getTemporaryDirectory()).path, 'database', 'quiet.db'),);
+    join((await getTemporaryDirectory()).path, 'database', 'quiet.db'),
+  );
 }

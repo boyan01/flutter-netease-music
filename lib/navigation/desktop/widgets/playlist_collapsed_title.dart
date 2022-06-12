@@ -30,25 +30,27 @@ class PlaylistCollapsedTitle extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 8),
-          Consumer(builder: (context, ref, child) {
-            return IconButton(
-              splashRadius: 20,
-              tooltip: context.strings.playAll,
-              icon: const PlayIcon(),
-              color: context.colorScheme.primary,
-              onPressed: () {
-                final id = TrackTileContainer.getPlaylistId(context);
-                final state = ref.read(playerStateProvider);
-                if (state.playingList.id == id && state.isPlaying) {
-                  ref
-                      .read(navigatorProvider.notifier)
-                      .navigate(NavigationTargetPlaying());
-                } else {
-                  TrackTileContainer.playTrack(context, null);
-                }
-              },
-            );
-          },),
+          Consumer(
+            builder: (context, ref, child) {
+              return IconButton(
+                splashRadius: 20,
+                tooltip: context.strings.playAll,
+                icon: const PlayIcon(),
+                color: context.colorScheme.primary,
+                onPressed: () {
+                  final id = TrackTileContainer.getPlaylistId(context);
+                  final state = ref.read(playerStateProvider);
+                  if (state.playingList.id == id && state.isPlaying) {
+                    ref
+                        .read(navigatorProvider.notifier)
+                        .navigate(NavigationTargetPlaying());
+                  } else {
+                    TrackTileContainer.playTrack(context, null);
+                  }
+                },
+              );
+            },
+          ),
         ],
       ),
     );

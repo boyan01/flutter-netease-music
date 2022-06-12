@@ -58,7 +58,9 @@ class _PlaylistDetailBody extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final filterStreamController = useStreamController<String>();
     final filterStream = useMemoized(
-        () => filterStreamController.stream, [filterStreamController],);
+      () => filterStreamController.stream,
+      [filterStreamController],
+    );
     return TrackTableContainer(
       child: TrackTileContainer.playlist(
         playlist: playlist,
@@ -165,8 +167,10 @@ class _PlaylistDetailHeader extends StatelessWidget {
               const SizedBox(height: 8),
               Row(
                 children: [
-                  Text(playlist.creator.nickname,
-                      style: context.textTheme.caption,),
+                  Text(
+                    playlist.creator.nickname,
+                    style: context.textTheme.caption,
+                  ),
                   const SizedBox(width: 8),
                   Text(
                     context.strings.createdDate(

@@ -24,21 +24,23 @@ class DurationProgressBar extends ConsumerWidget {
       ),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
-        child: PlayerProgressSlider(builder: (context, widget) {
-          final durationText = player.position?.timeStamp;
-          final positionText = player.duration?.timeStamp;
-          return Row(
-            children: <Widget>[
-              Text(positionText ?? '00:00', style: theme.bodyText2),
-              const Padding(padding: EdgeInsets.only(left: 4)),
-              Expanded(
-                child: widget,
-              ),
-              const Padding(padding: EdgeInsets.only(left: 4)),
-              Text(durationText ?? '00:00', style: theme.bodyText2),
-            ],
-          );
-        },),
+        child: PlayerProgressSlider(
+          builder: (context, widget) {
+            final durationText = player.position?.timeStamp;
+            final positionText = player.duration?.timeStamp;
+            return Row(
+              children: <Widget>[
+                Text(positionText ?? '00:00', style: theme.bodyText2),
+                const Padding(padding: EdgeInsets.only(left: 4)),
+                Expanded(
+                  child: widget,
+                ),
+                const Padding(padding: EdgeInsets.only(left: 4)),
+                Text(durationText ?? '00:00', style: theme.bodyText2),
+              ],
+            );
+          },
+        ),
       ),
     );
   }

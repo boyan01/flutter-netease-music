@@ -13,13 +13,14 @@ class RoundedImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ClipOval(
-        child: SizedBox.fromSize(
-      size: Size.square(size),
-      child: Image(
-        height: size,
-        width: size,
-        image: CachedImage(url!),
+      child: SizedBox.fromSize(
+        size: Size.square(size),
+        child: Image(
+          height: size,
+          width: size,
+          image: CachedImage(url!),
+        ),
       ),
-    ),);
+    );
   }
 }

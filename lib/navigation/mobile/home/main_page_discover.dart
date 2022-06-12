@@ -103,31 +103,32 @@ class _ItemNavigator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-        onTap: onTap,
-        child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-          child: Column(
-            children: <Widget>[
-              Material(
-                shape: const CircleBorder(),
-                elevation: 5,
-                child: ClipOval(
-                  child: Container(
-                    width: 40,
-                    height: 40,
-                    color: Theme.of(context).primaryColor,
-                    child: Icon(
-                      icon,
-                      color: Theme.of(context).primaryIconTheme.color,
-                    ),
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+        child: Column(
+          children: <Widget>[
+            Material(
+              shape: const CircleBorder(),
+              elevation: 5,
+              child: ClipOval(
+                child: Container(
+                  width: 40,
+                  height: 40,
+                  color: Theme.of(context).primaryColor,
+                  child: Icon(
+                    icon,
+                    color: Theme.of(context).primaryIconTheme.color,
                   ),
                 ),
               ),
-              const Padding(padding: EdgeInsets.only(top: 8)),
-              Text(text),
-            ],
-          ),
-        ),);
+            ),
+            const Padding(padding: EdgeInsets.only(top: 8)),
+            Text(text),
+          ],
+        ),
+      ),
+    );
   }
 }
 
@@ -137,25 +138,28 @@ class _SectionPlaylist extends ConsumerWidget {
     final snapshot = ref.watch(homePlaylistProvider.logErrorOnDebug());
     return snapshot.when(
       data: (list) {
-        return LayoutBuilder(builder: (context, constraints) {
-          assert(constraints.maxWidth.isFinite,
-              'can not layout playlist item in infinite width container.',);
-          final parentWidth = constraints.maxWidth - 8;
-          const count = /* false ? 6 : */ 3;
-          final width =
-              (parentWidth ~/ count).toDouble().clamp(80.0, 200.0);
-          final spacing = (parentWidth - width * count) / (count + 1);
-          return Padding(
-            padding:
-                EdgeInsets.symmetric(horizontal: 4 + spacing.roundToDouble()),
-            child: Wrap(
-              spacing: spacing,
-              children: list.map<Widget>((p) {
-                return _PlayListItemView(playlist: p, width: width);
-              }).toList(),
-            ),
-          );
-        },);
+        return LayoutBuilder(
+          builder: (context, constraints) {
+            assert(
+              constraints.maxWidth.isFinite,
+              'can not layout playlist item in infinite width container.',
+            );
+            final parentWidth = constraints.maxWidth - 8;
+            const count = /* false ? 6 : */ 3;
+            final width = (parentWidth ~/ count).toDouble().clamp(80.0, 200.0);
+            final spacing = (parentWidth - width * count) / (count + 1);
+            return Padding(
+              padding:
+                  EdgeInsets.symmetric(horizontal: 4 + spacing.roundToDouble()),
+              child: Wrap(
+                spacing: spacing,
+                children: list.map<Widget>((p) {
+                  return _PlayListItemView(playlist: p, width: width);
+                }).toList(),
+              ),
+            );
+          },
+        );
       },
       error: (error, stacktrace) {
         return SizedBox(
@@ -196,15 +200,16 @@ class _PlayListItemView extends ConsumerWidget {
     if (playlist.copywriter.isNotEmpty) {
       onLongPress = () {
         showDialog(
-            context: context,
-            builder: (context) {
-              return AlertDialog(
-                content: Text(
-                  playlist.copywriter,
-                  style: Theme.of(context).textTheme.bodyText1,
-                ),
-              );
-            },);
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              content: Text(
+                playlist.copywriter,
+                style: Theme.of(context).textTheme.bodyText1,
+              ),
+            );
+          },
+        );
       };
     }
 

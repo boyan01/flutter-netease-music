@@ -77,17 +77,19 @@ class _OverflowBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(builder: (context, constraints) {
-      final maxHeight = math.max<double>(constraints.maxHeight, 640);
-      final maxWidth = math.max<double>(constraints.maxWidth, 800);
-      return OverflowBox(
-        minHeight: 640,
-        maxHeight: maxHeight,
-        minWidth: 800,
-        maxWidth: maxWidth,
-        child: child,
-      );
-    },);
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final maxHeight = math.max<double>(constraints.maxHeight, 640);
+        final maxWidth = math.max<double>(constraints.maxWidth, 800);
+        return OverflowBox(
+          minHeight: 640,
+          maxHeight: maxHeight,
+          minWidth: 800,
+          maxWidth: maxWidth,
+          child: child,
+        );
+      },
+    );
   }
 }
 
@@ -101,8 +103,10 @@ class DesktopPlayingPageContainer extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final playingPage = ref.watch(navigatorProvider
-        .select((value) => value.current is NavigationTargetPlaying),);
+    final playingPage = ref.watch(
+      navigatorProvider
+          .select((value) => value.current is NavigationTargetPlaying),
+    );
     final showPlayingList = ref.watch(showPlayingListProvider);
     return Stack(
       children: [
@@ -138,26 +142,32 @@ class _SlideAnimatedPlayingListOverlay extends HookWidget {
       duration: const Duration(milliseconds: 300),
       initialValue: visible ? 1.0 : 0.0,
     );
-    useEffect(() {
-      if (visible) {
-        controller.forward();
-      } else {
-        controller.reverse();
-      }
-    }, [visible],);
+    useEffect(
+      () {
+        if (visible) {
+          controller.forward();
+        } else {
+          controller.reverse();
+        }
+      },
+      [visible],
+    );
 
-    final animation = useMemoized(() {
-      final tween = Tween<Offset>(
-        begin: const Offset(1, 0),
-        end: Offset.zero,
-      );
-      return tween.animate(
-        CurvedAnimation(
-          parent: controller,
-          curve: Curves.easeInOut,
-        ),
-      );
-    }, [controller],);
+    final animation = useMemoized(
+      () {
+        final tween = Tween<Offset>(
+          begin: const Offset(1, 0),
+          end: Offset.zero,
+        );
+        return tween.animate(
+          CurvedAnimation(
+            parent: controller,
+            curve: Curves.easeInOut,
+          ),
+        );
+      },
+      [controller],
+    );
     final offset = useAnimation(animation);
 
     if (controller.isDismissed) {
@@ -184,26 +194,32 @@ class _SlideAnimatedPlayingPage extends HookWidget {
       duration: const Duration(milliseconds: 300),
       initialValue: visible ? 1.0 : 0.0,
     );
-    useEffect(() {
-      if (visible) {
-        controller.forward();
-      } else {
-        controller.reverse();
-      }
-    }, [visible],);
+    useEffect(
+      () {
+        if (visible) {
+          controller.forward();
+        } else {
+          controller.reverse();
+        }
+      },
+      [visible],
+    );
 
-    final animation = useMemoized(() {
-      final tween = Tween<Offset>(
-        begin: const Offset(0, 1),
-        end: Offset.zero,
-      );
-      return tween.animate(
-        CurvedAnimation(
-          parent: controller,
-          curve: Curves.easeInOut,
-        ),
-      );
-    }, [controller],);
+    final animation = useMemoized(
+      () {
+        final tween = Tween<Offset>(
+          begin: const Offset(0, 1),
+          end: Offset.zero,
+        );
+        return tween.animate(
+          CurvedAnimation(
+            parent: controller,
+            curve: Curves.easeInOut,
+          ),
+        );
+      },
+      [controller],
+    );
     final offset = useAnimation(animation);
 
     if (controller.isDismissed) {

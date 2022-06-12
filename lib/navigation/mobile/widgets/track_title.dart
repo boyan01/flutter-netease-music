@@ -49,9 +49,10 @@ class TrackTile extends StatelessWidget {
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: context.textTheme.bodyMedium?.copyWith(
-                        color: track.type == TrackType.noCopyright
-                            ? context.theme.disabledColor
-                            : null,),
+                      color: track.type == TrackType.noCopyright
+                          ? context.theme.disabledColor
+                          : null,
+                    ),
                   ),
                   const SizedBox(height: 4),
                   Text(

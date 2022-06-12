@@ -15,11 +15,13 @@ class ArtistSelectionDialog extends StatelessWidget {
       return ListTile(
         title: Padding(
           padding: const EdgeInsets.only(left: 8),
-          child: Text(artist.name,
-              style: Theme.of(context)
-                  .textTheme
-                  .bodyText2!
-                  .merge(TextStyle(color: enabled ? null : Colors.grey)),),
+          child: Text(
+            artist.name,
+            style: Theme.of(context)
+                .textTheme
+                .bodyText2!
+                .merge(TextStyle(color: enabled ? null : Colors.grey)),
+          ),
         ),
         enabled: enabled,
         onTap: () {

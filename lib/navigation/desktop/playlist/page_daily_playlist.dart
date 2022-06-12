@@ -103,20 +103,22 @@ class _DailyHeader extends StatelessWidget {
                   children: [
                     const SizedBox(width: 20),
                     Text.rich(
-                      TextSpan(children: [
-                        TextSpan(
-                          text: date.day.toString().padLeft(2, '0'),
-                          style: const TextStyle(fontSize: 60),
-                        ),
-                        const TextSpan(
-                          text: ' / ',
-                          style: TextStyle(fontSize: 14),
-                        ),
-                        TextSpan(
-                          text: date.month.toString().padLeft(2, '0'),
-                          style: const TextStyle(fontSize: 14),
-                        ),
-                      ],),
+                      TextSpan(
+                        children: [
+                          TextSpan(
+                            text: date.day.toString().padLeft(2, '0'),
+                            style: const TextStyle(fontSize: 60),
+                          ),
+                          const TextSpan(
+                            text: ' / ',
+                            style: TextStyle(fontSize: 14),
+                          ),
+                          TextSpan(
+                            text: date.month.toString().padLeft(2, '0'),
+                            style: const TextStyle(fontSize: 14),
+                          ),
+                        ],
+                      ),
                       style: context.textTheme.headline5.bold?.copyWith(
                         color: context.colorScheme.primary,
                       ),

@@ -17,7 +17,7 @@ class PlayingLyricView extends ConsumerWidget {
     required this.music,
     required this.textStyle,
     this.textAlign = TextAlign.center,
-  })  : assert(textStyle.color != null);
+  }) : assert(textStyle.color != null);
   final VoidCallback? onTap;
 
   final Track music;
@@ -46,8 +46,13 @@ class PlayingLyricView extends ConsumerWidget {
 }
 
 class _LyricViewLoader extends ConsumerWidget {
-  const _LyricViewLoader(this.music, this.textAlign, this.textStyle, this.onTap,
-      {super.key,});
+  const _LyricViewLoader(
+    this.music,
+    this.textAlign,
+    this.textStyle,
+    this.onTap, {
+    super.key,
+  });
 
   final Track music;
 
@@ -67,16 +72,18 @@ class _LyricViewLoader extends ConsumerWidget {
             child: Text(context.strings.noLyric, style: textStyle),
           );
         }
-        return LayoutBuilder(builder: (context, constraints) {
-          return _LyricView(
-            lyric: lyric,
-            viewportHeight: constraints.maxHeight,
-            onTap: onTap,
-            textStyle: textStyle,
-            textAlign: textAlign,
-            track: music,
-          );
-        },);
+        return LayoutBuilder(
+          builder: (context, constraints) {
+            return _LyricView(
+              lyric: lyric,
+              viewportHeight: constraints.maxHeight,
+              onTap: onTap,
+              textStyle: textStyle,
+              textAlign: textAlign,
+              track: music,
+            );
+          },
+        );
       },
       error: (error, stack) => Center(
         child: Text(context.formattedError(error), style: textStyle),

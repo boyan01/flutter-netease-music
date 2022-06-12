@@ -49,7 +49,9 @@ class UserProfileSection extends ConsumerWidget {
                             borderRadius: BorderRadius.circular(12),
                           ),
                           padding: const EdgeInsets.symmetric(
-                              vertical: 2, horizontal: 4,),
+                            vertical: 2,
+                            horizontal: 4,
+                          ),
                           child: Text(
                             'Lv.${detail.level}',
                             style: const TextStyle(

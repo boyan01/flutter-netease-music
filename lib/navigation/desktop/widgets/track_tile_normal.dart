@@ -264,122 +264,126 @@ class TrackTile extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final configuration = _TrackTableConfiguration.of(context);
     return SizedBox(
-        height: 36,
-        child: Material(
-          color: index.isEven
-              ? context.colorScheme.background
-              : context.colorScheme.primary.withOpacity(0.04),
-          child: InkWell(
-            onTap: () {
-              if (track.type == TrackType.noCopyright) {
-                toast(context.strings.trackNoCopyright);
-                return;
-              }
-              TrackTileContainer.playTrack(context, track);
-            },
-            child: DefaultTextStyle(
-              style: const TextStyle(),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              child: Row(
-                children: [
-                  SizedBox(
-                    width: 40,
-                    child: Align(
-                      alignment: AlignmentDirectional.centerEnd,
-                      child: _IndexOrPlayIcon(index: index, track: track),
-                    ),
+      height: 36,
+      child: Material(
+        color: index.isEven
+            ? context.colorScheme.background
+            : context.colorScheme.primary.withOpacity(0.04),
+        child: InkWell(
+          onTap: () {
+            if (track.type == TrackType.noCopyright) {
+              toast(context.strings.trackNoCopyright);
+              return;
+            }
+            TrackTileContainer.playTrack(context, track);
+          },
+          child: DefaultTextStyle(
+            style: const TextStyle(),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            child: Row(
+              children: [
+                SizedBox(
+                  width: 40,
+                  child: Align(
+                    alignment: AlignmentDirectional.centerEnd,
+                    child: _IndexOrPlayIcon(index: index, track: track),
                   ),
-                  const SizedBox(width: 10),
-                  SizedBox(
-                    width: 20,
-                    child: LikeButton(
-                      music: track,
-                      iconSize: 16,
-                      padding: const EdgeInsets.all(2),
-                      likedColor: context.colorScheme.primary,
-                      color: context.textTheme.caption?.color,
-                    ),
+                ),
+                const SizedBox(width: 10),
+                SizedBox(
+                  width: 20,
+                  child: LikeButton(
+                    music: track,
+                    iconSize: 16,
+                    padding: const EdgeInsets.all(2),
+                    likedColor: context.colorScheme.primary,
+                    color: context.textTheme.caption?.color,
                   ),
-                  const SizedBox(width: 10),
-                  SizedBox(
-                    width: configuration.nameWidth,
-                    child: Align(
-                      alignment: AlignmentDirectional.centerStart,
-                      child: Text(
-                        track.name,
-                        overflow: TextOverflow.ellipsis,
-                        style: context.textTheme.bodyMedium?.copyWith(
-                          fontSize: 14,
-                          color: track.type == TrackType.noCopyright
-                              ? context.theme.disabledColor
-                              : null,
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    width: configuration.artistWidth,
-                    child: Align(
-                      alignment: AlignmentDirectional.centerStart,
-                      child: MouseHighlightText(
-                        style: context.textTheme.caption,
-                        highlightStyle: context.textTheme.caption!.copyWith(
-                          color: context.textTheme.bodyMedium!.color,
-                        ),
-                        children: track.artists
-                            .map((artist) => MouseHighlightSpan.highlight(
-                                  text: artist.name,
-                                  onTap: () {
-                                    if (artist.id == 0) {
-                                      return;
-                                    }
-                                    ref
-                                        .read(navigatorProvider.notifier)
-                                        .navigate(NavigationTargetArtistDetail(
-                                            artist.id,),);
-                                  },
-                                ),)
-                            .separated(MouseHighlightSpan.normal(text: '/'))
-                            .toList(),
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    width: configuration.albumWidth,
-                    child: Align(
-                      alignment: AlignmentDirectional.centerStart,
-                      child: HighlightClickableText(
-                        text: track.album?.name ?? '',
-                        onTap: () {
-                          final albumId = track.album?.id;
-                          if (albumId == null) {
-                            return;
-                          }
-                          ref
-                              .read(navigatorProvider.notifier)
-                              .navigate(NavigationTargetAlbumDetail(albumId));
-                        },
-                        style: context.textTheme.caption,
-                        highlightStyle: context.textTheme.caption?.copyWith(
-                          color: context.textTheme.bodyMedium?.color,
-                        ),
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    width: configuration.durationWidth,
+                ),
+                const SizedBox(width: 10),
+                SizedBox(
+                  width: configuration.nameWidth,
+                  child: Align(
+                    alignment: AlignmentDirectional.centerStart,
                     child: Text(
-                      track.duration.timeStamp,
-                      style: context.textTheme.caption,
+                      track.name,
+                      overflow: TextOverflow.ellipsis,
+                      style: context.textTheme.bodyMedium?.copyWith(
+                        fontSize: 14,
+                        color: track.type == TrackType.noCopyright
+                            ? context.theme.disabledColor
+                            : null,
+                      ),
                     ),
                   ),
-                  const SizedBox(width: 20),
-                ],
-              ),
+                ),
+                SizedBox(
+                  width: configuration.artistWidth,
+                  child: Align(
+                    alignment: AlignmentDirectional.centerStart,
+                    child: MouseHighlightText(
+                      style: context.textTheme.caption,
+                      highlightStyle: context.textTheme.caption!.copyWith(
+                        color: context.textTheme.bodyMedium!.color,
+                      ),
+                      children: track.artists
+                          .map(
+                            (artist) => MouseHighlightSpan.highlight(
+                              text: artist.name,
+                              onTap: () {
+                                if (artist.id == 0) {
+                                  return;
+                                }
+                                ref.read(navigatorProvider.notifier).navigate(
+                                      NavigationTargetArtistDetail(
+                                        artist.id,
+                                      ),
+                                    );
+                              },
+                            ),
+                          )
+                          .separated(MouseHighlightSpan.normal(text: '/'))
+                          .toList(),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  width: configuration.albumWidth,
+                  child: Align(
+                    alignment: AlignmentDirectional.centerStart,
+                    child: HighlightClickableText(
+                      text: track.album?.name ?? '',
+                      onTap: () {
+                        final albumId = track.album?.id;
+                        if (albumId == null) {
+                          return;
+                        }
+                        ref
+                            .read(navigatorProvider.notifier)
+                            .navigate(NavigationTargetAlbumDetail(albumId));
+                      },
+                      style: context.textTheme.caption,
+                      highlightStyle: context.textTheme.caption?.copyWith(
+                        color: context.textTheme.bodyMedium?.color,
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  width: configuration.durationWidth,
+                  child: Text(
+                    track.duration.timeStamp,
+                    style: context.textTheme.caption,
+                  ),
+                ),
+                const SizedBox(width: 20),
+              ],
             ),
           ),
-        ),);
+        ),
+      ),
+    );
   }
 }
 

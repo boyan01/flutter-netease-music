@@ -6,8 +6,8 @@ String getFormattedTime(int milliseconds) {
   final now = DateTime.now();
 
   final diff = Duration(
-      milliseconds:
-          now.millisecondsSinceEpoch - dateTime.millisecondsSinceEpoch,);
+    milliseconds: now.millisecondsSinceEpoch - dateTime.millisecondsSinceEpoch,
+  );
   if (diff.inMinutes < 1) {
     return '刚刚';
   }

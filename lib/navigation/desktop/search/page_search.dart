@@ -87,13 +87,15 @@ class _SearchTabBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(children: [
-      _Tab(label: context.strings.songs, isSelected: true, onTap: () {}),
-      const SizedBox(width: 20),
-      _Tab(label: context.strings.artists, isSelected: false, onTap: () {}),
-      const SizedBox(width: 20),
-      _Tab(label: context.strings.album, isSelected: false, onTap: () {}),
-    ],);
+    return Row(
+      children: [
+        _Tab(label: context.strings.songs, isSelected: true, onTap: () {}),
+        const SizedBox(width: 20),
+        _Tab(label: context.strings.artists, isSelected: false, onTap: () {}),
+        const SizedBox(width: 20),
+        _Tab(label: context.strings.album, isSelected: false, onTap: () {}),
+      ],
+    );
   }
 }
 

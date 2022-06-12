@@ -38,7 +38,8 @@ class _WindowsTaskBar extends ConsumerWidget {
         WindowsTaskbar.setThumbnailToolbar([
           ThumbnailToolbarButton(
             ThumbnailToolbarAssetIcon(
-                'assets/icons/baseline_skip_previous_white_24dp.ico',),
+              'assets/icons/baseline_skip_previous_white_24dp.ico',
+            ),
             context.strings.skipToPrevious,
             () {
               ref.read(playerProvider).skipToPrevious();
@@ -50,7 +51,8 @@ class _WindowsTaskBar extends ConsumerWidget {
           if (next.isPlaying)
             ThumbnailToolbarButton(
               ThumbnailToolbarAssetIcon(
-                  'assets/icons/baseline_pause_white_24dp.ico',),
+                'assets/icons/baseline_pause_white_24dp.ico',
+              ),
               context.strings.pause,
               () {
                 ref.read(playerProvider).pause();
@@ -59,7 +61,8 @@ class _WindowsTaskBar extends ConsumerWidget {
           else
             ThumbnailToolbarButton(
               ThumbnailToolbarAssetIcon(
-                  'assets/icons/baseline_play_arrow_white_24dp.ico',),
+                'assets/icons/baseline_play_arrow_white_24dp.ico',
+              ),
               context.strings.play,
               () {
                 ref.read(playerProvider).play();
@@ -67,7 +70,8 @@ class _WindowsTaskBar extends ConsumerWidget {
             ),
           ThumbnailToolbarButton(
             ThumbnailToolbarAssetIcon(
-                'assets/icons/baseline_skip_next_white_24dp.ico',),
+              'assets/icons/baseline_skip_next_white_24dp.ico',
+            ),
             context.strings.skipToNext,
             () {
               ref.read(playerProvider).skipToNext();

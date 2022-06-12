@@ -84,8 +84,12 @@ class _CenterSection extends HookConsumerWidget {
         crossFadeState: showLyric.value
             ? CrossFadeState.showSecond
             : CrossFadeState.showFirst,
-        layoutBuilder: (Widget topChild, Key topChildKey, Widget bottomChild,
-            Key bottomChildKey,) {
+        layoutBuilder: (
+          Widget topChild,
+          Key topChildKey,
+          Widget bottomChild,
+          Key bottomChildKey,
+        ) {
           return Stack(
             clipBehavior: Clip.none,
             children: <Widget>[
@@ -169,9 +173,11 @@ class _FmCover extends ConsumerWidget {
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
-              Icon(Icons.chevron_right,
-                  size: 17,
-                  color: Theme.of(context).primaryTextTheme.caption!.color,),
+              Icon(
+                Icons.chevron_right,
+                size: 17,
+                color: Theme.of(context).primaryTextTheme.caption!.color,
+              ),
             ],
           ),
         )
@@ -196,25 +202,26 @@ class _FmControllerBar extends ConsumerWidget {
     final playing = isFmPlaying && isPlaying;
 
     final iconPlayPause = IconButton(
-        tooltip: playing ? context.strings.pause : context.strings.play,
-        iconSize: 40,
-        icon: Icon(
-          playing ? Icons.pause_rounded : Icons.play_arrow_rounded,
-          color: color,
-        ),
-        onPressed: () {
-          final player = ref.read(playerProvider);
-          if (playing) {
-            player.pause();
-          } else if (isFmPlaying) {
-            player.play();
-          } else {
-            final fmPlaylist = ref.read(fmPlaylistProvider);
-            player
-              ..setTrackList(TrackList.fm(tracks: fmPlaylist))
-              ..playFromMediaId(track.id);
-          }
-        },);
+      tooltip: playing ? context.strings.pause : context.strings.play,
+      iconSize: 40,
+      icon: Icon(
+        playing ? Icons.pause_rounded : Icons.play_arrow_rounded,
+        color: color,
+      ),
+      onPressed: () {
+        final player = ref.read(playerProvider);
+        if (playing) {
+          player.pause();
+        } else if (isFmPlaying) {
+          player.play();
+        } else {
+          final fmPlaylist = ref.read(fmPlaylistProvider);
+          player
+            ..setTrackList(TrackList.fm(tracks: fmPlaylist))
+            ..playFromMediaId(track.id);
+        }
+      },
+    );
 
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 10),
@@ -222,33 +229,36 @@ class _FmControllerBar extends ConsumerWidget {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
           IconButton(
-              icon: Icon(
-                Icons.delete_outline,
-                color: color,
-              ),
-              onPressed: () {
-                toast('已加入不喜欢列表，以后将减少类似的推荐。');
-                ref.read(playerProvider).skipToNext();
-              },),
+            icon: Icon(
+              Icons.delete_outline,
+              color: color,
+            ),
+            onPressed: () {
+              toast('已加入不喜欢列表，以后将减少类似的推荐。');
+              ref.read(playerProvider).skipToNext();
+            },
+          ),
           LikeButton(music: track, color: color),
           iconPlayPause,
           IconButton(
-              tooltip: context.strings.skipToNext,
-              icon: Icon(
-                Icons.skip_next,
-                color: color,
-              ),
-              onPressed: () {
-                ref.read(playerProvider).skipToNext();
-              },),
+            tooltip: context.strings.skipToNext,
+            icon: Icon(
+              Icons.skip_next,
+              color: color,
+            ),
+            onPressed: () {
+              ref.read(playerProvider).skipToNext();
+            },
+          ),
           IconButton(
-              icon: Icon(
-                Icons.comment,
-                color: color,
-              ),
-              onPressed: () {
-                // TODO
-              },),
+            icon: Icon(
+              Icons.comment,
+              color: color,
+            ),
+            onPressed: () {
+              // TODO
+            },
+          ),
         ],
       ),
     );

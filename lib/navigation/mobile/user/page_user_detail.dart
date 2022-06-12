@@ -54,28 +54,34 @@ class _DetailPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: DefaultTabController(
-          length: 3,
-          child: NestedScrollView(
-            headerSliverBuilder: (context, _) {
-              return [
-                SliverOverlapAbsorber(
-                    handle: NestedScrollView.sliverOverlapAbsorberHandleFor(
-                        context,),
-                    sliver: _UserDetailAppBar(user),)
-              ];
-            },
-            body: SafeArea(
-              child: Padding(
-                padding: const EdgeInsets.only(
-                    top: kToolbarHeight + kTextTabBarHeight,),
-                child: TabBarView(children: <Widget>[
+        length: 3,
+        child: NestedScrollView(
+          headerSliverBuilder: (context, _) {
+            return [
+              SliverOverlapAbsorber(
+                handle: NestedScrollView.sliverOverlapAbsorberHandleFor(
+                  context,
+                ),
+                sliver: _UserDetailAppBar(user),
+              )
+            ];
+          },
+          body: SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.only(
+                top: kToolbarHeight + kTextTabBarHeight,
+              ),
+              child: TabBarView(
+                children: <Widget>[
                   TabMusic(user),
                   const TabEvents(),
                   TabAbout(user),
-                ],),
+                ],
               ),
             ),
-          ),),
+          ),
+        ),
+      ),
     );
   }
 }
@@ -94,33 +100,40 @@ class _UserDetailAppBar extends StatelessWidget {
       flexibleSpace: FlexibleDetailBar(
         background: FlexShadowBackground(
           child: Image(
-              height: 300,
-              width: 300,
-              fit: BoxFit.cover,
-              image: CachedImage(user.backgroundUrl),),
+            height: 300,
+            width: 300,
+            fit: BoxFit.cover,
+            image: CachedImage(user.backgroundUrl),
+          ),
         ),
         content: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                const Spacer(),
-                Row(
-                  children: <Widget>[
-                    RoundedImage(user.avatarUrl, size: 60),
-                  ],
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              const Spacer(),
+              Row(
+                children: <Widget>[
+                  RoundedImage(user.avatarUrl, size: 60),
+                ],
+              ),
+              const SizedBox(height: 10),
+              Text(
+                user.nickname,
+                style: const TextStyle(
+                  fontSize: 17,
+                  fontWeight: FontWeight.w400,
                 ),
-                const SizedBox(height: 10),
-                Text(user.nickname,
-                    style: const TextStyle(
-                        fontSize: 17, fontWeight: FontWeight.w400,),),
-                const SizedBox(height: 6),
-                Row(children: <Widget>[
+              ),
+              const SizedBox(height: 6),
+              Row(
+                children: <Widget>[
                   InkWell(
-                      onTap: () {
-                        toast('关注');
-                      },
-                      child: Text('关注:${user.followers}'),),
+                    onTap: () {
+                      toast('关注');
+                    },
+                    child: Text('关注:${user.followers}'),
+                  ),
                   const VerticalDivider(),
                   InkWell(
                     onTap: () {
@@ -128,9 +141,11 @@ class _UserDetailAppBar extends StatelessWidget {
                     },
                     child: Text('粉丝:${user.followedUsers}'),
                   ),
-                ],),
-                const SizedBox(height: 16),
-              ],),
+                ],
+              ),
+              const SizedBox(height: 16),
+            ],
+          ),
         ),
         builder: (context, t) {
           return AppBar(
@@ -140,12 +155,15 @@ class _UserDetailAppBar extends StatelessWidget {
             backgroundColor: Colors.transparent,
             actions: <Widget>[
               IconButton(
-                  icon: Icon(Icons.more_vert,
-                      color: Theme.of(context).primaryIconTheme.color,),
-                  onPressed: () {
-                    //TODO
-                    toast('todo');
-                  },)
+                icon: Icon(
+                  Icons.more_vert,
+                  color: Theme.of(context).primaryIconTheme.color,
+                ),
+                onPressed: () {
+                  //TODO
+                  toast('todo');
+                },
+              )
             ],
           );
         },

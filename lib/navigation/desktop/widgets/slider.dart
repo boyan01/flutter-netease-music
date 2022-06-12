@@ -17,11 +17,14 @@ class UnboundedRectangularSliderTrackShape extends RectangularSliderTrackShape {
     assert(trackHeight >= 0);
 
     final trackLeft = offset.dx;
-    final trackTop =
-        offset.dy + (parentBox.size.height - trackHeight) / 2;
+    final trackTop = offset.dy + (parentBox.size.height - trackHeight) / 2;
     final trackRight = trackLeft + parentBox.size.width;
     final trackBottom = trackTop + trackHeight;
-    return Rect.fromLTRB(math.min(trackLeft, trackRight), trackTop,
-        math.max(trackLeft, trackRight), trackBottom,);
+    return Rect.fromLTRB(
+      math.min(trackLeft, trackRight),
+      trackTop,
+      math.max(trackLeft, trackRight),
+      trackBottom,
+    );
   }
 }

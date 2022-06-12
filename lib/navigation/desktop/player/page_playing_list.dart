@@ -28,34 +28,38 @@ class PagePlayingList extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final node = useFocusNode();
-    useEffect(() {
-      void onFocusChange() {
-        if (!node.hasFocus) {
-          // delay to avoid focus conflict with the playlist toggle button.
-          Future.delayed(const Duration(milliseconds: 100), () {
-            ref.read(showPlayingListProvider.notifier).state = false;
-          });
+    useEffect(
+      () {
+        void onFocusChange() {
+          if (!node.hasFocus) {
+            // delay to avoid focus conflict with the playlist toggle button.
+            Future.delayed(const Duration(milliseconds: 100), () {
+              ref.read(showPlayingListProvider.notifier).state = false;
+            });
+          }
         }
-      }
 
-      node.addListener(onFocusChange);
-      return () {
-        node.removeListener(onFocusChange);
-      };
-    }, [node],);
+        node.addListener(onFocusChange);
+        return () {
+          node.removeListener(onFocusChange);
+        };
+      },
+      [node],
+    );
     return Focus(
       autofocus: true,
       focusNode: node,
       child: Material(
-          color: context.colorScheme.background,
-          elevation: 4,
-          child: Column(
-            children: const [
-              _PlayingListTitle(),
-              Divider(indent: 20, endIndent: 20),
-              Expanded(child: _PlayingList()),
-            ],
-          ),),
+        color: context.colorScheme.background,
+        elevation: 4,
+        child: Column(
+          children: const [
+            _PlayingListTitle(),
+            Divider(indent: 20, endIndent: 20),
+            Expanded(child: _PlayingList()),
+          ],
+        ),
+      ),
     );
   }
 }

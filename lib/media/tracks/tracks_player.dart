@@ -51,14 +51,16 @@ class TracksPlayerState with EquatableMixin {
 
 abstract class TracksPlayer extends StateNotifier<TracksPlayerState> {
   TracksPlayer()
-      : super(const TracksPlayerState(
-          isPlaying: false,
-          isBuffering: false,
-          playingTrack: null,
-          playingList: TrackList.empty(),
-          duration: null,
-          volume: 0,
-        ),);
+      : super(
+          const TracksPlayerState(
+            isPlaying: false,
+            isBuffering: false,
+            playingTrack: null,
+            playingList: TrackList.empty(),
+            duration: null,
+            volume: 0,
+          ),
+        );
 
   factory TracksPlayer.platform() {
     if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
