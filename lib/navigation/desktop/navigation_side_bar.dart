@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:overlay_support/overlay_support.dart';
+
+import '../../component/utils/scroll_controller.dart';
 import '../../extension.dart';
-import 'login/login_dialog.dart';
-import 'playlist/user_playlists.dart';
-import 'widgets/navigation_tile.dart';
 import '../../providers/account_provider.dart';
 import '../../providers/navigator_provider.dart';
 import '../../repository.dart';
-
-import '../../component/utils/scroll_controller.dart';
 import '../common/navigation_target.dart';
+import 'login/login_dialog.dart';
+import 'playlist/user_playlists.dart';
+import 'widgets/navigation_tile.dart';
 
 class NavigationSideBar extends StatelessWidget {
   const NavigationSideBar({Key? key}) : super(key: key);

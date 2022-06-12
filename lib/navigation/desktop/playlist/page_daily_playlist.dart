@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../../../component/utils/scroll_controller.dart';
 import '../../../extension.dart';
 import '../../../material.dart';
-import '../../common/playlist/music_list.dart';
 import '../../../providers/daily_playlist_provider.dart';
-import '../../../repository.dart';
-
 import '../../../providers/player_provider.dart';
+import '../../../repository.dart';
+import '../../common/playlist/music_list.dart';
 import '../widgets/playlist_collapsed_title.dart';
 import '../widgets/track_tile_normal.dart';
 

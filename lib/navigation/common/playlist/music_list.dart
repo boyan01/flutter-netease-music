@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:overlay_support/overlay_support.dart';
+
 import '../../../extension.dart';
 import '../../../media/tracks/track_list.dart';
 import '../../../media/tracks/tracks_player.dart';
-import '../navigation_target.dart';
 import '../../../providers/navigator_provider.dart';
 import '../../../providers/player_provider.dart';
 import '../../../repository.dart';
-
 import '../../mobile/playlists/dialog_selector.dart';
+import '../navigation_target.dart';
 
 enum PlayResult {
   success,

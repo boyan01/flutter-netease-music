@@ -2,9 +2,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import '../../extension.dart';
 import 'package:window_manager/window_manager.dart';
 
+import '../../extension.dart';
 import '../../providers/navigator_provider.dart';
 import '../common/navigator.dart';
 import 'widgets/bottom_bar.dart';

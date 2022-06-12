@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+
 import '../../component/utils/utils.dart';
 import '../../extension.dart';
 import '../../media/tracks/tracks_player.dart';
-import 'progress_track_container.dart';
 import '../../providers/player_provider.dart';
+import 'progress_track_container.dart';
 
 /// A seek bar for current position.
 class DurationProgressBar extends ConsumerWidget {

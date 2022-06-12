@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+
 import '../../component/utils/scroll_controller.dart';
 import '../../extension.dart';
 import '../../media/tracks/track_list.dart';
+import '../../providers/navigator_provider.dart';
 import '../../providers/personalized_playlist_provider.dart';
 import '../../providers/play_records_provider.dart';
 import '../../providers/player_provider.dart';
-
-import '../../providers/navigator_provider.dart';
 import '../common/navigation_target.dart';
 import '../common/recommended_playlist_tile.dart';
 import 'widgets/track_tile_short.dart';

@@ -1,20 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:overlay_support/overlay_support.dart';
+
+import '../../../component/netease/netease_loader.dart';
 import '../../../extension.dart';
 import '../../../material/flexible_app_bar.dart';
 import '../../../material/images.dart';
 import '../../../material/tabs.dart';
-import '../home/playlist_tile.dart';
 import '../../../providers/user_detail_provider.dart';
 import '../../../repository.dart';
-
-import '../../../component/netease/netease_loader.dart';
+import '../home/playlist_tile.dart';
 
 part 'tab_about.dart';
-
 part 'tab_events.dart';
-
 part 'tab_music.dart';
 
 ///用户详情页

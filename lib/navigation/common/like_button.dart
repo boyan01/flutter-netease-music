@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../providers/player_provider.dart';
 
 import '../../material/user.dart';
 import '../../providers/account_provider.dart';
 import '../../providers/favorite_tracks_provider.dart';
+import '../../providers/player_provider.dart';
 import '../../repository.dart';
 
 /// 歌曲喜欢按钮

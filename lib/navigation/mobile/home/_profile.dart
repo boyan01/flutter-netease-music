@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../../../component.dart';
-import '../../common/navigation_target.dart';
+import '../../../providers/account_provider.dart';
 import '../../../providers/navigator_provider.dart';
 import '../../../repository.dart';
-
-import '../../../providers/account_provider.dart';
+import '../../common/navigation_target.dart';
 
 class UserProfileSection extends ConsumerWidget {
   const UserProfileSection({Key? key}) : super(key: key);

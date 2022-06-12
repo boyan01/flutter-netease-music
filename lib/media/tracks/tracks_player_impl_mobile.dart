@@ -5,9 +5,9 @@ import 'dart:ui';
 
 import 'package:flutter/widgets.dart';
 import 'package:music_player/music_player.dart';
-import '../../model/persistence_player_state.dart';
 
 import '../../component.dart';
+import '../../model/persistence_player_state.dart';
 import '../../repository.dart';
 import 'track_list.dart';
 import 'tracks_player.dart';

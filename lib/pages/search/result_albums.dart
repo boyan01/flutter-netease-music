@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:loader/loader.dart';
-import '../../repository.dart';
 
 import '../../material/tiles.dart';
+import '../../repository.dart';
 
 class AlbumsResultSection extends StatefulWidget {
   const AlbumsResultSection({Key? key, this.query}) : super(key: key);

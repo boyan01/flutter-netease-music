@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import '../providers/navigator_provider.dart';
-import '../repository.dart';
 
 import '../navigation/common/navigation_target.dart';
 import '../navigation/mobile/artists/artists_selector.dart';
+import '../providers/navigator_provider.dart';
+import '../repository.dart';
 
 extension NavigatorControllerExt on NavigatorController {
   void navigateToArtistDetail({

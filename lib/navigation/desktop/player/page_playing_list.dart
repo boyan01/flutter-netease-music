@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import '../../../extension.dart';
-import '../../common/navigation_target.dart';
-import '../widgets/track_tile_short.dart';
-import '../../../providers/navigator_provider.dart';
-import '../../../providers/player_provider.dart';
 
 import '../../../component/utils/scroll_controller.dart';
+import '../../../extension.dart';
+import '../../../providers/navigator_provider.dart';
+import '../../../providers/player_provider.dart';
+import '../../common/navigation_target.dart';
+import '../widgets/track_tile_short.dart';
 
 final showPlayingListProvider =
     StateNotifierProvider<SimpleStateNotifier<bool>, bool>(

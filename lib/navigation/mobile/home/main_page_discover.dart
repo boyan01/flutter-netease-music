@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../extension.dart';
-import '../../common/playlist/music_list.dart';
-import '../../../repository.dart';
 
+import '../../../extension.dart';
 import '../../../providers/navigator_provider.dart';
 import '../../../providers/personalized_playlist_provider.dart';
+import '../../../repository.dart';
 import '../../common/navigation_target.dart';
+import '../../common/playlist/music_list.dart';
 
 class MainPageDiscover extends StatefulWidget {
   @override

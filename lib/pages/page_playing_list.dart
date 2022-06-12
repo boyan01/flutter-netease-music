@@ -3,11 +3,11 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:music_player/music_player.dart';
 import 'package:overlay_support/overlay_support.dart';
+
 import '../extension.dart';
 import '../navigation/mobile/playlists/dialog_selector.dart';
-import '../repository.dart';
-
 import '../providers/player_provider.dart';
+import '../repository.dart';
 
 /// Current Playing List Dialog
 ///

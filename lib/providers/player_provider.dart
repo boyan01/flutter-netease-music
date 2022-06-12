@@ -1,10 +1,10 @@
 import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'preference_provider.dart';
 
 import '../media/tracks/tracks_player.dart';
 import '../model/persistence_player_state.dart';
+import 'preference_provider.dart';
 
 final playerStateProvider =
     StateNotifierProvider<TracksPlayer, TracksPlayerState>(

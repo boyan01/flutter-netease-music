@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../../../extension.dart';
-import '../widgets/navigation_tile.dart';
-import '../../../providers/navigator_provider.dart';
-import '../../../repository.dart';
-
 import '../../../providers/account_provider.dart';
-
+import '../../../providers/navigator_provider.dart';
 import '../../../providers/user_playlists_provider.dart';
+import '../../../repository.dart';
 import '../../common/navigation_target.dart';
+import '../widgets/navigation_tile.dart';
 
 class SliverSidebarUserPlaylist extends ConsumerWidget {
   const SliverSidebarUserPlaylist({Key? key}) : super(key: key);

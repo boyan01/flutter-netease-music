@@ -5,18 +5,18 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:overlay_support/overlay_support.dart';
+import 'package:stream_transform/stream_transform.dart';
+
+import '../../../component/hooks.dart';
+import '../../../component/utils/scroll_controller.dart';
 import '../../../extension.dart';
 import '../../../material.dart';
+import '../../../providers/navigator_provider.dart';
 import '../../../providers/player_provider.dart';
 import '../../../providers/playlist_detail_provider.dart';
 import '../../../providers/settings_provider.dart';
 import '../../../repository.dart';
 import '../../../utils/track_list_filter.dart';
-import 'package:stream_transform/stream_transform.dart';
-
-import '../../../component/hooks.dart';
-import '../../../component/utils/scroll_controller.dart';
-import '../../../providers/navigator_provider.dart';
 import '../../common/navigation_target.dart';
 import '../../common/playlist/music_list.dart';
 import '../widgets/playlist_collapsed_title.dart';

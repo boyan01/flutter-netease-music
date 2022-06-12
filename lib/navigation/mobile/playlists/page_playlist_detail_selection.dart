@@ -3,11 +3,11 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:overlay_support/overlay_support.dart';
-import '../../../component.dart';
-import '../../common/playlist/music_list.dart';
-import '../../../repository/data/track.dart';
 
+import '../../../component.dart';
 import '../../../material/dialogs.dart';
+import '../../../repository/data/track.dart';
+import '../../common/playlist/music_list.dart';
 import 'dialog_selector.dart';
 
 typedef MusicDeletionCallback = Future<bool> Function(List<Music> selected);

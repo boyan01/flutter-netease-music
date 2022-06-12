@@ -3,11 +3,11 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:overlay_support/overlay_support.dart';
-import '../../../extension.dart';
-import '../../../repository.dart';
 
 import '../../../component/utils/time.dart';
+import '../../../extension.dart';
 import '../../../providers/navigator_provider.dart';
+import '../../../repository.dart';
 
 class AlbumFlexibleAppBar extends StatelessWidget {
   const AlbumFlexibleAppBar({

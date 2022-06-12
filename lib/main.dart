@@ -7,14 +7,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive/hive.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:path_provider/path_provider.dart';
-import 'navigation/app.dart';
-import 'pages/splash/page_splash.dart';
-import 'providers/preference_provider.dart';
-import 'repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:window_manager/window_manager.dart';
 
 import 'media/tracks/tracks_player_impl_mobile.dart';
+import 'navigation/app.dart';
+import 'pages/splash/page_splash.dart';
+import 'providers/preference_provider.dart';
+import 'repository.dart';
 import 'utils/callback_window_listener.dart';
 import 'utils/system/system_fonts.dart';
 

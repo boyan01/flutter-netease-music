@@ -33,6 +33,7 @@ linter:
     avoid_relative_lib_imports: true
     always_use_package_imports: false
     prefer_relative_imports: true
+    directives_ordering: true
 
     # TODO(bin): remove this
     use_key_in_widget_constructors: false

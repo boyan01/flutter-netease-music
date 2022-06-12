@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../../../extension.dart';
 import '../../../material.dart';
 import '../../../pages/page_playing_list.dart';
-import '../../../repository.dart';
-
 import '../../../providers/navigator_provider.dart';
 import '../../../providers/player_provider.dart';
+import '../../../repository.dart';
 import '../../common/player/cover.dart';
 import '../../common/player/lyric_view.dart';
 import '../../common/player/player_actions.dart';

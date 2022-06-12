@@ -1,11 +1,11 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../extension.dart';
-import '../../../providers/player_provider.dart';
 import 'package:windows_taskbar/windows_taskbar.dart';
 
+import '../../../extension.dart';
 import '../../../media/tracks/tracks_player.dart';
+import '../../../providers/player_provider.dart';
 
 class WindowsTaskBar extends StatelessWidget {
   const WindowsTaskBar({Key? key, required this.child}) : super(key: key);

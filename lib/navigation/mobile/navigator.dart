@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
-import 'home/page_home.dart';
-import 'player/page_playing.dart';
-import 'settings/page_setting.dart';
-import 'widgets/slide_up_page_route.dart';
 
 import '../../providers/navigator_provider.dart';
 import '../common/login/login_sub_navigation.dart';
 import '../common/navigation_target.dart';
 import 'artists/page_artist_detail.dart';
+import 'home/page_home.dart';
 import 'player/page_fm_playing.dart';
+import 'player/page_playing.dart';
 import 'playlists/page_album_detail.dart';
 import 'playlists/page_playlist_detail.dart';
+import 'settings/page_setting.dart';
 import 'user/page_user_detail.dart';
+import 'widgets/slide_up_page_route.dart';
 
 class MobileNavigatorController extends NavigatorController {
   MobileNavigatorController() {

@@ -1,11 +1,11 @@
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+
 import '../../extension.dart';
+import '../../providers/navigator_provider.dart';
 import '../../providers/player_provider.dart';
 import '../../repository.dart';
-
-import '../../providers/navigator_provider.dart';
 import '../common/buttons.dart';
 import '../common/navigation_target.dart';
 import '../common/player_progress.dart';

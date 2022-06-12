@@ -1,9 +1,9 @@
 import 'package:async/async.dart';
 import 'package:flutter/material.dart';
-import '../../navigation/mobile/artists/page_artist_detail.dart';
-import '../../repository.dart';
 
 import '../../component/netease/netease_loader.dart';
+import '../../navigation/mobile/artists/page_artist_detail.dart';
+import '../../repository.dart';
 
 class CollectionArtists extends StatelessWidget {
   @override

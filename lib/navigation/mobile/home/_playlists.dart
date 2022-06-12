@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../../../extension.dart';
+import '../../../providers/account_provider.dart';
 import '../../../providers/user_playlists_provider.dart';
 import '../../../repository.dart';
-
-import '../../../providers/account_provider.dart';
 import 'playlist_tile.dart';
 
 enum PlayListType { created, favorite }

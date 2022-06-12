@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:loader/loader.dart';
-import '../../component/utils/utils.dart';
-import 'model_search_history.dart';
-import '../../repository/netease.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 import '../../component/route.dart';
+import '../../component/utils/utils.dart';
+import '../../repository/netease.dart';
+import 'model_search_history.dart';
 import 'search_result_page.dart';
 import 'search_suggestion.dart';
 

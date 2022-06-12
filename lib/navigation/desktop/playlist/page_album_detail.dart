@@ -2,17 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:overlay_support/overlay_support.dart';
-import '../../../extension.dart';
-import '../widgets/highlight_clickable_text.dart';
-import '../../../providers/album_detail_provider.dart';
-import '../../../repository.dart';
 
 import '../../../component/utils/scroll_controller.dart';
+import '../../../extension.dart';
 import '../../../material/flexible_app_bar.dart';
+import '../../../providers/album_detail_provider.dart';
 import '../../../providers/navigator_provider.dart';
 import '../../../providers/player_provider.dart';
+import '../../../repository.dart';
 import '../../common/navigation_target.dart';
 import '../../common/playlist/music_list.dart';
+import '../widgets/highlight_clickable_text.dart';
 import '../widgets/playlist_collapsed_title.dart';
 import '../widgets/track_tile_normal.dart';
 

@@ -1,9 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../extension.dart';
 import '../media/tracks/track_list.dart';
-import 'player_provider.dart';
 import '../repository.dart';
+import 'player_provider.dart';
 
 final _fmPlaylistProvider =
     StateNotifierProvider<FmPlaylistNotifier, List<Track>>(

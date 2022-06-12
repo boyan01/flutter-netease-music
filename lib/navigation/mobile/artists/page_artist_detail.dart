@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:loader/loader.dart';
 import 'package:overlay_support/overlay_support.dart';
+
 import '../../../extension.dart';
+import '../../../material/tiles.dart';
+import '../../../part/part.dart';
+import '../../../repository.dart';
 import '../../common/playlist/music_list.dart';
 import '../playlists/dialog_selector.dart';
 import '../playlists/page_playlist_detail_selection.dart';
-import '../../../part/part.dart';
-import '../../../repository.dart';
-
-import '../../../material/tiles.dart';
 import 'artist_header.dart';
 
 ///歌手详情页

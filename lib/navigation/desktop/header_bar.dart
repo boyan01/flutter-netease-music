@@ -4,10 +4,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import '../../extension.dart';
-import '../../providers/navigator_provider.dart';
 import 'package:window_manager/window_manager.dart';
 
+import '../../extension.dart';
+import '../../providers/navigator_provider.dart';
 import '../../utils/callback_window_listener.dart';
 import '../common/navigation_target.dart';
 import 'widgets/caption_icons.dart';

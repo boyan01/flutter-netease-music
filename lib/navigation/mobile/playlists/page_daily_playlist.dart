@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:loader/loader.dart';
+import 'package:url_launcher/url_launcher_string.dart';
+
 import '../../../material/flexible_app_bar.dart';
-import '../../common/playlist/music_list.dart';
 import '../../../pages/account/page_need_login.dart';
 import '../../../repository.dart';
-import 'package:url_launcher/url_launcher_string.dart';
+import '../../common/playlist/music_list.dart';
 
 ///每日推荐歌曲页面
 ///NOTE：需要登陆
