@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
-import 'package:quiet/component.dart';
-import 'package:quiet/component/exceptions.dart';
-import 'package:quiet/component/utils/time.dart';
+import '../component.dart';
+import '../component/exceptions.dart';
+import '../component/utils/time.dart';
 
 extension ErrorFormat on BuildContext {
   /// human-readable error message

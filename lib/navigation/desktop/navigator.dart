@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:quiet/navigation/desktop/page_setting.dart';
-import 'package:quiet/navigation/desktop/player/page_fm_playing.dart';
-import 'package:quiet/navigation/desktop/playlist/page_cloud_tracks.dart';
-import 'package:quiet/navigation/desktop/playlist/page_daily_playlist.dart';
-import 'package:quiet/navigation/desktop/playlist/page_playlist.dart';
-import 'package:quiet/navigation/desktop/search/page_search.dart';
 
 import '../../providers/navigator_provider.dart';
 import '../common/navigation_target.dart';
 import 'artist/page_artist_detail.dart';
 import 'discover.dart';
+import 'page_setting.dart';
+import 'player/page_fm_playing.dart';
 import 'playlist/page_album_detail.dart';
+import 'playlist/page_cloud_tracks.dart';
+import 'playlist/page_daily_playlist.dart';
+import 'playlist/page_playlist.dart';
+import 'search/page_search.dart';
 
 class DesktopNavigatorController extends NavigatorController {
   DesktopNavigatorController() {

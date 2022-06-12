@@ -6,5 +6,5 @@ String getFormattedNumber(int number) {
   if (number < 10000) {
     return number.toString();
   }
-  return "${number ~/ 10000}万";
+  return '${number ~/ 10000}万';
 }

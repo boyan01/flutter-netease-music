@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:quiet/component/utils/scroll_controller.dart';
-import 'package:quiet/extension.dart';
-import 'package:quiet/material.dart';
-import 'package:quiet/navigation/common/playlist/music_list.dart';
-import 'package:quiet/providers/daily_playlist_provider.dart';
-import 'package:quiet/repository.dart';
 
+import '../../../component/utils/scroll_controller.dart';
+import '../../../extension.dart';
+import '../../../material.dart';
+import '../../../providers/daily_playlist_provider.dart';
 import '../../../providers/player_provider.dart';
+import '../../../repository.dart';
+import '../../common/playlist/music_list.dart';
 import '../widgets/playlist_collapsed_title.dart';
 import '../widgets/track_tile_normal.dart';
 
 class PageDailyPlaylist extends ConsumerWidget {
-  const PageDailyPlaylist({Key? key}) : super(key: key);
+  const PageDailyPlaylist({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -40,10 +40,10 @@ class PageDailyPlaylist extends ConsumerWidget {
 
 class _DailyPlaylistBody extends ConsumerWidget {
   const _DailyPlaylistBody({
-    Key? key,
+    super.key,
     required this.tracks,
     required this.date,
-  }) : super(key: key);
+  });
 
   final List<Track> tracks;
 
@@ -77,7 +77,7 @@ class _DailyPlaylistBody extends ConsumerWidget {
 }
 
 class _DailyHeader extends StatelessWidget {
-  const _DailyHeader({Key? key, required this.date}) : super(key: key);
+  const _DailyHeader({super.key, required this.date});
 
   final DateTime date;
 
@@ -100,24 +100,25 @@ class _DailyHeader extends StatelessWidget {
               SizedBox(
                 height: 100,
                 child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     const SizedBox(width: 20),
                     Text.rich(
-                      TextSpan(children: [
-                        TextSpan(
-                          text: date.day.toString().padLeft(2, '0'),
-                          style: const TextStyle(fontSize: 60),
-                        ),
-                        const TextSpan(
-                          text: ' / ',
-                          style: TextStyle(fontSize: 14),
-                        ),
-                        TextSpan(
-                          text: date.month.toString().padLeft(2, '0'),
-                          style: const TextStyle(fontSize: 14),
-                        ),
-                      ]),
+                      TextSpan(
+                        children: [
+                          TextSpan(
+                            text: date.day.toString().padLeft(2, '0'),
+                            style: const TextStyle(fontSize: 60),
+                          ),
+                          const TextSpan(
+                            text: ' / ',
+                            style: TextStyle(fontSize: 14),
+                          ),
+                          TextSpan(
+                            text: date.month.toString().padLeft(2, '0'),
+                            style: const TextStyle(fontSize: 14),
+                          ),
+                        ],
+                      ),
                       style: context.textTheme.headline5.bold?.copyWith(
                         color: context.colorScheme.primary,
                       ),

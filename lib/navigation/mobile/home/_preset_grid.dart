@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:overlay_support/overlay_support.dart';
-import 'package:quiet/component.dart';
-import 'package:quiet/providers/account_provider.dart';
 
-import 'package:quiet/pages/record/page_record.dart';
+import '../../../component.dart';
+import '../../../pages/record/page_record.dart';
+import '../../../providers/account_provider.dart';
 
 class PresetGridSection extends ConsumerWidget {
+  const PresetGridSection({super.key});
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Padding(
@@ -26,21 +28,21 @@ class PresetGridSection extends ConsumerWidget {
                     icon: Icons.arrow_circle_down_outlined,
                     label: context.strings.localMusic,
                     onTap: () {
-                      toast("TODO");
+                      toast('TODO');
                     },
                   ),
                   _PinnedTile(
                     icon: Icons.cloud_upload_outlined,
                     label: context.strings.cloudMusic,
                     onTap: () {
-                      toast("TODO");
+                      toast('TODO');
                     },
                   ),
                   _PinnedTile(
                     icon: Icons.check_circle_outline_outlined,
                     label: context.strings.alreadyBuy,
                     onTap: () {
-                      toast("TODO");
+                      toast('TODO');
                     },
                   ),
                   _PinnedTile(
@@ -48,11 +50,15 @@ class PresetGridSection extends ConsumerWidget {
                     label: context.strings.latestPlayHistory,
                     onTap: () {
                       if (ref.read(isLoginProvider)) {
-                        context.secondaryNavigator!
-                            .push(MaterialPageRoute(builder: (context) {
-                          return RecordPage(
-                              uid: ref.read(userProvider)!.userId);
-                        }));
+                        context.secondaryNavigator!.push(
+                          MaterialPageRoute(
+                            builder: (context) {
+                              return RecordPage(
+                                uid: ref.read(userProvider)!.userId,
+                              );
+                            },
+                          ),
+                        );
                       } else {
                         Navigator.of(context).pushNamed(pageLogin);
                       }
@@ -67,7 +73,7 @@ class PresetGridSection extends ConsumerWidget {
                     icon: Icons.supervised_user_circle_outlined,
                     label: context.strings.friends,
                     onTap: () {
-                      toast("TODO");
+                      toast('TODO');
                     },
                   ),
                   _PinnedTile(
@@ -88,7 +94,7 @@ class PresetGridSection extends ConsumerWidget {
                     icon: Icons.favorite,
                     label: context.strings.todo,
                     onTap: () {
-                      toast("TODO");
+                      toast('TODO');
                     },
                   ),
                 ],
@@ -103,11 +109,11 @@ class PresetGridSection extends ConsumerWidget {
 
 class _PinnedTile extends StatelessWidget {
   const _PinnedTile({
-    Key? key,
+    super.key,
     required this.icon,
     required this.label,
     this.onTap,
-  }) : super(key: key);
+  });
 
   final IconData icon;
   final String label;
@@ -127,11 +133,11 @@ class _PinnedTile extends StatelessWidget {
           children: [
             Icon(icon, size: 24, color: Theme.of(context).primaryColorLight),
             const SizedBox(height: 4),
-            Text(label,
-                style: Theme.of(context)
-                    .textTheme
-                    .bodyText2!
-                    .copyWith(fontSize: 12)),
+            Text(
+              label,
+              style:
+                  Theme.of(context).textTheme.bodyText2!.copyWith(fontSize: 12),
+            ),
           ],
         ),
       ),

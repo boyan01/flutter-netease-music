@@ -8,9 +8,9 @@ import '../../../providers/player_provider.dart';
 
 class GlobalHotkeys extends ConsumerWidget {
   const GlobalHotkeys({
-    Key? key,
+    super.key,
     required this.child,
-  }) : super(key: key);
+  });
 
   final Widget child;
 

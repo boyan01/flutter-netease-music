@@ -46,22 +46,22 @@ class CommentThreadId {
     late String prefix;
     switch (type) {
       case CommentType.song:
-        prefix = "R_SO_4_";
+        prefix = 'R_SO_4_';
         break;
       case CommentType.mv:
-        prefix = "R_MV_5_";
+        prefix = 'R_MV_5_';
         break;
       case CommentType.playlist:
-        prefix = "A_PL_0_";
+        prefix = 'A_PL_0_';
         break;
       case CommentType.album:
-        prefix = "R_AL_3_";
+        prefix = 'R_AL_3_';
         break;
       case CommentType.dj:
-        prefix = "A_DJ_1_";
+        prefix = 'A_DJ_1_';
         break;
       case CommentType.video:
-        prefix = "R_VI_62_";
+        prefix = 'R_VI_62_';
         break;
     }
     return prefix + id.toString();

@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:quiet/component.dart';
-import 'package:quiet/navigation/common/navigation_target.dart';
-import 'package:quiet/providers/navigator_provider.dart';
-import 'package:quiet/repository.dart';
 
+import '../../../component.dart';
 import '../../../providers/account_provider.dart';
+import '../../../providers/navigator_provider.dart';
+import '../../../repository.dart';
+import '../../common/navigation_target.dart';
 
 class UserProfileSection extends ConsumerWidget {
-  const UserProfileSection({Key? key}) : super(key: key);
+  const UserProfileSection({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -49,9 +49,11 @@ class UserProfileSection extends ConsumerWidget {
                             borderRadius: BorderRadius.circular(12),
                           ),
                           padding: const EdgeInsets.symmetric(
-                              vertical: 2, horizontal: 4),
+                            vertical: 2,
+                            horizontal: 4,
+                          ),
                           child: Text(
-                            "Lv.${detail.level}",
+                            'Lv.${detail.level}',
                             style: const TextStyle(
                               fontStyle: FontStyle.italic,
                               fontSize: 12,
@@ -74,7 +76,7 @@ class UserProfileSection extends ConsumerWidget {
 }
 
 class _NotLogin extends ConsumerWidget {
-  const _NotLogin({Key? key}) : super(key: key);
+  const _NotLogin({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

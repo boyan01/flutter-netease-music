@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:quiet/extension.dart';
+import '../../extension.dart';
 
 import '../../providers/navigator_provider.dart';
 import '../../providers/settings_provider.dart';
 
 class ThemeSwitchRadios extends ConsumerWidget {
-  const ThemeSwitchRadios({Key? key}) : super(key: key);
+  const ThemeSwitchRadios({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -40,7 +40,7 @@ class ThemeSwitchRadios extends ConsumerWidget {
 }
 
 class CopyRightOverlayCheckBox extends ConsumerWidget {
-  const CopyRightOverlayCheckBox({Key? key}) : super(key: key);
+  const CopyRightOverlayCheckBox({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -59,8 +59,8 @@ class CopyRightOverlayCheckBox extends ConsumerWidget {
 
 class DebugPlatformNavigationRadios extends ConsumerWidget {
   const DebugPlatformNavigationRadios({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -88,7 +88,7 @@ class DebugPlatformNavigationRadios extends ConsumerWidget {
 }
 
 class SkipAccompanimentCheckBox extends ConsumerWidget {
-  const SkipAccompanimentCheckBox({Key? key}) : super(key: key);
+  const SkipAccompanimentCheckBox({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

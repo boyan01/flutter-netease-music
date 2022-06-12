@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:quiet/extension.dart';
+import '../../../extension.dart';
 
 import '../../../providers/navigator_provider.dart';
 import '../../../providers/personalized_playlist_provider.dart';
@@ -8,7 +8,7 @@ import '../../common/navigation_target.dart';
 import '../../common/recommended_playlist_tile.dart';
 
 class HomeTabDiscover extends StatelessWidget {
-  const HomeTabDiscover({Key? key}) : super(key: key);
+  const HomeTabDiscover({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -25,10 +25,10 @@ class HomeTabDiscover extends StatelessWidget {
 
 class _Title extends StatelessWidget {
   const _Title({
-    Key? key,
+    super.key,
     required this.title,
     this.subtitle,
-  }) : super(key: key);
+  });
 
   final Widget title;
   final Widget? subtitle;
@@ -54,7 +54,7 @@ class _Title extends StatelessWidget {
 }
 
 class _Playlists extends ConsumerWidget {
-  const _Playlists({Key? key}) : super(key: key);
+  const _Playlists({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

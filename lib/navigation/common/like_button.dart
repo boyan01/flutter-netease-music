@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:quiet/providers/player_provider.dart';
 
 import '../../material/user.dart';
 import '../../providers/account_provider.dart';
 import '../../providers/favorite_tracks_provider.dart';
+import '../../providers/player_provider.dart';
 import '../../repository.dart';
 
 /// 歌曲喜欢按钮
 class LikeButton extends ConsumerWidget {
   const LikeButton({
-    Key? key,
+    super.key,
     required this.music,
     this.iconSize,
     this.padding = const EdgeInsets.all(8),
     this.color,
     this.likedColor,
-  }) : super(key: key);
+  });
 
   static Widget current(BuildContext context) {
     return Consumer(
@@ -53,9 +53,13 @@ class LikeButton extends ConsumerWidget {
           }
         }
         if (!isLiked) {
-          ref.read(userFavoriteMusicListProvider.notifier).likeMusic(music);
+          await ref
+              .read(userFavoriteMusicListProvider.notifier)
+              .likeMusic(music);
         } else {
-          ref.read(userFavoriteMusicListProvider.notifier).dislikeMusic(music);
+          await ref
+              .read(userFavoriteMusicListProvider.notifier)
+              .dislikeMusic(music);
         }
       },
     );

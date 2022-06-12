@@ -1,6 +1,6 @@
 int asInt(Map<String, dynamic>? json, String key, {int defaultValue = 0}) {
   if (json == null || !json.containsKey(key)) return defaultValue;
-  var value = json[key];
+  final value = json[key];
   if (value == null) return defaultValue;
   if (value is int) return value;
   if (value is double) return value.toInt();
@@ -13,10 +13,13 @@ int asInt(Map<String, dynamic>? json, String key, {int defaultValue = 0}) {
   return defaultValue;
 }
 
-double asDouble(Map<String, dynamic>? json, String key,
-    {double defaultValue = 0.0}) {
+double asDouble(
+  Map<String, dynamic>? json,
+  String key, {
+  double defaultValue = 0.0,
+}) {
   if (json == null || !json.containsKey(key)) return defaultValue;
-  var value = json[key];
+  final value = json[key];
   if (value == null) return defaultValue;
   if (value is double) return value;
   if (value is int) return value.toDouble();
@@ -25,39 +28,48 @@ double asDouble(Map<String, dynamic>? json, String key,
   return defaultValue;
 }
 
-bool asBool(Map<String, dynamic>? json, String key,
-    {bool defaultValue = false}) {
+bool asBool(
+  Map<String, dynamic>? json,
+  String key, {
+  bool defaultValue = false,
+}) {
   if (json == null || !json.containsKey(key)) return defaultValue;
-  var value = json[key];
+  final value = json[key];
   if (value == null) return defaultValue;
   if (value is bool) return value;
-  if (value is int) return value == 0 ? false : true;
-  if (value is double) return value == 0 ? false : true;
+  if (value is int) return value != 0;
+  if (value is double) return value != 0;
   if (value is String) {
-    if (value == "1" || value.toLowerCase() == "true") return true;
-    if (value == "0" || value.toLowerCase() == "false") return false;
+    if (value == '1' || value.toLowerCase() == 'true') return true;
+    if (value == '0' || value.toLowerCase() == 'false') return false;
   }
   return defaultValue;
 }
 
-String asString(Map<String, dynamic>? json, String key,
-    {String defaultValue = ""}) {
+String asString(
+  Map<String, dynamic>? json,
+  String key, {
+  String defaultValue = '',
+}) {
   if (json == null || !json.containsKey(key)) return defaultValue;
-  var value = json[key];
+  final value = json[key];
   if (value == null) return defaultValue;
   if (value is String) return value;
   if (value is int) return value.toString();
   if (value is double) return value.toString();
-  if (value is bool) return value ? "true" : "false";
+  if (value is bool) return value ? 'true' : 'false';
   return defaultValue;
 }
 
-Map<String, dynamic> asMap(Map<String, dynamic>? json, String key,
-    {Map<String, dynamic>? defaultValue}) {
+Map<String, dynamic> asMap(
+  Map<String, dynamic>? json,
+  String key, {
+  Map<String, dynamic>? defaultValue,
+}) {
   if (json == null || !json.containsKey(key)) {
     return defaultValue ?? <String, dynamic>{};
   }
-  var value = json[key];
+  final value = json[key];
   if (value == null) return defaultValue ?? <String, dynamic>{};
   if (value is Map<String, dynamic>) return value;
   return defaultValue ?? <String, dynamic>{};
@@ -65,7 +77,7 @@ Map<String, dynamic> asMap(Map<String, dynamic>? json, String key,
 
 List asList(Map<String, dynamic>? json, String key, {List? defaultValue}) {
   if (json == null || !json.containsKey(key)) return defaultValue ?? [];
-  var value = json[key];
+  final value = json[key];
   if (value == null) return defaultValue ?? [];
   if (value is List) return value;
   return defaultValue ?? [];

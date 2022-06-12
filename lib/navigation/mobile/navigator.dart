@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:quiet/navigation/mobile/home/page_home.dart';
-import 'package:quiet/navigation/mobile/player/page_playing.dart';
-import 'package:quiet/navigation/mobile/settings/page_setting.dart';
-import 'package:quiet/navigation/mobile/widgets/slide_up_page_route.dart';
 
 import '../../providers/navigator_provider.dart';
+import '../common/login/login_sub_navigation.dart';
 import '../common/navigation_target.dart';
 import 'artists/page_artist_detail.dart';
-import 'login/login_sub_navigation.dart';
+import 'home/page_home.dart';
 import 'player/page_fm_playing.dart';
+import 'player/page_playing.dart';
 import 'playlists/page_album_detail.dart';
 import 'playlists/page_playlist_detail.dart';
+import 'settings/page_setting.dart';
 import 'user/page_user_detail.dart';
+import 'widgets/slide_up_page_route.dart';
 
 class MobileNavigatorController extends NavigatorController {
   MobileNavigatorController() {
@@ -55,12 +55,11 @@ class MobileNavigatorController extends NavigatorController {
   }
 
   @override
-  List<Page> get pages =>
-      _pages.map((e) => _buildPage(e)).toList(growable: false);
+  List<Page> get pages => _pages.map(_buildPage).toList(growable: false);
 
   Page<dynamic> _buildPage(NavigationTarget target) {
     final Widget page;
-    bool slideUp = false;
+    var slideUp = false;
     switch (target.runtimeType) {
       case NavigationTargetDiscover:
       case NavigationTargetMy:
@@ -69,7 +68,7 @@ class MobileNavigatorController extends NavigatorController {
         page = PageHome(selectedTab: target);
         break;
       case NavigationTargetSettings:
-        page = PageSettings();
+        page = const PageSettings();
         break;
       case NavigationTargetPlaylist:
         page = PlaylistDetailPage(
@@ -77,11 +76,11 @@ class MobileNavigatorController extends NavigatorController {
         );
         break;
       case NavigationTargetPlaying:
-        page = PlayingPage();
+        page = const PlayingPage();
         slideUp = true;
         break;
       case NavigationTargetFmPlaying:
-        page = PagePlayingFm();
+        page = const PagePlayingFm();
         slideUp = true;
         break;
       case NavigationTargetUser:

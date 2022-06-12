@@ -12,11 +12,11 @@ const _indexPausing = 0;
 ///
 class PlayingIndicator extends HookConsumerWidget {
   const PlayingIndicator({
-    Key? key,
+    super.key,
     required this.playing,
     required this.pausing,
     required this.buffering,
-  }) : super(key: key);
+  });
 
   ///show when player is playing
   final Widget playing;

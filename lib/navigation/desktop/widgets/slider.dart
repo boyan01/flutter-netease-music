@@ -13,15 +13,18 @@ class UnboundedRectangularSliderTrackShape extends RectangularSliderTrackShape {
     bool isEnabled = false,
     bool isDiscrete = false,
   }) {
-    final double trackHeight = sliderTheme.trackHeight!;
+    final trackHeight = sliderTheme.trackHeight!;
     assert(trackHeight >= 0);
 
-    final double trackLeft = offset.dx;
-    final double trackTop =
-        offset.dy + (parentBox.size.height - trackHeight) / 2;
-    final double trackRight = trackLeft + parentBox.size.width;
-    final double trackBottom = trackTop + trackHeight;
-    return Rect.fromLTRB(math.min(trackLeft, trackRight), trackTop,
-        math.max(trackLeft, trackRight), trackBottom);
+    final trackLeft = offset.dx;
+    final trackTop = offset.dy + (parentBox.size.height - trackHeight) / 2;
+    final trackRight = trackLeft + parentBox.size.width;
+    final trackBottom = trackTop + trackHeight;
+    return Rect.fromLTRB(
+      math.min(trackLeft, trackRight),
+      trackTop,
+      math.max(trackLeft, trackRight),
+      trackBottom,
+    );
   }
 }

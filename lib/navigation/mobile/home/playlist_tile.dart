@@ -1,20 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:overlay_support/overlay_support.dart';
-import 'package:quiet/extension.dart';
-import 'package:quiet/navigation/common/navigation_target.dart';
-import 'package:quiet/pages/page_playlist_edit.dart';
-import 'package:quiet/providers/navigator_provider.dart';
-import 'package:quiet/repository.dart';
+
+import '../../../extension.dart';
+import '../../../pages/page_playlist_edit.dart';
+import '../../../providers/navigator_provider.dart';
+import '../../../repository.dart';
+import '../../common/navigation_target.dart';
 
 ///歌单列表元素
 class PlaylistTile extends ConsumerWidget {
   const PlaylistTile({
-    Key? key,
+    super.key,
     required this.playlist,
     this.enableMore = true,
     this.enableHero = true,
-  }) : super(key: key);
+  });
 
   final PlaylistDetail playlist;
 
@@ -27,7 +28,7 @@ class PlaylistTile extends ConsumerWidget {
     final Widget cover = ClipRRect(
       borderRadius: const BorderRadius.all(Radius.circular(4)),
       child: FadeInImage(
-        placeholder: const AssetImage("assets/playlist_playlist.9.png"),
+        placeholder: const AssetImage('assets/playlist_playlist.9.png'),
         image: CachedImage(playlist.coverUrl),
         fit: BoxFit.cover,
         height: 50,
@@ -58,8 +59,10 @@ class PlaylistTile extends ConsumerWidget {
                     style: const TextStyle(fontSize: 15),
                   ),
                   const Padding(padding: EdgeInsets.only(top: 4)),
-                  Text("${playlist.trackCount}首",
-                      style: Theme.of(context).textTheme.caption),
+                  Text(
+                    '${playlist.trackCount}首',
+                    style: Theme.of(context).textTheme.caption,
+                  ),
                   const Spacer(),
                 ],
               ),
@@ -68,23 +71,28 @@ class PlaylistTile extends ConsumerWidget {
               PopupMenuButton<PlaylistOp>(
                 itemBuilder: (context) {
                   return const [
-                    PopupMenuItem(value: PlaylistOp.share, child: Text("分享")),
+                    PopupMenuItem(value: PlaylistOp.share, child: Text('分享')),
                     PopupMenuItem(
-                        value: PlaylistOp.edit, child: Text("编辑歌单信息")),
-                    PopupMenuItem(value: PlaylistOp.delete, child: Text("删除")),
+                      value: PlaylistOp.edit,
+                      child: Text('编辑歌单信息'),
+                    ),
+                    PopupMenuItem(value: PlaylistOp.delete, child: Text('删除')),
                   ];
                 },
                 onSelected: (op) {
                   switch (op) {
                     case PlaylistOp.delete:
                     case PlaylistOp.share:
-                      toast("未接入。");
+                      toast('未接入。');
                       break;
                     case PlaylistOp.edit:
-                      context.secondaryNavigator!
-                          .push(MaterialPageRoute(builder: (context) {
-                        return PlaylistEditPage(playlist);
-                      }));
+                      context.secondaryNavigator!.push(
+                        MaterialPageRoute(
+                          builder: (context) {
+                            return PlaylistEditPage(playlist);
+                          },
+                        ),
+                      );
                       break;
                   }
                 },

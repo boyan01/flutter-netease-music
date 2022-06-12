@@ -1,5 +1,5 @@
 import 'package:flutter/widgets.dart';
-import 'package:quiet/generated/l10n.dart';
+import '../../generated/l10n.dart';
 
 export 'package:quiet/generated/l10n.dart';
 

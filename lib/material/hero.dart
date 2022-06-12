@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:quiet/component.dart';
+import '../component.dart';
 
 class QuietHero extends StatelessWidget {
-  const QuietHero({Key? key, required this.tag, required this.child})
-      : super(key: key);
+  const QuietHero({super.key, required this.tag, required this.child});
 
   final Object tag;
   final Widget child;

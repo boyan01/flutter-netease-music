@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:quiet/repository.dart';
+import '../repository.dart';
 
 final cloudTracksProvider = StreamProvider<CloudTracksDetail>(
   (ref) async* {

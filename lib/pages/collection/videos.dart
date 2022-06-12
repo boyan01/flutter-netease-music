@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:quiet/pages/collection/empty.dart';
+import 'empty.dart';
 
 class CollectionVideos extends StatelessWidget {
+  const CollectionVideos({super.key});
+
   @override
   Widget build(BuildContext context) {
     return const CollectionEmpty(

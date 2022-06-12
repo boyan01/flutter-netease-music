@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:overlay_support/overlay_support.dart';
-import 'package:quiet/extension.dart';
-import 'package:quiet/navigation/desktop/login/login_dialog.dart';
-import 'package:quiet/navigation/desktop/playlist/user_playlists.dart';
-import 'package:quiet/navigation/desktop/widgets/navigation_tile.dart';
-import 'package:quiet/providers/account_provider.dart';
-import 'package:quiet/providers/navigator_provider.dart';
-import 'package:quiet/repository.dart';
 
 import '../../component/utils/scroll_controller.dart';
+import '../../extension.dart';
+import '../../providers/account_provider.dart';
+import '../../providers/navigator_provider.dart';
+import '../../repository.dart';
 import '../common/navigation_target.dart';
+import 'login/login_dialog.dart';
+import 'playlist/user_playlists.dart';
+import 'widgets/navigation_tile.dart';
 
 class NavigationSideBar extends StatelessWidget {
-  const NavigationSideBar({Key? key}) : super(key: key);
+  const NavigationSideBar({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +33,7 @@ class NavigationSideBar extends StatelessWidget {
 }
 
 class _PresetItems extends ConsumerWidget {
-  const _PresetItems({Key? key}) : super(key: key);
+  const _PresetItems({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -87,7 +87,7 @@ class _PresetItems extends ConsumerWidget {
 }
 
 class _ProfileTile extends HookConsumerWidget {
-  const _ProfileTile({Key? key}) : super(key: key);
+  const _ProfileTile({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -110,29 +110,29 @@ class _ProfileTile extends HookConsumerWidget {
           toast(context.strings.todo);
         },
         child: SizedBox(
-            height: 72,
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const SizedBox(width: 4),
-                ClipOval(
-                  child: Image(
-                    image: CachedImage(user.avatarUrl),
-                    width: 32,
-                    height: 32,
-                  ),
+          height: 72,
+          child: Row(
+            children: [
+              const SizedBox(width: 4),
+              ClipOval(
+                child: Image(
+                  image: CachedImage(user.avatarUrl),
+                  width: 32,
+                  height: 32,
                 ),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: Text(
-                    user.nickname,
-                    style: context.theme.textTheme.bodyText2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Text(
+                  user.nickname,
+                  style: context.theme.textTheme.bodyText2,
+                  overflow: TextOverflow.ellipsis,
                 ),
-                const SizedBox(width: 4),
-              ],
-            )),
+              ),
+              const SizedBox(width: 4),
+            ],
+          ),
+        ),
       ),
     );
   }

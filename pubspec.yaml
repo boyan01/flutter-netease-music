@@ -16,7 +16,7 @@ dependencies:
   json_annotation: ^4.3.0
   dio_cookie_manager: 2.0.0
   path_provider: ^2.0.2
-  shared_preferences: ^2.0.6
+  shared_preferences: ^2.0.15
   url_launcher: ^6.0.9
   intl: ^0.17.0
   sembast: ^3.1.0+2
@@ -26,24 +26,24 @@ dependencies:
       url: https://github.com/boyan01/loader.git
       ref: e1ef2d9957bc8615c7f19f989d4fcfc142e20e93
   encrypt: ^5.0.0
-  overlay_support: ^1.2.1
+  overlay_support: ^2.0.1
   music_player:
     git:
       url: https://github.com/boyan01/flutter-music-player.git
-      ref: 7ba0513153853f769e3789b37f9ef630c85740f6
-  scrollable_positioned_list: ^0.2.0-nullsafety.0
+      ref: fd425d55d43f121b5ab3bc9ab878e20448fe3e61
+  scrollable_positioned_list: ^0.3.2
   hive: ^2.0.4
   flutter_hooks: ^0.18.0
   equatable: ^2.0.3
   netease_api:
     path: netease_api/
   path: ^1.8.0
-  async: ^2.8.0
+  async: ^2.9.0
   riverpod: ^1.0.3
   flutter_riverpod: ^1.0.3
   hooks_riverpod: ^1.0.3
   collection: ^1.15.0
-  window_manager: ^0.2.1
+  window_manager: ^0.2.5
   lpinyin: ^2.0.3
   stream_transform: ^2.0.0
   windows_taskbar: ^1.0.0
@@ -52,6 +52,7 @@ dependencies:
   dotted_border: ^2.0.0+2
   meta: ^1.7.0
   lychee_player: ^0.1.0
+  fluentui_system_icons: ^1.1.170
 
 dev_dependencies:
   flutter_test:
@@ -59,6 +60,9 @@ dev_dependencies:
   build_runner: ^2.0.6
   json_serializable: ^6.0.1
   flutter_lints: ^2.0.0
+
+dependency_overrides:
+  async: ^2.9.0
 
 # The following section is specific to Flutter.
 flutter:

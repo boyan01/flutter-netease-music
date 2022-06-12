@@ -3,12 +3,12 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:quiet/extension.dart';
+import '../extension.dart';
 
 import '../providers/settings_provider.dart';
 
 class CopyRightOverlay extends HookConsumerWidget {
-  const CopyRightOverlay({Key? key, this.child}) : super(key: key);
+  const CopyRightOverlay({super.key, this.child});
 
   final Widget? child;
 
@@ -21,9 +21,12 @@ class CopyRightOverlay extends HookConsumerWidget {
     final painter = useMemoized(
       () => _CopyrightPainter(copyright: copyRight, style: textStyle),
     );
-    useEffect(() {
-      painter.setText(copyRight, textStyle);
-    }, [copyRight, textStyle]);
+    useEffect(
+      () {
+        painter.setText(copyRight, textStyle);
+      },
+      [copyRight, textStyle],
+    );
     return CustomPaint(
       foregroundPainter:
           ref.watch(settingStateProvider.select((value) => value.copyright))
@@ -39,11 +42,12 @@ class _CopyrightPainter extends CustomPainter {
     required String copyright,
     required TextStyle style,
   }) : _textPainter = TextPainter(
-            text: TextSpan(
-              text: copyright,
-              style: style,
-            ),
-            textDirection: TextDirection.ltr);
+          text: TextSpan(
+            text: copyright,
+            style: style,
+          ),
+          textDirection: TextDirection.ltr,
+        );
 
   final TextPainter _textPainter;
 
@@ -59,7 +63,7 @@ class _CopyrightPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    const double radius = math.pi / 4;
+    const radius = math.pi / 4;
     if (_dirty) {
       _textPainter.layout();
       _dirty = false;
@@ -67,9 +71,9 @@ class _CopyrightPainter extends CustomPainter {
     canvas.rotate(-radius);
     canvas.translate(-size.width, 0);
 
-    double dy = 0;
+    var dy = 0.0;
     while (dy < size.height * 1.5) {
-      double dx = 0;
+      var dx = 0.0;
       while (dx < size.width * 1.5) {
         _textPainter.paint(canvas, Offset(dx, dy));
         dx += _textPainter.width * 1.5;

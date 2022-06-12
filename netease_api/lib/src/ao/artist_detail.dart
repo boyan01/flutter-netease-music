@@ -1,4 +1,4 @@
-import 'package:netease_api/netease_api.dart';
+import '../../netease_api.dart';
 
 import 'safe_convert.dart';
 
@@ -37,18 +37,18 @@ class Artist {
     this.topicPerson = 0,
     required this.alias,
     this.picId = 0,
-    this.briefDesc = "",
+    this.briefDesc = '',
     this.musicSize = 0,
     this.albumSize = 0,
-    this.picUrl = "",
+    this.picUrl = '',
     this.followed = false,
-    this.img1v1Url = "",
-    this.trans = "",
-    this.name = "",
+    this.img1v1Url = '',
+    this.trans = '',
+    this.name = '',
     this.id = 0,
     this.publishTime = 0,
-    this.picIdStr = "",
-    this.img1v1IdStr = "",
+    this.picIdStr = '',
+    this.img1v1IdStr = '',
     this.mvSize = 0,
   });
 

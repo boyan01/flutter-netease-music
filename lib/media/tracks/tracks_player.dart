@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../model/persistence_player_state.dart';
 
 import '../../repository/data/track.dart';
 import 'track_list.dart';
@@ -50,14 +51,16 @@ class TracksPlayerState with EquatableMixin {
 
 abstract class TracksPlayer extends StateNotifier<TracksPlayerState> {
   TracksPlayer()
-      : super(const TracksPlayerState(
-          isPlaying: false,
-          isBuffering: false,
-          playingTrack: null,
-          playingList: TrackList.empty(),
-          duration: null,
-          volume: 0.0,
-        ));
+      : super(
+          const TracksPlayerState(
+            isPlaying: false,
+            isBuffering: false,
+            playingTrack: null,
+            playingList: TrackList.empty(),
+            duration: null,
+            volume: 0,
+          ),
+        );
 
   factory TracksPlayer.platform() {
     if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
@@ -93,6 +96,8 @@ abstract class TracksPlayer extends StateNotifier<TracksPlayerState> {
   Future<Track?> getPreviousTrack();
 
   Future<void> insertToNext(Track track);
+
+  void restoreFromPersistence(PersistencePlayerState state);
 
   Track? get current;
 

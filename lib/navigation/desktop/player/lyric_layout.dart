@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:quiet/extension.dart';
-import 'package:quiet/navigation/common/navigation_target.dart';
-import 'package:quiet/providers/navigator_provider.dart';
-import 'package:quiet/repository.dart';
 
+import '../../../extension.dart';
+import '../../../providers/navigator_provider.dart';
+import '../../../repository.dart';
+import '../../common/navigation_target.dart';
 import '../../common/player/lyric_view.dart';
 import '../widgets/highlight_clickable_text.dart';
 
 class LyricLayout extends ConsumerWidget {
   const LyricLayout({
-    Key? key,
+    super.key,
     required this.track,
-  }) : super(key: key);
+  });
 
   final Track track;
 
@@ -43,7 +43,8 @@ class LyricLayout extends ConsumerWidget {
                   overflow: TextOverflow.ellipsis,
                   children: [
                     MouseHighlightSpan.normal(
-                        text: '${context.strings.album}:'),
+                      text: '${context.strings.album}:',
+                    ),
                     MouseHighlightSpan.widget(widget: const SizedBox(width: 4)),
                     MouseHighlightSpan.highlight(
                       text: track.album?.name ?? '',
@@ -71,19 +72,23 @@ class LyricLayout extends ConsumerWidget {
                   overflow: TextOverflow.ellipsis,
                   children: [
                     MouseHighlightSpan.normal(
-                        text: '${context.strings.artists}:'),
+                      text: '${context.strings.artists}:',
+                    ),
                     MouseHighlightSpan.widget(widget: const SizedBox(width: 4)),
                     ...track.artists
-                        .map((artist) => MouseHighlightSpan.highlight(
-                              text: artist.name,
-                              onTap: () {
-                                if (artist.id == 0) {
-                                  return;
-                                }
-                                ref.read(navigatorProvider.notifier).navigate(
-                                    NavigationTargetArtistDetail(artist.id));
-                              },
-                            ))
+                        .map(
+                          (artist) => MouseHighlightSpan.highlight(
+                            text: artist.name,
+                            onTap: () {
+                              if (artist.id == 0) {
+                                return;
+                              }
+                              ref.read(navigatorProvider.notifier).navigate(
+                                    NavigationTargetArtistDetail(artist.id),
+                                  );
+                            },
+                          ),
+                        )
                         .separated(MouseHighlightSpan.normal(text: '/')),
                   ],
                 ),

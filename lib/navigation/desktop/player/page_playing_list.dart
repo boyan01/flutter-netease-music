@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:quiet/extension.dart';
-import 'package:quiet/navigation/common/navigation_target.dart';
-import 'package:quiet/navigation/desktop/widgets/track_tile_short.dart';
-import 'package:quiet/providers/navigator_provider.dart';
-import 'package:quiet/providers/player_provider.dart';
 
 import '../../../component/utils/scroll_controller.dart';
+import '../../../extension.dart';
+import '../../../providers/navigator_provider.dart';
+import '../../../providers/player_provider.dart';
+import '../../common/navigation_target.dart';
+import '../widgets/track_tile_short.dart';
 
 final showPlayingListProvider =
     StateNotifierProvider<SimpleStateNotifier<bool>, bool>(
@@ -23,45 +23,49 @@ final showPlayingListProvider =
 );
 
 class PagePlayingList extends HookConsumerWidget {
-  const PagePlayingList({Key? key}) : super(key: key);
+  const PagePlayingList({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final node = useFocusNode();
-    useEffect(() {
-      void onFocusChange() {
-        if (!node.hasFocus) {
-          // delay to avoid focus conflict with the playlist toggle button.
-          Future.delayed(const Duration(milliseconds: 100), () {
-            ref.read(showPlayingListProvider.notifier).state = false;
-          });
+    useEffect(
+      () {
+        void onFocusChange() {
+          if (!node.hasFocus) {
+            // delay to avoid focus conflict with the playlist toggle button.
+            Future.delayed(const Duration(milliseconds: 100), () {
+              ref.read(showPlayingListProvider.notifier).state = false;
+            });
+          }
         }
-      }
 
-      node.addListener(onFocusChange);
-      return () {
-        node.removeListener(onFocusChange);
-      };
-    }, [node]);
+        node.addListener(onFocusChange);
+        return () {
+          node.removeListener(onFocusChange);
+        };
+      },
+      [node],
+    );
     return Focus(
       autofocus: true,
       focusNode: node,
       child: Material(
-          color: context.colorScheme.background,
-          elevation: 4,
-          child: Column(
-            children: const [
-              _PlayingListTitle(),
-              Divider(indent: 20, endIndent: 20),
-              Expanded(child: _PlayingList()),
-            ],
-          )),
+        color: context.colorScheme.background,
+        elevation: 4,
+        child: Column(
+          children: const [
+            _PlayingListTitle(),
+            Divider(indent: 20, endIndent: 20),
+            Expanded(child: _PlayingList()),
+          ],
+        ),
+      ),
     );
   }
 }
 
 class _PlayingListTitle extends ConsumerWidget {
-  const _PlayingListTitle({Key? key}) : super(key: key);
+  const _PlayingListTitle({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -78,7 +82,6 @@ class _PlayingListTitle extends ConsumerWidget {
           ),
           const SizedBox(height: 10),
           Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
                 context.strings.musicCountFormat(playingList.tracks.length),
@@ -94,7 +97,7 @@ class _PlayingListTitle extends ConsumerWidget {
 }
 
 class _PlayingList extends HookConsumerWidget {
-  const _PlayingList({Key? key}) : super(key: key);
+  const _PlayingList({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

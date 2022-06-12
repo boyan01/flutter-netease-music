@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:quiet/repository.dart';
+import '../../repository.dart';
 
 class RecommendedPlaylistTile extends StatelessWidget {
   const RecommendedPlaylistTile({
-    Key? key,
+    super.key,
     required this.playlist,
     required this.onTap,
     required this.width,
     this.imageSize = 80,
-  }) : super(key: key);
+  });
 
   final RecommendedPlaylist playlist;
 

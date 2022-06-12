@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:quiet/component.dart';
+import '../../component.dart';
 
 class AppIconButton extends StatelessWidget {
   const AppIconButton({
-    Key? key,
+    super.key,
     required this.icon,
     this.size = 24,
     this.onPressed,
@@ -12,7 +12,7 @@ class AppIconButton extends StatelessWidget {
     this.disabledColor,
     this.tooltip,
     this.padding = const EdgeInsets.all(8),
-  }) : super(key: key);
+  });
 
   final IconData icon;
   final double size;
@@ -42,11 +42,11 @@ class AppIconButton extends StatelessWidget {
 
 class PlaylistIconTextButton extends StatelessWidget {
   const PlaylistIconTextButton({
-    Key? key,
+    super.key,
     required this.icon,
     required this.text,
     this.onTap,
-  }) : super(key: key);
+  });
 
   final Widget icon;
   final Widget text;
@@ -58,7 +58,7 @@ class PlaylistIconTextButton extends StatelessWidget {
     return Container(
       height: 40,
       decoration: BoxDecoration(
-        border: Border.all(color: Theme.of(context).dividerColor, width: 1),
+        border: Border.all(color: Theme.of(context).dividerColor),
         borderRadius: BorderRadius.circular(24),
       ),
       child: InkWell(

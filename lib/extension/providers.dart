@@ -6,7 +6,7 @@ extension ProvidersException<State> on ProviderBase<AsyncValue<State>> {
     return select((value) {
       if (value is AsyncError) {
         final error = value as AsyncError;
-        debugPrint('$this: ${error.error} \n ${error.stackTrace}');
+        debugPrint('$this: ${error.error}');
       }
       return value;
     });

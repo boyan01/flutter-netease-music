@@ -2,9 +2,10 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:lychee_player/lychee_player.dart';
-import 'package:quiet/extension.dart';
-import 'package:quiet/repository.dart';
 
+import '../../extension.dart';
+import '../../model/persistence_player_state.dart';
+import '../../repository.dart';
 import 'track_list.dart';
 import 'tracks_player.dart';
 
@@ -96,7 +97,7 @@ class TracksPlayerImplLychee extends TracksPlayer {
 
   @override
   Future<void> playFromMediaId(int trackId) async {
-    stop();
+    await stop();
     final item = _trackList.tracks.firstWhereOrNull((t) => t.id == trackId);
     if (item != null) {
       _playTrack(item);
@@ -127,7 +128,7 @@ class TracksPlayerImplLychee extends TracksPlayer {
 
   @override
   void setTrackList(TrackList trackList) {
-    bool needStop = trackList.id != _trackList.id;
+    final needStop = trackList.id != _trackList.id;
     if (needStop) {
       stop();
       _current = null;
@@ -170,7 +171,7 @@ class TracksPlayerImplLychee extends TracksPlayer {
   TrackList get trackList => _trackList;
 
   @override
-  double get volume => 1.0;
+  double get volume => 1;
 
   void _playTrack(Track track) {
     scheduleMicrotask(() async {
@@ -196,5 +197,10 @@ class TracksPlayerImplLychee extends TracksPlayer {
     });
     _current = track;
     notifyPlayStateChanged();
+  }
+
+  @override
+  void restoreFromPersistence(PersistencePlayerState state) {
+    // TODO: implement restoreFromPersistence
   }
 }

@@ -85,5 +85,6 @@
   "artistAlbumCount": "专辑数：{value}",
   "personalProfile": "个人主页",
   "topSongs": "热门歌曲",
-  "showAllHotSongs": "查看所有热门歌曲 >"
+  "showAllHotSongs": "查看所有热门歌曲 >",
+  "pleaseInputPassword": "请输入密码"
 }

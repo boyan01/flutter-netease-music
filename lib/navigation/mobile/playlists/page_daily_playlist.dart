@@ -1,30 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:loader/loader.dart';
-import 'package:quiet/material/flexible_app_bar.dart';
-import 'package:quiet/navigation/common/playlist/music_list.dart';
-import 'package:quiet/pages/account/page_need_login.dart';
-import 'package:quiet/repository.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
+
+import '../../../material/flexible_app_bar.dart';
+import '../../../pages/account/page_need_login.dart';
+import '../../../repository.dart';
+import '../../common/playlist/music_list.dart';
 
 ///每日推荐歌曲页面
 ///NOTE：需要登陆
 class DailyPlaylistPage extends StatelessWidget {
+  const DailyPlaylistPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return PageNeedLogin(
       builder: (context) => Scaffold(
         body: Loader<List<Track>>(
-            loadTask: () => neteaseRepository!.recommendSongs(),
-            builder: (context, list) {
-              return MusicTileConfiguration(
-                  token: 'playlist_daily_recommend',
-                  musics: list,
-                  trailingBuilder:
-                      MusicTileConfiguration.defaultTrailingBuilder,
-                  leadingBuilder: MusicTileConfiguration.coverLeadingBuilder,
-                  onMusicTap: MusicTileConfiguration.defaultOnTap,
-                  child: _DailyMusicList());
-            }),
+          loadTask: () => neteaseRepository!.recommendSongs(),
+          builder: (context, list) {
+            return MusicTileConfiguration(
+              token: 'playlist_daily_recommend',
+              musics: list,
+              leadingBuilder: MusicTileConfiguration.coverLeadingBuilder,
+              child: _DailyMusicList(),
+            );
+          },
+        ),
       ),
     );
   }
@@ -42,15 +44,17 @@ class _DailyMusicList extends StatelessWidget {
         SliverAppBar(
           title: const Text('每日推荐'),
           titleSpacing: 0,
-          forceElevated: false,
           elevation: 0,
           actions: <Widget>[
             IconButton(
-                icon: const Icon(Icons.help_outline),
-                onPressed: () {
-                  launch("https://music.163.com/m/topic/19193112",
-                      forceWebView: true);
-                })
+              icon: const Icon(Icons.help_outline),
+              onPressed: () {
+                launchUrlString(
+                  'https://music.163.com/m/topic/19193112',
+                  mode: LaunchMode.inAppWebView,
+                );
+              },
+            )
           ],
           flexibleSpace: _HeaderContent(),
           expandedHeight: 232 - MediaQuery.of(context).padding.top,
@@ -59,9 +63,15 @@ class _DailyMusicList extends StatelessWidget {
               MusicListHeader(MusicTileConfiguration.of(context).musics.length),
         ),
         SliverList(
-            delegate: SliverChildBuilderDelegate((context, index) {
-          return MusicTile(MusicTileConfiguration.of(context).musics[index]);
-        }, childCount: MusicTileConfiguration.of(context).musics.length)),
+          delegate: SliverChildBuilderDelegate(
+            (context, index) {
+              return MusicTile(
+                MusicTileConfiguration.of(context).musics[index],
+              );
+            },
+            childCount: MusicTileConfiguration.of(context).musics.length,
+          ),
+        ),
       ],
     );
   }
@@ -74,7 +84,7 @@ class _HeaderContent extends StatelessWidget {
     final date = DateTime.now();
     final textTheme = Theme.of(context).primaryTextTheme;
     return FlexibleDetailBar(
-      background: Container(color: Theme.of(context).primaryColor),
+      background: ColoredBox(color: Theme.of(context).primaryColor),
       content: DefaultTextStyle(
         maxLines: 1,
         style: textTheme.bodyText2!.copyWith(fontWeight: FontWeight.bold),
@@ -85,18 +95,21 @@ class _HeaderContent extends StatelessWidget {
             top: MediaQuery.of(context).padding.top + kToolbarHeight,
           ),
           child: Column(
-            mainAxisSize: MainAxisSize.max,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               const Spacer(flex: 10),
-              Text.rich(TextSpan(children: [
+              Text.rich(
                 TextSpan(
-                  text: date.day.toString().padLeft(2, '0'),
-                  style: const TextStyle(fontSize: 23),
+                  children: [
+                    TextSpan(
+                      text: date.day.toString().padLeft(2, '0'),
+                      style: const TextStyle(fontSize: 23),
+                    ),
+                    const TextSpan(text: ' / '),
+                    TextSpan(text: date.month.toString().padLeft(2, '0')),
+                  ],
                 ),
-                const TextSpan(text: ' / '),
-                TextSpan(text: date.month.toString().padLeft(2, '0')),
-              ])),
+              ),
               const SizedBox(height: 4),
               Text(
                 '根据你的音乐口味，为你推荐好音乐',

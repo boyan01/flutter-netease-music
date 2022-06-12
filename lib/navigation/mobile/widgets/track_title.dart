@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:overlay_support/overlay_support.dart';
-import 'package:quiet/extension.dart';
-import 'package:quiet/repository.dart';
 
+import '../../../extension.dart';
 import '../../../providers/player_provider.dart';
+import '../../../repository.dart';
 import '../../common/playlist/music_list.dart';
 
 class TrackTile extends StatelessWidget {
   const TrackTile({
-    Key? key,
+    super.key,
     required this.track,
     required this.index,
-  }) : super(key: key);
+  });
 
   final Track track;
 
@@ -49,9 +49,10 @@ class TrackTile extends StatelessWidget {
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: context.textTheme.bodyMedium?.copyWith(
-                        color: track.type == TrackType.noCopyright
-                            ? context.theme.disabledColor
-                            : null),
+                      color: track.type == TrackType.noCopyright
+                          ? context.theme.disabledColor
+                          : null,
+                    ),
                   ),
                   const SizedBox(height: 4),
                   Text(
@@ -80,10 +81,10 @@ class TrackTile extends StatelessWidget {
 
 class _IndexOrPlayIcon extends ConsumerWidget {
   const _IndexOrPlayIcon({
-    Key? key,
+    super.key,
     required this.track,
     required this.index,
-  }) : super(key: key);
+  });
 
   final Track track;
 

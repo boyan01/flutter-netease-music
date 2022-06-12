@@ -13,8 +13,7 @@ typedef AppBuilder = Widget Function(BuildContext context, List<dynamic> data);
 
 ///the splash screen of application
 class PageSplash extends ConsumerStatefulWidget {
-  const PageSplash({Key? key, required this.futures, required this.builder})
-      : super(key: key);
+  const PageSplash({super.key, required this.futures, required this.builder});
 
   ///the data need init before application running
   final List<Future> futures;
@@ -44,7 +43,7 @@ class _PageSplashState extends ConsumerState<PageSplash> {
       ...tasks,
     ]).then((data) {
       final duration = DateTime.now().millisecondsSinceEpoch - start;
-      debugPrint("flutter initial in : $duration");
+      debugPrint('flutter initial in : $duration');
       setState(() {
         _data = data;
       });
@@ -54,7 +53,7 @@ class _PageSplashState extends ConsumerState<PageSplash> {
   @override
   Widget build(BuildContext context) {
     if (_data == null) {
-      return Container(color: const Color(0xFFd92e29));
+      return const ColoredBox(color: Color(0xFFd92e29));
     }
     return widget.builder(context, _data!);
   }

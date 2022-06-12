@@ -2,17 +2,17 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:quiet/extension.dart';
-import 'package:quiet/media/tracks/track_list.dart';
-import 'package:quiet/navigation/common/like_button.dart';
-import 'package:quiet/providers/fm_playlist_provider.dart';
-import 'package:quiet/providers/player_provider.dart';
-import 'package:quiet/repository.dart';
 
+import '../../../extension.dart';
+import '../../../media/tracks/track_list.dart';
+import '../../../providers/fm_playlist_provider.dart';
+import '../../../providers/player_provider.dart';
+import '../../../repository.dart';
+import '../../common/like_button.dart';
 import 'lyric_layout.dart';
 
 class PageFmPlaying extends ConsumerWidget {
-  const PageFmPlaying({Key? key}) : super(key: key);
+  const PageFmPlaying({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -51,9 +51,9 @@ class PageFmPlaying extends ConsumerWidget {
 
 class _CoverLayout extends StatelessWidget {
   const _CoverLayout({
-    Key? key,
+    super.key,
     required this.track,
-  }) : super(key: key);
+  });
 
   final Track track;
 
@@ -84,9 +84,9 @@ class _CoverLayout extends StatelessWidget {
 
 class _CoverPlayPauseButton extends ConsumerWidget {
   const _CoverPlayPauseButton({
-    Key? key,
+    super.key,
     required this.track,
-  }) : super(key: key);
+  });
 
   final Track track;
 
@@ -144,9 +144,9 @@ class _CoverPlayPauseButton extends ConsumerWidget {
 
 class _FmButtonBars extends ConsumerWidget {
   const _FmButtonBars({
-    Key? key,
+    super.key,
     required this.track,
-  }) : super(key: key);
+  });
 
   final Track track;
 

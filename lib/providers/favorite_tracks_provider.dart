@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:quiet/component.dart';
-import 'package:quiet/repository.dart';
+import '../component.dart';
+import '../repository.dart';
 
 import 'account_provider.dart';
 

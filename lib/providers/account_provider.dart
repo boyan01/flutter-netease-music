@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:async/async.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:quiet/repository.dart';
+import '../repository.dart';
 
 final userProvider =
     StateNotifierProvider<UserAccount, User?>((ref) => UserAccount());
@@ -31,13 +31,13 @@ class UserAccount extends StateNotifier<User?> {
     final result = await neteaseRepository!.login(phone, password);
     if (result.isValue) {
       final json = result.asValue!.value;
-      final userId = json["account"]["id"] as int;
+      final userId = json['account']['id'] as int;
 
       final userDetailResult = await neteaseRepository!.getUserDetail(userId);
       if (userDetailResult.isError) {
         final error = userDetailResult.asError!;
         debugPrint('error : ${error.error} ${error.stackTrace}');
-        return Result.error("can not get user detail.");
+        return Result.error('can not get user detail.');
       }
       state = userDetailResult.asValue!.value;
       neteaseLocalData[_persistenceKey] = state!.toJson();
@@ -57,24 +57,27 @@ class UserAccount extends StateNotifier<User?> {
       try {
         state = User.fromJson(user as Map<String, dynamic>);
       } catch (e) {
-        debugPrint("can not read user: $e");
-        neteaseLocalData["neteaseLocalData"] = null;
+        debugPrint('can not read user: $e');
+        neteaseLocalData['neteaseLocalData'] = null;
       }
       //访问api，刷新登陆状态
-      neteaseRepository!.refreshLogin().then((login) async {
-        if (!login || state == null) {
-          logout();
-        } else {
-          // refresh user
-          final result = await neteaseRepository!.getUserDetail(userId!);
-          if (result.isValue) {
-            state = result.asValue!.value;
-            neteaseLocalData[_persistenceKey] = state!.toJson();
+      await neteaseRepository!.refreshLogin().then(
+        (login) async {
+          if (!login || state == null) {
+            logout();
+          } else {
+            // refresh user
+            final result = await neteaseRepository!.getUserDetail(userId!);
+            if (result.isValue) {
+              state = result.asValue!.value;
+              neteaseLocalData[_persistenceKey] = state!.toJson();
+            }
           }
-        }
-      }, onError: (e) {
-        debugPrint("refresh login status failed \n $e");
-      });
+        },
+        onError: (e) {
+          debugPrint('refresh login status failed \n $e');
+        },
+      );
     }
   }
 

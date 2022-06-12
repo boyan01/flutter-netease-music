@@ -3,8 +3,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:meta/meta.dart';
-import 'package:quiet/extension.dart';
-import 'package:quiet/navigation/common/navigation_target.dart';
+import '../extension.dart';
+import '../navigation/common/navigation_target.dart';
 
 import '../navigation/desktop/navigator.dart';
 import '../navigation/mobile/navigator.dart';
@@ -60,13 +60,15 @@ class NavigatorState with EquatableMixin {
 @sealed
 abstract class NavigatorController extends StateNotifier<NavigatorState> {
   NavigatorController()
-      : super(NavigatorState(
-          pages: const [],
-          canBack: false,
-          canForward: false,
-          // no meaning, just for init
-          current: NavigationTargetDiscover(),
-        ));
+      : super(
+          NavigatorState(
+            pages: const [],
+            canBack: false,
+            canForward: false,
+            // no meaning, just for init
+            current: NavigationTargetDiscover(),
+          ),
+        );
 
   List<Page> get pages;
 

@@ -1,17 +1,18 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:overlay_support/overlay_support.dart';
-import 'package:quiet/material/dialogs.dart';
-import 'package:quiet/providers/navigator_provider.dart';
 
+import '../../../component/i18n/strings.dart';
+import '../../../extension/devices.dart';
+import '../../../material/dialogs.dart';
 import '../../../pages/welcome/page_welcome.dart';
 import '../../../providers/account_provider.dart';
+import '../../../providers/navigator_provider.dart';
 
-///登录流程: 密码输入
 class PageLoginPassword extends ConsumerStatefulWidget {
-  const PageLoginPassword({Key? key, required this.phone}) : super(key: key);
+  const PageLoginPassword({super.key, required this.phone});
 
-  ///手机号
   final String? phone;
 
   @override
@@ -36,7 +37,10 @@ class _PageLoginPasswordState extends ConsumerState<PageLoginPassword> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('手机号登录')),
+      appBar: AppBar(
+        title: Text(context.strings.loginWithPhone),
+        elevation: 0,
+      ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
         child: Column(
@@ -48,11 +52,13 @@ class _PageLoginPasswordState extends ConsumerState<PageLoginPassword> {
                 controller: _inputController,
                 obscureText: true,
                 keyboardType: TextInputType.url,
-                decoration: const InputDecoration(hintText: '请输入密码'),
+                decoration: InputDecoration(
+                  hintText: context.strings.pleaseInputPassword,
+                ),
               ),
             ),
             StretchButton(
-              text: '登录',
+              text: context.strings.login,
               primary: false,
               onTap: _doLogin,
             ),
@@ -65,7 +71,7 @@ class _PageLoginPasswordState extends ConsumerState<PageLoginPassword> {
   Future<void> _doLogin() async {
     final password = _inputController.text;
     if (password.isEmpty) {
-      toast('请输入密码');
+      toast(context.strings.pleaseInputPassword);
       return;
     }
     final account = ref.read(userProvider.notifier);
@@ -73,7 +79,11 @@ class _PageLoginPasswordState extends ConsumerState<PageLoginPassword> {
         await showLoaderOverlay(context, account.login(widget.phone, password));
     if (result.isValue) {
       // close login page.
-      ref.read(navigatorProvider.notifier).back();
+      if (defaultTargetPlatform.isMobile()) {
+        ref.read(navigatorProvider.notifier).back();
+      } else {
+        Navigator.of(context, rootNavigator: true).pop();
+      }
     } else {
       toast('登录失败:${result.asError!.error}');
     }

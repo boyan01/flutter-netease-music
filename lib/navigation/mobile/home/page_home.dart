@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:quiet/navigation/mobile/home/main_page_discover.dart';
-import 'package:quiet/navigation/mobile/home/main_page_my.dart';
-import 'package:quiet/navigation/mobile/home/tab_search.dart';
 
 import '../../../providers/navigator_provider.dart';
 import '../../common/navigation_target.dart';
+import 'main_page_discover.dart';
+import 'main_page_my.dart';
 import 'tab_discover.dart';
+import 'tab_search.dart';
 
 class PageHome extends StatelessWidget {
-  PageHome({Key? key, required this.selectedTab})
-      : assert(selectedTab.isMobileHomeTab()),
-        super(key: key);
+  PageHome({super.key, required this.selectedTab})
+      : assert(selectedTab.isMobileHomeTab());
 
   final NavigationTarget selectedTab;
 
@@ -23,17 +22,17 @@ class PageHome extends StatelessWidget {
         body = const HomeTabDiscover();
         break;
       case NavigationTargetMy:
-        body = MainPageMy();
+        body = const MainPageMy();
         break;
       case NavigationTargetLibrary:
-        body = MainPageDiscover();
+        body = const MainPageDiscover();
         break;
       case NavigationTargetSearch:
         body = const HomeTabSearch();
         break;
       default:
         assert(false, 'unsupported tab: $selectedTab');
-        body = MainPageMy();
+        body = const MainPageMy();
         break;
     }
     return Scaffold(appBar: const _AppBar(), body: body);
@@ -42,8 +41,8 @@ class PageHome extends StatelessWidget {
 
 class _AppBar extends ConsumerWidget with PreferredSizeWidget {
   const _AppBar({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

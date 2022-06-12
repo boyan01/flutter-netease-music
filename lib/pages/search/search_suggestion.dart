@@ -3,17 +3,17 @@ import 'dart:async';
 import 'package:async/async.dart';
 import 'package:flutter/material.dart';
 import 'package:loader/loader.dart';
-import 'package:quiet/repository/netease.dart';
+import '../../repository/netease.dart';
 
 typedef SuggestionSelectedCallback = void Function(String keyword);
 
 class SuggestionSection extends StatelessWidget {
-  const SuggestionSection(
-      {Key? key,
-      required this.title,
-      required this.content,
-      this.onDeleteClicked})
-      : super(key: key);
+  const SuggestionSection({
+    super.key,
+    required this.title,
+    required this.content,
+    this.onDeleteClicked,
+  });
 
   final String title;
   final VoidCallback? onDeleteClicked;
@@ -38,21 +38,24 @@ class SuggestionSection extends StatelessWidget {
             child: Row(
               children: <Widget>[
                 Expanded(
-                  child: Text(title,
-                      style: Theme.of(context)
-                          .textTheme
-                          .subtitle2!
-                          .copyWith(fontWeight: FontWeight.bold, fontSize: 17)),
+                  child: Text(
+                    title,
+                    style: Theme.of(context)
+                        .textTheme
+                        .subtitle2!
+                        .copyWith(fontWeight: FontWeight.bold, fontSize: 17),
+                  ),
                 ),
                 if (onDeleteClicked == null)
                   Container()
                 else
                   IconButton(
-                      icon: Icon(
-                        Icons.delete_outline,
-                        color: Theme.of(context).iconTheme.color,
-                      ),
-                      onPressed: onDeleteClicked)
+                    icon: Icon(
+                      Icons.delete_outline,
+                      color: Theme.of(context).iconTheme.color,
+                    ),
+                    onPressed: onDeleteClicked,
+                  )
               ],
             ),
           ),
@@ -65,14 +68,15 @@ class SuggestionSection extends StatelessWidget {
 
 class SuggestionSectionContent extends StatelessWidget {
   const SuggestionSectionContent({
-    Key? key,
+    super.key,
     required this.words,
     required this.suggestionSelectedCallback,
-  }) : super(key: key);
+  });
 
-  factory SuggestionSectionContent.from(
-      {required List<String> words,
-      final SuggestionSelectedCallback? suggestionSelectedCallback}) {
+  factory SuggestionSectionContent.from({
+    required List<String> words,
+    final SuggestionSelectedCallback? suggestionSelectedCallback,
+  }) {
     return SuggestionSectionContent(
       words: words,
       suggestionSelectedCallback: suggestionSelectedCallback!,
@@ -85,22 +89,26 @@ class SuggestionSectionContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Wrap(
-        spacing: 4,
-        children: words.map<Widget>((str) {
-          return ActionChip(
-            label: Text(str!),
-            onPressed: () {
-              suggestionSelectedCallback(str);
-            },
-          );
-        }).toList());
+      spacing: 4,
+      children: words.map<Widget>((str) {
+        return ActionChip(
+          label: Text(str!),
+          onPressed: () {
+            suggestionSelectedCallback(str);
+          },
+        );
+      }).toList(),
+    );
   }
 }
 
 ///搜索建议
 class SuggestionOverflow extends StatefulWidget {
-  const SuggestionOverflow(
-      {required this.query, required this.onSuggestionSelected});
+  const SuggestionOverflow({
+    super.key,
+    required this.query,
+    required this.onSuggestionSelected,
+  });
 
   final String query;
 
@@ -121,12 +129,13 @@ class _SuggestionOverflowState extends State<SuggestionOverflow> {
   void didUpdateWidget(SuggestionOverflow oldWidget) {
     super.didUpdateWidget(oldWidget);
     _operationDelay?.cancel();
-    _operationDelay = CancelableOperation.fromFuture(() async {
-      //we should delay some time to load the suggest for query
-      await Future.delayed(const Duration(milliseconds: 1000));
-      return widget.query;
-    }())
-      ..value.then((keyword) {
+    _operationDelay = CancelableOperation.fromFuture(
+      () async {
+        //we should delay some time to load the suggest for query
+        await Future.delayed(const Duration(milliseconds: 1000));
+        return widget.query;
+      }(),
+    )..value.then((keyword) {
         setState(() {
           _query = keyword;
         });
@@ -145,7 +154,7 @@ class _SuggestionOverflowState extends State<SuggestionOverflow> {
       padding: const EdgeInsets.symmetric(horizontal: 40),
       duration: const Duration(milliseconds: 300),
       child: ConstrainedBox(
-        constraints: const BoxConstraints(minWidth: 280.0),
+        constraints: const BoxConstraints(minWidth: 280),
         child: Material(
           elevation: 24,
           child: Column(
@@ -153,7 +162,7 @@ class _SuggestionOverflowState extends State<SuggestionOverflow> {
             children: <Widget>[
               ListTile(
                 title: Text(
-                  "搜索 : ${widget.query}",
+                  '搜索 : ${widget.query}',
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -162,24 +171,25 @@ class _SuggestionOverflowState extends State<SuggestionOverflow> {
                 },
               ),
               Loader<List<String>>(
-                  key: Key("suggest_$_query"),
-                  loadTask: () => neteaseRepository!.searchSuggest(_query),
-                  loadingBuilder: (context) {
-                    return Container();
-                  },
-                  builder: (context, result) {
-                    return Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: result.map((keyword) {
-                        return ListTile(
-                          title: Text(keyword),
-                          onTap: () {
-                            widget.onSuggestionSelected(keyword);
-                          },
-                        );
-                      }).toList(),
-                    );
-                  })
+                key: Key('suggest_$_query'),
+                loadTask: () => neteaseRepository!.searchSuggest(_query),
+                loadingBuilder: (context) {
+                  return Container();
+                },
+                builder: (context, result) {
+                  return Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: result.map((keyword) {
+                      return ListTile(
+                        title: Text(keyword),
+                        onTap: () {
+                          widget.onSuggestionSelected(keyword);
+                        },
+                      );
+                    }).toList(),
+                  );
+                },
+              )
             ],
           ),
         ),
