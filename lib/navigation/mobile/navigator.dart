@@ -5,9 +5,9 @@ import 'package:quiet/navigation/mobile/settings/page_setting.dart';
 import 'package:quiet/navigation/mobile/widgets/slide_up_page_route.dart';
 
 import '../../providers/navigator_provider.dart';
+import '../common/login/login_sub_navigation.dart';
 import '../common/navigation_target.dart';
 import 'artists/page_artist_detail.dart';
-import 'login/login_sub_navigation.dart';
 import 'player/page_fm_playing.dart';
 import 'playlists/page_album_detail.dart';
 import 'playlists/page_playlist_detail.dart';

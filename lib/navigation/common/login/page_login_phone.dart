@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:ui';
 
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -9,6 +10,8 @@ import 'package:overlay_support/overlay_support.dart';
 import 'package:quiet/component.dart';
 import 'package:quiet/material/dialogs.dart';
 import 'package:quiet/model/region_flag.dart';
+import 'package:quiet/navigation/common/buttons.dart';
+import 'package:quiet/providers/navigator_provider.dart';
 import 'package:quiet/repository.dart';
 
 import 'login_sub_navigation.dart';
@@ -26,20 +29,35 @@ Future<List<RegionFlag>> _getRegions() async {
   return result;
 }
 
-class PageLoginWithPhone extends HookWidget {
+class PageLoginWithPhone extends HookConsumerWidget {
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final regions = useFuture(useMemoized(() => _getRegions()));
+    final platform = ref.watch(debugNavigatorPlatformProvider);
     return Scaffold(
       appBar: AppBar(
         title: Text(context.strings.loginWithPhone),
-        leading: IconButton(
-          icon: const BackButtonIcon(),
-          tooltip: MaterialLocalizations.of(context).backButtonTooltip,
-          onPressed: () {
-            Navigator.of(context, rootNavigator: true).maybePop();
-          },
-        ),
+        leading: platform == NavigationPlatform.mobile
+            ? IconButton(
+                icon: const BackButtonIcon(),
+                tooltip: MaterialLocalizations.of(context).backButtonTooltip,
+                onPressed: () {
+                  Navigator.of(context, rootNavigator: true).maybePop();
+                },
+              )
+            : null,
+        elevation: 0,
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 8),
+            child: AppIconButton(
+              onPressed: () {
+                Navigator.of(context, rootNavigator: true).maybePop();
+              },
+              icon: FluentIcons.dismiss_20_regular,
+            ),
+          ),
+        ],
       ),
       body: regions.hasData
           ? _PhoneInputLayout(regions: regions.requireData)
@@ -157,7 +175,7 @@ class _PhoneInput extends HookWidget {
 
   Color? _textColor(BuildContext context) {
     if (controller.text.isEmpty) {
-      return Theme.of(context).disabledColor;
+      return context.theme.disabledColor;
     }
     return null;
   }
@@ -177,7 +195,7 @@ class _PhoneInput extends HookWidget {
       textInputAction: TextInputAction.next,
       onSubmitted: (text) => onDone(),
       decoration: InputDecoration(
-        prefix: InkWell(
+        prefixIcon: InkWell(
           onTap: onPrefixTap,
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
@@ -186,6 +204,10 @@ class _PhoneInput extends HookWidget {
               style: style,
             ),
           ),
+        ),
+        prefixIconConstraints: const BoxConstraints(
+          minWidth: 0,
+          minHeight: 0,
         ),
       ),
     );

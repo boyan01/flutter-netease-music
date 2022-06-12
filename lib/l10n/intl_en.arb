@@ -85,5 +85,6 @@
   "artistAlbumCount": "Album count: {value}",
   "personalProfile": "Personal profile",
   "topSongs": "Top Songs",
-  "showAllHotSongs": "Show all hot songs >"
+  "showAllHotSongs": "Show all hot songs >",
+  "pleaseInputPassword": "Please input password"
 }

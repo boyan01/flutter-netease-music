@@ -921,6 +921,16 @@ class S {
       args: [],
     );
   }
+
+  /// `Please input password`
+  String get pleaseInputPassword {
+    return Intl.message(
+      'Please input password',
+      name: 'pleaseInputPassword',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

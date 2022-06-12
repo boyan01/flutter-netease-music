@@ -103,6 +103,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "playlistPlayCount": m4,
         "playlistShareContent": m5,
         "playlistTrackCount": m6,
+        "pleaseInputPassword": MessageLookupByLibrary.simpleMessage("请输入密码"),
         "projectDescription": MessageLookupByLibrary.simpleMessage(
             "开源项目 https://github.com/boyan01/flutter-netease-music"),
         "recommendPlayLists": MessageLookupByLibrary.simpleMessage("推荐歌单"),
