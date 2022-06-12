@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:quiet/repository.dart';
-import 'package:quiet/repository/data/search_result.dart';
+import '../repository.dart';
+import '../repository/data/search_result.dart';
 
 final searchMusicProvider = StateNotifierProvider.family<
     SearchResultStateNotify<Track>, SearchResultState<Track>, String>(
@@ -30,12 +30,15 @@ class SearchResultState<T> with EquatableMixin {
 abstract class SearchResultStateNotify<T>
     extends StateNotifier<SearchResultState<T>> {
   SearchResultStateNotify(this.query)
-      : super(SearchResultState<T>(
+      : super(
+          SearchResultState<T>(
             value: const AsyncValue.loading(),
             page: 1,
             totalPageCount: 0,
             totalItemCount: 0,
-            query: query)) {
+            query: query,
+          ),
+        ) {
     _loadQuery(1);
   }
 
@@ -48,7 +51,7 @@ abstract class SearchResultStateNotify<T>
   int? _totalItemCount;
   int _page = 1;
 
-  void _loadQuery(int page) async {
+  Future<void> _loadQuery(int page) async {
     if (_loading) {
       return;
     }
@@ -81,7 +84,7 @@ abstract class SearchResultStateNotify<T>
 }
 
 class _TrackResultStateNotify extends SearchResultStateNotify<Track> {
-  _TrackResultStateNotify(String query) : super(query);
+  _TrackResultStateNotify(super.query);
 
   @override
   Future<SearchResult<List<Track>>> load(int offset, int count) =>

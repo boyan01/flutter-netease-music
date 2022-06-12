@@ -1,4 +1,4 @@
-import 'package:netease_api/src/ao/playlist_detail.dart';
+import 'playlist_detail.dart';
 
 import 'safe_convert.dart';
 
@@ -37,28 +37,28 @@ class Album {
     this.paid = false,
     this.onSale = false,
     this.mark = 0,
-    this.description = "",
+    this.description = '',
     this.status = 0,
     required this.alias,
     required this.artists,
     this.copyrightId = 0,
     this.picId = 0,
     required this.artist,
-    this.briefDesc = "",
+    this.briefDesc = '',
     this.publishTime = 0,
-    this.company = "",
-    this.picUrl = "",
-    this.commentThreadId = "",
+    this.company = '',
+    this.picUrl = '',
+    this.commentThreadId = '',
     this.pic = 0,
-    this.blurPicUrl = "",
+    this.blurPicUrl = '',
     this.companyId = 0,
-    this.tags = "",
-    this.subType = "",
-    this.name = "",
+    this.tags = '',
+    this.subType = '',
+    this.name = '',
     this.id = 0,
-    this.type = "",
+    this.type = '',
     this.size = 0,
-    this.picIdStr = "",
+    this.picIdStr = '',
     required this.info,
   });
 
@@ -161,14 +161,14 @@ class AlbumArtistsItem {
     this.picId = 0,
     this.musicSize = 0,
     this.albumSize = 0,
-    this.briefDesc = "",
-    this.picUrl = "",
-    this.img1v1Url = "",
+    this.briefDesc = '',
+    this.picUrl = '',
+    this.img1v1Url = '',
     this.followed = false,
-    this.trans = "",
-    this.name = "",
+    this.trans = '',
+    this.name = '',
     this.id = 0,
-    this.img1v1IdStr = "",
+    this.img1v1IdStr = '',
   });
 
   factory AlbumArtistsItem.fromJson(Map<String, dynamic>? json) =>
@@ -230,15 +230,15 @@ class AlbumArtist {
     this.picId = 0,
     this.musicSize = 0,
     this.albumSize = 0,
-    this.briefDesc = "",
-    this.picUrl = "",
-    this.img1v1Url = "",
+    this.briefDesc = '',
+    this.picUrl = '',
+    this.img1v1Url = '',
     this.followed = false,
-    this.trans = "",
-    this.name = "",
+    this.trans = '',
+    this.name = '',
     this.id = 0,
-    this.picIdStr = "",
-    this.img1v1IdStr = "",
+    this.picIdStr = '',
+    this.img1v1IdStr = '',
   });
 
   factory AlbumArtist.fromJson(Map<String, dynamic>? json) => AlbumArtist(
@@ -304,7 +304,7 @@ class AlbumInfo {
     this.commentCount = 0,
     this.likedCount = 0,
     this.shareCount = 0,
-    this.threadId = "",
+    this.threadId = '',
   });
 
   factory AlbumInfo.fromJson(Map<String, dynamic>? json) => AlbumInfo(
@@ -347,7 +347,7 @@ class AlbumInfo {
 
 class CommentThread {
   CommentThread({
-    this.id = "",
+    this.id = '',
     required this.resourceInfo,
     this.resourceType = 0,
     this.commentCount = 0,
@@ -357,7 +357,7 @@ class CommentThread {
     this.latestLikedUsers,
     this.resourceId = 0,
     this.resourceOwnerId = 0,
-    this.resourceTitle = "",
+    this.resourceTitle = '',
   });
 
   factory CommentThread.fromJson(Map<String, dynamic>? json) => CommentThread(
@@ -404,8 +404,8 @@ class ResourceInfo {
   ResourceInfo({
     this.id = 0,
     this.userId = 0,
-    this.name = "",
-    this.imgUrl = "",
+    this.name = '',
+    this.imgUrl = '',
     this.creator,
     this.encodedId,
     this.subTitle,

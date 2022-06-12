@@ -5,9 +5,9 @@ import 'dart:ui';
 
 import 'package:flutter/widgets.dart';
 import 'package:music_player/music_player.dart';
-import 'package:quiet/model/persistence_player_state.dart';
 
 import '../../component.dart';
+import '../../model/persistence_player_state.dart';
 import '../../repository.dart';
 import 'track_list.dart';
 import 'tracks_player.dart';
@@ -26,9 +26,9 @@ extension _Metadata on MusicMetadata {
     }
     return Track(
       id: int.parse(mediaId),
-      name: title ?? "",
+      name: title ?? '',
       uri: mediaUri,
-      artists: artists.map((artist) => ArtistMini.fromJson(artist)).toList(),
+      artists: artists.map(ArtistMini.fromJson).toList(),
       album: album == null ? null : AlbumMini.fromJson(album),
       imageUrl: extras?['imageUrl'] as String,
       duration: Duration(milliseconds: duration),
@@ -233,33 +233,39 @@ Future<String> _playUriInterceptor(String? mediaId, String? fallbackUri) async {
   }
 
   /// some devices do not support http request.
-  return result.asValue!.value.replaceFirst("http://", "https://");
+  return result.asValue!.value.replaceFirst('http://', 'https://');
 }
 
 Future<Uint8List> _loadImageInterceptor(MusicMetadata metadata) async {
-  final ImageStream stream =
-      CachedImage(metadata.iconUri.toString()).resolve(ImageConfiguration(
-    size: const Size(150, 150),
-    devicePixelRatio: WidgetsBinding.instance.window.devicePixelRatio,
-  ));
+  final stream = CachedImage(metadata.iconUri.toString()).resolve(
+    ImageConfiguration(
+      size: const Size(150, 150),
+      devicePixelRatio: WidgetsBinding.instance.window.devicePixelRatio,
+    ),
+  );
   final image = Completer<ImageInfo>();
-  stream.addListener(ImageStreamListener((info, a) {
-    image.complete(info);
-  }, onError: (exception, stackTrace) {
-    image.completeError(exception, stackTrace);
-  }));
+  stream.addListener(
+    ImageStreamListener(
+      (info, a) {
+        image.complete(info);
+      },
+      onError: image.completeError,
+    ),
+  );
   final result = await image.future
       .then((image) => image.image.toByteData(format: ImageByteFormat.png))
       .then((byte) => byte!.buffer.asUint8List())
       .timeout(const Duration(seconds: 10));
-  debugPrint("load image for : ${metadata.title} ${result.length}");
+  debugPrint('load image for : ${metadata.title} ${result.length}');
   return result;
 }
 
 class _PlayQueueInterceptor extends PlayQueueInterceptor {
   @override
   Future<List<MusicMetadata>> fetchMoreMusic(
-      BackgroundPlayQueue queue, PlayMode playMode) async {
+    BackgroundPlayQueue queue,
+    PlayMode playMode,
+  ) async {
     if (queue.queueId == kFmPlayQueueId) {
       final musics = await neteaseRepository!.getPersonalFmMusics();
       if (musics.isError) {

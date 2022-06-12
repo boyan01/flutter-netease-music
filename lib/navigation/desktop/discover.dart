@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:quiet/component/utils/scroll_controller.dart';
-import 'package:quiet/extension.dart';
-import 'package:quiet/media/tracks/track_list.dart';
-import 'package:quiet/providers/personalized_playlist_provider.dart';
-import 'package:quiet/providers/play_records_provider.dart';
-import 'package:quiet/providers/player_provider.dart';
 
+import '../../component/utils/scroll_controller.dart';
+import '../../extension.dart';
+import '../../media/tracks/track_list.dart';
 import '../../providers/navigator_provider.dart';
+import '../../providers/personalized_playlist_provider.dart';
+import '../../providers/play_records_provider.dart';
+import '../../providers/player_provider.dart';
 import '../common/navigation_target.dart';
 import '../common/recommended_playlist_tile.dart';
 import 'widgets/track_tile_short.dart';
 
 class DiscoverPage extends StatelessWidget {
-  const DiscoverPage({Key? key}) : super(key: key);
+  const DiscoverPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +42,7 @@ class DiscoverPage extends StatelessWidget {
 }
 
 class _Playlists extends ConsumerWidget {
-  const _Playlists({Key? key}) : super(key: key);
+  const _Playlists({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -63,20 +63,22 @@ class _Playlists extends ConsumerWidget {
     }
 
     return playlists.when(
-      data: (playlists) => builder(ListView.builder(
-        itemCount: playlists.length,
-        scrollDirection: Axis.horizontal,
-        itemBuilder: (context, index) {
-          final playlist = playlists[index];
-          return RecommendedPlaylistTile(
-            playlist: playlist,
-            width: 120,
-            onTap: () => ref
-                .read(navigatorProvider.notifier)
-                .navigate(NavigationTarget.playlist(playlistId: playlist.id)),
-          );
-        },
-      )),
+      data: (playlists) => builder(
+        ListView.builder(
+          itemCount: playlists.length,
+          scrollDirection: Axis.horizontal,
+          itemBuilder: (context, index) {
+            final playlist = playlists[index];
+            return RecommendedPlaylistTile(
+              playlist: playlist,
+              width: 120,
+              onTap: () => ref
+                  .read(navigatorProvider.notifier)
+                  .navigate(NavigationTarget.playlist(playlistId: playlist.id)),
+            );
+          },
+        ),
+      ),
       loading: () => builder(const Center(child: CircularProgressIndicator())),
       error: (error, stacktrace) => builder(
         Center(child: Text(context.formattedError(error))),
@@ -86,7 +88,7 @@ class _Playlists extends ConsumerWidget {
 }
 
 class _PlayRecord extends ConsumerWidget {
-  const _PlayRecord({Key? key}) : super(key: key);
+  const _PlayRecord({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -140,9 +142,9 @@ class _PlayRecord extends ConsumerWidget {
 
 class _Header extends StatelessWidget {
   const _Header({
-    Key? key,
+    super.key,
     required this.title,
-  }) : super(key: key);
+  });
 
   final String title;
 
@@ -157,10 +159,10 @@ class _Header extends StatelessWidget {
 
 class _Box extends StatelessWidget {
   const _Box({
-    Key? key,
+    super.key,
     required this.child,
     this.padding = const EdgeInsets.all(20),
-  }) : super(key: key);
+  });
 
   final Widget child;
 
@@ -170,7 +172,6 @@ class _Box extends StatelessWidget {
   Widget build(BuildContext context) {
     return Material(
       color: context.theme.colorScheme.onBackground.withOpacity(0.05),
-      elevation: 0,
       borderRadius: BorderRadius.circular(4),
       child: Padding(
         padding: padding,

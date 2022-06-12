@@ -1,7 +1,8 @@
 part of 'page_user_detail.dart';
 
 class TabMusic extends StatefulWidget {
-  const TabMusic(this.profile, {Key? key}) : super(key: key);
+  const TabMusic(this.profile, {super.key});
+
   final User profile;
 
   @override
@@ -21,7 +22,8 @@ class _TabMusicState extends State<TabMusic>
       loadTask: () => neteaseRepository!.userPlaylist(widget.profile.userId),
       serialize: (list) => list.map((it) => it.toJson()).toList(),
       deserialize: (list) => (list as List)
-          .map((it) => PlaylistDetail.fromJson(it))
+          .cast<Map<String, dynamic>>()
+          .map(PlaylistDetail.fromJson)
           .toList()
           .cast(),
       builder: (context, result) {
@@ -34,23 +36,29 @@ class _TabMusicState extends State<TabMusic>
             Row(
               children: <Widget>[
                 Expanded(child: _Header(title: '歌单(${created.length})')),
-                Text('共被收藏${widget.profile.playlistBeSubscribedCount}次',
-                    style: Theme.of(context).textTheme.caption),
+                Text(
+                  '共被收藏${widget.profile.playlistBeSubscribedCount}次',
+                  style: Theme.of(context).textTheme.caption,
+                ),
                 const SizedBox(width: 16),
               ],
             ),
-            ...created.map((playlist) => PlaylistTile(
+            ...created.map(
+              (playlist) => PlaylistTile(
+                playlist: playlist,
+                enableMore: false,
+                enableHero: false,
+              ),
+            ),
+            if (subscribed.isNotEmpty) ...[
+              _Header(title: '收藏的歌单(${subscribed.length})'),
+              ...subscribed.map(
+                (playlist) => PlaylistTile(
                   playlist: playlist,
                   enableMore: false,
                   enableHero: false,
-                )),
-            if (subscribed.isNotEmpty) ...[
-              _Header(title: '收藏的歌单(${subscribed.length})'),
-              ...subscribed.map((playlist) => PlaylistTile(
-                    playlist: playlist,
-                    enableMore: false,
-                    enableHero: false,
-                  )),
+                ),
+              ),
             ],
           ],
         );
@@ -60,7 +68,8 @@ class _TabMusicState extends State<TabMusic>
 }
 
 class _Header extends StatelessWidget {
-  const _Header({Key? key, required this.title}) : super(key: key);
+  const _Header({super.key, required this.title});
+
   final String title;
 
   @override

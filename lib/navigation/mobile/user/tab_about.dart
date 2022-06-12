@@ -1,7 +1,7 @@
 part of 'page_user_detail.dart';
 
 class TabAbout extends StatefulWidget {
-  const TabAbout(this.user, {Key? key}) : super(key: key);
+  const TabAbout(this.user, {super.key});
   final User user;
 
   @override
@@ -54,18 +54,21 @@ class _UserInformation extends StatelessWidget {
 }
 
 class _UserDescription extends StatelessWidget {
-  const _UserDescription({Key? key, this.description}) : super(key: key);
+  const _UserDescription({super.key, this.description});
   final String? description;
 
   @override
   Widget build(BuildContext context) {
     return DefaultTextStyle(
-        style: Theme.of(context).textTheme.caption!.copyWith(fontSize: 14),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Text(description == null || description!.isEmpty
+      style: Theme.of(context).textTheme.caption!.copyWith(fontSize: 14),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        child: Text(
+          description == null || description!.isEmpty
               ? '还没有填写个人介绍'
-              : description!),
-        ));
+              : description!,
+        ),
+      ),
+    );
   }
 }

@@ -1,10 +1,10 @@
 import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:quiet/providers/preference_provider.dart';
 
 import '../media/tracks/tracks_player.dart';
 import '../model/persistence_player_state.dart';
+import 'preference_provider.dart';
 
 final playerStateProvider =
     StateNotifierProvider<TracksPlayer, TracksPlayerState>(
@@ -17,18 +17,21 @@ final playerStateProvider =
         player.restoreFromPersistence(state);
       }
       PersistencePlayerState? lastState;
-      player.addListener((state) {
-        final newState = PersistencePlayerState(
-          volume: state.volume,
-          playingTrack: state.playingTrack,
-          playingList: state.playingList,
-        );
-        if (newState == lastState) {
-          return;
-        }
-        lastState = newState;
-        ref.read(sharedPreferenceProvider).setPlayerState(newState);
-      }, fireImmediately: false);
+      player.addListener(
+        (state) {
+          final newState = PersistencePlayerState(
+            volume: state.volume,
+            playingTrack: state.playingTrack,
+            playingList: state.playingList,
+          );
+          if (newState == lastState) {
+            return;
+          }
+          lastState = newState;
+          ref.read(sharedPreferenceProvider).setPlayerState(newState);
+        },
+        fireImmediately: false,
+      );
     });
 
     return player;

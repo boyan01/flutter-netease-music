@@ -1,5 +1,5 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:quiet/repository.dart';
+import '../repository.dart';
 
 final playlistDetailProvider = StreamProvider.family<PlaylistDetail, int>(
   (ref, playlistId) async* {
@@ -18,7 +18,7 @@ final playlistDetailProvider = StreamProvider.family<PlaylistDetail, int>(
         detail = detail.copyWith(tracks: musics.asValue!.value);
       }
     }
-    neteaseLocalData.updatePlaylistDetail(detail);
+    await neteaseLocalData.updatePlaylistDetail(detail);
     yield detail;
   },
 );

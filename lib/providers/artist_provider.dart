@@ -1,5 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:quiet/repository.dart';
+import '../repository.dart';
 
 final artistProvider = FutureProvider.family<ArtistDetail, int>(
   (ref, albumId) async {
@@ -14,9 +14,9 @@ final artistAlbumsProvider = FutureProvider.family<List<AlbumDetail>, int>(
     final result = await neteaseRepository!.artistAlbums(artistId);
     final albums = await result.asFuture;
 
-    final List<AlbumDetail> albumsList = [];
+    final albumsList = <AlbumDetail>[];
 
-    for (var album in albums) {
+    for (final album in albums) {
       final albumDetail = await neteaseRepository!.albumDetail(album.id);
       if (albumDetail.isValue) {
         albumsList.add(albumDetail.asValue!.value);

@@ -8,5 +8,5 @@ class QuietException implements Exception {
 }
 
 class NotLoginException extends QuietException {
-  NotLoginException(String message) : super(message);
+  NotLoginException(super.message);
 }

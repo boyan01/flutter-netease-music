@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:quiet/extension.dart';
-import 'package:quiet/material.dart';
-import 'package:quiet/navigation/desktop/home_window.dart';
-import 'package:quiet/providers/navigator_provider.dart';
 
+import '../extension.dart';
+import '../material.dart';
+import '../providers/navigator_provider.dart';
 import '../providers/settings_provider.dart';
+import 'desktop/home_window.dart';
 import 'mobile/mobile_window.dart';
 
 class QuietApp extends ConsumerWidget {
-  const QuietApp({Key? key}) : super(key: key);
+  const QuietApp({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -26,7 +26,7 @@ class QuietApp extends ConsumerWidget {
     }
     return MaterialApp(
       title: 'Quiet',
-      supportedLocales: const [Locale("en"), Locale("zh")],
+      supportedLocales: const [Locale('en'), Locale('zh')],
       localizationsDelegates: const [
         S.delegate,
         GlobalWidgetsLocalizations.delegate,

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:quiet/navigation/common/playlist/music_list.dart';
-import 'package:quiet/providers/player_provider.dart';
-import 'package:quiet/repository.dart';
+
+import '../../../providers/player_provider.dart';
+import '../../../repository.dart';
+import '../../common/playlist/music_list.dart';
 
 class PlaylistInternalSearchDelegate extends SearchDelegate {
   PlaylistInternalSearchDelegate(this.playlist);
@@ -42,7 +43,8 @@ class PlaylistInternalSearchDelegate extends SearchDelegate {
     }
     final result = list
         ?.where(
-            (m) => m.name.contains(query) || m.displaySubtitle.contains(query))
+          (m) => m.name.contains(query) || m.displaySubtitle.contains(query),
+        )
         .toList();
     if (result == null || result.isEmpty) {
       return _EmptyResultSection(query);
@@ -69,9 +71,9 @@ class _EmptyResultSection extends StatelessWidget {
 
 class _InternalResultSection extends ConsumerWidget {
   const _InternalResultSection({
-    Key? key,
+    super.key,
     required this.musics,
-  }) : super(key: key);
+  });
 
   ///result song list, can not be null and empty
   final List<Music> musics;
@@ -85,12 +87,12 @@ class _InternalResultSection extends ConsumerWidget {
           ..insertToNext(music)
           ..playFromMediaId(music.id);
       },
-      trailingBuilder: MusicTileConfiguration.defaultTrailingBuilder,
       child: ListView.builder(
-          itemCount: musics.length,
-          itemBuilder: (context, index) {
-            return MusicTile(musics[index]);
-          }),
+        itemCount: musics.length,
+        itemBuilder: (context, index) {
+          return MusicTile(musics[index]);
+        },
+      ),
     );
   }
 }

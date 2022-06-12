@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:quiet/component/route.dart';
+import '../../component/route.dart';
 
 import '../../providers/account_provider.dart';
 
 ///包裹页面，表示当前页面需要登陆才能正常显示
 class PageNeedLogin extends ConsumerWidget {
-  const PageNeedLogin({Key? key, this.builder}) : super(key: key);
+  const PageNeedLogin({super.key, this.builder});
 
   final WidgetBuilder? builder;
 
@@ -24,11 +24,12 @@ class PageNeedLogin extends ConsumerWidget {
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               TextButton(
-                  onPressed: () => Navigator.pop(context),
-                  child: Text(
-                    '取消',
-                    style: TextStyle(color: Theme.of(context).errorColor),
-                  )),
+                onPressed: () => Navigator.pop(context),
+                child: Text(
+                  '取消',
+                  style: TextStyle(color: Theme.of(context).errorColor),
+                ),
+              ),
               ElevatedButton(
                 onPressed: () => Navigator.pushNamed(context, pageLogin),
                 child: const Text('前往登陆页面'),

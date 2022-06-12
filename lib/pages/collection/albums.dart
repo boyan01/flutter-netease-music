@@ -5,6 +5,8 @@ import '../../component/netease/netease_loader.dart';
 import '../../material/tiles.dart';
 
 class CollectionAlbums extends StatelessWidget {
+  const CollectionAlbums({super.key});
+
   @override
   Widget build(BuildContext context) {
     return CachedLoader<Map>(
@@ -15,8 +17,9 @@ class CollectionAlbums extends StatelessWidget {
         return ListView(
           children: data
               .cast<Map>()
-              .map((album) =>
-                  AlbumTile(album: album, subtitle: _getAlbumSubtitle))
+              .map(
+                (album) => AlbumTile(album: album, subtitle: _getAlbumSubtitle),
+              )
               .toList(),
         );
       },
@@ -24,7 +27,7 @@ class CollectionAlbums extends StatelessWidget {
   }
 
   String _getAlbumSubtitle(Map album) {
-    final String artists = (album['artists'] as List)
+    final artists = (album['artists'] as List)
         .cast<Map>()
         .map((artist) => artist['name'])
         .join('/');

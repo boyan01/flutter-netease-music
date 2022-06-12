@@ -9,7 +9,7 @@ import 'package:netease_music_api/netease_cloud_music.dart' as api;
 
 import '../netease_api.dart';
 
-///enum for [NeteaseRepository.search] param type
+///enum for NeteaseRepository.search param type
 class SearchType {
   const SearchType._(this.type);
 
@@ -76,7 +76,7 @@ class Repository {
       try {
         cookieJar = PersistCookieJar(storage: FileStorage(cookiePath));
       } catch (e) {
-        debugPrint("error: can not create persist cookie jar");
+        debugPrint('error: can not create persist cookie jar');
       }
       _cookieJar.complete(cookieJar);
     });
@@ -92,13 +92,15 @@ class Repository {
 
   Future<void> _saveCookies(List<Cookie> cookies) async {
     final jar = await _cookieJar.future;
-    jar.saveFromResponse(Uri.parse('http://music.163.com'), cookies);
+    await jar.saveFromResponse(Uri.parse('http://music.163.com'), cookies);
   }
 
   ///使用手机号码登录
   Future<Result<Map>> login(String? phone, String password) async {
     return doRequest(
-        "/login/cellphone", {"phone": phone, "password": password});
+      '/login/cellphone',
+      {'phone': phone, 'password': password},
+    );
   }
 
   ///刷新登陆状态
@@ -112,7 +114,7 @@ class Repository {
   ///登出,删除本地cookie信息
   Future<void> logout() async {
     //删除cookie
-    _cookieJar.future.then((v) => v.deleteAll());
+    await _cookieJar.future.then((v) => v.deleteAll());
   }
 
   ///PlayListDetail 中的 tracks 都是空数据
@@ -122,24 +124,32 @@ class Repository {
     int limit = 1000,
   }) async {
     final response = await doRequest(
-        "/user/playlist", {"offset": offset, "uid": userId, "limit": limit});
+      '/user/playlist',
+      {'offset': offset, 'uid': userId, 'limit': limit},
+    );
     return _map(response, (result) => UserPlayList.fromJson(result));
   }
 
   ///create new playlist by [name]
-  Future<Result<PlayListDetail>?> createPlaylist(String? name,
-      {bool privacy = false}) async {
+  Future<Result<PlayListDetail>?> createPlaylist(
+    String? name, {
+    bool privacy = false,
+  }) async {
     final response = await doRequest(
-        "/playlist/create", {"name": name, 'privacy': privacy ? 10 : null});
+      '/playlist/create',
+      {'name': name, 'privacy': privacy ? 10 : null},
+    );
     return _map(
-        response, (result) => PlayListDetail.fromJson(result["playlist"]));
+      response,
+      (result) => PlayListDetail.fromJson(result['playlist']),
+    );
   }
 
   ///根据歌单id获取歌单详情，包括歌曲
   ///
   /// [s] 歌单最近的 s 个收藏者
   Future<Result<PlayListDetail>> playlistDetail(int id, {int s = 5}) async {
-    final response = await doRequest("/playlist/detail", {"id": "$id", "s": s});
+    final response = await doRequest('/playlist/detail', {'id': '$id', 's': s});
     return _map(response, (t) => PlayListDetail.fromJson(t));
   }
 
@@ -147,78 +157,91 @@ class Repository {
   ///return true if action success
   Future<bool> playlistSubscribe(int? id, {required bool subscribe}) async {
     final response = await doRequest(
-        "/playlist/subscribe", {"id": id, 't': subscribe ? 1 : 2});
+      '/playlist/subscribe',
+      {'id': id, 't': subscribe ? 1 : 2},
+    );
     return response.isValue;
   }
 
   ///根据专辑详细信息
   Future<Result<AlbumDetail>> albumDetail(int id) async {
-    final response = await doRequest("/album", {'id': id});
+    final response = await doRequest('/album', {'id': id});
     return _map(response, (t) => AlbumDetail.fromJson(t));
   }
 
   ///推荐歌单
-  Future<Result<Personalized>> personalizedPlaylist(
-      {int limit = 30, int offset = 0}) async {
-    final response = await doRequest("/personalized",
-        {"limit": limit, "offset": offset, "total": true, "n": 1000});
+  Future<Result<Personalized>> personalizedPlaylist({
+    int limit = 30,
+    int offset = 0,
+  }) async {
+    final response = await doRequest(
+      '/personalized',
+      {'limit': limit, 'offset': offset, 'total': true, 'n': 1000},
+    );
     return _map(response, (t) => Personalized.fromJson(t));
   }
 
   /// 推荐的新歌（10首）
   Future<Result<PersonalizedNewSong>> personalizedNewSong() async {
-    final response = await doRequest("/personalized/newsong");
+    final response = await doRequest('/personalized/newsong');
     return _map(response, (t) => PersonalizedNewSong.fromJson(t));
   }
 
   /// 榜单摘要
   Future<Result<Map>> topListDetail() async {
-    return doRequest("/toplist/detail");
+    return doRequest('/toplist/detail');
   }
 
   ///推荐歌曲，需要登陆
   Future<Result<DailyRecommendSongs>> recommendSongs() async {
-    final response = await doRequest("/recommend/songs");
+    final response = await doRequest('/recommend/songs');
     return _map(response, (t) => DailyRecommendSongs.fromJson(t['data']));
   }
 
   ///根据音乐id获取歌词
   Future<String?> lyric(int id) async {
-    final result = await doRequest('/lyric', {"id": id});
+    final result = await doRequest('/lyric', {'id': id});
     if (result.isError) {
       return Future.error(result.asError!.error);
     }
-    final Map? lyc = result.asValue!.value["lrc"];
+    final Map? lyc = result.asValue!.value['lrc'];
     if (lyc == null) {
       return null;
     }
-    return lyc["lyric"];
+    return lyc['lyric'];
   }
 
   ///获取搜索热词
   Future<Result<List<String>>> searchHotWords() async {
-    final result = await doRequest("/search/hot", {"type": 1111});
-    return _map(result, (dynamic t) {
-      final List hots = (t["result"] as Map)["hots"];
+    final result = await doRequest('/search/hot', {'type': 1111});
+    return _map(result, (t) {
+      final List hots = (t['result'] as Map)['hots'];
       return hots.cast<Map<String, dynamic>>().map((map) {
-        return map["first"] as String;
+        return map['first'] as String;
       }).toList();
     });
   }
 
   ///search by keyword
-  Future<Result<Map>> search(String? keyword, SearchType type,
-      {int limit = 20, int offset = 0}) {
-    return doRequest("/search/cloud", {
-      "keywords": keyword,
-      "type": type.type,
-      "limit": limit,
-      "offset": offset
+  Future<Result<Map>> search(
+    String? keyword,
+    SearchType type, {
+    int limit = 20,
+    int offset = 0,
+  }) {
+    return doRequest('/search/cloud', {
+      'keywords': keyword,
+      'type': type.type,
+      'limit': limit,
+      'offset': offset
     });
   }
 
-  Future<Result<SearchResultSongs>> searchSongs(String keyword,
-      {int limit = 20, int offset = 0}) async {
+  Future<Result<SearchResultSongs>> searchSongs(
+    String keyword, {
+    int limit = 20,
+    int offset = 0,
+  }) async {
     final result =
         await search(keyword, SearchType.song, limit: limit, offset: offset);
     return result.map((t) => SearchResultSongs.fromJson(t['result']));
@@ -231,46 +254,48 @@ class Repository {
       return Result.value(const []);
     }
     final response = await doRequest(
-        "https://music.163.com/weapi/search/suggest/keyword",
-        {"s": keyword.trim()});
+      'https://music.163.com/weapi/search/suggest/keyword',
+      {'s': keyword.trim()},
+    );
     if (response.isError) {
       return Result.value(const []);
     }
     return _map(response, (dynamic t) {
-      final List<Map>? match =
-          (response.asValue!.value["result"]["allMatch"] as List?)?.cast();
+      final match =
+          (response.asValue!.value['result']['allMatch'] as List?)?.cast();
       if (match == null) {
         return [];
       }
-      return match.map((m) => m["keyword"]).cast<String>().toList();
+      return match.map((m) => m['keyword']).cast<String>().toList();
     });
   }
 
   ///check music is available
   Future<bool> checkMusic(int id) async {
     final result = await doRequest(
-        "https://music.163.com/weapi/song/enhance/player/url",
-        {"ids": "[$id]", "br": 999000});
-    return result.isValue && result.asValue!.value["data"][0]["code"] == 200;
+      'https://music.163.com/weapi/song/enhance/player/url',
+      {'ids': '[$id]', 'br': 999000},
+    );
+    return result.isValue && result.asValue!.value['data'][0]['code'] == 200;
   }
 
   Future<Result<String>> getPlayUrl(int id, [int br = 320000]) async {
-    final result = await doRequest("/song/url", {"id": id, "br": br});
+    final result = await doRequest('/song/url', {'id': id, 'br': br});
     return _map(result, (dynamic result) {
       final data = result['data'] as List;
       if (data.isEmpty) {
-        throw "we can not get realtime play url: data is empty";
+        throw Exception('we can not get realtime play url: data is empty');
       }
       final url = data.first['url'] as String;
       if (url.isEmpty) {
-        throw "we can not get realtime play url: URL is null";
+        throw Exception('we can not get realtime play url: URL is null');
       }
       return url;
     });
   }
 
   Future<Result<SongDetail>> songDetails(List<int> ids) async {
-    final result = await doRequest("/song/detail", {"ids": ids.join(',')});
+    final result = await doRequest('/song/detail', {'ids': ids.join(',')});
     return _map(result, (result) => SongDetail.fromJson(result));
   }
 
@@ -284,10 +309,10 @@ class Repository {
     assert(musicIds.isNotEmpty);
 
     final result = await doRequest(
-        "https://music.163.com/weapi/playlist/manipulate/tracks", {
-      "op": operation == PlaylistOperation.add ? "add" : "del",
-      "pid": playlistId,
-      "trackIds": "[${musicIds.join(",")}]"
+        'https://music.163.com/weapi/playlist/manipulate/tracks', {
+      'op': operation == PlaylistOperation.add ? 'add' : 'del',
+      'pid': playlistId,
+      'trackIds': "[${musicIds.join(",")}]"
     });
     return result.isValue;
   }
@@ -298,7 +323,7 @@ class Repository {
     required String name,
     required String description,
   }) async {
-    final response = await doRequest("/playlist/update", {
+    final response = await doRequest('/playlist/update', {
       'id': id,
       'name': name,
       'desc': description,
@@ -310,18 +335,21 @@ class Repository {
 
   ///获取歌手信息和单曲
   Future<Result<ArtistDetail>> artist(int artistId) async {
-    final result = await doRequest("/artists", {'id': artistId});
+    final result = await doRequest('/artists', {'id': artistId});
     return _map(result, (t) => ArtistDetail.fromJson(t));
   }
 
   ///获取歌手的专辑列表
-  Future<Result<List<Album>>> artistAlbums(int artistId,
-      {int limit = 10, int offset = 0}) async {
-    final result = await doRequest("/artist/album", {
+  Future<Result<List<Album>>> artistAlbums(
+    int artistId, {
+    int limit = 10,
+    int offset = 0,
+  }) async {
+    final result = await doRequest('/artist/album', {
       'id': artistId,
-      "limit": limit,
-      "offset": offset,
-      "total": true,
+      'limit': limit,
+      'offset': offset,
+      'total': true,
     });
     return _map(result, (t) {
       final hotAlbums = t['hotAlbums'] as List;
@@ -333,34 +361,42 @@ class Repository {
   }
 
   ///获取歌手的MV列表
-  Future<Result<Map>> artistMvs(int artistId,
-      {int limit = 20, int offset = 0}) async {
-    return doRequest("/artist/mv", {"id": artistId});
+  Future<Result<Map>> artistMvs(
+    int artistId, {
+    int limit = 20,
+    int offset = 0,
+  }) async {
+    return doRequest('/artist/mv', {'id': artistId});
   }
 
   ///获取歌手介绍
   Future<Result<Map>> artistDesc(int artistId) async {
-    return doRequest("/artist/desc", {"id": artistId});
+    return doRequest('/artist/desc', {'id': artistId});
   }
 
   ///get comments
-  Future<Result<Map>> getComments(CommentThreadId commentThread,
-      {int limit = 20, int offset = 0}) async {
-    return doRequest('/comment/${commentThread.typePath}',
-        {'id': commentThread.id, 'limit': limit, 'offset': offset});
+  Future<Result<Map>> getComments(
+    CommentThreadId commentThread, {
+    int limit = 20,
+    int offset = 0,
+  }) async {
+    return doRequest(
+      '/comment/${commentThread.typePath}',
+      {'id': commentThread.id, 'limit': limit, 'offset': offset},
+    );
   }
 
   ///给歌曲加红心
   Future<bool> like(int? musicId, {required bool like}) async {
-    final response = await doRequest("/like", {"id": musicId, "like": like});
+    final response = await doRequest('/like', {'id': musicId, 'like': like});
     return response.isValue;
   }
 
   ///获取用户红心歌曲id列表
   Future<Result<List<int>>> likedList(int? userId) async {
-    final response = await doRequest("/likelist", {"uid": userId});
+    final response = await doRequest('/likelist', {'uid': userId});
     return _map(response, (dynamic t) {
-      return (t["ids"] as List).cast();
+      return (t['ids'] as List).cast();
     });
   }
 
@@ -401,7 +437,9 @@ class Repository {
 
   /// 获取用户播放记录
   Future<Result<List<PlayRecord>>> getRecord(
-      int? uid, PlayRecordType type) async {
+    int? uid,
+    PlayRecordType type,
+  ) async {
     final result =
         await doRequest('/user/record', {'uid': uid, 'type': type.index});
     return result.map((value) {
@@ -433,7 +471,9 @@ class Repository {
   }
 
   Future<Result<CellphoneExistenceCheck>> checkPhoneExist(
-      String phone, String countryCode) async {
+    String phone,
+    String countryCode,
+  ) async {
     final result = await doRequest(
       '/cellphone/existence/check',
       {'phone': phone, 'countrycode': countryCode},
@@ -444,30 +484,37 @@ class Repository {
   }
 
   ///[path] request path
-  ///[data] parameter
-  Future<Result<Map<String, dynamic>>> doRequest(String path,
-      [Map param = const {}]) async {
+  ///[param] parameter
+  Future<Result<Map<String, dynamic>>> doRequest(
+    String path, [
+    Map param = const {},
+  ]) async {
     api.Answer result;
     try {
       // convert all params to string
-      final Map<String, String> convertedParams =
+      final convertedParams =
           param.map((k, v) => MapEntry(k.toString(), v.toString()));
-      result = await api.cloudMusicApi(path,
-          parameter: convertedParams, cookie: await _loadCookies());
+      result = await api.cloudMusicApi(
+        path,
+        parameter: convertedParams,
+        cookie: await _loadCookies(),
+      );
     } catch (e, stacktrace) {
-      debugPrint("request error : $e \n $stacktrace");
+      debugPrint('request error : $e \n $stacktrace');
       return Result.error(e, stacktrace);
     }
     final map = result.body;
 
     if (result.status == 200) {
-      _saveCookies(result.cookie);
+      await _saveCookies(result.cookie);
     }
-    assert(() {
-      debugPrint('api request: $path $param');
-      debugPrint('api response: ${result.status} ${jsonEncode(result.body)}');
-      return true;
-    }());
+    assert(
+      () {
+        debugPrint('api request: $path $param');
+        debugPrint('api response: ${result.status} ${jsonEncode(result.body)}');
+        return true;
+      }(),
+    );
     if (map['code'] == _kCodeNeedLogin) {
       return Result.error('需要登陆才能访问哦~');
     } else if (map['code'] != _kCodeSuccess) {

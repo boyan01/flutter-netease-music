@@ -26,7 +26,7 @@ class MusicVideoDetailResult {
 
   final String bufferPicFS;
 
-  @JsonKey(name: "subed")
+  @JsonKey(name: 'subed')
   final bool subscribed;
 
   final MusicVideoDetail data;

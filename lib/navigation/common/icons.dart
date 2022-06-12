@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:quiet/extension.dart';
+import '../../extension.dart';
 
 class PlayIcon extends StatelessWidget {
   const PlayIcon({
-    Key? key,
+    super.key,
     this.size = 24,
-  }) : super(key: key);
+  });
 
   final double size;
 

@@ -2,25 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:overlay_support/overlay_support.dart';
-import 'package:quiet/extension.dart';
-import 'package:quiet/navigation/desktop/widgets/highlight_clickable_text.dart';
-import 'package:quiet/providers/album_detail_provider.dart';
-import 'package:quiet/repository.dart';
 
 import '../../../component/utils/scroll_controller.dart';
+import '../../../extension.dart';
 import '../../../material/flexible_app_bar.dart';
+import '../../../providers/album_detail_provider.dart';
 import '../../../providers/navigator_provider.dart';
 import '../../../providers/player_provider.dart';
+import '../../../repository.dart';
 import '../../common/navigation_target.dart';
 import '../../common/playlist/music_list.dart';
+import '../widgets/highlight_clickable_text.dart';
 import '../widgets/playlist_collapsed_title.dart';
 import '../widgets/track_tile_normal.dart';
 
 class PageAlbumDetail extends ConsumerWidget {
   const PageAlbumDetail({
-    Key? key,
+    super.key,
     required this.albumId,
-  }) : super(key: key);
+  });
 
   final int albumId;
 
@@ -43,10 +43,10 @@ class PageAlbumDetail extends ConsumerWidget {
 
 class _AlbumDetailBody extends ConsumerWidget {
   const _AlbumDetailBody({
-    Key? key,
+    super.key,
     required this.album,
     required this.tracks,
-  }) : super(key: key);
+  });
 
   final Album album;
   final List<Track> tracks;
@@ -71,7 +71,7 @@ class _AlbumDetailBody extends ConsumerWidget {
 }
 
 class _AlbumSliverBar extends StatelessWidget {
-  const _AlbumSliverBar({Key? key, required this.album}) : super(key: key);
+  const _AlbumSliverBar({super.key, required this.album});
 
   final Album album;
 
@@ -103,7 +103,7 @@ class _AlbumSliverBar extends StatelessWidget {
 }
 
 class _AlbumDetailHeader extends StatelessWidget {
-  const _AlbumDetailHeader({Key? key, required this.album}) : super(key: key);
+  const _AlbumDetailHeader({super.key, required this.album});
 
   final Album album;
 
@@ -129,9 +129,7 @@ class _AlbumDetailHeader extends StatelessWidget {
         ),
         Expanded(
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.max,
             children: [
               const SizedBox(height: 20),
               Text(
@@ -167,7 +165,7 @@ class _AlbumDetailHeader extends StatelessWidget {
 }
 
 class _HeaderActionButtons extends ConsumerWidget {
-  const _HeaderActionButtons({Key? key}) : super(key: key);
+  const _HeaderActionButtons({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -200,7 +198,6 @@ class _HeaderActionButtons extends ConsumerWidget {
           child: SizedBox(
             height: 32,
             child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 const Icon(Icons.playlist_add_rounded, size: 16),
                 const SizedBox(width: 4),
@@ -221,7 +218,6 @@ class _HeaderActionButtons extends ConsumerWidget {
           child: SizedBox(
             height: 32,
             child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 const Icon(Icons.share, size: 16),
                 const SizedBox(width: 4),
@@ -240,10 +236,10 @@ class _HeaderActionButtons extends ConsumerWidget {
 
 class _AlbumListView extends StatelessWidget {
   const _AlbumListView({
-    Key? key,
+    super.key,
     required this.album,
     required this.tracks,
-  }) : super(key: key);
+  });
   final Album album;
   final List<Track> tracks;
 

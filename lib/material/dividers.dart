@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 ///在 widget 底部添加分割线
 class DividerWrapper extends StatelessWidget {
   const DividerWrapper({
-    Key? key,
+    super.key,
     this.child,
     this.indent = 0,
     this.extent = 0,
-  }) : super(key: key);
+  });
 
   final Widget? child;
 

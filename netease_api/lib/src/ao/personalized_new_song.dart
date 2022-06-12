@@ -30,13 +30,13 @@ class SongItem {
   SongItem({
     this.id = 0,
     this.type = 0,
-    this.name = "",
+    this.name = '',
     this.copywriter,
-    this.picUrl = "",
+    this.picUrl = '',
     this.canDislike = false,
     this.trackNumberUpdateTime,
     required this.song,
-    this.alg = "",
+    this.alg = '',
   });
 
   factory SongItem.fromJson(Map<String, dynamic>? json) => SongItem(

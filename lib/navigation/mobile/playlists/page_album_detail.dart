@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:quiet/extension.dart';
-import 'package:quiet/providers/album_detail_provider.dart';
-import 'package:quiet/repository.dart';
+import '../../../extension.dart';
+import '../../../providers/album_detail_provider.dart';
+import '../../../repository.dart';
 
 import '../../common/playlist/music_list.dart';
 import 'page_playlist_detail.dart';
 import 'playlist_flexible_app_bar.dart';
 
 class AlbumDetailPage extends ConsumerWidget {
-  const AlbumDetailPage({Key? key, required this.albumId, this.album})
-      : super(key: key);
+  const AlbumDetailPage({super.key, required this.albumId, this.album});
 
   final int albumId;
   final Map? album;
@@ -47,8 +46,7 @@ class AlbumDetailPage extends ConsumerWidget {
 }
 
 class _AlbumBody extends StatelessWidget {
-  const _AlbumBody({Key? key, required this.album, required this.musicList})
-      : super(key: key);
+  const _AlbumBody({super.key, required this.album, required this.musicList});
 
   final Album album;
   final List<Music> musicList;
@@ -56,12 +54,10 @@ class _AlbumBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MusicTileConfiguration(
-        token: 'album_${album.id}',
-        musics: musicList,
-        onMusicTap: MusicTileConfiguration.defaultOnTap,
-        leadingBuilder: MusicTileConfiguration.indexedLeadingBuilder,
-        trailingBuilder: MusicTileConfiguration.defaultTrailingBuilder,
-        child: CustomScrollView(slivers: [
+      token: 'album_${album.id}',
+      musics: musicList,
+      child: CustomScrollView(
+        slivers: [
           SliverAppBar(
             automaticallyImplyLeading: false,
             expandedHeight: kHeaderHeight,
@@ -72,9 +68,13 @@ class _AlbumBody extends StatelessWidget {
             bottom: MusicListHeader(musicList.length),
           ),
           SliverList(
-              delegate: SliverChildBuilderDelegate(
-                  (context, index) => MusicTile(musicList[index]),
-                  childCount: musicList.length)),
-        ]));
+            delegate: SliverChildBuilderDelegate(
+              (context, index) => MusicTile(musicList[index]),
+              childCount: musicList.length,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

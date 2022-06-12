@@ -4,7 +4,7 @@ import 'package:music_player/music_player.dart';
 
 part 'persistence.dart';
 
-const String kFmPlayQueueId = "personal_fm";
+const String kFmPlayQueueId = 'personal_fm';
 
 //
 /////key which save playing music to local preference
@@ -49,11 +49,11 @@ extension PlayModeDescription on PlayMode {
 
   String get name {
     if (this == PlayMode.single) {
-      return "单曲循环";
+      return '单曲循环';
     } else if (this == PlayMode.shuffle) {
-      return "随机播放";
+      return '随机播放';
     } else {
-      return "列表循环";
+      return '列表循环';
     }
   }
 }

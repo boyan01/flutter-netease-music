@@ -33,15 +33,15 @@ class PersonalizedItem {
   PersonalizedItem({
     this.id = 0,
     this.type = 0,
-    this.name = "",
-    this.copywriter = "",
-    this.picUrl = "",
+    this.name = '',
+    this.copywriter = '',
+    this.picUrl = '',
     this.canDislike = false,
     this.trackNumberUpdateTime = 0,
     this.playCount = 0,
     this.trackCount = 0,
     this.highQuality = false,
-    this.alg = "",
+    this.alg = '',
   });
 
   factory PersonalizedItem.fromJson(Map<String, dynamic>? json) =>

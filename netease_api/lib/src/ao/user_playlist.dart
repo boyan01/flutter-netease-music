@@ -1,10 +1,10 @@
-import 'package:netease_api/netease_api.dart';
+import '../../netease_api.dart';
 
 import 'safe_convert.dart';
 
 class UserPlayList {
   UserPlayList({
-    this.version = "",
+    this.version = '',
     this.more = false,
     required this.playlist,
     this.code = 0,

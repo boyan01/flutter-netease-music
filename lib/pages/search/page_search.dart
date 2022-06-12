@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:loader/loader.dart';
-import 'package:quiet/component/utils/utils.dart';
-import 'package:quiet/pages/search/model_search_history.dart';
-import 'package:quiet/repository/netease.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 import '../../component/route.dart';
+import '../../component/utils/utils.dart';
+import '../../repository/netease.dart';
+import 'model_search_history.dart';
 import 'search_result_page.dart';
 import 'search_suggestion.dart';
 
@@ -43,7 +43,7 @@ class SearchPageRoute<T> extends PageRoute<T> {
 
   @override
   Animation<double> createAnimation() {
-    final Animation<double> animation = super.createAnimation();
+    final animation = super.createAnimation();
     _proxyAnimation?.parent = animation;
     return animation;
   }
@@ -61,7 +61,8 @@ class SearchPageRoute<T> extends PageRoute<T> {
 }
 
 class SearchPage extends StatefulWidget {
-  const SearchPage({Key? key, required this.animation}) : super(key: key);
+  const SearchPage({super.key, required this.animation});
+
   final Animation<double> animation;
 
   @override
@@ -81,8 +82,7 @@ class _SearchPageState extends State<SearchPage> {
     _queryTextController.text = value;
   }
 
-  ///the query of [_SearchResultPage]
-  String _searchedQuery = "";
+  String _searchedQuery = '';
 
   bool initialState = true;
 
@@ -106,15 +106,16 @@ class _SearchPageState extends State<SearchPage> {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
+    final theme = Theme.of(context);
 
     Widget? tabs;
     if (!initialState) {
       tabs = TabBar(
-          indicator:
-              const UnderlineTabIndicator(insets: EdgeInsets.only(bottom: 4)),
-          indicatorSize: TabBarIndicatorSize.label,
-          tabs: kSections.map((title) => Tab(child: Text(title))).toList());
+        indicator:
+            const UnderlineTabIndicator(insets: EdgeInsets.only(bottom: 4)),
+        indicatorSize: TabBarIndicatorSize.label,
+        tabs: kSections.map((title) => Tab(child: Text(title))).toList(),
+      );
     }
 
     return ScopedModel<SearchHistory>(
@@ -139,10 +140,11 @@ class _SearchPageState extends State<SearchPage> {
                   textInputAction: TextInputAction.search,
                   onSubmitted: (String _) => _search(query),
                   decoration: InputDecoration(
-                      border: InputBorder.none,
-                      hintStyle: theme.primaryTextTheme.headline6,
-                      hintText:
-                          MaterialLocalizations.of(context).searchFieldLabel),
+                    border: InputBorder.none,
+                    hintStyle: theme.primaryTextTheme.headline6,
+                    hintText:
+                        MaterialLocalizations.of(context).searchFieldLabel,
+                  ),
                 ),
                 actions: buildActions(context),
                 bottom: tabs as PreferredSizeWidget?,
@@ -150,14 +152,17 @@ class _SearchPageState extends State<SearchPage> {
               resizeToAvoidBottomInset: false,
               body: initialState
                   ? _EmptyQuerySuggestionSection(
-                      suggestionSelectedCallback: (query) => _search(query))
+                      suggestionSelectedCallback: _search,
+                    )
                   : SearchResultPage(query: _searchedQuery),
             ),
           ),
           SafeArea(
-              child: Padding(
-                  padding: const EdgeInsets.only(top: kToolbarHeight),
-                  child: buildSuggestions(context)))
+            child: Padding(
+              padding: const EdgeInsets.only(top: kToolbarHeight),
+              child: buildSuggestions(context),
+            ),
+          )
         ],
       ),
     );
@@ -213,7 +218,7 @@ class _SearchPageState extends State<SearchPage> {
     if (query.isEmpty ||
         !isSoftKeyboardDisplay(MediaQuery.of(context)) ||
         !_focusNode.hasFocus) {
-      return const SizedBox(height: 0, width: 0);
+      return const SizedBox.shrink();
     }
     return SuggestionOverflow(
       query: query,
@@ -230,9 +235,9 @@ class _SearchPageState extends State<SearchPage> {
 ///with query history from local
 class _EmptyQuerySuggestionSection extends StatelessWidget {
   const _EmptyQuerySuggestionSection({
-    Key? key,
+    super.key,
     required this.suggestionSelectedCallback,
-  }) : super(key: key);
+  });
 
   final SuggestionSelectedCallback suggestionSelectedCallback;
 
@@ -241,24 +246,25 @@ class _EmptyQuerySuggestionSection extends StatelessWidget {
     return ListView(
       children: <Widget>[
         Loader<List<String>>(
-            loadTask: () => neteaseRepository!.searchHotWords(),
-            //hide when failed load hot words
-            errorBuilder: (context, result) => Container(),
-            loadingBuilder: (context) {
-              return SuggestionSection(
-                title: "热门搜索",
-                content: Loader.buildSimpleLoadingWidget(context),
-              );
-            },
-            builder: (context, result) {
-              return SuggestionSection(
-                title: "热门搜索",
-                content: SuggestionSectionContent.from(
-                  words: result,
-                  suggestionSelectedCallback: suggestionSelectedCallback,
-                ),
-              );
-            }),
+          loadTask: () => neteaseRepository!.searchHotWords(),
+          //hide when failed load hot words
+          errorBuilder: (context, result) => Container(),
+          loadingBuilder: (context) {
+            return SuggestionSection(
+              title: '热门搜索',
+              content: Loader.buildSimpleLoadingWidget(context),
+            );
+          },
+          builder: (context, result) {
+            return SuggestionSection(
+              title: '热门搜索',
+              content: SuggestionSectionContent.from(
+                words: result,
+                suggestionSelectedCallback: suggestionSelectedCallback,
+              ),
+            );
+          },
+        ),
         SuggestionSection(
           title: '搜索记录',
           content: SuggestionSectionContent.from(

@@ -1,10 +1,11 @@
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
-import 'package:quiet/repository.dart';
+import '../../../repository.dart';
 
 class BlurBackground extends StatelessWidget {
-  const BlurBackground({Key? key, required this.music}) : super(key: key);
+  const BlurBackground({super.key, required this.music});
+
   final Track music;
 
   @override
@@ -21,18 +22,19 @@ class BlurBackground extends StatelessWidget {
         ),
         BackdropFilter(
           filter: ui.ImageFilter.blur(sigmaY: 14, sigmaX: 24),
-          child: Container(
-            decoration: const BoxDecoration(
-                gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [
-                Colors.black54,
-                Colors.black26,
-                Colors.black45,
-                Colors.black87,
-              ],
-            )),
+          child: const DecoratedBox(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  Colors.black54,
+                  Colors.black26,
+                  Colors.black45,
+                  Colors.black87,
+                ],
+              ),
+            ),
           ),
         ),
       ],

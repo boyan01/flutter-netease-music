@@ -2,7 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:loader/loader.dart';
-import 'package:quiet/repository.dart';
+
+import '../../repository.dart';
 
 @visibleForTesting
 bool enableCache = true;
@@ -12,14 +13,14 @@ bool enableCache = true;
 /// 如果[T]不是可序列化列表，则设置需要对应的序列化和反序列化方法
 ///
 class CachedLoader<T> extends StatelessWidget {
-  const CachedLoader(
-      {Key? key,
-      required this.loadTask,
-      required this.builder,
-      required this.cacheKey,
-      this.serialize,
-      this.deserialize})
-      : super(key: key);
+  const CachedLoader({
+    super.key,
+    required this.loadTask,
+    required this.builder,
+    required this.cacheKey,
+    this.serialize,
+    this.deserialize,
+  });
 
   final Future<Result<T>?> Function() loadTask;
 
@@ -32,13 +33,16 @@ class CachedLoader<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    assert(() {
-      () async {
-        debugPrint(
-            "load cache $cacheKey : ${(await neteaseLocalData.get(cacheKey)) == null ? 'null' : 'hit'}");
-      }();
-      return true;
-    }());
+    assert(
+      () {
+        () async {
+          debugPrint(
+            "load cache $cacheKey : ${(await neteaseLocalData.get(cacheKey)) == null ? 'null' : 'hit'}",
+          );
+        }();
+        return true;
+      }(),
+    );
     return Loader<T>(
       initialData: enableCache
           ? neteaseLocalData.get(cacheKey).then((cache) {

@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:quiet/extension.dart';
-import 'package:quiet/navigation/common/playlist/music_list.dart';
-import 'package:quiet/repository.dart';
 
+import '../../../extension.dart';
 import '../../../providers/navigator_provider.dart';
 import '../../../providers/personalized_playlist_provider.dart';
+import '../../../repository.dart';
 import '../../common/navigation_target.dart';
+import '../../common/playlist/music_list.dart';
 
 class MainPageDiscover extends StatefulWidget {
+  const MainPageDiscover({super.key});
+
   @override
   State<StatefulWidget> createState() => CloudPageState();
 }
@@ -24,9 +26,9 @@ class CloudPageState extends State<MainPageDiscover>
     return ListView(
       children: <Widget>[
         _NavigationLine(),
-        _Header("推荐歌单", () {}),
+        _Header('推荐歌单', () {}),
         _SectionPlaylist(),
-        _Header("最新音乐", () {}),
+        _Header('最新音乐', () {}),
         _SectionNewSongs(),
       ],
     );
@@ -43,15 +45,15 @@ class _NavigationLine extends ConsumerWidget {
         children: <Widget>[
           _ItemNavigator(
             Icons.radio,
-            "私人FM",
+            '私人FM',
             () => ref
                 .read(navigatorProvider.notifier)
                 .navigate(NavigationTargetFmPlaying()),
           ),
-          _ItemNavigator(Icons.today, "每日推荐", () {
+          _ItemNavigator(Icons.today, '每日推荐', () {
             context.secondaryNavigator!.pushNamed(pageDaily);
           }),
-          _ItemNavigator(Icons.show_chart, "排行榜", () {
+          _ItemNavigator(Icons.show_chart, '排行榜', () {
             context.secondaryNavigator!.pushNamed(pageLeaderboard);
           }),
         ],
@@ -101,31 +103,32 @@ class _ItemNavigator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-        onTap: onTap,
-        child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-          child: Column(
-            children: <Widget>[
-              Material(
-                shape: const CircleBorder(),
-                elevation: 5,
-                child: ClipOval(
-                  child: Container(
-                    width: 40,
-                    height: 40,
-                    color: Theme.of(context).primaryColor,
-                    child: Icon(
-                      icon,
-                      color: Theme.of(context).primaryIconTheme.color,
-                    ),
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+        child: Column(
+          children: <Widget>[
+            Material(
+              shape: const CircleBorder(),
+              elevation: 5,
+              child: ClipOval(
+                child: Container(
+                  width: 40,
+                  height: 40,
+                  color: Theme.of(context).primaryColor,
+                  child: Icon(
+                    icon,
+                    color: Theme.of(context).primaryIconTheme.color,
                   ),
                 ),
               ),
-              const Padding(padding: EdgeInsets.only(top: 8)),
-              Text(text),
-            ],
-          ),
-        ));
+            ),
+            const Padding(padding: EdgeInsets.only(top: 8)),
+            Text(text),
+          ],
+        ),
+      ),
+    );
   }
 }
 
@@ -135,25 +138,28 @@ class _SectionPlaylist extends ConsumerWidget {
     final snapshot = ref.watch(homePlaylistProvider.logErrorOnDebug());
     return snapshot.when(
       data: (list) {
-        return LayoutBuilder(builder: (context, constraints) {
-          assert(constraints.maxWidth.isFinite,
-              "can not layout playlist item in infinite width container.");
-          final parentWidth = constraints.maxWidth - 8;
-          const int count = /* false ? 6 : */ 3;
-          final double width =
-              (parentWidth ~/ count).toDouble().clamp(80.0, 200.0);
-          final double spacing = (parentWidth - width * count) / (count + 1);
-          return Padding(
-            padding:
-                EdgeInsets.symmetric(horizontal: 4 + spacing.roundToDouble()),
-            child: Wrap(
-              spacing: spacing,
-              children: list.map<Widget>((p) {
-                return _PlayListItemView(playlist: p, width: width);
-              }).toList(),
-            ),
-          );
-        });
+        return LayoutBuilder(
+          builder: (context, constraints) {
+            assert(
+              constraints.maxWidth.isFinite,
+              'can not layout playlist item in infinite width container.',
+            );
+            final parentWidth = constraints.maxWidth - 8;
+            const count = /* false ? 6 : */ 3;
+            final width = (parentWidth ~/ count).toDouble().clamp(80.0, 200.0);
+            final spacing = (parentWidth - width * count) / (count + 1);
+            return Padding(
+              padding:
+                  EdgeInsets.symmetric(horizontal: 4 + spacing.roundToDouble()),
+              child: Wrap(
+                spacing: spacing,
+                children: list.map<Widget>((p) {
+                  return _PlayListItemView(playlist: p, width: width);
+                }).toList(),
+              ),
+            );
+          },
+        );
       },
       error: (error, stacktrace) {
         return SizedBox(
@@ -178,10 +184,10 @@ class _SectionPlaylist extends ConsumerWidget {
 
 class _PlayListItemView extends ConsumerWidget {
   const _PlayListItemView({
-    Key? key,
+    super.key,
     required this.playlist,
     required this.width,
-  }) : super(key: key);
+  });
 
   final RecommendedPlaylist playlist;
 
@@ -194,15 +200,16 @@ class _PlayListItemView extends ConsumerWidget {
     if (playlist.copywriter.isNotEmpty) {
       onLongPress = () {
         showDialog(
-            context: context,
-            builder: (context) {
-              return AlertDialog(
-                content: Text(
-                  playlist.copywriter,
-                  style: Theme.of(context).textTheme.bodyText1,
-                ),
-              );
-            });
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              content: Text(
+                playlist.copywriter,
+                style: Theme.of(context).textTheme.bodyText1,
+              ),
+            );
+          },
+        );
       };
     }
 
@@ -225,7 +232,7 @@ class _PlayListItemView extends ConsumerWidget {
                   aspectRatio: 1,
                   child: FadeInImage(
                     placeholder:
-                        const AssetImage("assets/playlist_playlist.9.png"),
+                        const AssetImage('assets/playlist_playlist.9.png'),
                     image: CachedImage(playlist.picUrl),
                     fit: BoxFit.cover,
                   ),
@@ -254,11 +261,8 @@ class _SectionNewSongs extends ConsumerWidget {
         return MusicTileConfiguration(
           musics: songs,
           token: 'playlist_main_newsong',
-          onMusicTap: MusicTileConfiguration.defaultOnTap,
-          leadingBuilder: MusicTileConfiguration.indexedLeadingBuilder,
-          trailingBuilder: MusicTileConfiguration.defaultTrailingBuilder,
           child: Column(
-            children: songs.map((m) => MusicTile(m)).toList(),
+            children: songs.map(MusicTile.new).toList(),
           ),
         );
       },

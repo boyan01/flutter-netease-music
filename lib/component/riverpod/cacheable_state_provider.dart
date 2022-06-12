@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class SimpleStateNotifier<T> extends StateNotifier<T> {
-  SimpleStateNotifier(T state) : super(state);
+  SimpleStateNotifier(super.state);
 
   @override
   set state(T value) => super.state = value;
@@ -20,10 +20,11 @@ abstract class CacheableStateNotifier<T> extends StateNotifier<T> {
       if (cache != null) {
         state = cache;
       }
-      addListener((state) {
-        saveToCache(state);
-      }, fireImmediately: false);
-      _load();
+      addListener(
+        saveToCache,
+        fireImmediately: false,
+      );
+      await _load();
     });
   }
 

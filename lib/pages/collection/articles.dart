@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:quiet/pages/collection/empty.dart';
+import 'empty.dart';
 
 class CollectionArticles extends StatelessWidget {
+  const CollectionArticles({super.key});
+
   @override
   Widget build(BuildContext context) {
     return const CollectionEmpty(

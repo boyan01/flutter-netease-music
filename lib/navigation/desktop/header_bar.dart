@@ -4,16 +4,16 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:quiet/extension.dart';
-import 'package:quiet/providers/navigator_provider.dart';
 import 'package:window_manager/window_manager.dart';
 
+import '../../extension.dart';
+import '../../providers/navigator_provider.dart';
 import '../../utils/callback_window_listener.dart';
 import '../common/navigation_target.dart';
 import 'widgets/caption_icons.dart';
 
 class HeaderBar extends StatelessWidget {
-  const HeaderBar({Key? key}) : super(key: key);
+  const HeaderBar({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -23,12 +23,10 @@ class HeaderBar extends StatelessWidget {
       child: Padding(
         padding: EdgeInsets.only(
           top: defaultTargetPlatform == TargetPlatform.macOS ? 20 : 0,
-          bottom: 0,
         ),
         child: SizedBox(
           height: 42,
           child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const SizedBox(width: 180, child: _HeaderNavigationButtons()),
               const Expanded(child: _MoveWindow.expand()),
@@ -47,7 +45,7 @@ class HeaderBar extends StatelessWidget {
 }
 
 class _HeaderNavigationButtons extends ConsumerWidget {
-  const _HeaderNavigationButtons({Key? key}) : super(key: key);
+  const _HeaderNavigationButtons({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -81,7 +79,7 @@ class _HeaderNavigationButtons extends ConsumerWidget {
 }
 
 class _SearchBar extends HookConsumerWidget {
-  const _SearchBar({Key? key}) : super(key: key);
+  const _SearchBar({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -89,17 +87,15 @@ class _SearchBar extends HookConsumerWidget {
     return SizedBox(
       height: 24,
       width: 128,
-      child: Container(
+      child: DecoratedBox(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(32),
           border: Border.all(
             color: context.colorScheme.onBackground.withOpacity(0.5),
-            width: 1,
           ),
           color: context.colorScheme.surface,
         ),
         child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             const SizedBox(width: 10, child: _MoveWindow.expand()),
             const Icon(Icons.search, size: 16),
@@ -129,12 +125,14 @@ class _SearchBar extends HookConsumerWidget {
 }
 
 class _SettingButton extends ConsumerWidget {
-  const _SettingButton({Key? key}) : super(key: key);
+  const _SettingButton({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final selected = ref.watch(navigatorProvider
-        .select((value) => value.current is NavigationTargetSettings));
+    final selected = ref.watch(
+      navigatorProvider
+          .select((value) => value.current is NavigationTargetSettings),
+    );
     return IconButton(
       icon: const Icon(Icons.settings),
       iconSize: 20,
@@ -148,7 +146,7 @@ class _SettingButton extends ConsumerWidget {
 }
 
 class _WindowCaptionButtonGroup extends HookWidget {
-  const _WindowCaptionButtonGroup({Key? key}) : super(key: key);
+  const _WindowCaptionButtonGroup({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -156,53 +154,60 @@ class _WindowCaptionButtonGroup extends HookWidget {
     useMemoized(() async {
       isMaximized.value = await WindowManager.instance.isMaximized();
     });
-    useEffect(() {
-      final listener = CallbackWindowListener(onWindowMaximized: () {
-        isMaximized.value = true;
-      }, onWindowRestored: () {
-        isMaximized.value = false;
-      }, onWindowMoveCallback: () {
-        isMaximized.value = false;
-      });
-      WindowManager.instance.addListener(listener);
-      return () => WindowManager.instance.removeListener(listener);
-    }, [WindowManager.instance]);
-    return Row(children: [
-      _WindowButton(
-        icon: MinimizeIcon(color: context.iconTheme.color!),
-        onTap: () {
-          WindowManager.instance.minimize();
-        },
-      ),
-      _WindowButton(
-        icon: isMaximized.value
-            ? RestoreIcon(color: context.iconTheme.color!)
-            : MaximizeIcon(color: context.iconTheme.color!),
-        onTap: () {
-          if (isMaximized.value) {
-            WindowManager.instance.restore();
-          } else {
-            WindowManager.instance.maximize();
-          }
-          isMaximized.value = !isMaximized.value;
-        },
-      ),
-      _WindowButton(
-        icon: CloseIcon(color: context.iconTheme.color!),
-        onTap: () {
-          exit(0);
-        },
-      ),
-    ]);
+    useEffect(
+      () {
+        final listener = CallbackWindowListener(
+          onWindowMaximized: () {
+            isMaximized.value = true;
+          },
+          onWindowRestored: () {
+            isMaximized.value = false;
+          },
+          onWindowMoveCallback: () {
+            isMaximized.value = false;
+          },
+        );
+        WindowManager.instance.addListener(listener);
+        return () => WindowManager.instance.removeListener(listener);
+      },
+      [WindowManager.instance],
+    );
+    return Row(
+      children: [
+        _WindowButton(
+          icon: MinimizeIcon(color: context.iconTheme.color!),
+          onTap: WindowManager.instance.minimize,
+        ),
+        _WindowButton(
+          icon: isMaximized.value
+              ? RestoreIcon(color: context.iconTheme.color!)
+              : MaximizeIcon(color: context.iconTheme.color!),
+          onTap: () {
+            if (isMaximized.value) {
+              WindowManager.instance.restore();
+            } else {
+              WindowManager.instance.maximize();
+            }
+            isMaximized.value = !isMaximized.value;
+          },
+        ),
+        _WindowButton(
+          icon: CloseIcon(color: context.iconTheme.color!),
+          onTap: () {
+            exit(0);
+          },
+        ),
+      ],
+    );
   }
 }
 
 class _WindowButton extends StatelessWidget {
   const _WindowButton({
-    Key? key,
+    super.key,
     required this.icon,
     required this.onTap,
-  }) : super(key: key);
+  });
 
   final Widget icon;
 
@@ -214,7 +219,7 @@ class _WindowButton extends StatelessWidget {
       radius: 20,
       onTap: onTap,
       child: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(8),
         child: SizedBox.square(
           dimension: 24,
           child: icon,
@@ -225,7 +230,7 @@ class _WindowButton extends StatelessWidget {
 }
 
 class _MoveWindow extends StatelessWidget {
-  const _MoveWindow({Key? key, required this.child}) : super(key: key);
+  const _MoveWindow({super.key, required this.child});
 
   const _MoveWindow.expand() : child = const SizedBox.expand();
 
@@ -247,9 +252,9 @@ class _MoveWindow extends StatelessWidget {
       },
       onDoubleTap: () async {
         if (await WindowManager.instance.isMaximized()) {
-          WindowManager.instance.restore();
+          await WindowManager.instance.restore();
         } else {
-          WindowManager.instance.maximize();
+          await WindowManager.instance.maximize();
         }
       },
       child: child,

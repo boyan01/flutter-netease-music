@@ -4,18 +4,18 @@ import 'package:filesize/filesize.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:quiet/extension.dart';
-import 'package:quiet/navigation/common/navigation_target.dart';
-import 'package:quiet/navigation/common/playlist/music_list.dart';
-import 'package:quiet/navigation/desktop/widgets/track_tile_normal.dart';
-import 'package:quiet/providers/navigator_provider.dart';
-import 'package:quiet/repository.dart';
 
+import '../../../extension.dart';
 import '../../../providers/cloud_tracks_provider.dart';
+import '../../../providers/navigator_provider.dart';
 import '../../../providers/player_provider.dart';
+import '../../../repository.dart';
+import '../../common/navigation_target.dart';
+import '../../common/playlist/music_list.dart';
+import '../widgets/track_tile_normal.dart';
 
 class PageCloudTracks extends ConsumerWidget {
-  const PageCloudTracks({Key? key}) : super(key: key);
+  const PageCloudTracks({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -35,9 +35,9 @@ class PageCloudTracks extends ConsumerWidget {
 
 class _PageCloudTracksBody extends ConsumerWidget {
   const _PageCloudTracksBody({
-    Key? key,
+    super.key,
     required this.detail,
-  }) : super(key: key);
+  });
 
   final CloudTracksDetail detail;
 
@@ -73,9 +73,9 @@ class _PageCloudTracksBody extends ConsumerWidget {
 
 class _UserCloudInformation extends StatelessWidget {
   const _UserCloudInformation({
-    Key? key,
+    super.key,
     required this.detail,
-  }) : super(key: key);
+  });
 
   final CloudTracksDetail detail;
 
@@ -97,14 +97,16 @@ class _UserCloudInformation extends StatelessWidget {
 }
 
 class _DropUploadArea extends HookConsumerWidget {
-  const _DropUploadArea({Key? key, required this.child}) : super(key: key);
+  const _DropUploadArea({super.key, required this.child});
 
   final Widget child;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final enable = ref.watch(navigatorProvider
-        .select((value) => value.current is NavigationTargetCloudMusic));
+    final enable = ref.watch(
+      navigatorProvider
+          .select((value) => value.current is NavigationTargetCloudMusic),
+    );
     final dragging = useState(false);
     return DropTarget(
       enable: enable,

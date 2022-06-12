@@ -1,11 +1,11 @@
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:quiet/extension.dart';
-import 'package:quiet/providers/player_provider.dart';
-import 'package:quiet/repository.dart';
 
+import '../../extension.dart';
 import '../../providers/navigator_provider.dart';
+import '../../providers/player_provider.dart';
+import '../../repository.dart';
 import '../common/buttons.dart';
 import '../common/navigation_target.dart';
 import '../common/player_progress.dart';
@@ -13,7 +13,7 @@ import 'player/page_playing_list.dart';
 import 'widgets/slider.dart';
 
 class BottomPlayerBar extends StatelessWidget {
-  const BottomPlayerBar({Key? key}) : super(key: key);
+  const BottomPlayerBar({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +24,6 @@ class BottomPlayerBar extends StatelessWidget {
         child: Stack(
           children: [
             Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
               children: const [
                 Expanded(child: _PlayingItemWidget()),
                 SizedBox(width: 20),
@@ -42,7 +41,7 @@ class BottomPlayerBar extends StatelessWidget {
 }
 
 class _PlayingItemWidget extends ConsumerWidget {
-  const _PlayingItemWidget({Key? key}) : super(key: key);
+  const _PlayingItemWidget({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -68,7 +67,6 @@ class _PlayingItemWidget extends ConsumerWidget {
         }
       },
       child: Row(
-        mainAxisSize: MainAxisSize.max,
         children: [
           const SizedBox(width: 20),
           ClipRRect(
@@ -108,7 +106,7 @@ class _PlayingItemWidget extends ConsumerWidget {
 }
 
 class _CenterControllerWidget extends ConsumerWidget {
-  const _CenterControllerWidget({Key? key}) : super(key: key);
+  const _CenterControllerWidget({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -117,12 +115,9 @@ class _CenterControllerWidget extends ConsumerWidget {
     );
     final hasTrack = ref.watch(playingTrackProvider) != null;
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.center,
-      mainAxisSize: MainAxisSize.max,
       children: [
         Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             AppIconButton(
@@ -160,7 +155,7 @@ class _CenterControllerWidget extends ConsumerWidget {
 }
 
 class _PlayerControlWidget extends StatelessWidget {
-  const _PlayerControlWidget({Key? key}) : super(key: key);
+  const _PlayerControlWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -177,7 +172,7 @@ class _PlayerControlWidget extends StatelessWidget {
 }
 
 class _PlayingListButton extends ConsumerWidget {
-  const _PlayingListButton({Key? key}) : super(key: key);
+  const _PlayingListButton({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -189,7 +184,6 @@ class _PlayingListButton extends ConsumerWidget {
       tooltip: playingFm
           ? context.strings.personalFmPlaying
           : context.strings.playingList,
-      size: 24,
       enable: hasTrack && !playingFm,
       onPressed: () {
         final state = ref.read(showPlayingListProvider.notifier).state;
@@ -202,8 +196,8 @@ class _PlayingListButton extends ConsumerWidget {
 
 class _VolumeControl extends ConsumerWidget {
   const _VolumeControl({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -235,7 +229,7 @@ class _VolumeControl extends ConsumerWidget {
             ),
             child: Slider(
               value: (volume * 100).clamp(0.0, 100.0),
-              max: 100.0,
+              max: 100,
               onChanged: enable
                   ? (value) {
                       ref.read(playerProvider).setVolume(value / 100);
@@ -255,7 +249,7 @@ class _VolumeControl extends ConsumerWidget {
 }
 
 class _ProgressBar extends ConsumerWidget {
-  const _ProgressBar({Key? key}) : super(key: key);
+  const _ProgressBar({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

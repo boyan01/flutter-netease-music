@@ -3,18 +3,18 @@ import 'dart:ui' as ui;
 import 'package:flutter/gestures.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:quiet/extension.dart';
+import '../../../extension.dart';
 
 class HighlightClickableText extends HookWidget {
   const HighlightClickableText({
-    Key? key,
+    super.key,
     required this.text,
     this.style,
     this.highlightStyle,
     required this.onTap,
     this.maxLines,
     this.overflow,
-  }) : super(key: key);
+  });
 
   final String text;
   final TextStyle? style;
@@ -92,13 +92,13 @@ class _Widget extends MouseHighlightSpan {
 
 class MouseHighlightText extends HookWidget {
   const MouseHighlightText({
-    Key? key,
+    super.key,
     this.style,
     this.highlightStyle,
     required this.children,
     this.maxLines,
     this.overflow,
-  }) : super(key: key);
+  });
 
   final TextStyle? style;
 
@@ -118,31 +118,37 @@ class MouseHighlightText extends HookWidget {
 
     children.forEachIndexed((index, child) {
       if (child is _Highlight) {
-        spans.add(TextSpan(
-          text: child.text,
-          style: hovered.value.contains(index)
-              ? (child.highlightStyle ?? highlightStyle)
-              : child.style,
-          onEnter: (event) {
-            hovered.value.add(index);
-            refreshObject.value = !refreshObject.value;
-          },
-          onExit: (event) {
-            hovered.value.remove(index);
-            refreshObject.value = !refreshObject.value;
-          },
-          recognizer: TapGestureRecognizer()..onTap = child.onTap,
-        ));
+        spans.add(
+          TextSpan(
+            text: child.text,
+            style: hovered.value.contains(index)
+                ? (child.highlightStyle ?? highlightStyle)
+                : child.style,
+            onEnter: (event) {
+              hovered.value.add(index);
+              refreshObject.value = !refreshObject.value;
+            },
+            onExit: (event) {
+              hovered.value.remove(index);
+              refreshObject.value = !refreshObject.value;
+            },
+            recognizer: TapGestureRecognizer()..onTap = child.onTap,
+          ),
+        );
       } else if (child is _Normal) {
-        spans.add(TextSpan(
-          text: child.text,
-          style: child.style,
-        ));
+        spans.add(
+          TextSpan(
+            text: child.text,
+            style: child.style,
+          ),
+        );
       } else if (child is _Widget) {
-        spans.add(WidgetSpan(
-          child: child.widget,
-          alignment: child.alignment,
-        ));
+        spans.add(
+          WidgetSpan(
+            child: child.widget,
+            alignment: child.alignment,
+          ),
+        );
       } else {
         throw Exception('Unknown child type: ${child.runtimeType}');
       }

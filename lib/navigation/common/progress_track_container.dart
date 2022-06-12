@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:quiet/providers/player_provider.dart';
+import '../../providers/player_provider.dart';
 
 class ProgressTrackingContainer extends HookConsumerWidget {
   const ProgressTrackingContainer({
-    Key? key,
+    super.key,
     required this.builder,
-  }) : super(key: key);
+  });
 
   final WidgetBuilder builder;
 
@@ -16,23 +16,30 @@ class ProgressTrackingContainer extends HookConsumerWidget {
     final tickerProvider = useSingleTickerProvider();
     final state = useState<bool>(false);
     final ticker = useMemoized(
-        () => tickerProvider.createTicker((elapsed) {
-              state.value = !state.value;
-            }),
-        [tickerProvider]);
-    useEffect(() {
-      return ticker.dispose;
-    }, [ticker]);
+      () => tickerProvider.createTicker((elapsed) {
+        state.value = !state.value;
+      }),
+      [tickerProvider],
+    );
+    useEffect(
+      () {
+        return ticker.dispose;
+      },
+      [ticker],
+    );
 
     final needTrack = ref.watch(isPlayingProvider);
-    useEffect(() {
-      if (ticker.isActive == needTrack) return;
-      if (ticker.isActive) {
-        ticker.stop();
-      } else {
-        ticker.start();
-      }
-    }, [needTrack]);
+    useEffect(
+      () {
+        if (ticker.isActive == needTrack) return;
+        if (ticker.isActive) {
+          ticker.stop();
+        } else {
+          ticker.start();
+        }
+      },
+      [needTrack],
+    );
     return builder(context);
   }
 }

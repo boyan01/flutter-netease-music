@@ -65,12 +65,14 @@ class SettingState with EquatableMixin {
 
 class Settings extends StateNotifier<SettingState> {
   Settings()
-      : super(const SettingState(
-          themeMode: ThemeMode.system,
-          copyright: false,
-          skipWelcomePage: true,
-          skipAccompaniment: false,
-        ));
+      : super(
+          const SettingState(
+            themeMode: ThemeMode.system,
+            copyright: false,
+            skipWelcomePage: true,
+            skipAccompaniment: false,
+          ),
+        );
 
   late final SharedPreferences _preferences;
 

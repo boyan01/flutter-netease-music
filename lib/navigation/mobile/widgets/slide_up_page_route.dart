@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 class SlideUpPage extends Page<dynamic> {
   const SlideUpPage({
     required this.child,
-    String? name,
-  }) : super(name: name);
+    super.name,
+  });
 
   final Widget child;
 
@@ -31,8 +31,12 @@ class _SlideUpPageRouter<T> extends PageRoute<T>
   }
 
   @override
-  Widget buildTransitions(BuildContext context, Animation<double> animation,
-      Animation<double> secondaryAnimation, Widget child) {
+  Widget buildTransitions(
+    BuildContext context,
+    Animation<double> animation,
+    Animation<double> secondaryAnimation,
+    Widget child,
+  ) {
     return _FadeUpwardsPageTransition(
       routeAnimation: animation,
       child: child,
@@ -43,24 +47,23 @@ class _SlideUpPageRouter<T> extends PageRoute<T>
 // Slides the page upwards and fades it in.
 class _FadeUpwardsPageTransition extends StatelessWidget {
   _FadeUpwardsPageTransition({
-    Key? key,
+    super.key,
     // The route's linear 0.0 - 1.0 animation.
     required Animation<double> routeAnimation,
     required this.child,
   })  : _positionAnimation =
             routeAnimation.drive(_bottomUpTween.chain(_fastOutSlowInTween)),
         _opacityAnimation =
-            routeAnimation.drive(_alphaTween.chain(_easeInTween)),
-        super(key: key);
+            routeAnimation.drive(_alphaTween.chain(_easeInTween));
 
   static final Tween<Offset> _bottomUpTween = Tween<Offset>(
-    begin: const Offset(0.0, 1),
+    begin: const Offset(0, 1),
     end: Offset.zero,
   );
 
   static final Tween<double> _alphaTween = Tween<double>(
     begin: 0.5,
-    end: 1.0,
+    end: 1,
   );
 
   static final Animatable<double> _fastOutSlowInTween =

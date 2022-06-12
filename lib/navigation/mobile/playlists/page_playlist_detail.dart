@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:quiet/extension.dart';
-import 'package:quiet/providers/player_provider.dart';
-import 'package:quiet/providers/playlist_detail_provider.dart';
-import 'package:quiet/repository.dart';
 
+import '../../../extension.dart';
+import '../../../providers/player_provider.dart';
+import '../../../providers/playlist_detail_provider.dart';
 import '../../../providers/settings_provider.dart';
+import '../../../repository.dart';
 import '../../common/playlist/music_list.dart';
 import '../widgets/track_title.dart';
 import 'playlist_flexible_app_bar.dart';
@@ -18,8 +18,8 @@ const double kHeaderHeight = 280 + kToolbarHeight;
 class PlaylistDetailPage extends ConsumerWidget {
   const PlaylistDetailPage(
     this.playlistId, {
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   final int playlistId;
 
@@ -51,7 +51,7 @@ class PlaylistDetailPage extends ConsumerWidget {
 }
 
 class _Appbar extends StatelessWidget {
-  const _Appbar({Key? key, required this.playlist}) : super(key: key);
+  const _Appbar({super.key, required this.playlist});
 
   final PlaylistDetail playlist;
 

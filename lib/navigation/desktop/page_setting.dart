@@ -1,12 +1,12 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:quiet/component/utils/scroll_controller.dart';
-import 'package:quiet/extension.dart';
+import '../../component/utils/scroll_controller.dart';
+import '../../extension.dart';
 
 import '../common/settings.dart';
 
 class PageSetting extends StatelessWidget {
-  const PageSetting({Key? key}) : super(key: key);
+  const PageSetting({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +58,7 @@ class PageSetting extends StatelessWidget {
 }
 
 class _HotkeyLayout extends StatelessWidget {
-  const _HotkeyLayout({Key? key}) : super(key: key);
+  const _HotkeyLayout({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -158,15 +158,17 @@ class _HotkeyLayout extends StatelessWidget {
 }
 
 class _DebugSetting extends StatelessWidget {
-  const _DebugSetting({Key? key}) : super(key: key);
+  const _DebugSetting({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Navigation Platform (Developer options)',
-            style: context.textTheme.bodyMedium),
+        Text(
+          'Navigation Platform (Developer options)',
+          style: context.textTheme.bodyMedium,
+        ),
         const SizedBox(height: 12),
         const DebugPlatformNavigationRadios(),
         const Divider(height: 20),

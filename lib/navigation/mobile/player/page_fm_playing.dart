@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:overlay_support/overlay_support.dart';
-import 'package:quiet/extension.dart';
-import 'package:quiet/providers/navigator_provider.dart';
-import 'package:quiet/providers/player_provider.dart';
-import 'package:quiet/repository.dart';
 
+import '../../../extension.dart';
 import '../../../media/tracks/track_list.dart';
 import '../../../providers/fm_playlist_provider.dart';
+import '../../../providers/navigator_provider.dart';
+import '../../../providers/player_provider.dart';
+import '../../../repository.dart';
 import '../../common/like_button.dart';
 import '../../common/player/lyric_view.dart';
 import '../../common/player_progress.dart';
@@ -16,6 +16,8 @@ import 'background.dart';
 
 /// FM 播放页面
 class PagePlayingFm extends ConsumerWidget {
+  const PagePlayingFm({super.key});
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final fmPlaylist = ref.watch(fmPlaylistProvider);
@@ -67,9 +69,9 @@ class PagePlayingFm extends ConsumerWidget {
 
 class _CenterSection extends HookConsumerWidget {
   const _CenterSection({
-    Key? key,
+    super.key,
     required this.track,
-  }) : super(key: key);
+  });
 
   final Track track;
 
@@ -82,8 +84,12 @@ class _CenterSection extends HookConsumerWidget {
         crossFadeState: showLyric.value
             ? CrossFadeState.showSecond
             : CrossFadeState.showFirst,
-        layoutBuilder: (Widget topChild, Key topChildKey, Widget bottomChild,
-            Key bottomChildKey) {
+        layoutBuilder: (
+          Widget topChild,
+          Key topChildKey,
+          Widget bottomChild,
+          Key bottomChildKey,
+        ) {
           return Stack(
             clipBehavior: Clip.none,
             children: <Widget>[
@@ -117,7 +123,7 @@ class _CenterSection extends HookConsumerWidget {
 }
 
 class _FmCover extends ConsumerWidget {
-  const _FmCover({Key? key, required this.track}) : super(key: key);
+  const _FmCover({super.key, required this.track});
 
   final Track track;
 
@@ -167,9 +173,11 @@ class _FmCover extends ConsumerWidget {
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
-              Icon(Icons.chevron_right,
-                  size: 17,
-                  color: Theme.of(context).primaryTextTheme.caption!.color),
+              Icon(
+                Icons.chevron_right,
+                size: 17,
+                color: Theme.of(context).primaryTextTheme.caption!.color,
+              ),
             ],
           ),
         )
@@ -179,7 +187,7 @@ class _FmCover extends ConsumerWidget {
 }
 
 class _FmControllerBar extends ConsumerWidget {
-  const _FmControllerBar({Key? key, required this.track}) : super(key: key);
+  const _FmControllerBar({super.key, required this.track});
 
   final Track track;
 
@@ -194,25 +202,26 @@ class _FmControllerBar extends ConsumerWidget {
     final playing = isFmPlaying && isPlaying;
 
     final iconPlayPause = IconButton(
-        tooltip: playing ? context.strings.pause : context.strings.play,
-        iconSize: 40,
-        icon: Icon(
-          playing ? Icons.pause_rounded : Icons.play_arrow_rounded,
-          color: color,
-        ),
-        onPressed: () {
-          final player = ref.read(playerProvider);
-          if (playing) {
-            player.pause();
-          } else if (isFmPlaying) {
-            player.play();
-          } else {
-            final fmPlaylist = ref.read(fmPlaylistProvider);
-            player
-              ..setTrackList(TrackList.fm(tracks: fmPlaylist))
-              ..playFromMediaId(track.id);
-          }
-        });
+      tooltip: playing ? context.strings.pause : context.strings.play,
+      iconSize: 40,
+      icon: Icon(
+        playing ? Icons.pause_rounded : Icons.play_arrow_rounded,
+        color: color,
+      ),
+      onPressed: () {
+        final player = ref.read(playerProvider);
+        if (playing) {
+          player.pause();
+        } else if (isFmPlaying) {
+          player.play();
+        } else {
+          final fmPlaylist = ref.read(fmPlaylistProvider);
+          player
+            ..setTrackList(TrackList.fm(tracks: fmPlaylist))
+            ..playFromMediaId(track.id);
+        }
+      },
+    );
 
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 10),
@@ -220,33 +229,36 @@ class _FmControllerBar extends ConsumerWidget {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
           IconButton(
-              icon: Icon(
-                Icons.delete_outline,
-                color: color,
-              ),
-              onPressed: () {
-                toast('已加入不喜欢列表，以后将减少类似的推荐。');
-                ref.read(playerProvider).skipToNext();
-              }),
+            icon: Icon(
+              Icons.delete_outline,
+              color: color,
+            ),
+            onPressed: () {
+              toast('已加入不喜欢列表，以后将减少类似的推荐。');
+              ref.read(playerProvider).skipToNext();
+            },
+          ),
           LikeButton(music: track, color: color),
           iconPlayPause,
           IconButton(
-              tooltip: context.strings.skipToNext,
-              icon: Icon(
-                Icons.skip_next,
-                color: color,
-              ),
-              onPressed: () {
-                ref.read(playerProvider).skipToNext();
-              }),
+            tooltip: context.strings.skipToNext,
+            icon: Icon(
+              Icons.skip_next,
+              color: color,
+            ),
+            onPressed: () {
+              ref.read(playerProvider).skipToNext();
+            },
+          ),
           IconButton(
-              icon: Icon(
-                Icons.comment,
-                color: color,
-              ),
-              onPressed: () {
-                // TODO
-              }),
+            icon: Icon(
+              Icons.comment,
+              color: color,
+            ),
+            onPressed: () {
+              // TODO
+            },
+          ),
         ],
       ),
     );

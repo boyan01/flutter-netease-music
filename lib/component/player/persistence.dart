@@ -1,8 +1,8 @@
 part of 'player.dart';
 
-const _keyPlayQueue = "quiet_player_queue";
-const _keyCurrentPlaying = "quiet_current_playing";
-const _keyPlayMode = "quiet_play_mode";
+const _keyPlayQueue = 'quiet_player_queue';
+const _keyCurrentPlaying = 'quiet_current_playing';
+const _keyPlayMode = 'quiet_play_mode';
 
 extension PlayerPersistenceExtensions on Box<Map> {
   void savePlayQueue(PlayQueue queue) {
@@ -32,7 +32,7 @@ extension PlayerPersistenceExtensions on Box<Map> {
   }
 
   void savePlayMode(PlayMode mode) {
-    put(_keyPlayMode, {"mode": mode.index});
+    put(_keyPlayMode, {'mode': mode.index});
   }
 
   PlayMode restorePlayMode() {
@@ -40,7 +40,7 @@ extension PlayerPersistenceExtensions on Box<Map> {
     if (map == null) {
       return PlayMode.sequence;
     } else {
-      final int? mode = map["mode"] as int? ?? PlayMode.sequence.index;
+      final mode = map['mode'] as int? ?? PlayMode.sequence.index;
       return PlayMode(mode);
     }
   }

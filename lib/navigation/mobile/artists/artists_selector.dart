@@ -1,26 +1,27 @@
 import 'package:flutter/material.dart';
-import 'package:quiet/extension.dart';
-import 'package:quiet/repository/data/track.dart';
+import '../../../extension.dart';
+import '../../../repository/data/track.dart';
 
 ///歌手选择弹窗
 ///返回 [ArtistMini]
 class ArtistSelectionDialog extends StatelessWidget {
-  const ArtistSelectionDialog({Key? key, required this.artists})
-      : super(key: key);
+  const ArtistSelectionDialog({super.key, required this.artists});
   final List<ArtistMini> artists;
 
   @override
   Widget build(BuildContext context) {
-    final List<Widget> children = artists.map<Widget>((artist) {
+    final children = artists.map<Widget>((artist) {
       final enabled = artist.id != 0;
       return ListTile(
         title: Padding(
           padding: const EdgeInsets.only(left: 8),
-          child: Text(artist.name,
-              style: Theme.of(context)
-                  .textTheme
-                  .bodyText2!
-                  .merge(TextStyle(color: enabled ? null : Colors.grey))),
+          child: Text(
+            artist.name,
+            style: Theme.of(context)
+                .textTheme
+                .bodyText2!
+                .merge(TextStyle(color: enabled ? null : Colors.grey)),
+          ),
         ),
         enabled: enabled,
         onTap: () {

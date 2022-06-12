@@ -1,6 +1,8 @@
 part of 'page_user_detail.dart';
 
 class TabEvents extends StatefulWidget {
+  const TabEvents({super.key});
+
   @override
   State<TabEvents> createState() => _TabEventsState();
 }
