@@ -130,7 +130,7 @@ Future<_ImageCache> _imageCache() async {
     return __imageCache!;
   }
   final temp = await getTemporaryDirectory();
-  var dir = Directory("${temp.path}/quiet_images/");
+  var dir = Directory('${temp.path}/quiet_images/');
   if (!(await dir.exists())) {
     dir = await dir.create();
   }

@@ -26,21 +26,21 @@ class PresetGridSection extends ConsumerWidget {
                     icon: Icons.arrow_circle_down_outlined,
                     label: context.strings.localMusic,
                     onTap: () {
-                      toast("TODO");
+                      toast('TODO');
                     },
                   ),
                   _PinnedTile(
                     icon: Icons.cloud_upload_outlined,
                     label: context.strings.cloudMusic,
                     onTap: () {
-                      toast("TODO");
+                      toast('TODO');
                     },
                   ),
                   _PinnedTile(
                     icon: Icons.check_circle_outline_outlined,
                     label: context.strings.alreadyBuy,
                     onTap: () {
-                      toast("TODO");
+                      toast('TODO');
                     },
                   ),
                   _PinnedTile(
@@ -67,7 +67,7 @@ class PresetGridSection extends ConsumerWidget {
                     icon: Icons.supervised_user_circle_outlined,
                     label: context.strings.friends,
                     onTap: () {
-                      toast("TODO");
+                      toast('TODO');
                     },
                   ),
                   _PinnedTile(
@@ -88,7 +88,7 @@ class PresetGridSection extends ConsumerWidget {
                     icon: Icons.favorite,
                     label: context.strings.todo,
                     onTap: () {
-                      toast("TODO");
+                      toast('TODO');
                     },
                   ),
                 ],

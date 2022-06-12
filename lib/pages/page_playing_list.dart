@@ -135,7 +135,7 @@ class _Header extends ConsumerWidget {
                 // context.player.setPlayMode(playMode.next);
               },
               icon: Icon(playMode.icon),
-              label: Text("${playMode.name}(${tracks.length})")),
+              label: Text('${playMode.name}(${tracks.length})')),
           const Spacer(),
           TextButton.icon(
               onPressed: () async {
@@ -149,15 +149,15 @@ class _Header extends ConsumerWidget {
                   return;
                 }
                 if (succeed) {
-                  showSimpleNotification(const Text("添加到收藏成功"));
+                  showSimpleNotification(const Text('添加到收藏成功'));
                 } else {
-                  showSimpleNotification(const Text("添加到收藏失败"),
+                  showSimpleNotification(const Text('添加到收藏失败'),
                       leading: const Icon(Icons.error),
                       background: Theme.of(context).errorColor);
                 }
               },
               icon: const Icon(Icons.add_box),
-              label: const Text("收藏全部")),
+              label: const Text('收藏全部')),
           IconButton(
               icon: const Icon(Icons.delete_outline),
               onPressed: () async {
@@ -224,7 +224,7 @@ class _MusicTile extends ConsumerWidget {
               TextSpan(children: [
                 TextSpan(text: music.name, style: TextStyle(color: name)),
                 TextSpan(
-                    text: " - ${music.displaySubtitle}",
+                    text: ' - ${music.displaySubtitle}',
                     style: TextStyle(color: artist, fontSize: 12))
               ]),
               maxLines: 1,

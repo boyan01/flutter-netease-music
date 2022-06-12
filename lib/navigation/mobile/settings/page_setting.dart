@@ -34,8 +34,8 @@ class PageSettings extends StatelessWidget {
                       builder: (context) {
                         return AboutDialog(
                           applicationIcon:
-                              Image.asset("assets/ic_launcher_round.png"),
-                          applicationVersion: "0.3-alpha",
+                              Image.asset('assets/ic_launcher_round.png'),
+                          applicationVersion: '0.3-alpha',
                           applicationLegalese: context.strings.copyRightOverlay,
                         );
                       });

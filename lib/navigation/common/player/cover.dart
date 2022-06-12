@@ -176,7 +176,7 @@ class _AlbumCoverState extends ConsumerState<AlbumCover>
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, constraints) {
       assert(constraints.maxWidth.isFinite,
-          "the width of cover layout should be constrained!");
+          'the width of cover layout should be constrained!');
       return ClipRect(
         child: Padding(
           padding: const EdgeInsets.only(bottom: 20),
@@ -285,7 +285,7 @@ class _AlbumCoverState extends ConsumerState<AlbumCover>
                     //所以对此计算旋转中心点的偏移,以保重旋转动画的中心在针尾圆形的中点
                     const Alignment(-1 + 44 * 2 / 273, -1 + 37 * 2 / 402),
                 child: Image.asset(
-                  "assets/playing_page_needle.png",
+                  'assets/playing_page_needle.png',
                   height: kHeightSpaceAlbumTop * 1.8,
                 ),
               ),
@@ -364,7 +364,7 @@ class _RotationCoverImageState extends State<_RotationCoverImage>
   Widget build(BuildContext context) {
     ImageProvider image;
     if (widget.music == null || widget.music!.imageUrl == null) {
-      image = const AssetImage("assets/playing_page_disc.png");
+      image = const AssetImage('assets/playing_page_disc.png');
     } else {
       image = CachedImage(widget.music!.imageUrl.toString());
     }
@@ -380,7 +380,7 @@ class _RotationCoverImageState extends State<_RotationCoverImage>
           child: Container(
             foregroundDecoration: const BoxDecoration(
                 image: DecorationImage(
-                    image: AssetImage("assets/playing_page_disc.png"))),
+                    image: AssetImage('assets/playing_page_disc.png'))),
             padding: const EdgeInsets.all(30),
             child: ClipOval(
               child: Image(

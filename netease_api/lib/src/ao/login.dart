@@ -6,10 +6,10 @@ class Login {
     this.loginType = 0,
     this.code = 0,
     required this.account,
-    this.token = "",
+    this.token = '',
     required this.profile,
     required this.bindings,
-    this.cookie = "",
+    this.cookie = '',
   });
 
   factory Login.fromJson(Map<String, dynamic>? json) => Login(
@@ -45,12 +45,12 @@ class Login {
 class Account {
   Account({
     this.id = 0,
-    this.userName = "",
+    this.userName = '',
     this.type = 0,
     this.status = 0,
     this.whitelistAuthority = 0,
     this.createTime = 0,
-    this.salt = "",
+    this.salt = '',
     this.tokenVersion = 0,
     this.ban = 0,
     this.baoyueVersion = 0,

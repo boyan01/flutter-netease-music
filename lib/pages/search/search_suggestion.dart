@@ -153,7 +153,7 @@ class _SuggestionOverflowState extends State<SuggestionOverflow> {
             children: <Widget>[
               ListTile(
                 title: Text(
-                  "搜索 : ${widget.query}",
+                  '搜索 : ${widget.query}',
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -162,7 +162,7 @@ class _SuggestionOverflowState extends State<SuggestionOverflow> {
                 },
               ),
               Loader<List<String>>(
-                  key: Key("suggest_$_query"),
+                  key: Key('suggest_$_query'),
                   loadTask: () => neteaseRepository!.searchSuggest(_query),
                   loadingBuilder: (context) {
                     return Container();

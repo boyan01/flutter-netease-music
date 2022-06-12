@@ -51,7 +51,7 @@ class UserProfileSection extends ConsumerWidget {
                           padding: const EdgeInsets.symmetric(
                               vertical: 2, horizontal: 4),
                           child: Text(
-                            "Lv.${detail.level}",
+                            'Lv.${detail.level}',
                             style: const TextStyle(
                               fontStyle: FontStyle.italic,
                               fontSize: 12,

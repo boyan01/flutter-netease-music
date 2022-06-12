@@ -44,7 +44,7 @@ class _PageSplashState extends ConsumerState<PageSplash> {
       ...tasks,
     ]).then((data) {
       final duration = DateTime.now().millisecondsSinceEpoch - start;
-      debugPrint("flutter initial in : $duration");
+      debugPrint('flutter initial in : $duration');
       setState(() {
         _data = data;
       });

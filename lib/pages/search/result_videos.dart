@@ -57,7 +57,7 @@ class VideoTile extends StatelessWidget {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(3),
                 child: Image(
-                  image: CachedImage(map["coverUrl"]),
+                  image: CachedImage(map['coverUrl']),
                   fit: BoxFit.cover,
                 ),
               ),
@@ -72,7 +72,7 @@ class VideoTile extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
-                    Text(map["title"],
+                    Text(map['title'],
                         maxLines: 2, overflow: TextOverflow.ellipsis),
                     Text(
                       "${getTimeStamp(map["durationms"])} by ${(map["creator"] as List).cast<Map>().map((creator) {

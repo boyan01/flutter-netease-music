@@ -85,7 +85,7 @@ class PlaylistSelectorDialog extends ConsumerWidget {
           const Padding(padding: EdgeInsets.only(left: 16)),
           Expanded(
               child:
-                  Text("收藏到歌单", style: Theme.of(context).textTheme.headline6))
+                  Text('收藏到歌单', style: Theme.of(context).textTheme.headline6))
         ],
       ),
     );
@@ -131,13 +131,13 @@ class PlaylistSelectorDialog extends ConsumerWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
-                const Text("当前未登陆"),
+                const Text('当前未登陆'),
                 const SizedBox(height: 16),
                 ElevatedButton(
                   onPressed: () {
                     Navigator.of(context).pushNamed(pageLogin);
                   },
-                  child: const Text("点击前往登陆页面"),
+                  child: const Text('点击前往登陆页面'),
                 ),
                 const SizedBox(height: 32),
               ],
@@ -164,7 +164,7 @@ class PlaylistSelectorDialog extends ConsumerWidget {
                     onPressed: () {
                       Loader.of(context)!.refresh();
                     },
-                    child: const Text("重试"),
+                    child: const Text('重试'),
                   ),
                   const SizedBox(height: 32),
                 ],
@@ -182,11 +182,11 @@ class PlaylistSelectorDialog extends ConsumerWidget {
                 FadeInImage(
                   image: CachedImage(p!.coverUrl),
                   placeholder:
-                      const AssetImage("assets/playlist_playlist.9.png"),
+                      const AssetImage('assets/playlist_playlist.9.png'),
                   fit: BoxFit.cover,
                 ),
                 Text(p.name),
-                Text("共${p.trackCount}首"), () {
+                Text('共${p.trackCount}首'), () {
               Navigator.of(context).pop(p.id);
             });
           }));

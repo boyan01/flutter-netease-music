@@ -16,8 +16,8 @@ class AlbumTile extends ConsumerWidget {
   final String Function(Map album)? subtitle;
 
   String _defaultSubtitle(Map album) {
-    final String date = DateFormat("y.M.d")
-        .format(DateTime.fromMillisecondsSinceEpoch(album["publishTime"]));
+    final String date = DateFormat('y.M.d')
+        .format(DateTime.fromMillisecondsSinceEpoch(album['publishTime']));
     return "$date 歌曲 ${album["size"]}";
   }
 
@@ -27,7 +27,7 @@ class AlbumTile extends ConsumerWidget {
     return InkWell(
       onTap: () => ref
           .read(navigatorProvider.notifier)
-          .navigate(NavigationTargetAlbumDetail(album["id"])),
+          .navigate(NavigationTargetAlbumDetail(album['id'])),
       child: SizedBox(
         height: 64,
         child: Row(
@@ -39,7 +39,7 @@ class AlbumTile extends ConsumerWidget {
                 child: AspectRatio(
                   aspectRatio: 1,
                   child: Image(
-                      image: CachedImage(album["picUrl"]), fit: BoxFit.cover),
+                      image: CachedImage(album['picUrl']), fit: BoxFit.cover),
                 ),
               ),
             ),
@@ -49,7 +49,7 @@ class AlbumTile extends ConsumerWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 const Spacer(),
-                Text(album["name"], maxLines: 1),
+                Text(album['name'], maxLines: 1),
                 const Spacer(),
                 Text(subtitle,
                     maxLines: 1, style: Theme.of(context).textTheme.caption),

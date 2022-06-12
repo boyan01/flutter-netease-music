@@ -32,7 +32,7 @@ class SongsResultSectionState extends State<SongsResultSection>
               .search(widget.query, SearchType.song, offset: count);
           if (result.isValue) {
             return LoadMoreResult(
-                result.asValue!.value["result"]["songs"] ?? []);
+                result.asValue!.value['result']['songs'] ?? []);
           }
           return result as Result<List>;
         },

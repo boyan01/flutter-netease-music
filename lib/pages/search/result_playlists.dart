@@ -23,7 +23,7 @@ class _PlaylistResultSectionState extends State<PlaylistResultSection>
       final result = await neteaseRepository!
           .search(widget.query, SearchType.playlist, offset: offset);
       if (result.isValue) {
-        return LoadMoreResult(result.asValue!.value["result"]["playlists"]);
+        return LoadMoreResult(result.asValue!.value['result']['playlists']);
       }
       return result as Result<List>;
     }, builder: (context, dynamic item) {
@@ -56,7 +56,7 @@ class _PlayListTile extends StatelessWidget {
                 child: AspectRatio(
                   aspectRatio: 1,
                   child: Image(
-                      image: CachedImage(item["coverImgUrl"]),
+                      image: CachedImage(item['coverImgUrl']),
                       fit: BoxFit.cover),
                 ),
               ),
@@ -67,7 +67,7 @@ class _PlayListTile extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 const Spacer(),
-                Text(item["name"], maxLines: 1),
+                Text(item['name'], maxLines: 1),
                 const Spacer(),
                 Text(subTitle,
                     maxLines: 1, style: Theme.of(context).textTheme.caption),

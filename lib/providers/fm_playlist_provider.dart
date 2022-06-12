@@ -33,7 +33,7 @@ final fmPlaylistProvider = Provider<List<Track>>((ref) {
 
   ref.listen<Track?>(playingTrackProvider, (previous, next) {
     if (player.trackList.isFM) {
-      assert(next != null, "playing track should not be null");
+      assert(next != null, 'playing track should not be null');
       playedFmTrack = next;
       fmPlaylistNotifier.ensureHasEnoughTracks(next!);
     }
@@ -64,7 +64,7 @@ class FmPlaylistNotifier extends StateNotifier<List<Track>> {
     if (freshTrackIndex < state.length) {
       return;
     }
-    debugPrint("ensureHasEnoughTracks: $freshTrackIndex ${state.length}");
+    debugPrint('ensureHasEnoughTracks: $freshTrackIndex ${state.length}');
     _loading = true;
     final tracks = await neteaseRepository!.getPersonalFmMusics();
     _loading = false;

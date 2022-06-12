@@ -7,10 +7,10 @@ class DialogNoCopyRight extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: const [
-          Image(image: AssetImage("assets/no_copy_right.png")),
+          Image(image: AssetImage('assets/no_copy_right.png')),
           Padding(padding: EdgeInsets.only(top: 16)),
           Text(
-            "抱歉,该资源暂时不能播放.",
+            '抱歉,该资源暂时不能播放.',
             textAlign: TextAlign.center,
           ),
           Padding(padding: EdgeInsets.only(top: 16))

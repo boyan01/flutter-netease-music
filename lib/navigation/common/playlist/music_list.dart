@@ -271,8 +271,8 @@ class MusicTileConfiguration extends StatelessWidget {
               width: 40,
               height: 40,
               fit: BoxFit.cover,
-              image: CachedImage(music.imageUrl?.toString() ?? ""),
-              placeholder: const AssetImage("assets/playlist_playlist.9.png"),
+              image: CachedImage(music.imageUrl?.toString() ?? ''),
+              placeholder: const AssetImage('assets/playlist_playlist.9.png'),
             ),
           ),
         );
@@ -470,11 +470,11 @@ class _IconMore extends ConsumerWidget {
     final items = [
       const PopupMenuItem(
         value: _MusicAction.addToNext,
-        child: Text("下一首播放"),
+        child: Text('下一首播放'),
       ),
       const PopupMenuItem(
         value: _MusicAction.addToPlaylist,
-        child: Text("收藏到歌单"),
+        child: Text('收藏到歌单'),
       ),
     ];
 
@@ -487,13 +487,13 @@ class _IconMore extends ConsumerWidget {
     if (MusicTileConfiguration.of(context).supportAlbumMenu) {
       items.add(const PopupMenuItem(
         value: _MusicAction.album,
-        child: Text("专辑"),
+        child: Text('专辑'),
       ));
     }
     if (MusicTileConfiguration.of(context).remove != null) {
       items.add(const PopupMenuItem(
         value: _MusicAction.delete,
-        child: Text("删除"),
+        child: Text('删除'),
       ));
     }
     return items;
@@ -526,9 +526,9 @@ class _IconMore extends ConsumerWidget {
             return;
           }
           if (succeed) {
-            showSimpleNotification(const Text("已添加到收藏"));
+            showSimpleNotification(const Text('已添加到收藏'));
           } else {
-            showSimpleNotification(const Text("收藏歌曲失败!"),
+            showSimpleNotification(const Text('收藏歌曲失败!'),
                 leading: const Icon(Icons.error),
                 background: Theme.of(context).errorColor);
           }

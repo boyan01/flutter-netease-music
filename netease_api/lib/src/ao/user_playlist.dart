@@ -4,7 +4,7 @@ import 'safe_convert.dart';
 
 class UserPlayList {
   UserPlayList({
-    this.version = "",
+    this.version = '',
     this.more = false,
     required this.playlist,
     this.code = 0,

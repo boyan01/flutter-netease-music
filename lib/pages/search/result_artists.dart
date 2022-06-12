@@ -21,7 +21,7 @@ class _ArtistsResultSectionState extends State<ArtistsResultSection>
           .search(widget.query, SearchType.artist, offset: offset);
       if (result.isValue) {
         return Result.value(
-            (result.asValue!.value["result"]["artists"] as List?)!);
+            (result.asValue!.value['result']['artists'] as List?)!);
       }
       return result as Result<List>;
     }, builder: (context, dynamic item) {
@@ -41,11 +41,11 @@ class ArtistTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: map["id"] == 0
+      onTap: map['id'] == 0
           ? null
           : () {
               Navigator.push(context, MaterialPageRoute(builder: (context) {
-                return ArtistDetailPage(artistId: map["id"]);
+                return ArtistDetailPage(artistId: map['id']);
               }));
             },
       child: SizedBox(
@@ -59,7 +59,7 @@ class ArtistTile extends StatelessWidget {
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(4),
                   child: Image(
-                    image: CachedImage(map["img1v1Url"]),
+                    image: CachedImage(map['img1v1Url']),
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -75,15 +75,15 @@ class ArtistTile extends StatelessWidget {
                     Expanded(
                         child: Align(
                             alignment: Alignment.centerLeft,
-                            child: Text(map["name"]))),
-                    if (map["accountId"] != null)
+                            child: Text(map['name']))),
+                    if (map['accountId'] != null)
                       Row(children: <Widget>[
                         const Icon(
                           Icons.person,
                           size: 16,
                         ),
                         const Padding(padding: EdgeInsets.only(left: 2)),
-                        Text("已入驻", style: Theme.of(context).textTheme.caption)
+                        Text('已入驻', style: Theme.of(context).textTheme.caption)
                       ])
                   ],
                 )),

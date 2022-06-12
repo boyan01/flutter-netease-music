@@ -34,21 +34,21 @@ bool asBool(Map<String, dynamic>? json, String key,
   if (value is int) return value == 0 ? false : true;
   if (value is double) return value == 0 ? false : true;
   if (value is String) {
-    if (value == "1" || value.toLowerCase() == "true") return true;
-    if (value == "0" || value.toLowerCase() == "false") return false;
+    if (value == '1' || value.toLowerCase() == 'true') return true;
+    if (value == '0' || value.toLowerCase() == 'false') return false;
   }
   return defaultValue;
 }
 
 String asString(Map<String, dynamic>? json, String key,
-    {String defaultValue = ""}) {
+    {String defaultValue = ''}) {
   if (json == null || !json.containsKey(key)) return defaultValue;
   var value = json[key];
   if (value == null) return defaultValue;
   if (value is String) return value;
   if (value is int) return value.toString();
   if (value is double) return value.toString();
-  if (value is bool) return value ? "true" : "false";
+  if (value is bool) return value ? 'true' : 'false';
   return defaultValue;
 }
 

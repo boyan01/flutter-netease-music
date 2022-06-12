@@ -9,18 +9,18 @@ String getFormattedTime(int milliseconds) {
       milliseconds:
           now.millisecondsSinceEpoch - dateTime.millisecondsSinceEpoch);
   if (diff.inMinutes < 1) {
-    return "刚刚";
+    return '刚刚';
   }
   if (diff.inMinutes <= 60) {
-    return "${diff.inMinutes}分钟前";
+    return '${diff.inMinutes}分钟前';
   }
   if (diff.inHours <= 24) {
-    return "${diff.inHours}小时前";
+    return '${diff.inHours}小时前';
   }
   if (diff.inDays <= 5) {
-    return "${diff.inDays}天前";
+    return '${diff.inDays}天前';
   }
-  return DateFormat("y年M月d日").format(dateTime);
+  return DateFormat('y年M月d日').format(dateTime);
 }
 
 ///format milliseconds to time stamp like "06:23", which
@@ -32,5 +32,5 @@ String getTimeStamp(int milliseconds) {
   final String minutesStr = (minutes % 60).toString().padLeft(2, '0');
   final String secondsStr = (seconds % 60).toString().padLeft(2, '0');
 
-  return "$minutesStr:$secondsStr";
+  return '$minutesStr:$secondsStr';
 }

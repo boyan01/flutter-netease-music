@@ -82,7 +82,7 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   ///the query of [_SearchResultPage]
-  String _searchedQuery = "";
+  String _searchedQuery = '';
 
   bool initialState = true;
 
@@ -246,13 +246,13 @@ class _EmptyQuerySuggestionSection extends StatelessWidget {
             errorBuilder: (context, result) => Container(),
             loadingBuilder: (context) {
               return SuggestionSection(
-                title: "热门搜索",
+                title: '热门搜索',
                 content: Loader.buildSimpleLoadingWidget(context),
               );
             },
             builder: (context, result) {
               return SuggestionSection(
-                title: "热门搜索",
+                title: '热门搜索',
                 content: SuggestionSectionContent.from(
                   words: result,
                   suggestionSelectedCallback: suggestionSelectedCallback,

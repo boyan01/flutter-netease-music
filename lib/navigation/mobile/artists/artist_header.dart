@@ -17,10 +17,10 @@ class ArtistHeader extends StatelessWidget {
       elevation: 0,
       bottom: RoundedTabBar(
         tabs: <Widget>[
-          const Tab(text: "热门单曲"),
-          Tab(text: "专辑${artist.albumSize}"),
-          Tab(text: "视频${artist.mvSize}"),
-          const Tab(text: "艺人信息"),
+          const Tab(text: '热门单曲'),
+          Tab(text: '专辑${artist.albumSize}'),
+          Tab(text: '视频${artist.mvSize}'),
+          const Tab(text: '艺人信息'),
         ],
       ),
       actions: <Widget>[
@@ -69,7 +69,7 @@ class _ArtistFlexHeader extends StatelessWidget {
             actions: <Widget>[
               IconButton(
                   icon: const Icon(Icons.share),
-                  tooltip: "分享",
+                  tooltip: '分享',
                   onPressed: () {
                     toast('分享');
                   })

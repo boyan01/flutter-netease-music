@@ -27,7 +27,7 @@ class PlaylistTile extends ConsumerWidget {
     final Widget cover = ClipRRect(
       borderRadius: const BorderRadius.all(Radius.circular(4)),
       child: FadeInImage(
-        placeholder: const AssetImage("assets/playlist_playlist.9.png"),
+        placeholder: const AssetImage('assets/playlist_playlist.9.png'),
         image: CachedImage(playlist.coverUrl),
         fit: BoxFit.cover,
         height: 50,
@@ -58,7 +58,7 @@ class PlaylistTile extends ConsumerWidget {
                     style: const TextStyle(fontSize: 15),
                   ),
                   const Padding(padding: EdgeInsets.only(top: 4)),
-                  Text("${playlist.trackCount}首",
+                  Text('${playlist.trackCount}首',
                       style: Theme.of(context).textTheme.caption),
                   const Spacer(),
                 ],
@@ -68,17 +68,17 @@ class PlaylistTile extends ConsumerWidget {
               PopupMenuButton<PlaylistOp>(
                 itemBuilder: (context) {
                   return const [
-                    PopupMenuItem(value: PlaylistOp.share, child: Text("分享")),
+                    PopupMenuItem(value: PlaylistOp.share, child: Text('分享')),
                     PopupMenuItem(
-                        value: PlaylistOp.edit, child: Text("编辑歌单信息")),
-                    PopupMenuItem(value: PlaylistOp.delete, child: Text("删除")),
+                        value: PlaylistOp.edit, child: Text('编辑歌单信息')),
+                    PopupMenuItem(value: PlaylistOp.delete, child: Text('删除')),
                   ];
                 },
                 onSelected: (op) {
                   switch (op) {
                     case PlaylistOp.delete:
                     case PlaylistOp.share:
-                      toast("未接入。");
+                      toast('未接入。');
                       break;
                     case PlaylistOp.edit:
                       context.secondaryNavigator!

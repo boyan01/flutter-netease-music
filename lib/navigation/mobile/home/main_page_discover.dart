@@ -24,9 +24,9 @@ class CloudPageState extends State<MainPageDiscover>
     return ListView(
       children: <Widget>[
         _NavigationLine(),
-        _Header("推荐歌单", () {}),
+        _Header('推荐歌单', () {}),
         _SectionPlaylist(),
-        _Header("最新音乐", () {}),
+        _Header('最新音乐', () {}),
         _SectionNewSongs(),
       ],
     );
@@ -43,15 +43,15 @@ class _NavigationLine extends ConsumerWidget {
         children: <Widget>[
           _ItemNavigator(
             Icons.radio,
-            "私人FM",
+            '私人FM',
             () => ref
                 .read(navigatorProvider.notifier)
                 .navigate(NavigationTargetFmPlaying()),
           ),
-          _ItemNavigator(Icons.today, "每日推荐", () {
+          _ItemNavigator(Icons.today, '每日推荐', () {
             context.secondaryNavigator!.pushNamed(pageDaily);
           }),
-          _ItemNavigator(Icons.show_chart, "排行榜", () {
+          _ItemNavigator(Icons.show_chart, '排行榜', () {
             context.secondaryNavigator!.pushNamed(pageLeaderboard);
           }),
         ],
@@ -137,7 +137,7 @@ class _SectionPlaylist extends ConsumerWidget {
       data: (list) {
         return LayoutBuilder(builder: (context, constraints) {
           assert(constraints.maxWidth.isFinite,
-              "can not layout playlist item in infinite width container.");
+              'can not layout playlist item in infinite width container.');
           final parentWidth = constraints.maxWidth - 8;
           const int count = /* false ? 6 : */ 3;
           final double width =
@@ -225,7 +225,7 @@ class _PlayListItemView extends ConsumerWidget {
                   aspectRatio: 1,
                   child: FadeInImage(
                     placeholder:
-                        const AssetImage("assets/playlist_playlist.9.png"),
+                        const AssetImage('assets/playlist_playlist.9.png'),
                     image: CachedImage(playlist.picUrl),
                     fit: BoxFit.cover,
                   ),

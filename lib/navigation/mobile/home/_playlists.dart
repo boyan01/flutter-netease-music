@@ -29,7 +29,7 @@ class PlayListsGroupHeader extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 8),
           child: Row(
             children: [
-              Text("$name($count)"),
+              Text('$name($count)'),
               const Spacer(),
               const Icon(Icons.add),
               const Icon(Icons.more_vert),
@@ -126,7 +126,7 @@ class PlayListTypeNotification extends Notification {
 
 class PlayListSliverKey extends ValueKey {
   const PlayListSliverKey({this.createdPosition, this.favoritePosition})
-      : super("_PlayListSliverKey");
+      : super('_PlayListSliverKey');
   final int? createdPosition;
   final int? favoritePosition;
 }

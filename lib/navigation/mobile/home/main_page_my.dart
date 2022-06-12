@@ -30,8 +30,8 @@ class _MainPageMyState extends ConsumerState<MainPageMy>
   }
 
   void _onUserSelectedTab() {
-    debugPrint("_onUserSelectedTab :"
-        " ${_tabController!.index} ${_tabController!.indexIsChanging}");
+    debugPrint('_onUserSelectedTab :'
+        ' ${_tabController!.index} ${_tabController!.indexIsChanging}');
     if (_scrollerAnimating || _tabAnimating) {
       return;
     }
@@ -105,9 +105,9 @@ class _MainPageMyState extends ConsumerState<MainPageMy>
 
     final PlayListSliverKey? sliverKey =
         playListSliver!.widget.key as PlayListSliverKey?;
-    assert(playListSliver != null, "can not find sliver");
-    debugPrint("sliverKey : created position:"
-        " ${sliverKey!.createdPosition} ${sliverKey.favoritePosition}");
+    assert(playListSliver != null, 'can not find sliver');
+    debugPrint('sliverKey : created position:'
+        ' ${sliverKey!.createdPosition} ${sliverKey.favoritePosition}');
 
     final List<Element> children = [];
     playListSliver!.visitChildElements((element) {
@@ -121,7 +121,7 @@ class _MainPageMyState extends ConsumerState<MainPageMy>
     if (end <= start) {
       return;
     }
-    debugPrint("position start - end -> $start - $end");
+    debugPrint('position start - end -> $start - $end');
     callback(sliverKey, children, start, end);
   }
 
@@ -181,7 +181,7 @@ class _MainPageMyState extends ConsumerState<MainPageMy>
     }
 
     element.visitChildElements(_findIndex);
-    assert(index != null, "can not get index for element $element");
+    assert(index != null, 'can not get index for element $element');
     return index;
   }
 

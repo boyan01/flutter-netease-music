@@ -26,7 +26,7 @@ extension _Metadata on MusicMetadata {
     }
     return Track(
       id: int.parse(mediaId),
-      name: title ?? "",
+      name: title ?? '',
       uri: mediaUri,
       artists: artists.map((artist) => ArtistMini.fromJson(artist)).toList(),
       album: album == null ? null : AlbumMini.fromJson(album),
@@ -233,7 +233,7 @@ Future<String> _playUriInterceptor(String? mediaId, String? fallbackUri) async {
   }
 
   /// some devices do not support http request.
-  return result.asValue!.value.replaceFirst("http://", "https://");
+  return result.asValue!.value.replaceFirst('http://', 'https://');
 }
 
 Future<Uint8List> _loadImageInterceptor(MusicMetadata metadata) async {
@@ -252,7 +252,7 @@ Future<Uint8List> _loadImageInterceptor(MusicMetadata metadata) async {
       .then((image) => image.image.toByteData(format: ImageByteFormat.png))
       .then((byte) => byte!.buffer.asUint8List())
       .timeout(const Duration(seconds: 10));
-  debugPrint("load image for : ${metadata.title} ${result.length}");
+  debugPrint('load image for : ${metadata.title} ${result.length}');
   return result;
 }
 

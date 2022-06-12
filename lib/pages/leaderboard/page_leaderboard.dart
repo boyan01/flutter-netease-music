@@ -10,7 +10,7 @@ class LeaderboardPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         leading: const BackButton(),
-        title: const Text("排行榜"),
+        title: const Text('排行榜'),
       ),
       body: Loader<Map>(
         loadTask: () => neteaseRepository!.topListDetail(),
@@ -30,11 +30,11 @@ class _Leaderboard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final List<Widget> widgets = [];
-    widgets.add(const _ItemTitle("官方榜"));
+    widgets.add(const _ItemTitle('官方榜'));
     for (var i = 0; i < 4; i++) {
       widgets.add(_ItemLeaderboard1(data[i]));
     }
-    widgets.add(const _ItemTitle("全球榜"));
+    widgets.add(const _ItemTitle('全球榜'));
     widgets.add(GridView.builder(
         padding: const EdgeInsets.symmetric(horizontal: 8),
         shrinkWrap: true,
@@ -84,7 +84,7 @@ class _ItemLeaderBoard2 extends StatelessWidget {
     return InkWell(
       onTap: () {
         Navigator.push(context, MaterialPageRoute(builder: (context) {
-          return PlaylistDetailPage(row["id"]);
+          return PlaylistDetailPage(row['id']);
         }));
       },
       child: SizedBox(
@@ -99,7 +99,7 @@ class _ItemLeaderBoard2 extends StatelessWidget {
                 borderRadius: BorderRadius.circular(3),
                 child: Stack(
                   children: <Widget>[
-                    Image(image: CachedImage(row["coverImgUrl"])),
+                    Image(image: CachedImage(row['coverImgUrl'])),
                     Align(
                       alignment: Alignment.bottomCenter,
                       child: Container(
@@ -114,7 +114,7 @@ class _ItemLeaderBoard2 extends StatelessWidget {
                           children: <Widget>[
                             const Spacer(),
                             Text(
-                              row["updateFrequency"],
+                              row['updateFrequency'],
                               style: Theme.of(context).primaryTextTheme.caption,
                             ),
                             const Padding(padding: EdgeInsets.only(right: 4))
@@ -127,7 +127,7 @@ class _ItemLeaderBoard2 extends StatelessWidget {
               ),
             ),
             Text(
-              row["name"],
+              row['name'],
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
             ),
@@ -148,7 +148,7 @@ class _ItemLeaderboard1 extends StatelessWidget {
     return InkWell(
       onTap: () {
         Navigator.push(context, MaterialPageRoute(builder: (context) {
-          return PlaylistDetailPage(row["id"]);
+          return PlaylistDetailPage(row['id']);
         }));
       },
       child: Container(
@@ -162,7 +162,7 @@ class _ItemLeaderboard1 extends StatelessWidget {
                 borderRadius: BorderRadius.circular(3),
                 child: Stack(
                   children: <Widget>[
-                    Image(image: CachedImage(row["coverImgUrl"])),
+                    Image(image: CachedImage(row['coverImgUrl'])),
                     Align(
                       alignment: Alignment.bottomCenter,
                       child: Container(
@@ -177,7 +177,7 @@ class _ItemLeaderboard1 extends StatelessWidget {
                           children: <Widget>[
                             const Spacer(),
                             Text(
-                              row["updateFrequency"],
+                              row['updateFrequency'],
                               style: Theme.of(context).primaryTextTheme.caption,
                             ),
                             const Padding(padding: EdgeInsets.only(right: 4))
@@ -196,19 +196,19 @@ class _ItemLeaderboard1 extends StatelessWidget {
                 children: <Widget>[
                   const Spacer(),
                   Text(
-                    _getTrack((row["tracks"] as List)[0] as Map),
+                    _getTrack((row['tracks'] as List)[0] as Map),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
                   const Spacer(),
                   Text(
-                    _getTrack((row["tracks"] as List)[1] as Map),
+                    _getTrack((row['tracks'] as List)[1] as Map),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
                   const Spacer(),
                   Text(
-                    _getTrack((row["tracks"] as List)[2] as Map),
+                    _getTrack((row['tracks'] as List)[2] as Map),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),

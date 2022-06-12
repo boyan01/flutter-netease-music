@@ -595,11 +595,11 @@ class LyricEntry {
   LyricEntry(this.line, this.position, this.duration)
       : timeStamp = getTimeStamp(position);
 
-  static RegExp pattern = RegExp(r"\[\d{2}:\d{2}.\d{2,3}]");
+  static RegExp pattern = RegExp(r'\[\d{2}:\d{2}.\d{2,3}]');
 
   static int _stamp2int(final String stamp) {
-    final int indexOfColon = stamp.indexOf(":");
-    final int indexOfPoint = stamp.indexOf(".");
+    final int indexOfColon = stamp.indexOf(':');
+    final int indexOfPoint = stamp.indexOf('.');
 
     final int minute = int.parse(stamp.substring(1, indexOfColon));
     final int second =
@@ -618,11 +618,11 @@ class LyricEntry {
   ///build from a .lrc file line .such as: [11:44.100] what makes your beautiful
   static void inflate(String line, Map<int, String> map) {
     //TODO lyric info
-    if (line.startsWith("[ti:")) {
-    } else if (line.startsWith("[ar:")) {
-    } else if (line.startsWith("[al:")) {
-    } else if (line.startsWith("[au:")) {
-    } else if (line.startsWith("[by:")) {
+    if (line.startsWith('[ti:')) {
+    } else if (line.startsWith('[ar:')) {
+    } else if (line.startsWith('[al:')) {
+    } else if (line.startsWith('[au:')) {
+    } else if (line.startsWith('[by:')) {
     } else {
       final stamps = pattern.allMatches(line);
       final content = line.split(pattern).last;

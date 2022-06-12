@@ -26,7 +26,7 @@ class QuietApp extends ConsumerWidget {
     }
     return MaterialApp(
       title: 'Quiet',
-      supportedLocales: const [Locale("en"), Locale("zh")],
+      supportedLocales: const [Locale('en'), Locale('zh')],
       localizationsDelegates: const [
         S.delegate,
         GlobalWidgetsLocalizations.delegate,

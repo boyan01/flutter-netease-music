@@ -6,8 +6,8 @@ class CloudMusicDetail {
   CloudMusicDetail({
     required this.data,
     this.count = 0,
-    this.size = "",
-    this.maxSize = "",
+    this.size = '',
+    this.maxSize = '',
     this.upgradeSign = 0,
     this.hasMore = false,
     this.code = 0,
@@ -48,17 +48,17 @@ class CloudSongItem {
   CloudSongItem({
     required this.simpleSong,
     this.fileSize = 0,
-    this.album = "",
-    this.artist = "",
+    this.album = '',
+    this.artist = '',
     this.bitrate = 0,
     this.songId = 0,
     this.addTime = 0,
-    this.songName = "",
+    this.songName = '',
     this.cover = 0,
-    this.coverId = "",
-    this.lyricId = "",
+    this.coverId = '',
+    this.lyricId = '',
     this.version = 0,
-    this.fileName = "",
+    this.fileName = '',
   });
 
   factory CloudSongItem.fromJson(Map<String, dynamic>? json) => CloudSongItem(
@@ -109,7 +109,7 @@ class CloudSongItem {
 
 class SimpleSong {
   SimpleSong({
-    this.name = "",
+    this.name = '',
     this.id = 0,
     this.pst = 0,
     this.t = 0,
@@ -308,7 +308,7 @@ class SimpleSongAlbum {
   SimpleSongAlbum({
     this.id = 0,
     this.name,
-    this.picUrl = "",
+    this.picUrl = '',
     required this.tns,
     this.pic = 0,
   });

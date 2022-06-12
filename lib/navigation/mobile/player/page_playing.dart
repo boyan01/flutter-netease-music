@@ -64,7 +64,7 @@ class PlayerControllerBar extends ConsumerWidget {
 
     final iconPlayPause = PlayingIndicator(
       playing: IconButton(
-          tooltip: "暂停",
+          tooltip: '暂停',
           iconSize: 40,
           icon: Icon(
             Icons.pause_circle_outline,
@@ -74,7 +74,7 @@ class PlayerControllerBar extends ConsumerWidget {
             ref.read(playerProvider).pause();
           }),
       pausing: IconButton(
-          tooltip: "播放",
+          tooltip: '播放',
           iconSize: 40,
           icon: Icon(
             Icons.play_circle_outline,

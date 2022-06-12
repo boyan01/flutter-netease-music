@@ -24,13 +24,13 @@ class ArtistDetailPage extends StatelessWidget {
       loadTask: () => neteaseRepository!.artist(artistId),
       loadingBuilder: (context) {
         return Scaffold(
-          appBar: AppBar(title: const Text("歌手")),
+          appBar: AppBar(title: const Text('歌手')),
           body: Loader.buildSimpleLoadingWidget(context),
         );
       },
       errorBuilder: (context, result) {
         return Scaffold(
-          appBar: AppBar(title: const Text("歌手")),
+          appBar: AppBar(title: const Text('歌手')),
           body: Loader.buildSimpleFailedWidget(context, result),
         );
       },
@@ -108,7 +108,7 @@ class _PageHotSongsState extends State<_PageHotSongs>
                   const SizedBox(width: 8),
                   const Icon(Icons.add_box),
                   const SizedBox(width: 8),
-                  Expanded(child: Text("收藏热门${widget.musicList.length}单曲")),
+                  Expanded(child: Text('收藏热门${widget.musicList.length}单曲')),
                   TextButton(
                     onPressed: () {
                       Navigator.of(context).push(
@@ -117,7 +117,7 @@ class _PageHotSongsState extends State<_PageHotSongs>
                         }),
                       );
                     },
-                    child: const Text("多选"),
+                    child: const Text('多选'),
                   )
                 ],
               ),
@@ -133,7 +133,7 @@ class _PageHotSongsState extends State<_PageHotSongs>
   Widget build(BuildContext context) {
     super.build(context);
     if (widget.musicList.isEmpty) {
-      return const Center(child: Text("该歌手无热门曲目"));
+      return const Center(child: Text('该歌手无热门曲目'));
     }
     return MusicTileConfiguration(
       musics: widget.musicList,
@@ -204,7 +204,7 @@ class _PageMVsState extends State<_PageMVs> with AutomaticKeepAliveClientMixin {
   Future<Result<List<Map>>> _loadMv(int offset) async {
     final result =
         await neteaseRepository!.artistMvs(widget.artistId, offset: offset);
-    return ValueResult((result.asValue!.value["mvs"] as List).cast());
+    return ValueResult((result.asValue!.value['mvs'] as List).cast());
   }
 
   @override
@@ -229,7 +229,7 @@ class _PageMVsState extends State<_PageMVs> with AutomaticKeepAliveClientMixin {
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(3),
                       child: Image(
-                        image: CachedImage(mv["imgurl16v9"]),
+                        image: CachedImage(mv['imgurl16v9']),
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -240,10 +240,10 @@ class _PageMVsState extends State<_PageMVs> with AutomaticKeepAliveClientMixin {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       const Spacer(),
-                      Text(mv["name"],
+                      Text(mv['name'],
                           maxLines: 1, overflow: TextOverflow.ellipsis),
                       const SizedBox(height: 4),
-                      Text(mv["publishTime"],
+                      Text(mv['publishTime'],
                           style: Theme.of(context).textTheme.caption),
                       const Spacer(),
                       const Divider(height: 0)
@@ -279,14 +279,14 @@ class _PageArtistIntroductionState extends State<_PageArtistIntroduction>
   List<Widget> _buildIntroduction(BuildContext context, Map result) {
     final Widget title = Padding(
         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
-        child: Text("${widget.artistName}简介",
+        child: Text('${widget.artistName}简介',
             style: const TextStyle(
                 fontSize: 15, fontWeight: FontWeight.bold, shadows: [])));
 
     final Widget briefDesc = Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8),
       child: Text(
-        result["briefDesc"],
+        result['briefDesc'],
         style: TextStyle(color: Theme.of(context).textTheme.caption!.color),
       ),
     );
@@ -297,7 +297,7 @@ class _PageArtistIntroductionState extends State<_PageArtistIntroduction>
       child: const SizedBox(
         height: 36,
         child: Center(
-          child: Text("完整歌手介绍"),
+          child: Text('完整歌手介绍'),
         ),
       ),
     );
@@ -305,13 +305,13 @@ class _PageArtistIntroductionState extends State<_PageArtistIntroduction>
   }
 
   List<Widget> _buildTopic(BuildContext context, Map result) {
-    final List<Map>? data = (result["topicData"] as List?)?.cast();
+    final List<Map>? data = (result['topicData'] as List?)?.cast();
     if (data == null || data.isEmpty) {
       return [];
     }
     const Widget title = Padding(
         padding: EdgeInsets.symmetric(vertical: 10, horizontal: 8),
-        child: Text("相关专题文章",
+        child: Text('相关专题文章',
             style: TextStyle(
                 fontSize: 15, fontWeight: FontWeight.bold, shadows: [])));
     final List<Widget> list = data.map<Widget>((topic) {
@@ -333,7 +333,7 @@ class _PageArtistIntroductionState extends State<_PageArtistIntroduction>
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(3),
                   child: Image(
-                    image: CachedImage(topic["rectanglePicUrl"]),
+                    image: CachedImage(topic['rectanglePicUrl']),
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -344,7 +344,7 @@ class _PageArtistIntroductionState extends State<_PageArtistIntroduction>
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   const Spacer(),
-                  Text(topic["mainTitle"],
+                  Text(topic['mainTitle'],
                       maxLines: 1, overflow: TextOverflow.ellipsis),
                   const SizedBox(height: 4),
                   Text(subtitle, style: Theme.of(context).textTheme.caption),
@@ -359,7 +359,7 @@ class _PageArtistIntroductionState extends State<_PageArtistIntroduction>
     }).toList();
     list.insert(0, title);
 
-    if (result["count"] > data.length) {
+    if (result['count'] > data.length) {
       list.add(InkWell(
         onTap: () {
           toast(context.strings.todo);
@@ -367,7 +367,7 @@ class _PageArtistIntroductionState extends State<_PageArtistIntroduction>
         child: const SizedBox(
           height: 56,
           child: Center(
-            child: Text("全部专栏文章"),
+            child: Text('全部专栏文章'),
           ),
         ),
       ));

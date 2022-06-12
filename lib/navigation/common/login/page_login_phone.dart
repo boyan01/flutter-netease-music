@@ -20,7 +20,7 @@ import 'page_dia_code_selection.dart';
 /// Read emoji flags from assets.
 Future<List<RegionFlag>> _getRegions() async {
   final jsonStr =
-      await rootBundle.loadString("assets/emoji-flags.json", cache: false);
+      await rootBundle.loadString('assets/emoji-flags.json', cache: false);
   final flags = json.decode(jsonStr) as List;
   final result =
       flags.cast<Map>().map((map) => RegionFlag.fromMap(map)).where((flag) {
@@ -99,8 +99,8 @@ class _PhoneInputLayout extends HookConsumerWidget {
         neteaseRepository!.checkPhoneExist(
           text,
           selectedRegion.value.dialCode!
-              .replaceAll("+", "")
-              .replaceAll(" ", ""),
+              .replaceAll('+', '')
+              .replaceAll(' ', ''),
         ),
       );
       if (result.isError) {
@@ -200,7 +200,7 @@ class _PhoneInput extends HookWidget {
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
             child: Text(
-              "${selectedRegion.emoji} ${selectedRegion.dialCode!}",
+              '${selectedRegion.emoji} ${selectedRegion.dialCode!}',
               style: style,
             ),
           ),

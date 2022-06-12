@@ -46,7 +46,7 @@ class PlaylistSelectionPageState extends State<PlaylistSelectionPage> {
       key: _scaffoldKey,
       appBar: AppBar(
         leading: const BackButton(),
-        title: Text("已选择${selectedList.length}项"),
+        title: Text('已选择${selectedList.length}项'),
         actions: [
           TextButton(
             onPressed: () {
@@ -60,7 +60,7 @@ class PlaylistSelectionPageState extends State<PlaylistSelectionPage> {
                 }
               });
             },
-            child: Text(allSelected ? "取消全选" : "全选",
+            child: Text(allSelected ? '取消全选' : '全选',
                 style: Theme.of(context).primaryTextTheme.bodyText2),
           )
         ],
@@ -83,7 +83,7 @@ class PlaylistSelectionPageState extends State<PlaylistSelectionPage> {
             controller: controller,
             itemCount: widget.list!.length,
             itemBuilder: (context, index) {
-              debugPrint("build item $index");
+              debugPrint('build item $index');
               final item = widget.list![index];
               final checked = selectedList.contains(item);
               return _SelectionItem(music: item, selected: checked);
@@ -105,7 +105,7 @@ class PlaylistSelectionPageState extends State<PlaylistSelectionPage> {
               await Stream.fromIterable(selectedList).forEach((e) {
                 // TODO(bin): refactor
               });
-              showSimpleNotification(Text("已添加${selectedList.length}首歌曲"));
+              showSimpleNotification(Text('已添加${selectedList.length}首歌曲'));
             },
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -124,7 +124,7 @@ class PlaylistSelectionPageState extends State<PlaylistSelectionPage> {
                 return;
               }
               if (succeed) {
-                showSimpleNotification(Text("已成功收藏${selectedList.length}首歌曲"));
+                showSimpleNotification(Text('已成功收藏${selectedList.length}首歌曲'));
               } else {
                 showSimpleNotification(
                   Text(context.strings.addToPlaylistFailed),
@@ -153,7 +153,7 @@ class PlaylistSelectionPageState extends State<PlaylistSelectionPage> {
                   });
                 }
                 if (succeed) {
-                  showSimpleNotification(Text("已删除${selectedList.length}首歌曲"),
+                  showSimpleNotification(Text('已删除${selectedList.length}首歌曲'),
                       background: Theme.of(context).errorColor);
                 } else {
                   showSimpleNotification(

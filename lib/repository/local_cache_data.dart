@@ -20,7 +20,7 @@ class LocalData {
     if (data != null) {
       final cached = await data;
       if (cached != null) {
-        assert(cached is T, "local espect be $T, but is $cached");
+        assert(cached is T, 'local espect be $T, but is $cached');
         yield cached as T;
       }
     }
@@ -29,7 +29,7 @@ class LocalData {
       neteaseLocalData[key] = net;
       yield net;
     } catch (e) {
-      if (onNetError != null) onNetError("$e");
+      if (onNetError != null) onNetError('$e');
       debugPrint('error : $e');
     }
   }
@@ -49,7 +49,7 @@ class LocalData {
       return result;
     }
     assert(false,
-        "the result of $key is not subtype of $T. ${result.runtimeType}");
+        'the result of $key is not subtype of $T. ${result.runtimeType}');
     return null;
   }
 
@@ -59,7 +59,7 @@ class LocalData {
   }
 
   Future<List<PlaylistDetail>> getUserPlaylist(int? userId) async {
-    final data = await get("user_playlist_$userId");
+    final data = await get('user_playlist_$userId');
     if (data == null) {
       return const [];
     }
@@ -71,11 +71,11 @@ class LocalData {
   }
 
   void updateUserPlaylist(int? userId, List<PlaylistDetail?> list) {
-    _put(list.map((p) => p!.toJson()).toList(), "user_playlist_$userId");
+    _put(list.map((p) => p!.toJson()).toList(), 'user_playlist_$userId');
   }
 
   Future<PlaylistDetail?> getPlaylistDetail(int playlistId) async {
-    final data = await get<Map<String, dynamic>>("playlist_detail_$playlistId");
+    final data = await get<Map<String, dynamic>>('playlist_detail_$playlistId');
     if (data == null) {
       return null;
     }

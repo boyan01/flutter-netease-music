@@ -3,15 +3,15 @@ import 'package:flutter/material.dart';
 import 'page_login_password.dart';
 import 'page_login_phone.dart';
 
-const pageLoginPhone = "loginWithPhone";
+const pageLoginPhone = 'loginWithPhone';
 
 ///
 /// 需要的参数:
 /// phone : 手机号
 ///
-const pageLoginPassword = "loginPassword";
+const pageLoginPassword = 'loginPassword';
 
-const pageRegister = "register";
+const pageRegister = 'register';
 
 ///登录子流程
 class LoginNavigator extends StatelessWidget {

@@ -23,7 +23,7 @@ class _PlaylistEditPageState extends State<PlaylistEditPage> {
     return Scaffold(
       appBar: AppBar(
         leading: const BackButton(),
-        title: const Text("编辑歌单信息"),
+        title: const Text('编辑歌单信息'),
       ),
       body: Builder(builder: (context) {
         return Column(
@@ -31,7 +31,7 @@ class _PlaylistEditPageState extends State<PlaylistEditPage> {
             const SizedBox(height: 8),
             InkWell(
               onTap: () {
-                showSimpleNotification(const Text("Not implemented"),
+                showSimpleNotification(const Text('Not implemented'),
                     background: Theme.of(context).errorColor);
               },
               child: Container(
@@ -39,7 +39,7 @@ class _PlaylistEditPageState extends State<PlaylistEditPage> {
                 padding: const EdgeInsets.symmetric(horizontal: 8),
                 child: Row(
                   children: <Widget>[
-                    Expanded(child: Text("更换封面", style: style)),
+                    Expanded(child: Text('更换封面', style: style)),
                     Image(
                         image: CachedImage(widget.playlist.coverUrl),
                         height: 56,
@@ -61,7 +61,7 @@ class _PlaylistEditPageState extends State<PlaylistEditPage> {
                 padding: const EdgeInsets.symmetric(horizontal: 8),
                 child: Row(
                   children: <Widget>[
-                    Expanded(child: Text("名称", style: style)),
+                    Expanded(child: Text('名称', style: style)),
                     Text(widget.playlist.name)
                   ],
                 ),
@@ -70,7 +70,7 @@ class _PlaylistEditPageState extends State<PlaylistEditPage> {
             const Divider(height: 0, indent: 8),
             InkWell(
               onTap: () {
-                showSimpleNotification(const Text("Not implemented"),
+                showSimpleNotification(const Text('Not implemented'),
                     background: Theme.of(context).errorColor);
               },
               child: Container(
@@ -78,8 +78,8 @@ class _PlaylistEditPageState extends State<PlaylistEditPage> {
                 padding: const EdgeInsets.symmetric(horizontal: 8),
                 child: Row(
                   children: <Widget>[
-                    Expanded(child: Text("标签", style: style)),
-                    Text("功能未实现", style: Theme.of(context).textTheme.caption)
+                    Expanded(child: Text('标签', style: style)),
+                    Text('功能未实现', style: Theme.of(context).textTheme.caption)
                   ],
                 ),
               ),
@@ -87,7 +87,7 @@ class _PlaylistEditPageState extends State<PlaylistEditPage> {
             const Divider(height: 0, indent: 8),
             InkWell(
               onTap: () {
-                showSimpleNotification(const Text("Not implemented"),
+                showSimpleNotification(const Text('Not implemented'),
                     background: Theme.of(context).errorColor);
               },
               child: Container(
@@ -95,7 +95,7 @@ class _PlaylistEditPageState extends State<PlaylistEditPage> {
                 padding: const EdgeInsets.symmetric(horizontal: 8),
                 child: Row(
                   children: <Widget>[
-                    Expanded(child: Text("描述", style: style)),
+                    Expanded(child: Text('描述', style: style)),
                     Text(widget.playlist.name)
                   ],
                 ),
@@ -143,7 +143,7 @@ class _PlaylistNameEditPageState extends State<_PlaylistNameEditPage> {
     return Scaffold(
       appBar: AppBar(
         leading: const BackButton(),
-        title: const Text("歌单名称"),
+        title: const Text('歌单名称'),
         actions: <Widget>[
           TextButton(
               onPressed: () async {
@@ -169,7 +169,7 @@ class _PlaylistNameEditPageState extends State<_PlaylistNameEditPage> {
                 //   });
                 // }
               },
-              child: const Text("保存"))
+              child: const Text('保存'))
         ],
       ),
       body: Padding(
@@ -184,16 +184,16 @@ class _PlaylistNameEditPageState extends State<_PlaylistNameEditPage> {
               focusNode: _focusNode,
               textInputAction: TextInputAction.done,
               decoration: InputDecoration(
-                  hintText: "编辑歌单名称",
+                  hintText: '编辑歌单名称',
                   errorText: error,
                   suffixIcon: IconButton(
                       icon: const Icon(Icons.close),
                       onPressed: () {
-                        _controller!.text = "";
+                        _controller!.text = '';
                       })),
               validator: (v) {
                 if (v!.isEmpty) {
-                  return "歌单名不能为空";
+                  return '歌单名不能为空';
                 }
                 return null;
               },

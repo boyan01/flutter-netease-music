@@ -49,7 +49,7 @@ class _DailyMusicList extends StatelessWidget {
                 icon: const Icon(Icons.help_outline),
                 onPressed: () {
                   launchUrlString(
-                    "https://music.163.com/m/topic/19193112",
+                    'https://music.163.com/m/topic/19193112',
                     mode: LaunchMode.inAppWebView,
                   );
                 })

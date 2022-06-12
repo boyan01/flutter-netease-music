@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-const String _kKeyHistory = "key_search_history";
+const String _kKeyHistory = 'key_search_history';
 
 class SearchHistory extends Model {
   SearchHistory() {

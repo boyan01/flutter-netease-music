@@ -43,8 +43,8 @@ Future<T> showLoaderOverlay<T>(BuildContext context, Future<T> data,
 ///other return false
 Future<bool> showConfirmDialog(BuildContext context, Widget content,
     {String? positiveLabel, String? negativeLabel}) async {
-  negativeLabel ??= "取消";
-  positiveLabel ??= "确认";
+  negativeLabel ??= '取消';
+  positiveLabel ??= '确认';
 
   final bool? result = await showDialog(
       context: context,

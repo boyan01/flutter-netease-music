@@ -9,10 +9,10 @@ class CollectionEmpty extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
-        const Image(image: AssetImage("assets/no_copy_right.png")),
+        const Image(image: AssetImage('assets/no_copy_right.png')),
         const SizedBox(height: 16),
         const Text(
-          "暂无收藏",
+          '暂无收藏',
           textAlign: TextAlign.center,
         ),
         const SizedBox(height: 16),

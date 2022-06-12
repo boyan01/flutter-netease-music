@@ -27,22 +27,22 @@ class _AlbumsResultSectionState extends State<AlbumsResultSection>
       if (result.isError) {
         return result.asError!;
       }
-      final list = result.asValue!.value["result"]["albums"] as List?;
+      final list = result.asValue!.value['result']['albums'] as List?;
       return LoadMoreResult(list?.cast<Map>() ?? const []);
     }, builder: (context, album) {
       return AlbumTile(
         album: album,
         subtitle: (album) {
-          String subTitle = (album["artists"] as List)
+          String subTitle = (album['artists'] as List)
               .cast<Map>()
-              .map((ar) => ar["name"])
+              .map((ar) => ar['name'])
               .toList()
-              .join("/");
-          if (album["containedSong"] == null ||
-              (album["containedSong"] as String).isEmpty) {
-            final String publishTime = DateFormat("y.M.d").format(
-                DateTime.fromMillisecondsSinceEpoch(album["publishTime"]));
-            subTitle = "$subTitle $publishTime";
+              .join('/');
+          if (album['containedSong'] == null ||
+              (album['containedSong'] as String).isEmpty) {
+            final String publishTime = DateFormat('y.M.d').format(
+                DateTime.fromMillisecondsSinceEpoch(album['publishTime']));
+            subTitle = '$subTitle $publishTime';
           } else {
             subTitle = "$subTitle 包含单曲: ${album["containedSong"]}";
           }

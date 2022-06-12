@@ -43,7 +43,7 @@ class _DiaCodeListState extends State<_DiaCodeList> {
   late List<RegionFlag> _sortedRegions;
   ItemScrollController? _scrollController;
 
-  String _query = "";
+  String _query = '';
 
   OverlaySupportEntry? _currentShowingEntry;
 
@@ -242,7 +242,7 @@ class AZSelection extends SingleChildRenderObjectWidget {
 
 class AZRender extends RenderBox {
   static final _chars =
-      "abcdefghijklmnopqrstuvwxyz".toUpperCase().characters.toList();
+      'abcdefghijklmnopqrstuvwxyz'.toUpperCase().characters.toList();
 
   final _offsets = HashMap<TextPainter, Offset>();
 
@@ -263,7 +263,7 @@ class AZRender extends RenderBox {
     super.performLayout();
     assert(() {
       if (!hasSize) {
-        throw FlutterError("RenderBox was not laid out: ${toString()}");
+        throw FlutterError('RenderBox was not laid out: ${toString()}');
       }
       return true;
     }());

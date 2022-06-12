@@ -367,11 +367,11 @@ class _AlbumHeaderContent extends ConsumerWidget {
                                 context: context, artists: [album.artist]),
                         child: Padding(
                           padding: const EdgeInsets.only(top: 4, bottom: 4),
-                          child: Text("歌手: ${album.artist.name}"),
+                          child: Text('歌手: ${album.artist.name}'),
                         )),
                     const SizedBox(height: 4),
                     Text(
-                        "发行时间：${getFormattedTime(album.publishTime.millisecondsSinceEpoch)}")
+                        '发行时间：${getFormattedTime(album.publishTime.millisecondsSinceEpoch)}')
                   ],
                 ),
               ))

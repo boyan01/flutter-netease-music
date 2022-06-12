@@ -7,7 +7,7 @@ import 'result_songs.dart';
 import 'result_videos.dart';
 
 ///搜索结果分类
-const List<String> kSections = ["单曲", "视频", "歌手", "专辑", "歌单"];
+const List<String> kSections = ['单曲', '视频', '歌手', '专辑', '歌单'];
 
 class SearchResultPage extends StatefulWidget {
   SearchResultPage({Key? key, this.query})
@@ -45,11 +45,11 @@ class _SearchResultPageState extends State<SearchResultPage> {
   Widget build(BuildContext context) {
     return TabBarView(
       children: [
-        SongsResultSection(query: query, key: Key("SongTab_$query")),
-        VideosResultSection(query: query, key: Key("VideoTab_$query")),
-        ArtistsResultSection(query: query, key: Key("Artists_$query")),
-        AlbumsResultSection(query: query, key: Key("AlbumTab_$query")),
-        PlaylistResultSection(query: query, key: Key("PlaylistTab_$query")),
+        SongsResultSection(query: query, key: Key('SongTab_$query')),
+        VideosResultSection(query: query, key: Key('VideoTab_$query')),
+        ArtistsResultSection(query: query, key: Key('Artists_$query')),
+        AlbumsResultSection(query: query, key: Key('AlbumTab_$query')),
+        PlaylistResultSection(query: query, key: Key('PlaylistTab_$query')),
       ],
     );
   }
