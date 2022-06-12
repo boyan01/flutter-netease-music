@@ -188,8 +188,11 @@ class PlaylistSelectionPageState extends State<PlaylistSelectionPage> {
 }
 
 class _SelectionItem extends ConsumerWidget {
-  const _SelectionItem(
-      {super.key, required this.music, required this.selected});
+  const _SelectionItem({
+    super.key,
+    required this.music,
+    required this.selected,
+  });
 
   final Music music;
 
