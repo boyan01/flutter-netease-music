@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:overlay_support/overlay_support.dart';
-import 'package:quiet/extension.dart';
-import 'package:quiet/navigation/common/like_button.dart';
-import 'package:quiet/navigation/common/playlist/music_list.dart';
-import 'package:quiet/providers/navigator_provider.dart';
-import 'package:quiet/providers/player_provider.dart';
-import 'package:quiet/repository.dart';
+import '../../../extension.dart';
+import '../../common/like_button.dart';
+import '../../common/playlist/music_list.dart';
+import '../../../providers/navigator_provider.dart';
+import '../../../providers/player_provider.dart';
+import '../../../repository.dart';
 
 import '../../common/navigation_target.dart';
 import 'highlight_clickable_text.dart';

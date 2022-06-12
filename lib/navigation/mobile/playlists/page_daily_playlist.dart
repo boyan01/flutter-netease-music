@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:loader/loader.dart';
-import 'package:quiet/material/flexible_app_bar.dart';
-import 'package:quiet/navigation/common/playlist/music_list.dart';
-import 'package:quiet/pages/account/page_need_login.dart';
-import 'package:quiet/repository.dart';
+import '../../../material/flexible_app_bar.dart';
+import '../../common/playlist/music_list.dart';
+import '../../../pages/account/page_need_login.dart';
+import '../../../repository.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 ///每日推荐歌曲页面

@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:quiet/component/exceptions.dart';
-import 'package:quiet/extension.dart';
-import 'package:quiet/repository.dart';
+import '../component/exceptions.dart';
+import '../extension.dart';
+import '../repository.dart';
 
 import 'account_provider.dart';
 

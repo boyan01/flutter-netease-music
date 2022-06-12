@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:overlay_support/overlay_support.dart';
-import 'package:quiet/extension.dart';
-import 'package:quiet/media/tracks/track_list.dart';
-import 'package:quiet/media/tracks/tracks_player.dart';
-import 'package:quiet/navigation/common/navigation_target.dart';
-import 'package:quiet/providers/navigator_provider.dart';
-import 'package:quiet/providers/player_provider.dart';
-import 'package:quiet/repository.dart';
+import '../../../extension.dart';
+import '../../../media/tracks/track_list.dart';
+import '../../../media/tracks/tracks_player.dart';
+import '../navigation_target.dart';
+import '../../../providers/navigator_provider.dart';
+import '../../../providers/player_provider.dart';
+import '../../../repository.dart';
 
 import '../../mobile/playlists/dialog_selector.dart';
 

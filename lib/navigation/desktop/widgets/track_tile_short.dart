@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:quiet/extension.dart';
-import 'package:quiet/repository.dart';
+import '../../../extension.dart';
+import '../../../repository.dart';
 
 class TrackShortTile extends StatelessWidget {
   const TrackShortTile({

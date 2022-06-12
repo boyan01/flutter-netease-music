@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:quiet/extension.dart';
-import 'package:quiet/material.dart';
-import 'package:quiet/navigation/desktop/home_window.dart';
-import 'package:quiet/providers/navigator_provider.dart';
+import '../extension.dart';
+import '../material.dart';
+import 'desktop/home_window.dart';
+import '../providers/navigator_provider.dart';
 
 import '../providers/settings_provider.dart';
 import 'mobile/mobile_window.dart';

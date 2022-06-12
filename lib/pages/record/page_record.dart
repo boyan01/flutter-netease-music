@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:loader/loader.dart';
-import 'package:quiet/material/tabs.dart';
-import 'package:quiet/navigation/common/playlist/music_list.dart';
-import 'package:quiet/repository.dart';
+import '../../material/tabs.dart';
+import '../../navigation/common/playlist/music_list.dart';
+import '../../repository.dart';
 
 class RecordPage extends StatelessWidget {
   const RecordPage({Key? key, required this.uid, this.username})

@@ -1,4 +1,4 @@
-import 'package:netease_api/netease_api.dart';
+import '../../netease_api.dart';
 
 import 'safe_convert.dart';
 

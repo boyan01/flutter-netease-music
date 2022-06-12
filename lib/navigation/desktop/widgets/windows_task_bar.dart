@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:quiet/extension.dart';
-import 'package:quiet/providers/player_provider.dart';
+import '../../../extension.dart';
+import '../../../providers/player_provider.dart';
 import 'package:windows_taskbar/windows_taskbar.dart';
 
 import '../../../media/tracks/tracks_player.dart';

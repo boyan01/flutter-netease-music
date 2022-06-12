@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:quiet/component/utils/scroll_controller.dart';
-import 'package:quiet/extension.dart';
+import '../../component/utils/scroll_controller.dart';
+import '../../extension.dart';
 
 import '../common/settings.dart';
 

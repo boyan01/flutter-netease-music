@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:quiet/navigation/mobile/home/page_home.dart';
-import 'package:quiet/navigation/mobile/player/page_playing.dart';
-import 'package:quiet/navigation/mobile/settings/page_setting.dart';
-import 'package:quiet/navigation/mobile/widgets/slide_up_page_route.dart';
+import 'home/page_home.dart';
+import 'player/page_playing.dart';
+import 'settings/page_setting.dart';
+import 'widgets/slide_up_page_route.dart';
 
 import '../../providers/navigator_provider.dart';
 import '../common/login/login_sub_navigation.dart';

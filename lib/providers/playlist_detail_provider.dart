@@ -1,5 +1,5 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:quiet/repository.dart';
+import '../repository.dart';
 
 final playlistDetailProvider = StreamProvider.family<PlaylistDetail, int>(
   (ref, playlistId) async* {

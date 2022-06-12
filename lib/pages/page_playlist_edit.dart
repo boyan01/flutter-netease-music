@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:overlay_support/overlay_support.dart';
-import 'package:quiet/repository.dart';
+import '../repository.dart';
 
 ///page for playlist edit
 class PlaylistEditPage extends StatefulWidget {

@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:lpinyin/lpinyin.dart';
-import 'package:quiet/component/hooks.dart';
+import '../component/hooks.dart';
 
 import '../repository.dart';
 

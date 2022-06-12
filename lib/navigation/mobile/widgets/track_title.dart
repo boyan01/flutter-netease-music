@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:overlay_support/overlay_support.dart';
-import 'package:quiet/extension.dart';
-import 'package:quiet/repository.dart';
+import '../../../extension.dart';
+import '../../../repository.dart';
 
 import '../../../providers/player_provider.dart';
 import '../../common/playlist/music_list.dart';

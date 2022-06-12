@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:quiet/providers/player_provider.dart';
+import '../../providers/player_provider.dart';
 
 class ProgressTrackingContainer extends HookConsumerWidget {
   const ProgressTrackingContainer({

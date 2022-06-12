@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:overlay_support/overlay_support.dart';
-import 'package:quiet/extension.dart';
-import 'package:quiet/navigation/desktop/login/login_dialog.dart';
-import 'package:quiet/navigation/desktop/playlist/user_playlists.dart';
-import 'package:quiet/navigation/desktop/widgets/navigation_tile.dart';
-import 'package:quiet/providers/account_provider.dart';
-import 'package:quiet/providers/navigator_provider.dart';
-import 'package:quiet/repository.dart';
+import '../../extension.dart';
+import 'login/login_dialog.dart';
+import 'playlist/user_playlists.dart';
+import 'widgets/navigation_tile.dart';
+import '../../providers/account_provider.dart';
+import '../../providers/navigator_provider.dart';
+import '../../repository.dart';
 
 import '../../component/utils/scroll_controller.dart';
 import '../common/navigation_target.dart';

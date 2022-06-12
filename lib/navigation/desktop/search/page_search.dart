@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:quiet/extension.dart';
-import 'package:quiet/navigation/common/navigation_target.dart';
+import '../../../extension.dart';
+import '../../common/navigation_target.dart';
 
 import 'page_search_music.dart';
 

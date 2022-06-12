@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:quiet/component.dart';
+import '../../../component.dart';
 
 import '../../../providers/player_provider.dart';
 import '../../common/player/cover.dart';

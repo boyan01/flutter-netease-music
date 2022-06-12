@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:quiet/component.dart';
-import 'package:quiet/navigation/common/navigation_target.dart';
-import 'package:quiet/providers/navigator_provider.dart';
-import 'package:quiet/repository.dart';
+import '../../../component.dart';
+import '../../common/navigation_target.dart';
+import '../../../providers/navigator_provider.dart';
+import '../../../repository.dart';
 
 import '../../../providers/account_provider.dart';
 

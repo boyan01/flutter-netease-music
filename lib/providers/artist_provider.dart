@@ -1,5 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:quiet/repository.dart';
+import '../repository.dart';
 
 final artistProvider = FutureProvider.family<ArtistDetail, int>(
   (ref, albumId) async {

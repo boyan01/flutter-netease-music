@@ -5,9 +5,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:netease_api/netease_api.dart' as api;
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
-import 'package:quiet/component/cache/cache.dart';
-import 'package:quiet/repository.dart';
-import 'package:quiet/repository/data/search_result.dart';
+import '../component/cache/cache.dart';
+import '../repository.dart';
+import 'data/search_result.dart';
 
 export 'package:netease_api/netease_api.dart'
     show

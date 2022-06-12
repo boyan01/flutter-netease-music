@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:quiet/component/route.dart';
+import '../../component/route.dart';
 
 import '../../providers/account_provider.dart';
 

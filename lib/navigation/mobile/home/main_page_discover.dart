@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:quiet/extension.dart';
-import 'package:quiet/navigation/common/playlist/music_list.dart';
-import 'package:quiet/repository.dart';
+import '../../../extension.dart';
+import '../../common/playlist/music_list.dart';
+import '../../../repository.dart';
 
 import '../../../providers/navigator_provider.dart';
 import '../../../providers/personalized_playlist_provider.dart';

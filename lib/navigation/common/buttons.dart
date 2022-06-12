@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:quiet/component.dart';
+import '../../component.dart';
 
 class AppIconButton extends StatelessWidget {
   const AppIconButton({

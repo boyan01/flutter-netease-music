@@ -7,10 +7,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive/hive.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:quiet/navigation/app.dart';
-import 'package:quiet/pages/splash/page_splash.dart';
-import 'package:quiet/providers/preference_provider.dart';
-import 'package:quiet/repository.dart';
+import 'navigation/app.dart';
+import 'pages/splash/page_splash.dart';
+import 'providers/preference_provider.dart';
+import 'repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:window_manager/window_manager.dart';
 

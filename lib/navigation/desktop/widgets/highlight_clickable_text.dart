@@ -3,7 +3,7 @@ import 'dart:ui' as ui;
 import 'package:flutter/gestures.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:quiet/extension.dart';
+import '../../../extension.dart';
 
 class HighlightClickableText extends HookWidget {
   const HighlightClickableText({

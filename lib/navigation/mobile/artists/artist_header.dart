@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:overlay_support/overlay_support.dart';
-import 'package:quiet/material/flexible_app_bar.dart';
-import 'package:quiet/material/tabs.dart';
-import 'package:quiet/repository.dart';
+import '../../../material/flexible_app_bar.dart';
+import '../../../material/tabs.dart';
+import '../../../repository.dart';
 
 class ArtistHeader extends StatelessWidget {
   const ArtistHeader({Key? key, required this.artist}) : super(key: key);

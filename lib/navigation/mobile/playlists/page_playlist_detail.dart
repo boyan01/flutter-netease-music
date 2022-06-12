@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:quiet/extension.dart';
-import 'package:quiet/providers/player_provider.dart';
-import 'package:quiet/providers/playlist_detail_provider.dart';
-import 'package:quiet/repository.dart';
+import '../../../extension.dart';
+import '../../../providers/player_provider.dart';
+import '../../../providers/playlist_detail_provider.dart';
+import '../../../repository.dart';
 
 import '../../../providers/settings_provider.dart';
 import '../../common/playlist/music_list.dart';

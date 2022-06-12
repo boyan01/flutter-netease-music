@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:loader/loader.dart';
-import 'package:quiet/repository.dart';
+import '../../repository.dart';
 
 @visibleForTesting
 bool enableCache = true;

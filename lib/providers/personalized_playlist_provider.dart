@@ -1,4 +1,4 @@
-import 'package:quiet/repository.dart';
+import '../repository.dart';
 import 'package:riverpod/riverpod.dart';
 
 final homePlaylistProvider = FutureProvider((ref) async {

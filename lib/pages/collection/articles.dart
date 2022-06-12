@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:quiet/pages/collection/empty.dart';
+import 'empty.dart';
 
 class CollectionArticles extends StatelessWidget {
   @override

@@ -1,9 +1,9 @@
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:quiet/extension.dart';
-import 'package:quiet/providers/player_provider.dart';
-import 'package:quiet/repository.dart';
+import '../../extension.dart';
+import '../../providers/player_provider.dart';
+import '../../repository.dart';
 
 import '../../providers/navigator_provider.dart';
 import '../common/buttons.dart';

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:loader/loader.dart';
-import 'package:quiet/repository.dart';
+import '../../repository.dart';
 
 import '../../material/tiles.dart';
 

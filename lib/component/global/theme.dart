@@ -2,7 +2,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:quiet/utils/system/system_fonts.dart';
+import '../../utils/system/system_fonts.dart';
 
 const lightSwatch = MaterialColor(0xFFdd4237, {
   900: Color(0xFFae2a20),

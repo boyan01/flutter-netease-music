@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:loader/loader.dart';
-import 'package:quiet/component/utils/utils.dart';
-import 'package:quiet/pages/search/model_search_history.dart';
-import 'package:quiet/repository/netease.dart';
+import '../../component/utils/utils.dart';
+import 'model_search_history.dart';
+import '../../repository/netease.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 import '../../component/route.dart';

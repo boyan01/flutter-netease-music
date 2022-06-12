@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:quiet/navigation/mobile/home/main_page_discover.dart';
-import 'package:quiet/navigation/mobile/home/main_page_my.dart';
-import 'package:quiet/navigation/mobile/home/tab_search.dart';
+import 'main_page_discover.dart';
+import 'main_page_my.dart';
+import 'tab_search.dart';
 
 import '../../../providers/navigator_provider.dart';
 import '../../common/navigation_target.dart';

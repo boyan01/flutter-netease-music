@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:loader/loader.dart';
-import 'package:quiet/navigation/common/playlist/music_list.dart';
-import 'package:quiet/repository.dart';
+import '../../navigation/common/playlist/music_list.dart';
+import '../../repository.dart';
 
 ///song list result
 class SongsResultSection extends StatefulWidget {

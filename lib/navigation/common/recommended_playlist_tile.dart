@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:quiet/repository.dart';
+import '../../repository.dart';
 
 class RecommendedPlaylistTile extends StatelessWidget {
   const RecommendedPlaylistTile({

@@ -6,7 +6,7 @@ import 'dart:ui' as ui;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:quiet/component/cache/key_value_cache.dart';
+import '../component/cache/key_value_cache.dart';
 
 ///default image size in dimens
 const _defaultImageSize = Size.fromWidth(200);

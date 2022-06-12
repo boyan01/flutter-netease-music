@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:loader/loader.dart';
-import 'package:quiet/component/utils/utils.dart';
-import 'package:quiet/repository.dart';
+import '../../component/utils/utils.dart';
+import '../../repository.dart';
 
 class PlaylistResultSection extends StatefulWidget {
   const PlaylistResultSection({Key? key, this.query}) : super(key: key);

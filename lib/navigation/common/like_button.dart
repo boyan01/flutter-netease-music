@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:quiet/providers/player_provider.dart';
+import '../../providers/player_provider.dart';
 
 import '../../material/user.dart';
 import '../../providers/account_provider.dart';

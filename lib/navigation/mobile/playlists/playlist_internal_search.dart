@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:quiet/navigation/common/playlist/music_list.dart';
-import 'package:quiet/providers/player_provider.dart';
-import 'package:quiet/repository.dart';
+import '../../common/playlist/music_list.dart';
+import '../../../providers/player_provider.dart';
+import '../../../repository.dart';
 
 class PlaylistInternalSearchDelegate extends SearchDelegate {
   PlaylistInternalSearchDelegate(this.playlist);

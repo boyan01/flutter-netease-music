@@ -2,9 +2,9 @@ import 'dart:async';
 
 import 'package:dart_vlc/dart_vlc.dart';
 import 'package:flutter/foundation.dart';
-import 'package:quiet/extension.dart';
-import 'package:quiet/model/persistence_player_state.dart';
-import 'package:quiet/repository.dart';
+import '../../extension.dart';
+import '../../model/persistence_player_state.dart';
+import '../../repository.dart';
 
 import 'track_list.dart';
 import 'tracks_player.dart';

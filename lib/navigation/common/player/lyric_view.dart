@@ -2,10 +2,10 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:quiet/extension.dart';
-import 'package:quiet/providers/lyric_provider.dart';
-import 'package:quiet/providers/player_provider.dart';
-import 'package:quiet/repository.dart';
+import '../../../extension.dart';
+import '../../../providers/lyric_provider.dart';
+import '../../../providers/player_provider.dart';
+import '../../../repository.dart';
 
 import '../progress_track_container.dart';
 import 'lyric.dart';

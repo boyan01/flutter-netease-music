@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:loader/loader.dart';
-import 'package:quiet/navigation/mobile/artists/page_artist_detail.dart';
-import 'package:quiet/repository.dart';
+import '../../navigation/mobile/artists/page_artist_detail.dart';
+import '../../repository.dart';
 
 class ArtistsResultSection extends StatefulWidget {
   const ArtistsResultSection({Key? key, this.query}) : super(key: key);

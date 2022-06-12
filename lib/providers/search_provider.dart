@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:quiet/repository.dart';
-import 'package:quiet/repository/data/search_result.dart';
+import '../repository.dart';
+import '../repository/data/search_result.dart';
 
 final searchMusicProvider = StateNotifierProvider.family<
     SearchResultStateNotify<Track>, SearchResultState<Track>, String>(

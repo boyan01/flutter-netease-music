@@ -2,12 +2,12 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:quiet/extension.dart';
-import 'package:quiet/media/tracks/track_list.dart';
-import 'package:quiet/navigation/common/like_button.dart';
-import 'package:quiet/providers/fm_playlist_provider.dart';
-import 'package:quiet/providers/player_provider.dart';
-import 'package:quiet/repository.dart';
+import '../../../extension.dart';
+import '../../../media/tracks/track_list.dart';
+import '../../common/like_button.dart';
+import '../../../providers/fm_playlist_provider.dart';
+import '../../../providers/player_provider.dart';
+import '../../../repository.dart';
 
 import 'lyric_layout.dart';
 

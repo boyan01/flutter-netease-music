@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:quiet/extension.dart';
-import 'package:quiet/navigation/desktop/widgets/navigation_tile.dart';
-import 'package:quiet/providers/navigator_provider.dart';
-import 'package:quiet/repository.dart';
+import '../../../extension.dart';
+import '../widgets/navigation_tile.dart';
+import '../../../providers/navigator_provider.dart';
+import '../../../repository.dart';
 
-import 'package:quiet/providers/account_provider.dart';
+import '../../../providers/account_provider.dart';
 
 import '../../../providers/user_playlists_provider.dart';
 import '../../common/navigation_target.dart';

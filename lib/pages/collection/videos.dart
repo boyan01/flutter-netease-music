@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:quiet/pages/collection/empty.dart';
+import 'empty.dart';
 
 class CollectionVideos extends StatelessWidget {
   @override

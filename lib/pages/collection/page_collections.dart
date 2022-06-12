@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:quiet/pages/collection/albums.dart';
-import 'package:quiet/pages/collection/articles.dart';
-import 'package:quiet/pages/collection/artists.dart';
-import 'package:quiet/pages/collection/videos.dart';
+import 'albums.dart';
+import 'articles.dart';
+import 'artists.dart';
+import 'videos.dart';
 
 ///我的收藏页面
 class MyCollectionPage extends StatelessWidget {

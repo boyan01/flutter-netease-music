@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:async/async.dart';
 import 'package:flutter/material.dart';
 import 'package:loader/loader.dart';
-import 'package:quiet/repository/netease.dart';
+import '../../repository/netease.dart';
 
 typedef SuggestionSelectedCallback = void Function(String keyword);
 

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:overlay_support/overlay_support.dart';
-import 'package:quiet/component.dart';
-import 'package:quiet/providers/player_provider.dart';
+import '../../../component.dart';
+import '../../../providers/player_provider.dart';
 
 import '../like_button.dart';
 

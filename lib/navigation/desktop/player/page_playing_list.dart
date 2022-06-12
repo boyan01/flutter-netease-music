@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:quiet/extension.dart';
-import 'package:quiet/navigation/common/navigation_target.dart';
-import 'package:quiet/navigation/desktop/widgets/track_tile_short.dart';
-import 'package:quiet/providers/navigator_provider.dart';
-import 'package:quiet/providers/player_provider.dart';
+import '../../../extension.dart';
+import '../../common/navigation_target.dart';
+import '../widgets/track_tile_short.dart';
+import '../../../providers/navigator_provider.dart';
+import '../../../providers/player_provider.dart';
 
 import '../../../component/utils/scroll_controller.dart';
 

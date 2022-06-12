@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:loader/loader.dart';
-import 'package:quiet/navigation/mobile/playlists/page_playlist_detail.dart';
-import 'package:quiet/repository.dart';
+import '../../navigation/mobile/playlists/page_playlist_detail.dart';
+import '../../repository.dart';
 
 ///各个排行榜数据
 class LeaderboardPage extends StatelessWidget {

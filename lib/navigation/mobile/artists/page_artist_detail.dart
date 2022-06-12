@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:loader/loader.dart';
 import 'package:overlay_support/overlay_support.dart';
-import 'package:quiet/extension.dart';
-import 'package:quiet/navigation/common/playlist/music_list.dart';
-import 'package:quiet/navigation/mobile/playlists/dialog_selector.dart';
-import 'package:quiet/navigation/mobile/playlists/page_playlist_detail_selection.dart';
-import 'package:quiet/part/part.dart';
-import 'package:quiet/repository.dart';
+import '../../../extension.dart';
+import '../../common/playlist/music_list.dart';
+import '../playlists/dialog_selector.dart';
+import '../playlists/page_playlist_detail_selection.dart';
+import '../../../part/part.dart';
+import '../../../repository.dart';
 
 import '../../../material/tiles.dart';
 import 'artist_header.dart';

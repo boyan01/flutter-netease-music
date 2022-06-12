@@ -1,4 +1,4 @@
-import 'package:netease_api/src/ao/playlist_detail.dart';
+import 'playlist_detail.dart';
 
 import 'safe_convert.dart';
 

@@ -7,12 +7,12 @@ import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:overlay_support/overlay_support.dart';
-import 'package:quiet/component.dart';
-import 'package:quiet/material/dialogs.dart';
-import 'package:quiet/model/region_flag.dart';
-import 'package:quiet/navigation/common/buttons.dart';
-import 'package:quiet/providers/navigator_provider.dart';
-import 'package:quiet/repository.dart';
+import '../../../component.dart';
+import '../../../material/dialogs.dart';
+import '../../../model/region_flag.dart';
+import '../buttons.dart';
+import '../../../providers/navigator_provider.dart';
+import '../../../repository.dart';
 
 import 'login_sub_navigation.dart';
 import 'page_dia_code_selection.dart';

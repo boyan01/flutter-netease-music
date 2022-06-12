@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:loader/loader.dart';
-import 'package:quiet/part/part.dart';
-import 'package:quiet/repository.dart';
+import '../part/part.dart';
+import '../repository.dart';
 
 import '../component/netease/counter.dart';
 import '../material/dividers.dart';

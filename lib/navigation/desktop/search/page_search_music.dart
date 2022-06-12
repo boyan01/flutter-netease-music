@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:quiet/component/utils/scroll_controller.dart';
-import 'package:quiet/extension.dart';
-import 'package:quiet/navigation/common/playlist/music_list.dart';
-import 'package:quiet/navigation/desktop/widgets/track_tile_normal.dart';
-import 'package:quiet/repository.dart';
+import '../../../component/utils/scroll_controller.dart';
+import '../../../extension.dart';
+import '../../common/playlist/music_list.dart';
+import '../widgets/track_tile_normal.dart';
+import '../../../repository.dart';
 
 import '../../../providers/player_provider.dart';
 import '../../../providers/search_provider.dart';

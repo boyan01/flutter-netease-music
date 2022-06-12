@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:overlay_support/overlay_support.dart';
-import 'package:quiet/extension.dart';
-import 'package:quiet/navigation/common/navigation_target.dart';
-import 'package:quiet/pages/page_playlist_edit.dart';
-import 'package:quiet/providers/navigator_provider.dart';
-import 'package:quiet/repository.dart';
+import '../../../extension.dart';
+import '../../common/navigation_target.dart';
+import '../../../pages/page_playlist_edit.dart';
+import '../../../providers/navigator_provider.dart';
+import '../../../repository.dart';
 
 ///歌单列表元素
 class PlaylistTile extends ConsumerWidget {

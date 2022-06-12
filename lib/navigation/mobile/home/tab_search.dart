@@ -1,5 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import 'package:quiet/extension.dart';
+import '../../../extension.dart';
 
 class HomeTabSearch extends StatelessWidget {
   const HomeTabSearch({Key? key}) : super(key: key);
