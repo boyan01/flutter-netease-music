@@ -4,7 +4,7 @@ import '../repository.dart';
 
 ///page for playlist edit
 class PlaylistEditPage extends StatefulWidget {
-  const PlaylistEditPage(this.playlist, {Key? key}) : super(key: key);
+  const PlaylistEditPage(this.playlist, {super.key});
   final PlaylistDetail playlist;
 
   @override
@@ -18,7 +18,7 @@ class _PlaylistEditPageState extends State<PlaylistEditPage> {
         fontSize: 15,
         shadows: [
           const Shadow(offset: Offset(0.3, 0.3), color: Colors.black87)
-        ]);
+        ],);
 
     return Scaffold(
       appBar: AppBar(
@@ -32,7 +32,7 @@ class _PlaylistEditPageState extends State<PlaylistEditPage> {
             InkWell(
               onTap: () {
                 showSimpleNotification(const Text('Not implemented'),
-                    background: Theme.of(context).errorColor);
+                    background: Theme.of(context).errorColor,);
               },
               child: Container(
                 height: 72,
@@ -43,7 +43,7 @@ class _PlaylistEditPageState extends State<PlaylistEditPage> {
                     Image(
                         image: CachedImage(widget.playlist.coverUrl),
                         height: 56,
-                        width: 56)
+                        width: 56,)
                   ],
                 ),
               ),
@@ -54,7 +54,7 @@ class _PlaylistEditPageState extends State<PlaylistEditPage> {
                 Navigator.of(context)
                     .push(MaterialPageRoute(builder: (context) {
                   return _PlaylistNameEditPage(widget.playlist);
-                }));
+                },),);
               },
               child: Container(
                 height: 56,
@@ -71,7 +71,7 @@ class _PlaylistEditPageState extends State<PlaylistEditPage> {
             InkWell(
               onTap: () {
                 showSimpleNotification(const Text('Not implemented'),
-                    background: Theme.of(context).errorColor);
+                    background: Theme.of(context).errorColor,);
               },
               child: Container(
                 height: 56,
@@ -88,7 +88,7 @@ class _PlaylistEditPageState extends State<PlaylistEditPage> {
             InkWell(
               onTap: () {
                 showSimpleNotification(const Text('Not implemented'),
-                    background: Theme.of(context).errorColor);
+                    background: Theme.of(context).errorColor,);
               },
               child: Container(
                 height: 56,
@@ -104,13 +104,13 @@ class _PlaylistEditPageState extends State<PlaylistEditPage> {
             const Divider(height: 0, indent: 8),
           ],
         );
-      }),
+      },),
     );
   }
 }
 
 class _PlaylistNameEditPage extends StatefulWidget {
-  const _PlaylistNameEditPage(this.playlist, {Key? key}) : super(key: key);
+  const _PlaylistNameEditPage(this.playlist, {super.key});
   final PlaylistDetail? playlist;
 
   @override
@@ -169,7 +169,7 @@ class _PlaylistNameEditPageState extends State<_PlaylistNameEditPage> {
                 //   });
                 // }
               },
-              child: const Text('保存'))
+              child: const Text('保存'),)
         ],
       ),
       body: Padding(
@@ -190,7 +190,7 @@ class _PlaylistNameEditPageState extends State<_PlaylistNameEditPage> {
                       icon: const Icon(Icons.close),
                       onPressed: () {
                         _controller!.text = '';
-                      })),
+                      },),),
               validator: (v) {
                 if (v!.isEmpty) {
                   return '歌单名不能为空';

@@ -18,7 +18,7 @@ final playlistDetailProvider = StreamProvider.family<PlaylistDetail, int>(
         detail = detail.copyWith(tracks: musics.asValue!.value);
       }
     }
-    neteaseLocalData.updatePlaylistDetail(detail);
+    await neteaseLocalData.updatePlaylistDetail(detail);
     yield detail;
   },
 );

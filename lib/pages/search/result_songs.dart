@@ -5,7 +5,7 @@ import '../../repository.dart';
 
 ///song list result
 class SongsResultSection extends StatefulWidget {
-  const SongsResultSection({Key? key, required this.query}) : super(key: key);
+  const SongsResultSection({super.key, required this.query});
 
   final String? query;
 
@@ -32,7 +32,8 @@ class SongsResultSectionState extends State<SongsResultSection>
               .search(widget.query, SearchType.song, offset: count);
           if (result.isValue) {
             return LoadMoreResult(
-                result.asValue!.value['result']['songs'] ?? []);
+              (result.asValue!.value['result'] as Map)['songs'] ?? [],
+            );
           }
           return result as Result<List>;
         },

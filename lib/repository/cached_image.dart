@@ -6,20 +6,26 @@ import 'dart:ui' as ui;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:path_provider/path_provider.dart';
+
 import '../component/cache/key_value_cache.dart';
 
 ///default image size in dimens
 const _defaultImageSize = Size.fromWidth(200);
 
 ///image provider for network image
+@immutable
 class CachedImage extends ImageProvider<CachedImage> implements CacheKey {
   /// Creates an object that fetches the image at the given URL.
   ///
   /// The arguments must not be null.
-  CachedImage(this.url, {this.scale = 1.0, this.headers}) : _size = null;
+  const CachedImage(this.url, {this.scale = 1.0, this.headers}) : _size = null;
 
-  const CachedImage._internal(this.url, this._size,
-      {this.scale = 1.0, this.headers});
+  const CachedImage._internal(
+    this.url,
+    this._size, {
+    this.scale = 1.0,
+    this.headers,
+  });
 
   /// The URL from which the image will be fetched.
   final String url;
@@ -61,7 +67,9 @@ class CachedImage extends ImageProvider<CachedImage> implements CacheKey {
   @override
   ImageStreamCompleter load(CachedImage key, DecoderCallback decode) {
     return MultiFrameImageStreamCompleter(
-        codec: _loadAsync(key, decode), scale: key.scale);
+      codec: _loadAsync(key, decode),
+      scale: key.scale,
+    );
   }
 
   static final HttpClient _httpClient = HttpClient();
@@ -70,8 +78,11 @@ class CachedImage extends ImageProvider<CachedImage> implements CacheKey {
     final cache = await _imageCache();
     final image = await cache.get(key);
     if (image != null) {
-      return decode(Uint8List.fromList(image),
-          cacheWidth: key.width, cacheHeight: null);
+      return decode(
+        Uint8List.fromList(image),
+        cacheWidth: key.width,
+        cacheHeight: null,
+      );
     }
 
     if (key.url.isEmpty) {
@@ -79,18 +90,19 @@ class CachedImage extends ImageProvider<CachedImage> implements CacheKey {
     }
 
     //request network source
-    final Uri resolved = Uri.base.resolve(key.url);
-    final HttpClientRequest request = await _httpClient.getUrl(resolved);
+    final resolved = Uri.base.resolve(key.url);
+    final request = await _httpClient.getUrl(resolved);
     headers?.forEach((String name, String value) {
       request.headers.add(name, value);
     });
-    final HttpClientResponse response = await request.close();
+    final response = await request.close();
     if (response.statusCode != HttpStatus.ok) {
       throw Exception(
-          'HTTP request failed, statusCode: ${response.statusCode}, $resolved');
+        'HTTP request failed, statusCode: ${response.statusCode}, $resolved',
+      );
     }
 
-    final Uint8List bytes = await consolidateHttpClientResponseBytes(response);
+    final bytes = await consolidateHttpClientResponseBytes(response);
     if (bytes.lengthInBytes == 0) {
       throw Exception('NetworkImage is an empty file: $resolved');
     }
@@ -98,18 +110,24 @@ class CachedImage extends ImageProvider<CachedImage> implements CacheKey {
     //save image to cache
     await cache.update(key, bytes);
 
-    return decode(Uint8List.fromList(bytes),
-        cacheWidth: key.width, cacheHeight: null);
+    return decode(
+      Uint8List.fromList(bytes),
+      cacheWidth: key.width,
+      cacheHeight: null,
+    );
   }
 
   @override
   Future<CachedImage> obtainKey(ImageConfiguration configuration) {
-    return SynchronousFuture<CachedImage>(CachedImage._internal(
+    return SynchronousFuture<CachedImage>(
+      CachedImage._internal(
         url,
         (configuration.size ?? _defaultImageSize) *
             configuration.devicePixelRatio!,
         scale: scale,
-        headers: headers));
+        headers: headers,
+      ),
+    );
   }
 
   @override
@@ -160,7 +178,7 @@ class _ImageCache implements Cache<Uint8List?> {
   Future<bool> update(CacheKey key, Uint8List? t) async {
     var file = provider.getFile(key);
     if (await file.exists()) {
-      file.delete();
+      await file.delete();
     }
     file = await file.create();
     await file.writeAsBytes(t!);

@@ -5,8 +5,7 @@ import '../../navigation/common/playlist/music_list.dart';
 import '../../repository.dart';
 
 class RecordPage extends StatelessWidget {
-  const RecordPage({Key? key, required this.uid, this.username})
-      : super(key: key);
+  const RecordPage({super.key, required this.uid, this.username});
 
   ///user id
   final int uid;
@@ -30,18 +29,17 @@ class RecordPage extends StatelessWidget {
           body: TabBarView(children: [
             _RecordSection(uid: uid, type: 1),
             _RecordSection(uid: uid, type: 0),
-          ]),
-        ));
+          ],),
+        ),);
   }
 }
 
 class _RecordSection extends StatefulWidget {
   const _RecordSection({
-    Key? key,
+    super.key,
     required this.uid,
     required this.type,
-  })  : assert(type == 0 || type == 1),
-        super(key: key);
+  })  : assert(type == 0 || type == 1);
 
   final int uid;
   final int type;
@@ -68,7 +66,7 @@ class _RecordSectionState extends State<_RecordSection>
         return _RecordMusicList(
           type: widget.type,
           recordList:
-              data.cast<Map>().map((e) => _RecordMusic.fromJson(e)).toList(),
+              data.cast<Map>().map(_RecordMusic.fromJson).toList(),
         );
       },
     );
@@ -92,10 +90,9 @@ class _RecordMusic {
 }
 
 class _RecordMusicList extends StatelessWidget {
-  _RecordMusicList({Key? key, required this.recordList, this.type})
-      : musicList = List.filled(recordList.length, null, growable: false),
-        super(key: key) {
-    for (int i = 0; i < recordList.length; i++) {
+  _RecordMusicList({super.key, required this.recordList, this.type})
+      : musicList = List.filled(recordList.length, null) {
+    for (var i = 0; i < recordList.length; i++) {
       final r = recordList[i];
       musicList[i] = r.music;
       _recordMap[r.music.id] = r;
@@ -115,8 +112,6 @@ class _RecordMusicList extends StatelessWidget {
     return MusicTileConfiguration(
       musics: musicList.cast(),
       token: 'play_record_$type',
-      leadingBuilder: MusicTileConfiguration.indexedLeadingBuilder,
-      onMusicTap: MusicTileConfiguration.defaultOnTap,
       trailingBuilder: (context, music) {
         return Container(
           padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -134,7 +129,7 @@ class _RecordMusicList extends StatelessWidget {
           itemCount: musicList.length,
           itemBuilder: (context, index) {
             return MusicTile(musicList[index]!);
-          }),
+          },),
     );
   }
 }

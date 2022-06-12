@@ -11,8 +11,7 @@ import 'playlist_tile.dart';
 enum PlayListType { created, favorite }
 
 class PlayListsGroupHeader extends StatelessWidget {
-  const PlayListsGroupHeader({Key? key, required this.name, this.count})
-      : super(key: key);
+  const PlayListsGroupHeader({super.key, required this.name, this.count});
 
   final String name;
   final int? count;
@@ -43,10 +42,10 @@ class PlayListsGroupHeader extends StatelessWidget {
 
 class MainPlayListTile extends StatelessWidget {
   const MainPlayListTile({
-    Key? key,
+    super.key,
     required this.data,
     this.enableBottomRadius = false,
-  }) : super(key: key);
+  });
 
   final PlaylistDetail data;
   final bool enableBottomRadius;
@@ -77,7 +76,10 @@ class MyPlayListsHeaderDelegate extends SliverPersistentHeaderDelegate {
 
   @override
   Widget build(
-      BuildContext context, double shrinkOffset, bool overlapsContent) {
+    BuildContext context,
+    double shrinkOffset,
+    bool overlapsContent,
+  ) {
     return _MyPlayListsHeader(controller: tabController);
   }
 
@@ -95,7 +97,8 @@ class MyPlayListsHeaderDelegate extends SliverPersistentHeaderDelegate {
 
 class _MyPlayListsHeader extends StatelessWidget
     implements PreferredSizeWidget {
-  const _MyPlayListsHeader({Key? key, this.controller}) : super(key: key);
+  const _MyPlayListsHeader({super.key, this.controller});
+
   final TabController? controller;
 
   @override
@@ -103,7 +106,7 @@ class _MyPlayListsHeader extends StatelessWidget
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return ColoredBox(
       color: Theme.of(context).scaffoldBackgroundColor,
       child: TabBar(
         controller: controller,
@@ -133,10 +136,10 @@ class PlayListSliverKey extends ValueKey {
 
 class UserPlayListSection extends ConsumerStatefulWidget {
   const UserPlayListSection({
-    Key? key,
+    super.key,
     required this.userId,
     this.scrollController,
-  }) : super(key: key);
+  });
 
   final int? userId;
   final ScrollController? scrollController;
@@ -174,8 +177,7 @@ class _UserPlayListSectionState extends ConsumerState<UserPlayListSection> {
     if (_dividerIndex < 0) {
       return;
     }
-    final RenderSliverList? global =
-        context.findRenderObject() as RenderSliverList?;
+    final global = context.findRenderObject() as RenderSliverList?;
     if (global == null) {
       return;
     }
@@ -190,9 +192,8 @@ class _UserPlayListSectionState extends ConsumerState<UserPlayListSection> {
     final offset = global.childMainAxisPosition(child as RenderBox);
     const height = _kPlayListHeaderHeight + _kPlayListDividerHeight / 2;
     PlayListTypeNotification(
-            type:
-                offset > height ? PlayListType.created : PlayListType.favorite)
-        .dispatch(context);
+      type: offset > height ? PlayListType.created : PlayListType.favorite,
+    ).dispatch(context);
   }
 
   @override
@@ -209,19 +210,27 @@ class _UserPlayListSectionState extends ConsumerState<UserPlayListSection> {
         _dividerIndex = 2 + created.length;
         return SliverList(
           key: PlayListSliverKey(
-              createdPosition: 1, favoritePosition: 3 + created.length),
-          delegate: SliverChildListDelegate.fixed([
-            const SizedBox(height: _kPlayListDividerHeight),
-            PlayListsGroupHeader(
-                name: context.strings.createdSongList, count: created.length),
-            ..._playlistWidget(created.toList()),
-            SizedBox(height: _kPlayListDividerHeight, key: _dividerKey),
-            PlayListsGroupHeader(
+            createdPosition: 1,
+            favoritePosition: 3 + created.length,
+          ),
+          delegate: SliverChildListDelegate.fixed(
+            [
+              const SizedBox(height: _kPlayListDividerHeight),
+              PlayListsGroupHeader(
+                name: context.strings.createdSongList,
+                count: created.length,
+              ),
+              ..._playlistWidget(created.toList()),
+              SizedBox(height: _kPlayListDividerHeight, key: _dividerKey),
+              PlayListsGroupHeader(
                 name: context.strings.favoriteSongList,
-                count: subscribed.length),
-            ..._playlistWidget(subscribed.toList()),
-            const SizedBox(height: _kPlayListDividerHeight),
-          ], addAutomaticKeepAlives: false),
+                count: subscribed.length,
+              ),
+              ..._playlistWidget(subscribed.toList()),
+              const SizedBox(height: _kPlayListDividerHeight),
+            ],
+            addAutomaticKeepAlives: false,
+          ),
         );
       },
       error: (error, stackTrace) =>

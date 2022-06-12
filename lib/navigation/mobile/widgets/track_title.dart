@@ -9,10 +9,10 @@ import '../../common/playlist/music_list.dart';
 
 class TrackTile extends StatelessWidget {
   const TrackTile({
-    Key? key,
+    super.key,
     required this.track,
     required this.index,
-  }) : super(key: key);
+  });
 
   final Track track;
 
@@ -51,7 +51,7 @@ class TrackTile extends StatelessWidget {
                     style: context.textTheme.bodyMedium?.copyWith(
                         color: track.type == TrackType.noCopyright
                             ? context.theme.disabledColor
-                            : null),
+                            : null,),
                   ),
                   const SizedBox(height: 4),
                   Text(
@@ -80,10 +80,10 @@ class TrackTile extends StatelessWidget {
 
 class _IndexOrPlayIcon extends ConsumerWidget {
   const _IndexOrPlayIcon({
-    Key? key,
+    super.key,
     required this.track,
     required this.index,
-  }) : super(key: key);
+  });
 
   final Track track;
 

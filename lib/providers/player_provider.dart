@@ -28,7 +28,7 @@ final playerStateProvider =
         }
         lastState = newState;
         ref.read(sharedPreferenceProvider).setPlayerState(newState);
-      }, fireImmediately: false);
+      }, fireImmediately: false,);
     });
 
     return player;

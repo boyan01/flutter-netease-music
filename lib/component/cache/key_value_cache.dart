@@ -76,16 +76,16 @@ class FileCacheProvider {
 }
 
 Future<void> _fileLru(Map params) async {
-  final Directory directory = Directory(params['path'] as String);
-  final int? maxSize = params['maxSize'] as int?;
+  final directory = Directory(params['path'] as String);
+  final maxSize = params['maxSize'] as int?;
   if (!directory.existsSync()) {
     return;
   }
-  final List<File> files = directory.listSync().whereType<File>().toList();
+  final files = directory.listSync().whereType<File>().toList();
   files.sort((a, b) => a.lastModifiedSync().compareTo(b.lastModifiedSync()));
 
-  int totalSize = 0;
-  for (final File file in files) {
+  var totalSize = 0;
+  for (final file in files) {
     if (totalSize > maxSize!) {
       file.deleteSync();
     } else {

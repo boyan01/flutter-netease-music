@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class DialogNoCopyRight extends StatelessWidget {
+  const DialogNoCopyRight({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Dialog(

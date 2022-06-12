@@ -5,9 +5,9 @@ import '../../providers/player_provider.dart';
 
 class ProgressTrackingContainer extends HookConsumerWidget {
   const ProgressTrackingContainer({
-    Key? key,
+    super.key,
     required this.builder,
-  }) : super(key: key);
+  });
 
   final WidgetBuilder builder;
 
@@ -19,10 +19,10 @@ class ProgressTrackingContainer extends HookConsumerWidget {
         () => tickerProvider.createTicker((elapsed) {
               state.value = !state.value;
             }),
-        [tickerProvider]);
+        [tickerProvider],);
     useEffect(() {
       return ticker.dispose;
-    }, [ticker]);
+    }, [ticker],);
 
     final needTrack = ref.watch(isPlayingProvider);
     useEffect(() {
@@ -32,7 +32,7 @@ class ProgressTrackingContainer extends HookConsumerWidget {
       } else {
         ticker.start();
       }
-    }, [needTrack]);
+    }, [needTrack],);
     return builder(context);
   }
 }

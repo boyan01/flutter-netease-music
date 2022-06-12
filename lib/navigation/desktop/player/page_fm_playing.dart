@@ -12,7 +12,7 @@ import '../../common/like_button.dart';
 import 'lyric_layout.dart';
 
 class PageFmPlaying extends ConsumerWidget {
-  const PageFmPlaying({Key? key}) : super(key: key);
+  const PageFmPlaying({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -51,9 +51,9 @@ class PageFmPlaying extends ConsumerWidget {
 
 class _CoverLayout extends StatelessWidget {
   const _CoverLayout({
-    Key? key,
+    super.key,
     required this.track,
-  }) : super(key: key);
+  });
 
   final Track track;
 
@@ -84,9 +84,9 @@ class _CoverLayout extends StatelessWidget {
 
 class _CoverPlayPauseButton extends ConsumerWidget {
   const _CoverPlayPauseButton({
-    Key? key,
+    super.key,
     required this.track,
-  }) : super(key: key);
+  });
 
   final Track track;
 
@@ -144,9 +144,9 @@ class _CoverPlayPauseButton extends ConsumerWidget {
 
 class _FmButtonBars extends ConsumerWidget {
   const _FmButtonBars({
-    Key? key,
+    super.key,
     required this.track,
-  }) : super(key: key);
+  });
 
   final Track track;
 

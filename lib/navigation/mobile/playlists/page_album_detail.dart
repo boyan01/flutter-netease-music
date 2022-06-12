@@ -9,8 +9,7 @@ import 'page_playlist_detail.dart';
 import 'playlist_flexible_app_bar.dart';
 
 class AlbumDetailPage extends ConsumerWidget {
-  const AlbumDetailPage({Key? key, required this.albumId, this.album})
-      : super(key: key);
+  const AlbumDetailPage({super.key, required this.albumId, this.album});
 
   final int albumId;
   final Map? album;
@@ -47,8 +46,7 @@ class AlbumDetailPage extends ConsumerWidget {
 }
 
 class _AlbumBody extends StatelessWidget {
-  const _AlbumBody({Key? key, required this.album, required this.musicList})
-      : super(key: key);
+  const _AlbumBody({super.key, required this.album, required this.musicList});
 
   final Album album;
   final List<Music> musicList;
@@ -58,9 +56,6 @@ class _AlbumBody extends StatelessWidget {
     return MusicTileConfiguration(
         token: 'album_${album.id}',
         musics: musicList,
-        onMusicTap: MusicTileConfiguration.defaultOnTap,
-        leadingBuilder: MusicTileConfiguration.indexedLeadingBuilder,
-        trailingBuilder: MusicTileConfiguration.defaultTrailingBuilder,
         child: CustomScrollView(slivers: [
           SliverAppBar(
             automaticallyImplyLeading: false,
@@ -74,7 +69,7 @@ class _AlbumBody extends StatelessWidget {
           SliverList(
               delegate: SliverChildBuilderDelegate(
                   (context, index) => MusicTile(musicList[index]),
-                  childCount: musicList.length)),
-        ]));
+                  childCount: musicList.length,),),
+        ],),);
   }
 }

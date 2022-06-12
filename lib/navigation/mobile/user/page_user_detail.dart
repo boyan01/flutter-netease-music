@@ -17,7 +17,7 @@ part 'tab_music.dart';
 
 ///用户详情页
 class UserDetailPage extends ConsumerWidget {
-  const UserDetailPage({Key? key, required this.userId}) : super(key: key);
+  const UserDetailPage({super.key, required this.userId});
 
   ///用户ID
   final int userId;
@@ -45,9 +45,9 @@ class UserDetailPage extends ConsumerWidget {
 
 class _DetailPage extends StatelessWidget {
   const _DetailPage({
-    Key? key,
+    super.key,
     required this.user,
-  }) : super(key: key);
+  });
   final User user;
 
   @override
@@ -60,29 +60,29 @@ class _DetailPage extends StatelessWidget {
               return [
                 SliverOverlapAbsorber(
                     handle: NestedScrollView.sliverOverlapAbsorberHandleFor(
-                        context),
-                    sliver: _UserDetailAppBar(user))
+                        context,),
+                    sliver: _UserDetailAppBar(user),)
               ];
             },
             body: SafeArea(
               child: Padding(
                 padding: const EdgeInsets.only(
-                    top: kToolbarHeight + kTextTabBarHeight),
+                    top: kToolbarHeight + kTextTabBarHeight,),
                 child: TabBarView(children: <Widget>[
                   TabMusic(user),
-                  TabEvents(),
+                  const TabEvents(),
                   TabAbout(user),
-                ]),
+                ],),
               ),
             ),
-          )),
+          ),),
     );
   }
 }
 
 ///伸缩自如的AppBar
 class _UserDetailAppBar extends StatelessWidget {
-  const _UserDetailAppBar(this.user, {Key? key}) : super(key: key);
+  const _UserDetailAppBar(this.user, {super.key});
   final User user;
 
   @override
@@ -97,7 +97,7 @@ class _UserDetailAppBar extends StatelessWidget {
               height: 300,
               width: 300,
               fit: BoxFit.cover,
-              image: CachedImage(user.backgroundUrl)),
+              image: CachedImage(user.backgroundUrl),),
         ),
         content: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -113,14 +113,14 @@ class _UserDetailAppBar extends StatelessWidget {
                 const SizedBox(height: 10),
                 Text(user.nickname,
                     style: const TextStyle(
-                        fontSize: 17, fontWeight: FontWeight.w400)),
+                        fontSize: 17, fontWeight: FontWeight.w400,),),
                 const SizedBox(height: 6),
                 Row(children: <Widget>[
                   InkWell(
                       onTap: () {
                         toast('关注');
                       },
-                      child: Text('关注:${user.followers}')),
+                      child: Text('关注:${user.followers}'),),
                   const VerticalDivider(),
                   InkWell(
                     onTap: () {
@@ -128,9 +128,9 @@ class _UserDetailAppBar extends StatelessWidget {
                     },
                     child: Text('粉丝:${user.followedUsers}'),
                   ),
-                ]),
+                ],),
                 const SizedBox(height: 16),
-              ]),
+              ],),
         ),
         builder: (context, t) {
           return AppBar(
@@ -141,11 +141,11 @@ class _UserDetailAppBar extends StatelessWidget {
             actions: <Widget>[
               IconButton(
                   icon: Icon(Icons.more_vert,
-                      color: Theme.of(context).primaryIconTheme.color),
+                      color: Theme.of(context).primaryIconTheme.color,),
                   onPressed: () {
                     //TODO
                     toast('todo');
-                  })
+                  },)
             ],
           );
         },

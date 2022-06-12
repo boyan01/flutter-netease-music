@@ -78,11 +78,11 @@ class NetworkRepository {
       offset: offset,
     );
     final result = await ret.asFuture;
-    return (SearchResult<List<Track>>(
+    return SearchResult<List<Track>>(
       result: result.songs.map((e) => e.toTrack(e.privilege)).toList(),
       hasMore: result.hasMore,
       totalCount: result.songCount,
-    ));
+    );
   }
 
   Future<Result<List<String>>> searchSuggest(String? keyword) =>
@@ -174,7 +174,7 @@ class NetworkRepository {
     return Result.value(AlbumDetail(
       album: albumDetail.album.toAlbum(),
       tracks: albumDetail.songs.map((e) => e.toTrack(null)).toList(),
-    ));
+    ),);
   }
 
   Future<Result<api.MusicVideoDetailResult>> mvDetail(int mvId) =>
@@ -190,11 +190,11 @@ class NetworkRepository {
       artist: artistDetail.artist.toArtist(),
       hotSongs: artistDetail.hotSongs.map((e) => e.toTrack(null)).toList(),
       more: artistDetail.more,
-    ));
+    ),);
   }
 
   Future<Result<List<Album>>> artistAlbums(int artistId,
-      {int limit = 10, int offset = 0}) async {
+      {int limit = 10, int offset = 0,}) async {
     final ret = await _repository.artistAlbums(
       artistId,
       limit: limit,
@@ -209,7 +209,7 @@ class NetworkRepository {
 
   // FIXME
   Future<Result<Map>> artistMvs(int artistId,
-          {int limit = 20, int offset = 0}) =>
+          {int limit = 20, int offset = 0,}) =>
       _repository.artistMvs(
         artistId,
         limit: limit,
@@ -224,7 +224,7 @@ class NetworkRepository {
   Future<Result<Map>> topListDetail() async => Result.error('not implement');
 
   Future<Result<List<PlayRecord>>> getRecord(
-      int userId, api.PlayRecordType type) async {
+      int userId, api.PlayRecordType type,) async {
     final records = await _repository.getRecord(userId, type);
     if (records.isError) {
       return records.asError!;
@@ -235,8 +235,8 @@ class NetworkRepository {
               playCount: e.playCount,
               score: e.score,
               song: e.song.toTrack(null),
-            ))
-        .toList());
+            ),)
+        .toList(),);
   }
 
   // FIXME
@@ -278,7 +278,7 @@ class NetworkRepository {
                 playCount: e.playCount,
                 trackCount: e.trackCount,
                 alg: e.alg,
-              ))
+              ),)
           .toList(),
     );
   }
@@ -609,7 +609,7 @@ class _LyricCache implements Cache<String?> {
   Future<bool> update(CacheKey key, String? t) async {
     var file = provider.getFile(key);
     if (await file.exists()) {
-      file.delete();
+      await file.delete();
     }
     file = await file.create(recursive: true);
     await file.writeAsString(t!);

@@ -6,6 +6,8 @@ import '../../component.dart';
 import '../../providers/settings_provider.dart';
 
 class PageWelcome extends StatefulWidget {
+  const PageWelcome({super.key});
+
   @override
   State<PageWelcome> createState() => _PageWelcomeState();
 }
@@ -27,8 +29,8 @@ class _PageWelcomeState extends State<PageWelcome> {
 
 class _WelcomeBody extends ConsumerWidget {
   const _WelcomeBody({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -43,8 +45,8 @@ class _WelcomeBody extends ConsumerWidget {
                 final result = await Navigator.pushNamed(context, pageLogin);
                 if (result == true) {
                   //remove the all pages
-                  Navigator.pushNamedAndRemoveUntil(
-                      context, pageMain, (route) => false);
+                  await Navigator.pushNamedAndRemoveUntil(
+                      context, pageMain, (route) => false,);
                 }
               },
               child: Text(context.strings.loginWithPhone),
@@ -55,7 +57,7 @@ class _WelcomeBody extends ConsumerWidget {
                 ref.read(settingStateProvider.notifier).setSkipWelcomePage();
                 //remove the all pages
                 Navigator.pushNamedAndRemoveUntil(
-                    context, pageMain, (route) => false);
+                    context, pageMain, (route) => false,);
               },
               child: Text(context.strings.skipLogin),
             ),
@@ -67,7 +69,7 @@ class _WelcomeBody extends ConsumerWidget {
             launchUrlString('https://github.com/boyan01/flutter-netease-music');
           },
           child: Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(8),
             child: Text(
               context.strings.projectDescription,
               style: context.primaryTextTheme.caption,
@@ -89,11 +91,11 @@ class _WelcomeBody extends ConsumerWidget {
 
 class StretchButton extends StatelessWidget {
   const StretchButton({
-    Key? key,
+    super.key,
     required this.onTap,
     required this.text,
     this.primary = true,
-  }) : super(key: key);
+  });
 
   final VoidCallback onTap;
 
@@ -120,7 +122,7 @@ class StretchButton extends StatelessWidget {
           color: foreground,
         ),
         shape: RoundedRectangleBorder(
-            side: border, borderRadius: BorderRadius.circular(20)),
+            side: border, borderRadius: BorderRadius.circular(20),),
         padding: const EdgeInsets.symmetric(vertical: 16),
       ),
       onPressed: onTap,

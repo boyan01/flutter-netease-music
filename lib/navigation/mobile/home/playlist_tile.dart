@@ -11,11 +11,11 @@ import '../../common/navigation_target.dart';
 ///歌单列表元素
 class PlaylistTile extends ConsumerWidget {
   const PlaylistTile({
-    Key? key,
+    super.key,
     required this.playlist,
     this.enableMore = true,
     this.enableHero = true,
-  }) : super(key: key);
+  });
 
   final PlaylistDetail playlist;
 
@@ -60,7 +60,7 @@ class PlaylistTile extends ConsumerWidget {
                   ),
                   const Padding(padding: EdgeInsets.only(top: 4)),
                   Text('${playlist.trackCount}首',
-                      style: Theme.of(context).textTheme.caption),
+                      style: Theme.of(context).textTheme.caption,),
                   const Spacer(),
                 ],
               ),
@@ -71,7 +71,7 @@ class PlaylistTile extends ConsumerWidget {
                   return const [
                     PopupMenuItem(value: PlaylistOp.share, child: Text('分享')),
                     PopupMenuItem(
-                        value: PlaylistOp.edit, child: Text('编辑歌单信息')),
+                        value: PlaylistOp.edit, child: Text('编辑歌单信息'),),
                     PopupMenuItem(value: PlaylistOp.delete, child: Text('删除')),
                   ];
                 },
@@ -85,7 +85,7 @@ class PlaylistTile extends ConsumerWidget {
                       context.secondaryNavigator!
                           .push(MaterialPageRoute(builder: (context) {
                         return PlaylistEditPage(playlist);
-                      }));
+                      },),);
                       break;
                   }
                 },

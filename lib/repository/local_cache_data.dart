@@ -10,7 +10,7 @@ LocalData neteaseLocalData = LocalData._();
 class LocalData {
   LocalData._();
 
-  ///netData 类型必须是可以放入 [store] 中的类型
+  ///netData 类型必须是可以放入 store 中的类型
   static Stream<T> withData<T>(
     String key,
     Future<T> netData, {
@@ -43,18 +43,20 @@ class LocalData {
   }
 
   Future<T?> get<T>(dynamic key) async {
-    final Database db = await getApplicationDatabase();
+    final db = await getApplicationDatabase();
     final dynamic result = await StoreRef.main().record(key).get(db);
     if (result is T?) {
       return result;
     }
-    assert(false,
-        'the result of $key is not subtype of $T. ${result.runtimeType}');
+    assert(
+      false,
+      'the result of $key is not subtype of $T. ${result.runtimeType}',
+    );
     return null;
   }
 
   Future _put(dynamic value, [dynamic key]) async {
-    final Database db = await getApplicationDatabase();
+    final db = await getApplicationDatabase();
     return StoreRef.main().record(key).put(db, value);
   }
 
@@ -65,7 +67,7 @@ class LocalData {
     }
     final result = (data as List)
         .cast<Map<String, dynamic>>()
-        .map((m) => PlaylistDetail.fromJson(m))
+        .map(PlaylistDetail.fromJson)
         .toList();
     return result;
   }
@@ -89,6 +91,8 @@ class LocalData {
   //TODO 添加分页加载逻辑
   Future updatePlaylistDetail(PlaylistDetail playlistDetail) {
     return _put(
-        playlistDetail.toJson(), 'playlist_detail_${playlistDetail.id}');
+      playlistDetail.toJson(),
+      'playlist_detail_${playlistDetail.id}',
+    );
   }
 }

@@ -5,13 +5,12 @@ import '../../../repository/data/track.dart';
 ///歌手选择弹窗
 ///返回 [ArtistMini]
 class ArtistSelectionDialog extends StatelessWidget {
-  const ArtistSelectionDialog({Key? key, required this.artists})
-      : super(key: key);
+  const ArtistSelectionDialog({super.key, required this.artists});
   final List<ArtistMini> artists;
 
   @override
   Widget build(BuildContext context) {
-    final List<Widget> children = artists.map<Widget>((artist) {
+    final children = artists.map<Widget>((artist) {
       final enabled = artist.id != 0;
       return ListTile(
         title: Padding(
@@ -20,7 +19,7 @@ class ArtistSelectionDialog extends StatelessWidget {
               style: Theme.of(context)
                   .textTheme
                   .bodyText2!
-                  .merge(TextStyle(color: enabled ? null : Colors.grey))),
+                  .merge(TextStyle(color: enabled ? null : Colors.grey)),),
         ),
         enabled: enabled,
         onTap: () {

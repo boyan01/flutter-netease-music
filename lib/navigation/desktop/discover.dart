@@ -14,7 +14,7 @@ import '../common/recommended_playlist_tile.dart';
 import 'widgets/track_tile_short.dart';
 
 class DiscoverPage extends StatelessWidget {
-  const DiscoverPage({Key? key}) : super(key: key);
+  const DiscoverPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +42,7 @@ class DiscoverPage extends StatelessWidget {
 }
 
 class _Playlists extends ConsumerWidget {
-  const _Playlists({Key? key}) : super(key: key);
+  const _Playlists({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -76,7 +76,7 @@ class _Playlists extends ConsumerWidget {
                 .navigate(NavigationTarget.playlist(playlistId: playlist.id)),
           );
         },
-      )),
+      ),),
       loading: () => builder(const Center(child: CircularProgressIndicator())),
       error: (error, stacktrace) => builder(
         Center(child: Text(context.formattedError(error))),
@@ -86,7 +86,7 @@ class _Playlists extends ConsumerWidget {
 }
 
 class _PlayRecord extends ConsumerWidget {
-  const _PlayRecord({Key? key}) : super(key: key);
+  const _PlayRecord({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -140,9 +140,9 @@ class _PlayRecord extends ConsumerWidget {
 
 class _Header extends StatelessWidget {
   const _Header({
-    Key? key,
+    super.key,
     required this.title,
-  }) : super(key: key);
+  });
 
   final String title;
 
@@ -157,10 +157,10 @@ class _Header extends StatelessWidget {
 
 class _Box extends StatelessWidget {
   const _Box({
-    Key? key,
+    super.key,
     required this.child,
     this.padding = const EdgeInsets.all(20),
-  }) : super(key: key);
+  });
 
   final Widget child;
 
@@ -170,7 +170,6 @@ class _Box extends StatelessWidget {
   Widget build(BuildContext context) {
     return Material(
       color: context.theme.colorScheme.onBackground.withOpacity(0.05),
-      elevation: 0,
       borderRadius: BorderRadius.circular(4),
       child: Padding(
         padding: padding,

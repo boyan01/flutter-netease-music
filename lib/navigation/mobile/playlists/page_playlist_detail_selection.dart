@@ -15,10 +15,10 @@ typedef MusicDeletionCallback = Future<bool> Function(List<Music> selected);
 ///多选歌曲
 class PlaylistSelectionPage extends StatefulWidget {
   const PlaylistSelectionPage({
-    Key? key,
+    super.key,
     required this.list,
     this.onDelete,
-  }) : super(key: key);
+  });
 
   final List<Track>? list;
 
@@ -61,7 +61,7 @@ class PlaylistSelectionPageState extends State<PlaylistSelectionPage> {
               });
             },
             child: Text(allSelected ? '取消全选' : '全选',
-                style: Theme.of(context).primaryTextTheme.bodyText2),
+                style: Theme.of(context).primaryTextTheme.bodyText2,),
           )
         ],
       ),
@@ -87,7 +87,7 @@ class PlaylistSelectionPageState extends State<PlaylistSelectionPage> {
               final item = widget.list![index];
               final checked = selectedList.contains(item);
               return _SelectionItem(music: item, selected: checked);
-            }),
+            },),
       ),
       bottomNavigationBar: _buildBottomBar(context),
     );
@@ -111,15 +111,15 @@ class PlaylistSelectionPageState extends State<PlaylistSelectionPage> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 const Icon(Icons.play_circle_outline),
-                const SizedBox(height: 2.0),
+                const SizedBox(height: 2),
                 Text(context.strings.playInNext)
               ],
             ),
           ),
           TextButton(
             onPressed: () async {
-              final bool? succeed = await PlaylistSelectorDialog.addSongs(
-                  context, selectedList.map((m) => m.id).toList());
+              final succeed = await PlaylistSelectorDialog.addSongs(
+                  context, selectedList.map((m) => m.id).toList(),);
               if (succeed == null) {
                 return;
               }
@@ -136,7 +136,7 @@ class PlaylistSelectionPageState extends State<PlaylistSelectionPage> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 const Icon(Icons.add_box),
-                const SizedBox(height: 2.0),
+                const SizedBox(height: 2),
                 Text(context.strings.addToPlaylist)
               ],
             ),
@@ -145,16 +145,16 @@ class PlaylistSelectionPageState extends State<PlaylistSelectionPage> {
             TextButton(
               onPressed: () async {
                 final succeed = await showLoaderOverlay(
-                    context, widget.onDelete!(selectedList));
+                    context, widget.onDelete!(selectedList),);
                 if (succeed) {
                   setState(() {
-                    widget.list!.removeWhere((v) => selectedList.contains(v));
+                    widget.list!.removeWhere(selectedList.contains);
                     selectedList.clear();
                   });
                 }
                 if (succeed) {
                   showSimpleNotification(Text('已删除${selectedList.length}首歌曲'),
-                      background: Theme.of(context).errorColor);
+                      background: Theme.of(context).errorColor,);
                 } else {
                   showSimpleNotification(
                     Text(context.strings.failedToDelete),
@@ -167,7 +167,7 @@ class PlaylistSelectionPageState extends State<PlaylistSelectionPage> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   const Icon(Icons.delete_outline),
-                  const SizedBox(height: 2.0),
+                  const SizedBox(height: 2),
                   Text(context.strings.delete),
                 ],
               ),
@@ -179,8 +179,7 @@ class PlaylistSelectionPageState extends State<PlaylistSelectionPage> {
 }
 
 class _SelectionItem extends ConsumerWidget {
-  const _SelectionItem({Key? key, required this.music, required this.selected})
-      : super(key: key);
+  const _SelectionItem({super.key, required this.music, required this.selected});
 
   final Music music;
 
@@ -199,7 +198,7 @@ class _SelectionItem extends ConsumerWidget {
                 value: selected,
                 onChanged: (v) => {
                       /*ignored pointer ,so we do not handle this event*/
-                    }),
+                    },),
             const SizedBox(width: 4),
             Expanded(child: MusicTile(music)),
             const SizedBox(width: 16),

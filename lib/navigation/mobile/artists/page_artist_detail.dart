@@ -13,7 +13,7 @@ import 'artist_header.dart';
 
 ///歌手详情页
 class ArtistDetailPage extends StatelessWidget {
-  const ArtistDetailPage({Key? key, required this.artistId}) : super(key: key);
+  const ArtistDetailPage({super.key, required this.artistId});
 
   ///歌手ID
   final int artistId;
@@ -38,36 +38,39 @@ class ArtistDetailPage extends StatelessWidget {
         body: DefaultTabController(
           length: 4,
           child: NestedScrollView(
-              headerSliverBuilder: (context, innerBoxIsScrolled) => [
-                    SliverOverlapAbsorber(
-                      handle: NestedScrollView.sliverOverlapAbsorberHandleFor(
-                          context),
-                      sliver: ArtistHeader(artist: result.artist),
+            headerSliverBuilder: (context, innerBoxIsScrolled) => [
+              SliverOverlapAbsorber(
+                handle: NestedScrollView.sliverOverlapAbsorberHandleFor(
+                  context,
+                ),
+                sliver: ArtistHeader(artist: result.artist),
+              ),
+            ],
+            body: SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.only(
+                  top: kToolbarHeight + kTextTabBarHeight,
+                ),
+                child: TabBarView(
+                  children: [
+                    _PageHotSongs(
+                      musicList: result.hotSongs,
+                      artistId: artistId,
+                    ),
+                    _PageAlbums(artistId: artistId),
+                    _PageMVs(
+                      artistId: artistId,
+                      mvCount: result.artist.mvSize,
+                    ),
+                    _PageArtistIntroduction(
+                      artistId: artistId,
+                      artistName: result.artist.name,
                     ),
                   ],
-              body: SafeArea(
-                child: Padding(
-                  padding: const EdgeInsets.only(
-                      top: kToolbarHeight + kTextTabBarHeight),
-                  child: TabBarView(
-                    children: [
-                      _PageHotSongs(
-                        musicList: result.hotSongs,
-                        artistId: artistId,
-                      ),
-                      _PageAlbums(artistId: artistId),
-                      _PageMVs(
-                        artistId: artistId,
-                        mvCount: result.artist.mvSize,
-                      ),
-                      _PageArtistIntroduction(
-                        artistId: artistId,
-                        artistName: result.artist.name,
-                      ),
-                    ],
-                  ),
                 ),
-              )),
+              ),
+            ),
+          ),
         ),
       ),
     );
@@ -76,9 +79,11 @@ class ArtistDetailPage extends StatelessWidget {
 
 ///热门单曲
 class _PageHotSongs extends StatefulWidget {
-  const _PageHotSongs(
-      {Key? key, required this.musicList, required this.artistId})
-      : super(key: key);
+  const _PageHotSongs({
+    super.key,
+    required this.musicList,
+    required this.artistId,
+  });
 
   final List<Music> musicList;
 
@@ -96,7 +101,9 @@ class _PageHotSongsState extends State<_PageHotSongs>
     return InkWell(
       onTap: () {
         PlaylistSelectorDialog.addSongs(
-            context, widget.musicList.map((m) => m.id).toList());
+          context,
+          widget.musicList.map((m) => m.id).toList(),
+        );
       },
       child: SizedBox(
         height: 48,
@@ -112,9 +119,12 @@ class _PageHotSongsState extends State<_PageHotSongs>
                   TextButton(
                     onPressed: () {
                       Navigator.of(context).push(
-                        MaterialPageRoute(builder: (context) {
-                          return PlaylistSelectionPage(list: widget.musicList);
-                        }),
+                        MaterialPageRoute(
+                          builder: (context) {
+                            return PlaylistSelectionPage(
+                                list: widget.musicList,);
+                          },
+                        ),
                       );
                     },
                     child: const Text('多选'),
@@ -138,18 +148,16 @@ class _PageHotSongsState extends State<_PageHotSongs>
     return MusicTileConfiguration(
       musics: widget.musicList,
       token: 'artist_${widget.artistId}_hot',
-      leadingBuilder: MusicTileConfiguration.indexedLeadingBuilder,
-      trailingBuilder: MusicTileConfiguration.defaultTrailingBuilder,
-      onMusicTap: MusicTileConfiguration.defaultOnTap,
       child: ListView.builder(
-          itemCount: widget.musicList.length + 1,
-          itemBuilder: (context, index) {
-            if (index == 0) {
-              return _buildHeader(context);
-            } else {
-              return MusicTile(widget.musicList[index - 1]);
-            }
-          }),
+        itemCount: widget.musicList.length + 1,
+        itemBuilder: (context, index) {
+          if (index == 0) {
+            return _buildHeader(context);
+          } else {
+            return MusicTile(widget.musicList[index - 1]);
+          }
+        },
+      ),
     );
   }
 
@@ -158,7 +166,8 @@ class _PageHotSongsState extends State<_PageHotSongs>
 }
 
 class _PageAlbums extends StatefulWidget {
-  const _PageAlbums({Key? key, required this.artistId}) : super(key: key);
+  const _PageAlbums({super.key, required this.artistId});
+
   final int artistId;
 
   @override
@@ -187,8 +196,7 @@ class _PageAlbumsState extends State<_PageAlbums>
 }
 
 class _PageMVs extends StatefulWidget {
-  const _PageMVs({Key? key, required this.artistId, required this.mvCount})
-      : super(key: key);
+  const _PageMVs({super.key, required this.artistId, required this.mvCount});
 
   final int artistId;
 
@@ -211,49 +219,56 @@ class _PageMVsState extends State<_PageMVs> with AutomaticKeepAliveClientMixin {
   Widget build(BuildContext context) {
     super.build(context);
     return AutoLoadMoreList<Map>(
-        loadMore: _loadMv,
-        builder: (context, mv) {
-          return InkWell(
-            onTap: () {
-              Navigator.pushNamed(context, '/mv', arguments: mv['id']);
-            },
-            child: SizedBox(
-              height: 72,
-              child: Row(
-                children: <Widget>[
-                  const SizedBox(width: 8),
-                  Container(
-                    height: 72,
-                    width: 72 * 1.6,
-                    padding: const EdgeInsets.all(4),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(3),
-                      child: Image(
-                        image: CachedImage(mv['imgurl16v9']),
-                        fit: BoxFit.cover,
-                      ),
+      loadMore: _loadMv,
+      builder: (context, mv) {
+        return InkWell(
+          onTap: () {
+            Navigator.pushNamed(context, '/mv', arguments: mv['id']);
+          },
+          child: SizedBox(
+            height: 72,
+            child: Row(
+              children: <Widget>[
+                const SizedBox(width: 8),
+                Container(
+                  height: 72,
+                  width: 72 * 1.6,
+                  padding: const EdgeInsets.all(4),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(3),
+                    child: Image(
+                      image: CachedImage(mv['imgurl16v9']),
+                      fit: BoxFit.cover,
                     ),
                   ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                      child: Column(
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       const Spacer(),
-                      Text(mv['name'],
-                          maxLines: 1, overflow: TextOverflow.ellipsis),
+                      Text(
+                        mv['name'],
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
                       const SizedBox(height: 4),
-                      Text(mv['publishTime'],
-                          style: Theme.of(context).textTheme.caption),
+                      Text(
+                        mv['publishTime'],
+                        style: Theme.of(context).textTheme.caption,
+                      ),
                       const Spacer(),
                       const Divider(height: 0)
                     ],
-                  ))
-                ],
-              ),
+                  ),
+                )
+              ],
             ),
-          );
-        });
+          ),
+        );
+      },
+    );
   }
 
   @override
@@ -261,9 +276,12 @@ class _PageMVsState extends State<_PageMVs> with AutomaticKeepAliveClientMixin {
 }
 
 class _PageArtistIntroduction extends StatefulWidget {
-  const _PageArtistIntroduction(
-      {Key? key, required this.artistId, required this.artistName})
-      : super(key: key);
+  const _PageArtistIntroduction({
+    super.key,
+    required this.artistId,
+    required this.artistName,
+  });
+
   final int artistId;
 
   final String? artistName;
@@ -278,10 +296,16 @@ class _PageArtistIntroductionState extends State<_PageArtistIntroduction>
     with AutomaticKeepAliveClientMixin {
   List<Widget> _buildIntroduction(BuildContext context, Map result) {
     final Widget title = Padding(
-        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
-        child: Text('${widget.artistName}简介',
-            style: const TextStyle(
-                fontSize: 15, fontWeight: FontWeight.bold, shadows: [])));
+      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
+      child: Text(
+        '${widget.artistName}简介',
+        style: const TextStyle(
+          fontSize: 15,
+          fontWeight: FontWeight.bold,
+          shadows: [],
+        ),
+      ),
+    );
 
     final Widget briefDesc = Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8),
@@ -305,17 +329,23 @@ class _PageArtistIntroductionState extends State<_PageArtistIntroduction>
   }
 
   List<Widget> _buildTopic(BuildContext context, Map result) {
-    final List<Map>? data = (result['topicData'] as List?)?.cast();
+    final data = (result['topicData'] as List?)?.cast();
     if (data == null || data.isEmpty) {
       return [];
     }
     const Widget title = Padding(
-        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 8),
-        child: Text('相关专题文章',
-            style: TextStyle(
-                fontSize: 15, fontWeight: FontWeight.bold, shadows: [])));
-    final List<Widget> list = data.map<Widget>((topic) {
-      final String subtitle =
+      padding: EdgeInsets.symmetric(vertical: 10, horizontal: 8),
+      child: Text(
+        '相关专题文章',
+        style: TextStyle(
+          fontSize: 15,
+          fontWeight: FontWeight.bold,
+          shadows: [],
+        ),
+      ),
+    );
+    final list = data.map<Widget>((topic) {
+      final subtitle =
           "by ${topic["creator"]["nickname"]} 阅读 ${topic["readCount"]}";
       return InkWell(
         onTap: () {
@@ -340,18 +370,22 @@ class _PageArtistIntroductionState extends State<_PageArtistIntroduction>
               ),
               const SizedBox(width: 8),
               Expanded(
-                  child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  const Spacer(),
-                  Text(topic['mainTitle'],
-                      maxLines: 1, overflow: TextOverflow.ellipsis),
-                  const SizedBox(height: 4),
-                  Text(subtitle, style: Theme.of(context).textTheme.caption),
-                  const Spacer(),
-                  const Divider(height: 0)
-                ],
-              ))
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    const Spacer(),
+                    Text(
+                      topic['mainTitle'],
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(height: 4),
+                    Text(subtitle, style: Theme.of(context).textTheme.caption),
+                    const Spacer(),
+                    const Divider(height: 0)
+                  ],
+                ),
+              )
             ],
           ),
         ),
@@ -359,18 +393,20 @@ class _PageArtistIntroductionState extends State<_PageArtistIntroduction>
     }).toList();
     list.insert(0, title);
 
-    if (result['count'] > data.length) {
-      list.add(InkWell(
-        onTap: () {
-          toast(context.strings.todo);
-        },
-        child: const SizedBox(
-          height: 56,
-          child: Center(
-            child: Text('全部专栏文章'),
+    if ((result['count'] as int) > data.length) {
+      list.add(
+        InkWell(
+          onTap: () {
+            toast(context.strings.todo);
+          },
+          child: const SizedBox(
+            height: 56,
+            child: Center(
+              child: Text('全部专栏文章'),
+            ),
           ),
         ),
-      ));
+      );
     }
 
     return list;

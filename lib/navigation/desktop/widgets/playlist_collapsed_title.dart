@@ -10,9 +10,9 @@ import '../../common/playlist/music_list.dart';
 
 class PlaylistCollapsedTitle extends StatelessWidget {
   const PlaylistCollapsedTitle({
-    Key? key,
+    super.key,
     required this.text,
-  }) : super(key: key);
+  });
 
   final String text;
 
@@ -21,7 +21,6 @@ class PlaylistCollapsedTitle extends StatelessWidget {
     return SizedBox(
       height: 56,
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           const SizedBox(width: 20),
           Flexible(
@@ -49,7 +48,7 @@ class PlaylistCollapsedTitle extends StatelessWidget {
                 }
               },
             );
-          }),
+          },),
         ],
       ),
     );

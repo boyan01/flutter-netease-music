@@ -13,7 +13,7 @@ import 'playlist/user_playlists.dart';
 import 'widgets/navigation_tile.dart';
 
 class NavigationSideBar extends StatelessWidget {
-  const NavigationSideBar({Key? key}) : super(key: key);
+  const NavigationSideBar({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +33,7 @@ class NavigationSideBar extends StatelessWidget {
 }
 
 class _PresetItems extends ConsumerWidget {
-  const _PresetItems({Key? key}) : super(key: key);
+  const _PresetItems({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -87,7 +87,7 @@ class _PresetItems extends ConsumerWidget {
 }
 
 class _ProfileTile extends HookConsumerWidget {
-  const _ProfileTile({Key? key}) : super(key: key);
+  const _ProfileTile({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -112,7 +112,6 @@ class _ProfileTile extends HookConsumerWidget {
         child: SizedBox(
             height: 72,
             child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 const SizedBox(width: 4),
                 ClipOval(
@@ -132,7 +131,7 @@ class _ProfileTile extends HookConsumerWidget {
                 ),
                 const SizedBox(width: 4),
               ],
-            )),
+            ),),
       ),
     );
   }

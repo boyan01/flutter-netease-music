@@ -5,7 +5,7 @@ import '../../repository.dart';
 
 ///video list result
 class VideosResultSection extends StatefulWidget {
-  const VideosResultSection({Key? key, required this.query}) : super(key: key);
+  const VideosResultSection({super.key, required this.query});
 
   final String? query;
 
@@ -18,16 +18,19 @@ class _VideosResultSectionState extends State<VideosResultSection>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return AutoLoadMoreList(loadMore: (offset) async {
-      final result = await neteaseRepository!
-          .search(widget.query, SearchType.video, offset: offset);
-      if (result.isError) {
-        return result.asError!;
-      }
-      return result.asValue!.value['result']['videos'];
-    }, builder: (context, dynamic item) {
-      return VideoTile(map: item);
-    });
+    return AutoLoadMoreList(
+      loadMore: (offset) async {
+        final result = await neteaseRepository!
+            .search(widget.query, SearchType.video, offset: offset);
+        if (result.isError) {
+          return result.asError!;
+        }
+        return (result.asValue!.value['result'] as Map)['videos'];
+      },
+      builder: (context, dynamic item) {
+        return VideoTile(map: item);
+      },
+    );
   }
 
   @override
@@ -36,7 +39,7 @@ class _VideosResultSectionState extends State<VideosResultSection>
 
 ///item for video
 class VideoTile extends StatelessWidget {
-  const VideoTile({Key? key, required this.map}) : super(key: key);
+  const VideoTile({super.key, required this.map});
 
   final Map<String, dynamic> map;
 
@@ -64,29 +67,36 @@ class VideoTile extends StatelessWidget {
             ),
             const Padding(padding: EdgeInsets.only(left: 8)),
             Expanded(
-                child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Expanded(
                     child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    Text(map['title'],
-                        maxLines: 2, overflow: TextOverflow.ellipsis),
-                    Text(
-                      "${getTimeStamp(map["durationms"])} by ${(map["creator"] as List).cast<Map>().map((creator) {
-                        return creator["userName"];
-                      }).join("/")}",
-                      style: Theme.of(context).textTheme.caption,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: <Widget>[
+                        Text(
+                          map['title'],
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        Text(
+                          "${getTimeStamp(map["duration"])} "
+                          'by '
+                          "${(map["creator"] as List).cast<Map>().map((creator) {
+                            return creator["userName"];
+                          }).join("/")}",
+                          style: Theme.of(context).textTheme.caption,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
                     ),
-                  ],
-                )),
-                const Divider(height: 0)
-              ],
-            ))
+                  ),
+                  const Divider(height: 0)
+                ],
+              ),
+            )
           ],
         ),
       ),

@@ -8,6 +8,8 @@ import '_profile.dart';
 
 ///the first page display in page_main
 class MainPageMy extends ConsumerStatefulWidget {
+  const MainPageMy({super.key});
+
   @override
   ConsumerState<MainPageMy> createState() => _MainPageMyState();
 }
@@ -30,8 +32,10 @@ class _MainPageMyState extends ConsumerState<MainPageMy>
   }
 
   void _onUserSelectedTab() {
-    debugPrint('_onUserSelectedTab :'
-        ' ${_tabController!.index} ${_tabController!.indexIsChanging}');
+    debugPrint(
+      '_onUserSelectedTab :'
+      ' ${_tabController!.index} ${_tabController!.indexIsChanging}',
+    );
     if (_scrollerAnimating || _tabAnimating) {
       return;
     }
@@ -55,7 +59,7 @@ class _MainPageMyState extends ConsumerState<MainPageMy>
           delegate: SliverChildListDelegate(
             [
               const UserProfileSection(),
-              PresetGridSection(),
+              const PresetGridSection(),
               const SizedBox(height: 8),
             ],
           ),
@@ -103,16 +107,15 @@ class _MainPageMyState extends ConsumerState<MainPageMy>
       return;
     }
 
-    final PlayListSliverKey? sliverKey =
-        playListSliver!.widget.key as PlayListSliverKey?;
+    final sliverKey = playListSliver!.widget.key as PlayListSliverKey?;
     assert(playListSliver != null, 'can not find sliver');
-    debugPrint('sliverKey : created position:'
-        ' ${sliverKey!.createdPosition} ${sliverKey.favoritePosition}');
+    debugPrint(
+      'sliverKey : created position:'
+      ' ${sliverKey!.createdPosition} ${sliverKey.favoritePosition}',
+    );
 
-    final List<Element> children = [];
-    playListSliver!.visitChildElements((element) {
-      children.add(element);
-    });
+    final children = <Element>[];
+    playListSliver!.visitChildElements(children.add);
     if (children.isEmpty) {
       return;
     }
@@ -134,11 +137,13 @@ class _MainPageMyState extends ConsumerState<MainPageMy>
           : sliverKey.favoritePosition!;
       final position = _scrollController.position;
       if (target >= start && target <= end) {
-        final Element toShow = children[target - start];
+        final toShow = children[target - start];
         position
-            .ensureVisible(toShow.renderObject!,
-                duration: const Duration(milliseconds: 300),
-                curve: Curves.linear)
+            .ensureVisible(
+          toShow.renderObject!,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.linear,
+        )
             .whenComplete(() {
           _scrollerAnimating = false;
         });
@@ -199,7 +204,7 @@ class _MainPageMyState extends ConsumerState<MainPageMy>
     }
     _tabAnimating = true;
     _tabController!.animateTo(type.index);
-    Future.delayed(kTabScrollDuration + const Duration(milliseconds: 100))
+    await Future.delayed(kTabScrollDuration + const Duration(milliseconds: 100))
         .whenComplete(() {
       _tabAnimating = false;
     });

@@ -5,7 +5,7 @@ import '../../../material/tabs.dart';
 import '../../../repository.dart';
 
 class ArtistHeader extends StatelessWidget {
-  const ArtistHeader({Key? key, required this.artist}) : super(key: key);
+  const ArtistHeader({super.key, required this.artist});
   final Artist artist;
 
   @override
@@ -26,15 +26,15 @@ class ArtistHeader extends StatelessWidget {
       actions: <Widget>[
         IconButton(
             icon: Icon(Icons.share,
-                color: Theme.of(context).primaryIconTheme.color),
-            onPressed: null)
+                color: Theme.of(context).primaryIconTheme.color,),
+            onPressed: null,)
       ],
     );
   }
 }
 
 class _ArtistFlexHeader extends StatelessWidget {
-  const _ArtistFlexHeader({Key? key, required this.artist}) : super(key: key);
+  const _ArtistFlexHeader({super.key, required this.artist});
   final Artist artist;
 
   @override
@@ -47,7 +47,7 @@ class _ArtistFlexHeader extends StatelessWidget {
             child: Image(
                 image: CachedImage(artist.picUrl),
                 height: 300,
-                fit: BoxFit.cover)),
+                fit: BoxFit.cover,),),
         content: Padding(
           padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
           child: Column(
@@ -56,9 +56,9 @@ class _ArtistFlexHeader extends StatelessWidget {
                 const Spacer(),
                 Text(
                     '${artist.name}${artist.alias.isEmpty ? '' : '(${artist.alias[0]})'}',
-                    style: const TextStyle(fontSize: 20)),
+                    style: const TextStyle(fontSize: 20),),
                 Text('歌曲数量:${artist.musicSize}'),
-              ]),
+              ],),
         ),
         builder: (context, t) {
           return AppBar(
@@ -72,7 +72,7 @@ class _ArtistFlexHeader extends StatelessWidget {
                   tooltip: '分享',
                   onPressed: () {
                     toast('分享');
-                  })
+                  },)
             ],
           );
         },

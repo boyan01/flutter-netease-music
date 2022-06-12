@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class CollectionEmpty extends StatelessWidget {
-  const CollectionEmpty({Key? key, required this.message}) : super(key: key);
+  const CollectionEmpty({super.key, required this.message});
   final String message;
 
   @override

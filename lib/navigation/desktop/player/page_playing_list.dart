@@ -23,7 +23,7 @@ final showPlayingListProvider =
 );
 
 class PagePlayingList extends HookConsumerWidget {
-  const PagePlayingList({Key? key}) : super(key: key);
+  const PagePlayingList({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -42,7 +42,7 @@ class PagePlayingList extends HookConsumerWidget {
       return () {
         node.removeListener(onFocusChange);
       };
-    }, [node]);
+    }, [node],);
     return Focus(
       autofocus: true,
       focusNode: node,
@@ -55,13 +55,13 @@ class PagePlayingList extends HookConsumerWidget {
               Divider(indent: 20, endIndent: 20),
               Expanded(child: _PlayingList()),
             ],
-          )),
+          ),),
     );
   }
 }
 
 class _PlayingListTitle extends ConsumerWidget {
-  const _PlayingListTitle({Key? key}) : super(key: key);
+  const _PlayingListTitle({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -78,7 +78,6 @@ class _PlayingListTitle extends ConsumerWidget {
           ),
           const SizedBox(height: 10),
           Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
                 context.strings.musicCountFormat(playingList.tracks.length),
@@ -94,7 +93,7 @@ class _PlayingListTitle extends ConsumerWidget {
 }
 
 class _PlayingList extends HookConsumerWidget {
-  const _PlayingList({Key? key}) : super(key: key);
+  const _PlayingList({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

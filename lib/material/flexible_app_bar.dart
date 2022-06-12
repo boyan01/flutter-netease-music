@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 ///the same as [FlexibleSpaceBar]
 class FlexibleDetailBar extends StatelessWidget {
   const FlexibleDetailBar({
-    Key? key,
+    super.key,
     required this.content,
     this.builder,
     required this.background,
     this.customBuilder,
-  }) : super(key: key);
+  });
 
   ///the content of bar
   ///scroll with the parent ScrollView
@@ -18,8 +18,8 @@ class FlexibleDetailBar extends StatelessWidget {
   ///scroll in parallax
   final Widget background;
 
-  ///custom content interaction with t
-  ///[bottom] 0.0 -> Expanded  1.0 -> Collapsed to toolbar
+  /// custom content interaction with t
+  /// bottom 0.0 -> Expanded  1.0 -> Collapsed to toolbar
   final Widget Function(BuildContext context, double t)? builder;
 
   final Widget Function(
@@ -29,7 +29,7 @@ class FlexibleDetailBar extends StatelessWidget {
   )? customBuilder;
 
   static double percentage(BuildContext context) {
-    final _FlexibleDetail? value =
+    final value =
         context.dependOnInheritedWidgetOfExactType<_FlexibleDetail>();
     assert(value != null, 'ooh , can not find');
     return value!.t;
@@ -37,31 +37,31 @@ class FlexibleDetailBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final FlexibleSpaceBarSettings settings =
+    final settings =
         context.dependOnInheritedWidgetOfExactType<FlexibleSpaceBarSettings>()!;
 
-    final List<Widget> children = <Widget>[];
+    final children = <Widget>[];
 
-    final double deltaExtent = settings.maxExtent - settings.minExtent;
+    final deltaExtent = settings.maxExtent - settings.minExtent;
     // 0.0 -> Expanded
     // 1.0 -> Collapsed to toolbar
-    final double t =
+    final t =
         (1.0 - (settings.currentExtent - settings.minExtent) / deltaExtent)
             .clamp(0.0, 1.0);
 
     // add parallax effect to background.
     children.add(Positioned(
-      top: -Tween<double>(begin: 0.0, end: deltaExtent / 4.0).transform(t),
+      top: -Tween<double>(begin: 0, end: deltaExtent / 4.0).transform(t),
       left: 0,
       right: 0,
       // to avoid one line gap between bottom and blow content.
       bottom: 0,
       child: ClipRect(child: background),
-    ));
+    ),);
 
     // need add a padding to avoid overlap the bottom widget.
-    double bottomPadding = 0;
-    final SliverAppBar? sliverBar =
+    var bottomPadding = 0.0;
+    final sliverBar =
         context.findAncestorWidgetOfExactType<SliverAppBar>();
     if (sliverBar != null && sliverBar.bottom != null) {
       bottomPadding = sliverBar.bottom!.preferredSize.height;
@@ -79,11 +79,11 @@ class FlexibleDetailBar extends StatelessWidget {
             color: Colors.transparent,
             child: DefaultTextStyle(
                 style: Theme.of(context).primaryTextTheme.bodyText2!,
-                child: content),
+                child: content,),
           ),
         ),
       ),
-    ));
+    ),);
 
     if (builder != null) {
       children.add(Column(children: <Widget>[builder!(context, t)]));
@@ -102,7 +102,7 @@ class FlexibleDetailBar extends StatelessWidget {
             settings.maxExtent - settings.minExtent,
           ),
         ),
-      ));
+      ),);
     }
 
     return _FlexibleDetail(t,
@@ -112,12 +112,12 @@ class FlexibleDetailBar extends StatelessWidget {
                 child: Stack(
                   fit: StackFit.expand,
                   children: children,
-                ))));
+                ),),),);
   }
 }
 
 class _FlexibleDetail extends InheritedWidget {
-  const _FlexibleDetail(this.t, {required Widget child}) : super(child: child);
+  const _FlexibleDetail(this.t, {required super.child});
 
   ///0 : Expanded
   ///1 : Collapsed
@@ -134,7 +134,7 @@ class _FlexibleDetail extends InheritedWidget {
 /// child上下滑动的时候会覆盖上黑色阴影
 ///
 class FlexShadowBackground extends StatelessWidget {
-  const FlexShadowBackground({Key? key, this.child}) : super(key: key);
+  const FlexShadowBackground({super.key, this.child});
   final Widget? child;
 
   @override

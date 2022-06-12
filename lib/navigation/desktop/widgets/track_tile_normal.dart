@@ -13,9 +13,9 @@ import 'highlight_clickable_text.dart';
 
 class TrackTableContainer extends StatelessWidget {
   const TrackTableContainer({
-    Key? key,
+    super.key,
     required this.child,
-  }) : super(key: key);
+  });
 
   final Widget child;
 
@@ -32,10 +32,10 @@ class TrackTableContainer extends StatelessWidget {
 
 class _TrackTableContainer extends StatefulWidget {
   const _TrackTableContainer({
-    Key? key,
+    super.key,
     required this.child,
     required this.width,
-  }) : super(key: key);
+  });
 
   final Widget child;
 
@@ -148,13 +148,13 @@ class _TrackTableContainerState extends State<_TrackTableContainer> {
 
 class _TrackTableConfiguration extends InheritedWidget {
   const _TrackTableConfiguration({
-    Key? key,
-    required Widget child,
+    super.key,
+    required super.child,
     required this.nameWidth,
     required this.artistWidth,
     required this.albumWidth,
     required this.durationWidth,
-  }) : super(key: key, child: child);
+  });
 
   final double nameWidth;
   final double artistWidth;
@@ -162,7 +162,7 @@ class _TrackTableConfiguration extends InheritedWidget {
   final double durationWidth;
 
   static _TrackTableConfiguration of(BuildContext context) {
-    final _TrackTableConfiguration? result =
+    final result =
         context.dependOnInheritedWidgetOfExactType<_TrackTableConfiguration>();
     assert(result != null, 'No _TrackTableConfiguration found in context');
     return result!;
@@ -178,7 +178,7 @@ class _TrackTableConfiguration extends InheritedWidget {
 }
 
 class TrackTableHeader extends StatelessWidget with PreferredSizeWidget {
-  const TrackTableHeader({Key? key}) : super(key: key);
+  const TrackTableHeader({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -187,7 +187,6 @@ class TrackTableHeader extends StatelessWidget with PreferredSizeWidget {
       child: SizedBox.fromSize(
         size: preferredSize,
         child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             const SizedBox(width: 80),
             SizedBox(
@@ -252,10 +251,10 @@ class TrackTableHeader extends StatelessWidget with PreferredSizeWidget {
 
 class TrackTile extends ConsumerWidget {
   const TrackTile({
-    Key? key,
+    super.key,
     required this.track,
     required this.index,
-  }) : super(key: key);
+  });
 
   final Track track;
 
@@ -283,7 +282,6 @@ class TrackTile extends ConsumerWidget {
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   SizedBox(
                     width: 40,
@@ -339,9 +337,9 @@ class TrackTile extends ConsumerWidget {
                                     ref
                                         .read(navigatorProvider.notifier)
                                         .navigate(NavigationTargetArtistDetail(
-                                            artist.id));
+                                            artist.id,),);
                                   },
-                                ))
+                                ),)
                             .separated(MouseHighlightSpan.normal(text: '/'))
                             .toList(),
                       ),
@@ -381,16 +379,16 @@ class TrackTile extends ConsumerWidget {
               ),
             ),
           ),
-        ));
+        ),);
   }
 }
 
 class _IndexOrPlayIcon extends ConsumerWidget {
   const _IndexOrPlayIcon({
-    Key? key,
+    super.key,
     required this.index,
     required this.track,
-  }) : super(key: key);
+  });
 
   final int index;
   final Track track;

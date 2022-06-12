@@ -66,7 +66,7 @@ abstract class NavigatorController extends StateNotifier<NavigatorState> {
           canForward: false,
           // no meaning, just for init
           current: NavigationTargetDiscover(),
-        ));
+        ),);
 
   List<Page> get pages;
 

@@ -5,12 +5,12 @@ class PrimaryTabIndicator extends UnderlineTabIndicator {
   PrimaryTabIndicator({Color color = Colors.white})
       : super(
             insets: const EdgeInsets.only(bottom: 4),
-            borderSide: BorderSide(color: color, width: 2.0));
+            borderSide: BorderSide(color: color, width: 2),);
 }
 
 ///网易云音乐风格的TabBar
 class RoundedTabBar extends StatelessWidget implements PreferredSizeWidget {
-  const RoundedTabBar({Key? key, required this.tabs}) : super(key: key);
+  const RoundedTabBar({super.key, required this.tabs});
   final List<Widget> tabs;
 
   @override
@@ -24,7 +24,7 @@ class RoundedTabBar extends StatelessWidget implements PreferredSizeWidget {
                 PrimaryTabIndicator(color: context.colorScheme.secondary),
             indicatorSize: TabBarIndicatorSize.label,
             labelColor: Theme.of(context).textTheme.bodyText1!.color,
-            tabs: tabs),
+            tabs: tabs,),
       ),
     );
   }

@@ -10,9 +10,8 @@ import 'result_videos.dart';
 const List<String> kSections = ['单曲', '视频', '歌手', '专辑', '歌单'];
 
 class SearchResultPage extends StatefulWidget {
-  SearchResultPage({Key? key, this.query})
-      : assert(query != null && query.isNotEmpty),
-        super(key: key);
+  SearchResultPage({super.key, this.query})
+      : assert(query != null && query.isNotEmpty);
 
   final String? query;
 

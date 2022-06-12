@@ -8,9 +8,9 @@ import '../like_button.dart';
 
 class PlayingOperationBar extends ConsumerWidget {
   const PlayingOperationBar({
-    Key? key,
+    super.key,
     this.iconColor,
-  }) : super(key: key);
+  });
 
   final Color? iconColor;
 

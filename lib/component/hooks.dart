@@ -25,7 +25,7 @@ AsyncSnapshot<T> useMemoizedFutureResult<T>(
   final future = useMemoized(() async {
     final result = await valueBuilder();
     return result.asFuture;
-  }, keys);
+  }, keys,);
   return useFuture(
     future,
     initialData: initialData,

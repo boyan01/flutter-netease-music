@@ -16,7 +16,7 @@ import 'widgets/hotkeys.dart';
 import 'widgets/windows_task_bar.dart';
 
 class HomeWindow extends StatelessWidget {
-  const HomeWindow({Key? key}) : super(key: key);
+  const HomeWindow({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +25,7 @@ class HomeWindow extends StatelessWidget {
 }
 
 class _WindowLayout extends StatelessWidget {
-  const _WindowLayout({Key? key}) : super(key: key);
+  const _WindowLayout({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +46,7 @@ class _WindowLayout extends StatelessWidget {
 }
 
 class _ContentLayout extends StatelessWidget {
-  const _ContentLayout({Key? key}) : super(key: key);
+  const _ContentLayout({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -69,17 +69,17 @@ class _ContentLayout extends StatelessWidget {
 
 class _OverflowBox extends StatelessWidget {
   const _OverflowBox({
-    Key? key,
+    super.key,
     required this.child,
-  }) : super(key: key);
+  });
 
   final Widget child;
 
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, constraints) {
-      final maxHeight = math.max(constraints.maxHeight, 640.0);
-      final maxWidth = math.max(constraints.maxWidth, 800.0);
+      final maxHeight = math.max<double>(constraints.maxHeight, 640);
+      final maxWidth = math.max<double>(constraints.maxWidth, 800);
       return OverflowBox(
         minHeight: 640,
         maxHeight: maxHeight,
@@ -87,22 +87,22 @@ class _OverflowBox extends StatelessWidget {
         maxWidth: maxWidth,
         child: child,
       );
-    });
+    },);
   }
 }
 
 class DesktopPlayingPageContainer extends ConsumerWidget {
   const DesktopPlayingPageContainer({
-    Key? key,
+    super.key,
     required this.child,
-  }) : super(key: key);
+  });
 
   final Widget child;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final playingPage = ref.watch(navigatorProvider
-        .select((value) => value.current is NavigationTargetPlaying));
+        .select((value) => value.current is NavigationTargetPlaying),);
     final showPlayingList = ref.watch(showPlayingListProvider);
     return Stack(
       children: [
@@ -126,9 +126,9 @@ class DesktopPlayingPageContainer extends ConsumerWidget {
 
 class _SlideAnimatedPlayingListOverlay extends HookWidget {
   const _SlideAnimatedPlayingListOverlay({
-    Key? key,
+    super.key,
     required this.visible,
-  }) : super(key: key);
+  });
 
   final bool visible;
 
@@ -144,7 +144,7 @@ class _SlideAnimatedPlayingListOverlay extends HookWidget {
       } else {
         controller.reverse();
       }
-    }, [visible]);
+    }, [visible],);
 
     final animation = useMemoized(() {
       final tween = Tween<Offset>(
@@ -157,7 +157,7 @@ class _SlideAnimatedPlayingListOverlay extends HookWidget {
           curve: Curves.easeInOut,
         ),
       );
-    }, [controller]);
+    }, [controller],);
     final offset = useAnimation(animation);
 
     if (controller.isDismissed) {
@@ -172,9 +172,9 @@ class _SlideAnimatedPlayingListOverlay extends HookWidget {
 
 class _SlideAnimatedPlayingPage extends HookWidget {
   const _SlideAnimatedPlayingPage({
-    Key? key,
+    super.key,
     required this.visible,
-  }) : super(key: key);
+  });
 
   final bool visible;
 
@@ -190,11 +190,11 @@ class _SlideAnimatedPlayingPage extends HookWidget {
       } else {
         controller.reverse();
       }
-    }, [visible]);
+    }, [visible],);
 
     final animation = useMemoized(() {
       final tween = Tween<Offset>(
-        begin: const Offset(0.0, 1.0),
+        begin: const Offset(0, 1),
         end: Offset.zero,
       );
       return tween.animate(
@@ -203,7 +203,7 @@ class _SlideAnimatedPlayingPage extends HookWidget {
           curve: Curves.easeInOut,
         ),
       );
-    }, [controller]);
+    }, [controller],);
     final offset = useAnimation(animation);
 
     if (controller.isDismissed) {

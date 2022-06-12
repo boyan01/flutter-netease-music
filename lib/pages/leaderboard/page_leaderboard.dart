@@ -5,6 +5,8 @@ import '../../repository.dart';
 
 ///各个排行榜数据
 class LeaderboardPage extends StatelessWidget {
+  const LeaderboardPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,7 +31,7 @@ class _Leaderboard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<Widget> widgets = [];
+    final widgets = <Widget>[];
     widgets.add(const _ItemTitle('官方榜'));
     for (var i = 0; i < 4; i++) {
       widgets.add(_ItemLeaderboard1(data[i]));
@@ -44,10 +46,10 @@ class _Leaderboard extends StatelessWidget {
             crossAxisCount: 3,
             childAspectRatio: 10 / 13.5,
             mainAxisSpacing: 4,
-            crossAxisSpacing: 8),
+            crossAxisSpacing: 8,),
         itemBuilder: (context, int i) {
           return _ItemLeaderBoard2(data[i + 4]);
-        }));
+        },),);
     return ListView(
       children: widgets,
     );
@@ -85,7 +87,7 @@ class _ItemLeaderBoard2 extends StatelessWidget {
       onTap: () {
         Navigator.push(context, MaterialPageRoute(builder: (context) {
           return PlaylistDetailPage(row['id']);
-        }));
+        },),);
       },
       child: SizedBox(
         height: 130,
@@ -109,7 +111,7 @@ class _ItemLeaderBoard2 extends StatelessWidget {
                             gradient: LinearGradient(
                                 begin: Alignment.topCenter,
                                 end: Alignment.bottomCenter,
-                                colors: [Colors.transparent, Colors.black45])),
+                                colors: [Colors.transparent, Colors.black45],),),
                         child: Row(
                           children: <Widget>[
                             const Spacer(),
@@ -149,7 +151,7 @@ class _ItemLeaderboard1 extends StatelessWidget {
       onTap: () {
         Navigator.push(context, MaterialPageRoute(builder: (context) {
           return PlaylistDetailPage(row['id']);
-        }));
+        },),);
       },
       child: Container(
         height: 130,
@@ -172,7 +174,7 @@ class _ItemLeaderboard1 extends StatelessWidget {
                             gradient: LinearGradient(
                                 begin: Alignment.topCenter,
                                 end: Alignment.bottomCenter,
-                                colors: [Colors.transparent, Colors.black45])),
+                                colors: [Colors.transparent, Colors.black45],),),
                         child: Row(
                           children: <Widget>[
                             const Spacer(),

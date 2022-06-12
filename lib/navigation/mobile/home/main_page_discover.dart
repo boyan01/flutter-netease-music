@@ -9,6 +9,8 @@ import '../../common/navigation_target.dart';
 import '../../common/playlist/music_list.dart';
 
 class MainPageDiscover extends StatefulWidget {
+  const MainPageDiscover({super.key});
+
   @override
   State<StatefulWidget> createState() => CloudPageState();
 }
@@ -125,7 +127,7 @@ class _ItemNavigator extends StatelessWidget {
               Text(text),
             ],
           ),
-        ));
+        ),);
   }
 }
 
@@ -137,12 +139,12 @@ class _SectionPlaylist extends ConsumerWidget {
       data: (list) {
         return LayoutBuilder(builder: (context, constraints) {
           assert(constraints.maxWidth.isFinite,
-              'can not layout playlist item in infinite width container.');
+              'can not layout playlist item in infinite width container.',);
           final parentWidth = constraints.maxWidth - 8;
-          const int count = /* false ? 6 : */ 3;
-          final double width =
+          const count = /* false ? 6 : */ 3;
+          final width =
               (parentWidth ~/ count).toDouble().clamp(80.0, 200.0);
-          final double spacing = (parentWidth - width * count) / (count + 1);
+          final spacing = (parentWidth - width * count) / (count + 1);
           return Padding(
             padding:
                 EdgeInsets.symmetric(horizontal: 4 + spacing.roundToDouble()),
@@ -153,7 +155,7 @@ class _SectionPlaylist extends ConsumerWidget {
               }).toList(),
             ),
           );
-        });
+        },);
       },
       error: (error, stacktrace) {
         return SizedBox(
@@ -178,10 +180,10 @@ class _SectionPlaylist extends ConsumerWidget {
 
 class _PlayListItemView extends ConsumerWidget {
   const _PlayListItemView({
-    Key? key,
+    super.key,
     required this.playlist,
     required this.width,
-  }) : super(key: key);
+  });
 
   final RecommendedPlaylist playlist;
 
@@ -202,7 +204,7 @@ class _PlayListItemView extends ConsumerWidget {
                   style: Theme.of(context).textTheme.bodyText1,
                 ),
               );
-            });
+            },);
       };
     }
 
@@ -254,11 +256,8 @@ class _SectionNewSongs extends ConsumerWidget {
         return MusicTileConfiguration(
           musics: songs,
           token: 'playlist_main_newsong',
-          onMusicTap: MusicTileConfiguration.defaultOnTap,
-          leadingBuilder: MusicTileConfiguration.indexedLeadingBuilder,
-          trailingBuilder: MusicTileConfiguration.defaultTrailingBuilder,
           child: Column(
-            children: songs.map((m) => MusicTile(m)).toList(),
+            children: songs.map(MusicTile.new).toList(),
           ),
         );
       },

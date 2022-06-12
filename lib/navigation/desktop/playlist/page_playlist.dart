@@ -24,9 +24,9 @@ import '../widgets/track_tile_normal.dart';
 
 class PagePlaylist extends HookConsumerWidget {
   const PagePlaylist({
-    Key? key,
+    super.key,
     required this.playlistId,
-  }) : super(key: key);
+  });
 
   final int playlistId;
 
@@ -48,9 +48,9 @@ class PagePlaylist extends HookConsumerWidget {
 
 class _PlaylistDetailBody extends HookConsumerWidget {
   const _PlaylistDetailBody({
-    Key? key,
+    super.key,
     required this.playlist,
-  }) : super(key: key);
+  });
 
   final PlaylistDetail playlist;
 
@@ -58,7 +58,7 @@ class _PlaylistDetailBody extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final filterStreamController = useStreamController<String>();
     final filterStream = useMemoized(
-        () => filterStreamController.stream, [filterStreamController]);
+        () => filterStreamController.stream, [filterStreamController],);
     return TrackTableContainer(
       child: TrackTileContainer.playlist(
         playlist: playlist,
@@ -83,10 +83,10 @@ class _PlaylistDetailBody extends HookConsumerWidget {
 
 class _PlaylistSliverBar extends StatelessWidget {
   const _PlaylistSliverBar({
-    Key? key,
+    super.key,
     required this.playlist,
     required this.playlistFilterController,
-  }) : super(key: key);
+  });
 
   final PlaylistDetail playlist;
 
@@ -124,10 +124,10 @@ class _PlaylistSliverBar extends StatelessWidget {
 
 class _PlaylistDetailHeader extends StatelessWidget {
   const _PlaylistDetailHeader({
-    Key? key,
+    super.key,
     required this.playlist,
     required this.playlistFilterController,
-  }) : super(key: key);
+  });
 
   final PlaylistDetail playlist;
 
@@ -155,9 +155,7 @@ class _PlaylistDetailHeader extends StatelessWidget {
         ),
         Expanded(
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.max,
             children: [
               const SizedBox(height: 20),
               Text(
@@ -168,7 +166,7 @@ class _PlaylistDetailHeader extends StatelessWidget {
               Row(
                 children: [
                   Text(playlist.creator.nickname,
-                      style: context.textTheme.caption),
+                      style: context.textTheme.caption,),
                   const SizedBox(width: 8),
                   Text(
                     context.strings.createdDate(
@@ -215,7 +213,7 @@ class _PlaylistDetailHeader extends StatelessWidget {
 }
 
 class _HeaderActionButtons extends ConsumerWidget {
-  const _HeaderActionButtons({Key? key}) : super(key: key);
+  const _HeaderActionButtons({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -248,7 +246,6 @@ class _HeaderActionButtons extends ConsumerWidget {
           child: SizedBox(
             height: 32,
             child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 const Icon(Icons.playlist_add_rounded, size: 16),
                 const SizedBox(width: 4),
@@ -269,7 +266,6 @@ class _HeaderActionButtons extends ConsumerWidget {
           child: SizedBox(
             height: 32,
             child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 const Icon(Icons.share, size: 16),
                 const SizedBox(width: 4),
@@ -288,10 +284,10 @@ class _HeaderActionButtons extends ConsumerWidget {
 
 class _PlaylistListView extends HookWidget {
   const _PlaylistListView({
-    Key? key,
+    super.key,
     required this.playlist,
     required this.filter,
-  }) : super(key: key);
+  });
   final PlaylistDetail playlist;
   final Stream<String> filter;
 
@@ -316,9 +312,9 @@ class _PlaylistListView extends HookWidget {
 
 class _PlaylistSearchBox extends StatelessWidget {
   const _PlaylistSearchBox({
-    Key? key,
+    super.key,
     required this.playlistFilterController,
-  }) : super(key: key);
+  });
 
   final StreamController<String> playlistFilterController;
 
@@ -341,7 +337,6 @@ class _PlaylistSearchBox extends StatelessWidget {
             borderRadius: BorderRadius.circular(32),
             borderSide: BorderSide(
               color: context.colorScheme.onBackground.withOpacity(0.5),
-              width: 1,
             ),
           ),
           hintText: context.strings.searchPlaylistSongs,
@@ -352,7 +347,6 @@ class _PlaylistSearchBox extends StatelessWidget {
           prefixIconConstraints:
               const BoxConstraints.tightFor(width: 28, height: 24),
         ),
-        maxLines: 1,
       ),
     );
   }

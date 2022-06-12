@@ -107,7 +107,7 @@ class TracksPlayerImplVlc extends TracksPlayer {
 
   @override
   Future<void> playFromMediaId(int trackId) async {
-    stop();
+    await stop();
     final item = _trackList.tracks.firstWhereOrNull((t) => t.id == trackId);
     if (item != null) {
       _playTrack(item);
@@ -140,7 +140,7 @@ class TracksPlayerImplVlc extends TracksPlayer {
 
   @override
   void setTrackList(TrackList trackList) {
-    bool needStop = trackList.id != _trackList.id;
+    final needStop = trackList.id != _trackList.id;
     if (needStop) {
       stop();
       _current = null;

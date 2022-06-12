@@ -5,6 +5,8 @@ import '../../../component.dart';
 import '../../common/settings.dart';
 
 class PageSettings extends StatelessWidget {
+  const PageSettings({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,15 +32,16 @@ class PageSettings extends StatelessWidget {
                 title: Text(context.strings.about),
                 onTap: () {
                   showDialog(
-                      context: context,
-                      builder: (context) {
-                        return AboutDialog(
-                          applicationIcon:
-                              Image.asset('assets/ic_launcher_round.png'),
-                          applicationVersion: '0.3-alpha',
-                          applicationLegalese: context.strings.copyRightOverlay,
-                        );
-                      });
+                    context: context,
+                    builder: (context) {
+                      return AboutDialog(
+                        applicationIcon:
+                            Image.asset('assets/ic_launcher_round.png'),
+                        applicationVersion: '0.3-alpha',
+                        applicationLegalese: context.strings.copyRightOverlay,
+                      );
+                    },
+                  );
                 },
               )
             ],
@@ -50,8 +53,7 @@ class PageSettings extends StatelessWidget {
 }
 
 class SettingGroup extends StatelessWidget {
-  const SettingGroup({Key? key, this.title, required this.children})
-      : super(key: key);
+  const SettingGroup({super.key, this.title, required this.children});
 
   final String? title;
   final List<Widget> children;
@@ -75,7 +77,8 @@ class SettingGroup extends StatelessWidget {
 }
 
 class _SettingTitle extends StatelessWidget {
-  const _SettingTitle({Key? key, required this.title}) : super(key: key);
+  const _SettingTitle({super.key, required this.title});
+
   final String title;
 
   @override
@@ -91,7 +94,7 @@ class _SettingTitle extends StatelessWidget {
 }
 
 class _DebugNavigationPlatformSetting extends StatelessWidget {
-  const _DebugNavigationPlatformSetting({Key? key}) : super(key: key);
+  const _DebugNavigationPlatformSetting({super.key});
 
   @override
   Widget build(BuildContext context) {

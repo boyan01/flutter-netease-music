@@ -7,8 +7,7 @@ import '../providers/navigator_provider.dart';
 import '../repository/cached_image.dart';
 
 class AlbumTile extends ConsumerWidget {
-  const AlbumTile({Key? key, required this.album, this.subtitle})
-      : super(key: key);
+  const AlbumTile({super.key, required this.album, this.subtitle});
 
   ///netease album json object
   final Map album;
@@ -16,14 +15,14 @@ class AlbumTile extends ConsumerWidget {
   final String Function(Map album)? subtitle;
 
   String _defaultSubtitle(Map album) {
-    final String date = DateFormat('y.M.d')
+    final date = DateFormat('y.M.d')
         .format(DateTime.fromMillisecondsSinceEpoch(album['publishTime']));
     return "$date 歌曲 ${album["size"]}";
   }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final String subtitle = (this.subtitle ?? _defaultSubtitle)(album);
+    final subtitle = (this.subtitle ?? _defaultSubtitle)(album);
     return InkWell(
       onTap: () => ref
           .read(navigatorProvider.notifier)
@@ -39,7 +38,7 @@ class AlbumTile extends ConsumerWidget {
                 child: AspectRatio(
                   aspectRatio: 1,
                   child: Image(
-                      image: CachedImage(album['picUrl']), fit: BoxFit.cover),
+                      image: CachedImage(album['picUrl']), fit: BoxFit.cover,),
                 ),
               ),
             ),
@@ -52,11 +51,11 @@ class AlbumTile extends ConsumerWidget {
                 Text(album['name'], maxLines: 1),
                 const Spacer(),
                 Text(subtitle,
-                    maxLines: 1, style: Theme.of(context).textTheme.caption),
+                    maxLines: 1, style: Theme.of(context).textTheme.caption,),
                 const Spacer(),
                 const Divider(height: 0)
               ],
-            ))
+            ),)
           ],
         ),
       ),

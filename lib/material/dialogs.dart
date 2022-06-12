@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 ///show a loading overlay above the screen
 ///indicator that page is waiting for response
 Future<T> showLoaderOverlay<T>(BuildContext context, Future<T> data,
-    {Duration timeout = const Duration(seconds: 5)}) {
-  final Completer<T> completer = Completer.sync();
+    {Duration timeout = const Duration(seconds: 5),}) {
+  final completer = Completer<T>.sync();
 
   final entry = OverlayEntry(builder: (context) {
     return AbsorbPointer(
@@ -22,19 +22,13 @@ Future<T> showLoaderOverlay<T>(BuildContext context, Future<T> data,
         ),
       ),
     );
-  });
+  },);
   Overlay.of(context)!.insert(entry);
   data
-      .then((value) {
-        completer.complete(value);
-      })
+      .then(completer.complete)
       .timeout(timeout)
-      .catchError((e, s) {
-        completer.completeError(e, s);
-      })
-      .whenComplete(() {
-        entry.remove();
-      });
+      .catchError(completer.completeError)
+      .whenComplete(entry.remove);
   return completer.future;
 }
 
@@ -42,11 +36,11 @@ Future<T> showLoaderOverlay<T>(BuildContext context, Future<T> data,
 ///return true when clicked positive button
 ///other return false
 Future<bool> showConfirmDialog(BuildContext context, Widget content,
-    {String? positiveLabel, String? negativeLabel}) async {
+    {String? positiveLabel, String? negativeLabel,}) async {
   negativeLabel ??= '取消';
   positiveLabel ??= '确认';
 
-  final bool? result = await showDialog(
+  final result = await showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
@@ -66,6 +60,6 @@ Future<bool> showConfirmDialog(BuildContext context, Widget content,
             ),
           ],
         );
-      });
+      },);
   return result ?? false;
 }

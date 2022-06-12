@@ -8,7 +8,7 @@ import '../../common/player/player_actions.dart';
 import 'lyric_layout.dart';
 
 class PagePlaying extends StatelessWidget {
-  const PagePlaying({Key? key}) : super(key: key);
+  const PagePlaying({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +22,7 @@ class PagePlaying extends StatelessWidget {
             flex: 4,
             child: Consumer(builder: (context, ref, child) {
               return LyricLayout(track: ref.watch(playingTrackProvider)!);
-            }),
+            },),
           ),
         ],
       ),
@@ -32,7 +32,7 @@ class PagePlaying extends StatelessWidget {
 
 // left cover layout
 class _LayoutCover extends ConsumerWidget {
-  const _LayoutCover({Key? key}) : super(key: key);
+  const _LayoutCover({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -43,7 +43,6 @@ class _LayoutCover extends ConsumerWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 40),
             child: IgnorePointer(
-              ignoring: true,
               child: ConstrainedBox(
                 constraints: const BoxConstraints(maxWidth: 420),
                 child: AlbumCover(music: ref.watch(playingTrackProvider)!),

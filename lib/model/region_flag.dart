@@ -1,10 +1,12 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:meta/meta.dart';
 
 part 'region_flag.g.dart';
 
 @JsonSerializable()
+@immutable
 class RegionFlag {
-  RegionFlag({
+  const RegionFlag({
     required this.code,
     required this.emoji,
     required this.unicode,

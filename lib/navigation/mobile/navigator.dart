@@ -56,11 +56,11 @@ class MobileNavigatorController extends NavigatorController {
 
   @override
   List<Page> get pages =>
-      _pages.map((e) => _buildPage(e)).toList(growable: false);
+      _pages.map(_buildPage).toList(growable: false);
 
   Page<dynamic> _buildPage(NavigationTarget target) {
     final Widget page;
-    bool slideUp = false;
+    var slideUp = false;
     switch (target.runtimeType) {
       case NavigationTargetDiscover:
       case NavigationTargetMy:
@@ -69,7 +69,7 @@ class MobileNavigatorController extends NavigatorController {
         page = PageHome(selectedTab: target);
         break;
       case NavigationTargetSettings:
-        page = PageSettings();
+        page = const PageSettings();
         break;
       case NavigationTargetPlaylist:
         page = PlaylistDetailPage(
@@ -77,11 +77,11 @@ class MobileNavigatorController extends NavigatorController {
         );
         break;
       case NavigationTargetPlaying:
-        page = PlayingPage();
+        page = const PlayingPage();
         slideUp = true;
         break;
       case NavigationTargetFmPlaying:
-        page = PagePlayingFm();
+        page = const PagePlayingFm();
         slideUp = true;
         break;
       case NavigationTargetUser:

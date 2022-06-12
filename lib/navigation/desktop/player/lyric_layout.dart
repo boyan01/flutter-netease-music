@@ -10,9 +10,9 @@ import '../widgets/highlight_clickable_text.dart';
 
 class LyricLayout extends ConsumerWidget {
   const LyricLayout({
-    Key? key,
+    super.key,
     required this.track,
-  }) : super(key: key);
+  });
 
   final Track track;
 
@@ -43,7 +43,7 @@ class LyricLayout extends ConsumerWidget {
                   overflow: TextOverflow.ellipsis,
                   children: [
                     MouseHighlightSpan.normal(
-                        text: '${context.strings.album}:'),
+                        text: '${context.strings.album}:',),
                     MouseHighlightSpan.widget(widget: const SizedBox(width: 4)),
                     MouseHighlightSpan.highlight(
                       text: track.album?.name ?? '',
@@ -71,7 +71,7 @@ class LyricLayout extends ConsumerWidget {
                   overflow: TextOverflow.ellipsis,
                   children: [
                     MouseHighlightSpan.normal(
-                        text: '${context.strings.artists}:'),
+                        text: '${context.strings.artists}:',),
                     MouseHighlightSpan.widget(widget: const SizedBox(width: 4)),
                     ...track.artists
                         .map((artist) => MouseHighlightSpan.highlight(
@@ -81,9 +81,9 @@ class LyricLayout extends ConsumerWidget {
                                   return;
                                 }
                                 ref.read(navigatorProvider.notifier).navigate(
-                                    NavigationTargetArtistDetail(artist.id));
+                                    NavigationTargetArtistDetail(artist.id),);
                               },
-                            ))
+                            ),)
                         .separated(MouseHighlightSpan.normal(text: '/')),
                   ],
                 ),

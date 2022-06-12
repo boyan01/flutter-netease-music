@@ -10,7 +10,7 @@ import '../common/navigator.dart';
 import 'widgets/bottom_bar.dart';
 
 class MobileWindow extends StatelessWidget {
-  const MobileWindow({Key? key}) : super(key: key);
+  const MobileWindow({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -25,8 +25,8 @@ class MobileWindow extends StatelessWidget {
 
 class _MobileWindowLayout extends StatelessWidget {
   const _MobileWindowLayout({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -41,8 +41,7 @@ class _MobileWindowLayout extends StatelessWidget {
 
 // show mobile window on desktop. (for debug)
 class _MobileWindowOnDesktopWrapper extends HookConsumerWidget {
-  const _MobileWindowOnDesktopWrapper({Key? key, required this.child})
-      : super(key: key);
+  const _MobileWindowOnDesktopWrapper({super.key, required this.child});
 
   final Widget child;
 

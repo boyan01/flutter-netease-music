@@ -3,12 +3,12 @@ import '../../../component.dart';
 
 class NavigationTile extends StatelessWidget {
   const NavigationTile({
-    Key? key,
+    super.key,
     required this.icon,
     required this.title,
     required this.isSelected,
     required this.onTap,
-  }) : super(key: key);
+  });
 
   final Widget icon;
 
@@ -34,7 +34,6 @@ class NavigationTile extends StatelessWidget {
             borderRadius: BorderRadius.circular(8),
           ),
           child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const SizedBox(width: 8),
               IconTheme.merge(
@@ -58,7 +57,7 @@ class NavigationTile extends StatelessWidget {
 }
 
 class NavigationTitle extends StatelessWidget {
-  const NavigationTitle({Key? key, required this.title}) : super(key: key);
+  const NavigationTitle({super.key, required this.title});
 
   final String title;
 

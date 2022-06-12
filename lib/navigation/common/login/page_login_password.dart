@@ -11,7 +11,7 @@ import '../../../providers/account_provider.dart';
 import '../../../providers/navigator_provider.dart';
 
 class PageLoginPassword extends ConsumerStatefulWidget {
-  const PageLoginPassword({Key? key, required this.phone}) : super(key: key);
+  const PageLoginPassword({super.key, required this.phone});
 
   final String? phone;
 

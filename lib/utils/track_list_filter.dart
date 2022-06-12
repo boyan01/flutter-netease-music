@@ -28,7 +28,7 @@ List<Track> useFilteredTracks(List<Track> tracks, String filter) {
             track.toString().toLowerCase().contains(filter.toLowerCase());
       }).toList();
     }
-  }, [tracks, filter, pinyinData]);
+  }, [tracks, filter, pinyinData],);
   return filteredTracks.value;
 }
 
@@ -45,7 +45,6 @@ Map<int, String> computePingYin(List<Track> tracks) {
     final pinyin = PinyinHelper.getPinyinE(
       track.name,
       separator: '',
-      format: PinyinFormat.WITHOUT_TONE,
     );
     final short = PinyinHelper.getShortPinyin(str);
     map[track.id] = '$pinyin $short';

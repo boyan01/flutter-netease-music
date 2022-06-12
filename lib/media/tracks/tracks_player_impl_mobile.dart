@@ -28,7 +28,7 @@ extension _Metadata on MusicMetadata {
       id: int.parse(mediaId),
       name: title ?? '',
       uri: mediaUri,
-      artists: artists.map((artist) => ArtistMini.fromJson(artist)).toList(),
+      artists: artists.map(ArtistMini.fromJson).toList(),
       album: album == null ? null : AlbumMini.fromJson(album),
       imageUrl: extras?['imageUrl'] as String,
       duration: Duration(milliseconds: duration),
@@ -237,17 +237,15 @@ Future<String> _playUriInterceptor(String? mediaId, String? fallbackUri) async {
 }
 
 Future<Uint8List> _loadImageInterceptor(MusicMetadata metadata) async {
-  final ImageStream stream =
+  final stream =
       CachedImage(metadata.iconUri.toString()).resolve(ImageConfiguration(
     size: const Size(150, 150),
     devicePixelRatio: WidgetsBinding.instance.window.devicePixelRatio,
-  ));
+  ),);
   final image = Completer<ImageInfo>();
   stream.addListener(ImageStreamListener((info, a) {
     image.complete(info);
-  }, onError: (exception, stackTrace) {
-    image.completeError(exception, stackTrace);
-  }));
+  }, onError: image.completeError,),);
   final result = await image.future
       .then((image) => image.image.toByteData(format: ImageByteFormat.png))
       .then((byte) => byte!.buffer.asUint8List())
@@ -259,7 +257,7 @@ Future<Uint8List> _loadImageInterceptor(MusicMetadata metadata) async {
 class _PlayQueueInterceptor extends PlayQueueInterceptor {
   @override
   Future<List<MusicMetadata>> fetchMoreMusic(
-      BackgroundPlayQueue queue, PlayMode playMode) async {
+      BackgroundPlayQueue queue, PlayMode playMode,) async {
     if (queue.queueId == kFmPlayQueueId) {
       final musics = await neteaseRepository!.getPersonalFmMusics();
       if (musics.isError) {

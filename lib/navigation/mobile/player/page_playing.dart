@@ -14,6 +14,8 @@ import '../../common/player_progress.dart';
 import 'background.dart';
 
 class PlayingPage extends ConsumerWidget {
+  const PlayingPage({super.key});
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final current = ref.read(playerStateProvider).playingTrack;
@@ -36,7 +38,7 @@ class PlayingPage extends ConsumerWidget {
                 _CenterSection(music: current),
                 const PlayingOperationBar(),
                 const DurationProgressBar(),
-                PlayerControllerBar(),
+                const PlayerControllerBar(),
                 SizedBox(
                   height: MediaQuery.of(context).viewInsets.bottom +
                       MediaQuery.of(context).viewPadding.bottom,
@@ -53,6 +55,8 @@ class PlayingPage extends ConsumerWidget {
 ///player controller
 /// pause,play,play next,play previous...
 class PlayerControllerBar extends ConsumerWidget {
+  const PlayerControllerBar({super.key});
+
   Widget getPlayModeIcon(BuildContext context, Color? color) {
     // TODO: implement getPlayModeIcon
     return Icon(Icons.shuffle, color: color);
@@ -64,25 +68,27 @@ class PlayerControllerBar extends ConsumerWidget {
 
     final iconPlayPause = PlayingIndicator(
       playing: IconButton(
-          tooltip: '暂停',
-          iconSize: 40,
-          icon: Icon(
-            Icons.pause_circle_outline,
-            color: color,
-          ),
-          onPressed: () {
-            ref.read(playerProvider).pause();
-          }),
+        tooltip: '暂停',
+        iconSize: 40,
+        icon: Icon(
+          Icons.pause_circle_outline,
+          color: color,
+        ),
+        onPressed: () {
+          ref.read(playerProvider).pause();
+        },
+      ),
       pausing: IconButton(
-          tooltip: '播放',
-          iconSize: 40,
-          icon: Icon(
-            Icons.play_circle_outline,
-            color: color,
-          ),
-          onPressed: () {
-            ref.read(playerProvider).play();
-          }),
+        tooltip: '播放',
+        iconSize: 40,
+        icon: Icon(
+          Icons.play_circle_outline,
+          color: color,
+        ),
+        onPressed: () {
+          ref.read(playerProvider).play();
+        },
+      ),
       buffering: const SizedBox(
         height: 56,
         width: 56,
@@ -102,45 +108,49 @@ class PlayerControllerBar extends ConsumerWidget {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
           IconButton(
-              splashRadius: 24,
-              icon: getPlayModeIcon(context, color),
-              onPressed: () {
-                // FIXME
-                // context.player.setPlayMode(context.playMode.next);
-              }),
+            splashRadius: 24,
+            icon: getPlayModeIcon(context, color),
+            onPressed: () {
+              // FIXME
+              // context.player.setPlayMode(context.playMode.next);
+            },
+          ),
           IconButton(
-              iconSize: 36,
-              splashRadius: 24,
-              tooltip: context.strings.skipToPrevious,
-              icon: Icon(
-                Icons.skip_previous,
-                color: color,
-              ),
-              onPressed: () {
-                ref.read(playerProvider).skipToPrevious();
-              }),
+            iconSize: 36,
+            splashRadius: 24,
+            tooltip: context.strings.skipToPrevious,
+            icon: Icon(
+              Icons.skip_previous,
+              color: color,
+            ),
+            onPressed: () {
+              ref.read(playerProvider).skipToPrevious();
+            },
+          ),
           iconPlayPause,
           IconButton(
-              tooltip: context.strings.skipToNext,
-              iconSize: 36,
-              splashRadius: 24,
-              icon: Icon(
-                Icons.skip_next,
-                color: color,
-              ),
-              onPressed: () {
-                ref.read(playerProvider).skipToNext();
-              }),
+            tooltip: context.strings.skipToNext,
+            iconSize: 36,
+            splashRadius: 24,
+            icon: Icon(
+              Icons.skip_next,
+              color: color,
+            ),
+            onPressed: () {
+              ref.read(playerProvider).skipToNext();
+            },
+          ),
           IconButton(
-              tooltip: context.strings.playingList,
-              splashRadius: 24,
-              icon: Icon(
-                Icons.menu,
-                color: color,
-              ),
-              onPressed: () {
-                PlayingListDialog.show(context);
-              }),
+            tooltip: context.strings.playingList,
+            splashRadius: 24,
+            icon: Icon(
+              Icons.menu,
+              color: color,
+            ),
+            onPressed: () {
+              PlayingListDialog.show(context);
+            },
+          ),
         ],
       ),
     );
@@ -148,7 +158,8 @@ class PlayerControllerBar extends ConsumerWidget {
 }
 
 class _CenterSection extends StatefulWidget {
-  const _CenterSection({Key? key, required this.music}) : super(key: key);
+  const _CenterSection({super.key, required this.music});
+
   final Track music;
 
   @override
@@ -164,8 +175,12 @@ class _CenterSectionState extends State<_CenterSection> {
       child: AnimatedCrossFade(
         crossFadeState:
             _showLyric ? CrossFadeState.showSecond : CrossFadeState.showFirst,
-        layoutBuilder: (Widget topChild, Key topChildKey, Widget bottomChild,
-            Key bottomChildKey) {
+        layoutBuilder: (
+          Widget topChild,
+          Key topChildKey,
+          Widget bottomChild,
+          Key bottomChildKey,
+        ) {
           return Stack(
             clipBehavior: Clip.none,
             children: <Widget>[
@@ -207,7 +222,8 @@ class _CenterSectionState extends State<_CenterSection> {
 }
 
 class PlayingTitle extends ConsumerWidget {
-  const PlayingTitle({Key? key, required this.music}) : super(key: key);
+  const PlayingTitle({super.key, required this.music});
+
   final Track music;
 
   @override
@@ -225,12 +241,12 @@ class PlayingTitle extends ConsumerWidget {
             style: context.primaryTextTheme.titleMedium,
           ),
           InkWell(
-            onTap: () => ref
-                .read(navigatorProvider.notifier)
-                .navigateToArtistDetail(
-                    context: context, artists: music.artists),
+            onTap: () =>
+                ref.read(navigatorProvider.notifier).navigateToArtistDetail(
+                      context: context,
+                      artists: music.artists,
+                    ),
             child: Row(
-              mainAxisSize: MainAxisSize.max,
               children: <Widget>[
                 Flexible(
                   child: Text(

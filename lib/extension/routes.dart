@@ -6,7 +6,7 @@ import '../providers/navigator_provider.dart';
 import '../repository.dart';
 
 extension NavigatorControllerExt on NavigatorController {
-  void navigateToArtistDetail({
+  Future<void> navigateToArtistDetail({
     required BuildContext context,
     required List<ArtistMini> artists,
   }) async {
@@ -18,7 +18,7 @@ extension NavigatorControllerExt on NavigatorController {
     } else {
       final artist = await showDialog<ArtistMini>(
           context: context,
-          builder: (context) => ArtistSelectionDialog(artists: artists));
+          builder: (context) => ArtistSelectionDialog(artists: artists),);
       if (artist != null) {
         navigate(NavigationTargetArtistDetail(artist.id));
       }

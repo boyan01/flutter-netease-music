@@ -32,13 +32,17 @@ final fmPlaylistProvider = Provider<List<Track>>((ref) {
 
   Track? playedFmTrack;
 
-  ref.listen<Track?>(playingTrackProvider, (previous, next) {
-    if (player.trackList.isFM) {
-      assert(next != null, 'playing track should not be null');
-      playedFmTrack = next;
-      fmPlaylistNotifier.ensureHasEnoughTracks(next!);
-    }
-  }, fireImmediately: true).autoRemove(ref);
+  ref.listen<Track?>(
+    playingTrackProvider,
+    (previous, next) {
+      if (player.trackList.isFM) {
+        assert(next != null, 'playing track should not be null');
+        playedFmTrack = next;
+        fmPlaylistNotifier.ensureHasEnoughTracks(next);
+      }
+    },
+    fireImmediately: true,
+  ).autoRemove(ref);
 
   ref.listen<TrackList>(playingListProvider, (previous, next) {
     if (next.isFM && (previous == null || !previous.isFM)) {
@@ -71,7 +75,8 @@ class FmPlaylistNotifier extends StateNotifier<List<Track>> {
     _loading = false;
     if (tracks.isError) {
       debugPrint(
-          'load fm playlist failed: ${tracks.asError!.error} ${tracks.asError!.stackTrace}');
+        'load fm playlist failed: ${tracks.asError!.error} ${tracks.asError!.stackTrace}',
+      );
       return;
     }
     state = state + tracks.asValue!.value;

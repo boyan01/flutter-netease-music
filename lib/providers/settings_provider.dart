@@ -70,7 +70,7 @@ class Settings extends StateNotifier<SettingState> {
           copyright: false,
           skipWelcomePage: true,
           skipAccompaniment: false,
-        ));
+        ),);
 
   late final SharedPreferences _preferences;
 

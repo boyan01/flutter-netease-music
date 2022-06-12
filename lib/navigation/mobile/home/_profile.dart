@@ -8,7 +8,7 @@ import '../../../repository.dart';
 import '../../common/navigation_target.dart';
 
 class UserProfileSection extends ConsumerWidget {
-  const UserProfileSection({Key? key}) : super(key: key);
+  const UserProfileSection({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -49,7 +49,7 @@ class UserProfileSection extends ConsumerWidget {
                             borderRadius: BorderRadius.circular(12),
                           ),
                           padding: const EdgeInsets.symmetric(
-                              vertical: 2, horizontal: 4),
+                              vertical: 2, horizontal: 4,),
                           child: Text(
                             'Lv.${detail.level}',
                             style: const TextStyle(
@@ -74,7 +74,7 @@ class UserProfileSection extends ConsumerWidget {
 }
 
 class _NotLogin extends ConsumerWidget {
-  const _NotLogin({Key? key}) : super(key: key);
+  const _NotLogin({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

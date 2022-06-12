@@ -10,7 +10,7 @@ import 'progress_track_container.dart';
 
 /// A seek bar for current position.
 class DurationProgressBar extends ConsumerWidget {
-  const DurationProgressBar({Key? key}) : super(key: key);
+  const DurationProgressBar({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -38,7 +38,7 @@ class DurationProgressBar extends ConsumerWidget {
               Text(durationText ?? '00:00', style: theme.bodyText2),
             ],
           );
-        }),
+        },),
       ),
     );
   }
@@ -46,9 +46,9 @@ class DurationProgressBar extends ConsumerWidget {
 
 class PlayerProgressSlider extends HookConsumerWidget {
   const PlayerProgressSlider({
-    Key? key,
+    super.key,
     this.builder,
-  }) : super(key: key);
+  });
 
   final Widget Function(BuildContext context, Widget slider)? builder;
 
@@ -70,10 +70,10 @@ class PlayerProgressSlider extends HookConsumerWidget {
 
 class _PlayerProgressSliderSnapshot extends StatelessWidget {
   const _PlayerProgressSliderSnapshot({
-    Key? key,
+    super.key,
     required this.player,
     required this.userTrackingValue,
-  }) : super(key: key);
+  });
 
   final TracksPlayer player;
 

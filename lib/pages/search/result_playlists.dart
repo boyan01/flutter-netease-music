@@ -4,7 +4,8 @@ import '../../component/utils/utils.dart';
 import '../../repository.dart';
 
 class PlaylistResultSection extends StatefulWidget {
-  const PlaylistResultSection({Key? key, this.query}) : super(key: key);
+  const PlaylistResultSection({super.key, this.query});
+
   final String? query;
 
   @override
@@ -19,27 +20,33 @@ class _PlaylistResultSectionState extends State<PlaylistResultSection>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return AutoLoadMoreList(loadMore: (offset) async {
-      final result = await neteaseRepository!
-          .search(widget.query, SearchType.playlist, offset: offset);
-      if (result.isValue) {
-        return LoadMoreResult(result.asValue!.value['result']['playlists']);
-      }
-      return result as Result<List>;
-    }, builder: (context, dynamic item) {
-      return _PlayListTile(item);
-    });
+    return AutoLoadMoreList(
+      loadMore: (offset) async {
+        final result = await neteaseRepository!
+            .search(widget.query, SearchType.playlist, offset: offset);
+        if (result.isValue) {
+          return LoadMoreResult(
+            (result.asValue!.value['result'] as Map)['playlists'],
+          );
+        }
+        return result as Result<List>;
+      },
+      builder: (context, dynamic item) {
+        return _PlayListTile(item);
+      },
+    );
   }
 }
 
 class _PlayListTile extends StatelessWidget {
-  const _PlayListTile(this.item, {Key? key}) : super(key: key);
+  const _PlayListTile(this.item, {super.key});
+
   final Map item;
 
   @override
   Widget build(BuildContext context) {
-    final String subTitle =
-        "${item["trackCount"]}首 by ${item["creator"]["nickname"]}, "
+    final subTitle =
+        "${item["trackCount"]}首 by ${(item["creator"] as Map)["nickname"]}, "
         "播放${getFormattedNumber(item["playCount"])}次";
     return InkWell(
       onTap: () {
@@ -56,25 +63,30 @@ class _PlayListTile extends StatelessWidget {
                 child: AspectRatio(
                   aspectRatio: 1,
                   child: Image(
-                      image: CachedImage(item['coverImgUrl']),
-                      fit: BoxFit.cover),
+                    image: CachedImage(item['coverImgUrl']),
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
             ),
             const Padding(padding: EdgeInsets.only(left: 4)),
             Expanded(
-                child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                const Spacer(),
-                Text(item['name'], maxLines: 1),
-                const Spacer(),
-                Text(subTitle,
-                    maxLines: 1, style: Theme.of(context).textTheme.caption),
-                const Spacer(),
-                const Divider(height: 0)
-              ],
-            ))
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  const Spacer(),
+                  Text(item['name'], maxLines: 1),
+                  const Spacer(),
+                  Text(
+                    subTitle,
+                    maxLines: 1,
+                    style: Theme.of(context).textTheme.caption,
+                  ),
+                  const Spacer(),
+                  const Divider(height: 0)
+                ],
+              ),
+            )
           ],
         ),
       ),

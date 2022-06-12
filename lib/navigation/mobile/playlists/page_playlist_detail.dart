@@ -18,8 +18,8 @@ const double kHeaderHeight = 280 + kToolbarHeight;
 class PlaylistDetailPage extends ConsumerWidget {
   const PlaylistDetailPage(
     this.playlistId, {
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   final int playlistId;
 
@@ -51,7 +51,7 @@ class PlaylistDetailPage extends ConsumerWidget {
 }
 
 class _Appbar extends StatelessWidget {
-  const _Appbar({Key? key, required this.playlist}) : super(key: key);
+  const _Appbar({super.key, required this.playlist});
 
   final PlaylistDetail playlist;
 

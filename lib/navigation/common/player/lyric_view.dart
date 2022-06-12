@@ -12,13 +12,12 @@ import 'lyric.dart';
 
 class PlayingLyricView extends ConsumerWidget {
   PlayingLyricView({
-    Key? key,
+    super.key,
     this.onTap,
     required this.music,
     required this.textStyle,
     this.textAlign = TextAlign.center,
-  })  : assert(textStyle.color != null),
-        super(key: key);
+  })  : assert(textStyle.color != null);
   final VoidCallback? onTap;
 
   final Track music;
@@ -48,8 +47,7 @@ class PlayingLyricView extends ConsumerWidget {
 
 class _LyricViewLoader extends ConsumerWidget {
   const _LyricViewLoader(this.music, this.textAlign, this.textStyle, this.onTap,
-      {Key? key})
-      : super(key: key);
+      {super.key,});
 
   final Track music;
 
@@ -78,7 +76,7 @@ class _LyricViewLoader extends ConsumerWidget {
             textAlign: textAlign,
             track: music,
           );
-        });
+        },);
       },
       error: (error, stack) => Center(
         child: Text(context.formattedError(error), style: textStyle),
@@ -95,14 +93,14 @@ class _LyricViewLoader extends ConsumerWidget {
 
 class _LyricView extends ConsumerWidget {
   const _LyricView({
-    Key? key,
+    super.key,
     required this.lyric,
     required this.viewportHeight,
     required this.onTap,
     required this.textAlign,
     required this.textStyle,
     required this.track,
-  }) : super(key: key);
+  });
 
   final LyricContent lyric;
 

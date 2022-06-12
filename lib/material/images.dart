@@ -3,7 +3,7 @@ import '../repository.dart';
 
 ///圆形图片
 class RoundedImage extends StatelessWidget {
-  const RoundedImage(this.url, {Key? key, this.size = 48}) : super(key: key);
+  const RoundedImage(this.url, {super.key, this.size = 48});
 
   ///图片直径
   final double size;
@@ -20,6 +20,6 @@ class RoundedImage extends StatelessWidget {
         width: size,
         image: CachedImage(url!),
       ),
-    ));
+    ),);
   }
 }

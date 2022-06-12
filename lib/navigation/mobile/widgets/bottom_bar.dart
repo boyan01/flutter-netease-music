@@ -18,9 +18,9 @@ const kBottomPlayerBarHeight = 56.0;
 
 class AnimatedAppBottomBar extends HookConsumerWidget {
   const AnimatedAppBottomBar({
-    Key? key,
+    super.key,
     required this.child,
-  }) : super(key: key);
+  });
 
   final Widget child;
 
@@ -145,7 +145,7 @@ class AnimatedAppBottomBar extends HookConsumerWidget {
 }
 
 class BottomPlayerBar extends ConsumerWidget {
-  const BottomPlayerBar({Key? key}) : super(key: key);
+  const BottomPlayerBar({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -159,7 +159,7 @@ class BottomPlayerBar extends ConsumerWidget {
       child: InkWell(
         onTap: () => ref.read(navigatorProvider.notifier).navigate(queue.isFM
             ? NavigationTargetFmPlaying()
-            : NavigationTargetPlaying()),
+            : NavigationTargetPlaying(),),
         child: SizedBox(
           height: kBottomPlayerBarHeight,
           child: Row(
@@ -223,7 +223,7 @@ class BottomPlayerBar extends ConsumerWidget {
 }
 
 class _SubTitleOrLyric extends ConsumerWidget {
-  const _SubTitleOrLyric(this.subtitle, {Key? key}) : super(key: key);
+  const _SubTitleOrLyric(this.subtitle, {super.key});
 
   final String subtitle;
 
@@ -252,12 +252,12 @@ class _PauseButton extends ConsumerWidget {
           icon: const Icon(Icons.pause),
           onPressed: () {
             ref.read(playerStateProvider.notifier).pause();
-          }),
+          },),
       pausing: IconButton(
           icon: const Icon(Icons.play_arrow),
           onPressed: () {
             ref.read(playerStateProvider.notifier).play();
-          }),
+          },),
       buffering: Container(
         height: 24,
         width: 24,
@@ -272,9 +272,9 @@ class _PauseButton extends ConsumerWidget {
 
 class HomeBottomNavigationBar extends ConsumerWidget {
   const HomeBottomNavigationBar({
-    Key? key,
+    super.key,
     required this.currentTab,
-  }) : super(key: key);
+  });
 
   final NavigationTarget currentTab;
 

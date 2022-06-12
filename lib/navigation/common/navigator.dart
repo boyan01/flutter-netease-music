@@ -4,7 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../../providers/navigator_provider.dart';
 
 class AppNavigator extends ConsumerWidget {
-  const AppNavigator({Key? key}) : super(key: key);
+  const AppNavigator({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

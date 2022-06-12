@@ -16,6 +16,8 @@ import 'background.dart';
 
 /// FM 播放页面
 class PagePlayingFm extends ConsumerWidget {
+  const PagePlayingFm({super.key});
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final fmPlaylist = ref.watch(fmPlaylistProvider);
@@ -67,9 +69,9 @@ class PagePlayingFm extends ConsumerWidget {
 
 class _CenterSection extends HookConsumerWidget {
   const _CenterSection({
-    Key? key,
+    super.key,
     required this.track,
-  }) : super(key: key);
+  });
 
   final Track track;
 
@@ -83,7 +85,7 @@ class _CenterSection extends HookConsumerWidget {
             ? CrossFadeState.showSecond
             : CrossFadeState.showFirst,
         layoutBuilder: (Widget topChild, Key topChildKey, Widget bottomChild,
-            Key bottomChildKey) {
+            Key bottomChildKey,) {
           return Stack(
             clipBehavior: Clip.none,
             children: <Widget>[
@@ -117,7 +119,7 @@ class _CenterSection extends HookConsumerWidget {
 }
 
 class _FmCover extends ConsumerWidget {
-  const _FmCover({Key? key, required this.track}) : super(key: key);
+  const _FmCover({super.key, required this.track});
 
   final Track track;
 
@@ -169,7 +171,7 @@ class _FmCover extends ConsumerWidget {
               ),
               Icon(Icons.chevron_right,
                   size: 17,
-                  color: Theme.of(context).primaryTextTheme.caption!.color),
+                  color: Theme.of(context).primaryTextTheme.caption!.color,),
             ],
           ),
         )
@@ -179,7 +181,7 @@ class _FmCover extends ConsumerWidget {
 }
 
 class _FmControllerBar extends ConsumerWidget {
-  const _FmControllerBar({Key? key, required this.track}) : super(key: key);
+  const _FmControllerBar({super.key, required this.track});
 
   final Track track;
 
@@ -212,7 +214,7 @@ class _FmControllerBar extends ConsumerWidget {
               ..setTrackList(TrackList.fm(tracks: fmPlaylist))
               ..playFromMediaId(track.id);
           }
-        });
+        },);
 
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 10),
@@ -227,7 +229,7 @@ class _FmControllerBar extends ConsumerWidget {
               onPressed: () {
                 toast('已加入不喜欢列表，以后将减少类似的推荐。');
                 ref.read(playerProvider).skipToNext();
-              }),
+              },),
           LikeButton(music: track, color: color),
           iconPlayPause,
           IconButton(
@@ -238,7 +240,7 @@ class _FmControllerBar extends ConsumerWidget {
               ),
               onPressed: () {
                 ref.read(playerProvider).skipToNext();
-              }),
+              },),
           IconButton(
               icon: Icon(
                 Icons.comment,
@@ -246,7 +248,7 @@ class _FmControllerBar extends ConsumerWidget {
               ),
               onPressed: () {
                 // TODO
-              }),
+              },),
         ],
       ),
     );

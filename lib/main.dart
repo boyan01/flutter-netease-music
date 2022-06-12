@@ -21,42 +21,44 @@ import 'utils/system/system_fonts.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await loadFallbackFonts();
-  NetworkRepository.initialize();
-  DartVLC.initialize();
+  unawaited(NetworkRepository.initialize());
+  unawaited(DartVLC.initialize());
   final preferences = await SharedPreferences.getInstance();
-  _initialDesktop(preferences);
+  unawaited(_initialDesktop(preferences));
   runZonedGuarded(() {
-    runApp(ProviderScope(
-      overrides: [
-        sharedPreferenceProvider.overrideWithValue(preferences),
-      ],
-      child: PageSplash(
-        futures: [
-          getApplicationDocumentsDirectory().then((dir) {
-            Hive.init(dir.path);
-            return Hive.openBox<Map>('player');
-          }),
+    runApp(
+      ProviderScope(
+        overrides: [
+          sharedPreferenceProvider.overrideWithValue(preferences),
         ],
-        builder: (BuildContext context, List<dynamic> data) {
-          return MyApp(
-            player: data[0] as Box<Map>,
-          );
-        },
+        child: PageSplash(
+          futures: [
+            getApplicationDocumentsDirectory().then((dir) {
+              Hive.init(dir.path);
+              return Hive.openBox<Map>('player');
+            }),
+          ],
+          builder: (BuildContext context, List<dynamic> data) {
+            return MyApp(
+              player: data[0] as Box<Map>,
+            );
+          },
+        ),
       ),
-    ));
+    );
   }, (error, stack) {
     debugPrint('uncaught error : $error $stack');
   });
 }
 
-void _initialDesktop(SharedPreferences preferences) async {
+Future<void> _initialDesktop(SharedPreferences preferences) async {
   if (!(Platform.isMacOS || Platform.isLinux || Platform.isWindows)) {
     return;
   }
   await WindowManager.instance.ensureInitialized();
   if (Platform.isWindows) {
     final size = preferences.getWindowSize();
-    WindowOptions windowOptions = WindowOptions(
+    final windowOptions = WindowOptions(
       size: size ?? const Size(1080, 720),
       center: true,
       minimumSize: const Size(960, 720),
@@ -64,28 +66,33 @@ void _initialDesktop(SharedPreferences preferences) async {
       skipTaskbar: false,
       titleBarStyle: TitleBarStyle.hidden,
     );
-    windowManager.waitUntilReadyToShow(windowOptions, () async {
+    await windowManager.waitUntilReadyToShow(windowOptions, () async {
       await windowManager.show();
       await windowManager.focus();
     });
     windowManager.addListener(
-      CallbackWindowListener(onWindowResizeCallback: () async {
-        final size = await windowManager.getSize();
-        preferences.setWindowSize(size);
-      }),
+      CallbackWindowListener(
+        onWindowResizeCallback: () async {
+          final size = await windowManager.getSize();
+          await preferences.setWindowSize(size);
+        },
+      ),
     );
   }
 
-  assert(() {
-    scheduleMicrotask(() async {
-      final size = await WindowManager.instance.getSize();
-      if (size.width < 960 || size.height < 720) {
-        WindowManager.instance.setSize(const Size(960, 720), animate: true);
-      }
-    });
+  assert(
+    () {
+      scheduleMicrotask(() async {
+        final size = await WindowManager.instance.getSize();
+        if (size.width < 960 || size.height < 720) {
+          await WindowManager.instance
+              .setSize(const Size(960, 720), animate: true);
+        }
+      });
 
-    return true;
-  }());
+      return true;
+    }(),
+  );
 }
 
 /// The entry of dart background service
@@ -99,7 +106,7 @@ void playerBackgroundService() {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key, this.player}) : super(key: key);
+  const MyApp({super.key, this.player});
 
   final Box<Map>? player;
 

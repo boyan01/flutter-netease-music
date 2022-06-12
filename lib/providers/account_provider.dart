@@ -61,7 +61,7 @@ class UserAccount extends StateNotifier<User?> {
         neteaseLocalData['neteaseLocalData'] = null;
       }
       //访问api，刷新登陆状态
-      neteaseRepository!.refreshLogin().then((login) async {
+      await neteaseRepository!.refreshLogin().then((login) async {
         if (!login || state == null) {
           logout();
         } else {
@@ -74,7 +74,7 @@ class UserAccount extends StateNotifier<User?> {
         }
       }, onError: (e) {
         debugPrint('refresh login status failed \n $e');
-      });
+      },);
     }
   }
 

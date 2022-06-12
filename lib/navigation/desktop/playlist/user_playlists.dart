@@ -10,7 +10,7 @@ import '../../common/navigation_target.dart';
 import '../widgets/navigation_tile.dart';
 
 class SliverSidebarUserPlaylist extends ConsumerWidget {
-  const SliverSidebarUserPlaylist({Key? key}) : super(key: key);
+  const SliverSidebarUserPlaylist({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -23,7 +23,7 @@ class SliverSidebarUserPlaylist extends ConsumerWidget {
 }
 
 class _UserPlaylistLoader extends ConsumerWidget {
-  const _UserPlaylistLoader({Key? key, required this.userId}) : super(key: key);
+  const _UserPlaylistLoader({super.key, required this.userId});
 
   final int userId;
 
@@ -58,10 +58,10 @@ class _UserPlaylistLoader extends ConsumerWidget {
 
 class _UserPlaylist extends StatelessWidget {
   const _UserPlaylist({
-    Key? key,
+    super.key,
     required this.playlists,
     required this.userId,
-  }) : super(key: key);
+  });
 
   final List<PlaylistDetail> playlists;
 
@@ -96,9 +96,9 @@ class _UserPlaylist extends StatelessWidget {
 
 class _UserPlaylistItem extends ConsumerWidget {
   const _UserPlaylistItem({
-    Key? key,
+    super.key,
     required this.playlist,
-  }) : super(key: key);
+  });
 
   final PlaylistDetail playlist;
 
@@ -107,7 +107,7 @@ class _UserPlaylistItem extends ConsumerWidget {
     final current = ref.watch(navigatorProvider.select((value) =>
         value.current is NavigationTargetPlaylist
             ? (value.current as NavigationTargetPlaylist).playlistId
-            : null));
+            : null,),);
     return NavigationTile(
       icon: const Icon(Icons.playlist_play),
       title: Tooltip(

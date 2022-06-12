@@ -15,7 +15,7 @@ import '../../common/playlist/music_list.dart';
 import '../widgets/track_tile_normal.dart';
 
 class PageCloudTracks extends ConsumerWidget {
-  const PageCloudTracks({Key? key}) : super(key: key);
+  const PageCloudTracks({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -35,9 +35,9 @@ class PageCloudTracks extends ConsumerWidget {
 
 class _PageCloudTracksBody extends ConsumerWidget {
   const _PageCloudTracksBody({
-    Key? key,
+    super.key,
     required this.detail,
-  }) : super(key: key);
+  });
 
   final CloudTracksDetail detail;
 
@@ -73,9 +73,9 @@ class _PageCloudTracksBody extends ConsumerWidget {
 
 class _UserCloudInformation extends StatelessWidget {
   const _UserCloudInformation({
-    Key? key,
+    super.key,
     required this.detail,
-  }) : super(key: key);
+  });
 
   final CloudTracksDetail detail;
 
@@ -97,14 +97,14 @@ class _UserCloudInformation extends StatelessWidget {
 }
 
 class _DropUploadArea extends HookConsumerWidget {
-  const _DropUploadArea({Key? key, required this.child}) : super(key: key);
+  const _DropUploadArea({super.key, required this.child});
 
   final Widget child;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final enable = ref.watch(navigatorProvider
-        .select((value) => value.current is NavigationTargetCloudMusic));
+        .select((value) => value.current is NavigationTargetCloudMusic),);
     final dragging = useState(false);
     return DropTarget(
       enable: enable,

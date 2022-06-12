@@ -5,17 +5,17 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
 AppScrollController useAppScrollController() {
-  final controller = useMemoized(() => AppScrollController());
+  final controller = useMemoized(AppScrollController.new);
   useEffect(() {
     return controller.dispose;
-  }, [controller]);
+  }, [controller],);
   return controller;
 }
 
 class AppScrollController extends ScrollController {
   @override
   ScrollPosition createScrollPosition(ScrollPhysics physics,
-      ScrollContext context, ScrollPosition? oldPosition) {
+      ScrollContext context, ScrollPosition? oldPosition,) {
     return _ScrollPositionWithSingleContext(
       physics: physics,
       context: context,
@@ -29,20 +29,13 @@ class AppScrollController extends ScrollController {
 
 class _ScrollPositionWithSingleContext extends ScrollPositionWithSingleContext {
   _ScrollPositionWithSingleContext({
-    required ScrollPhysics physics,
-    required ScrollContext context,
-    double? initialPixels = 0.0,
-    bool keepScrollOffset = true,
-    ScrollPosition? oldPosition,
-    String? debugLabel,
-  }) : super(
-          physics: physics,
-          context: context,
-          initialPixels: initialPixels,
-          keepScrollOffset: keepScrollOffset,
-          oldPosition: oldPosition,
-          debugLabel: debugLabel,
-        );
+    required super.physics,
+    required super.context,
+    super.initialPixels,
+    super.keepScrollOffset,
+    super.oldPosition,
+    super.debugLabel,
+  });
 
   @override
   void pointerScroll(double delta) {

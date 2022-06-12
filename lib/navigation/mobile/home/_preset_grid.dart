@@ -7,6 +7,8 @@ import '../../../pages/record/page_record.dart';
 import '../../../providers/account_provider.dart';
 
 class PresetGridSection extends ConsumerWidget {
+  const PresetGridSection({super.key});
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Padding(
@@ -48,11 +50,15 @@ class PresetGridSection extends ConsumerWidget {
                     label: context.strings.latestPlayHistory,
                     onTap: () {
                       if (ref.read(isLoginProvider)) {
-                        context.secondaryNavigator!
-                            .push(MaterialPageRoute(builder: (context) {
-                          return RecordPage(
-                              uid: ref.read(userProvider)!.userId);
-                        }));
+                        context.secondaryNavigator!.push(
+                          MaterialPageRoute(
+                            builder: (context) {
+                              return RecordPage(
+                                uid: ref.read(userProvider)!.userId,
+                              );
+                            },
+                          ),
+                        );
                       } else {
                         Navigator.of(context).pushNamed(pageLogin);
                       }
@@ -103,11 +109,11 @@ class PresetGridSection extends ConsumerWidget {
 
 class _PinnedTile extends StatelessWidget {
   const _PinnedTile({
-    Key? key,
+    super.key,
     required this.icon,
     required this.label,
     this.onTap,
-  }) : super(key: key);
+  });
 
   final IconData icon;
   final String label;
@@ -127,11 +133,11 @@ class _PinnedTile extends StatelessWidget {
           children: [
             Icon(icon, size: 24, color: Theme.of(context).primaryColorLight),
             const SizedBox(height: 4),
-            Text(label,
-                style: Theme.of(context)
-                    .textTheme
-                    .bodyText2!
-                    .copyWith(fontSize: 12)),
+            Text(
+              label,
+              style:
+                  Theme.of(context).textTheme.bodyText2!.copyWith(fontSize: 12),
+            ),
           ],
         ),
       ),

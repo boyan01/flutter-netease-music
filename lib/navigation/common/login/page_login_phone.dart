@@ -23,16 +23,18 @@ Future<List<RegionFlag>> _getRegions() async {
       await rootBundle.loadString('assets/emoji-flags.json', cache: false);
   final flags = json.decode(jsonStr) as List;
   final result =
-      flags.cast<Map>().map((map) => RegionFlag.fromMap(map)).where((flag) {
+      flags.cast<Map>().map(RegionFlag.fromMap).where((flag) {
     return flag.dialCode != null && flag.dialCode!.trim().isNotEmpty;
   }).toList();
   return result;
 }
 
 class PageLoginWithPhone extends HookConsumerWidget {
+  const PageLoginWithPhone({super.key});
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final regions = useFuture(useMemoized(() => _getRegions()));
+    final regions = useFuture(useMemoized(_getRegions));
     final platform = ref.watch(debugNavigatorPlatformProvider);
     return Scaffold(
       appBar: AppBar(
@@ -70,9 +72,9 @@ class PageLoginWithPhone extends HookConsumerWidget {
 
 class _PhoneInputLayout extends HookConsumerWidget {
   const _PhoneInputLayout({
-    Key? key,
+    super.key,
     required this.regions,
-  }) : super(key: key);
+  });
 
   final List<RegionFlag> regions;
 
@@ -84,8 +86,8 @@ class _PhoneInputLayout extends HookConsumerWidget {
       // initial to select system default region.
       final countryCode = window.locale.countryCode;
       return regions.firstWhere((region) => region.code == countryCode,
-          orElse: () => regions[0]);
-    }));
+          orElse: () => regions[0],);
+    }),);
 
     Future<void> onNextClick() async {
       final text = inputController.text;
@@ -116,8 +118,8 @@ class _PhoneInputLayout extends HookConsumerWidget {
         toast('无密码登录流程的开发未完成,欢迎提出PR贡献代码...');
         return;
       }
-      Navigator.pushNamed(context, pageLoginPassword,
-          arguments: {'phone': text});
+      await Navigator.pushNamed(context, pageLoginPassword,
+          arguments: {'phone': text},);
     }
 
     return Padding(
@@ -136,11 +138,11 @@ class _PhoneInputLayout extends HookConsumerWidget {
               controller: inputController,
               selectedRegion: selectedRegion.value,
               onPrefixTap: () async {
-                final RegionFlag? region = await Navigator.push(
+                final region = await Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) {
                     return RegionSelectionPage(regions: regions);
-                  }),
+                  },),
                 );
                 if (region != null) {
                   selectedRegion.value = region;
@@ -158,12 +160,12 @@ class _PhoneInputLayout extends HookConsumerWidget {
 
 class _PhoneInput extends HookWidget {
   const _PhoneInput({
-    Key? key,
+    super.key,
     required this.controller,
     required this.selectedRegion,
     required this.onPrefixTap,
     required this.onDone,
-  }) : super(key: key);
+  });
 
   final TextEditingController controller;
 
@@ -206,8 +208,7 @@ class _PhoneInput extends HookWidget {
           ),
         ),
         prefixIconConstraints: const BoxConstraints(
-          minWidth: 0,
-          minHeight: 0,
+          
         ),
       ),
     );
@@ -215,7 +216,7 @@ class _PhoneInput extends HookWidget {
 }
 
 class _ButtonNextStep extends StatelessWidget {
-  const _ButtonNextStep({Key? key, required this.onTap}) : super(key: key);
+  const _ButtonNextStep({super.key, required this.onTap});
 
   final VoidCallback onTap;
 

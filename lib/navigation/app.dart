@@ -10,7 +10,7 @@ import 'desktop/home_window.dart';
 import 'mobile/mobile_window.dart';
 
 class QuietApp extends ConsumerWidget {
-  const QuietApp({Key? key}) : super(key: key);
+  const QuietApp({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

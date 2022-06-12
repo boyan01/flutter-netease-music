@@ -4,11 +4,11 @@ import '../../../repository.dart';
 
 class TrackShortTile extends StatelessWidget {
   const TrackShortTile({
-    Key? key,
+    super.key,
     required this.track,
     required this.index,
     required this.onTap,
-  }) : super(key: key);
+  });
 
   final Track track;
 
@@ -23,7 +23,6 @@ class TrackShortTile extends StatelessWidget {
       child: SizedBox(
         height: 72,
         child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             const SizedBox(width: 12),
             Text(

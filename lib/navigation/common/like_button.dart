@@ -10,13 +10,13 @@ import '../../repository.dart';
 /// 歌曲喜欢按钮
 class LikeButton extends ConsumerWidget {
   const LikeButton({
-    Key? key,
+    super.key,
     required this.music,
     this.iconSize,
     this.padding = const EdgeInsets.all(8),
     this.color,
     this.likedColor,
-  }) : super(key: key);
+  });
 
   static Widget current(BuildContext context) {
     return Consumer(
@@ -53,9 +53,9 @@ class LikeButton extends ConsumerWidget {
           }
         }
         if (!isLiked) {
-          ref.read(userFavoriteMusicListProvider.notifier).likeMusic(music);
+          await ref.read(userFavoriteMusicListProvider.notifier).likeMusic(music);
         } else {
-          ref.read(userFavoriteMusicListProvider.notifier).dislikeMusic(music);
+          await ref.read(userFavoriteMusicListProvider.notifier).dislikeMusic(music);
         }
       },
     );

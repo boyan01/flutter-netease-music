@@ -40,7 +40,7 @@ extension PlayerPersistenceExtensions on Box<Map> {
     if (map == null) {
       return PlayMode.sequence;
     } else {
-      final int? mode = map['mode'] as int? ?? PlayMode.sequence.index;
+      final mode = map['mode'] as int? ?? PlayMode.sequence.index;
       return PlayMode(mode);
     }
   }

@@ -7,14 +7,14 @@ import '../../../extension.dart';
 
 class HighlightClickableText extends HookWidget {
   const HighlightClickableText({
-    Key? key,
+    super.key,
     required this.text,
     this.style,
     this.highlightStyle,
     required this.onTap,
     this.maxLines,
     this.overflow,
-  }) : super(key: key);
+  });
 
   final String text;
   final TextStyle? style;
@@ -92,13 +92,13 @@ class _Widget extends MouseHighlightSpan {
 
 class MouseHighlightText extends HookWidget {
   const MouseHighlightText({
-    Key? key,
+    super.key,
     this.style,
     this.highlightStyle,
     required this.children,
     this.maxLines,
     this.overflow,
-  }) : super(key: key);
+  });
 
   final TextStyle? style;
 
@@ -132,17 +132,17 @@ class MouseHighlightText extends HookWidget {
             refreshObject.value = !refreshObject.value;
           },
           recognizer: TapGestureRecognizer()..onTap = child.onTap,
-        ));
+        ),);
       } else if (child is _Normal) {
         spans.add(TextSpan(
           text: child.text,
           style: child.style,
-        ));
+        ),);
       } else if (child is _Widget) {
         spans.add(WidgetSpan(
           child: child.widget,
           alignment: child.alignment,
-        ));
+        ),);
       } else {
         throw Exception('Unknown child type: ${child.runtimeType}');
       }

@@ -25,7 +25,7 @@ class TrackList with EquatableMixin {
 
   const TrackList.playlist({required this.id, required this.tracks})
       : assert(id != kFmTrackListId,
-            'Cannot create a playlist with id $kFmTrackListId'),
+            'Cannot create a playlist with id $kFmTrackListId',),
         isFM = false;
 
   factory TrackList.fromJson(Map<String, dynamic> json) =>

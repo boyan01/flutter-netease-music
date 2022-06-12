@@ -11,9 +11,9 @@ import '../../../repository.dart';
 
 class AlbumFlexibleAppBar extends StatelessWidget {
   const AlbumFlexibleAppBar({
-    Key? key,
+    super.key,
     required this.album,
-  }) : super(key: key);
+  });
 
   final Album album;
 
@@ -30,90 +30,97 @@ class AlbumFlexibleAppBar extends StatelessWidget {
         (1.0 - (settings.currentExtent - settings.minExtent) / deltaExtent)
             .clamp(0.0, 1.0);
 
-    final List<Widget> children = <Widget>[];
+    final children = <Widget>[];
 
     // need add a padding to avoid overlap the bottom widget.
-    double bottomPadding = 0;
-    final SliverAppBar? sliverBar =
-        context.findAncestorWidgetOfExactType<SliverAppBar>();
+    var bottomPadding = 0.0;
+    final sliverBar = context.findAncestorWidgetOfExactType<SliverAppBar>();
     if (sliverBar != null && sliverBar.bottom != null) {
       bottomPadding = sliverBar.bottom!.preferredSize.height;
     }
 
     // add  background.
-    children.add(Positioned(
-      top: -Tween<double>(begin: 0.0, end: deltaExtent / 4.0).transform(t),
-      left: 0,
-      right: 0,
-      bottom: 0,
-      child: _Background(
-        image: CachedImage(album.picUrl),
-        current: settings.currentExtent - settings.minExtent,
-      ),
-    ));
-
-    // add playlist information.
-    children.add(Positioned(
-      top: settings.currentExtent - settings.maxExtent,
-      left: 0,
-      right: 0,
-      height: settings.maxExtent,
-      child: Opacity(
-        opacity: 1 - t,
-        child: Padding(
-          padding: const EdgeInsets.only(top: kToolbarHeight),
-          child: SafeArea(child: _AlbumHeaderContent(album: album)),
+    children.add(
+      Positioned(
+        top: -Tween<double>(begin: 0, end: deltaExtent / 4.0).transform(t),
+        left: 0,
+        right: 0,
+        bottom: 0,
+        child: _Background(
+          image: CachedImage(album.picUrl),
+          current: settings.currentExtent - settings.minExtent,
         ),
       ),
-    ));
+    );
+
+    // add playlist information.
+    children.add(
+      Positioned(
+        top: settings.currentExtent - settings.maxExtent,
+        left: 0,
+        right: 0,
+        height: settings.maxExtent,
+        child: Opacity(
+          opacity: 1 - t,
+          child: Padding(
+            padding: const EdgeInsets.only(top: kToolbarHeight),
+            child: SafeArea(child: _AlbumHeaderContent(album: album)),
+          ),
+        ),
+      ),
+    );
 
     // add appbar.
-    children.add(Column(
-      children: [_AlbumAppBar(t: t, album: album)],
-    ));
+    children.add(
+      Column(
+        children: [_AlbumAppBar(t: t, album: album)],
+      ),
+    );
 
     // add overlapped buttons.
-    children.add(Positioned(
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      child: _OverlappedActionButtons(
-        currentExtent: settings.currentExtent - settings.minExtent,
-        extent: deltaExtent,
-        children: [
-          _OverlappedButton(
-            borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(24),
-              bottomLeft: Radius.circular(24),
+    children.add(
+      Positioned(
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        child: _OverlappedActionButtons(
+          currentExtent: settings.currentExtent - settings.minExtent,
+          extent: deltaExtent,
+          children: [
+            _OverlappedButton(
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(24),
+                bottomLeft: Radius.circular(24),
+              ),
+              icon: const Icon(Icons.library_add),
+              label: Text(album.likedCount.toString()),
+              onPressed: () {
+                toast(context.strings.todo);
+              },
             ),
-            icon: const Icon(Icons.library_add),
-            label: Text(album.likedCount.toString()),
-            onPressed: () {
-              toast(context.strings.todo);
-            },
-          ),
-          _OverlappedButton(
-            icon: const Icon(Icons.comment),
-            label: Text(album.commentCount.toString()),
-            onPressed: () {
-              toast(context.strings.todo);
-            },
-          ),
-          _OverlappedButton(
-            borderRadius: const BorderRadius.only(
-              topRight: Radius.circular(24),
-              bottomRight: Radius.circular(24),
+            _OverlappedButton(
+              icon: const Icon(Icons.comment),
+              label: Text(album.commentCount.toString()),
+              onPressed: () {
+                toast(context.strings.todo);
+              },
             ),
-            icon: const Icon(Icons.share),
-            label: Text(album.shareCount.toString()),
-            onPressed: () {
-              toast(context.strings.todo);
-            },
-          ),
-        ],
+            _OverlappedButton(
+              borderRadius: const BorderRadius.only(
+                topRight: Radius.circular(24),
+                bottomRight: Radius.circular(24),
+              ),
+              icon: const Icon(Icons.share),
+              label: Text(album.shareCount.toString()),
+              onPressed: () {
+                toast(context.strings.todo);
+              },
+            ),
+          ],
+        ),
       ),
-    ));
+    );
 
     return ClipRect(
       child: Padding(
@@ -129,9 +136,9 @@ class AlbumFlexibleAppBar extends StatelessWidget {
 
 class PlaylistFlexibleAppBar extends StatelessWidget {
   const PlaylistFlexibleAppBar({
-    Key? key,
+    super.key,
     required this.playlist,
-  }) : super(key: key);
+  });
 
   final PlaylistDetail playlist;
 
@@ -148,90 +155,97 @@ class PlaylistFlexibleAppBar extends StatelessWidget {
         (1.0 - (settings.currentExtent - settings.minExtent) / deltaExtent)
             .clamp(0.0, 1.0);
 
-    final List<Widget> children = <Widget>[];
+    final children = <Widget>[];
 
     // need add a padding to avoid overlap the bottom widget.
-    double bottomPadding = 0;
-    final SliverAppBar? sliverBar =
-        context.findAncestorWidgetOfExactType<SliverAppBar>();
+    var bottomPadding = 0.0;
+    final sliverBar = context.findAncestorWidgetOfExactType<SliverAppBar>();
     if (sliverBar != null && sliverBar.bottom != null) {
       bottomPadding = sliverBar.bottom!.preferredSize.height;
     }
 
     // add  background.
-    children.add(Positioned(
-      top: -Tween<double>(begin: 0.0, end: deltaExtent / 4.0).transform(t),
-      left: 0,
-      right: 0,
-      bottom: 0,
-      child: _Background(
-        image: CachedImage(playlist.coverUrl),
-        current: settings.currentExtent - settings.minExtent,
-      ),
-    ));
-
-    // add playlist information.
-    children.add(Positioned(
-      top: settings.currentExtent - settings.maxExtent,
-      left: 0,
-      right: 0,
-      height: settings.maxExtent,
-      child: Opacity(
-        opacity: 1 - t,
-        child: Padding(
-          padding: const EdgeInsets.only(top: kToolbarHeight),
-          child: SafeArea(child: _PlayListHeaderContent(playlist: playlist)),
+    children.add(
+      Positioned(
+        top: -Tween<double>(begin: 0, end: deltaExtent / 4.0).transform(t),
+        left: 0,
+        right: 0,
+        bottom: 0,
+        child: _Background(
+          image: CachedImage(playlist.coverUrl),
+          current: settings.currentExtent - settings.minExtent,
         ),
       ),
-    ));
+    );
+
+    // add playlist information.
+    children.add(
+      Positioned(
+        top: settings.currentExtent - settings.maxExtent,
+        left: 0,
+        right: 0,
+        height: settings.maxExtent,
+        child: Opacity(
+          opacity: 1 - t,
+          child: Padding(
+            padding: const EdgeInsets.only(top: kToolbarHeight),
+            child: SafeArea(child: _PlayListHeaderContent(playlist: playlist)),
+          ),
+        ),
+      ),
+    );
 
     // add appbar.
-    children.add(Column(
-      children: [_AppBar(t: t, playlist: playlist)],
-    ));
+    children.add(
+      Column(
+        children: [_AppBar(t: t, playlist: playlist)],
+      ),
+    );
 
     // add overlapped buttons.
-    children.add(Positioned(
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      child: _OverlappedActionButtons(
-        currentExtent: settings.currentExtent - settings.minExtent,
-        extent: deltaExtent,
-        children: [
-          _OverlappedButton(
-            borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(24),
-              bottomLeft: Radius.circular(24),
+    children.add(
+      Positioned(
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        child: _OverlappedActionButtons(
+          currentExtent: settings.currentExtent - settings.minExtent,
+          extent: deltaExtent,
+          children: [
+            _OverlappedButton(
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(24),
+                bottomLeft: Radius.circular(24),
+              ),
+              icon: const Icon(Icons.library_add),
+              label: Text(playlist.subscribedCount.toString()),
+              onPressed: () {
+                toast(context.strings.todo);
+              },
             ),
-            icon: const Icon(Icons.library_add),
-            label: Text(playlist.subscribedCount.toString()),
-            onPressed: () {
-              toast(context.strings.todo);
-            },
-          ),
-          _OverlappedButton(
-            icon: const Icon(Icons.comment),
-            label: Text(playlist.commentCount.toString()),
-            onPressed: () {
-              toast(context.strings.todo);
-            },
-          ),
-          _OverlappedButton(
-            borderRadius: const BorderRadius.only(
-              topRight: Radius.circular(24),
-              bottomRight: Radius.circular(24),
+            _OverlappedButton(
+              icon: const Icon(Icons.comment),
+              label: Text(playlist.commentCount.toString()),
+              onPressed: () {
+                toast(context.strings.todo);
+              },
             ),
-            icon: const Icon(Icons.share),
-            label: Text(playlist.shareCount.toString()),
-            onPressed: () {
-              toast(context.strings.todo);
-            },
-          ),
-        ],
+            _OverlappedButton(
+              borderRadius: const BorderRadius.only(
+                topRight: Radius.circular(24),
+                bottomRight: Radius.circular(24),
+              ),
+              icon: const Icon(Icons.share),
+              label: Text(playlist.shareCount.toString()),
+              onPressed: () {
+                toast(context.strings.todo);
+              },
+            ),
+          ],
+        ),
       ),
-    ));
+    );
 
     return ClipRect(
       child: Padding(
@@ -247,11 +261,11 @@ class PlaylistFlexibleAppBar extends StatelessWidget {
 
 class _OverlappedActionButtons extends StatelessWidget {
   const _OverlappedActionButtons({
-    Key? key,
+    super.key,
     required this.currentExtent,
     required this.extent,
     required this.children,
-  }) : super(key: key);
+  });
 
   final double currentExtent;
 
@@ -301,10 +315,11 @@ class _OverlappedActionButtons extends StatelessWidget {
 
 class _AlbumAppBar extends StatelessWidget {
   const _AlbumAppBar({
-    Key? key,
+    super.key,
     required this.t,
     required this.album,
-  }) : super(key: key);
+  });
+
   final double t;
   final Album album;
 
@@ -323,9 +338,9 @@ class _AlbumAppBar extends StatelessWidget {
 
 class _AlbumHeaderContent extends ConsumerWidget {
   const _AlbumHeaderContent({
-    Key? key,
+    super.key,
     required this.album,
-  }) : super(key: key);
+  });
 
   final Album album;
 
@@ -350,31 +365,36 @@ class _AlbumHeaderContent extends ConsumerWidget {
               ),
               const SizedBox(width: 16),
               Expanded(
-                  child: DefaultTextStyle(
-                style: Theme.of(context).primaryTextTheme.bodyText2!,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    const SizedBox(height: 8),
-                    Text(album.name, style: const TextStyle(fontSize: 17)),
-                    const SizedBox(height: 10),
-                    InkWell(
+                child: DefaultTextStyle(
+                  style: Theme.of(context).primaryTextTheme.bodyText2!,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      const SizedBox(height: 8),
+                      Text(album.name, style: const TextStyle(fontSize: 17)),
+                      const SizedBox(height: 10),
+                      InkWell(
                         onTap: () => ref
                             .read(navigatorProvider.notifier)
                             .navigateToArtistDetail(
-                                context: context, artists: [album.artist]),
+                          context: context,
+                          artists: [album.artist],
+                        ),
                         child: Padding(
                           padding: const EdgeInsets.only(top: 4, bottom: 4),
                           child: Text('歌手: ${album.artist.name}'),
-                        )),
-                    const SizedBox(height: 4),
-                    Text(
-                        '发行时间：${getFormattedTime(album.publishTime.millisecondsSinceEpoch)}')
-                  ],
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        '发行时间：${getFormattedTime(album.publishTime.millisecondsSinceEpoch)}',
+                      )
+                    ],
+                  ),
                 ),
-              ))
+              )
             ],
           ),
         ),
@@ -385,10 +405,10 @@ class _AlbumHeaderContent extends ConsumerWidget {
 
 class _AppBar extends StatelessWidget {
   const _AppBar({
-    Key? key,
+    super.key,
     required this.t,
     required this.playlist,
-  }) : super(key: key);
+  });
 
   final double t;
   final PlaylistDetail playlist;
@@ -408,10 +428,10 @@ class _AppBar extends StatelessWidget {
 
 class _Background extends StatelessWidget {
   const _Background({
-    Key? key,
+    super.key,
     required this.image,
     required this.current,
-  }) : super(key: key);
+  });
 
   final ImageProvider image;
 
@@ -433,10 +453,10 @@ class _Background extends StatelessWidget {
           RepaintBoundary(
             child: BackdropFilter(
               filter: ImageFilter.blur(sigmaX: 24, sigmaY: 24),
-              child: Container(color: Colors.black.withOpacity(0.3)),
+              child: ColoredBox(color: Colors.black.withOpacity(0.3)),
             ),
           ),
-          Container(color: Colors.black.withOpacity(0.3))
+          ColoredBox(color: Colors.black.withOpacity(0.3))
         ],
       ),
     );
@@ -445,9 +465,10 @@ class _Background extends StatelessWidget {
 
 class _PlayListHeaderContent extends ConsumerWidget {
   const _PlayListHeaderContent({
-    Key? key,
+    super.key,
     required this.playlist,
-  }) : super(key: key);
+  });
+
   final PlaylistDetail playlist;
 
   @override
@@ -513,7 +534,7 @@ class _BackgroundClipper extends CustomClipper<Path> {
 
   @override
   Path getClip(Size size) {
-    final Path path = Path();
+    final path = Path();
     path.moveTo(0, 0);
     path.lineTo(0, size.height - bottom - height);
     path.quadraticBezierTo(
@@ -535,12 +556,12 @@ class _BackgroundClipper extends CustomClipper<Path> {
 
 class _OverlappedButton extends StatelessWidget {
   const _OverlappedButton({
-    Key? key,
+    super.key,
     required this.icon,
     required this.label,
     required this.onPressed,
     this.borderRadius,
-  }) : super(key: key);
+  });
 
   final Widget icon;
   final Widget label;
@@ -562,7 +583,6 @@ class _OverlappedButton extends StatelessWidget {
         width: 100,
         height: 42,
         child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             IconTheme.merge(

@@ -16,7 +16,7 @@ import '../widgets/highlight_clickable_text.dart';
 import '../widgets/track_tile_normal.dart';
 
 class PageArtistDetail extends ConsumerWidget {
-  const PageArtistDetail({Key? key, required this.artistId}) : super(key: key);
+  const PageArtistDetail({super.key, required this.artistId});
 
   final int artistId;
 
@@ -36,9 +36,9 @@ class PageArtistDetail extends ConsumerWidget {
 
 class _ArtistDetailScaffold extends HookWidget {
   const _ArtistDetailScaffold({
-    Key? key,
+    super.key,
     required this.artist,
-  }) : super(key: key);
+  });
 
   final ArtistDetail artist;
 
@@ -64,9 +64,9 @@ class _ArtistDetailScaffold extends HookWidget {
 
 class _ArtistDetailHeader extends StatelessWidget {
   const _ArtistDetailHeader({
-    Key? key,
+    super.key,
     required this.artist,
-  }) : super(key: key);
+  });
 
   final Artist artist;
 
@@ -92,9 +92,7 @@ class _ArtistDetailHeader extends StatelessWidget {
             const SizedBox(width: 20),
             Expanded(
               child: Column(
-                mainAxisSize: MainAxisSize.max,
                 crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Text(
                     artist.name,
@@ -117,7 +115,8 @@ class _ArtistDetailHeader extends StatelessWidget {
                   Row(
                     children: [
                       Text(
-                          context.strings.playlistTrackCount(artist.musicSize)),
+                        context.strings.playlistTrackCount(artist.musicSize),
+                      ),
                       const SizedBox(width: 8),
                       Text(context.strings.artistAlbumCount(artist.albumSize)),
                     ],
@@ -134,10 +133,10 @@ class _ArtistDetailHeader extends StatelessWidget {
 
 class _TopSongs extends ConsumerWidget {
   const _TopSongs({
-    Key? key,
+    super.key,
     required this.tracks,
     required this.artist,
-  }) : super(key: key);
+  });
 
   final List<Track> tracks;
 
@@ -152,17 +151,19 @@ class _TopSongs extends ConsumerWidget {
       child: _CoverTrackListWidget(
         canCollapse: true,
         title: Text(context.strings.topSongs),
-        cover: Container(
+        cover: DecoratedBox(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(8),
             color: context.colorScheme.primary,
           ),
           child: Center(
             child: Text.rich(
-              const TextSpan(children: [
-                TextSpan(text: 'TOP\n'),
-                TextSpan(text: '50', style: TextStyle(fontSize: 50)),
-              ]),
+              const TextSpan(
+                children: [
+                  TextSpan(text: 'TOP\n'),
+                  TextSpan(text: '50', style: TextStyle(fontSize: 50)),
+                ],
+              ),
               style: context.primaryTextTheme.headlineLarge.bold,
               textAlign: TextAlign.center,
             ),
@@ -180,9 +181,9 @@ class _TopSongs extends ConsumerWidget {
 
 class _ArtistAlbums extends ConsumerWidget {
   const _ArtistAlbums({
-    Key? key,
+    super.key,
     required this.artistId,
-  }) : super(key: key);
+  });
 
   final int artistId;
 
@@ -220,9 +221,9 @@ class _ArtistAlbums extends ConsumerWidget {
 
 class _AlbumItemWidget extends ConsumerWidget {
   const _AlbumItemWidget({
-    Key? key,
+    super.key,
     required this.album,
-  }) : super(key: key);
+  });
 
   final AlbumDetail album;
 
@@ -261,13 +262,13 @@ class _AlbumItemWidget extends ConsumerWidget {
 
 class _CoverTrackListWidget extends StatelessWidget {
   const _CoverTrackListWidget({
-    Key? key,
+    super.key,
     required this.cover,
     required this.tracks,
     required this.onAddAllTap,
     required this.title,
     required this.canCollapse,
-  }) : super(key: key);
+  });
 
   final Widget cover;
   final List<Track> tracks;
@@ -291,7 +292,6 @@ class _CoverTrackListWidget extends StatelessWidget {
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
               Row(
@@ -331,11 +331,10 @@ const _maxInitialCount = 10;
 
 class _TrackList extends HookWidget {
   const _TrackList({
-    Key? key,
+    super.key,
     required this.tracks,
     required bool canCollapse,
-  })  : canCollapse = canCollapse && tracks.length > _maxInitialCount,
-        super(key: key);
+  }) : canCollapse = canCollapse && tracks.length > _maxInitialCount;
 
   final List<Track> tracks;
 

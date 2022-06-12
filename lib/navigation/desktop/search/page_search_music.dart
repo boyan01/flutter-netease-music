@@ -11,8 +11,7 @@ import '../widgets/track_tile_normal.dart';
 import 'page_search.dart';
 
 class PageMusicSearchResult extends ConsumerWidget {
-  const PageMusicSearchResult({Key? key, required this.query})
-      : super(key: key);
+  const PageMusicSearchResult({super.key, required this.query});
 
   final String query;
 
@@ -47,9 +46,9 @@ class PageMusicSearchResult extends ConsumerWidget {
 
 class _TrackList extends HookConsumerWidget {
   const _TrackList({
-    Key? key,
+    super.key,
     required this.tracks,
-  }) : super(key: key);
+  });
   final List<Track> tracks;
 
   @override

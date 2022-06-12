@@ -30,19 +30,19 @@ Future<bool> showNeedLoginToast(BuildContext context) async {
               ),
             )
           ],
-        )));
+        ),),);
   },
       curve: Curves.ease,
       key: const ValueKey('overlay_need_login'),
-      duration: const Duration(milliseconds: 2000));
+      duration: const Duration(milliseconds: 2000),);
   return await (completer.future as FutureOr<bool>);
 }
 
 class _Toast extends StatelessWidget {
   const _Toast({
-    Key? key,
+    super.key,
     required this.child,
-  }) : super(key: key);
+  });
   final Widget child;
 
   @override

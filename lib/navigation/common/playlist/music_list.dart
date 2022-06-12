@@ -102,7 +102,11 @@ class TrackTileContainer extends StatelessWidget {
     required TracksPlayer player,
   }) {
     return TrackTileContainer.trackList(
-        tracks: tracks, player: player, id: 'user_cloud_tracks', child: child);
+      tracks: tracks,
+      player: player,
+      id: 'user_cloud_tracks',
+      child: child,
+    );
   }
 
   factory TrackTileContainer.playlist({
@@ -164,11 +168,11 @@ class TrackTileContainer extends StatelessWidget {
   const TrackTileContainer._private(
     this._playbackMusic,
     this._deleteMusic, {
-    Key? key,
+    super.key,
     required this.tracks,
     required this.id,
     required this.child,
-  }) : super(key: key);
+  });
 
   static PlayResult playTrack(
     BuildContext context,
@@ -219,7 +223,7 @@ class TrackTileContainer extends StatelessWidget {
 
 class MusicTileConfiguration extends StatelessWidget {
   const MusicTileConfiguration({
-    Key? key,
+    super.key,
     this.token,
     required this.musics,
     this.onMusicTap = MusicTileConfiguration.defaultOnTap,
@@ -228,7 +232,7 @@ class MusicTileConfiguration extends StatelessWidget {
     this.trailingBuilder = MusicTileConfiguration.defaultTrailingBuilder,
     this.supportAlbumMenu = true,
     this.remove,
-  }) : super(key: key);
+  });
 
   static MusicTileConfiguration of(BuildContext context) {
     final list =
@@ -245,8 +249,7 @@ class MusicTileConfiguration extends StatelessWidget {
   }
 
   static Widget indexedLeadingBuilder(BuildContext context, Music music) {
-    final int index =
-        MusicTileConfiguration.of(context).musics.indexOf(music) + 1;
+    final index = MusicTileConfiguration.of(context).musics.indexOf(music) + 1;
     return _buildPlayingLeading(context, music) ??
         Container(
           margin: const EdgeInsets.only(left: 8, right: 8),
@@ -312,7 +315,8 @@ class MusicTileConfiguration extends StatelessWidget {
 
 /// music item widget
 class MusicTile extends StatelessWidget {
-  const MusicTile(this.music, {Key? key}) : super(key: key);
+  const MusicTile(this.music, {super.key});
+
   final Music music;
 
   @override
@@ -340,7 +344,8 @@ class MusicTile extends StatelessWidget {
 }
 
 class _SimpleMusicTile extends StatelessWidget {
-  const _SimpleMusicTile(this.music, {Key? key}) : super(key: key);
+  const _SimpleMusicTile(this.music, {super.key});
+
   final Music music;
 
   @override
@@ -350,27 +355,28 @@ class _SimpleMusicTile extends StatelessWidget {
       child: Row(
         children: <Widget>[
           Expanded(
-              child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: <Widget>[
-              const Spacer(),
-              Text(
-                music.name,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: Theme.of(context).textTheme.bodyText2,
-              ),
-              const Padding(padding: EdgeInsets.only(top: 3)),
-              Text(
-                music.displaySubtitle,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: Theme.of(context).textTheme.caption,
-              ),
-              const Spacer(),
-            ],
-          )),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                const Spacer(),
+                Text(
+                  music.name,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: Theme.of(context).textTheme.bodyText2,
+                ),
+                const Padding(padding: EdgeInsets.only(top: 3)),
+                Text(
+                  music.displaySubtitle,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: Theme.of(context).textTheme.caption,
+                ),
+                const Spacer(),
+              ],
+            ),
+          ),
         ],
       ),
     );
@@ -379,7 +385,7 @@ class _SimpleMusicTile extends StatelessWidget {
 
 /// The header view of MusicList
 class MusicListHeader extends ConsumerWidget implements PreferredSizeWidget {
-  const MusicListHeader(this.count, {this.tail});
+  const MusicListHeader(this.count, {this.tail, super.key});
 
   final int count;
 
@@ -401,7 +407,8 @@ class MusicListHeader extends ConsumerWidget implements PreferredSizeWidget {
           } else {
             player
               ..setTrackList(
-                  TrackList.playlist(id: list.token!, tracks: list.musics))
+                TrackList.playlist(id: list.token!, tracks: list.musics),
+              )
               ..play();
           }
         },
@@ -438,7 +445,8 @@ class MusicListHeader extends ConsumerWidget implements PreferredSizeWidget {
 }
 
 class IconMV extends StatelessWidget {
-  const IconMV(this.music, {Key? key}) : super(key: key);
+  const IconMV(this.music, {super.key});
+
   final Music music;
 
   @override
@@ -463,7 +471,8 @@ enum _MusicAction {
 }
 
 class _IconMore extends ConsumerWidget {
-  const _IconMore(this.music, {Key? key}) : super(key: key);
+  const _IconMore(this.music, {super.key});
+
   final Music music;
 
   List<PopupMenuItem> _buildMenu(BuildContext context) {
@@ -478,23 +487,32 @@ class _IconMore extends ConsumerWidget {
       ),
     ];
 
-    items.add(PopupMenuItem(
+    items.add(
+      PopupMenuItem(
         enabled: music.artists.fold(0, (dynamic c, ar) => c + ar.id) != 0,
         value: _MusicAction.artists,
-        child: Text("歌手: ${music.artists.map((a) => a.name).join('/')}",
-            maxLines: 1)));
+        child: Text(
+          "歌手: ${music.artists.map((a) => a.name).join('/')}",
+          maxLines: 1,
+        ),
+      ),
+    );
 
     if (MusicTileConfiguration.of(context).supportAlbumMenu) {
-      items.add(const PopupMenuItem(
-        value: _MusicAction.album,
-        child: Text('专辑'),
-      ));
+      items.add(
+        const PopupMenuItem(
+          value: _MusicAction.album,
+          child: Text('专辑'),
+        ),
+      );
     }
     if (MusicTileConfiguration.of(context).remove != null) {
-      items.add(const PopupMenuItem(
-        value: _MusicAction.delete,
-        child: Text('删除'),
-      ));
+      items.add(
+        const PopupMenuItem(
+          value: _MusicAction.delete,
+          child: Text('删除'),
+        ),
+      );
     }
     return items;
   }
@@ -506,19 +524,20 @@ class _IconMore extends ConsumerWidget {
   ) async {
     switch (type) {
       case _MusicAction.addToNext:
-        ref.read(playerProvider).insertToNext(music);
+        await ref.read(playerProvider).insertToNext(music);
         break;
       case _MusicAction.delete:
         MusicTileConfiguration.of(context).remove!(music);
         break;
       case _MusicAction.addToPlaylist:
         final id = await showDialog(
-            context: context,
-            builder: (context) {
-              return const PlaylistSelectorDialog();
-            });
+          context: context,
+          builder: (context) {
+            return const PlaylistSelectorDialog();
+          },
+        );
         if (id != null) {
-          final bool succeed = await neteaseRepository!
+          final succeed = await neteaseRepository!
               .playlistTracksEdit(PlaylistOperation.add, id, [music.id]);
           final scaffold = Scaffold.maybeOf(context);
           if (scaffold == null) {
@@ -528,9 +547,11 @@ class _IconMore extends ConsumerWidget {
           if (succeed) {
             showSimpleNotification(const Text('已添加到收藏'));
           } else {
-            showSimpleNotification(const Text('收藏歌曲失败!'),
-                leading: const Icon(Icons.error),
-                background: Theme.of(context).errorColor);
+            showSimpleNotification(
+              const Text('收藏歌曲失败!'),
+              leading: const Icon(Icons.error),
+              background: Theme.of(context).errorColor,
+            );
           }
         }
         break;

@@ -6,6 +6,8 @@ import 'videos.dart';
 
 ///我的收藏页面
 class MyCollectionPage extends StatelessWidget {
+  const MyCollectionPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -25,12 +27,14 @@ class MyCollectionPage extends StatelessWidget {
             indicatorSize: TabBarIndicatorSize.label,
           ),
         ),
-        body: TabBarView(children: [
-          CollectionAlbums(),
-          CollectionArtists(),
-          CollectionVideos(),
-          CollectionArticles(),
-        ]),
+        body: const TabBarView(
+          children: [
+            CollectionAlbums(),
+            CollectionArtists(),
+            CollectionVideos(),
+            CollectionArticles(),
+          ],
+        ),
       ),
     );
   }

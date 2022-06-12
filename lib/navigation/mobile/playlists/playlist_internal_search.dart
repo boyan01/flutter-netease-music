@@ -43,7 +43,7 @@ class PlaylistInternalSearchDelegate extends SearchDelegate {
     }
     final result = list
         ?.where(
-            (m) => m.name.contains(query) || m.displaySubtitle.contains(query))
+            (m) => m.name.contains(query) || m.displaySubtitle.contains(query),)
         .toList();
     if (result == null || result.isEmpty) {
       return _EmptyResultSection(query);
@@ -70,9 +70,9 @@ class _EmptyResultSection extends StatelessWidget {
 
 class _InternalResultSection extends ConsumerWidget {
   const _InternalResultSection({
-    Key? key,
+    super.key,
     required this.musics,
-  }) : super(key: key);
+  });
 
   ///result song list, can not be null and empty
   final List<Music> musics;
@@ -86,12 +86,11 @@ class _InternalResultSection extends ConsumerWidget {
           ..insertToNext(music)
           ..playFromMediaId(music.id);
       },
-      trailingBuilder: MusicTileConfiguration.defaultTrailingBuilder,
       child: ListView.builder(
           itemCount: musics.length,
           itemBuilder: (context, index) {
             return MusicTile(musics[index]);
-          }),
+          },),
     );
   }
 }

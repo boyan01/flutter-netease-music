@@ -10,6 +10,8 @@ import '../repository.dart';
 
 ///我的电台页面
 class MyDjPage extends ConsumerWidget {
+  const MyDjPage({super.key});
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
@@ -19,12 +21,13 @@ class MyDjPage extends ConsumerWidget {
       body: ListView(
         children: <Widget>[
           _ListTitle(
-              title: '我创建的电台('
-                  '${ref.watch(userMusicCountProvider).createDjRadioCount})'),
+            title: '我创建的电台('
+                '${ref.watch(userMusicCountProvider).createDjRadioCount})',
+          ),
           _SectionMyCreated(),
           _ListTitle(
-              title:
-                  '我订阅的电台(${ref.watch(userMusicCountProvider).djRadioCount})'),
+            title: '我订阅的电台(${ref.watch(userMusicCountProvider).djRadioCount})',
+          ),
           _SectionSubscribed(),
         ],
       ),
@@ -33,7 +36,8 @@ class MyDjPage extends ConsumerWidget {
 }
 
 class DjTile extends StatelessWidget {
-  const DjTile(this.data, {Key? key}) : super(key: key);
+  const DjTile(this.data, {super.key});
+
   final Map data;
 
   @override
@@ -58,29 +62,30 @@ class DjTile extends StatelessWidget {
               ),
               const SizedBox(width: 4),
               Expanded(
-                  child: DefaultTextStyle(
-                style: Theme.of(context).textTheme.bodyText2!,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    const SizedBox(height: 4),
-                    Text(data['name'] as String),
-                    const SizedBox(height: 4),
-                    Text(
-                      'by ${data['dj']['nickname']}',
-                      style: Theme.of(context).textTheme.caption,
-                    ),
-                    const Spacer(),
-                    Text(
-                      data['lastProgramName'] as String? ?? '暂无更新',
-                      style: Theme.of(context).textTheme.caption,
-                    ),
-                    const SizedBox(height: 4),
-                  ],
+                child: DefaultTextStyle(
+                  style: Theme.of(context).textTheme.bodyText2!,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      const SizedBox(height: 4),
+                      Text(data['name'] as String),
+                      const SizedBox(height: 4),
+                      Text(
+                        'by ${data['dj']['nickname']}',
+                        style: Theme.of(context).textTheme.caption,
+                      ),
+                      const Spacer(),
+                      Text(
+                        data['lastProgramName'] as String? ?? '暂无更新',
+                        style: Theme.of(context).textTheme.caption,
+                      ),
+                      const SizedBox(height: 4),
+                    ],
+                  ),
                 ),
-              )),
+              ),
               InkWell(
                 onTap: () {},
                 child: const SizedBox(
@@ -106,7 +111,7 @@ class _SectionSubscribed extends StatelessWidget {
       builder: (context, result) {
         return Column(
           mainAxisSize: MainAxisSize.min,
-          children: result.map((m) => DjTile(m)).toList(),
+          children: result.map(DjTile.new).toList(),
         );
       },
     );
@@ -119,14 +124,13 @@ class _SectionMyCreated extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     if (ref.watch(isLoginProvider)) {
       return Loader<List<Map>>(
-          loadTask: () => neteaseRepository!.userDj(ref.read(userIdProvider)),
-          loadingBuilder: (context) {
-            return Loader.buildSimpleLoadingWidget(context);
-          },
-          builder: (context, result) {
-            //TODO 我创建的电台
-            final widgets = <Widget>[];
-            widgets.add(DividerWrapper(
+        loadTask: () => neteaseRepository!.userDj(ref.read(userIdProvider)),
+        loadingBuilder: Loader.buildSimpleLoadingWidget,
+        builder: (context, result) {
+          //TODO 我创建的电台
+          final widgets = <Widget>[];
+          widgets.add(
+            DividerWrapper(
               child: ListTile(
                 leading:
                     Icon(Icons.mic_none, color: Theme.of(context).primaryColor),
@@ -136,12 +140,14 @@ class _SectionMyCreated extends ConsumerWidget {
                   notImplemented(context);
                 },
               ),
-            ));
-            return Column(
-              mainAxisSize: MainAxisSize.min,
-              children: widgets,
-            );
-          });
+            ),
+          );
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            children: widgets,
+          );
+        },
+      );
     } else {
       return const SizedBox(
         height: 200,
@@ -154,7 +160,8 @@ class _SectionMyCreated extends ConsumerWidget {
 }
 
 class _ListTitle extends StatelessWidget {
-  const _ListTitle({Key? key, required this.title}) : super(key: key);
+  const _ListTitle({super.key, required this.title});
+
   final String title;
 
   @override

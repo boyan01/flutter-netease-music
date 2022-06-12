@@ -13,7 +13,7 @@ import '../../../repository.dart';
 ///pop with a int value which represent selected id
 ///or null indicate selected nothing
 class PlaylistSelectorDialog extends ConsumerWidget {
-  const PlaylistSelectorDialog({Key? key}) : super(key: key);
+  const PlaylistSelectorDialog({super.key});
 
   ///add songs to user playlist
   ///return :
@@ -25,7 +25,7 @@ class PlaylistSelectorDialog extends ConsumerWidget {
         context: context,
         builder: (context) {
           return const PlaylistSelectorDialog();
-        });
+        },);
     if (playlistId == null) {
       return null;
     }
@@ -38,7 +38,7 @@ class PlaylistSelectorDialog extends ConsumerWidget {
   }
 
   Widget _buildTile(BuildContext context, Widget leading, Widget title,
-      Widget? subTitle, GestureTapCallback onTap) {
+      Widget? subTitle, GestureTapCallback onTap,) {
     return InkWell(
       onTap: onTap,
       child: Container(
@@ -63,14 +63,14 @@ class PlaylistSelectorDialog extends ConsumerWidget {
                 AnimatedDefaultTextStyle(
                     style: Theme.of(context).textTheme.bodyText2!,
                     duration: Duration.zero,
-                    child: title),
+                    child: title,),
                 if (subTitle != null)
                   AnimatedDefaultTextStyle(
                       style: Theme.of(context).textTheme.caption!,
                       duration: Duration.zero,
-                      child: subTitle),
+                      child: subTitle,),
               ],
-            ))
+            ),)
           ],
         ),
       ),
@@ -85,7 +85,7 @@ class PlaylistSelectorDialog extends ConsumerWidget {
           const Padding(padding: EdgeInsets.only(left: 16)),
           Expanded(
               child:
-                  Text('收藏到歌单', style: Theme.of(context).textTheme.headline6))
+                  Text('收藏到歌单', style: Theme.of(context).textTheme.headline6),)
         ],
       ),
     );
@@ -100,12 +100,12 @@ class PlaylistSelectorDialog extends ConsumerWidget {
           child: Center(
             child: ConstrainedBox(
               constraints:
-                  const BoxConstraints(minWidth: 280.0, maxHeight: 356),
+                  const BoxConstraints(minWidth: 280, maxHeight: 356),
               child: Material(
-                elevation: 24.0,
+                elevation: 24,
                 type: MaterialType.card,
                 shape: const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(4.0))),
+                    borderRadius: BorderRadius.all(Radius.circular(4)),),
                 child: Column(
                   children: <Widget>[
                     _buildTitle(context),
@@ -142,7 +142,7 @@ class PlaylistSelectorDialog extends ConsumerWidget {
                 const SizedBox(height: 32),
               ],
             ),
-          ));
+          ),);
     }
     final userId = ref.watch(userProvider)!.userId;
     return Loader<List<PlaylistDetail?>>(
@@ -169,7 +169,7 @@ class PlaylistSelectorDialog extends ConsumerWidget {
                   const SizedBox(height: 32),
                 ],
               ),
-            ));
+            ),);
       },
       builder: (context, result) {
         return Builder(builder: (context) {
@@ -189,17 +189,17 @@ class PlaylistSelectorDialog extends ConsumerWidget {
                 Text('共${p.trackCount}首'), () {
               Navigator.of(context).pop(p.id);
             });
-          }));
+          }),);
 
           return _buildDialog(context, ListView(children: widgets));
-        });
+        },);
       },
       loadingBuilder: (context) {
         return _buildDialog(
             context,
             const Center(
               child: CircularProgressIndicator(),
-            ));
+            ),);
       },
     );
   }

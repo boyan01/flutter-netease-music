@@ -57,8 +57,8 @@ abstract class TracksPlayer extends StateNotifier<TracksPlayerState> {
           playingTrack: null,
           playingList: TrackList.empty(),
           duration: null,
-          volume: 0.0,
-        ));
+          volume: 0,
+        ),);
 
   factory TracksPlayer.platform() {
     if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {

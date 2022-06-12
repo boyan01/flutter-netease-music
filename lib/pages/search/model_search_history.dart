@@ -9,7 +9,7 @@ const String _kKeyHistory = 'key_search_history';
 class SearchHistory extends Model {
   SearchHistory() {
     scheduleMicrotask(() async {
-      final SharedPreferences preferences =
+      final preferences =
           await SharedPreferences.getInstance();
       _histories = preferences.getStringList(_kKeyHistory) ?? [];
       notifyListeners();
@@ -38,7 +38,7 @@ class SearchHistory extends Model {
 
   Future<void> insertSearchHistory(String query) async {
     debugPrint(
-        'insert history $query init = $_init , _histories = $_histories');
+        'insert history $query init = $_init , _histories = $_histories',);
 
     if (!_init) return;
 
@@ -50,6 +50,6 @@ class SearchHistory extends Model {
     notifyListeners();
 
     final preference = await SharedPreferences.getInstance();
-    preference.setStringList(_kKeyHistory, _histories!);
+    await preference.setStringList(_kKeyHistory, _histories!);
   }
 }

@@ -5,7 +5,7 @@ import '../../common/navigation_target.dart';
 import 'page_search_music.dart';
 
 class PageSearch extends StatelessWidget {
-  const PageSearch({Key? key, required this.target}) : super(key: key);
+  const PageSearch({super.key, required this.target});
 
   final NavigationTarget target;
 
@@ -32,11 +32,11 @@ class PageSearch extends StatelessWidget {
 
 class SearchResultScaffold extends StatelessWidget {
   const SearchResultScaffold({
-    Key? key,
+    super.key,
     required this.body,
     required this.query,
     required this.queryResultDescription,
-  }) : super(key: key);
+  });
 
   final Widget body;
 
@@ -81,7 +81,7 @@ class SearchResultScaffold extends StatelessWidget {
 }
 
 class _SearchTabBar extends StatelessWidget {
-  const _SearchTabBar({Key? key, required this.query}) : super(key: key);
+  const _SearchTabBar({super.key, required this.query});
 
   final String query;
 
@@ -93,17 +93,17 @@ class _SearchTabBar extends StatelessWidget {
       _Tab(label: context.strings.artists, isSelected: false, onTap: () {}),
       const SizedBox(width: 20),
       _Tab(label: context.strings.album, isSelected: false, onTap: () {}),
-    ]);
+    ],);
   }
 }
 
 class _Tab extends StatelessWidget {
   const _Tab({
-    Key? key,
+    super.key,
     required this.label,
     required this.onTap,
     required this.isSelected,
-  }) : super(key: key);
+  });
 
   final String label;
   final VoidCallback onTap;

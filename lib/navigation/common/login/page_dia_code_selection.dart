@@ -12,8 +12,7 @@ import '../../../model/region_flag.dart';
 
 /// Region selection for login.
 class RegionSelectionPage extends StatelessWidget {
-  const RegionSelectionPage({Key? key, required this.regions})
-      : super(key: key);
+  const RegionSelectionPage({super.key, required this.regions});
   final List<RegionFlag> regions;
 
   @override
@@ -27,9 +26,9 @@ class RegionSelectionPage extends StatelessWidget {
 
 class _DiaCodeList extends StatefulWidget {
   const _DiaCodeList({
-    Key? key,
+    super.key,
     required this.regions,
-  }) : super(key: key);
+  });
 
   // Regions to be selections.
   final List<RegionFlag> regions;
@@ -65,9 +64,9 @@ class _DiaCodeListState extends State<_DiaCodeList> {
 
   /// Jump to best matched index in [_sortedRegions] with [q].
   void _jumpToAlphabet(String q) {
-    int index = -1;
+    var index = -1;
     for (var i = 0; i < _sortedRegions.length; i++) {
-      final RegionFlag item = _sortedRegions[i];
+      final item = _sortedRegions[i];
       if (item.name.toLowerCase().compareTo(q) < 0) {
         index = i;
       } else {
@@ -122,7 +121,7 @@ class _DiaCodeListState extends State<_DiaCodeList> {
                 itemBuilder: (context, index) {
                   final region = _sortedRegions[index];
                   return _RegionTile(region: region);
-                }),
+                },),
           ),
           if (_query.isNotEmpty)
             Opacity(
@@ -149,7 +148,7 @@ class _DiaCodeListState extends State<_DiaCodeList> {
               _currentShowingEntry?.dismiss(animate: false);
               _currentShowingEntry = showOverlay((_, progress) {
                 return _AzSelectionOverlay(content: selection);
-              }, duration: const Duration(milliseconds: 500));
+              }, duration: const Duration(milliseconds: 500),);
               _jumpToAlphabet(selection.toLowerCase());
             },
             textStyle: Theme.of(context).textTheme.bodyText1,
@@ -162,9 +161,9 @@ class _DiaCodeListState extends State<_DiaCodeList> {
 
 class _AzSelectionOverlay extends StatelessWidget {
   const _AzSelectionOverlay({
-    Key? key,
+    super.key,
     required this.content,
-  }) : super(key: key);
+  });
   final String content;
 
   @override
@@ -190,9 +189,9 @@ class _AzSelectionOverlay extends StatelessWidget {
 
 class _RegionTile extends StatelessWidget {
   const _RegionTile({
-    Key? key,
+    super.key,
     required this.region,
-  }) : super(key: key);
+  });
 
   final RegionFlag region;
 
@@ -219,8 +218,7 @@ typedef OnSelection = void Function(String char);
 
 /// Custom render for vertical A_Z list.
 class AZSelection extends SingleChildRenderObjectWidget {
-  const AZSelection({Key? key, this.onSelection, this.textStyle})
-      : super(key: key);
+  const AZSelection({super.key, this.onSelection, this.textStyle});
 
   final OnSelection? onSelection;
   final TextStyle? textStyle;
@@ -234,7 +232,7 @@ class AZSelection extends SingleChildRenderObjectWidget {
 
   @override
   void updateRenderObject(
-      BuildContext context, covariant AZRender renderObject) {
+      BuildContext context, covariant AZRender renderObject,) {
     renderObject
       ..onSelection = onSelection
       ..textStyle = textStyle ?? Theme.of(context).textTheme.bodyText1;
@@ -267,11 +265,11 @@ class AZRender extends RenderBox {
         throw FlutterError('RenderBox was not laid out: ${toString()}');
       }
       return true;
-    }());
+    }(),);
     final lineHeight = constraints.maxHeight / _chars.length;
     _offsets.clear();
     for (var i = 0; i < _chars.length; i++) {
-      final String item = _chars[i];
+      final item = _chars[i];
 
       final painter = TextPainter(
         textDirection: TextDirection.ltr,
@@ -321,7 +319,7 @@ class AZRender extends RenderBox {
       return false;
     }
     final rect = Rect.fromLTWH(
-        constraints.maxWidth - width, 0, width, constraints.maxHeight);
+        constraints.maxWidth - width, 0, width, constraints.maxHeight,);
     if (rect.contains(position)) {
       result.add(BoxHitTestEntry(this, position));
       return true;
