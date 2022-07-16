@@ -42,8 +42,12 @@ class NavigationTile extends StatelessWidget {
               ),
               const SizedBox(width: 8),
               Expanded(
-                child: DefaultTextStyle(
-                  style: context.theme.textTheme.bodyMedium!,
+                child: DefaultTextStyle.merge(
+                  style: context.theme.textTheme.bodyMedium?.copyWith(
+                    fontWeight:
+                        isSelected ? FontWeight.bold : FontWeight.normal,
+                    fontSize: 14,
+                  ),
                   maxLines: 1,
                   child: title,
                 ),
@@ -64,8 +68,8 @@ class NavigationTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(left: 16, right: 20, top: 10, bottom: 4),
-      child: Text(title, style: context.theme.textTheme.subtitle1.bold),
+      padding: const EdgeInsets.only(left: 16, right: 20, top: 12, bottom: 8),
+      child: Text(title, style: context.theme.textTheme.caption),
     );
   }
 }

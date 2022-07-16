@@ -287,7 +287,7 @@ packages:
       name: fluentui_system_icons
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.1.170"
+    version: "1.1.175"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -497,9 +497,11 @@ packages:
   netease_music_api:
     dependency: transitive
     description:
-      path: "../NeteaseCloudMusicApi"
-      relative: true
-    source: path
+      path: "."
+      ref: "99ff567a2c9be430376476d0a080c9f5da088128"
+      resolved-ref: "99ff567a2c9be430376476d0a080c9f5da088128"
+      url: "https://github.com/boyan01/NeteaseCloudMusicApi.git"
+    source: git
     version: "1.0.0"
   overlay_support:
     dependency: "direct main"

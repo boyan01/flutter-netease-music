@@ -56,7 +56,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "copyRightOverlay":
             MessageLookupByLibrary.simpleMessage("只用作个人学习研究，禁止用于商业及非法用途"),
         "createdDate": m2,
-        "createdSongList": MessageLookupByLibrary.simpleMessage("创建歌单"),
+        "createdSongList": MessageLookupByLibrary.simpleMessage("创建的歌单"),
         "currentPlaying": MessageLookupByLibrary.simpleMessage("当前播放"),
         "dailyRecommend": MessageLookupByLibrary.simpleMessage("每日推荐"),
         "dailyRecommendDescription":
@@ -69,7 +69,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "failedToDelete": MessageLookupByLibrary.simpleMessage("删除失败"),
         "failedToLoad": MessageLookupByLibrary.simpleMessage("加载失败"),
         "failedToPlayMusic": MessageLookupByLibrary.simpleMessage("播放音乐失败"),
-        "favoriteSongList": MessageLookupByLibrary.simpleMessage("收藏歌单"),
+        "favoriteSongList": MessageLookupByLibrary.simpleMessage("收藏的歌单"),
         "friends": MessageLookupByLibrary.simpleMessage("我的好友"),
         "functionDescription": MessageLookupByLibrary.simpleMessage("功能描述"),
         "hideCopyrightOverlay": MessageLookupByLibrary.simpleMessage("隐藏版权浮层"),

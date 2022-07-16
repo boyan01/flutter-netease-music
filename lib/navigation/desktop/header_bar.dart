@@ -1,16 +1,20 @@
 import 'dart:io';
 
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:overlay_support/overlay_support.dart';
 import 'package:window_manager/window_manager.dart';
 
 import '../../extension.dart';
+import '../../providers/account_provider.dart';
 import '../../providers/navigator_provider.dart';
+import '../../repository/cached_image.dart';
 import '../../utils/callback_window_listener.dart';
 import '../common/navigation_target.dart';
-import 'widgets/caption_icons.dart';
+import 'login/login_dialog.dart';
 
 class HeaderBar extends StatelessWidget {
   const HeaderBar({super.key});
@@ -25,12 +29,14 @@ class HeaderBar extends StatelessWidget {
           top: defaultTargetPlatform == TargetPlatform.macOS ? 20 : 0,
         ),
         child: SizedBox(
-          height: 42,
+          height: 56,
           child: Row(
             children: [
               const SizedBox(width: 180, child: _HeaderNavigationButtons()),
               const Expanded(child: _MoveWindow.expand()),
               const _SearchBar(),
+              const SizedBox(width: 20, child: _MoveWindow.expand()),
+              const _ProfileWidget(),
               const SizedBox(width: 10, child: _MoveWindow.expand()),
               const _SettingButton(),
               const SizedBox(width: 20, child: _MoveWindow.expand()),
@@ -124,6 +130,69 @@ class _SearchBar extends HookConsumerWidget {
   }
 }
 
+class _ProfileWidget extends HookConsumerWidget {
+  const _ProfileWidget({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final user = ref.watch(userProvider);
+
+    final Widget child;
+
+    if (user == null) {
+      child = Row(
+        children: [
+          const Icon(FluentIcons.person_16_regular, size: 16),
+          const SizedBox(width: 10),
+          Text(
+            context.strings.login,
+            style: context.theme.textTheme.caption?.copyWith(
+              fontSize: 14,
+            ),
+          ),
+        ],
+      );
+    } else {
+      child = Row(
+        children: [
+          ClipOval(
+            child: Image(
+              image: CachedImage(user.avatarUrl),
+              width: 24,
+              height: 24,
+            ),
+          ),
+          const SizedBox(width: 10),
+          ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 160),
+            child: Text(
+              user.nickname,
+              style: context.theme.textTheme.bodyMedium?.copyWith(
+                fontSize: 14,
+              ),
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+        ],
+      );
+    }
+    return InkWell(
+      borderRadius: BorderRadius.circular(8),
+      onTap: () {
+        if (user == null) {
+          showLoginDialog(context: context);
+          return;
+        }
+        toast(context.strings.todo);
+      },
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+        child: child,
+      ),
+    );
+  }
+}
+
 class _SettingButton extends ConsumerWidget {
   const _SettingButton({super.key});
 
@@ -173,15 +242,16 @@ class _WindowCaptionButtonGroup extends HookWidget {
       [WindowManager.instance],
     );
     return Row(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         _WindowButton(
-          icon: MinimizeIcon(color: context.iconTheme.color!),
+          icon: const Icon(FluentIcons.subtract_20_regular),
           onTap: WindowManager.instance.minimize,
         ),
         _WindowButton(
           icon: isMaximized.value
-              ? RestoreIcon(color: context.iconTheme.color!)
-              : MaximizeIcon(color: context.iconTheme.color!),
+              ? const Icon(FluentIcons.square_multiple_20_regular)
+              : const Icon(FluentIcons.maximize_20_regular),
           onTap: () {
             if (isMaximized.value) {
               WindowManager.instance.restore();
@@ -192,7 +262,7 @@ class _WindowCaptionButtonGroup extends HookWidget {
           },
         ),
         _WindowButton(
-          icon: CloseIcon(color: context.iconTheme.color!),
+          icon: const Icon(FluentIcons.dismiss_20_regular),
           onTap: () {
             exit(0);
           },
@@ -219,10 +289,13 @@ class _WindowButton extends StatelessWidget {
       radius: 20,
       onTap: onTap,
       child: Padding(
-        padding: const EdgeInsets.all(8),
+        padding: const EdgeInsets.all(12),
         child: SizedBox.square(
-          dimension: 24,
-          child: icon,
+          dimension: 20,
+          child: IconTheme.merge(
+            data: const IconThemeData(size: 20),
+            child: icon,
+          ),
         ),
       ),
     );

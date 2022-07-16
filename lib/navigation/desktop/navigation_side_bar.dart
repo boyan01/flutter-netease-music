@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:overlay_support/overlay_support.dart';
 
 import '../../component/utils/scroll_controller.dart';
 import '../../extension.dart';
 import '../../providers/account_provider.dart';
 import '../../providers/navigator_provider.dart';
-import '../../repository.dart';
 import '../common/navigation_target.dart';
-import 'login/login_dialog.dart';
 import 'playlist/user_playlists.dart';
 import 'widgets/navigation_tile.dart';
 
@@ -45,9 +42,7 @@ class _PresetItems extends ConsumerWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SizedBox(height: 20),
-          const _ProfileTile(),
-          const SizedBox(height: 20),
+          const SizedBox(height: 8),
           NavigationTile(
             icon: const Icon(Icons.compass_calibration_rounded),
             title: Text(context.strings.discover),
@@ -81,58 +76,6 @@ class _PresetItems extends ConsumerWidget {
             onTap: () => navigator.navigate(NavigationTargetCloudMusic()),
           ),
         ],
-      ),
-    );
-  }
-}
-
-class _ProfileTile extends HookConsumerWidget {
-  const _ProfileTile({super.key});
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final user = ref.watch(userProvider);
-    if (user == null) {
-      return NavigationTile(
-        icon: const Icon(Icons.person_outline_rounded),
-        title: Text(context.strings.login),
-        isSelected: false,
-        onTap: () {
-          showLoginDialog(context: context);
-        },
-      );
-    }
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8),
-      child: InkWell(
-        borderRadius: BorderRadius.circular(8),
-        onTap: () {
-          toast(context.strings.todo);
-        },
-        child: SizedBox(
-          height: 72,
-          child: Row(
-            children: [
-              const SizedBox(width: 4),
-              ClipOval(
-                child: Image(
-                  image: CachedImage(user.avatarUrl),
-                  width: 32,
-                  height: 32,
-                ),
-              ),
-              const SizedBox(width: 10),
-              Expanded(
-                child: Text(
-                  user.nickname,
-                  style: context.theme.textTheme.bodyText2,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-              const SizedBox(width: 4),
-            ],
-          ),
-        ),
       ),
     );
   }
