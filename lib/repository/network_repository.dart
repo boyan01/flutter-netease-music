@@ -307,8 +307,11 @@ class NetworkRepository {
       return ret.asError!;
     }
     final songDetails = ret.asValue!.value.songs;
+    final privilegesMap = Map<int, api.PrivilegesItem>.fromEntries(
+      ret.asValue!.value.privileges.map((e) => MapEntry(e.id, e)),
+    );
     return Result.value(
-      songDetails.map((e) => e.toTrack(null)).toList(),
+      songDetails.map((e) => e.toTrack(privilegesMap[e.id])).toList(),
     );
   }
 
