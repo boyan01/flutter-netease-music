@@ -61,7 +61,6 @@ Future<void> _initialDesktop(SharedPreferences preferences) async {
     final size = preferences.getWindowSize();
     final windowOptions = WindowOptions(
       size: size ?? const Size(1080, 720),
-      center: true,
       minimumSize: windowMinSize,
       backgroundColor: Colors.transparent,
       skipTaskbar: false,
