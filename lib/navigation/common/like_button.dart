@@ -1,3 +1,4 @@
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -40,7 +41,9 @@ class LikeButton extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final isLiked = ref.watch(musicIsFavoriteProvider(music));
     return IconButton(
-      icon: Icon(isLiked ? Icons.favorite : Icons.favorite_border),
+      icon: Icon(
+        isLiked ? FluentIcons.heart_24_filled : FluentIcons.heart_24_regular,
+      ),
       iconSize: iconSize,
       splashRadius: iconSize,
       color: isLiked ? likedColor : color,
