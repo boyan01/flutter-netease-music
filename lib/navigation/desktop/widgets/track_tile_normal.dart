@@ -1,3 +1,4 @@
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:overlay_support/overlay_support.dart';
@@ -272,15 +273,26 @@ class TrackTile extends ConsumerWidget {
             : context.colorScheme.primary.withOpacity(0.04),
         child: GestureDetector(
           onSecondaryTapUp: (details) {
+            final parentContext = context;
             showOverlayAtPosition(
               globalPosition: details.globalPosition,
-              builder: (context) => const PopupMenuLayout(
+              builder: (context) => ContextMenuLayout(
                 children: [
-                  AppPopupMenuItem(
-                    title: Text('Copy'),
+                  ContextMenuItem(
+                    title: Text(context.strings.play),
+                    icon: const Icon(FluentIcons.play_circle_24_regular),
+                    enable: track.type != TrackType.noCopyright,
+                    onTap: () {
+                      TrackTileContainer.playTrack(parentContext, track);
+                    },
                   ),
-                  AppPopupMenuItem(
-                    title: Text('Copy Copy CopyCopyCopy'),
+                  ContextMenuItem(
+                    title: Text(context.strings.playInNext),
+                    icon: const Icon(FluentIcons.arrow_forward_24_regular),
+                    enable: track.type != TrackType.noCopyright,
+                    onTap: () {
+                      ref.read(playerProvider).insertToNext(track);
+                    },
                   ),
                 ],
               ),

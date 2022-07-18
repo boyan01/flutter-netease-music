@@ -7,8 +7,8 @@ import 'package:overlay_support/overlay_support.dart';
 
 import '../../../extension.dart';
 
-class PopupMenuLayout extends StatelessWidget {
-  const PopupMenuLayout({super.key, required this.children});
+class ContextMenuLayout extends StatelessWidget {
+  const ContextMenuLayout({super.key, required this.children});
 
   final List<Widget> children;
 
@@ -18,26 +18,69 @@ class PopupMenuLayout extends StatelessWidget {
       color: context.colorScheme.surface,
       elevation: 5,
       borderRadius: BorderRadius.circular(8),
-      child: IntrinsicWidth(
-        stepWidth: 56,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: children,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8),
+        child: IntrinsicWidth(
+          stepWidth: 56,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: children,
+          ),
         ),
       ),
     );
   }
 }
 
-class AppPopupMenuItem extends StatelessWidget {
-  const AppPopupMenuItem({super.key, required this.title});
+class ContextMenuItem extends StatelessWidget {
+  const ContextMenuItem({
+    super.key,
+    required this.title,
+    required this.icon,
+    required this.onTap,
+    this.enable = true,
+  });
 
   final Widget title;
+  final Widget icon;
+  final VoidCallback onTap;
+  final bool enable;
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      title: title,
+    return InkWell(
+      onTap: enable
+          ? () {
+              onTap();
+              OverlaySupportEntry.of(context)?.dismiss();
+            }
+          : null,
+      child: SizedBox(
+        height: 36,
+        child: Row(
+          children: [
+            const SizedBox(width: 8),
+            IconTheme.merge(
+              data: IconThemeData(
+                size: 20,
+                color: enable ? null : context.theme.disabledColor,
+              ),
+              child: icon,
+            ),
+            const SizedBox(width: 8),
+            Expanded(
+              child: DefaultTextStyle.merge(
+                style: TextStyle(
+                  fontSize: 14,
+                  color: enable ? null : context.theme.disabledColor,
+                ),
+                child: title,
+              ),
+            ),
+            const SizedBox(width: 8),
+          ],
+        ),
+      ),
     );
   }
 }
@@ -51,16 +94,12 @@ OverlaySupportEntry showOverlayAtPosition({
         final mediaQuery = MediaQuery.of(context);
         return FocusableActionDetector(
           autofocus: true,
-          focusNode: FocusNode(),
           shortcuts: const {
             SingleActivator(LogicalKeyboardKey.escape): _ExitMenuIntent(),
-            SingleActivator(LogicalKeyboardKey.keyA, control: true):
-                _ExitMenuIntent(),
           },
           actions: {
             _ExitMenuIntent: CallbackAction<_ExitMenuIntent>(
               onInvoke: (intent) {
-                debugPrint('exit menu');
                 OverlaySupportEntry.of(context)?.dismiss();
               },
             )
