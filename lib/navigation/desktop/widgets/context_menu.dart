@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
@@ -32,13 +33,14 @@ class ContextMenuLayout extends StatelessWidget {
   }
 }
 
-class ContextMenuItem extends StatelessWidget {
+class ContextMenuItem extends StatefulWidget {
   const ContextMenuItem({
     super.key,
     required this.title,
     required this.icon,
     required this.onTap,
     this.enable = true,
+    this.subMenuBuilder,
   });
 
   final Widget title;
@@ -46,39 +48,105 @@ class ContextMenuItem extends StatelessWidget {
   final VoidCallback onTap;
   final bool enable;
 
+  final WidgetBuilder? subMenuBuilder;
+
+  @override
+  State<ContextMenuItem> createState() => _ContextMenuItemState();
+}
+
+class _ContextMenuItemState extends State<ContextMenuItem> {
+  OverlaySupportEntry? _subMemuEntry;
+
+  int _subMenuOpenCount = 0;
+
+  Timer? _delayDismissSubMenuTimer;
+
+  final _subMenukey = ModalKey(UniqueKey());
+
+  void _dismissSubMenu() {
+    _subMenuOpenCount--;
+    if (_subMenuOpenCount > 0) {
+      return;
+    }
+    _delayDismissSubMenuTimer = Timer(
+      const Duration(milliseconds: 100),
+      () {
+        _subMemuEntry?.dismiss();
+        _subMenuOpenCount = 0;
+        _delayDismissSubMenuTimer = null;
+      },
+    );
+  }
+
+  void _showContextSubMenu() {
+    if (widget.subMenuBuilder == null) {
+      return;
+    }
+    if (_delayDismissSubMenuTimer != null) {
+      _delayDismissSubMenuTimer?.cancel();
+      return;
+    }
+    _subMenuOpenCount++;
+
+    if (_subMenuOpenCount > 1) {
+      return;
+    }
+
+    final box = context.findRenderObject() as RenderBox?;
+    assert(box != null, 'box is null');
+    if (box == null) {
+      return;
+    }
+    final position = box.localToGlobal(box.size.centerRight(Offset.zero));
+    _subMemuEntry = _showSubMenu(
+      builder: (context) => MouseRegion(
+        hitTestBehavior: HitTestBehavior.opaque,
+        onEnter: (details) => _showContextSubMenu(),
+        onExit: (detials) => _dismissSubMenu(),
+        child: Builder(builder: widget.subMenuBuilder!),
+      ),
+      position: position,
+      key: _subMenukey,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: enable
-          ? () {
-              onTap();
-              OverlaySupportEntry.of(context)?.dismiss();
-            }
-          : null,
-      child: SizedBox(
-        height: 36,
-        child: Row(
-          children: [
-            const SizedBox(width: 8),
-            IconTheme.merge(
-              data: IconThemeData(
-                size: 20,
-                color: enable ? null : context.theme.disabledColor,
-              ),
-              child: icon,
-            ),
-            const SizedBox(width: 8),
-            Expanded(
-              child: DefaultTextStyle.merge(
-                style: TextStyle(
-                  fontSize: 14,
-                  color: enable ? null : context.theme.disabledColor,
+    return MouseRegion(
+      onEnter: (detials) => _showContextSubMenu(),
+      onExit: (detials) => _dismissSubMenu(),
+      child: InkWell(
+        onTap: widget.enable
+            ? () {
+                widget.onTap();
+                OverlaySupportEntry.of(context)?.dismiss();
+              }
+            : null,
+        child: SizedBox(
+          height: 36,
+          child: Row(
+            children: [
+              const SizedBox(width: 8),
+              IconTheme.merge(
+                data: IconThemeData(
+                  size: 20,
+                  color: widget.enable ? null : context.theme.disabledColor,
                 ),
-                child: title,
+                child: widget.icon,
               ),
-            ),
-            const SizedBox(width: 8),
-          ],
+              const SizedBox(width: 8),
+              Expanded(
+                child: DefaultTextStyle.merge(
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: widget.enable ? null : context.theme.disabledColor,
+                  ),
+                  child: widget.title,
+                ),
+              ),
+              const SizedBox(width: 8),
+            ],
+          ),
         ),
       ),
     );
@@ -88,10 +156,10 @@ class ContextMenuItem extends StatelessWidget {
 OverlaySupportEntry showOverlayAtPosition({
   required WidgetBuilder builder,
   required Offset globalPosition,
+  Key? key,
 }) =>
     showOverlay(
       (context, t) {
-        final mediaQuery = MediaQuery.of(context);
         return FocusableActionDetector(
           autofocus: true,
           shortcuts: const {
@@ -115,25 +183,10 @@ OverlaySupportEntry showOverlayAtPosition({
                     OverlaySupportEntry.of(context)?.dismiss();
                   },
                 ),
-              MediaQuery.removePadding(
-                context: context,
-                removeTop: true,
-                removeBottom: true,
-                removeLeft: true,
-                removeRight: true,
-                child: CustomSingleChildLayout(
-                  delegate: _MenuLayout(
-                    position: globalPosition,
-                    avoidBounds:
-                        DisplayFeatureSubScreen.avoidBounds(mediaQuery).toSet(),
-                    padding: mediaQuery.padding,
-                  ),
-                  child: _MenuClip(
-                    value: t,
-                    position: globalPosition,
-                    child: Builder(builder: builder),
-                  ),
-                ),
+              _ContextMenuOverlay(
+                alignPosition: globalPosition,
+                builder: builder,
+                animationValue: t,
               ),
             ],
           ),
@@ -143,7 +196,61 @@ OverlaySupportEntry showOverlayAtPosition({
       curve: Curves.easeInOut,
       animationDuration: const Duration(milliseconds: 200),
       reverseAnimationDuration: const Duration(milliseconds: 150),
+      key: key,
     );
+
+OverlaySupportEntry _showSubMenu({
+  required WidgetBuilder builder,
+  required Offset position,
+  Key? key,
+}) =>
+    showOverlay(
+      (context, t) => _ContextMenuOverlay(
+        alignPosition: position,
+        builder: builder,
+        animationValue: t,
+      ),
+      duration: Duration.zero,
+      curve: Curves.easeInOut,
+      key: key,
+    );
+
+class _ContextMenuOverlay extends StatelessWidget {
+  const _ContextMenuOverlay({
+    super.key,
+    required this.alignPosition,
+    required this.builder,
+    this.animationValue = 1,
+  });
+
+  final Offset alignPosition;
+  final WidgetBuilder builder;
+  final double animationValue;
+
+  @override
+  Widget build(BuildContext context) {
+    final mediaQuery = MediaQuery.of(context);
+    return MediaQuery.removePadding(
+      context: context,
+      removeTop: true,
+      removeBottom: true,
+      removeLeft: true,
+      removeRight: true,
+      child: CustomSingleChildLayout(
+        delegate: _MenuLayout(
+          position: alignPosition,
+          avoidBounds: DisplayFeatureSubScreen.avoidBounds(mediaQuery).toSet(),
+          padding: mediaQuery.padding,
+        ),
+        child: _MenuClip(
+          value: animationValue,
+          position: alignPosition,
+          child: Builder(builder: builder),
+        ),
+      ),
+    );
+  }
+}
 
 class _ExitMenuIntent extends Intent {
   const _ExitMenuIntent();
