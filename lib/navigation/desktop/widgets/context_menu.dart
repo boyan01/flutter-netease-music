@@ -33,19 +33,34 @@ class ContextMenuLayout extends StatelessWidget {
   }
 }
 
+class _ParentMenuControllerWidget extends StatelessWidget {
+  const _ParentMenuControllerWidget({
+    super.key,
+    required this.child,
+    required this.onChildClicked,
+  });
+
+  final Widget child;
+
+  final VoidCallback onChildClicked;
+
+  @override
+  Widget build(BuildContext context) => child;
+}
+
 class ContextMenuItem extends StatefulWidget {
   const ContextMenuItem({
     super.key,
     required this.title,
     required this.icon,
-    required this.onTap,
+    this.onTap,
     this.enable = true,
     this.subMenuBuilder,
   });
 
   final Widget title;
   final Widget icon;
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
   final bool enable;
 
   final WidgetBuilder? subMenuBuilder;
@@ -103,11 +118,27 @@ class _ContextMenuItemState extends State<ContextMenuItem> {
         hitTestBehavior: HitTestBehavior.opaque,
         onEnter: (details) => _showContextSubMenu(),
         onExit: (detials) => _dismissSubMenu(),
-        child: Builder(builder: widget.subMenuBuilder!),
+        child: _ParentMenuControllerWidget(
+          onChildClicked: _dismissSelf,
+          child: Builder(builder: widget.subMenuBuilder!),
+        ),
       ),
       position: position,
       key: _subMenukey,
     );
+  }
+
+  void _dismissSelf() {
+    OverlaySupportEntry.of(context)?.dismiss();
+    final controller =
+        context.findAncestorWidgetOfExactType<_ParentMenuControllerWidget>();
+    controller?.onChildClicked();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _subMemuEntry?.dismiss(animate: false);
   }
 
   @override
@@ -117,10 +148,12 @@ class _ContextMenuItemState extends State<ContextMenuItem> {
       onExit: (detials) => _dismissSubMenu(),
       child: InkWell(
         onTap: widget.enable
-            ? () {
-                widget.onTap();
-                OverlaySupportEntry.of(context)?.dismiss();
-              }
+            ? widget.subMenuBuilder != null
+                ? () {}
+                : () {
+                    widget.onTap?.call();
+                    _dismissSelf();
+                  }
             : null,
         child: SizedBox(
           height: 36,
@@ -187,6 +220,7 @@ OverlaySupportEntry showOverlayAtPosition({
                 alignPosition: globalPosition,
                 builder: builder,
                 animationValue: t,
+                align: _MenuAlign.topLeft,
               ),
             ],
           ),
@@ -209,6 +243,7 @@ OverlaySupportEntry _showSubMenu({
         alignPosition: position,
         builder: builder,
         animationValue: t,
+        align: _MenuAlign.centerLeft,
       ),
       duration: Duration.zero,
       curve: Curves.easeInOut,
@@ -221,11 +256,13 @@ class _ContextMenuOverlay extends StatelessWidget {
     required this.alignPosition,
     required this.builder,
     this.animationValue = 1,
+    required this.align,
   });
 
   final Offset alignPosition;
   final WidgetBuilder builder;
   final double animationValue;
+  final _MenuAlign align;
 
   @override
   Widget build(BuildContext context) {
@@ -241,6 +278,7 @@ class _ContextMenuOverlay extends StatelessWidget {
           position: alignPosition,
           avoidBounds: DisplayFeatureSubScreen.avoidBounds(mediaQuery).toSet(),
           padding: mediaQuery.padding,
+          align: align,
         ),
         child: _MenuClip(
           value: animationValue,
@@ -348,16 +386,23 @@ class _RenderClipper extends RenderProxyBox {
 
 const double _kMenuScreenPadding = 8;
 
+enum _MenuAlign {
+  topLeft,
+  centerLeft,
+}
+
 class _MenuLayout extends SingleChildLayoutDelegate {
   _MenuLayout({
     required this.position,
     required this.avoidBounds,
     required this.padding,
+    required this.align,
   });
 
   final Offset position;
   final Set<Rect> avoidBounds;
   final EdgeInsets padding;
+  final _MenuAlign align;
 
   @override
   BoxConstraints getConstraintsForChild(BoxConstraints constraints) {
@@ -380,11 +425,20 @@ class _MenuLayout extends SingleChildLayoutDelegate {
     // size: The size of the overlay.
     // childSize: The size of the menu, when fully open, as determined by
     // getConstraintsForChild.
-    final wantedPosition = position;
     final subScreens = DisplayFeatureSubScreen.subScreensInBounds(
       Offset.zero & size,
       avoidBounds,
     );
+
+    final Offset wantedPosition;
+    switch (align) {
+      case _MenuAlign.topLeft:
+        wantedPosition = position;
+        break;
+      case _MenuAlign.centerLeft:
+        wantedPosition = position - Offset(0, childSize.height / 2);
+        break;
+    }
     final subScreen = _closestScreen(subScreens, wantedPosition);
     return _fitInsideScreen(subScreen, childSize, wantedPosition);
   }

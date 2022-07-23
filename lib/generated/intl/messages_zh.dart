@@ -43,6 +43,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "about": MessageLookupByLibrary.simpleMessage("关于"),
         "addToPlaylist": MessageLookupByLibrary.simpleMessage("加入歌单"),
         "addToPlaylistFailed": MessageLookupByLibrary.simpleMessage("加入歌单失败"),
+        "addedToPlaylistSuccess":
+            MessageLookupByLibrary.simpleMessage("已添加到播放列表"),
         "album": MessageLookupByLibrary.simpleMessage("专辑"),
         "albumShareContent": m0,
         "alreadyBuy": MessageLookupByLibrary.simpleMessage("收藏和赞"),
@@ -77,6 +79,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "latestPlayHistory": MessageLookupByLibrary.simpleMessage("最近播放"),
         "library": MessageLookupByLibrary.simpleMessage("音乐库"),
         "likeMusic": MessageLookupByLibrary.simpleMessage("喜欢歌曲"),
+        "loading": MessageLookupByLibrary.simpleMessage("加载中..."),
         "localMusic": MessageLookupByLibrary.simpleMessage("本地音乐"),
         "login": MessageLookupByLibrary.simpleMessage("立即登录"),
         "loginWithPhone": MessageLookupByLibrary.simpleMessage("手机号登录"),

@@ -5,8 +5,10 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:overlay_support/overlay_support.dart';
 
 import '../../../extension.dart';
+import '../../../providers/account_provider.dart';
 import '../../../providers/navigator_provider.dart';
 import '../../../providers/player_provider.dart';
+import '../../../providers/user_playlists_provider.dart';
 import '../../../repository.dart';
 import '../../common/like_button.dart';
 import '../../common/navigation_target.dart';
@@ -283,47 +285,10 @@ class TrackTile extends HookConsumerWidget {
               highlighting.value = true;
               final entry = showOverlayAtPosition(
                 globalPosition: details.globalPosition,
-                builder: (context) => ContextMenuLayout(
-                  children: [
-                    ContextMenuItem(
-                      title: Text(context.strings.play),
-                      icon: const Icon(FluentIcons.play_circle_24_regular),
-                      enable: track.type != TrackType.noCopyright,
-                      onTap: () {
-                        TrackTileContainer.playTrack(parentContext, track);
-                      },
-                    ),
-                    ContextMenuItem(
-                      title: Text(context.strings.playInNext),
-                      icon: const Icon(FluentIcons.arrow_forward_24_regular),
-                      enable: track.type != TrackType.noCopyright,
-                      onTap: () {
-                        ref.read(playerProvider).insertToNext(track);
-                      },
-                    ),
-                    ContextMenuItem(
-                      title: Text(context.strings.addToPlaylist),
-                      icon: const Icon(FluentIcons.album_add_24_regular),
-                      onTap: () {
-                        // TODO(BIN): Add to playlist
-                      },
-                      subMenuBuilder: (context) {
-                        return ContextMenuLayout(
-                          children: [
-                            ContextMenuItem(
-                              title: Text(context.strings.createdSongList),
-                              icon: const Icon(
-                                  FluentIcons.arrow_forward_24_regular),
-                              enable: track.type != TrackType.noCopyright,
-                              onTap: () {
-                                ref.read(playerProvider).insertToNext(track);
-                              },
-                            ),
-                          ],
-                        );
-                      },
-                    ),
-                  ],
+                builder: (context) => _TrackItemMenus(
+                  track: track,
+                  playTrack: () =>
+                      TrackTileContainer.playTrack(parentContext, track),
                 ),
               );
               await entry.dismissed;
@@ -485,5 +450,106 @@ class _IndexOrPlayIcon extends ConsumerWidget {
         style: context.textTheme.caption,
       );
     }
+  }
+}
+
+class _TrackItemMenus extends ConsumerWidget {
+  const _TrackItemMenus({
+    super.key,
+    required this.track,
+    required this.playTrack,
+  });
+
+  final Track track;
+  final VoidCallback playTrack;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final userId = ref.watch(userIdProvider);
+    return ContextMenuLayout(
+      children: [
+        ContextMenuItem(
+          title: Text(context.strings.play),
+          icon: const Icon(FluentIcons.play_circle_24_regular),
+          enable: track.type != TrackType.noCopyright,
+          onTap: playTrack,
+        ),
+        ContextMenuItem(
+          title: Text(context.strings.playInNext),
+          icon: const Icon(FluentIcons.arrow_forward_24_regular),
+          enable: track.type != TrackType.noCopyright,
+          onTap: () {
+            ref.read(playerProvider).insertToNext(track);
+          },
+        ),
+        if (userId != null)
+          ContextMenuItem(
+            title: Text(context.strings.addToPlaylist),
+            icon: const Icon(FluentIcons.album_add_24_regular),
+            subMenuBuilder: (context) => _AddToPlaylistSubMenu(track: track),
+          ),
+      ],
+    );
+  }
+}
+
+class _AddToPlaylistSubMenu extends ConsumerWidget {
+  const _AddToPlaylistSubMenu({super.key, required this.track});
+
+  final Track track;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final userId = ref.read(userIdProvider);
+    assert(userId != null, 'userId is null');
+    final data = ref.watch(
+      userPlaylistsProvider(userId!).select(
+        (value) => value.whenData(
+          (value) => value.where((element) => element.creator.userId == userId),
+        ),
+      ),
+    );
+    return data.when(
+      data: (data) => ContextMenuLayout(
+        children: [
+          for (final playlist in data)
+            ContextMenuItem(
+              title: Text(playlist.name),
+              icon: const Icon(FluentIcons.music_note_1_24_regular),
+              onTap: () async {
+                try {
+                  final ret = await neteaseRepository!.playlistTracksEdit(
+                    PlaylistOperation.add,
+                    playlist.id,
+                    [track.id],
+                  );
+                  if (ret) {
+                    toast(context.strings.addedToPlaylistSuccess);
+                  }
+                } catch (error, stacktrace) {
+                  toast(context.formattedError(error));
+                  debugPrint('add to playlist failed: $error\n$stacktrace');
+                }
+              },
+            ),
+        ],
+      ),
+      error: (error, stacktrace) => ContextMenuLayout(
+        children: [
+          Text(context.formattedError(error)),
+        ],
+      ),
+      loading: () => ContextMenuLayout(
+        children: [
+          ContextMenuItem(
+            title: Text(context.strings.loading),
+            icon: const SizedBox.square(
+              dimension: 24,
+              child: CircularProgressIndicator(),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

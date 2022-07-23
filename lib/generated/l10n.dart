@@ -931,6 +931,26 @@ class S {
       args: [],
     );
   }
+
+  /// `Loading...`
+  String get loading {
+    return Intl.message(
+      'Loading...',
+      name: 'loading',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Added to playlist successfully`
+  String get addedToPlaylistSuccess {
+    return Intl.message(
+      'Added to playlist successfully',
+      name: 'addedToPlaylistSuccess',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {
