@@ -45,6 +45,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("add to playlist"),
         "addToPlaylistFailed":
             MessageLookupByLibrary.simpleMessage("add to playlist failed"),
+        "addedToPlaylistSuccess": MessageLookupByLibrary.simpleMessage(
+            "Added to playlist successfully"),
         "album": MessageLookupByLibrary.simpleMessage("Album"),
         "albumShareContent": m0,
         "alreadyBuy": MessageLookupByLibrary.simpleMessage("Payed"),
@@ -89,6 +91,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Play History"),
         "library": MessageLookupByLibrary.simpleMessage("Library"),
         "likeMusic": MessageLookupByLibrary.simpleMessage("Like Music"),
+        "loading": MessageLookupByLibrary.simpleMessage("Loading..."),
         "localMusic": MessageLookupByLibrary.simpleMessage("Local Music"),
         "login": MessageLookupByLibrary.simpleMessage("Login"),
         "loginWithPhone":

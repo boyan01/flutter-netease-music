@@ -33,7 +33,6 @@ class _UserPlaylistLoader extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final data = ref.watch(userPlaylistsProvider(userId));
-    importExtension();
     return data.when(
       data: (data) => _UserPlaylist(playlists: data, userId: userId),
       loading: () => const SliverPadding(

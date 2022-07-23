@@ -86,5 +86,7 @@
   "personalProfile": "个人主页",
   "topSongs": "热门歌曲",
   "showAllHotSongs": "查看所有热门歌曲 >",
-  "pleaseInputPassword": "请输入密码"
+  "pleaseInputPassword": "请输入密码",
+  "loading": "加载中...",
+  "addedToPlaylistSuccess": "已添加到播放列表"
 }
