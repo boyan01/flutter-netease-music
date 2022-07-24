@@ -37,6 +37,7 @@ class PlaylistDetailStateNotifier
       state = AsyncValue.data(local);
     }
     _initializeCompleter.complete();
+    await _load();
   }
 
   var _isNetworkLoading = false;
