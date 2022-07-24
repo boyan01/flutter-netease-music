@@ -8,6 +8,7 @@ import '../../../extension.dart';
 import '../../../providers/account_provider.dart';
 import '../../../providers/navigator_provider.dart';
 import '../../../providers/player_provider.dart';
+import '../../../providers/playlist_detail_provider.dart';
 import '../../../providers/user_playlists_provider.dart';
 import '../../../repository.dart';
 import '../../common/like_button.dart';
@@ -290,8 +291,11 @@ class TrackTile extends HookConsumerWidget {
                   playTrack: () =>
                       TrackTileContainer.playTrack(parentContext, track),
                   deleteTrack: TrackTileContainer.canDeleteTrack(parentContext)
-                      ? () =>
-                          TrackTileContainer.deleteTrack(parentContext, track)
+                      ? () => TrackTileContainer.deleteTrack(
+                            parentContext,
+                            ref.read,
+                            track,
+                          )
                       : null,
                 ),
               );
@@ -530,14 +534,10 @@ class _AddToPlaylistSubMenu extends ConsumerWidget {
               icon: const Icon(FluentIcons.music_note_1_24_regular),
               onTap: () async {
                 try {
-                  final ret = await neteaseRepository!.playlistTracksEdit(
-                    PlaylistOperation.add,
-                    playlist.id,
-                    [track.id],
-                  );
-                  if (ret) {
-                    toast(context.strings.addedToPlaylistSuccess);
-                  }
+                  final controller =
+                      ref.read(playlistDetailProvider(playlist.id).notifier);
+                  await controller.addTrack(track);
+                  toast(context.strings.addedToPlaylistSuccess);
                 } catch (error, stacktrace) {
                   toast(context.formattedError(error));
                   debugPrint('add to playlist failed: $error\n$stacktrace');
