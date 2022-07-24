@@ -289,6 +289,10 @@ class TrackTile extends HookConsumerWidget {
                   track: track,
                   playTrack: () =>
                       TrackTileContainer.playTrack(parentContext, track),
+                  deleteTrack: TrackTileContainer.canDeleteTrack(parentContext)
+                      ? () =>
+                          TrackTileContainer.deleteTrack(parentContext, track)
+                      : null,
                 ),
               );
               await entry.dismissed;
@@ -458,10 +462,12 @@ class _TrackItemMenus extends ConsumerWidget {
     super.key,
     required this.track,
     required this.playTrack,
+    required this.deleteTrack,
   });
 
   final Track track;
   final VoidCallback playTrack;
+  final Future<void> Function()? deleteTrack;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -487,6 +493,12 @@ class _TrackItemMenus extends ConsumerWidget {
             title: Text(context.strings.addToPlaylist),
             icon: const Icon(FluentIcons.album_add_24_regular),
             subMenuBuilder: (context) => _AddToPlaylistSubMenu(track: track),
+          ),
+        if (deleteTrack != null)
+          ContextMenuItem(
+            title: Text(context.strings.delete),
+            icon: const Icon(FluentIcons.delete_24_regular),
+            onTap: deleteTrack,
           ),
       ],
     );

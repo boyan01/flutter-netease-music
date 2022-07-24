@@ -73,7 +73,7 @@ class TrackTileContainer extends StatelessWidget {
   }) {
     return TrackTileContainer._private(
       (track) => player.playWithList(id, tracks, track: track),
-      (track) => throw UnimplementedError('$id not support delete track.'),
+      null,
       id: id,
       tracks: tracks,
       child: child,
@@ -114,8 +114,10 @@ class TrackTileContainer extends StatelessWidget {
     required Widget child,
     required TracksPlayer player,
     required bool skipAccompaniment,
+    int? userId,
   }) {
     final id = 'playlist_${playlist.id}';
+    final isUserPlaylist = userId != null && playlist.creator.userId == userId;
     return TrackTileContainer._private(
       (track) {
         final List<Track> tracks;
@@ -128,9 +130,16 @@ class TrackTileContainer extends StatelessWidget {
         }
         return player.playWithList(id, tracks, track: track);
       },
-      (track) {
-        // TODO: remove track
-      },
+      isUserPlaylist
+          ? (track) async {
+              // TODO: notify track has been deleted.
+              await neteaseRepository!.playlistTracksEdit(
+                PlaylistOperation.remove,
+                playlist.id,
+                [track.id],
+              );
+            }
+          : null,
       tracks: playlist.tracks,
       id: id,
       child: child,
@@ -197,14 +206,25 @@ class TrackTileContainer extends StatelessWidget {
     return container.id;
   }
 
-  static void deleteTrack(BuildContext context, Track track) {
+  static Future<void> deleteTrack(BuildContext context, Track track) {
     final container =
         context.findAncestorWidgetOfExactType<TrackTileContainer>();
     assert(container != null, 'container is null');
     if (container == null) {
-      return;
+      return Future.value();
     }
-    container._deleteMusic(track);
+    assert(container._deleteMusic != null, 'deleteMusic is null');
+    return container._deleteMusic?.call(track) ?? Future.value();
+  }
+
+  static bool canDeleteTrack(BuildContext context) {
+    final container =
+        context.findAncestorWidgetOfExactType<TrackTileContainer>();
+    assert(container != null, 'container is null');
+    if (container == null) {
+      return false;
+    }
+    return container._deleteMusic != null;
   }
 
   final List<Track> tracks;
@@ -215,7 +235,7 @@ class TrackTileContainer extends StatelessWidget {
 
   final PlayResult Function(Track?) _playbackMusic;
 
-  final void Function(Track) _deleteMusic;
+  final Future<void> Function(Track)? _deleteMusic;
 
   @override
   Widget build(BuildContext context) => child;

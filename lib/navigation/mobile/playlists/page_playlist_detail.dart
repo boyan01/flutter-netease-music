@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../extension.dart';
+import '../../../providers/account_provider.dart';
 import '../../../providers/player_provider.dart';
 import '../../../providers/playlist_detail_provider.dart';
 import '../../../providers/settings_provider.dart';
@@ -81,6 +82,7 @@ class _MusicList extends ConsumerWidget {
       skipAccompaniment: ref.watch(
         settingStateProvider.select((value) => value.skipAccompaniment),
       ),
+      userId: ref.read(userIdProvider),
       child: SliverList(
         delegate: SliverChildBuilderDelegate(
           (context, index) => TrackTile(
