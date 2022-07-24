@@ -66,8 +66,8 @@ class _PresetItems extends ConsumerWidget {
           NavigationTile(
             icon: const Icon(Icons.history_rounded),
             title: Text(context.strings.latestPlayHistory),
-            isSelected: false,
-            onTap: () {},
+            isSelected: currentPage is NavigationTargetPlayHistory,
+            onTap: () => navigator.navigate(NavigationTargetPlayHistory()),
           ),
           NavigationTile(
             icon: const Icon(Icons.cloud_upload_rounded),

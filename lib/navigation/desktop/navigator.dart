@@ -9,6 +9,7 @@ import 'player/page_fm_playing.dart';
 import 'playlist/page_album_detail.dart';
 import 'playlist/page_cloud_tracks.dart';
 import 'playlist/page_daily_playlist.dart';
+import 'playlist/page_play_history.dart';
 import 'playlist/page_playlist.dart';
 import 'search/page_search.dart';
 
@@ -100,6 +101,8 @@ class DesktopNavigatorController extends NavigatorController {
       page = PageSearch(target: target);
     } else if (target is NavigationTargetCloudMusic) {
       page = const PageCloudTracks();
+    } else if (target is NavigationTargetPlayHistory) {
+      page = const PagePlayHistory();
     } else {
       throw Exception('Unknown navigation type: $target');
     }

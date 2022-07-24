@@ -88,5 +88,7 @@
   "showAllHotSongs": "查看所有热门歌曲 >",
   "pleaseInputPassword": "请输入密码",
   "loading": "加载中...",
-  "addedToPlaylistSuccess": "已添加到播放列表"
+  "addedToPlaylistSuccess": "已添加到播放列表",
+  "clearPlayHistory": "清空列表",
+  "noPlayHistory": "暂无播放记录"
 }

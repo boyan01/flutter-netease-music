@@ -52,6 +52,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "alreadyBuy": MessageLookupByLibrary.simpleMessage("Payed"),
         "artistAlbumCount": m1,
         "artists": MessageLookupByLibrary.simpleMessage("Artists"),
+        "clearPlayHistory":
+            MessageLookupByLibrary.simpleMessage("Clear Play History"),
         "cloudMusic": MessageLookupByLibrary.simpleMessage("Could Space"),
         "cloudMusicFileDropDescription": MessageLookupByLibrary.simpleMessage(
             "Drop your music file to here to upload."),
@@ -104,6 +106,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "nextStep": MessageLookupByLibrary.simpleMessage("next step"),
         "noLyric": MessageLookupByLibrary.simpleMessage("No Lyric"),
         "noMusic": MessageLookupByLibrary.simpleMessage("no music"),
+        "noPlayHistory":
+            MessageLookupByLibrary.simpleMessage("No play history"),
         "pause": MessageLookupByLibrary.simpleMessage("Pause"),
         "personalFM": MessageLookupByLibrary.simpleMessage("Personal FM"),
         "personalFmPlaying":

@@ -270,6 +270,7 @@ class TrackTile extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final configuration = _TrackTableConfiguration.of(context);
     final highlighting = useState(false);
+    final isMounted = useIsMounted();
     return SizedBox(
       height: 36,
       child: Material(
@@ -300,6 +301,9 @@ class TrackTile extends HookConsumerWidget {
                 ),
               );
               await entry.dismissed;
+              if (!isMounted()) {
+                return;
+              }
               highlighting.value = false;
             },
             child: InkWell(

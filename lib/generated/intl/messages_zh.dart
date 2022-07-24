@@ -50,6 +50,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "alreadyBuy": MessageLookupByLibrary.simpleMessage("收藏和赞"),
         "artistAlbumCount": m1,
         "artists": MessageLookupByLibrary.simpleMessage("歌手"),
+        "clearPlayHistory": MessageLookupByLibrary.simpleMessage("清空列表"),
         "cloudMusic": MessageLookupByLibrary.simpleMessage("云盘"),
         "cloudMusicFileDropDescription":
             MessageLookupByLibrary.simpleMessage("将音乐文件拖放到这里进行上传"),
@@ -91,6 +92,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "nextStep": MessageLookupByLibrary.simpleMessage("下一步"),
         "noLyric": MessageLookupByLibrary.simpleMessage("暂无歌词"),
         "noMusic": MessageLookupByLibrary.simpleMessage("暂无音乐"),
+        "noPlayHistory": MessageLookupByLibrary.simpleMessage("暂无播放记录"),
         "pause": MessageLookupByLibrary.simpleMessage("暂停"),
         "personalFM": MessageLookupByLibrary.simpleMessage("私人FM"),
         "personalFmPlaying": MessageLookupByLibrary.simpleMessage("私人FM播放中"),

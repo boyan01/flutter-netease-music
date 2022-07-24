@@ -49,6 +49,8 @@ extension _TracksPlayer on TracksPlayer {
   }
 }
 
+typedef TrackDeleteHandler = Future<void> Function(Reader read, Track track);
+
 class TrackTileContainer extends StatelessWidget {
   factory TrackTileContainer.album({
     required Album album,
@@ -143,10 +145,13 @@ class TrackTileContainer extends StatelessWidget {
     );
   }
 
+  /// Difference [TrackTileContainer.trackList]
+  /// Track item will only be insert to current playing list.
   factory TrackTileContainer.simpleList({
     required List<Track> tracks,
     required Widget child,
     required TracksPlayer player,
+    TrackDeleteHandler? onDelete,
   }) {
     return TrackTileContainer._private(
       (track) {
@@ -163,7 +168,7 @@ class TrackTileContainer extends StatelessWidget {
           return PlayResult.success;
         }
       },
-      null,
+      onDelete,
       tracks: tracks,
       id: '',
       child: child,
@@ -235,7 +240,7 @@ class TrackTileContainer extends StatelessWidget {
 
   final PlayResult Function(Track?) _playbackMusic;
 
-  final Future<void> Function(Reader, Track)? _deleteMusic;
+  final TrackDeleteHandler? _deleteMusic;
 
   @override
   Widget build(BuildContext context) => child;

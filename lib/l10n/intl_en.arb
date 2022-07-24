@@ -88,5 +88,7 @@
   "showAllHotSongs": "Show all hot songs >",
   "pleaseInputPassword": "Please input password",
   "loading": "Loading...",
-  "addedToPlaylistSuccess": "Added to playlist successfully"
+  "addedToPlaylistSuccess": "Added to playlist successfully",
+  "clearPlayHistory": "Clear Play History",
+  "noPlayHistory": "No play history"
 }
