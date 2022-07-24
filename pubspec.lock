@@ -498,8 +498,8 @@ packages:
     dependency: transitive
     description:
       path: "."
-      ref: "99ff567a2c9be430376476d0a080c9f5da088128"
-      resolved-ref: "99ff567a2c9be430376476d0a080c9f5da088128"
+      ref: f32aecf83490d754f620824827fb4b7b243788b7
+      resolved-ref: f32aecf83490d754f620824827fb4b7b243788b7
       url: "https://github.com/boyan01/NeteaseCloudMusicApi.git"
     source: git
     version: "1.0.0"
@@ -587,13 +587,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.7"
-  pedantic:
-    dependency: transitive
-    description:
-      name: pedantic
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.11.1"
   platform:
     dependency: transitive
     description:
