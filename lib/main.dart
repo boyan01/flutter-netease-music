@@ -23,8 +23,10 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await loadFallbackFonts();
   unawaited(NetworkRepository.initialize());
-  unawaited(DartVLC.initialize());
   final preferences = await SharedPreferences.getInstance();
+  if (Platform.isLinux || Platform.isWindows) {
+    await DartVLC.initialize();
+  }
   unawaited(_initialDesktop(preferences));
   runZonedGuarded(() {
     runApp(

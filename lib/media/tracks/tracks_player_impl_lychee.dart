@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:dart_vlc/dart_vlc.dart';
 import 'package:flutter/foundation.dart';
+import 'package:lychee_player/lychee_player.dart';
 
 import '../../extension.dart';
 import '../../model/persistence_player_state.dart';
@@ -9,41 +9,29 @@ import '../../repository.dart';
 import 'track_list.dart';
 import 'tracks_player.dart';
 
-extension _SecondsToDuration on double {
+extension _SecondsExt on double {
   Duration toDuration() {
-    return Duration(milliseconds: (this * 1000).round());
+    return Duration(milliseconds: (this * 1000).toInt());
   }
 }
 
-class TracksPlayerImplVlc extends TracksPlayer {
-  TracksPlayerImplVlc() {
-    _player.playbackStream.listen((event) {
-      if (event.isCompleted) {
-        skipToNext();
-      }
-      notifyPlayStateChanged();
-    });
-    _player.generalStream.listen((event) => notifyPlayStateChanged());
-    _player.pause();
-  }
-
-  final _player = Player(
-    id: 0,
-    commandlineArguments: ['--no-video'],
-  );
+class TracksPlayerImplLychee extends TracksPlayer {
+  TracksPlayerImplLychee();
 
   var _trackList = const TrackList.empty();
 
   Track? _current;
 
+  LycheeAudioPlayer? _player;
+
   @override
-  Duration? get bufferedPosition => _player.bufferingProgress.toDuration();
+  Duration? get bufferedPosition => null;
 
   @override
   Track? get current => _current;
 
   @override
-  Duration? get duration => _player.position.duration;
+  Duration? get duration => _player?.duration().toDuration();
 
   @override
   Future<Track?> getNextTrack() async {
@@ -90,19 +78,21 @@ class TracksPlayerImplVlc extends TracksPlayer {
   }
 
   @override
-  bool get isBuffering => false;
+  bool get isBuffering => _player?.state.value == PlayerState.buffering;
 
   @override
-  bool get isPlaying => _player.playback.isPlaying;
+  bool get isPlaying =>
+      _player?.state.value == PlayerState.ready &&
+      _player?.playWhenReady == true;
 
   @override
   Future<void> pause() async {
-    _player.pause();
+    _player?.playWhenReady = false;
   }
 
   @override
   Future<void> play() async {
-    _player.play();
+    _player?.playWhenReady = true;
   }
 
   @override
@@ -115,28 +105,26 @@ class TracksPlayerImplVlc extends TracksPlayer {
   }
 
   @override
-  double get playbackSpeed => _player.general.rate;
+  double get playbackSpeed => 1;
 
   @override
-  Duration? get position => _player.position.position;
+  Duration? get position => _player?.currentTime().toDuration();
 
   @override
   RepeatMode get repeatMode => RepeatMode.all;
 
   @override
   Future<void> seekTo(Duration position) async {
-    _player.seek(position);
+    _player?.seek(position.inMilliseconds / 1000);
   }
 
   @override
   Future<void> setPlaybackSpeed(double speed) async {
-    _player.setRate(speed);
+    // TODO implement setPlaybackSpeed
   }
 
   @override
-  Future<void> setRepeatMode(RepeatMode repeatMode) async {
-    // TODO
-  }
+  Future<void> setRepeatMode(RepeatMode repeatMode) async {}
 
   @override
   void setTrackList(TrackList trackList) {
@@ -151,8 +139,7 @@ class TracksPlayerImplVlc extends TracksPlayer {
 
   @override
   Future<void> setVolume(double volume) async {
-    _player.setVolume(volume);
-    notifyPlayStateChanged();
+    // TODO : implement setVolume
   }
 
   @override
@@ -173,16 +160,20 @@ class TracksPlayerImplVlc extends TracksPlayer {
 
   @override
   Future<void> stop() async {
-    _player.stop();
+    _player?.playWhenReady = false;
+    _player?.dispose();
+    _player = null;
+    _current = null;
+    notifyPlayStateChanged();
   }
 
   @override
   TrackList get trackList => _trackList;
 
   @override
-  double get volume => _player.general.volume;
+  double get volume => 1;
 
-  void _playTrack(Track track, {bool autoStart = true}) {
+  void _playTrack(Track track) {
     scheduleMicrotask(() async {
       final url = await neteaseRepository!.getPlayUrl(track.id);
       if (url.isError) {
@@ -193,7 +184,16 @@ class TracksPlayerImplVlc extends TracksPlayer {
         // skip play. since the track is changed.
         return;
       }
-      _player.open(Media.network(url.asValue!.value), autoStart: autoStart);
+      _player?.dispose();
+      _player = LycheeAudioPlayer(url.asValue!.value)
+        ..playWhenReady = true
+        ..onPlayWhenReadyChanged.addListener(notifyPlayStateChanged)
+        ..state.addListener(() {
+          if (_player?.state.value == PlayerState.end) {
+            skipToNext();
+          }
+          notifyPlayStateChanged();
+        });
     });
     _current = track;
     notifyPlayStateChanged();
@@ -201,11 +201,6 @@ class TracksPlayerImplVlc extends TracksPlayer {
 
   @override
   void restoreFromPersistence(PersistencePlayerState state) {
-    _trackList = state.playingList;
-    if (state.playingTrack != null) {
-      _playTrack(state.playingTrack!, autoStart: false);
-    }
-    setVolume(state.volume);
-    notifyPlayStateChanged();
+    // TODO: implement restoreFromPersistence
   }
 }
