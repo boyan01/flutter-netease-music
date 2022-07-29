@@ -87,9 +87,9 @@ extension ApplyFontsExtension on ThemeData {
     if (loadedFallbackFonts == null) {
       if (Platform.isWindows) {
         return copyWith(
-          textTheme: textTheme.applyFonts(null, ['Microsoft Yahei UI']),
+          textTheme: textTheme.applyFonts(null, ['Microsoft Yahei']),
           primaryTextTheme:
-              primaryTextTheme.applyFonts(null, ['Microsoft Yahei UI']),
+              primaryTextTheme.applyFonts(null, ['Microsoft Yahei']),
         );
       }
       return this;
