@@ -931,6 +931,46 @@ class S {
       args: [],
     );
   }
+
+  /// `Loading...`
+  String get loading {
+    return Intl.message(
+      'Loading...',
+      name: 'loading',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Added to playlist successfully`
+  String get addedToPlaylistSuccess {
+    return Intl.message(
+      'Added to playlist successfully',
+      name: 'addedToPlaylistSuccess',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Clear Play History`
+  String get clearPlayHistory {
+    return Intl.message(
+      'Clear Play History',
+      name: 'clearPlayHistory',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No play history`
+  String get noPlayHistory {
+    return Intl.message(
+      'No play history',
+      name: 'noPlayHistory',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

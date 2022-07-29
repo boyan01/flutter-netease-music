@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../media/tracks/tracks_player.dart';
 import '../model/persistence_player_state.dart';
+import 'play_history_provider.dart';
 import 'preference_provider.dart';
 
 final playerStateProvider =
@@ -32,6 +33,17 @@ final playerStateProvider =
         },
         fireImmediately: false,
       );
+    });
+
+    var lastPlayingTrack = player.current;
+    player.addListener((state) {
+      final currentPlaying = state.playingTrack;
+      if (currentPlaying != lastPlayingTrack) {
+        lastPlayingTrack = currentPlaying;
+        if (currentPlaying != null) {
+          ref.read(playHistoryProvider.notifier).onTrackPlayed(currentPlaying);
+        }
+      }
     });
 
     return player;

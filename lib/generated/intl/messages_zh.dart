@@ -43,11 +43,14 @@ class MessageLookup extends MessageLookupByLibrary {
         "about": MessageLookupByLibrary.simpleMessage("关于"),
         "addToPlaylist": MessageLookupByLibrary.simpleMessage("加入歌单"),
         "addToPlaylistFailed": MessageLookupByLibrary.simpleMessage("加入歌单失败"),
+        "addedToPlaylistSuccess":
+            MessageLookupByLibrary.simpleMessage("已添加到播放列表"),
         "album": MessageLookupByLibrary.simpleMessage("专辑"),
         "albumShareContent": m0,
         "alreadyBuy": MessageLookupByLibrary.simpleMessage("收藏和赞"),
         "artistAlbumCount": m1,
         "artists": MessageLookupByLibrary.simpleMessage("歌手"),
+        "clearPlayHistory": MessageLookupByLibrary.simpleMessage("清空列表"),
         "cloudMusic": MessageLookupByLibrary.simpleMessage("云盘"),
         "cloudMusicFileDropDescription":
             MessageLookupByLibrary.simpleMessage("将音乐文件拖放到这里进行上传"),
@@ -56,7 +59,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "copyRightOverlay":
             MessageLookupByLibrary.simpleMessage("只用作个人学习研究，禁止用于商业及非法用途"),
         "createdDate": m2,
-        "createdSongList": MessageLookupByLibrary.simpleMessage("创建歌单"),
+        "createdSongList": MessageLookupByLibrary.simpleMessage("创建的歌单"),
         "currentPlaying": MessageLookupByLibrary.simpleMessage("当前播放"),
         "dailyRecommend": MessageLookupByLibrary.simpleMessage("每日推荐"),
         "dailyRecommendDescription":
@@ -69,7 +72,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "failedToDelete": MessageLookupByLibrary.simpleMessage("删除失败"),
         "failedToLoad": MessageLookupByLibrary.simpleMessage("加载失败"),
         "failedToPlayMusic": MessageLookupByLibrary.simpleMessage("播放音乐失败"),
-        "favoriteSongList": MessageLookupByLibrary.simpleMessage("收藏歌单"),
+        "favoriteSongList": MessageLookupByLibrary.simpleMessage("收藏的歌单"),
         "friends": MessageLookupByLibrary.simpleMessage("我的好友"),
         "functionDescription": MessageLookupByLibrary.simpleMessage("功能描述"),
         "hideCopyrightOverlay": MessageLookupByLibrary.simpleMessage("隐藏版权浮层"),
@@ -77,6 +80,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "latestPlayHistory": MessageLookupByLibrary.simpleMessage("最近播放"),
         "library": MessageLookupByLibrary.simpleMessage("音乐库"),
         "likeMusic": MessageLookupByLibrary.simpleMessage("喜欢歌曲"),
+        "loading": MessageLookupByLibrary.simpleMessage("加载中..."),
         "localMusic": MessageLookupByLibrary.simpleMessage("本地音乐"),
         "login": MessageLookupByLibrary.simpleMessage("立即登录"),
         "loginWithPhone": MessageLookupByLibrary.simpleMessage("手机号登录"),
@@ -88,6 +92,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "nextStep": MessageLookupByLibrary.simpleMessage("下一步"),
         "noLyric": MessageLookupByLibrary.simpleMessage("暂无歌词"),
         "noMusic": MessageLookupByLibrary.simpleMessage("暂无音乐"),
+        "noPlayHistory": MessageLookupByLibrary.simpleMessage("暂无播放记录"),
         "pause": MessageLookupByLibrary.simpleMessage("暂停"),
         "personalFM": MessageLookupByLibrary.simpleMessage("私人FM"),
         "personalFmPlaying": MessageLookupByLibrary.simpleMessage("私人FM播放中"),

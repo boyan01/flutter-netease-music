@@ -3,9 +3,12 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 
 import 'data/playlist_detail.dart';
+import 'data/track.dart';
 import 'database.dart';
 
 LocalData neteaseLocalData = LocalData._();
+
+const String _playHistoryKey = 'play_history';
 
 class LocalData {
   LocalData._();
@@ -89,10 +92,24 @@ class LocalData {
   }
 
   //TODO 添加分页加载逻辑
-  Future updatePlaylistDetail(PlaylistDetail playlistDetail) {
+  Future<void> updatePlaylistDetail(PlaylistDetail playlistDetail) {
     return _put(
       playlistDetail.toJson(),
       'playlist_detail_${playlistDetail.id}',
     );
+  }
+
+  Future<List<Track>> getPlayHistory() async {
+    final data = await get<List<Map<String, dynamic>>>(_playHistoryKey);
+    if (data == null) {
+      return const [];
+    }
+    final result =
+        data.cast<Map<String, dynamic>>().map(Track.fromJson).toList();
+    return result;
+  }
+
+  Future<void> updatePlayHistory(List<Track> list) {
+    return _put(list.map((t) => t.toJson()).toList(), _playHistoryKey);
   }
 }

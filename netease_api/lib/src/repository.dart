@@ -308,11 +308,10 @@ class Repository {
   ) async {
     assert(musicIds.isNotEmpty);
 
-    final result = await doRequest(
-        'https://music.163.com/weapi/playlist/manipulate/tracks', {
+    final result = await doRequest('/playlist/tracks', {
       'op': operation == PlaylistOperation.add ? 'add' : 'del',
       'pid': playlistId,
-      'trackIds': "[${musicIds.join(",")}]"
+      'tracks': musicIds.join(',')
     });
     return result.isValue;
   }

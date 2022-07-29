@@ -15,6 +15,7 @@ import 'pages/splash/page_splash.dart';
 import 'providers/preference_provider.dart';
 import 'repository.dart';
 import 'utils/callback_window_listener.dart';
+import 'utils/platform_configuration.dart';
 import 'utils/system/system_fonts.dart';
 
 void main() async {
@@ -58,8 +59,7 @@ Future<void> _initialDesktop(SharedPreferences preferences) async {
     final size = preferences.getWindowSize();
     final windowOptions = WindowOptions(
       size: size ?? const Size(1080, 720),
-      center: true,
-      minimumSize: const Size(960, 720),
+      minimumSize: windowMinSize,
       backgroundColor: Colors.transparent,
       skipTaskbar: false,
       titleBarStyle: TitleBarStyle.hidden,

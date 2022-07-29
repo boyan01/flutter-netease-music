@@ -30,7 +30,7 @@ dependencies:
   music_player:
     git:
       url: https://github.com/boyan01/flutter-music-player.git
-      ref: fd425d55d43f121b5ab3bc9ab878e20448fe3e61
+      ref: 19e2b5ee6a1327f5a599edfe10f6d4207bc4102b
   scrollable_positioned_list: ^0.3.2
   hive: ^2.0.4
   flutter_hooks: ^0.18.0
@@ -42,6 +42,7 @@ dependencies:
   riverpod: ^1.0.3
   flutter_riverpod: ^1.0.3
   hooks_riverpod: ^1.0.3
+  dart_vlc: ^0.3.0
   collection: ^1.15.0
   window_manager: ^0.2.5
   lpinyin: ^2.0.3
@@ -52,7 +53,7 @@ dependencies:
   dotted_border: ^2.0.0+2
   meta: ^1.7.0
   lychee_player: ^0.1.0
-  fluentui_system_icons: ^1.1.170
+  fluentui_system_icons: ^1.1.175
 
 dev_dependencies:
   flutter_test:

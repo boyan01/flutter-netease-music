@@ -152,3 +152,7 @@ class NavigationTargetSearchAlbumResult extends NavigationTarget {
 class NavigationTargetCloudMusic extends NavigationTarget {
   NavigationTargetCloudMusic();
 }
+
+class NavigationTargetPlayHistory extends NavigationTarget {
+  NavigationTargetPlayHistory();
+}

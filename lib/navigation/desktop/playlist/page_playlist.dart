@@ -11,6 +11,7 @@ import '../../../component/hooks.dart';
 import '../../../component/utils/scroll_controller.dart';
 import '../../../extension.dart';
 import '../../../material.dart';
+import '../../../providers/account_provider.dart';
 import '../../../providers/navigator_provider.dart';
 import '../../../providers/player_provider.dart';
 import '../../../providers/playlist_detail_provider.dart';
@@ -68,6 +69,7 @@ class _PlaylistDetailBody extends HookConsumerWidget {
         skipAccompaniment: ref.watch(
           settingStateProvider.select((value) => value.skipAccompaniment),
         ),
+        userId: ref.read(userIdProvider),
         child: CustomScrollView(
           controller: AppScrollController(),
           slivers: [

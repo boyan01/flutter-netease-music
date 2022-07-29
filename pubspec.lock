@@ -36,6 +36,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.9.0"
+  audio_video_progress_bar:
+    dependency: transitive
+    description:
+      name: audio_video_progress_bar
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.10.0"
   boolean_selector:
     dependency: transitive
     description:
@@ -183,6 +190,20 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.2.3"
+  dart_vlc:
+    dependency: "direct main"
+    description:
+      name: dart_vlc
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.3.0"
+  dart_vlc_ffi:
+    dependency: transitive
+    description:
+      name: dart_vlc_ffi
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.8"
   desktop_drop:
     dependency: "direct main"
     description:
@@ -266,7 +287,7 @@ packages:
       name: fluentui_system_icons
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.1.170"
+    version: "1.1.176"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -291,6 +312,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_native_view:
+    dependency: transitive
+    description:
+      name: flutter_native_view
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.2"
   flutter_riverpod:
     dependency: "direct main"
     description:
@@ -461,8 +489,8 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: fd425d55d43f121b5ab3bc9ab878e20448fe3e61
-      resolved-ref: fd425d55d43f121b5ab3bc9ab878e20448fe3e61
+      ref: "19e2b5ee6a1327f5a599edfe10f6d4207bc4102b"
+      resolved-ref: "19e2b5ee6a1327f5a599edfe10f6d4207bc4102b"
       url: "https://github.com/boyan01/flutter-music-player.git"
     source: git
     version: "0.0.1"
@@ -477,8 +505,8 @@ packages:
     dependency: transitive
     description:
       path: "."
-      ref: "8bdb36f3efda3cefa57efc8e2190c188d9a05a86"
-      resolved-ref: "8bdb36f3efda3cefa57efc8e2190c188d9a05a86"
+      ref: f32aecf83490d754f620824827fb4b7b243788b7
+      resolved-ref: f32aecf83490d754f620824827fb4b7b243788b7
       url: "https://github.com/boyan01/NeteaseCloudMusicApi.git"
     source: git
     version: "1.0.0"
@@ -566,13 +594,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.7"
-  pedantic:
-    dependency: transitive
-    description:
-      name: pedantic
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.11.1"
   platform:
     dependency: transitive
     description:

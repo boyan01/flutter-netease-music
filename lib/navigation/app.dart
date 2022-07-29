@@ -6,6 +6,7 @@ import '../extension.dart';
 import '../material.dart';
 import '../providers/navigator_provider.dart';
 import '../providers/settings_provider.dart';
+import '../utils/platform_configuration.dart';
 import 'desktop/home_window.dart';
 import 'mobile/mobile_window.dart';
 
@@ -41,7 +42,7 @@ class QuietApp extends ConsumerWidget {
       home: home,
       debugShowCheckedModeBanner: false,
       builder: (context, child) {
-        return CopyRightOverlay(child: child);
+        return AppPlatformConfiguration(child: CopyRightOverlay(child: child));
       },
     );
   }

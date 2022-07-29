@@ -86,5 +86,9 @@
   "personalProfile": "Personal profile",
   "topSongs": "Top Songs",
   "showAllHotSongs": "Show all hot songs >",
-  "pleaseInputPassword": "Please input password"
+  "pleaseInputPassword": "Please input password",
+  "loading": "Loading...",
+  "addedToPlaylistSuccess": "Added to playlist successfully",
+  "clearPlayHistory": "Clear Play History",
+  "noPlayHistory": "No play history"
 }

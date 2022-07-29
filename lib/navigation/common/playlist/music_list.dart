@@ -7,6 +7,7 @@ import '../../../media/tracks/track_list.dart';
 import '../../../media/tracks/tracks_player.dart';
 import '../../../providers/navigator_provider.dart';
 import '../../../providers/player_provider.dart';
+import '../../../providers/playlist_detail_provider.dart';
 import '../../../repository.dart';
 import '../../mobile/playlists/dialog_selector.dart';
 import '../navigation_target.dart';
@@ -48,6 +49,8 @@ extension _TracksPlayer on TracksPlayer {
   }
 }
 
+typedef TrackDeleteHandler = Future<void> Function(Reader read, Track track);
+
 class TrackTileContainer extends StatelessWidget {
   factory TrackTileContainer.album({
     required Album album,
@@ -58,7 +61,7 @@ class TrackTileContainer extends StatelessWidget {
     final id = 'album_${album.id}';
     return TrackTileContainer._private(
       (track) => player.playWithList(id, tracks, track: track),
-      (track) => throw UnimplementedError('album not support delete track.'),
+      null,
       id: id,
       tracks: tracks,
       child: child,
@@ -73,7 +76,7 @@ class TrackTileContainer extends StatelessWidget {
   }) {
     return TrackTileContainer._private(
       (track) => player.playWithList(id, tracks, track: track),
-      (track) => throw UnimplementedError('$id not support delete track.'),
+      null,
       id: id,
       tracks: tracks,
       child: child,
@@ -114,8 +117,10 @@ class TrackTileContainer extends StatelessWidget {
     required Widget child,
     required TracksPlayer player,
     required bool skipAccompaniment,
+    int? userId,
   }) {
     final id = 'playlist_${playlist.id}';
+    final isUserPlaylist = userId != null && playlist.creator.userId == userId;
     return TrackTileContainer._private(
       (track) {
         final List<Track> tracks;
@@ -128,19 +133,25 @@ class TrackTileContainer extends StatelessWidget {
         }
         return player.playWithList(id, tracks, track: track);
       },
-      (track) {
-        // TODO: remove track
-      },
+      isUserPlaylist
+          ? (read, track) async {
+              await read(playlistDetailProvider(playlist.id).notifier)
+                  .removeTrack(track);
+            }
+          : null,
       tracks: playlist.tracks,
       id: id,
       child: child,
     );
   }
 
+  /// Difference [TrackTileContainer.trackList]
+  /// Track item will only be insert to current playing list.
   factory TrackTileContainer.simpleList({
     required List<Track> tracks,
     required Widget child,
     required TracksPlayer player,
+    TrackDeleteHandler? onDelete,
   }) {
     return TrackTileContainer._private(
       (track) {
@@ -157,8 +168,7 @@ class TrackTileContainer extends StatelessWidget {
           return PlayResult.success;
         }
       },
-      (track) =>
-          throw UnimplementedError('simpleList not support delete track.'),
+      onDelete,
       tracks: tracks,
       id: '',
       child: child,
@@ -197,14 +207,29 @@ class TrackTileContainer extends StatelessWidget {
     return container.id;
   }
 
-  static void deleteTrack(BuildContext context, Track track) {
+  static Future<void> deleteTrack(
+    BuildContext context,
+    Reader reader,
+    Track track,
+  ) {
     final container =
         context.findAncestorWidgetOfExactType<TrackTileContainer>();
     assert(container != null, 'container is null');
     if (container == null) {
-      return;
+      return Future.value();
     }
-    container._deleteMusic(track);
+    assert(container._deleteMusic != null, 'deleteMusic is null');
+    return container._deleteMusic?.call(reader, track) ?? Future.value();
+  }
+
+  static bool canDeleteTrack(BuildContext context) {
+    final container =
+        context.findAncestorWidgetOfExactType<TrackTileContainer>();
+    assert(container != null, 'container is null');
+    if (container == null) {
+      return false;
+    }
+    return container._deleteMusic != null;
   }
 
   final List<Track> tracks;
@@ -215,7 +240,7 @@ class TrackTileContainer extends StatelessWidget {
 
   final PlayResult Function(Track?) _playbackMusic;
 
-  final void Function(Track) _deleteMusic;
+  final TrackDeleteHandler? _deleteMusic;
 
   @override
   Widget build(BuildContext context) => child;

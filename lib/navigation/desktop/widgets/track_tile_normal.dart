@@ -1,14 +1,20 @@
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:overlay_support/overlay_support.dart';
 
 import '../../../extension.dart';
+import '../../../providers/account_provider.dart';
 import '../../../providers/navigator_provider.dart';
 import '../../../providers/player_provider.dart';
+import '../../../providers/playlist_detail_provider.dart';
+import '../../../providers/user_playlists_provider.dart';
 import '../../../repository.dart';
 import '../../common/like_button.dart';
 import '../../common/navigation_target.dart';
 import '../../common/playlist/music_list.dart';
+import 'context_menu.dart';
 import 'highlight_clickable_text.dart';
 
 class TrackTableContainer extends StatelessWidget {
@@ -249,7 +255,7 @@ class TrackTableHeader extends StatelessWidget with PreferredSizeWidget {
   Size get preferredSize => const Size.fromHeight(40);
 }
 
-class TrackTile extends ConsumerWidget {
+class TrackTile extends HookConsumerWidget {
   const TrackTile({
     super.key,
     required this.track,
@@ -263,122 +269,157 @@ class TrackTile extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final configuration = _TrackTableConfiguration.of(context);
+    final highlighting = useState(false);
+    final isMounted = useIsMounted();
     return SizedBox(
       height: 36,
       child: Material(
         color: index.isEven
             ? context.colorScheme.background
             : context.colorScheme.primary.withOpacity(0.04),
-        child: InkWell(
-          onTap: () {
-            if (track.type == TrackType.noCopyright) {
-              toast(context.strings.trackNoCopyright);
-              return;
-            }
-            TrackTileContainer.playTrack(context, track);
-          },
-          child: DefaultTextStyle(
-            style: const TextStyle(),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            child: Row(
-              children: [
-                SizedBox(
-                  width: 40,
-                  child: Align(
-                    alignment: AlignmentDirectional.centerEnd,
-                    child: _IndexOrPlayIcon(index: index, track: track),
-                  ),
-                ),
-                const SizedBox(width: 10),
-                SizedBox(
-                  width: 20,
-                  child: LikeButton(
-                    music: track,
-                    iconSize: 16,
-                    padding: const EdgeInsets.all(2),
-                    likedColor: context.colorScheme.primary,
-                    color: context.textTheme.caption?.color,
-                  ),
-                ),
-                const SizedBox(width: 10),
-                SizedBox(
-                  width: configuration.nameWidth,
-                  child: Align(
-                    alignment: AlignmentDirectional.centerStart,
-                    child: Text(
-                      track.name,
-                      overflow: TextOverflow.ellipsis,
-                      style: context.textTheme.bodyMedium?.copyWith(
-                        fontSize: 14,
-                        color: track.type == TrackType.noCopyright
-                            ? context.theme.disabledColor
-                            : null,
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  width: configuration.artistWidth,
-                  child: Align(
-                    alignment: AlignmentDirectional.centerStart,
-                    child: MouseHighlightText(
-                      style: context.textTheme.caption,
-                      highlightStyle: context.textTheme.caption!.copyWith(
-                        color: context.textTheme.bodyMedium!.color,
-                      ),
-                      children: track.artists
-                          .map(
-                            (artist) => MouseHighlightSpan.highlight(
-                              text: artist.name,
-                              onTap: () {
-                                if (artist.id == 0) {
-                                  return;
-                                }
-                                ref.read(navigatorProvider.notifier).navigate(
-                                      NavigationTargetArtistDetail(
-                                        artist.id,
-                                      ),
-                                    );
-                              },
-                            ),
+        child: ColoredBox(
+          color: highlighting.value
+              ? context.theme.highlightColor
+              : Colors.transparent,
+          child: GestureDetector(
+            onSecondaryTapUp: (details) async {
+              final parentContext = context;
+              highlighting.value = true;
+              final entry = showOverlayAtPosition(
+                globalPosition: details.globalPosition,
+                builder: (context) => _TrackItemMenus(
+                  track: track,
+                  playTrack: () =>
+                      TrackTileContainer.playTrack(parentContext, track),
+                  deleteTrack: TrackTileContainer.canDeleteTrack(parentContext)
+                      ? () => TrackTileContainer.deleteTrack(
+                            parentContext,
+                            ref.read,
+                            track,
                           )
-                          .separated(MouseHighlightSpan.normal(text: '/'))
-                          .toList(),
-                    ),
-                  ),
+                      : null,
                 ),
-                SizedBox(
-                  width: configuration.albumWidth,
-                  child: Align(
-                    alignment: AlignmentDirectional.centerStart,
-                    child: HighlightClickableText(
-                      text: track.album?.name ?? '',
-                      onTap: () {
-                        final albumId = track.album?.id;
-                        if (albumId == null) {
-                          return;
-                        }
-                        ref
-                            .read(navigatorProvider.notifier)
-                            .navigate(NavigationTargetAlbumDetail(albumId));
-                      },
-                      style: context.textTheme.caption,
-                      highlightStyle: context.textTheme.caption?.copyWith(
-                        color: context.textTheme.bodyMedium?.color,
+              );
+              await entry.dismissed;
+              if (!isMounted()) {
+                return;
+              }
+              highlighting.value = false;
+            },
+            child: InkWell(
+              onTap: () {
+                if (track.type == TrackType.noCopyright) {
+                  toast(context.strings.trackNoCopyright);
+                  return;
+                }
+                TrackTileContainer.playTrack(context, track);
+              },
+              child: DefaultTextStyle(
+                style: const TextStyle(),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                child: Row(
+                  children: [
+                    SizedBox(
+                      width: 40,
+                      child: Align(
+                        alignment: AlignmentDirectional.centerEnd,
+                        child: _IndexOrPlayIcon(index: index, track: track),
                       ),
                     ),
-                  ),
+                    const SizedBox(width: 10),
+                    SizedBox(
+                      width: 20,
+                      child: LikeButton(
+                        music: track,
+                        iconSize: 16,
+                        padding: const EdgeInsets.all(2),
+                        likedColor: context.colorScheme.primary,
+                        color: context.textTheme.caption?.color,
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    SizedBox(
+                      width: configuration.nameWidth,
+                      child: Align(
+                        alignment: AlignmentDirectional.centerStart,
+                        child: Text(
+                          track.name,
+                          overflow: TextOverflow.ellipsis,
+                          style: context.textTheme.bodyMedium?.copyWith(
+                            fontSize: 14,
+                            color: track.type == TrackType.noCopyright
+                                ? context.theme.disabledColor
+                                : null,
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      width: configuration.artistWidth,
+                      child: Align(
+                        alignment: AlignmentDirectional.centerStart,
+                        child: MouseHighlightText(
+                          style: context.textTheme.caption,
+                          highlightStyle: context.textTheme.caption!.copyWith(
+                            color: context.textTheme.bodyMedium!.color,
+                          ),
+                          children: track.artists
+                              .map(
+                                (artist) => MouseHighlightSpan.highlight(
+                                  text: artist.name,
+                                  onTap: () {
+                                    if (artist.id == 0) {
+                                      return;
+                                    }
+                                    ref
+                                        .read(navigatorProvider.notifier)
+                                        .navigate(
+                                          NavigationTargetArtistDetail(
+                                            artist.id,
+                                          ),
+                                        );
+                                  },
+                                ),
+                              )
+                              .separated(MouseHighlightSpan.normal(text: '/'))
+                              .toList(),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      width: configuration.albumWidth,
+                      child: Align(
+                        alignment: AlignmentDirectional.centerStart,
+                        child: HighlightClickableText(
+                          text: track.album?.name ?? '',
+                          onTap: () {
+                            final albumId = track.album?.id;
+                            if (albumId == null) {
+                              return;
+                            }
+                            ref
+                                .read(navigatorProvider.notifier)
+                                .navigate(NavigationTargetAlbumDetail(albumId));
+                          },
+                          style: context.textTheme.caption,
+                          highlightStyle: context.textTheme.caption?.copyWith(
+                            color: context.textTheme.bodyMedium?.color,
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      width: configuration.durationWidth,
+                      child: Text(
+                        track.duration.timeStamp,
+                        style: context.textTheme.caption,
+                      ),
+                    ),
+                    const SizedBox(width: 20),
+                  ],
                 ),
-                SizedBox(
-                  width: configuration.durationWidth,
-                  child: Text(
-                    track.duration.timeStamp,
-                    style: context.textTheme.caption,
-                  ),
-                ),
-                const SizedBox(width: 20),
-              ],
+              ),
             ),
           ),
         ),
@@ -421,5 +462,110 @@ class _IndexOrPlayIcon extends ConsumerWidget {
         style: context.textTheme.caption,
       );
     }
+  }
+}
+
+class _TrackItemMenus extends ConsumerWidget {
+  const _TrackItemMenus({
+    super.key,
+    required this.track,
+    required this.playTrack,
+    required this.deleteTrack,
+  });
+
+  final Track track;
+  final VoidCallback playTrack;
+  final Future<void> Function()? deleteTrack;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final userId = ref.watch(userIdProvider);
+    return ContextMenuLayout(
+      children: [
+        ContextMenuItem(
+          title: Text(context.strings.play),
+          icon: const Icon(FluentIcons.play_circle_24_regular),
+          enable: track.type != TrackType.noCopyright,
+          onTap: playTrack,
+        ),
+        ContextMenuItem(
+          title: Text(context.strings.playInNext),
+          icon: const Icon(FluentIcons.arrow_forward_24_regular),
+          enable: track.type != TrackType.noCopyright,
+          onTap: () {
+            ref.read(playerProvider).insertToNext(track);
+          },
+        ),
+        if (userId != null)
+          ContextMenuItem(
+            title: Text(context.strings.addToPlaylist),
+            icon: const Icon(FluentIcons.album_add_24_regular),
+            subMenuBuilder: (context) => _AddToPlaylistSubMenu(track: track),
+          ),
+        if (deleteTrack != null)
+          ContextMenuItem(
+            title: Text(context.strings.delete),
+            icon: const Icon(FluentIcons.delete_24_regular),
+            onTap: deleteTrack,
+          ),
+      ],
+    );
+  }
+}
+
+class _AddToPlaylistSubMenu extends ConsumerWidget {
+  const _AddToPlaylistSubMenu({super.key, required this.track});
+
+  final Track track;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final userId = ref.read(userIdProvider);
+    assert(userId != null, 'userId is null');
+    final data = ref.watch(
+      userPlaylistsProvider(userId!).select(
+        (value) => value.whenData(
+          (value) => value.where((element) => element.creator.userId == userId),
+        ),
+      ),
+    );
+    return data.when(
+      data: (data) => ContextMenuLayout(
+        children: [
+          for (final playlist in data)
+            ContextMenuItem(
+              title: Text(playlist.name),
+              icon: const Icon(FluentIcons.music_note_1_24_regular),
+              onTap: () async {
+                try {
+                  final controller =
+                      ref.read(playlistDetailProvider(playlist.id).notifier);
+                  await controller.addTrack(track);
+                  toast(context.strings.addedToPlaylistSuccess);
+                } catch (error, stacktrace) {
+                  toast(context.formattedError(error));
+                  debugPrint('add to playlist failed: $error\n$stacktrace');
+                }
+              },
+            ),
+        ],
+      ),
+      error: (error, stacktrace) => ContextMenuLayout(
+        children: [
+          Text(context.formattedError(error)),
+        ],
+      ),
+      loading: () => ContextMenuLayout(
+        children: [
+          ContextMenuItem(
+            title: Text(context.strings.loading),
+            icon: const SizedBox.square(
+              dimension: 24,
+              child: CircularProgressIndicator(),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

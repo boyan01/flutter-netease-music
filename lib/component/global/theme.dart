@@ -1,7 +1,5 @@
-//网易红调色板
-import 'dart:io';
-
 import 'package:flutter/material.dart';
+
 import '../../utils/system/system_fonts.dart';
 
 const lightSwatch = MaterialColor(0xFFdd4237, {
@@ -37,7 +35,7 @@ ThemeData get quietDarkTheme {
           waitDuration: Duration(milliseconds: 1000),
         ),
       )
-      .applyAppFonts()
+      .withFallbackFonts()
       .applyCommon();
 }
 
@@ -58,7 +56,7 @@ ThemeData _buildTheme(Color primaryColor) {
           size: 24,
         ),
       )
-      .applyAppFonts()
+      .withFallbackFonts()
       .applyCommon();
 }
 
@@ -89,110 +87,6 @@ extension _ThemeExt on ThemeData {
           TargetPlatform.linux: ZoomPageTransitionsBuilder(),
           TargetPlatform.windows: ZoomPageTransitionsBuilder(),
         },
-      ),
-    );
-  }
-
-  ThemeData applyAppFonts() {
-    final fallbackFontFamily = getFallbackFontFamily();
-    if (fallbackFontFamily == null) {
-      if (Platform.isWindows) {
-        return copyWith(
-          textTheme: textTheme.applyFonts(null, ['Microsoft Yahei']),
-          primaryTextTheme:
-              primaryTextTheme.applyFonts(null, ['Microsoft Yahei']),
-        );
-      }
-      return this;
-    }
-    return _applyFonts(fontFamilyFallback: [fallbackFontFamily]);
-  }
-
-  ThemeData _applyFonts({
-    String? fontFamily,
-    List<String>? fontFamilyFallback,
-  }) {
-    if (fontFamily == null && fontFamilyFallback?.isEmpty == true) {
-      return this;
-    }
-    return copyWith(
-      textTheme: textTheme.applyFonts(
-        fontFamily,
-        fontFamilyFallback,
-      ),
-      primaryTextTheme: primaryTextTheme.applyFonts(
-        fontFamily,
-        fontFamilyFallback,
-      ),
-    );
-  }
-}
-
-extension _TextTheme on TextTheme {
-  TextTheme applyFonts(String? fontFamily, List<String>? fontFamilyFallback) {
-    if (fontFamily == null && fontFamilyFallback?.isEmpty == true) {
-      return this;
-    }
-    return copyWith(
-      displayLarge: displayLarge?.copyWith(
-        fontFamily: fontFamily,
-        fontFamilyFallback: fontFamilyFallback,
-      ),
-      displayMedium: displayMedium?.copyWith(
-        fontFamily: fontFamily,
-        fontFamilyFallback: fontFamilyFallback,
-      ),
-      displaySmall: displaySmall?.copyWith(
-        fontFamily: fontFamily,
-        fontFamilyFallback: fontFamilyFallback,
-      ),
-      headlineLarge: headlineLarge?.copyWith(
-        fontFamily: fontFamily,
-        fontFamilyFallback: fontFamilyFallback,
-      ),
-      headlineMedium: headlineMedium?.copyWith(
-        fontFamily: fontFamily,
-        fontFamilyFallback: fontFamilyFallback,
-      ),
-      headlineSmall: headlineSmall?.copyWith(
-        fontFamily: fontFamily,
-        fontFamilyFallback: fontFamilyFallback,
-      ),
-      titleLarge: titleLarge?.copyWith(
-        fontFamily: fontFamily,
-        fontFamilyFallback: fontFamilyFallback,
-      ),
-      titleMedium: titleMedium?.copyWith(
-        fontFamily: fontFamily,
-        fontFamilyFallback: fontFamilyFallback,
-      ),
-      titleSmall: titleSmall?.copyWith(
-        fontFamily: fontFamily,
-        fontFamilyFallback: fontFamilyFallback,
-      ),
-      bodyLarge: bodyLarge?.copyWith(
-        fontFamily: fontFamily,
-        fontFamilyFallback: fontFamilyFallback,
-      ),
-      bodyMedium: bodyMedium?.copyWith(
-        fontFamily: fontFamily,
-        fontFamilyFallback: fontFamilyFallback,
-      ),
-      bodySmall: bodySmall?.copyWith(
-        fontFamily: fontFamily,
-        fontFamilyFallback: fontFamilyFallback,
-      ),
-      labelLarge: labelLarge?.copyWith(
-        fontFamily: fontFamily,
-        fontFamilyFallback: fontFamilyFallback,
-      ),
-      labelMedium: labelMedium?.copyWith(
-        fontFamily: fontFamily,
-        fontFamilyFallback: fontFamilyFallback,
-      ),
-      labelSmall: labelSmall?.copyWith(
-        fontFamily: fontFamily,
-        fontFamilyFallback: fontFamilyFallback,
       ),
     );
   }
