@@ -3,12 +3,13 @@ import 'dart:io';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../model/persistence_player_state.dart';
 
+import '../../model/persistence_player_state.dart';
 import '../../repository/data/track.dart';
 import 'track_list.dart';
 import 'tracks_player_impl_lychee.dart';
 import 'tracks_player_impl_mobile.dart';
+import 'tracks_player_impl_vlc.dart';
 
 enum RepeatMode {
   /// Repeat all the tracks.
@@ -63,7 +64,10 @@ abstract class TracksPlayer extends StateNotifier<TracksPlayerState> {
         );
 
   factory TracksPlayer.platform() {
-    if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+    if (Platform.isWindows || Platform.isLinux) {
+      return TracksPlayerImplVlc();
+    }
+    if (Platform.isMacOS) {
       return TracksPlayerImplLychee();
     }
     return TracksPlayerImplMobile();
