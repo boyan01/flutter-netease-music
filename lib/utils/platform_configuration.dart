@@ -16,7 +16,7 @@ class AppPlatformConfiguration extends HookWidget {
     final devicePixelRatio = MediaQuery.of(context).devicePixelRatio;
     useEffect(
       () {
-        if (Platform.isMacOS || Platform.isLinux || Platform.isWindows) {
+        if (Platform.isMacOS || Platform.isWindows) {
           // update window min size when device pixel ratio changed.
           // when move window from screen(4k) to screen(2k), window size will be changed.
           // and window min size should be updated.
