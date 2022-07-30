@@ -3,10 +3,12 @@ import 'dart:async';
 import 'package:async/async.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../repository.dart';
+import 'repository_provider.dart';
 
 final userProvider =
-    StateNotifierProvider<UserAccount, User?>((ref) => UserAccount());
+    StateNotifierProvider<UserAccount, User?>((ref) => UserAccount(ref.read));
 
 final isLoginProvider = Provider<bool>((ref) {
   return ref.watch(userProvider) != null;
@@ -18,7 +20,9 @@ final userIdProvider = Provider<int?>((ref) {
 
 ///登录状态
 class UserAccount extends StateNotifier<User?> {
-  UserAccount() : super(null);
+  UserAccount(this.read) : super(null);
+
+  final Reader read;
 
   ///get user info from persistence data
   static Future<Map?> getPersistenceUser() async {
@@ -32,17 +36,30 @@ class UserAccount extends StateNotifier<User?> {
     if (result.isValue) {
       final json = result.asValue!.value;
       final userId = json['account']['id'] as int;
-
-      final userDetailResult = await neteaseRepository!.getUserDetail(userId);
-      if (userDetailResult.isError) {
-        final error = userDetailResult.asError!;
-        debugPrint('error : ${error.error} ${error.stackTrace}');
-        return Result.error('can not get user detail.');
+      try {
+        await _updateLoginStatus(userId);
+      } catch (error, stacktrace) {
+        return Result.error(error, stacktrace);
       }
-      state = userDetailResult.asValue!.value;
-      neteaseLocalData[_persistenceKey] = state!.toJson();
     }
     return result;
+  }
+
+  Future<void> _updateLoginStatus(int userId) async {
+    final userDetailResult = await neteaseRepository!.getUserDetail(userId);
+    if (userDetailResult.isError) {
+      final error = userDetailResult.asError!;
+      debugPrint('error : ${error.error} ${error.stackTrace}');
+      throw Exception('can not get user detail.');
+    }
+    state = userDetailResult.asValue!.value;
+    neteaseLocalData[_persistenceKey] = state!.toJson();
+  }
+
+  Future<void> loginWithQrKey() async {
+    final result = await read(neteaseRepositoryProvider).getLoginStatus();
+    final userId = result['account']['id'] as int;
+    await _updateLoginStatus(userId);
   }
 
   void logout() {

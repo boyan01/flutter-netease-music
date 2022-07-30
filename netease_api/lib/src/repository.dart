@@ -91,6 +91,7 @@ class Repository {
   }
 
   Future<void> _saveCookies(List<Cookie> cookies) async {
+    debugPrint('save cookies: $cookies');
     final jar = await _cookieJar.future;
     await jar.saveFromResponse(Uri.parse('http://music.163.com'), cookies);
   }
@@ -103,12 +104,39 @@ class Repository {
     );
   }
 
+  Future<Result<Map>> loginQrKey() {
+    return doRequest('/login/qr/key');
+  }
+
+  /// 800: qrcode is expired
+  /// 801: wait for qrcode to be scanned
+  /// 802: qrcode is waiting for approval
+  /// 803: qrcode is approved
+  Future<int> loginQrCheck(String key) async {
+    try {
+      final ret =
+          await (await doRequest('/login/qr/check', {'key': key})).asFuture;
+      debugPrint('login qr check: $ret');
+    } on RequestError catch (error) {
+      if (error.code == 803) {
+        await _saveCookies(error.answer.cookie);
+      }
+      return error.code;
+    }
+    throw Exception('unknown error');
+  }
+
   ///刷新登陆状态
   ///返回结果：true 正常登陆状态
   ///         false 需要重新登陆
   Future<bool> refreshLogin() async {
     final result = await doRequest('/login/refresh');
     return result.isValue;
+  }
+
+  Future<Map> loginStatus() async {
+    final result = await doRequest('/login/status');
+    return result.asFuture;
   }
 
   ///登出,删除本地cookie信息
@@ -515,9 +543,21 @@ class Repository {
       }(),
     );
     if (map['code'] == _kCodeNeedLogin) {
-      return Result.error('需要登陆才能访问哦~');
+      return Result.error(
+        RequestError(
+          code: _kCodeNeedLogin,
+          message: '需要登录才能访问哦~',
+          answer: result,
+        ),
+      );
     } else if (map['code'] != _kCodeSuccess) {
-      return Result.error(map['msg'] ?? '请求失败了~');
+      return Result.error(
+        RequestError(
+          code: map['code'],
+          message: map['msg'] ?? map['message'] ?? '请求失败了~',
+          answer: result,
+        ),
+      );
     }
     return Result.value(map as Map<String, dynamic>);
   }

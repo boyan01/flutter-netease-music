@@ -504,11 +504,9 @@ packages:
   netease_music_api:
     dependency: transitive
     description:
-      path: "."
-      ref: f32aecf83490d754f620824827fb4b7b243788b7
-      resolved-ref: f32aecf83490d754f620824827fb4b7b243788b7
-      url: "https://github.com/boyan01/NeteaseCloudMusicApi.git"
-    source: git
+      path: "../NeteaseCloudMusicApi"
+      relative: true
+    source: path
     version: "1.0.0"
   overlay_support:
     dependency: "direct main"
@@ -622,6 +620,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.5.0"
+  pretty_qr_code:
+    dependency: "direct main"
+    description:
+      name: pretty_qr_code
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.2"
   process:
     dependency: transitive
     description:
@@ -643,6 +648,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.2.0"
+  qr:
+    dependency: transitive
+    description:
+      name: qr
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.1.0"
   riverpod:
     dependency: "direct main"
     description:

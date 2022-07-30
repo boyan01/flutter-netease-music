@@ -971,6 +971,46 @@ class S {
       args: [],
     );
   }
+
+  /// `Login via QR code`
+  String get loginViaQrCode {
+    return Intl.message(
+      'Login via QR code',
+      name: 'loginViaQrCode',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `scan QR code by Netease cloud music mobile app`
+  String get loginViaQrCodeWaitingScanDescription {
+    return Intl.message(
+      'scan QR code by Netease cloud music mobile app',
+      name: 'loginViaQrCodeWaitingScanDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please confirm login via QR code in Netease cloud music mobile app`
+  String get loginViaQrCodeWaitingConfirmDescription {
+    return Intl.message(
+      'Please confirm login via QR code in Netease cloud music mobile app',
+      name: 'loginViaQrCodeWaitingConfirmDescription',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `QR code expired`
+  String get qrCodeExpired {
+    return Intl.message(
+      'QR code expired',
+      name: 'qrCodeExpired',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

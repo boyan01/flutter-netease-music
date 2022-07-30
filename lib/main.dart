@@ -14,6 +14,7 @@ import 'media/tracks/tracks_player_impl_mobile.dart';
 import 'navigation/app.dart';
 import 'pages/splash/page_splash.dart';
 import 'providers/preference_provider.dart';
+import 'providers/repository_provider.dart';
 import 'repository.dart';
 import 'utils/callback_window_listener.dart';
 import 'utils/platform_configuration.dart';
@@ -22,7 +23,7 @@ import 'utils/system/system_fonts.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await loadFallbackFonts();
-  unawaited(NetworkRepository.initialize());
+  await NetworkRepository.initialize();
   final preferences = await SharedPreferences.getInstance();
   if (Platform.isLinux || Platform.isWindows) {
     await DartVLC.initialize();
@@ -33,6 +34,7 @@ void main() async {
       ProviderScope(
         overrides: [
           sharedPreferenceProvider.overrideWithValue(preferences),
+          neteaseRepositoryProvider.overrideWithValue(neteaseRepository!),
         ],
         child: PageSplash(
           futures: [

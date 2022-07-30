@@ -96,6 +96,14 @@ class MessageLookup extends MessageLookupByLibrary {
         "loading": MessageLookupByLibrary.simpleMessage("Loading..."),
         "localMusic": MessageLookupByLibrary.simpleMessage("Local Music"),
         "login": MessageLookupByLibrary.simpleMessage("Login"),
+        "loginViaQrCode":
+            MessageLookupByLibrary.simpleMessage("Login via QR code"),
+        "loginViaQrCodeWaitingConfirmDescription":
+            MessageLookupByLibrary.simpleMessage(
+                "Please confirm login via QR code in Netease cloud music mobile app"),
+        "loginViaQrCodeWaitingScanDescription":
+            MessageLookupByLibrary.simpleMessage(
+                "scan QR code by Netease cloud music mobile app"),
         "loginWithPhone":
             MessageLookupByLibrary.simpleMessage("login with phone"),
         "musicCountFormat": m3,
@@ -129,6 +137,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Please input password"),
         "projectDescription": MessageLookupByLibrary.simpleMessage(
             "OpenSource project https://github.com/boyan01/flutter-netease-music"),
+        "qrCodeExpired":
+            MessageLookupByLibrary.simpleMessage("QR code expired"),
         "recommendPlayLists":
             MessageLookupByLibrary.simpleMessage("Recommend PlayLists"),
         "search": MessageLookupByLibrary.simpleMessage("Search"),

@@ -18,3 +18,4 @@ export 'src/ao/user_detail.dart';
 export 'src/ao/user_playlist.dart';
 export 'src/comment_thread.dart';
 export 'src/repository.dart';
+export 'src/request_error.dart';

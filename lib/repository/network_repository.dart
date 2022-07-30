@@ -5,8 +5,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:netease_api/netease_api.dart' as api;
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
+
 import '../component/cache/cache.dart';
 import '../repository.dart';
+import 'data/login_qr_key_status.dart';
 import 'data/search_result.dart';
 
 export 'package:netease_api/netease_api.dart'
@@ -368,6 +370,29 @@ class NetworkRepository {
       tracks: value.data.map((e) => e.toTrack()).toList(),
     );
   }
+
+  Future<String> loginQrKey() async {
+    final ret = await _repository.loginQrKey();
+    final data = ret.asValue!.value;
+    return data['unikey'];
+  }
+
+  Future<LoginQrKeyStatus> checkLoginQrKey(String key) async {
+    final code = await _repository.loginQrCheck(key);
+    switch (code) {
+      case 800:
+        return LoginQrKeyStatus.expired;
+      case 801:
+        return LoginQrKeyStatus.waitingScan;
+      case 802:
+        return LoginQrKeyStatus.waitingConfirm;
+      case 803:
+        return LoginQrKeyStatus.confirmed;
+    }
+    throw Exception('unknown error');
+  }
+
+  Future<Map> getLoginStatus() => _repository.loginStatus();
 }
 
 // https://github.com/Binaryify/NeteaseCloudMusicApi/issues/899#issuecomment-680002883

@@ -83,6 +83,11 @@ class MessageLookup extends MessageLookupByLibrary {
         "loading": MessageLookupByLibrary.simpleMessage("加载中..."),
         "localMusic": MessageLookupByLibrary.simpleMessage("本地音乐"),
         "login": MessageLookupByLibrary.simpleMessage("立即登录"),
+        "loginViaQrCode": MessageLookupByLibrary.simpleMessage("扫码登录"),
+        "loginViaQrCodeWaitingConfirmDescription":
+            MessageLookupByLibrary.simpleMessage("在网易云音乐手机端确认登录"),
+        "loginViaQrCodeWaitingScanDescription":
+            MessageLookupByLibrary.simpleMessage("使用网易云音乐手机端扫码登录"),
         "loginWithPhone": MessageLookupByLibrary.simpleMessage("手机号登录"),
         "musicCountFormat": m3,
         "musicName": MessageLookupByLibrary.simpleMessage("音乐标题"),
@@ -111,6 +116,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "pleaseInputPassword": MessageLookupByLibrary.simpleMessage("请输入密码"),
         "projectDescription": MessageLookupByLibrary.simpleMessage(
             "开源项目 https://github.com/boyan01/flutter-netease-music"),
+        "qrCodeExpired": MessageLookupByLibrary.simpleMessage("二维码已过期"),
         "recommendPlayLists": MessageLookupByLibrary.simpleMessage("推荐歌单"),
         "search": MessageLookupByLibrary.simpleMessage("搜索"),
         "searchMusicResultCount": m7,

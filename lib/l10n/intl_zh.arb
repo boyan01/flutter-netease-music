@@ -90,5 +90,9 @@
   "loading": "加载中...",
   "addedToPlaylistSuccess": "已添加到播放列表",
   "clearPlayHistory": "清空列表",
-  "noPlayHistory": "暂无播放记录"
+  "noPlayHistory": "暂无播放记录",
+  "loginViaQrCode": "扫码登录",
+  "loginViaQrCodeWaitingScanDescription": "使用网易云音乐手机端扫码登录",
+  "loginViaQrCodeWaitingConfirmDescription": "在网易云音乐手机端确认登录",
+  "qrCodeExpired": "二维码已过期"
 }

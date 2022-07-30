@@ -90,5 +90,9 @@
   "loading": "Loading...",
   "addedToPlaylistSuccess": "Added to playlist successfully",
   "clearPlayHistory": "Clear Play History",
-  "noPlayHistory": "No play history"
+  "noPlayHistory": "No play history",
+  "loginViaQrCode": "Login via QR code",
+  "loginViaQrCodeWaitingScanDescription": "scan QR code by Netease cloud music mobile app",
+  "loginViaQrCodeWaitingConfirmDescription": "Please confirm login via QR code in Netease cloud music mobile app",
+  "qrCodeExpired": "QR code expired"
 }
