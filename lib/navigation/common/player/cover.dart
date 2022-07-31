@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+
 import '../../../media/tracks/tracks_player.dart';
 import '../../../providers/player_provider.dart';
 import '../../../repository/cached_image.dart';
@@ -109,7 +110,9 @@ class _AlbumCoverState extends ConsumerState<AlbumCover>
         setState(() {
           _coverTranslateX = 0;
           _current = widget.music;
+          _previousNextDirty = true;
           _invalidatePn();
+          _checkNeedleAndCoverStatus();
         });
       },
     );
