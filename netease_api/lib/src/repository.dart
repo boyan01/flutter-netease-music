@@ -91,7 +91,6 @@ class Repository {
   }
 
   Future<void> _saveCookies(List<Cookie> cookies) async {
-    debugPrint('save cookies: $cookies');
     final jar = await _cookieJar.future;
     await jar.saveFromResponse(Uri.parse('http://music.163.com'), cookies);
   }

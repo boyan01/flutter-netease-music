@@ -30,6 +30,7 @@ class UserAccount extends StateNotifier<User?> {
   }
 
   static const _persistenceKey = 'neteaseLoginUser';
+  static const _kLoginViaQrCode = 'loginViaQrCode';
 
   Future<Result<Map>> login(String? phone, String password) async {
     final result = await neteaseRepository!.login(phone, password);
@@ -59,6 +60,7 @@ class UserAccount extends StateNotifier<User?> {
   Future<void> loginWithQrKey() async {
     final result = await read(neteaseRepositoryProvider).getLoginStatus();
     final userId = result['account']['id'] as int;
+    neteaseLocalData[_kLoginViaQrCode] = true;
     await _updateLoginStatus(userId);
   }
 
@@ -77,24 +79,28 @@ class UserAccount extends StateNotifier<User?> {
         debugPrint('can not read user: $e');
         neteaseLocalData['neteaseLocalData'] = null;
       }
-      //访问api，刷新登陆状态
-      await neteaseRepository!.refreshLogin().then(
-        (login) async {
-          if (!login || state == null) {
-            logout();
-          } else {
-            // refresh user
-            final result = await neteaseRepository!.getUserDetail(userId!);
-            if (result.isValue) {
-              state = result.asValue!.value;
-              neteaseLocalData[_persistenceKey] = state!.toJson();
+      final isLoginViaQrCode =
+          (await neteaseLocalData[_kLoginViaQrCode]) == true;
+      if (!isLoginViaQrCode) {
+        //访问api，刷新登陆状态
+        await neteaseRepository!.refreshLogin().then(
+          (login) async {
+            if (!login || state == null) {
+              logout();
+            } else {
+              // refresh user
+              final result = await neteaseRepository!.getUserDetail(userId!);
+              if (result.isValue) {
+                state = result.asValue!.value;
+                neteaseLocalData[_persistenceKey] = state!.toJson();
+              }
             }
-          }
-        },
-        onError: (e) {
-          debugPrint('refresh login status failed \n $e');
-        },
-      );
+          },
+          onError: (e) {
+            debugPrint('refresh login status failed \n $e');
+          },
+        );
+      }
     }
   }
 
