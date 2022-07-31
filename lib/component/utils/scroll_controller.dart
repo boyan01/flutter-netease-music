@@ -4,8 +4,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
-AppScrollController useAppScrollController() {
-  final controller = useMemoized(AppScrollController.new);
+AppScrollController useAppScrollController({double initialScrollOffset = 0}) {
+  final controller = useMemoized(
+    () => AppScrollController(
+      initialScrollOffset: initialScrollOffset,
+    ),
+  );
   useEffect(
     () {
       return controller.dispose;
@@ -16,6 +20,8 @@ AppScrollController useAppScrollController() {
 }
 
 class AppScrollController extends ScrollController {
+  AppScrollController({super.initialScrollOffset});
+
   @override
   ScrollPosition createScrollPosition(
     ScrollPhysics physics,
