@@ -7,6 +7,7 @@ import 'package:window_manager/window_manager.dart';
 import '../../extension.dart';
 import '../../providers/navigator_provider.dart';
 import '../common/navigator.dart';
+import '../desktop/header_bar.dart';
 import 'widgets/bottom_bar.dart';
 
 class MobileWindow extends StatelessWidget {
@@ -54,23 +55,25 @@ class _MobileWindowOnDesktopWrapper extends HookConsumerWidget {
     return Column(
       children: [
         Material(
-          child: SizedBox(
-            height: 40,
-            child: Stack(
-              children: [
-                Row(
-                  children: [
-                    if (defaultTargetPlatform == TargetPlatform.macOS)
-                      const SizedBox(width: 40),
-                    BackButton(
-                      onPressed: () {
-                        ref.read(navigatorProvider.notifier).back();
-                      },
-                    ),
-                  ],
-                ),
-                const Center(child: Text('mobile')),
-              ],
+          child: MoveWindow(
+            child: SizedBox(
+              height: 40,
+              child: Stack(
+                children: [
+                  Row(
+                    children: [
+                      if (defaultTargetPlatform == TargetPlatform.macOS)
+                        const SizedBox(width: 40),
+                      BackButton(
+                        onPressed: () {
+                          ref.read(navigatorProvider.notifier).back();
+                        },
+                      ),
+                    ],
+                  ),
+                  const Center(child: Text('mobile')),
+                ],
+              ),
             ),
           ),
         ),

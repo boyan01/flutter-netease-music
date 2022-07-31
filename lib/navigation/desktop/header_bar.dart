@@ -33,13 +33,13 @@ class HeaderBar extends StatelessWidget {
           child: Row(
             children: [
               const SizedBox(width: 180, child: _HeaderNavigationButtons()),
-              const Expanded(child: _MoveWindow.expand()),
+              const Expanded(child: MoveWindow.expand()),
               const _SearchBar(),
-              const SizedBox(width: 20, child: _MoveWindow.expand()),
+              const SizedBox(width: 20, child: MoveWindow.expand()),
               const _ProfileWidget(),
-              const SizedBox(width: 10, child: _MoveWindow.expand()),
+              const SizedBox(width: 10, child: MoveWindow.expand()),
               const _SettingButton(),
-              const SizedBox(width: 20, child: _MoveWindow.expand()),
+              const SizedBox(width: 20, child: MoveWindow.expand()),
               if (defaultTargetPlatform == TargetPlatform.windows)
                 const _WindowCaptionButtonGroup(),
             ],
@@ -60,7 +60,7 @@ class _HeaderNavigationButtons extends ConsumerWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
-        const Expanded(child: _MoveWindow.expand()),
+        const Expanded(child: MoveWindow.expand()),
         IconButton(
           splashRadius: 20,
           mouseCursor: navigatorState.canBack
@@ -103,9 +103,9 @@ class _SearchBar extends HookConsumerWidget {
         ),
         child: Row(
           children: [
-            const SizedBox(width: 10, child: _MoveWindow.expand()),
+            const SizedBox(width: 10, child: MoveWindow.expand()),
             const Icon(Icons.search, size: 16),
-            const SizedBox(width: 4, child: _MoveWindow.expand()),
+            const SizedBox(width: 4, child: MoveWindow.expand()),
             Expanded(
               child: TextField(
                 cursorHeight: 12,
@@ -302,10 +302,10 @@ class _WindowButton extends StatelessWidget {
   }
 }
 
-class _MoveWindow extends StatelessWidget {
-  const _MoveWindow({super.key, required this.child});
+class MoveWindow extends StatelessWidget {
+  const MoveWindow({super.key, required this.child});
 
-  const _MoveWindow.expand() : child = const SizedBox.expand();
+  const MoveWindow.expand({super.key}) : child = const SizedBox.expand();
 
   final Widget child;
 
