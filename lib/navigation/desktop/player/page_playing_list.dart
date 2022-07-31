@@ -136,6 +136,11 @@ class _PlayingList extends HookConsumerWidget {
         return 0;
       }
 
+      final totalHeight = playingList.tracks.length * _kTrackItemHeight;
+      if (totalHeight - offset <= layoutHeight / 2) {
+        return totalHeight - layoutHeight;
+      }
+
       // ensure current track is in the middle of the list.
       return offset - layoutHeight / 2;
     });
