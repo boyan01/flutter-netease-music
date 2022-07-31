@@ -18,7 +18,7 @@ class PlayingPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final current = ref.read(playerStateProvider).playingTrack;
+    final current = ref.watch(playerStateProvider).playingTrack;
     if (current == null) {
       WidgetsBinding.instance.scheduleFrameCallback((_) {
         Navigator.of(context).pop();
@@ -157,24 +157,20 @@ class PlayerControllerBar extends ConsumerWidget {
   }
 }
 
-class _CenterSection extends StatefulWidget {
+final _isShowLyricProvider = StateProvider((ref) => false);
+
+class _CenterSection extends ConsumerWidget {
   const _CenterSection({super.key, required this.music});
 
   final Track music;
 
   @override
-  State<StatefulWidget> createState() => _CenterSectionState();
-}
-
-class _CenterSectionState extends State<_CenterSection> {
-  static bool _showLyric = false;
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final showLyric = ref.watch(_isShowLyricProvider);
     return Expanded(
       child: AnimatedCrossFade(
         crossFadeState:
-            _showLyric ? CrossFadeState.showSecond : CrossFadeState.showFirst,
+            showLyric ? CrossFadeState.showSecond : CrossFadeState.showFirst,
         layoutBuilder: (
           Widget topChild,
           Key topChildKey,
@@ -198,22 +194,18 @@ class _CenterSectionState extends State<_CenterSection> {
         duration: const Duration(milliseconds: 300),
         firstChild: GestureDetector(
           onTap: () {
-            setState(() {
-              _showLyric = !_showLyric;
-            });
+            ref.read(_isShowLyricProvider.notifier).state = !showLyric;
           },
-          child: AlbumCover(music: widget.music),
+          child: AlbumCover(music: music),
         ),
         secondChild: PlayingLyricView(
-          music: widget.music,
+          music: music,
           textStyle: Theme.of(context)
               .textTheme
               .bodyText2!
               .copyWith(height: 2, fontSize: 16, color: Colors.white),
           onTap: () {
-            setState(() {
-              _showLyric = !_showLyric;
-            });
+            ref.read(_isShowLyricProvider.notifier).state = !showLyric;
           },
         ),
       ),
