@@ -26,8 +26,8 @@ class DurationProgressBar extends ConsumerWidget {
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: PlayerProgressSlider(
           builder: (context, widget) {
-            final durationText = player.position?.timeStamp;
-            final positionText = player.duration?.timeStamp;
+            final durationText = player.duration?.timeStamp;
+            final positionText = player.position?.timeStamp;
             return Row(
               children: <Widget>[
                 Text(positionText ?? '00:00', style: theme.bodyText2),
