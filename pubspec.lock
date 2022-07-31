@@ -504,9 +504,11 @@ packages:
   netease_music_api:
     dependency: transitive
     description:
-      path: "../NeteaseCloudMusicApi"
-      relative: true
-    source: path
+      path: "."
+      ref: "47684bc8b75bf37ad3201993a9e3db0b5fe64ec3"
+      resolved-ref: "47684bc8b75bf37ad3201993a9e3db0b5fe64ec3"
+      url: "https://github.com/boyan01/NeteaseCloudMusicApi.git"
+    source: git
     version: "1.0.0"
   overlay_support:
     dependency: "direct main"

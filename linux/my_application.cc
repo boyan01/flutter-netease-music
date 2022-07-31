@@ -47,10 +47,10 @@ static void my_application_activate(GApplication *application) {
     gtk_window_set_title(window, "quiet");
   }
 
-  gtk_window_set_default_size(window, 960, 720);
+  gtk_window_set_default_size(window, 960, 750);
   GdkGeometry geometry;
   geometry.min_width = 960;
-  geometry.min_height = 720;
+  geometry.min_height = 750;
   gtk_window_set_geometry_hints(window, nullptr, &geometry, GdkWindowHints(GDK_HINT_MIN_SIZE));
   gtk_widget_show(GTK_WIDGET(window));
 

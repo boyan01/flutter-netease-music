@@ -74,6 +74,13 @@ Future<void> _initialDesktop(SharedPreferences preferences) async {
       await windowManager.show();
       await windowManager.focus();
     });
+  } else if (Platform.isLinux) {
+    final size = preferences.getWindowSize();
+    await windowManager.setSize(size ?? const Size(1080, 720));
+    await windowManager.center();
+  }
+
+  if (Platform.isWindows || Platform.isLinux) {
     windowManager.addListener(
       CallbackWindowListener(
         onWindowResizeCallback: () async {
