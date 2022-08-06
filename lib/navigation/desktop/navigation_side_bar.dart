@@ -15,7 +15,7 @@ class NavigationSideBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: context.colorScheme.surface,
+      color: context.colorScheme.surfaceWithElevation(1),
       shadowColor: Colors.transparent,
       elevation: 5,
       child: CustomScrollView(

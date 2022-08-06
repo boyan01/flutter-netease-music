@@ -78,7 +78,7 @@ class _UserPlaylist extends HookWidget {
     final createdExpanded = useState(true);
     final subscribedExpanded = useState(true);
 
-    final backgroundColor = context.colorScheme.surfaceWithElevation(5);
+    final backgroundColor = context.colorScheme.surfaceWithElevation(1);
 
     return SliverToBoxAdapter(
       child: ExpansionPanelList(
