@@ -298,7 +298,7 @@ class _OverlappedActionButtons extends StatelessWidget {
                         Container(
                           width: 1,
                           height: 24,
-                          color: context.theme.dividerColor,
+                          color: context.colorScheme.divider,
                         ),
                       )
                       .toList(),

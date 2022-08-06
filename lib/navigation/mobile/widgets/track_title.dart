@@ -50,7 +50,7 @@ class TrackTile extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                     style: context.textTheme.bodyMedium?.copyWith(
                       color: track.type == TrackType.noCopyright
-                          ? context.theme.disabledColor
+                          ? context.colorScheme.textDisabled
                           : null,
                     ),
                   ),

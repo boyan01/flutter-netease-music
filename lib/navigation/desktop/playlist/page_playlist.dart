@@ -342,7 +342,7 @@ class _PlaylistSearchBox extends StatelessWidget {
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(32),
             borderSide: BorderSide(
-              color: context.colorScheme.onBackground.withOpacity(0.5),
+              color: context.colorScheme.textPrimary.withOpacity(0.5),
             ),
           ),
           hintText: context.strings.searchPlaylistSongs,

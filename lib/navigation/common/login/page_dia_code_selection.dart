@@ -177,7 +177,7 @@ class _AzSelectionOverlay extends StatelessWidget {
         height: 80,
         width: 80,
         child: Material(
-          color: context.theme.dividerColor,
+          color: context.colorScheme.divider,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
           child: Center(
             child: Text(

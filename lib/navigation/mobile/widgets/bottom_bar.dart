@@ -289,7 +289,7 @@ class HomeBottomNavigationBar extends ConsumerWidget {
         (element) => element == currentTab.runtimeType,
       ),
       selectedItemColor: context.colorScheme.primary,
-      unselectedItemColor: context.colorScheme.onBackground,
+      unselectedItemColor: context.colorScheme.textPrimary,
       onTap: (index) {
         final NavigationTarget target;
         switch (index) {

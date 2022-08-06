@@ -97,7 +97,7 @@ class _SearchBar extends HookConsumerWidget {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(32),
           border: Border.all(
-            color: context.colorScheme.onBackground.withOpacity(0.5),
+            color: context.colorScheme.textPrimary.withOpacity(0.5),
           ),
           color: context.colorScheme.surface,
         ),
@@ -146,7 +146,7 @@ class _ProfileWidget extends HookConsumerWidget {
           const SizedBox(width: 10),
           Text(
             context.strings.login,
-            style: context.theme.textTheme.caption?.copyWith(
+            style: context.textTheme.caption?.copyWith(
               fontSize: 14,
             ),
           ),
@@ -167,7 +167,7 @@ class _ProfileWidget extends HookConsumerWidget {
             constraints: const BoxConstraints(maxWidth: 160),
             child: Text(
               user.nickname,
-              style: context.theme.textTheme.bodyMedium?.copyWith(
+              style: context.textTheme.bodyMedium?.copyWith(
                 fontSize: 14,
               ),
               overflow: TextOverflow.ellipsis,

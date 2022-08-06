@@ -16,7 +16,7 @@ class PlayingOperationBar extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final iconColor = this.iconColor ?? context.theme.primaryIconTheme.color;
+    final iconColor = this.iconColor ?? context.colorScheme.onPrimary;
     final music = ref.watch(playingTrackProvider)!;
 
     return Row(

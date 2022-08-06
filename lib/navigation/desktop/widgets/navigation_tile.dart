@@ -29,7 +29,7 @@ class NavigationTile extends StatelessWidget {
           height: 40,
           decoration: BoxDecoration(
             color: isSelected
-                ? context.colorScheme.onSurface.withOpacity(0.1)
+                ? context.colorScheme.textPrimary.withOpacity(0.1)
                 : null,
             borderRadius: BorderRadius.circular(8),
           ),
@@ -43,7 +43,7 @@ class NavigationTile extends StatelessWidget {
               const SizedBox(width: 8),
               Expanded(
                 child: DefaultTextStyle.merge(
-                  style: context.theme.textTheme.bodyMedium?.copyWith(
+                  style: context.textTheme.bodyMedium?.copyWith(
                     fontWeight:
                         isSelected ? FontWeight.bold : FontWeight.normal,
                     fontSize: 14,
@@ -69,7 +69,7 @@ class NavigationTitle extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(left: 16, right: 20, top: 12, bottom: 8),
-      child: Text(title, style: context.theme.textTheme.caption),
+      child: Text(title, style: context.textTheme.caption),
     );
   }
 }

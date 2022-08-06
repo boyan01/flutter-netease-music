@@ -171,7 +171,7 @@ class _Box extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: context.theme.colorScheme.onBackground.withOpacity(0.05),
+      color: context.colorScheme.textPrimary.withOpacity(0.05),
       borderRadius: BorderRadius.circular(4),
       child: Padding(
         padding: padding,

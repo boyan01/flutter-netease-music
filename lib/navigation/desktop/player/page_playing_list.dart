@@ -190,7 +190,7 @@ class _PlayingTrackItem extends HookConsumerWidget {
       height: _kTrackItemHeight,
       child: Material(
         color:
-            isSelected.value ? context.theme.highlightColor : backgroundColor,
+            isSelected.value ? context.colorScheme.highlight : backgroundColor,
         child: GestureDetector(
           onSecondaryTapUp: (details) async {
             isSelected.value = true;
@@ -246,7 +246,7 @@ class _PlayingTrackItem extends HookConsumerWidget {
                     overflow: TextOverflow.ellipsis,
                     style: context.textTheme.bodyMedium?.copyWith(
                       color: track.type == TrackType.noCopyright
-                          ? context.theme.disabledColor
+                          ? context.colorScheme.textDisabled
                           : isCurrentPlaying
                               ? context.colorScheme.primary
                               : null,

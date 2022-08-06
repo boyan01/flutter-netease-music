@@ -52,7 +52,7 @@ class _LayoutCover extends ConsumerWidget {
             ),
           ),
           const Spacer(),
-          PlayingOperationBar(iconColor: context.iconTheme.color),
+          PlayingOperationBar(iconColor: context.colorScheme.textPrimary),
           const SizedBox(height: 60),
         ],
       ),

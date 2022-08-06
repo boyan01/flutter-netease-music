@@ -126,7 +126,7 @@ class _DropUploadArea extends HookConsumerWidget {
               child: Padding(
                 padding: const EdgeInsets.all(16),
                 child: DottedBorder(
-                  color: context.colorScheme.onSurface,
+                  color: context.colorScheme.textPrimary,
                   borderType: BorderType.RRect,
                   radius: const Radius.circular(8),
                   child: Center(

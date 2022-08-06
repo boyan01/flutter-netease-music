@@ -279,7 +279,7 @@ class TrackTile extends HookConsumerWidget {
             : context.colorScheme.primary.withOpacity(0.04),
         child: ColoredBox(
           color: highlighting.value
-              ? context.theme.highlightColor
+              ? context.colorScheme.highlight
               : Colors.transparent,
           child: GestureDetector(
             onSecondaryTapUp: (details) async {
@@ -349,7 +349,7 @@ class TrackTile extends HookConsumerWidget {
                           style: context.textTheme.bodyMedium?.copyWith(
                             fontSize: 14,
                             color: track.type == TrackType.noCopyright
-                                ? context.theme.disabledColor
+                                ? context.colorScheme.textDisabled
                                 : null,
                           ),
                         ),

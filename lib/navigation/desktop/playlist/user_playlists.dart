@@ -78,11 +78,7 @@ class _UserPlaylist extends HookWidget {
     final createdExpanded = useState(true);
     final subscribedExpanded = useState(true);
 
-    final backgroundColor = ElevationOverlay.applyOverlay(
-      context,
-      context.colorScheme.surface,
-      5,
-    );
+    final backgroundColor = context.colorScheme.surfaceWithElevation(5);
 
     return SliverToBoxAdapter(
       child: ExpansionPanelList(
@@ -149,7 +145,7 @@ class _PlaylistsHeader extends StatelessWidget {
           children: [
             const SizedBox(width: 8),
             Flexible(
-              child: Text(title, style: context.theme.textTheme.caption),
+              child: Text(title, style: context.textTheme.caption),
             ),
             const SizedBox(width: 4),
             AnimatedRotation(
@@ -157,7 +153,7 @@ class _PlaylistsHeader extends StatelessWidget {
               turns: expanded ? 0 : -0.25,
               child: Icon(
                 FluentIcons.chevron_down_16_regular,
-                color: context.colorScheme.onSurface,
+                color: context.colorScheme.textPrimary,
                 size: 16,
               ),
             ),

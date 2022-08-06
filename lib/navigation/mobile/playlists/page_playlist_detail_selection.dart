@@ -168,7 +168,7 @@ class PlaylistSelectionPageState extends State<PlaylistSelectionPage> {
                   showSimpleNotification(
                     Text(context.strings.failedToDelete),
                     leading: const Icon(Icons.error),
-                    background: context.theme.errorColor,
+                    background: context.colorScheme.primary,
                   );
                 }
               },

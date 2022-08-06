@@ -185,7 +185,7 @@ class _PhoneInput extends HookWidget {
 
   Color? _textColor(BuildContext context) {
     if (controller.text.isEmpty) {
-      return context.theme.disabledColor;
+      return context.colorScheme.textDisabled;
     }
     return null;
   }

@@ -193,7 +193,7 @@ class _FmControllerBar extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final color = context.theme.primaryIconTheme.color;
+    final color = context.colorScheme.onPrimary;
 
     final isFmPlaying = ref
         .watch(playerStateProvider.select((value) => value.playingList.isFM));

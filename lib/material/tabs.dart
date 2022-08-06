@@ -12,6 +12,7 @@ class PrimaryTabIndicator extends UnderlineTabIndicator {
 ///网易云音乐风格的TabBar
 class RoundedTabBar extends StatelessWidget implements PreferredSizeWidget {
   const RoundedTabBar({super.key, required this.tabs});
+
   final List<Widget> tabs;
 
   @override
@@ -21,7 +22,7 @@ class RoundedTabBar extends StatelessWidget implements PreferredSizeWidget {
       child: Material(
         color: Theme.of(context).scaffoldBackgroundColor,
         child: TabBar(
-          indicator: PrimaryTabIndicator(color: context.colorScheme.secondary),
+          indicator: PrimaryTabIndicator(color: context.colorScheme.primary),
           indicatorSize: TabBarIndicatorSize.label,
           labelColor: Theme.of(context).textTheme.bodyText1!.color,
           tabs: tabs,

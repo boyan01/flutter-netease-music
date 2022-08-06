@@ -163,7 +163,8 @@ class _ContextMenuItemState extends State<ContextMenuItem> {
               IconTheme.merge(
                 data: IconThemeData(
                   size: 20,
-                  color: widget.enable ? null : context.theme.disabledColor,
+                  color:
+                      widget.enable ? null : context.colorScheme.textDisabled,
                 ),
                 child: widget.icon,
               ),
@@ -172,7 +173,8 @@ class _ContextMenuItemState extends State<ContextMenuItem> {
                 child: DefaultTextStyle.merge(
                   style: TextStyle(
                     fontSize: 14,
-                    color: widget.enable ? null : context.theme.disabledColor,
+                    color:
+                        widget.enable ? null : context.colorScheme.textDisabled,
                   ),
                   child: widget.title,
                 ),
@@ -333,6 +335,7 @@ class _RenderClipper extends RenderProxyBox {
   double _value;
 
   double get value => _value;
+
   set value(double value) {
     if (value == _value) {
       return;
@@ -342,7 +345,9 @@ class _RenderClipper extends RenderProxyBox {
   }
 
   Offset _position;
+
   Offset get position => _position;
+
   set position(Offset value) {
     if (value == _position) {
       return;

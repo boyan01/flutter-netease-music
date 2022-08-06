@@ -16,7 +16,7 @@ class _PageWelcomeState extends State<PageWelcome> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: context.theme.primaryColor,
+      backgroundColor: context.colorScheme.primary,
       body: const SafeArea(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 50),
