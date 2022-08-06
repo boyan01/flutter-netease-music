@@ -1,12 +1,13 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../providers/favorite_tracks_provider.dart';
 import '../../../providers/player_provider.dart';
 
-class GlobalHotkeys extends ConsumerWidget {
+class GlobalHotkeys extends HookConsumerWidget {
   const GlobalHotkeys({
     super.key,
     required this.child,
@@ -50,6 +51,25 @@ class GlobalHotkeys extends ConsumerWidget {
       }
     }
 
+    final focusInTextField = useState(false);
+
+    useEffect(
+      () {
+        void onFocusChange() {
+          focusInTextField.value = _checkFocusNodeIsTextField(
+            FocusManager.instance.primaryFocus,
+          );
+        }
+
+        onFocusChange();
+        FocusManager.instance.addListener(onFocusChange);
+        return () {
+          FocusManager.instance.removeListener(onFocusChange);
+        };
+      },
+      [],
+    );
+
     return FocusableActionDetector(
       autofocus: true,
       actions: {
@@ -60,7 +80,12 @@ class GlobalHotkeys extends ConsumerWidget {
         _SkipToPreviousIntent: CallbackAction(onInvoke: handlePlayerAction),
         _LikeTrackIntent: CallbackAction(onInvoke: handlePlayerAction),
       },
-      shortcuts: _commonShortcuts,
+      shortcuts: {
+        ..._commonShortcuts,
+        if (!focusInTextField.value)
+          const SingleActivator(LogicalKeyboardKey.space):
+              const _PlayPauseIntent(),
+      },
       child: child,
     );
   }
@@ -77,8 +102,6 @@ final _commonShortcuts = <ShortcutActivator, Intent>{
     control: defaultTargetPlatform != TargetPlatform.macOS,
     meta: defaultTargetPlatform == TargetPlatform.macOS,
   ): const _VolumeDownIntent(),
-  // FIXME this block text filed space.
-  // const SingleActivator(LogicalKeyboardKey.space): const _PlayPauseIntent(),
   SingleActivator(
     LogicalKeyboardKey.arrowRight,
     control: defaultTargetPlatform != TargetPlatform.macOS,
@@ -118,4 +141,13 @@ class _SkipToPreviousIntent extends Intent {
 
 class _LikeTrackIntent extends Intent {
   const _LikeTrackIntent() : super();
+}
+
+bool _checkFocusNodeIsTextField(FocusNode? node) {
+  final context = node?.context;
+  if (context == null) {
+    return false;
+  }
+  final text = context.findAncestorWidgetOfExactType<EditableText>();
+  return text != null;
 }

@@ -12,7 +12,6 @@ import 'header_bar.dart';
 import 'navigation_side_bar.dart';
 import 'player/page_playing.dart';
 import 'player/page_playing_list.dart';
-import 'widgets/hotkeys.dart';
 import 'widgets/windows_task_bar.dart';
 
 class HomeWindow extends StatelessWidget {
@@ -20,7 +19,7 @@ class HomeWindow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const WindowsTaskBar(child: GlobalHotkeys(child: _WindowLayout()));
+    return const WindowsTaskBar(child: _WindowLayout());
   }
 }
 

@@ -8,6 +8,7 @@ import '../providers/navigator_provider.dart';
 import '../providers/settings_provider.dart';
 import '../utils/platform_configuration.dart';
 import 'desktop/home_window.dart';
+import 'desktop/widgets/hotkeys.dart';
 import 'mobile/mobile_window.dart';
 
 class QuietApp extends ConsumerWidget {
@@ -25,29 +26,31 @@ class QuietApp extends ConsumerWidget {
         home = const MobileWindow();
         break;
     }
-    return MaterialApp(
-      title: 'Quiet',
-      supportedLocales: const [Locale('en'), Locale('zh')],
-      localizationsDelegates: const [
-        S.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalMaterialLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-      ],
-      theme: lightTheme,
-      darkTheme: quietDarkTheme,
-      themeMode: ref.watch(
-        settingStateProvider.select((value) => value.themeMode),
+    return GlobalHotkeys(
+      child: MaterialApp(
+        title: 'Quiet',
+        supportedLocales: const [Locale('en'), Locale('zh')],
+        localizationsDelegates: const [
+          S.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        theme: lightTheme,
+        darkTheme: quietDarkTheme,
+        themeMode: ref.watch(
+          settingStateProvider.select((value) => value.themeMode),
+        ),
+        home: home,
+        debugShowCheckedModeBanner: false,
+        builder: (context, child) {
+          return AppTheme(
+            child: AppPlatformConfiguration(
+              child: CopyRightOverlay(child: child),
+            ),
+          );
+        },
       ),
-      home: home,
-      debugShowCheckedModeBanner: false,
-      builder: (context, child) {
-        return AppTheme(
-          child: AppPlatformConfiguration(
-            child: CopyRightOverlay(child: child),
-          ),
-        );
-      },
     );
   }
 }
