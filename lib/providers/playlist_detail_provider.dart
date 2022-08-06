@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../repository.dart';
@@ -50,7 +51,7 @@ class PlaylistDetailStateNotifier
     try {
       final result = await neteaseRepository!.playlistDetail(playlistId);
       var data = await result.asFuture;
-      if (data.tracks.length != data.tracks.length) {
+      if (data.tracks.length != data.trackCount) {
         final trackIds = data.trackIds.toSet();
 
         for (final track in data.tracks) {
@@ -69,6 +70,7 @@ class PlaylistDetailStateNotifier
       await neteaseLocalData.updatePlaylistDetail(data);
       state = AsyncValue.data(data);
     } catch (error, stacktrace) {
+      debugPrint('error: $error ,$stacktrace');
       if (_playlistDetail == null) {
         state = AsyncValue.error(error, stackTrace: stacktrace);
       }
