@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:async/async.dart' show Result;
+import 'package:async/async.dart' show Result, ErrorResult;
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:netease_music_api/netease_cloud_music.dart' as api;
@@ -35,7 +35,7 @@ enum PlayRecordType {
 
 const _kCodeSuccess = 200;
 
-const _kCodeNeedLogin = 301;
+const kCodeNeedLogin = 301;
 
 ///map a result to any other
 Result<R> _map<R>(
@@ -68,8 +68,10 @@ extension _FutureMapExtension<T> on Future<Result<T>> {
   }
 }
 
+typedef OnRequestError = void Function(ErrorResult error);
+
 class Repository {
-  Repository(String cookiePath) {
+  Repository(String cookiePath, {this.onError}) {
     api.debugPrint = debugPrint;
     scheduleMicrotask(() async {
       PersistCookieJar? cookieJar;
@@ -83,6 +85,8 @@ class Repository {
   }
 
   final Completer<PersistCookieJar> _cookieJar = Completer();
+
+  final OnRequestError? onError;
 
   Future<List<Cookie>> _loadCookies() async {
     final jar = await _cookieJar.future;
@@ -527,7 +531,9 @@ class Repository {
       );
     } catch (e, stacktrace) {
       debugPrint('request error : $e \n $stacktrace');
-      return Result.error(e, stacktrace);
+      final result = ErrorResult(e, stacktrace);
+      onError?.call(result);
+      return result;
     }
     final map = result.body;
 
@@ -541,22 +547,26 @@ class Repository {
         return true;
       }(),
     );
-    if (map['code'] == _kCodeNeedLogin) {
-      return Result.error(
+    if (map['code'] == kCodeNeedLogin) {
+      final error = ErrorResult(
         RequestError(
-          code: _kCodeNeedLogin,
+          code: kCodeNeedLogin,
           message: '需要登录才能访问哦~',
           answer: result,
         ),
       );
+      onError?.call(error);
+      return error;
     } else if (map['code'] != _kCodeSuccess) {
-      return Result.error(
+      final error = ErrorResult(
         RequestError(
           code: map['code'],
           message: map['msg'] ?? map['message'] ?? '请求失败了~',
           answer: result,
         ),
       );
+      onError?.call(error);
+      return error;
     }
     return Result.value(map as Map<String, dynamic>);
   }

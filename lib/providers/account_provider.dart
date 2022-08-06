@@ -18,11 +18,19 @@ final userIdProvider = Provider<int?>((ref) {
   return ref.watch(userProvider)?.userId;
 });
 
-///登录状态
 class UserAccount extends StateNotifier<User?> {
-  UserAccount(this.read) : super(null);
+  UserAccount(this.read) : super(null) {
+    _subscription = read(neteaseRepositoryProvider).onApiUnAuthorized.listen(
+      (event) {
+        debugPrint('onApiUnAuthorized');
+        logout();
+      },
+    );
+  }
 
   final Reader read;
+
+  StreamSubscription? _subscription;
 
   ///get user info from persistence data
   static Future<Map?> getPersistenceUser() async {
@@ -116,5 +124,11 @@ class UserAccount extends StateNotifier<User?> {
       return null;
     }
     return state!.userId;
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _subscription?.cancel();
   }
 }

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:async/async.dart';
@@ -23,8 +24,20 @@ export 'package:netease_api/netease_api.dart'
 
 class NetworkRepository {
   NetworkRepository(String cookiePath, this.cachePath)
-      : _repository = api.Repository(cookiePath),
-        _lyricCache = _LyricCache(p.join(cachePath, 'lyrics'));
+      : _lyricCache = _LyricCache(p.join(cachePath, 'lyrics')) {
+    _repository = api.Repository(
+      cookiePath,
+      onError: (error) {
+        if (error.error is api.RequestError) {
+          final requestError = error.error as api.RequestError;
+          if (requestError.code == api.kCodeNeedLogin) {
+            _onApiUnAuthorized.add(null);
+            return;
+          }
+        }
+      },
+    );
+  }
 
   static Future<void> initialize() async {
     var documentDir = (await getApplicationDocumentsDirectory()).path;
@@ -36,11 +49,15 @@ class NetworkRepository {
     neteaseRepository = NetworkRepository(cookiePath, cachePath);
   }
 
-  final api.Repository _repository;
+  late api.Repository _repository;
 
   final String cachePath;
 
   final _LyricCache _lyricCache;
+
+  final _onApiUnAuthorized = StreamController<void>.broadcast();
+
+  Stream<void> get onApiUnAuthorized => _onApiUnAuthorized.stream;
 
   /// Fetch lyric by track id
   Future<String?> lyric(int id) async {
