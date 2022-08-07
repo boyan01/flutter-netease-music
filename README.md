@@ -11,9 +11,9 @@ A Universal copy app of [NeteaseMusic](https://music.163.com/#/download)
 
 1. clone project to local
 
-  ```bash
-  git clone https://github.com/boyan01/flutter-netease-music.git 
-  ```
+    ```bash
+    git clone https://github.com/boyan01/flutter-netease-music.git 
+    ```
 
 2. install [Flutter](https://flutter.io/docs/get-started/install)
 
@@ -21,9 +21,9 @@ A Universal copy app of [NeteaseMusic](https://music.163.com/#/download)
 
 3. build & run
 
- ```bash
- flutter run --profile
- ```
+    ```bash
+    flutter run --profile
+    ```
 
 ## Development (开发)
 
@@ -39,8 +39,8 @@ flutter pub global run intl_utils:generate
 debian:
 
    ```shell
-   sudo apt-get install vlc
-   sudo apt-get install libvlc-dev
+   sudo apt install libavcodec-dev libavformat-dev libavdevice-dev
+   sudo apt-get install libsdl2-dev
    ```
 
 ## Dependency backend
