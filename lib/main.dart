@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:dart_vlc/dart_vlc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive/hive.dart';
@@ -25,9 +24,6 @@ void main() async {
   await loadFallbackFonts();
   await NetworkRepository.initialize();
   final preferences = await SharedPreferences.getInstance();
-  if (Platform.isLinux || Platform.isWindows) {
-    await DartVLC.initialize();
-  }
   unawaited(_initialDesktop(preferences));
   runZonedGuarded(() {
     runApp(

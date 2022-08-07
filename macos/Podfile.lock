@@ -1,7 +1,7 @@
 PODS:
   - desktop_drop (0.0.1):
     - FlutterMacOS
-  - ffmpeg-kit-macos-full (4.5.LTS)
+  - ffmpeg-kit-macos-full (4.4.LTS)
   - FlutterMacOS (1.0.0)
   - lychee_player (0.0.1):
     - ffmpeg-kit-macos-full (~> 4.4.LTS)
@@ -56,9 +56,9 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   desktop_drop: 69eeff437544aa619c8db7f4481b3a65f7696898
-  ffmpeg-kit-macos-full: 6720d5b032e6d75928585ea321c228cb307d5d07
+  ffmpeg-kit-macos-full: 578f89931c88d0df654bfe63a4deea939f04901c
   FlutterMacOS: 57701585bf7de1b3fc2bb61f6378d73bbdea8424
-  lychee_player: 529082696b590f0cbb3a581d289d026620f115a0
+  lychee_player: 1e542ffa621ed9da529fd19546d66775418176dd
   path_provider_macos: 3c0c3b4b0d4a76d2bf989a913c2de869c5641a19
   screen_retriever: 59634572a57080243dd1bf715e55b6c54f241a38
   shared_preferences_macos: a64dc611287ed6cbe28fd1297898db1336975727
