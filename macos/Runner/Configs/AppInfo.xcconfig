@@ -8,7 +8,7 @@
 PRODUCT_NAME = quiet
 
 // The application's bundle identifier
-PRODUCT_BUNDLE_IDENTIFIER = tech.soit.queit.app.quiet
+PRODUCT_BUNDLE_IDENTIFIER = tech.soit.quiet.app
 
 // The copyright displayed in application information
 PRODUCT_COPYRIGHT = Copyright © 2021 tech.soit.queit.app. All rights reserved.

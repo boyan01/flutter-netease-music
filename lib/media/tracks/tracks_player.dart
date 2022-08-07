@@ -9,7 +9,6 @@ import '../../repository/data/track.dart';
 import 'track_list.dart';
 import 'tracks_player_impl_lychee.dart';
 import 'tracks_player_impl_mobile.dart';
-import 'tracks_player_impl_vlc.dart';
 
 enum RepeatMode {
   /// Repeat all the tracks.
@@ -64,10 +63,7 @@ abstract class TracksPlayer extends StateNotifier<TracksPlayerState> {
         );
 
   factory TracksPlayer.platform() {
-    if (Platform.isWindows || Platform.isLinux) {
-      return TracksPlayerImplVlc();
-    }
-    if (Platform.isMacOS) {
+    if (Platform.isMacOS || Platform.isWindows || Platform.isLinux) {
       return TracksPlayerImplLychee();
     }
     return TracksPlayerImplMobile();
