@@ -177,15 +177,15 @@ class _MainPageMyState extends ConsumerState<MainPageMy>
 
   static int? _index(Element element) {
     int? index;
-    void _findIndex(Element e) {
+    void findIndex(Element e) {
       if (e.widget is IndexedSemantics) {
         index = (e.widget as IndexedSemantics).index;
       } else {
-        e.visitChildElements(_findIndex);
+        e.visitChildElements(findIndex);
       }
     }
 
-    element.visitChildElements(_findIndex);
+    element.visitChildElements(findIndex);
     assert(index != null, 'can not get index for element $element');
     return index;
   }
