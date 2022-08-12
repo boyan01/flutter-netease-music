@@ -1,0 +1,9 @@
+Section: x11
+Priority: optional
+Version: 1.0.0
+Homepage: https://github.com/boyan01/flutter-netease-music
+Package: quiet
+Maintainer: boyan
+Architecture: amd64
+Depends: libgtk-3-0 (>= 3.10.0), libsdl2-2.0-0, libavcodec58, libavformat58
+Description: A Universal copy app of Netease Music

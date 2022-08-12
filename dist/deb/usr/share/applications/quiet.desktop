@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=Quiet
+Comment=A Universal copy app of Netease Music
+GenericName=Music Player
+Categories=Audio
+Version=1.0
+Exec=quiet
+Terminal=false
+Icon=quiet
