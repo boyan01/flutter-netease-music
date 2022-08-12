@@ -123,7 +123,7 @@ class StretchButton extends StatelessWidget {
         : BorderSide(color: foreground!.withOpacity(0.5), width: 0.5);
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
-        primary: background,
+        foregroundColor: background,
         textStyle: TextStyle(
           color: foreground,
         ),
