@@ -1,7 +1,7 @@
 name: quiet
 description: a music player
 
-version: 1.0.0+1
+version: 0.3.0
 publish_to: none
 
 environment:
