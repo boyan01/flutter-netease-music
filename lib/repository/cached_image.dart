@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:io';
-import 'dart:typed_data';
 import 'dart:ui' as ui;
 
 import 'package:flutter/foundation.dart';
@@ -62,10 +61,13 @@ class CachedImage extends ImageProvider<CachedImage> implements CacheKey {
           _size == other._size;
 
   @override
-  int get hashCode => hashValues(id, scale, _size);
+  int get hashCode => Object.hash(id, scale, _size);
 
   @override
-  ImageStreamCompleter load(CachedImage key, DecoderCallback decode) {
+  ImageStreamCompleter loadBuffer(
+    CachedImage key,
+    DecoderBufferCallback decode,
+  ) {
     return MultiFrameImageStreamCompleter(
       codec: _loadAsync(key, decode),
       scale: key.scale,
@@ -74,12 +76,15 @@ class CachedImage extends ImageProvider<CachedImage> implements CacheKey {
 
   static final HttpClient _httpClient = HttpClient();
 
-  Future<ui.Codec> _loadAsync(CachedImage key, DecoderCallback decode) async {
+  Future<ui.Codec> _loadAsync(
+    CachedImage key,
+    DecoderBufferCallback decode,
+  ) async {
     final cache = await _imageCache();
     final image = await cache.get(key);
     if (image != null) {
       return decode(
-        Uint8List.fromList(image),
+        await ui.ImmutableBuffer.fromUint8List(image),
         cacheWidth: key.width,
         cacheHeight: null,
       );
@@ -111,7 +116,7 @@ class CachedImage extends ImageProvider<CachedImage> implements CacheKey {
     await cache.update(key, bytes);
 
     return decode(
-      Uint8List.fromList(bytes),
+      await ui.ImmutableBuffer.fromUint8List(bytes),
       cacheWidth: key.width,
       cacheHeight: null,
     );
