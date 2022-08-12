@@ -2,10 +2,7 @@ name: Release
 on:
   push:
     tags:
-      - v*.*.*
-    branches:
-      - test*
-
+      - '*'
 
 jobs:
   build:
