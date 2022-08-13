@@ -3,7 +3,9 @@ import 'dart:ui' as ui;
 import 'package:flutter/gestures.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+
 import '../../../extension.dart';
+import '../../../repository/data/track.dart';
 
 class HighlightClickableText extends HookWidget {
   const HighlightClickableText({
@@ -159,6 +161,43 @@ class MouseHighlightText extends HookWidget {
       style: style,
       maxLines: maxLines,
       overflow: overflow,
+    );
+  }
+}
+
+class HighlightArtistText extends StatelessWidget {
+  const HighlightArtistText({
+    super.key,
+    required this.artists,
+    required this.onTap,
+    this.style,
+    this.highlightStyle,
+  });
+
+  final List<ArtistMini> artists;
+
+  final void Function(ArtistMini artist) onTap;
+
+  final TextStyle? style;
+  final TextStyle? highlightStyle;
+
+  @override
+  Widget build(BuildContext context) {
+    return MouseHighlightText(
+      style: style ?? context.textTheme.caption,
+      highlightStyle: highlightStyle ??
+          context.textTheme.caption!.copyWith(
+            color: context.textTheme.bodyMedium!.color,
+          ),
+      children: artists
+          .map(
+            (artist) => MouseHighlightSpan.highlight(
+              text: artist.name,
+              onTap: () => onTap(artist),
+            ),
+          )
+          .separated(MouseHighlightSpan.normal(text: '/'))
+          .toList(),
     );
   }
 }

@@ -139,6 +139,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "OpenSource project https://github.com/boyan01/flutter-netease-music"),
         "qrCodeExpired":
             MessageLookupByLibrary.simpleMessage("QR code expired"),
+        "recommendForYou":
+            MessageLookupByLibrary.simpleMessage("Recommend for you"),
         "recommendPlayLists":
             MessageLookupByLibrary.simpleMessage("Recommend PlayLists"),
         "search": MessageLookupByLibrary.simpleMessage("Search"),

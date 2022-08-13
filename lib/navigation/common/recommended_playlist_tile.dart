@@ -27,7 +27,7 @@ class RecommendedPlaylistTile extends StatelessWidget {
         width: width,
         padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             Tooltip(
               message: playlist.copywriter,

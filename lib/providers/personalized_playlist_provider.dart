@@ -3,7 +3,7 @@ import 'package:riverpod/riverpod.dart';
 import '../repository.dart';
 
 final homePlaylistProvider = FutureProvider((ref) async {
-  final list = await neteaseRepository!.personalizedPlaylist(limit: 6);
+  final list = await neteaseRepository!.personalizedPlaylist(limit: 8);
   return list.asFuture;
 });
 

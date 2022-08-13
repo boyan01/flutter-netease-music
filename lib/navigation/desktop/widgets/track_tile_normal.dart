@@ -359,31 +359,18 @@ class TrackTile extends HookConsumerWidget {
                       width: configuration.artistWidth,
                       child: Align(
                         alignment: AlignmentDirectional.centerStart,
-                        child: MouseHighlightText(
-                          style: context.textTheme.caption,
-                          highlightStyle: context.textTheme.caption!.copyWith(
-                            color: context.textTheme.bodyMedium!.color,
-                          ),
-                          children: track.artists
-                              .map(
-                                (artist) => MouseHighlightSpan.highlight(
-                                  text: artist.name,
-                                  onTap: () {
-                                    if (artist.id == 0) {
-                                      return;
-                                    }
-                                    ref
-                                        .read(navigatorProvider.notifier)
-                                        .navigate(
-                                          NavigationTargetArtistDetail(
-                                            artist.id,
-                                          ),
-                                        );
-                                  },
-                                ),
-                              )
-                              .separated(MouseHighlightSpan.normal(text: '/'))
-                              .toList(),
+                        child: HighlightArtistText(
+                          artists: track.artists,
+                          onTap: (artist) {
+                            if (artist.id == 0) {
+                              return;
+                            }
+                            ref.read(navigatorProvider.notifier).navigate(
+                                  NavigationTargetArtistDetail(
+                                    artist.id,
+                                  ),
+                                );
+                          },
                         ),
                       ),
                     ),

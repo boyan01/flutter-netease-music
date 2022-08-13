@@ -94,5 +94,6 @@
   "loginViaQrCode": "扫码登录",
   "loginViaQrCodeWaitingScanDescription": "使用网易云音乐手机端扫码登录",
   "loginViaQrCodeWaitingConfirmDescription": "在网易云音乐手机端确认登录",
-  "qrCodeExpired": "二维码已过期"
+  "qrCodeExpired": "二维码已过期",
+  "recommendForYou": "为你推荐"
 }

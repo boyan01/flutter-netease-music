@@ -8,6 +8,7 @@ import '../../../media/tracks/track_list.dart';
 import '../../../providers/fm_playlist_provider.dart';
 import '../../../providers/player_provider.dart';
 import '../../../repository.dart';
+import '../../common/buttons.dart';
 import '../../common/like_button.dart';
 import 'lyric_layout.dart';
 
@@ -70,7 +71,7 @@ class _CoverLayout extends StatelessWidget {
                 borderRadius: BorderRadius.circular(8),
                 child: Image(image: CachedImage(track.imageUrl!)),
               ),
-              _CoverPlayPauseButton(track: track)
+              FmCoverPlayPauseButton(track: track)
             ],
           ),
         ),
@@ -82,13 +83,21 @@ class _CoverLayout extends StatelessWidget {
   }
 }
 
-class _CoverPlayPauseButton extends ConsumerWidget {
-  const _CoverPlayPauseButton({
+class FmCoverPlayPauseButton extends ConsumerWidget {
+  const FmCoverPlayPauseButton({
     super.key,
     required this.track,
+    this.pauseIconSize = 40,
+    this.playIconSize = 40,
+    this.margin = const EdgeInsets.all(20),
   });
 
   final Track track;
+
+  final double pauseIconSize;
+  final double playIconSize;
+
+  final EdgeInsetsGeometry margin;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -98,40 +107,46 @@ class _CoverPlayPauseButton extends ConsumerWidget {
 
     final playing = isFmPlaying && isPlaying;
 
+    final iconSize = playing ? pauseIconSize : playIconSize;
+
     return AnimatedAlign(
       alignment: playing ? Alignment.bottomRight : Alignment.center,
       duration: const Duration(milliseconds: 300),
       curve: Curves.easeInOut,
       child: Padding(
-        padding: const EdgeInsets.all(20),
+        padding: margin,
         child: ClipOval(
           child: BackdropFilter(
             filter: ImageFilter.blur(sigmaX: 4, sigmaY: 4),
-            child: SizedBox.square(
-              dimension: 56,
-              child: Material(
-                color: Colors.white24,
-                child: IconButton(
-                  tooltip:
-                      playing ? context.strings.pause : context.strings.play,
-                  icon: Icon(
-                    playing ? Icons.pause_rounded : Icons.play_arrow_rounded,
+            child: AnimatedSize(
+              duration: const Duration(milliseconds: 300),
+              curve: Curves.easeInOut,
+              child: SizedBox.square(
+                dimension: iconSize + 16,
+                child: Material(
+                  color: Colors.white24,
+                  child: AppIconButton(
+                    tooltip:
+                        playing ? context.strings.pause : context.strings.play,
+                    icon: playing
+                        ? Icons.pause_rounded
+                        : Icons.play_arrow_rounded,
                     color: context.colorScheme.primary,
-                    size: 40,
+                    size: iconSize,
+                    onPressed: () {
+                      final player = ref.read(playerProvider);
+                      if (playing) {
+                        player.pause();
+                      } else if (isFmPlaying) {
+                        player.play();
+                      } else {
+                        final fmPlaylist = ref.read(fmPlaylistProvider);
+                        player
+                          ..setTrackList(TrackList.fm(tracks: fmPlaylist))
+                          ..playFromMediaId(track.id);
+                      }
+                    },
                   ),
-                  onPressed: () {
-                    final player = ref.read(playerProvider);
-                    if (playing) {
-                      player.pause();
-                    } else if (isFmPlaying) {
-                      player.play();
-                    } else {
-                      final fmPlaylist = ref.read(fmPlaylistProvider);
-                      player
-                        ..setTrackList(TrackList.fm(tracks: fmPlaylist))
-                        ..playFromMediaId(track.id);
-                    }
-                  },
                 ),
               ),
             ),
