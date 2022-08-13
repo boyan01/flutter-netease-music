@@ -173,7 +173,10 @@ class TracksPlayerImplLychee extends TracksPlayer {
   @override
   double get volume => 1;
 
-  void _playTrack(Track track) {
+  void _playTrack(
+    Track track, {
+    bool playWhenReady = true,
+  }) {
     scheduleMicrotask(() async {
       final url = await neteaseRepository!.getPlayUrl(track.id);
       if (url.isError) {
@@ -186,7 +189,7 @@ class TracksPlayerImplLychee extends TracksPlayer {
       }
       _player?.dispose();
       _player = LycheeAudioPlayer(url.asValue!.value)
-        ..playWhenReady = true
+        ..playWhenReady = playWhenReady
         ..onPlayWhenReadyChanged.addListener(notifyPlayStateChanged)
         ..state.addListener(() {
           if (_player?.state.value == PlayerState.end) {
@@ -201,6 +204,11 @@ class TracksPlayerImplLychee extends TracksPlayer {
 
   @override
   void restoreFromPersistence(PersistencePlayerState state) {
-    // TODO: implement restoreFromPersistence
+    _trackList = state.playingList;
+    if (state.playingTrack != null) {
+      _playTrack(state.playingTrack!, playWhenReady: false);
+    }
+    setVolume(state.volume);
+    notifyPlayStateChanged();
   }
 }
