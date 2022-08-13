@@ -117,6 +117,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "projectDescription": MessageLookupByLibrary.simpleMessage(
             "开源项目 https://github.com/boyan01/flutter-netease-music"),
         "qrCodeExpired": MessageLookupByLibrary.simpleMessage("二维码已过期"),
+        "recommendForYou": MessageLookupByLibrary.simpleMessage("为你推荐"),
         "recommendPlayLists": MessageLookupByLibrary.simpleMessage("推荐歌单"),
         "search": MessageLookupByLibrary.simpleMessage("搜索"),
         "searchMusicResultCount": m7,

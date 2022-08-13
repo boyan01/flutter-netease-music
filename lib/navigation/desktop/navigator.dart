@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../providers/navigator_provider.dart';
 import '../common/navigation_target.dart';
 import 'artist/page_artist_detail.dart';
-import 'discover.dart';
+import 'discover/page_discover.dart';
 import 'page_setting.dart';
 import 'player/page_fm_playing.dart';
 import 'playlist/page_album_detail.dart';

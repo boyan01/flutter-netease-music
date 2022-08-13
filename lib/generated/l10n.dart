@@ -1011,6 +1011,16 @@ class S {
       args: [],
     );
   }
+
+  /// `Recommend for you`
+  String get recommendForYou {
+    return Intl.message(
+      'Recommend for you',
+      name: 'recommendForYou',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

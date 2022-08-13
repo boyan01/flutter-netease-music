@@ -94,5 +94,6 @@
   "loginViaQrCode": "Login via QR code",
   "loginViaQrCodeWaitingScanDescription": "scan QR code by Netease cloud music mobile app",
   "loginViaQrCodeWaitingConfirmDescription": "Please confirm login via QR code in Netease cloud music mobile app",
-  "qrCodeExpired": "QR code expired"
+  "qrCodeExpired": "QR code expired",
+  "recommendForYou": "Recommend for you"
 }
