@@ -15,6 +15,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.4.0"
+  ansicolor:
+    dependency: transitive
+    description:
+      name: ansicolor
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.1"
   args:
     dependency: transitive
     description:
@@ -450,6 +457,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.2"
+  mixin_logger:
+    dependency: "direct main"
+    description:
+      name: mixin_logger
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.1"
   music_player:
     dependency: "direct main"
     description:

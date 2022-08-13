@@ -54,6 +54,7 @@ dependencies:
   lychee_player: ^0.3.2
   fluentui_system_icons: ^1.1.175
   pretty_qr_code: ^2.0.2
+  mixin_logger: ^0.0.1
 
 dev_dependencies:
   flutter_test:

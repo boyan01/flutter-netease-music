@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'preference_provider.dart';
+
 const String _prefix = 'quiet:settings:';
 
 const String _keyThemeMode = '$_prefix:themeMode';
@@ -11,10 +13,11 @@ const String _keyCopyright = '$_prefix:copyright';
 
 const String _keySkipWelcomePage = '$_prefix:skipWelcomePage';
 
-final settingStateProvider =
-    StateNotifierProvider<Settings, SettingState>((ref) {
-  return Settings();
-});
+final settingStateProvider = StateNotifierProvider<Settings, SettingState>(
+  (ref) {
+    return Settings(ref.read(sharedPreferenceProvider));
+  },
+);
 
 class SettingState with EquatableMixin {
   const SettingState({
@@ -64,22 +67,10 @@ class SettingState with EquatableMixin {
 }
 
 class Settings extends StateNotifier<SettingState> {
-  Settings()
-      : super(
-          const SettingState(
-            themeMode: ThemeMode.system,
-            copyright: false,
-            skipWelcomePage: true,
-            skipAccompaniment: false,
-          ),
-        );
+  Settings(this._preferences)
+      : super(SettingState.fromPreference(_preferences));
 
-  late final SharedPreferences _preferences;
-
-  void attachPreference(SharedPreferences preference) {
-    _preferences = preference;
-    state = SettingState.fromPreference(preference);
-  }
+  final SharedPreferences _preferences;
 
   void setThemeMode(ThemeMode themeMode) {
     _preferences.setInt(_keyThemeMode, themeMode.index);

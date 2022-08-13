@@ -2,10 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../providers/account_provider.dart';
-import '../../providers/settings_provider.dart';
 
 ///used to build application widget
 ///[data] the data initial in [PageSplash]
@@ -32,10 +30,6 @@ class _PageSplashState extends ConsumerState<PageSplash> {
     super.initState();
     final tasks = [
       ref.read(userProvider.notifier).initialize(),
-      () async {
-        final preferences = await SharedPreferences.getInstance();
-        ref.read(settingStateProvider.notifier).attachPreference(preferences);
-      }(),
     ];
     final start = DateTime.now().millisecondsSinceEpoch;
     Future.wait([

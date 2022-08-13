@@ -3,9 +3,9 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:hive/hive.dart';
+import 'package:mixin_logger/mixin_logger.dart';
 import 'package:overlay_support/overlay_support.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:path/path.dart' as p;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:window_manager/window_manager.dart';
 
@@ -15,6 +15,7 @@ import 'pages/splash/page_splash.dart';
 import 'providers/preference_provider.dart';
 import 'providers/repository_provider.dart';
 import 'repository.dart';
+import 'repository/app_dir.dart';
 import 'utils/callback_window_listener.dart';
 import 'utils/platform_configuration.dart';
 import 'utils/system/system_fonts.dart';
@@ -23,8 +24,10 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await loadFallbackFonts();
   await NetworkRepository.initialize();
+  await initAppDir();
   final preferences = await SharedPreferences.getInstance();
   unawaited(_initialDesktop(preferences));
+  initLogger(p.join(appDir.path, 'logs'));
   runZonedGuarded(() {
     runApp(
       ProviderScope(
@@ -33,16 +36,9 @@ void main() async {
           neteaseRepositoryProvider.overrideWithValue(neteaseRepository!),
         ],
         child: PageSplash(
-          futures: [
-            getApplicationDocumentsDirectory().then((dir) {
-              Hive.init(dir.path);
-              return Hive.openBox<Map>('player');
-            }),
-          ],
+          futures: const [],
           builder: (BuildContext context, List<dynamic> data) {
-            return MyApp(
-              player: data[0] as Box<Map>,
-            );
+            return const MyApp();
           },
         ),
       ),
@@ -113,9 +109,7 @@ void playerBackgroundService() {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key, this.player});
-
-  final Box<Map>? player;
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
