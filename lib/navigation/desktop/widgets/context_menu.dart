@@ -48,6 +48,56 @@ class _ParentMenuControllerWidget extends StatelessWidget {
   Widget build(BuildContext context) => child;
 }
 
+class AppMenuItem extends StatelessWidget {
+  const AppMenuItem({
+    super.key,
+    required this.onTap,
+    required this.icon,
+    required this.title,
+    this.enable = true,
+    this.height = 36,
+  });
+
+  final VoidCallback onTap;
+  final bool enable;
+  final Widget icon;
+  final Widget title;
+  final double height;
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: enable ? onTap : null,
+      child: SizedBox(
+        height: height,
+        child: Row(
+          children: [
+            const SizedBox(width: 8),
+            IconTheme.merge(
+              data: IconThemeData(
+                size: 20,
+                color: enable ? null : context.colorScheme.textDisabled,
+              ),
+              child: icon,
+            ),
+            const SizedBox(width: 8),
+            Expanded(
+              child: DefaultTextStyle.merge(
+                style: TextStyle(
+                  fontSize: 14,
+                  color: enable ? null : context.colorScheme.textDisabled,
+                ),
+                child: title,
+              ),
+            ),
+            const SizedBox(width: 8),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 class ContextMenuItem extends StatefulWidget {
   const ContextMenuItem({
     super.key,
@@ -146,43 +196,16 @@ class _ContextMenuItemState extends State<ContextMenuItem> {
     return MouseRegion(
       onEnter: (detials) => _showContextSubMenu(),
       onExit: (detials) => _dismissSubMenu(),
-      child: InkWell(
-        onTap: widget.enable
-            ? widget.subMenuBuilder != null
-                ? () {}
-                : () {
-                    widget.onTap?.call();
-                    _dismissSelf();
-                  }
-            : null,
-        child: SizedBox(
-          height: 36,
-          child: Row(
-            children: [
-              const SizedBox(width: 8),
-              IconTheme.merge(
-                data: IconThemeData(
-                  size: 20,
-                  color:
-                      widget.enable ? null : context.colorScheme.textDisabled,
-                ),
-                child: widget.icon,
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: DefaultTextStyle.merge(
-                  style: TextStyle(
-                    fontSize: 14,
-                    color:
-                        widget.enable ? null : context.colorScheme.textDisabled,
-                  ),
-                  child: widget.title,
-                ),
-              ),
-              const SizedBox(width: 8),
-            ],
-          ),
-        ),
+      child: AppMenuItem(
+        enable: widget.enable,
+        onTap: widget.subMenuBuilder != null
+            ? () {}
+            : () {
+                widget.onTap?.call();
+                _dismissSelf();
+              },
+        icon: widget.icon,
+        title: widget.title,
       ),
     );
   }

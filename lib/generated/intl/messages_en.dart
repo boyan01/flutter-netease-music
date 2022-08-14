@@ -77,12 +77,15 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Please login first."),
         "errorToFetchData":
             MessageLookupByLibrary.simpleMessage("error to fetch data."),
+        "events": MessageLookupByLibrary.simpleMessage("Events"),
         "failedToDelete": MessageLookupByLibrary.simpleMessage("delete failed"),
         "failedToLoad": MessageLookupByLibrary.simpleMessage("failed to load"),
         "failedToPlayMusic":
             MessageLookupByLibrary.simpleMessage("failed to play music"),
         "favoriteSongList":
             MessageLookupByLibrary.simpleMessage("Favorite Song List"),
+        "follow": MessageLookupByLibrary.simpleMessage("Follow"),
+        "follower": MessageLookupByLibrary.simpleMessage("Follower"),
         "friends": MessageLookupByLibrary.simpleMessage("Friends"),
         "functionDescription":
             MessageLookupByLibrary.simpleMessage("Description"),
@@ -106,6 +109,7 @@ class MessageLookup extends MessageLookupByLibrary {
                 "scan QR code by Netease cloud music mobile app"),
         "loginWithPhone":
             MessageLookupByLibrary.simpleMessage("login with phone"),
+        "logout": MessageLookupByLibrary.simpleMessage("Logout"),
         "musicCountFormat": m3,
         "musicName": MessageLookupByLibrary.simpleMessage("Music Name"),
         "my": MessageLookupByLibrary.simpleMessage("My"),

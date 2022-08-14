@@ -5,7 +5,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:overlay_support/overlay_support.dart';
 import 'package:window_manager/window_manager.dart';
 
 import '../../extension.dart';
@@ -15,6 +14,7 @@ import '../../repository/cached_image.dart';
 import '../../utils/callback_window_listener.dart';
 import '../common/navigation_target.dart';
 import 'login/login_dialog.dart';
+import 'popup/user_info_popup.dart';
 
 class HeaderBar extends StatelessWidget {
   const HeaderBar({super.key});
@@ -139,6 +139,8 @@ class _ProfileWidget extends HookConsumerWidget {
 
     final Widget child;
 
+    final link = useMemoized(LayerLink.new);
+
     if (user == null) {
       child = Row(
         children: [
@@ -176,18 +178,21 @@ class _ProfileWidget extends HookConsumerWidget {
         ],
       );
     }
-    return InkWell(
-      borderRadius: BorderRadius.circular(8),
-      onTap: () {
-        if (user == null) {
-          showLoginDialog(context: context);
-          return;
-        }
-        toast(context.strings.todo);
-      },
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-        child: child,
+    return CompositedTransformTarget(
+      link: link,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(8),
+        onTap: () {
+          if (user == null) {
+            showLoginDialog(context: context);
+          } else {
+            showUserInfoPopup(link: link);
+          }
+        },
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+          child: child,
+        ),
       ),
     );
   }
