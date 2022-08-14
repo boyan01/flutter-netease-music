@@ -24,6 +24,8 @@ class TracksPlayerImplLychee extends TracksPlayer {
 
   LycheeAudioPlayer? _player;
 
+  double _volume = 1;
+
   @override
   Duration? get bufferedPosition => null;
 
@@ -139,7 +141,9 @@ class TracksPlayerImplLychee extends TracksPlayer {
 
   @override
   Future<void> setVolume(double volume) async {
-    // TODO : implement setVolume
+    _player?.volume = volume;
+    _volume = volume;
+    notifyPlayStateChanged();
   }
 
   @override
@@ -171,7 +175,7 @@ class TracksPlayerImplLychee extends TracksPlayer {
   TrackList get trackList => _trackList;
 
   @override
-  double get volume => 1;
+  double get volume => _volume;
 
   void _playTrack(
     Track track, {
@@ -196,7 +200,8 @@ class TracksPlayerImplLychee extends TracksPlayer {
             skipToNext();
           }
           notifyPlayStateChanged();
-        });
+        })
+        ..volume = _volume;
     });
     _current = track;
     notifyPlayStateChanged();
