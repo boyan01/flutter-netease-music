@@ -135,7 +135,7 @@ class _QrCodeBody extends HookConsumerWidget {
             data: url,
             size: 180,
             roundEdges: true,
-            elementColor: context.colorScheme.onPrimary,
+            elementColor: context.colorScheme.textPrimary,
           ),
           const Spacer(),
           Text(
