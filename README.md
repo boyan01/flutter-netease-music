@@ -17,7 +17,7 @@ A Universal copy app of [NeteaseMusic](https://music.163.com/#/download)
 
 2. install [Flutter](https://flutter.io/docs/get-started/install)
 
-    * require latest flutter dev channel.
+    * require latest flutter beta channel.
 
 3. build & run
 
