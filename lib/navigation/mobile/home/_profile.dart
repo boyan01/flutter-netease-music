@@ -1,3 +1,4 @@
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -5,6 +6,7 @@ import '../../../component.dart';
 import '../../../providers/account_provider.dart';
 import '../../../providers/navigator_provider.dart';
 import '../../../repository.dart';
+import '../../common/buttons.dart';
 import '../../common/navigation_target.dart';
 
 class UserProfileSection extends ConsumerWidget {
@@ -69,7 +71,12 @@ class UserProfileSection extends ConsumerWidget {
                   ],
                 ),
               ),
-              const Icon(Icons.chevron_right)
+              AppIconButton(
+                onPressed: () => ref
+                    .read(navigatorProvider.notifier)
+                    .navigate(NavigationTargetSettings()),
+                icon: FluentIcons.settings_20_regular,
+              ),
             ],
           ),
         ),
