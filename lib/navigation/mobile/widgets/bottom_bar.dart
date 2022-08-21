@@ -10,6 +10,7 @@ import '../../../providers/lyric_provider.dart';
 import '../../../providers/navigator_provider.dart';
 import '../../../providers/player_provider.dart';
 import '../../../repository.dart';
+import '../../common/buttons.dart';
 import '../../common/like_button.dart';
 import '../../common/navigation_target.dart';
 import '../../common/progress_track_container.dart';
@@ -209,9 +210,9 @@ class BottomPlayerBar extends ConsumerWidget {
               if (queue.isFM)
                 LikeButton(music: music)
               else
-                IconButton(
+                AppIconButton(
                   tooltip: context.strings.playingList,
-                  icon: const Icon(FluentIcons.list_24_regular),
+                  icon: FluentIcons.list_24_regular,
                   onPressed: () {
                     PlayingListDialog.show(context);
                   },
@@ -250,14 +251,14 @@ class _PauseButton extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return PlayingIndicator(
-      playing: IconButton(
-        icon: const Icon(Icons.pause),
+      playing: AppIconButton(
+        icon: FluentIcons.pause_20_filled,
         onPressed: () {
           ref.read(playerStateProvider.notifier).pause();
         },
       ),
-      pausing: IconButton(
-        icon: const Icon(Icons.play_arrow),
+      pausing: AppIconButton(
+        icon: FluentIcons.play_20_filled,
         onPressed: () {
           ref.read(playerStateProvider.notifier).play();
         },

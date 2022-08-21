@@ -23,7 +23,7 @@ class AppIconButton extends StatelessWidget {
 
   final String? tooltip;
 
-  final EdgeInsets padding;
+  final EdgeInsetsGeometry padding;
 
   @override
   Widget build(BuildContext context) => IconButton(
