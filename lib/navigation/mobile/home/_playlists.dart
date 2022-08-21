@@ -93,7 +93,7 @@ class MyPlayListsHeaderDelegate extends SliverPersistentHeaderDelegate {
 }
 
 final _playListTabUserSelectedProvider = Provider(
-  (ref) => StreamController<int>(),
+  (ref) => StreamController<int>.broadcast(),
 );
 
 class _MyPlayListsHeader extends ConsumerWidget implements PreferredSizeWidget {
@@ -221,10 +221,12 @@ class _UserPlaylists extends HookConsumerWidget {
       [scrollController],
     );
 
-    final stream = ref.read(_playListTabUserSelectedProvider);
+    final stream = useMemoized(
+      () => ref.read(_playListTabUserSelectedProvider).stream,
+    );
     useEffect(
       () {
-        final subscription = stream.stream.listen((index) {
+        final subscription = stream.listen((index) {
           scrollController.animateTo(
             index == 0 ? firstItemOffset : firstItemOffset + createdHeight,
             duration: const Duration(milliseconds: 300),
