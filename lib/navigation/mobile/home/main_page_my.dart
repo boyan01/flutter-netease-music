@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../extension.dart';
 import '../../../providers/account_provider.dart';
+import '../../../providers/navigator_provider.dart';
+import '../../common/navigation_target.dart';
 import '_playlists.dart';
 import '_preset_grid.dart';
 import '_profile.dart';
@@ -47,6 +50,9 @@ class _MainPageMyState extends ConsumerState<MainPageMy>
   Widget build(BuildContext context) {
     super.build(context);
     final userId = ref.watch(userProvider)?.userId;
+    if (userId == null) {
+      return const _NotLogin();
+    }
     return CustomScrollView(
       controller: _scrollController,
       slivers: [
@@ -95,5 +101,35 @@ class _MainPageMyState extends ConsumerState<MainPageMy>
         .whenComplete(() {
       _tabAnimating = false;
     });
+  }
+}
+
+class _NotLogin extends ConsumerWidget {
+  const _NotLogin({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Column(
+      children: [
+        const Spacer(),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Center(
+            child: Text(
+              context.strings.playlistLoginDescription,
+              style: context.textTheme.bodyLarge,
+            ),
+          ),
+        ),
+        const SizedBox(height: 24),
+        TextButton(
+          onPressed: () => ref
+              .read(navigatorProvider.notifier)
+              .navigate(NavigationTargetLogin()),
+          child: Text(context.strings.login),
+        ),
+        const Spacer(),
+      ],
+    );
   }
 }
