@@ -1,7 +1,6 @@
 const kMobileHomeTabs = [
   NavigationTargetDiscover,
   NavigationTargetLibrary,
-  NavigationTargetMy,
   NavigationTargetSearch,
 ];
 
@@ -53,10 +52,6 @@ class NavigationTargetFmPlaying extends NavigationTarget {
 
 class NavigationTargetLibrary extends NavigationTarget {
   NavigationTargetLibrary();
-}
-
-class NavigationTargetMy extends NavigationTarget {
-  NavigationTargetMy();
 }
 
 class NavigationTargetSearch extends NavigationTarget {

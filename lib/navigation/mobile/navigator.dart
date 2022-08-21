@@ -15,7 +15,7 @@ import 'widgets/slide_up_page_route.dart';
 
 class MobileNavigatorController extends NavigatorController {
   MobileNavigatorController() {
-    _pages.add(NavigationTargetMy());
+    _pages.add(NavigationTargetLibrary());
     notifyListeners();
   }
 
@@ -62,7 +62,6 @@ class MobileNavigatorController extends NavigatorController {
     var slideUp = false;
     switch (target.runtimeType) {
       case NavigationTargetDiscover:
-      case NavigationTargetMy:
       case NavigationTargetLibrary:
       case NavigationTargetSearch:
         page = PageHome(selectedTab: target);

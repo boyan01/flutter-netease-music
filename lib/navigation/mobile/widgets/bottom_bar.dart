@@ -34,7 +34,7 @@ class AnimatedAppBottomBar extends HookConsumerWidget {
 
     final bool hideNavigationBar;
     if (!kMobileHomeTabs.contains(currentRoute.runtimeType)) {
-      currentTab = lastHomeTarget.value ?? NavigationTargetMy();
+      currentTab = lastHomeTarget.value ?? NavigationTargetLibrary();
       hideNavigationBar = true;
     } else {
       currentTab = currentRoute;
@@ -300,9 +300,6 @@ class HomeBottomNavigationBar extends ConsumerWidget {
             target = NavigationTargetLibrary();
             break;
           case 2:
-            target = NavigationTargetMy();
-            break;
-          case 3:
             target = NavigationTargetSearch();
             break;
           default:
@@ -319,10 +316,6 @@ class HomeBottomNavigationBar extends ConsumerWidget {
         BottomNavigationBarItem(
           icon: const Icon(Icons.my_library_music),
           label: context.strings.library,
-        ),
-        BottomNavigationBarItem(
-          icon: const Icon(Icons.person),
-          label: context.strings.my,
         ),
         BottomNavigationBarItem(
           icon: const Icon(Icons.search),

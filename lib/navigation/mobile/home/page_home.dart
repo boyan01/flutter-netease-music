@@ -5,7 +5,6 @@ import '../../../providers/navigator_provider.dart';
 import '../../common/navigation_target.dart';
 import 'main_page_discover.dart';
 import 'main_page_my.dart';
-import 'tab_discover.dart';
 import 'tab_search.dart';
 
 class PageHome extends StatelessWidget {
@@ -18,13 +17,10 @@ class PageHome extends StatelessWidget {
   Widget build(BuildContext context) {
     final Widget body;
     switch (selectedTab.runtimeType) {
-      case NavigationTargetDiscover:
-        body = const HomeTabDiscover();
-        break;
-      case NavigationTargetMy:
+      case NavigationTargetLibrary:
         body = const MainPageMy();
         break;
-      case NavigationTargetLibrary:
+      case NavigationTargetDiscover:
         body = const MainPageDiscover();
         break;
       case NavigationTargetSearch:

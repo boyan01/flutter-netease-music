@@ -146,7 +146,7 @@ class _SectionPlaylist extends ConsumerWidget {
             );
             final parentWidth = constraints.maxWidth - 8;
             const count = /* false ? 6 : */ 3;
-            final width = (parentWidth ~/ count).toDouble().clamp(80.0, 200.0);
+            final width = (parentWidth / count).clamp(80.0, 200.0);
             final spacing = (parentWidth - width * count) / (count + 1);
             return Padding(
               padding:
