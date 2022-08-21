@@ -85,6 +85,7 @@ extension _ThemeExt on ThemeData {
           TargetPlatform.windows: ZoomPageTransitionsBuilder(),
         },
       ),
+      useMaterial3: false,
     );
   }
 }
