@@ -252,13 +252,13 @@ class _PauseButton extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return PlayingIndicator(
       playing: AppIconButton(
-        icon: FluentIcons.pause_20_filled,
+        icon: FluentIcons.pause_circle_24_regular,
         onPressed: () {
           ref.read(playerStateProvider.notifier).pause();
         },
       ),
       pausing: AppIconButton(
-        icon: FluentIcons.play_20_filled,
+        icon: FluentIcons.play_circle_24_regular,
         onPressed: () {
           ref.read(playerStateProvider.notifier).play();
         },
