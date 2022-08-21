@@ -1,14 +1,16 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:mixin_logger/mixin_logger.dart';
 
 import '../../../extension.dart';
 import '../../../providers/account_provider.dart';
 import '../../../providers/user_playlists_provider.dart';
 import '../../../repository.dart';
 import 'playlist_tile.dart';
-
-enum PlayListType { created, favorite }
 
 class PlayListsGroupHeader extends StatelessWidget {
   const PlayListsGroupHeader({super.key, required this.name, this.count});
@@ -58,60 +60,61 @@ class MainPlayListTile extends StatelessWidget {
         borderRadius: enableBottomRadius
             ? const BorderRadius.vertical(bottom: Radius.circular(4))
             : null,
-        color: Theme.of(context).backgroundColor,
+        color: context.colorScheme.background,
         child: PlaylistTile(playlist: data),
       ),
     );
   }
 }
 
-const double _kPlayListHeaderHeight = 48;
+const double kPlayListHeaderHeight = 48;
 
 const double _kPlayListDividerHeight = 10;
 
 class MyPlayListsHeaderDelegate extends SliverPersistentHeaderDelegate {
-  MyPlayListsHeaderDelegate(this.tabController);
-
-  final TabController tabController;
+  MyPlayListsHeaderDelegate();
 
   @override
   Widget build(
     BuildContext context,
     double shrinkOffset,
     bool overlapsContent,
-  ) {
-    return _MyPlayListsHeader(controller: tabController);
-  }
+  ) =>
+      const _MyPlayListsHeader();
 
   @override
-  double get maxExtent => _kPlayListHeaderHeight;
+  double get maxExtent => kPlayListHeaderHeight;
 
   @override
-  double get minExtent => _kPlayListHeaderHeight;
+  double get minExtent => kPlayListHeaderHeight;
 
   @override
   bool shouldRebuild(covariant MyPlayListsHeaderDelegate oldDelegate) {
-    return oldDelegate.tabController != tabController;
+    return false;
   }
 }
 
-class _MyPlayListsHeader extends StatelessWidget
-    implements PreferredSizeWidget {
-  const _MyPlayListsHeader({super.key, required this.controller});
+final _playListTabUserSelectedProvider = Provider(
+  (ref) => StreamController<int>(),
+);
 
-  final TabController controller;
-
-  @override
-  Size get preferredSize => const Size.fromHeight(_kPlayListHeaderHeight);
+class _MyPlayListsHeader extends ConsumerWidget implements PreferredSizeWidget {
+  const _MyPlayListsHeader({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Size get preferredSize => const Size.fromHeight(kPlayListHeaderHeight);
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
     return ColoredBox(
-      color: Theme.of(context).scaffoldBackgroundColor,
+      color: context.colorScheme.background,
       child: TabBar(
-        controller: controller,
-        labelColor: Theme.of(context).textTheme.bodyText1!.color,
+        labelColor: context.colorScheme.textPrimary,
         indicatorSize: TabBarIndicatorSize.label,
+        indicatorColor: context.colorScheme.primary,
+        onTap: (index) {
+          ref.read(_playListTabUserSelectedProvider).add(index);
+        },
         tabs: [
           Tab(text: context.strings.createdSongList),
           Tab(text: context.strings.favoriteSongList),
@@ -121,137 +124,138 @@ class _MyPlayListsHeader extends StatelessWidget
   }
 }
 
-class PlayListTypeNotification extends Notification {
-  PlayListTypeNotification({required this.type});
-
-  final PlayListType type;
-}
-
-class PlayListSliverKey extends ValueKey {
-  const PlayListSliverKey({this.createdPosition, this.favoritePosition})
-      : super('_PlayListSliverKey');
-  final int? createdPosition;
-  final int? favoritePosition;
-}
-
-class UserPlayListSection extends ConsumerStatefulWidget {
+class UserPlayListSection extends ConsumerWidget {
   const UserPlayListSection({
     super.key,
-    required this.userId,
     required this.scrollController,
+    required this.firstItemOffset,
   });
 
-  final int? userId;
   final ScrollController scrollController;
 
-  @override
-  ConsumerState<UserPlayListSection> createState() =>
-      _UserPlayListSectionState();
-}
-
-class _UserPlayListSectionState extends ConsumerState<UserPlayListSection> {
-  final _dividerKey = GlobalKey();
-
-  int _dividerIndex = -1;
+  final double firstItemOffset;
 
   @override
-  void initState() {
-    super.initState();
-    widget.scrollController.addListener(_onScrolled);
-  }
-
-  @override
-  void didUpdateWidget(covariant UserPlayListSection oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    oldWidget.scrollController.removeListener(_onScrolled);
-    widget.scrollController.addListener(_onScrolled);
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    widget.scrollController.removeListener(_onScrolled);
-  }
-
-  void _onScrolled() {
-    if (_dividerIndex < 0) {
-      return;
+  Widget build(BuildContext context, WidgetRef ref) {
+    final userId = ref.watch(userIdProvider);
+    if (userId == null) {
+      return const SliverToBoxAdapter(child: SizedBox.shrink());
     }
-    final global = context.findRenderObject() as RenderSliverList?;
-    if (global == null) {
-      return;
-    }
-    RenderObject? child = global.firstChild;
-    while (
-        child != null && global.indexOf(child as RenderBox) != _dividerIndex) {
-      child = global.childAfter(child);
-    }
-    if (child == null) {
-      return;
-    }
-    final offset = global.childMainAxisPosition(child as RenderBox);
-    const height = _kPlayListHeaderHeight + _kPlayListDividerHeight / 2;
-    PlayListTypeNotification(
-      type: offset > height ? PlayListType.created : PlayListType.favorite,
-    ).dispatch(context);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    if (!ref.watch(isLoginProvider)) {
-      return _singleSliver(child: notLogin(context));
-    }
-    final playlists = ref.watch(userPlaylistsProvider(widget.userId!));
+    final playlists = ref.watch(userPlaylistsProvider(userId));
     return playlists.when(
       data: (result) {
-        final created = result.where((p) => p.creator.userId == widget.userId);
-        final subscribed =
-            result.where((p) => p.creator.userId != widget.userId);
-        _dividerIndex = 2 + created.length;
-        return SliverList(
-          key: PlayListSliverKey(
-            createdPosition: 1,
-            favoritePosition: 3 + created.length,
-          ),
-          delegate: SliverChildListDelegate.fixed(
-            [
-              const SizedBox(height: _kPlayListDividerHeight),
-              PlayListsGroupHeader(
-                name: context.strings.createdSongList,
-                count: created.length,
-              ),
-              ..._playlistWidget(created.toList()),
-              SizedBox(height: _kPlayListDividerHeight, key: _dividerKey),
-              PlayListsGroupHeader(
-                name: context.strings.favoriteSongList,
-                count: subscribed.length,
-              ),
-              ..._playlistWidget(subscribed.toList()),
-              const SizedBox(height: _kPlayListDividerHeight),
-            ],
-            addAutomaticKeepAlives: false,
-          ),
+        final created = result.where((p) => p.creator.userId == userId);
+        final subscribed = result.where((p) => p.creator.userId != userId);
+        return _UserPlaylists(
+          created: created.toList(),
+          subscribed: subscribed.toList(),
+          scrollController: scrollController,
+          firstItemOffset: firstItemOffset,
         );
       },
-      error: (error, stackTrace) =>
-          _singleSliver(child: Text(context.formattedError(error))),
-      loading: () => _singleSliver(child: Container()),
+      error: (error, stackTrace) => SliverToBoxAdapter(
+        child: Text(context.formattedError(error)),
+      ),
+      loading: () => const SliverToBoxAdapter(child: SizedBox.shrink()),
     );
   }
+}
 
-  Widget notLogin(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 40),
-      child: Column(
-        children: [
-          Text(context.strings.playlistLoginDescription),
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pushNamed(pageLogin);
-            },
-            child: Text(context.strings.login),
+class _UserPlaylists extends HookConsumerWidget {
+  const _UserPlaylists({
+    super.key,
+    required this.created,
+    required this.subscribed,
+    required this.scrollController,
+    required this.firstItemOffset,
+  });
+
+  final List<PlaylistDetail> created;
+  final List<PlaylistDetail> subscribed;
+  final ScrollController scrollController;
+
+  final double firstItemOffset;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final createdHeight = _kPlayListDividerHeight + 40 + 60 * created.length;
+
+    final tabController = DefaultTabController.of(context);
+
+    final tabAnimating = useRef(false);
+
+    useEffect(
+      () {
+        void onScroll() {
+          if (tabController == null) {
+            return;
+          }
+
+          if (tabController.indexIsChanging || tabAnimating.value) {
+            return;
+          }
+
+          final int targetIndex;
+          if (scrollController.offset < createdHeight + firstItemOffset) {
+            targetIndex = 0;
+          } else {
+            targetIndex = 1;
+          }
+
+          if (tabController.index == targetIndex) {
+            return;
+          }
+
+          tabAnimating.value = true;
+          tabController.animateTo(targetIndex);
+          Future.delayed(
+            kTabScrollDuration + const Duration(milliseconds: 100),
+          ).whenComplete(() {
+            tabAnimating.value = false;
+          });
+        }
+
+        scrollController.addListener(onScroll);
+        return () {
+          scrollController.removeListener(onScroll);
+        };
+      },
+      [scrollController],
+    );
+
+    final stream = ref.read(_playListTabUserSelectedProvider);
+    useEffect(
+      () {
+        final subscription = stream.stream.listen((index) {
+          scrollController.animateTo(
+            index == 0 ? firstItemOffset : firstItemOffset + createdHeight,
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.ease,
+          );
+        });
+        return subscription.cancel;
+      },
+      [stream],
+    );
+
+    return SliverList(
+      delegate: SliverChildListDelegate.fixed(
+        [
+          const SizedBox(height: _kPlayListDividerHeight),
+          PlayListsGroupHeader(
+            name: context.strings.createdSongList,
+            count: created.length,
           ),
+          ..._playlistWidget(created),
+          const SizedBox(height: _kPlayListDividerHeight),
+          PlayListsGroupHeader(
+            name: context.strings.favoriteSongList,
+            count: subscribed.length,
+          ),
+          ..._playlistWidget(subscribed),
+          const SizedBox(height: _kPlayListDividerHeight),
         ],
+        addAutomaticKeepAlives: false,
       ),
     );
   }
@@ -264,11 +268,5 @@ class _UserPlayListSectionState extends ConsumerState<UserPlayListSection> {
           enableBottomRadius: i == details.length - 1,
         )
     ];
-  }
-
-  static Widget _singleSliver({required Widget child}) {
-    return SliverList(
-      delegate: SliverChildListDelegate([child]),
-    );
   }
 }

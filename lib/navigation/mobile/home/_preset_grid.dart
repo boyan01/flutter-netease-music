@@ -14,7 +14,7 @@ class PresetGridSection extends ConsumerWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Material(
-        color: Theme.of(context).backgroundColor,
+        color: context.colorScheme.surface,
         borderRadius: BorderRadius.circular(8),
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 4),
@@ -24,13 +24,6 @@ class PresetGridSection extends ConsumerWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  _PinnedTile(
-                    icon: Icons.arrow_circle_down_outlined,
-                    label: context.strings.localMusic,
-                    onTap: () {
-                      toast('TODO');
-                    },
-                  ),
                   _PinnedTile(
                     icon: Icons.cloud_upload_outlined,
                     label: context.strings.cloudMusic,
@@ -64,37 +57,11 @@ class PresetGridSection extends ConsumerWidget {
                       }
                     },
                   ),
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  _PinnedTile(
-                    icon: Icons.supervised_user_circle_outlined,
-                    label: context.strings.friends,
-                    onTap: () {
-                      toast('TODO');
-                    },
-                  ),
-                  _PinnedTile(
-                    icon: Icons.star_border_rounded,
-                    label: context.strings.collectionLike,
-                    onTap: () {
-                      context.secondaryNavigator!.pushNamed(pageMyCollection);
-                    },
-                  ),
                   _PinnedTile(
                     icon: Icons.radio,
                     label: context.strings.myDjs,
                     onTap: () {
                       context.secondaryNavigator!.pushNamed(pageMyDj);
-                    },
-                  ),
-                  _PinnedTile(
-                    icon: Icons.favorite,
-                    label: context.strings.todo,
-                    onTap: () {
-                      toast('TODO');
                     },
                   ),
                 ],
@@ -131,12 +98,11 @@ class _PinnedTile extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(icon, size: 24, color: Theme.of(context).primaryColorLight),
+            Icon(icon, size: 24, color: context.colorScheme.textPrimary),
             const SizedBox(height: 4),
             Text(
               label,
-              style:
-                  Theme.of(context).textTheme.bodyText2!.copyWith(fontSize: 12),
+              style: context.textTheme.bodySmall,
             ),
           ],
         ),

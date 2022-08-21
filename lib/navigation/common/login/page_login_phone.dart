@@ -230,7 +230,7 @@ class _ButtonNextStep extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
-        foregroundColor: Theme.of(context).primaryColor,
+        foregroundColor: context.colorScheme.onPrimary,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         textStyle: Theme.of(context).primaryTextTheme.bodyText2,
         padding: const EdgeInsets.symmetric(vertical: 18),
