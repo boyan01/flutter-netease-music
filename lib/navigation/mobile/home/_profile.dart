@@ -10,11 +10,14 @@ import '../../common/navigation_target.dart';
 class UserProfileSection extends ConsumerWidget {
   const UserProfileSection({super.key});
 
+  static const height = 80.0;
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final detail = ref.watch(userProvider);
+    assert(detail != null, 'user detail is null');
     if (detail == null) {
-      return const _NotLogin();
+      return const SizedBox(height: height);
     }
     return Padding(
       padding: const EdgeInsets.only(bottom: 8, left: 16, right: 16),

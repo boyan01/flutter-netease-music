@@ -72,7 +72,7 @@ const double _kPlayListDividerHeight = 10;
 class MyPlayListsHeaderDelegate extends SliverPersistentHeaderDelegate {
   MyPlayListsHeaderDelegate(this.tabController);
 
-  final TabController? tabController;
+  final TabController tabController;
 
   @override
   Widget build(
@@ -97,9 +97,9 @@ class MyPlayListsHeaderDelegate extends SliverPersistentHeaderDelegate {
 
 class _MyPlayListsHeader extends StatelessWidget
     implements PreferredSizeWidget {
-  const _MyPlayListsHeader({super.key, this.controller});
+  const _MyPlayListsHeader({super.key, required this.controller});
 
-  final TabController? controller;
+  final TabController controller;
 
   @override
   Size get preferredSize => const Size.fromHeight(_kPlayListHeaderHeight);
@@ -138,11 +138,11 @@ class UserPlayListSection extends ConsumerStatefulWidget {
   const UserPlayListSection({
     super.key,
     required this.userId,
-    this.scrollController,
+    required this.scrollController,
   });
 
   final int? userId;
-  final ScrollController? scrollController;
+  final ScrollController scrollController;
 
   @override
   ConsumerState<UserPlayListSection> createState() =>
@@ -157,20 +157,20 @@ class _UserPlayListSectionState extends ConsumerState<UserPlayListSection> {
   @override
   void initState() {
     super.initState();
-    widget.scrollController!.addListener(_onScrolled);
+    widget.scrollController.addListener(_onScrolled);
   }
 
   @override
   void didUpdateWidget(covariant UserPlayListSection oldWidget) {
     super.didUpdateWidget(oldWidget);
-    oldWidget.scrollController!.removeListener(_onScrolled);
-    widget.scrollController!.addListener(_onScrolled);
+    oldWidget.scrollController.removeListener(_onScrolled);
+    widget.scrollController.addListener(_onScrolled);
   }
 
   @override
   void dispose() {
     super.dispose();
-    widget.scrollController!.removeListener(_onScrolled);
+    widget.scrollController.removeListener(_onScrolled);
   }
 
   void _onScrolled() {
