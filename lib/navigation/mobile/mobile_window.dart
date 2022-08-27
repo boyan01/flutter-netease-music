@@ -56,6 +56,7 @@ class _MobileWindowOnDesktopWrapper extends HookConsumerWidget {
       children: [
         Material(
           child: MoveWindow(
+            enableDoubleClickInteraction: false,
             child: SizedBox(
               height: 40,
               child: Stack(
