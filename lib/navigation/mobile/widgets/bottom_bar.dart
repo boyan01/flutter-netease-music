@@ -208,7 +208,10 @@ class BottomPlayerBar extends ConsumerWidget {
               ),
               _PauseButton(),
               if (queue.isFM)
-                LikeButton(music: music)
+                LikeButton(
+                  music: music,
+                  likedColor: context.colorScheme.primary,
+                )
               else
                 AppIconButton(
                   tooltip: context.strings.playingList,

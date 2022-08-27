@@ -1,5 +1,9 @@
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../component.dart';
+import '../../providers/navigator_provider.dart';
 
 class AppIconButton extends StatelessWidget {
   const AppIconButton({
@@ -30,7 +34,7 @@ class AppIconButton extends StatelessWidget {
         onPressed: enable ? (onPressed ?? () {}) : null,
         icon: Icon(icon),
         iconSize: size,
-        color: color,
+        color: color ?? IconTheme.of(context).color,
         disabledColor: disabledColor,
         splashRadius: size,
         tooltip: tooltip,
@@ -88,6 +92,37 @@ class PlaylistIconTextButton extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+class AppBackButton extends ConsumerWidget {
+  const AppBackButton({
+    super.key,
+    this.size = 24,
+    this.color,
+  });
+
+  final double size;
+
+  final Color? color;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final IconData icon;
+    if (defaultTargetPlatform == TargetPlatform.iOS ||
+        defaultTargetPlatform == TargetPlatform.macOS) {
+      icon = FluentIcons.ios_arrow_ltr_24_regular;
+    } else {
+      icon = FluentIcons.arrow_left_24_regular;
+    }
+    return AppIconButton(
+      icon: icon,
+      size: size,
+      color: color,
+      onPressed: () {
+        ref.read(navigatorProvider.notifier).back();
+      },
     );
   }
 }

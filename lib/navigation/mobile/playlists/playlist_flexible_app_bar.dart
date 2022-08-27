@@ -8,6 +8,7 @@ import '../../../component/utils/time.dart';
 import '../../../extension.dart';
 import '../../../providers/navigator_provider.dart';
 import '../../../repository.dart';
+import '../../common/buttons.dart';
 
 class AlbumFlexibleAppBar extends StatelessWidget {
   const AlbumFlexibleAppBar({
@@ -416,11 +417,13 @@ class _AppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      leading: const BackButton(),
+      leading: const AppBackButton(),
       automaticallyImplyLeading: false,
       title: Text(t > 0.5 ? playlist.name : context.strings.playlist),
       backgroundColor: Colors.transparent,
+      foregroundColor: context.colorScheme.onPrimary,
       elevation: 0,
+      centerTitle: false,
       titleSpacing: 0,
     );
   }
