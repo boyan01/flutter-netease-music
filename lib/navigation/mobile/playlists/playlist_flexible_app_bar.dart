@@ -282,7 +282,9 @@ class _OverlappedActionButtons extends StatelessWidget {
         const Spacer(),
         Transform.translate(
           offset: Offset(
-              0, currentExtent < extentLimit ? extentLimit - currentExtent : 0),
+            0,
+            currentExtent < extentLimit ? extentLimit - currentExtent : 0,
+          ),
           child: AnimatedOpacity(
             opacity: currentExtent > extentLimit ? 1 : 0,
             curve: Curves.easeInOut,

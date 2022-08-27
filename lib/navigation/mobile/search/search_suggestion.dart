@@ -6,10 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:loader/loader.dart';
 
 import '../../../component.dart';
-import '../../../providers/navigator_provider.dart';
-import '../../../providers/search_history_provider.dart';
 import '../../../repository/netease.dart';
-import '../../common/navigation_target.dart';
 
 typedef SuggestionSelectedCallback = void Function(String keyword);
 
