@@ -99,5 +99,6 @@
   "logout": "退出登录",
   "events": "动态",
   "follower": "粉丝",
-  "follow": "关注"
+  "follow": "关注",
+  "searchHistory": "搜索历史"
 }

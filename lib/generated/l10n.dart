@@ -1061,6 +1061,16 @@ class S {
       args: [],
     );
   }
+
+  /// `Search History`
+  String get searchHistory {
+    return Intl.message(
+      'Search History',
+      name: 'searchHistory',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

@@ -8,7 +8,7 @@ import '../../component/utils/utils.dart';
 import '../../repository/netease.dart';
 import 'model_search_history.dart';
 import 'search_result_page.dart';
-import 'search_suggestion.dart';
+import '../../navigation/mobile/search/search_suggestion.dart';
 
 class SearchPageRoute<T> extends PageRoute<T> {
   SearchPageRoute(this._proxyAnimation)
@@ -220,13 +220,7 @@ class _SearchPageState extends State<SearchPage> {
         !_focusNode.hasFocus) {
       return const SizedBox.shrink();
     }
-    return SuggestionOverflow(
-      query: query,
-      onSuggestionSelected: (keyword) {
-        query = keyword;
-        _search(query);
-      },
-    );
+    return SuggestionOverflow(query: query);
   }
 }
 
