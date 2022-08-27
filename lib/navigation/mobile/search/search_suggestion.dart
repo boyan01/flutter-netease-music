@@ -110,9 +110,15 @@ class SuggestionSectionContent extends StatelessWidget {
 
 ///搜索建议
 class SuggestionOverflow extends ConsumerStatefulWidget {
-  const SuggestionOverflow({super.key, required this.query});
+  const SuggestionOverflow({
+    super.key,
+    required this.query,
+    required this.onSuggestionSelected,
+  });
 
   final String query;
+
+  final SuggestionSelectedCallback onSuggestionSelected;
 
   @override
   ConsumerState<SuggestionOverflow> createState() {
@@ -162,12 +168,7 @@ class _SuggestionOverflowState extends ConsumerState<SuggestionOverflow> {
               overflow: TextOverflow.ellipsis,
             ),
             onTap: () {
-              ref
-                  .read(navigatorProvider.notifier)
-                  .navigate(NavigationTargetSearchMusicResult(widget.query));
-              ref
-                  .read(searchHistoryProvider.notifier)
-                  .insertSearchHistory(widget.query);
+              widget.onSuggestionSelected(widget.query);
             },
           ),
           Loader<List<String>>(

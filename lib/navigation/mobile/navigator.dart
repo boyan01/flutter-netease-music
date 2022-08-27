@@ -9,7 +9,6 @@ import 'player/page_fm_playing.dart';
 import 'player/page_playing.dart';
 import 'playlists/page_album_detail.dart';
 import 'playlists/page_playlist_detail.dart';
-import 'search/page_search_music_result.dart';
 import 'settings/page_setting.dart';
 import 'user/page_user_detail.dart';
 import 'widgets/slide_up_page_route.dart';
@@ -97,11 +96,6 @@ class MobileNavigatorController extends NavigatorController {
       case NavigationTargetAlbumDetail:
         page = AlbumDetailPage(
           albumId: (target as NavigationTargetAlbumDetail).albumId,
-        );
-        break;
-      case NavigationTargetSearchMusicResult:
-        page = PageMusicSearchResult(
-          query: (target as NavigationTargetSearchMusicResult).keyword,
         );
         break;
       default:

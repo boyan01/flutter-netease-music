@@ -1,145 +1,169 @@
-import 'package:fluentui_system_icons/fluentui_system_icons.dart';
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../extension.dart';
-import '../../../providers/navigator_provider.dart';
 import '../../../providers/search_history_provider.dart';
-import '../../common/buttons.dart';
-import '../../common/navigation_target.dart';
+import '../search/page_search_music_result.dart';
+import '../search/search_bar.dart';
 import '../search/search_suggestion.dart';
 
-class HomeTabSearch extends HookConsumerWidget {
+typedef OnQueryCallback = void Function(String query);
+
+enum _SearchPageState {
+  initial,
+  focusing,
+  inputting,
+  search,
+}
+
+class HomeTabSearch extends ConsumerStatefulWidget {
   const HomeTabSearch({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final enableSearch = useState(false);
-    final textEditController = useTextEditingController();
-
-    final inputText = useListenable(textEditController).text.trim();
-    final Widget body;
-    if (enableSearch.value) {
-      if (inputText.isNotEmpty) {
-        body = Column(
-          children: <Widget>[
-            SuggestionOverflow(query: inputText),
-          ],
-        );
-      } else {
-        body = Column(
-          children: const [
-            _SearchHistory(),
-          ],
-        );
-      }
-    } else {
-      body = const SizedBox();
-    }
-
-    return Column(
-      children: [
-        const SizedBox(height: 20),
-        GestureDetector(
-          behavior: HitTestBehavior.opaque,
-          onTap: () {
-            enableSearch.value = true;
-          },
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: SearchBar(
-              enable: enableSearch.value,
-              onDismissTapped: () {
-                enableSearch.value = false;
-              },
-              controller: textEditController,
-            ),
-          ),
-        ),
-        const SizedBox(height: 10),
-        Expanded(child: body)
-      ],
-    );
-  }
+  ConsumerState<HomeTabSearch> createState() => _HomeTabSearchState();
 }
 
-class SearchBar extends HookWidget implements PreferredSizeWidget {
-  const SearchBar({
-    super.key,
-    required this.enable,
-    required this.onDismissTapped,
-    required this.controller,
-  });
+class _HomeTabSearchState extends ConsumerState<HomeTabSearch> {
+  final _editController = TextEditingController();
+  var _state = _SearchPageState.initial;
+  final _focusNode = FocusNode();
 
-  final bool enable;
+  String? _query;
 
-  final VoidCallback onDismissTapped;
+  @override
+  void initState() {
+    super.initState();
+    _editController.addListener(_onTextChanged);
+  }
 
-  final TextEditingController controller;
+  void _onTextChanged() {
+    final text = _editController.text.trim();
+    if (_state == _SearchPageState.search && _query != text) {
+      _state = _SearchPageState.inputting;
+    } else if (_state == _SearchPageState.focusing && text.isNotEmpty) {
+      _state = _SearchPageState.inputting;
+    } else if (_state == _SearchPageState.inputting && text.isEmpty) {
+      _state = _SearchPageState.focusing;
+    }
+    setState(() {});
+  }
+
+  void _doQuery(String query) {
+    ref.read(searchHistoryProvider.notifier).insertSearchHistory(query);
+    setState(() {
+      _state = _SearchPageState.search;
+      _query = query;
+      _editController.value = TextEditingValue(
+        text: query,
+        selection: TextSelection(
+          baseOffset: query.length,
+          extentOffset: query.length,
+        ),
+      );
+      _focusNode.unfocus();
+    });
+  }
+
+  @override
+  void dispose() {
+    _editController.removeListener(_onTextChanged);
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    final focusNode = useFocusNode();
-    useEffect(
-      () {
-        if (enable) {
-          focusNode.requestFocus();
+    final Widget body;
+    switch (_state) {
+      case _SearchPageState.initial:
+        body = const SizedBox();
+        break;
+      case _SearchPageState.focusing:
+        body = Column(
+          children: [
+            _SearchHistory(onQuery: _doQuery),
+          ],
+        );
+        break;
+      case _SearchPageState.inputting:
+        body = Column(
+          children: <Widget>[
+            SuggestionOverflow(
+              query: _editController.text.trim(),
+              onSuggestionSelected: _doQuery,
+            ),
+          ],
+        );
+        break;
+      case _SearchPageState.search:
+        body = PageMusicSearchResult(query: _editController.text.trim());
+        break;
+    }
+    return WillPopScope(
+      onWillPop: () async {
+        if (_state == _SearchPageState.search) {
+          setState(() {
+            _state = _SearchPageState.focusing;
+            _editController.clear();
+          });
+        } else if (_state == _SearchPageState.inputting ||
+            _state == _SearchPageState.focusing) {
+          setState(() {
+            _state = _SearchPageState.initial;
+            _editController.clear();
+          });
+        } else {
+          return true;
         }
+        return false;
       },
-      [enable],
-    );
-    return Row(
-      children: [
-        Expanded(
-          child: SizedBox(
-            height: 50,
-            child: CupertinoSearchTextField(
-              focusNode: focusNode,
-              controller: controller,
-              placeholder: context.strings.search,
-              enabled: enable,
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              itemColor: context.colorScheme.textPrimary,
-              placeholderStyle: TextStyle(
-                color: context.colorScheme.textPrimary,
+      child: Column(
+        children: [
+          const SizedBox(height: 4),
+          GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            onTap: () {
+              if (_state == _SearchPageState.initial) {
+                setState(() {
+                  _state = _SearchPageState.focusing;
+                  Timer(
+                    const Duration(milliseconds: 100),
+                    _focusNode.requestFocus,
+                  );
+                });
+              }
+            },
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: SearchBar(
+                focusNode: _focusNode,
+                controller: _editController,
+                enable: _state != _SearchPageState.initial,
+                onDismissTapped: () {
+                  setState(() {
+                    _state = _SearchPageState.initial;
+                    _editController.clear();
+                  });
+                },
               ),
-              style: TextStyle(
-                color: context.colorScheme.textPrimary,
-              ),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(50),
-                border: Border.all(
-                  color: context.colorScheme.divider,
-                ),
-                color: context.colorScheme.surface,
-              ),
-              prefixInsets: const EdgeInsetsDirectional.fromSTEB(20, 0, 0, 4),
             ),
           ),
-        ),
-        AnimatedSize(
-          duration: const Duration(milliseconds: 200),
-          child: enable
-              ? Padding(
-                  padding: const EdgeInsets.only(left: 10),
-                  child: AppIconButton(
-                    icon: FluentIcons.dismiss_20_regular,
-                    onPressed: onDismissTapped,
-                  ),
-                )
-              : const SizedBox(),
-        ),
-      ],
+          const SizedBox(height: 10),
+          Expanded(child: body)
+        ],
+      ),
     );
   }
-
-  @override
-  Size get preferredSize => const Size.fromHeight(50);
 }
 
 class _SearchHistory extends ConsumerWidget {
-  const _SearchHistory({super.key});
+  const _SearchHistory({
+    super.key,
+    required this.onQuery,
+  });
+
+  final OnQueryCallback onQuery;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -153,12 +177,7 @@ class _SearchHistory extends ConsumerWidget {
         title: context.strings.searchHistory,
         content: SuggestionSectionContent.from(
           words: histories,
-          suggestionSelectedCallback: (word) {
-            ref
-                .read(navigatorProvider.notifier)
-                .navigate(NavigationTargetSearchMusicResult(word));
-            ref.read(searchHistoryProvider.notifier).insertSearchHistory(word);
-          },
+          suggestionSelectedCallback: onQuery,
         ),
         onDeleteClicked: () {
           ref.read(searchHistoryProvider.notifier).clearSearchHistory();

@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../extension.dart';
 import '../../../providers/player_provider.dart';
 import '../../../providers/search_provider.dart';
 import '../../../repository/data/track.dart';
 import '../../common/playlist/music_list.dart';
-import '../home/tab_search.dart';
 import '../widgets/track_title.dart';
 
 class PageMusicSearchResult extends ConsumerWidget {
@@ -39,7 +38,7 @@ class PageMusicSearchResult extends ConsumerWidget {
   }
 }
 
-class _SearchResultScaffold extends HookWidget {
+class _SearchResultScaffold extends HookConsumerWidget {
   const _SearchResultScaffold({
     super.key,
     required this.query,
@@ -50,27 +49,8 @@ class _SearchResultScaffold extends HookWidget {
   final Widget body;
 
   @override
-  Widget build(BuildContext context) {
-    final controller = useTextEditingController();
-    useEffect(
-      () {
-        controller.value = TextEditingValue(
-          text: query,
-          selection: TextSelection.collapsed(
-            offset: query.length,
-          ),
-        );
-      },
-      [query],
-    );
-    return Scaffold(
-      appBar: SearchBar(
-        enable: true,
-        controller: controller,
-        onDismissTapped: () {},
-      ),
-      body: body,
-    );
+  Widget build(BuildContext context, WidgetRef ref) {
+    return body;
   }
 }
 

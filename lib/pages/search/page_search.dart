@@ -220,7 +220,10 @@ class _SearchPageState extends State<SearchPage> {
         !_focusNode.hasFocus) {
       return const SizedBox.shrink();
     }
-    return SuggestionOverflow(query: query);
+    return SuggestionOverflow(
+      query: query,
+      onSuggestionSelected: _search,
+    );
   }
 }
 
