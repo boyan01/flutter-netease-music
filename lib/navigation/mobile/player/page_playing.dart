@@ -224,7 +224,7 @@ class PlayingTitle extends ConsumerWidget {
                     music.displaySubtitle,
                     style: context.primaryTextTheme.caption,
                     maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
+                    overflow: TextOverflow.clip,
                   ),
                 ),
                 Icon(
@@ -232,6 +232,7 @@ class PlayingTitle extends ConsumerWidget {
                   size: 17,
                   color: context.colorScheme.onPrimary,
                 ),
+                const SizedBox(width: 16),
               ],
             ),
           )
