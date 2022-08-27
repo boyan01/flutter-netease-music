@@ -13,6 +13,8 @@ import 'settings/page_setting.dart';
 import 'user/page_user_detail.dart';
 import 'widgets/slide_up_page_route.dart';
 
+typedef AppWillPopCallback = bool Function();
+
 class MobileNavigatorController extends NavigatorController {
   MobileNavigatorController() {
     _pages.add(NavigationTargetLibrary());
@@ -21,12 +23,27 @@ class MobileNavigatorController extends NavigatorController {
 
   final _pages = <NavigationTarget>[];
 
+  final List<AppWillPopCallback> _willPopCallbacks = [];
+
   @override
   void back() {
+    for (final callback in _willPopCallbacks.reversed) {
+      if (!callback()) {
+        return;
+      }
+    }
     if (canBack) {
       _pages.removeLast();
       notifyListeners();
     }
+  }
+
+  void addScopedWillPopCallback(AppWillPopCallback callback) {
+    _willPopCallbacks.add(callback);
+  }
+
+  void removeScopedWillPopCallback(AppWillPopCallback callback) {
+    _willPopCallbacks.remove(callback);
   }
 
   @override

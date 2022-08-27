@@ -8,6 +8,7 @@ import '../../../providers/search_history_provider.dart';
 import '../search/page_search_music_result.dart';
 import '../search/search_bar.dart';
 import '../search/search_suggestion.dart';
+import '../widgets/will_pop_scope.dart';
 
 typedef OnQueryCallback = void Function(String query);
 
@@ -100,8 +101,8 @@ class _HomeTabSearchState extends ConsumerState<HomeTabSearch> {
         body = PageMusicSearchResult(query: _editController.text.trim());
         break;
     }
-    return WillPopScope(
-      onWillPop: () async {
+    return AppWillPopScope(
+      onWillPop: () {
         if (_state == _SearchPageState.search) {
           setState(() {
             _state = _SearchPageState.focusing;
