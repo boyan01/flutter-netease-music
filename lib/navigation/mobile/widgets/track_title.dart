@@ -96,7 +96,7 @@ class _IndexOrPlayIcon extends ConsumerWidget {
     final playingTrack = ref.watch(playingTrackProvider);
     final isCurrent =
         TrackTileContainer.getPlaylistId(context) == playingListId &&
-            playingTrack == track;
+            playingTrack?.id == track.id;
     final isPlaying = ref.watch(isPlayingProvider);
     if (isCurrent) {
       return isPlaying
