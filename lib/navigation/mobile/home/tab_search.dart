@@ -119,40 +119,42 @@ class _HomeTabSearchState extends ConsumerState<HomeTabSearch> {
         }
         return false;
       },
-      child: Column(
-        children: [
-          const SizedBox(height: 4),
-          GestureDetector(
-            behavior: HitTestBehavior.opaque,
-            onTap: () {
-              if (_state == _SearchPageState.initial) {
-                setState(() {
-                  _state = _SearchPageState.focusing;
-                  Timer(
-                    const Duration(milliseconds: 100),
-                    _focusNode.requestFocus,
-                  );
-                });
-              }
-            },
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: SearchBar(
-                focusNode: _focusNode,
-                controller: _editController,
-                enable: _state != _SearchPageState.initial,
-                onDismissTapped: () {
+      child: SafeArea(
+        child: Column(
+          children: [
+            const SizedBox(height: 4),
+            GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTap: () {
+                if (_state == _SearchPageState.initial) {
                   setState(() {
-                    _state = _SearchPageState.initial;
-                    _editController.clear();
+                    _state = _SearchPageState.focusing;
+                    Timer(
+                      const Duration(milliseconds: 100),
+                      _focusNode.requestFocus,
+                    );
                   });
-                },
+                }
+              },
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: SearchBar(
+                  focusNode: _focusNode,
+                  controller: _editController,
+                  enable: _state != _SearchPageState.initial,
+                  onDismissTapped: () {
+                    setState(() {
+                      _state = _SearchPageState.initial;
+                      _editController.clear();
+                    });
+                  },
+                ),
               ),
             ),
-          ),
-          const SizedBox(height: 10),
-          Expanded(child: body)
-        ],
+            const SizedBox(height: 10),
+            Expanded(child: body)
+          ],
+        ),
       ),
     );
   }

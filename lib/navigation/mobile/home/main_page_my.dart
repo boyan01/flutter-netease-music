@@ -47,27 +47,29 @@ class _UserLibraryBody extends HookConsumerWidget {
     ].reduce((a, b) => a + b);
     return DefaultTabController(
       length: 2,
-      child: CustomScrollView(
-        controller: scrollController,
-        slivers: [
-          SliverList(
-            delegate: SliverChildListDelegate(
-              [
-                const UserProfileSection(),
-                const PresetGridSection(),
-                const SizedBox(height: 8),
-              ],
+      child: SafeArea(
+        child: CustomScrollView(
+          controller: scrollController,
+          slivers: [
+            SliverList(
+              delegate: SliverChildListDelegate(
+                [
+                  const UserProfileSection(),
+                  const PresetGridSection(),
+                  const SizedBox(height: 8),
+                ],
+              ),
             ),
-          ),
-          SliverPersistentHeader(
-            pinned: true,
-            delegate: MyPlayListsHeaderDelegate(),
-          ),
-          UserPlayListSection(
-            scrollController: scrollController,
-            firstItemOffset: headerHeight,
-          ),
-        ],
+            SliverPersistentHeader(
+              pinned: true,
+              delegate: MyPlayListsHeaderDelegate(),
+            ),
+            UserPlayListSection(
+              scrollController: scrollController,
+              firstItemOffset: headerHeight,
+            ),
+          ],
+        ),
       ),
     );
   }
