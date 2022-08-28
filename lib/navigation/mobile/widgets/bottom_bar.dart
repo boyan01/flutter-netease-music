@@ -5,14 +5,15 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../extension.dart';
 import '../../../material/player.dart';
-import '../../../pages/page_playing_list.dart';
 import '../../../providers/lyric_provider.dart';
 import '../../../providers/navigator_provider.dart';
 import '../../../providers/player_provider.dart';
 import '../../../repository.dart';
+import '../../common/buttons.dart';
 import '../../common/like_button.dart';
 import '../../common/navigation_target.dart';
 import '../../common/progress_track_container.dart';
+import '../player/page_playing_list.dart';
 
 const kBottomPlayerBarHeight = 56.0;
 
@@ -34,7 +35,7 @@ class AnimatedAppBottomBar extends HookConsumerWidget {
 
     final bool hideNavigationBar;
     if (!kMobileHomeTabs.contains(currentRoute.runtimeType)) {
-      currentTab = lastHomeTarget.value ?? NavigationTargetMy();
+      currentTab = lastHomeTarget.value ?? NavigationTargetLibrary();
       hideNavigationBar = true;
     } else {
       currentTab = currentRoute;
@@ -107,7 +108,7 @@ class AnimatedAppBottomBar extends HookConsumerWidget {
             duration: const Duration(milliseconds: 200),
             opacity: hidePlayerBar ? 0 : 1,
             curve: Curves.easeIn,
-            child: const BottomPlayerBar(),
+            child: const _MobileBottomPlayerBar(),
           ),
         ),
         AnimatedPositioned(
@@ -144,8 +145,8 @@ class AnimatedAppBottomBar extends HookConsumerWidget {
   }
 }
 
-class BottomPlayerBar extends ConsumerWidget {
-  const BottomPlayerBar({super.key});
+class _MobileBottomPlayerBar extends ConsumerWidget {
+  const _MobileBottomPlayerBar({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -207,14 +208,15 @@ class BottomPlayerBar extends ConsumerWidget {
               ),
               _PauseButton(),
               if (queue.isFM)
-                LikeButton(music: music)
+                LikeButton(
+                  music: music,
+                  likedColor: context.colorScheme.primary,
+                )
               else
-                IconButton(
+                AppIconButton(
                   tooltip: context.strings.playingList,
-                  icon: const Icon(FluentIcons.list_24_regular),
-                  onPressed: () {
-                    PlayingListDialog.show(context);
-                  },
+                  icon: FluentIcons.list_24_regular,
+                  onPressed: () => showMobilePlayingBottomSheet(context),
                 ),
             ],
           ),
@@ -250,14 +252,14 @@ class _PauseButton extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return PlayingIndicator(
-      playing: IconButton(
-        icon: const Icon(Icons.pause),
+      playing: AppIconButton(
+        icon: FluentIcons.pause_circle_24_regular,
         onPressed: () {
           ref.read(playerStateProvider.notifier).pause();
         },
       ),
-      pausing: IconButton(
-        icon: const Icon(Icons.play_arrow),
+      pausing: AppIconButton(
+        icon: FluentIcons.play_circle_24_regular,
         onPressed: () {
           ref.read(playerStateProvider.notifier).play();
         },
@@ -300,9 +302,6 @@ class HomeBottomNavigationBar extends ConsumerWidget {
             target = NavigationTargetLibrary();
             break;
           case 2:
-            target = NavigationTargetMy();
-            break;
-          case 3:
             target = NavigationTargetSearch();
             break;
           default:
@@ -319,10 +318,6 @@ class HomeBottomNavigationBar extends ConsumerWidget {
         BottomNavigationBarItem(
           icon: const Icon(Icons.my_library_music),
           label: context.strings.library,
-        ),
-        BottomNavigationBarItem(
-          icon: const Icon(Icons.person),
-          label: context.strings.my,
         ),
         BottomNavigationBarItem(
           icon: const Icon(Icons.search),

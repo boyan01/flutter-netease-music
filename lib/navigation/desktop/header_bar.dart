@@ -308,11 +308,19 @@ class _WindowButton extends StatelessWidget {
 }
 
 class MoveWindow extends StatelessWidget {
-  const MoveWindow({super.key, required this.child});
+  const MoveWindow({
+    super.key,
+    required this.child,
+    this.enableDoubleClickInteraction = true,
+  });
 
-  const MoveWindow.expand({super.key}) : child = const SizedBox.expand();
+  const MoveWindow.expand({super.key})
+      : child = const SizedBox.expand(),
+        enableDoubleClickInteraction = true;
 
   final Widget child;
+
+  final bool enableDoubleClickInteraction;
 
   @override
   Widget build(BuildContext context) {
@@ -328,13 +336,15 @@ class MoveWindow extends StatelessWidget {
       onPanStart: (details) {
         WindowManager.instance.startDragging();
       },
-      onDoubleTap: () async {
-        if (await WindowManager.instance.isMaximized()) {
-          await WindowManager.instance.restore();
-        } else {
-          await WindowManager.instance.maximize();
-        }
-      },
+      onDoubleTap: !enableDoubleClickInteraction
+          ? null
+          : () async {
+              if (await WindowManager.instance.isMaximized()) {
+                await WindowManager.instance.restore();
+              } else {
+                await WindowManager.instance.maximize();
+              }
+            },
       child: child,
     );
   }

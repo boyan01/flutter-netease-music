@@ -7,6 +7,7 @@ import '../../providers/account_provider.dart';
 import '../../providers/favorite_tracks_provider.dart';
 import '../../providers/player_provider.dart';
 import '../../repository.dart';
+import 'buttons.dart';
 
 /// 歌曲喜欢按钮
 class LikeButton extends ConsumerWidget {
@@ -40,12 +41,10 @@ class LikeButton extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isLiked = ref.watch(musicIsFavoriteProvider(music));
-    return IconButton(
-      icon: Icon(
-        isLiked ? FluentIcons.heart_24_filled : FluentIcons.heart_24_regular,
-      ),
-      iconSize: iconSize,
-      splashRadius: iconSize,
+    return AppIconButton(
+      icon:
+          isLiked ? FluentIcons.heart_24_filled : FluentIcons.heart_24_regular,
+      size: iconSize ?? 24,
       color: isLiked ? likedColor : color,
       padding: padding,
       onPressed: () async {

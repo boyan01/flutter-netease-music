@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../extension.dart';
 import '../../../providers/account_provider.dart';
@@ -16,7 +17,7 @@ const double kHeaderHeight = 280 + kToolbarHeight;
 /// page display a Playlist
 ///
 /// Playlist : a list of musics by user collected
-class PlaylistDetailPage extends ConsumerWidget {
+class PlaylistDetailPage extends HookConsumerWidget {
   const PlaylistDetailPage(
     this.playlistId, {
     super.key,
@@ -29,10 +30,12 @@ class PlaylistDetailPage extends ConsumerWidget {
     final detail = ref.watch(
       playlistDetailProvider(playlistId).logErrorOnDebug(),
     );
+    final absorberHandle = useMemoized(SliverOverlapAbsorberHandle.new);
     return Scaffold(
       body: detail.when(
         data: (detail) => CustomScrollView(
           slivers: <Widget>[
+            SliverOverlapAbsorber(handle: absorberHandle),
             _Appbar(playlist: detail),
             _MusicList(detail),
           ],

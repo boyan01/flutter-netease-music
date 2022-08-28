@@ -99,5 +99,6 @@
   "logout": "Logout",
   "events": "Events",
   "follower": "Follower",
-  "follow": "Follow"
+  "follow": "Follow",
+  "searchHistory": "Search History"
 }

@@ -2,8 +2,11 @@ import 'dart:async';
 
 import 'package:async/async.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:loader/loader.dart';
-import '../../repository/netease.dart';
+
+import '../../../component.dart';
+import '../../../repository/netease.dart';
 
 typedef SuggestionSelectedCallback = void Function(String keyword);
 
@@ -103,7 +106,7 @@ class SuggestionSectionContent extends StatelessWidget {
 }
 
 ///搜索建议
-class SuggestionOverflow extends StatefulWidget {
+class SuggestionOverflow extends ConsumerStatefulWidget {
   const SuggestionOverflow({
     super.key,
     required this.query,
@@ -115,12 +118,12 @@ class SuggestionOverflow extends StatefulWidget {
   final SuggestionSelectedCallback onSuggestionSelected;
 
   @override
-  State<StatefulWidget> createState() {
+  ConsumerState<SuggestionOverflow> createState() {
     return _SuggestionOverflowState();
   }
 }
 
-class _SuggestionOverflowState extends State<SuggestionOverflow> {
+class _SuggestionOverflowState extends ConsumerState<SuggestionOverflow> {
   String? _query;
 
   CancelableOperation? _operationDelay;
@@ -150,49 +153,40 @@ class _SuggestionOverflowState extends State<SuggestionOverflow> {
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedPadding(
-      padding: const EdgeInsets.symmetric(horizontal: 40),
-      duration: const Duration(milliseconds: 300),
-      child: ConstrainedBox(
-        constraints: const BoxConstraints(minWidth: 280),
-        child: Material(
-          elevation: 24,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              ListTile(
-                title: Text(
-                  '搜索 : ${widget.query}',
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                onTap: () {
-                  widget.onSuggestionSelected(widget.query);
-                },
-              ),
-              Loader<List<String>>(
-                key: Key('suggest_$_query'),
-                loadTask: () => neteaseRepository!.searchSuggest(_query),
-                loadingBuilder: (context) {
-                  return Container();
-                },
-                builder: (context, result) {
-                  return Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: result.map((keyword) {
-                      return ListTile(
-                        title: Text(keyword),
-                        onTap: () {
-                          widget.onSuggestionSelected(keyword);
-                        },
-                      );
-                    }).toList(),
-                  );
-                },
-              )
-            ],
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          ListTile(
+            title: Text(
+              '${context.strings.search}: ${widget.query}',
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+            onTap: () {
+              widget.onSuggestionSelected(widget.query);
+            },
           ),
-        ),
+          Loader<List<String>>(
+            key: Key('suggest_$_query'),
+            loadTask: () => neteaseRepository!.searchSuggest(_query),
+            loadingBuilder: (context) {
+              return Container();
+            },
+            builder: (context, result) {
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                children: result.map((keyword) {
+                  return ListTile(
+                    title: Text(keyword),
+                    onTap: () {},
+                  );
+                }).toList(),
+              );
+            },
+          )
+        ],
       ),
     );
   }

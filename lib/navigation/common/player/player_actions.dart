@@ -22,7 +22,11 @@ class PlayingOperationBar extends ConsumerWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: <Widget>[
-        LikeButton(music: music, color: iconColor),
+        LikeButton(
+          music: music,
+          color: iconColor,
+          likedColor: context.colorScheme.primary,
+        ),
         IconButton(
           icon: Icon(Icons.comment, color: iconColor),
           onPressed: () => toast(context.strings.todo),

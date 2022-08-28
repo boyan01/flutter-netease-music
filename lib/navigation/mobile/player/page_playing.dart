@@ -1,17 +1,19 @@
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../extension.dart';
 import '../../../material.dart';
-import '../../../pages/page_playing_list.dart';
 import '../../../providers/navigator_provider.dart';
 import '../../../providers/player_provider.dart';
 import '../../../repository.dart';
+import '../../common/buttons.dart';
 import '../../common/player/cover.dart';
 import '../../common/player/lyric_view.dart';
 import '../../common/player/player_actions.dart';
 import '../../common/player_progress.dart';
 import 'background.dart';
+import 'page_playing_list.dart';
 
 class PlayingPage extends ConsumerWidget {
   const PlayingPage({super.key});
@@ -57,34 +59,21 @@ class PlayingPage extends ConsumerWidget {
 class PlayerControllerBar extends ConsumerWidget {
   const PlayerControllerBar({super.key});
 
-  Widget getPlayModeIcon(BuildContext context, Color? color) {
-    // TODO: implement getPlayModeIcon
-    return Icon(Icons.shuffle, color: color);
-  }
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final color = Theme.of(context).primaryIconTheme.color;
-
     final iconPlayPause = PlayingIndicator(
-      playing: IconButton(
-        tooltip: '暂停',
-        iconSize: 40,
-        icon: Icon(
-          Icons.pause_circle_outline,
-          color: color,
-        ),
+      playing: AppIconButton(
+        tooltip: context.strings.pause,
+        size: 40,
+        icon: FluentIcons.pause_circle_24_regular,
         onPressed: () {
           ref.read(playerProvider).pause();
         },
       ),
-      pausing: IconButton(
-        tooltip: '播放',
-        iconSize: 40,
-        icon: Icon(
-          Icons.play_circle_outline,
-          color: color,
-        ),
+      pausing: AppIconButton(
+        tooltip: context.strings.play,
+        size: 40,
+        icon: FluentIcons.play_circle_24_regular,
         onPressed: () {
           ref.read(playerProvider).play();
         },
@@ -102,56 +91,44 @@ class PlayerControllerBar extends ConsumerWidget {
       ),
     );
 
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 16),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: <Widget>[
-          IconButton(
-            splashRadius: 24,
-            icon: getPlayModeIcon(context, color),
-            onPressed: () {
-              // FIXME
-              // context.player.setPlayMode(context.playMode.next);
-            },
-          ),
-          IconButton(
-            iconSize: 36,
-            splashRadius: 24,
-            tooltip: context.strings.skipToPrevious,
-            icon: Icon(
-              Icons.skip_previous,
-              color: color,
+    return IconTheme(
+      data: IconThemeData(color: context.colorScheme.onPrimary),
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 16),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: <Widget>[
+            AppIconButton(
+              icon: FluentIcons.arrow_repeat_all_20_regular,
+              onPressed: () {
+                // FIXME
+                // context.player.setPlayMode(context.playMode.next);
+              },
             ),
-            onPressed: () {
-              ref.read(playerProvider).skipToPrevious();
-            },
-          ),
-          iconPlayPause,
-          IconButton(
-            tooltip: context.strings.skipToNext,
-            iconSize: 36,
-            splashRadius: 24,
-            icon: Icon(
-              Icons.skip_next,
-              color: color,
+            AppIconButton(
+              size: 36,
+              tooltip: context.strings.skipToPrevious,
+              icon: FluentIcons.previous_20_regular,
+              onPressed: () {
+                ref.read(playerProvider).skipToPrevious();
+              },
             ),
-            onPressed: () {
-              ref.read(playerProvider).skipToNext();
-            },
-          ),
-          IconButton(
-            tooltip: context.strings.playingList,
-            splashRadius: 24,
-            icon: Icon(
-              Icons.menu,
-              color: color,
+            iconPlayPause,
+            AppIconButton(
+              tooltip: context.strings.skipToNext,
+              size: 36,
+              icon: FluentIcons.next_20_regular,
+              onPressed: () {
+                ref.read(playerProvider).skipToNext();
+              },
             ),
-            onPressed: () {
-              PlayingListDialog.show(context);
-            },
-          ),
-        ],
+            AppIconButton(
+              tooltip: context.strings.playingList,
+              icon: FluentIcons.list_20_regular,
+              onPressed: () => showMobilePlayingBottomSheet(context),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -222,7 +199,7 @@ class PlayingTitle extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return AppBar(
       elevation: 0,
-      leading: const BackButton(),
+      leading: AppBackButton(color: context.colorScheme.onPrimary),
       titleSpacing: 0,
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -245,10 +222,15 @@ class PlayingTitle extends ConsumerWidget {
                     music.displaySubtitle,
                     style: context.primaryTextTheme.caption,
                     maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
+                    overflow: TextOverflow.clip,
                   ),
                 ),
-                const Icon(Icons.chevron_right, size: 17),
+                Icon(
+                  FluentIcons.chevron_right_20_regular,
+                  size: 17,
+                  color: context.colorScheme.onPrimary,
+                ),
+                const SizedBox(width: 16),
               ],
             ),
           )

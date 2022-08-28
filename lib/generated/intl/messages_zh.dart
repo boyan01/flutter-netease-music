@@ -124,6 +124,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "recommendForYou": MessageLookupByLibrary.simpleMessage("为你推荐"),
         "recommendPlayLists": MessageLookupByLibrary.simpleMessage("推荐歌单"),
         "search": MessageLookupByLibrary.simpleMessage("搜索"),
+        "searchHistory": MessageLookupByLibrary.simpleMessage("搜索历史"),
         "searchMusicResultCount": m7,
         "searchPlaylistSongs": MessageLookupByLibrary.simpleMessage("搜索歌单歌曲"),
         "selectRegionDiaCode": MessageLookupByLibrary.simpleMessage("选择地区号码"),

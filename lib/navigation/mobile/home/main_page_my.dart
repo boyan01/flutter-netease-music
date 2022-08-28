@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../../../component/utils/scroll_controller.dart';
+import '../../../extension.dart';
 import '../../../providers/account_provider.dart';
+import '../../../providers/navigator_provider.dart';
+import '../../common/navigation_target.dart';
 import '_playlists.dart';
 import '_preset_grid.dart';
 import '_profile.dart';
@@ -16,197 +20,85 @@ class MainPageMy extends ConsumerStatefulWidget {
 
 class _MainPageMyState extends ConsumerState<MainPageMy>
     with AutomaticKeepAliveClientMixin, SingleTickerProviderStateMixin {
-  final ScrollController _scrollController = ScrollController();
-
-  TabController? _tabController;
-
-  bool _scrollerAnimating = false;
-  bool _tabAnimating = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _tabController =
-        TabController(length: PlayListType.values.length, vsync: this);
-    _tabController!.addListener(_onUserSelectedTab);
-  }
-
-  void _onUserSelectedTab() {
-    debugPrint(
-      '_onUserSelectedTab :'
-      ' ${_tabController!.index} ${_tabController!.indexIsChanging}',
-    );
-    if (_scrollerAnimating || _tabAnimating) {
-      return;
-    }
-    _scrollToPlayList(PlayListType.values[_tabController!.index]);
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    _tabController!.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
     super.build(context);
     final userId = ref.watch(userProvider)?.userId;
-    return CustomScrollView(
-      controller: _scrollController,
-      slivers: [
-        SliverList(
-          delegate: SliverChildListDelegate(
-            [
-              const UserProfileSection(),
-              const PresetGridSection(),
-              const SizedBox(height: 8),
-            ],
-          ),
-        ),
-        SliverPersistentHeader(
-          pinned: true,
-          delegate: MyPlayListsHeaderDelegate(_tabController),
-        ),
-        NotificationListener<PlayListTypeNotification>(
-          onNotification: (notification) {
-            _updateCurrentTabSelection(notification.type);
-            return true;
-          },
-          child: UserPlayListSection(
-            userId: userId,
-            scrollController: _scrollController,
-          ),
-        ),
-      ],
-    );
-  }
-
-  void _computeScroller(
-    void Function(
-      PlayListSliverKey sliverKey,
-      List<Element> children,
-      int start,
-      int end,
-    )
-        callback,
-  ) {
-    SliverMultiBoxAdaptorElement? playListSliver;
-    void playListSliverFinder(Element element) {
-      if (element.widget.key is PlayListSliverKey) {
-        playListSliver = element as SliverMultiBoxAdaptorElement?;
-      } else if (playListSliver == null) {
-        element.visitChildElements(playListSliverFinder);
-      }
+    if (userId == null) {
+      return const _NotLogin();
     }
-
-    // to find PlayListSliver.
-    context.visitChildElements(playListSliverFinder);
-
-    if (playListSliver == null) {
-      return;
-    }
-
-    final sliverKey = playListSliver!.widget.key as PlayListSliverKey?;
-    assert(playListSliver != null, 'can not find sliver');
-    debugPrint(
-      'sliverKey : created position:'
-      ' ${sliverKey!.createdPosition} ${sliverKey.favoritePosition}',
-    );
-
-    final children = <Element>[];
-    playListSliver!.visitChildElements(children.add);
-    if (children.isEmpty) {
-      return;
-    }
-    final start = _index(children.first)!;
-    final end = _index(children.last)!;
-    if (end <= start) {
-      return;
-    }
-    debugPrint('position start - end -> $start - $end');
-    callback(sliverKey, children, start, end);
-  }
-
-  void _scrollToPlayList(PlayListType type) {
-    _scrollerAnimating = true;
-
-    _computeScroller((sliverKey, children, start, end) {
-      final target = type == PlayListType.created
-          ? sliverKey.createdPosition!
-          : sliverKey.favoritePosition!;
-      final position = _scrollController.position;
-      if (target >= start && target <= end) {
-        final toShow = children[target - start];
-        position
-            .ensureVisible(
-          toShow.renderObject!,
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.linear,
-        )
-            .whenComplete(() {
-          _scrollerAnimating = false;
-        });
-      } else if (target < start) {
-        position
-            .ensureVisible(
-          children.first.renderObject!,
-          duration: const Duration(milliseconds: 150),
-          curve: Curves.linear,
-        )
-            .then((_) {
-          WidgetsBinding.instance.scheduleFrameCallback((timeStamp) {
-            _scrollToPlayList(type);
-          });
-        });
-      } else if (target > end) {
-        position
-            .ensureVisible(
-          children.last.renderObject!,
-          duration: const Duration(milliseconds: 150),
-          curve: Curves.linear,
-        )
-            .then((_) {
-          WidgetsBinding.instance.scheduleFrameCallback((timeStamp) {
-            _scrollToPlayList(type);
-          });
-        });
-      }
-    });
-  }
-
-  static int? _index(Element element) {
-    int? index;
-    void findIndex(Element e) {
-      if (e.widget is IndexedSemantics) {
-        index = (e.widget as IndexedSemantics).index;
-      } else {
-        e.visitChildElements(findIndex);
-      }
-    }
-
-    element.visitChildElements(findIndex);
-    assert(index != null, 'can not get index for element $element');
-    return index;
+    return const _UserLibraryBody();
   }
 
   @override
   bool get wantKeepAlive => true;
+}
 
-  Future<void> _updateCurrentTabSelection(PlayListType type) async {
-    if (_tabController!.index == type.index) {
-      return;
-    }
-    if (_tabController!.indexIsChanging ||
-        _scrollerAnimating ||
-        _tabAnimating) {
-      return;
-    }
-    _tabAnimating = true;
-    _tabController!.animateTo(type.index);
-    await Future.delayed(kTabScrollDuration + const Duration(milliseconds: 100))
-        .whenComplete(() {
-      _tabAnimating = false;
-    });
+class _UserLibraryBody extends HookConsumerWidget {
+  const _UserLibraryBody({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final scrollController = useAppScrollController();
+    final headerHeight = const <double>[
+      UserProfileSection.height,
+      70, // PresetGridSection
+      8,
+    ].reduce((a, b) => a + b);
+    return DefaultTabController(
+      length: 2,
+      child: CustomScrollView(
+        controller: scrollController,
+        slivers: [
+          SliverList(
+            delegate: SliverChildListDelegate(
+              [
+                const UserProfileSection(),
+                const PresetGridSection(),
+                const SizedBox(height: 8),
+              ],
+            ),
+          ),
+          SliverPersistentHeader(
+            pinned: true,
+            delegate: MyPlayListsHeaderDelegate(),
+          ),
+          UserPlayListSection(
+            scrollController: scrollController,
+            firstItemOffset: headerHeight,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _NotLogin extends ConsumerWidget {
+  const _NotLogin({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Column(
+      children: [
+        const Spacer(),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Center(
+            child: Text(
+              context.strings.playlistLoginDescription,
+              style: context.textTheme.bodyLarge,
+            ),
+          ),
+        ),
+        const SizedBox(height: 24),
+        TextButton(
+          onPressed: () => ref
+              .read(navigatorProvider.notifier)
+              .navigate(NavigationTargetLogin()),
+          child: Text(context.strings.login),
+        ),
+        const Spacer(),
+      ],
+    );
   }
 }

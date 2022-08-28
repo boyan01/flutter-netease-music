@@ -5,10 +5,10 @@ import 'package:scoped_model/scoped_model.dart';
 
 import '../../component/route.dart';
 import '../../component/utils/utils.dart';
+import '../../navigation/mobile/search/search_suggestion.dart';
 import '../../repository/netease.dart';
 import 'model_search_history.dart';
 import 'search_result_page.dart';
-import 'search_suggestion.dart';
 
 class SearchPageRoute<T> extends PageRoute<T> {
   SearchPageRoute(this._proxyAnimation)
@@ -222,10 +222,7 @@ class _SearchPageState extends State<SearchPage> {
     }
     return SuggestionOverflow(
       query: query,
-      onSuggestionSelected: (keyword) {
-        query = keyword;
-        _search(query);
-      },
+      onSuggestionSelected: _search,
     );
   }
 }

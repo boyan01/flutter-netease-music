@@ -1,3 +1,4 @@
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -5,16 +6,20 @@ import '../../../component.dart';
 import '../../../providers/account_provider.dart';
 import '../../../providers/navigator_provider.dart';
 import '../../../repository.dart';
+import '../../common/buttons.dart';
 import '../../common/navigation_target.dart';
 
 class UserProfileSection extends ConsumerWidget {
   const UserProfileSection({super.key});
 
+  static const height = 80.0;
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final detail = ref.watch(userProvider);
+    assert(detail != null, 'user detail is null');
     if (detail == null) {
-      return const _NotLogin();
+      return const SizedBox(height: height);
     }
     return Padding(
       padding: const EdgeInsets.only(bottom: 8, left: 16, right: 16),
@@ -66,7 +71,12 @@ class UserProfileSection extends ConsumerWidget {
                   ],
                 ),
               ),
-              const Icon(Icons.chevron_right)
+              AppIconButton(
+                onPressed: () => ref
+                    .read(navigatorProvider.notifier)
+                    .navigate(NavigationTargetSettings()),
+                icon: FluentIcons.settings_20_regular,
+              ),
             ],
           ),
         ),

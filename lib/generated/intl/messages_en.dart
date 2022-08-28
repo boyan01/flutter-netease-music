@@ -148,6 +148,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "recommendPlayLists":
             MessageLookupByLibrary.simpleMessage("Recommend PlayLists"),
         "search": MessageLookupByLibrary.simpleMessage("Search"),
+        "searchHistory": MessageLookupByLibrary.simpleMessage("Search History"),
         "searchMusicResultCount": m7,
         "searchPlaylistSongs":
             MessageLookupByLibrary.simpleMessage("Search Songs"),

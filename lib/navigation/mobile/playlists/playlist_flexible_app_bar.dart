@@ -8,6 +8,7 @@ import '../../../component/utils/time.dart';
 import '../../../extension.dart';
 import '../../../providers/navigator_provider.dart';
 import '../../../repository.dart';
+import '../../common/buttons.dart';
 
 class AlbumFlexibleAppBar extends StatelessWidget {
   const AlbumFlexibleAppBar({
@@ -275,33 +276,42 @@ class _OverlappedActionButtons extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    const extentLimit = 66;
     return Column(
       children: [
         const Spacer(),
         Transform.translate(
-          offset: Offset(0, currentExtent < 66 ? 66 - currentExtent : 0),
+          offset: Offset(
+            0,
+            currentExtent < extentLimit ? extentLimit - currentExtent : 0,
+          ),
           child: AnimatedOpacity(
-            opacity: currentExtent > 66 ? 1 : 0,
+            opacity: currentExtent > extentLimit ? 1 : 0,
             curve: Curves.easeInOut,
             duration: const Duration(milliseconds: 150),
-            child: Material(
-              elevation: 4,
-              color: context.colorScheme.background,
-              borderRadius: BorderRadius.circular(24),
-              child: SizedBox(
-                height: 42,
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: children
-                      .cast<Widget>()
-                      .separated(
-                        Container(
-                          width: 1,
-                          height: 24,
-                          color: context.colorScheme.divider,
-                        ),
-                      )
-                      .toList(),
+            child: AnimatedScale(
+              scale: currentExtent > extentLimit ? 1 : 0.6,
+              curve: Curves.easeInOut,
+              duration: const Duration(milliseconds: 150),
+              child: Material(
+                elevation: 1,
+                color: context.colorScheme.background,
+                borderRadius: BorderRadius.circular(24),
+                child: SizedBox(
+                  height: 42,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: children
+                        .cast<Widget>()
+                        .separated(
+                          Container(
+                            width: 1,
+                            height: 24,
+                            color: context.colorScheme.divider,
+                          ),
+                        )
+                        .toList(),
+                  ),
                 ),
               ),
             ),
@@ -416,11 +426,13 @@ class _AppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      leading: const BackButton(),
+      leading: const AppBackButton(),
       automaticallyImplyLeading: false,
       title: Text(t > 0.5 ? playlist.name : context.strings.playlist),
       backgroundColor: Colors.transparent,
+      foregroundColor: context.colorScheme.onPrimary,
       elevation: 0,
+      centerTitle: false,
       titleSpacing: 0,
     );
   }

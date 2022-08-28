@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../../../component.dart';
 
+import '../../common/buttons.dart';
 import '../../common/settings.dart';
 
 class PageSettings extends StatelessWidget {
@@ -11,8 +12,8 @@ class PageSettings extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('设置'),
-        titleSpacing: 0,
+        title: Text(context.strings.settings),
+        leading: const AppBackButton(),
       ),
       body: ListView(
         children: <Widget>[
@@ -84,7 +85,7 @@ class _SettingTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.only(left: 8, top: 6, bottom: 6),
+      padding: const EdgeInsets.only(left: 20, top: 6, bottom: 6),
       child: Text(
         title,
         style: const TextStyle(color: Color.fromARGB(255, 175, 175, 175)),

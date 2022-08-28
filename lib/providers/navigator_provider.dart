@@ -54,7 +54,12 @@ class NavigatorState with EquatableMixin {
   final NavigationTarget current;
 
   @override
-  List<Object?> get props => [pages, canBack, canForward, current];
+  List<Object?> get props => [
+        pages,
+        canBack,
+        canForward,
+        current,
+      ];
 }
 
 @sealed
