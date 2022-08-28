@@ -149,7 +149,7 @@ class TracksPlayerImplMobile extends TracksPlayer {
 
   @override
   Duration? get position {
-    final p = _player.playbackState.position;
+    final p = _player.playbackState.computedPosition;
     return Duration(milliseconds: p);
   }
 
