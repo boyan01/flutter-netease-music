@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../extension.dart';
 import '../../../material.dart';
-import '../../../pages/page_playing_list.dart';
 import '../../../providers/navigator_provider.dart';
 import '../../../providers/player_provider.dart';
 import '../../../repository.dart';
@@ -14,6 +13,7 @@ import '../../common/player/lyric_view.dart';
 import '../../common/player/player_actions.dart';
 import '../../common/player_progress.dart';
 import 'background.dart';
+import 'page_playing_list.dart';
 
 class PlayingPage extends ConsumerWidget {
   const PlayingPage({super.key});
@@ -125,9 +125,7 @@ class PlayerControllerBar extends ConsumerWidget {
             AppIconButton(
               tooltip: context.strings.playingList,
               icon: FluentIcons.list_20_regular,
-              onPressed: () {
-                PlayingListDialog.show(context);
-              },
+              onPressed: () => showMobilePlayingBottomSheet(context),
             ),
           ],
         ),

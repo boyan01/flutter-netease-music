@@ -5,7 +5,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../extension.dart';
 import '../../../material/player.dart';
-import '../../../pages/page_playing_list.dart';
 import '../../../providers/lyric_provider.dart';
 import '../../../providers/navigator_provider.dart';
 import '../../../providers/player_provider.dart';
@@ -14,6 +13,7 @@ import '../../common/buttons.dart';
 import '../../common/like_button.dart';
 import '../../common/navigation_target.dart';
 import '../../common/progress_track_container.dart';
+import '../player/page_playing_list.dart';
 
 const kBottomPlayerBarHeight = 56.0;
 
@@ -108,7 +108,7 @@ class AnimatedAppBottomBar extends HookConsumerWidget {
             duration: const Duration(milliseconds: 200),
             opacity: hidePlayerBar ? 0 : 1,
             curve: Curves.easeIn,
-            child: const BottomPlayerBar(),
+            child: const _MobileBottomPlayerBar(),
           ),
         ),
         AnimatedPositioned(
@@ -145,8 +145,8 @@ class AnimatedAppBottomBar extends HookConsumerWidget {
   }
 }
 
-class BottomPlayerBar extends ConsumerWidget {
-  const BottomPlayerBar({super.key});
+class _MobileBottomPlayerBar extends ConsumerWidget {
+  const _MobileBottomPlayerBar({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -216,9 +216,7 @@ class BottomPlayerBar extends ConsumerWidget {
                 AppIconButton(
                   tooltip: context.strings.playingList,
                   icon: FluentIcons.list_24_regular,
-                  onPressed: () {
-                    PlayingListDialog.show(context);
-                  },
+                  onPressed: () => showMobilePlayingBottomSheet(context),
                 ),
             ],
           ),

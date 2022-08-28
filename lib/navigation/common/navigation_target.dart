@@ -4,6 +4,10 @@ const kMobileHomeTabs = [
   NavigationTargetSearch,
 ];
 
+const kMobilePopupPages = {
+  NavigationTargetPlayingList,
+};
+
 abstract class NavigationTarget {
   NavigationTarget();
 
@@ -150,4 +154,8 @@ class NavigationTargetCloudMusic extends NavigationTarget {
 
 class NavigationTargetPlayHistory extends NavigationTarget {
   NavigationTargetPlayHistory();
+}
+
+class NavigationTargetPlayingList extends NavigationTarget {
+  NavigationTargetPlayingList();
 }

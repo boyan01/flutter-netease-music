@@ -7,13 +7,21 @@ import 'artists/page_artist_detail.dart';
 import 'home/page_home.dart';
 import 'player/page_fm_playing.dart';
 import 'player/page_playing.dart';
+import 'player/page_playing_list.dart';
 import 'playlists/page_album_detail.dart';
 import 'playlists/page_playlist_detail.dart';
 import 'settings/page_setting.dart';
 import 'user/page_user_detail.dart';
+import 'widgets/bottom_sheet_page.dart';
 import 'widgets/slide_up_page_route.dart';
 
 typedef AppWillPopCallback = bool Function();
+
+enum _PageType {
+  normal,
+  slideUp,
+  bottomSheet,
+}
 
 class MobileNavigatorController extends NavigatorController {
   MobileNavigatorController() {
@@ -76,7 +84,7 @@ class MobileNavigatorController extends NavigatorController {
 
   Page<dynamic> _buildPage(NavigationTarget target) {
     final Widget page;
-    var slideUp = false;
+    var pageType = _PageType.normal;
     switch (target.runtimeType) {
       case NavigationTargetDiscover:
       case NavigationTargetLibrary:
@@ -93,11 +101,11 @@ class MobileNavigatorController extends NavigatorController {
         break;
       case NavigationTargetPlaying:
         page = const PlayingPage();
-        slideUp = true;
+        pageType = _PageType.slideUp;
         break;
       case NavigationTargetFmPlaying:
         page = const PagePlayingFm();
-        slideUp = true;
+        pageType = _PageType.bottomSheet;
         break;
       case NavigationTargetUser:
         page = UserDetailPage(userId: (target as NavigationTargetUser).userId);
@@ -115,18 +123,29 @@ class MobileNavigatorController extends NavigatorController {
           albumId: (target as NavigationTargetAlbumDetail).albumId,
         );
         break;
+      case NavigationTargetPlayingList:
+        page = const PlayingListDialog();
+        pageType = _PageType.bottomSheet;
+        break;
       default:
         throw Exception('Unknown navigation type: $target');
     }
-    if (slideUp) {
-      return SlideUpPage(
-        child: page,
-        name: target.runtimeType.toString(),
-      );
+    switch (pageType) {
+      case _PageType.normal:
+        return MaterialPage<dynamic>(
+          child: page,
+          name: target.runtimeType.toString(),
+        );
+      case _PageType.slideUp:
+        return SlideUpPage(
+          child: page,
+          name: target.runtimeType.toString(),
+        );
+      case _PageType.bottomSheet:
+        return BottomSheetPage(
+          child: page,
+          name: target.runtimeType.toString(),
+        );
     }
-    return MaterialPage<dynamic>(
-      child: page,
-      name: target.runtimeType.toString(),
-    );
   }
 }
