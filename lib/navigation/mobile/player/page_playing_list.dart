@@ -52,28 +52,30 @@ class PlayingListDialog extends StatelessWidget {
   const PlayingListDialog({super.key});
 
   @override
-  Widget build(BuildContext context) => Padding(
-        padding: const EdgeInsets.all(10),
-        child: Material(
-          color: context.colorScheme.background,
-          borderRadius: BorderRadius.circular(12),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              const SizedBox(height: 12),
-              const _Title(),
-              _Header(),
-              const Divider(
-                height: 1,
-                thickness: 1,
-              ),
-              Expanded(
-                child: LayoutBuilder(
-                  builder: (context, constraints) =>
-                      _PlayingList(layoutHeight: constraints.maxHeight),
+  Widget build(BuildContext context) => SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(10),
+          child: Material(
+            color: context.colorScheme.background,
+            borderRadius: BorderRadius.circular(12),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: <Widget>[
+                const SizedBox(height: 12),
+                const _Title(),
+                _Header(),
+                const Divider(
+                  height: 1,
+                  thickness: 1,
                 ),
-              )
-            ],
+                Expanded(
+                  child: LayoutBuilder(
+                    builder: (context, constraints) =>
+                        _PlayingList(layoutHeight: constraints.maxHeight),
+                  ),
+                )
+              ],
+            ),
           ),
         ),
       );
@@ -88,6 +90,7 @@ class _Title extends ConsumerWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           Text(
             context.strings.currentPlaying,
@@ -177,7 +180,7 @@ class _PlayingList extends HookConsumerWidget {
       if (playing == null) {
         return 0;
       }
-      final index = playingList.tracks.indexOf(playing);
+      final index = playingList.tracks.indexWhere((e) => e.id == playing.id);
       if (index < 0) {
         assert(false, 'playing track should be in the playing list');
         return 0;
@@ -223,7 +226,7 @@ class _MusicTile extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isCurrentPlaying = ref.watch(
-      playerStateProvider.select((value) => value.playingTrack == music),
+      playerStateProvider.select((value) => value.playingTrack?.id == music.id),
     );
     // final isPlaying = ref.watch(isPlayingProvider);
 
