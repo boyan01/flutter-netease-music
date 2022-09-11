@@ -1,7 +1,6 @@
 # Quiet
 
 [![CI](https://github.com/boyan01/flutter-netease-music/workflows/CI/badge.svg)](https://github.com/boyan01/flutter-netease-music/actions)
-[![codecov](https://codecov.io/gh/boyan01/flutter-netease-music/branch/master/graph/badge.svg)](https://codecov.io/gh/boyan01/flutter-netease-music)
 
 仿[网易云音乐](https://music.163.com/#/download), 支持全平台。
 

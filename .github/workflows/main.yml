@@ -46,12 +46,6 @@ jobs:
       - name: Flutter unit test
         run: flutter test --coverage --coverage-path=lcov.info
 
-      - name: Report CodeCov
-        uses: codecov/codecov-action@v1.0.2
-        with:
-          token: ${{secrets.CODECOV_TOKEN}}
-          flags: unittests
-
       - name: Build APP
         run: flutter build linux
     
