@@ -20,7 +20,7 @@ dependencies:
   url_launcher: ^6.0.9
   intl: ^0.17.0
   sembast: ^3.3.0
-  scoped_model: ^2.0.0-nullsafety.0
+  scoped_model: ^2.0.0
   loader:
     git:
       url: https://github.com/boyan01/loader.git
