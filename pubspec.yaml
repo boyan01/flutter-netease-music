@@ -40,8 +40,8 @@ dependencies:
   path: ^1.8.0
   async: ^2.9.0
   riverpod: ^1.0.3
-  flutter_riverpod: ^1.0.3
-  hooks_riverpod: ^1.0.3
+  flutter_riverpod: ^1.0.4
+  hooks_riverpod: ^1.0.4
   collection: ^1.15.0
   window_manager: ^0.2.7
   lpinyin: ^2.0.3
@@ -62,9 +62,6 @@ dev_dependencies:
   build_runner: ^2.0.6
   json_serializable: ^6.0.1
   flutter_lints: ^2.0.0
-
-dependency_overrides:
-  async: ^2.9.0
 
 # The following section is specific to Flutter.
 flutter:
