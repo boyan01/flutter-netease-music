@@ -803,7 +803,7 @@ packages:
     source: hosted
     version: "1.1.1"
   synchronized:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: synchronized
       url: "https://pub.dartlang.org"
