@@ -2,10 +2,12 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:lychee_player/lychee_player.dart';
+import 'package:mixin_logger/mixin_logger.dart';
 
 import '../../extension.dart';
 import '../../model/persistence_player_state.dart';
 import '../../repository.dart';
+import '../../utils/media_cache/media_cache.dart';
 import 'track_list.dart';
 import 'tracks_player.dart';
 
@@ -182,17 +184,20 @@ class TracksPlayerImplLychee extends TracksPlayer {
     bool playWhenReady = true,
   }) {
     scheduleMicrotask(() async {
-      final url = await neteaseRepository!.getPlayUrl(track.id);
-      if (url.isError) {
-        debugPrint('Failed to get play url: ${url.asError!.error}');
+      final urlResult = await neteaseRepository!.getPlayUrl(track.id);
+      if (urlResult.isError) {
+        debugPrint('Failed to get play urlResult: ${urlResult.asError!.error}');
         return;
       }
+      final url =
+          await generateTrackProxyUrl(track.id, urlResult.asValue!.value);
+      d('Play url: $url');
       if (_current != track) {
         // skip play. since the track is changed.
         return;
       }
       _player?.dispose();
-      _player = LycheeAudioPlayer(url.asValue!.value)
+      _player = LycheeAudioPlayer(url)
         ..playWhenReady = playWhenReady
         ..onPlayWhenReadyChanged.addListener(notifyPlayStateChanged)
         ..state.addListener(() {
