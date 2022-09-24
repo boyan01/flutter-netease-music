@@ -5,6 +5,7 @@ import '../repository.dart';
 ///page for playlist edit
 class PlaylistEditPage extends StatefulWidget {
   const PlaylistEditPage(this.playlist, {super.key});
+
   final PlaylistDetail playlist;
 
   @override
@@ -87,8 +88,10 @@ class _PlaylistEditPageState extends State<PlaylistEditPage> {
                   child: Row(
                     children: <Widget>[
                       Expanded(child: Text('标签', style: style)),
-                      Text('功能未实现',
-                          style: Theme.of(context).textTheme.bodySmall)
+                      Text(
+                        '功能未实现',
+                        style: Theme.of(context).textTheme.bodySmall,
+                      )
                     ],
                   ),
                 ),
@@ -123,6 +126,7 @@ class _PlaylistEditPageState extends State<PlaylistEditPage> {
 
 class _PlaylistNameEditPage extends StatefulWidget {
   const _PlaylistNameEditPage(this.playlist, {super.key});
+
   final PlaylistDetail? playlist;
 
   @override

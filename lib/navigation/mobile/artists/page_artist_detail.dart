@@ -381,8 +381,10 @@ class _PageArtistIntroductionState extends State<_PageArtistIntroduction>
                       overflow: TextOverflow.ellipsis,
                     ),
                     const SizedBox(height: 4),
-                    Text(subtitle,
-                        style: Theme.of(context).textTheme.bodySmall),
+                    Text(
+                      subtitle,
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
                     const Spacer(),
                     const Divider(height: 0)
                   ],
