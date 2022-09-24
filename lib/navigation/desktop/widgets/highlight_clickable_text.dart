@@ -184,9 +184,9 @@ class HighlightArtistText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MouseHighlightText(
-      style: style ?? context.textTheme.caption,
+      style: style ?? context.textTheme.bodySmall,
       highlightStyle: highlightStyle ??
-          context.textTheme.caption!.copyWith(
+          context.textTheme.bodySmall!.copyWith(
             color: context.textTheme.bodyMedium!.color,
           ),
       children: artists

@@ -1,19 +1,27 @@
 import 'package:equatable/equatable.dart';
+import 'package:hive/hive.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'track.g.dart';
 
 typedef Music = Track;
 
+@HiveType(typeId: 3)
 enum TrackType {
+  @HiveField(0)
   free,
+  @HiveField(1)
   payAlbum,
+  @HiveField(2)
   vip,
+  @HiveField(3)
   cloud,
+  @HiveField(4)
   noCopyright,
 }
 
 @JsonSerializable()
+@HiveType(typeId: 2)
 class Track with EquatableMixin {
   Track({
     required this.id,
@@ -28,20 +36,28 @@ class Track with EquatableMixin {
 
   factory Track.fromJson(Map<String, dynamic> json) => _$TrackFromJson(json);
 
+  @HiveField(0)
   final int id;
 
+  @HiveField(1)
   final String? uri;
 
+  @HiveField(2)
   final String name;
 
+  @HiveField(3)
   final List<ArtistMini> artists;
 
+  @HiveField(4)
   final AlbumMini? album;
 
+  @HiveField(5)
   final String? imageUrl;
 
+  @HiveField(6)
   final Duration duration;
 
+  @HiveField(7)
   final TrackType type;
 
   String get displaySubtitle {
@@ -65,6 +81,7 @@ class Track with EquatableMixin {
 }
 
 @JsonSerializable()
+@HiveType(typeId: 4)
 class ArtistMini with EquatableMixin {
   ArtistMini({
     required this.id,
@@ -76,10 +93,13 @@ class ArtistMini with EquatableMixin {
       _$ArtistMiniFromJson(json);
 
   @JsonKey(name: 'id')
+  @HiveField(0)
   final int id;
   @JsonKey(name: 'name')
+  @HiveField(1)
   final String name;
   @JsonKey(name: 'imageUrl')
+  @HiveField(2)
   final String? imageUrl;
 
   @override
@@ -89,6 +109,7 @@ class ArtistMini with EquatableMixin {
 }
 
 @JsonSerializable()
+@HiveType(typeId: 5)
 class AlbumMini with EquatableMixin {
   AlbumMini({
     required this.id,
@@ -100,12 +121,15 @@ class AlbumMini with EquatableMixin {
       _$AlbumMiniFromJson(json);
 
   @JsonKey(name: 'id')
+  @HiveField(0)
   final int id;
 
   @JsonKey(name: 'picUrl')
+  @HiveField(1)
   final String? picUri;
 
   @JsonKey(name: 'name')
+  @HiveField(2)
   final String name;
 
   @override

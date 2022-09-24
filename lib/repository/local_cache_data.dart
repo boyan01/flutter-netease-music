@@ -1,10 +1,10 @@
 import 'dart:async';
 
-import 'package:flutter/foundation.dart';
+import 'package:hive/hive.dart';
+import 'package:mixin_logger/mixin_logger.dart';
 
 import 'data/playlist_detail.dart';
 import 'data/track.dart';
-import 'database.dart';
 
 LocalData neteaseLocalData = LocalData._();
 
@@ -13,29 +13,7 @@ const String _playHistoryKey = 'play_history';
 class LocalData {
   LocalData._();
 
-  ///netData 类型必须是可以放入 store 中的类型
-  static Stream<T> withData<T>(
-    String key,
-    Future<T> netData, {
-    void Function(dynamic e)? onNetError,
-  }) async* {
-    final data = neteaseLocalData[key];
-    if (data != null) {
-      final cached = await data;
-      if (cached != null) {
-        assert(cached is T, 'local espect be $T, but is $cached');
-        yield cached as T;
-      }
-    }
-    try {
-      final net = await netData;
-      neteaseLocalData[key] = net;
-      yield net;
-    } catch (e) {
-      if (onNetError != null) onNetError('$e');
-      debugPrint('error : $e');
-    }
-  }
+  final _box = Hive.openBox('local_data');
 
   FutureOr operator [](dynamic key) async {
     return get(key);
@@ -46,37 +24,21 @@ class LocalData {
   }
 
   Future<T?> get<T>(dynamic key) async {
-    final db = await getApplicationDatabase();
-    final dynamic result = await StoreRef.main().record(key).get(db);
-    if (result is T?) {
-      return result;
+    final box = await _box;
+    try {
+      return box.get(key) as T?;
+    } catch (error, stackTrace) {
+      e('get $key error: $error\n$stackTrace');
     }
-    assert(
-      false,
-      'the result of $key is not subtype of $T. ${result.runtimeType}',
-    );
-    return null;
   }
 
   Future _put(dynamic value, [dynamic key]) async {
-    final db = await getApplicationDatabase();
-    return StoreRef.main().record(key).put(db, value);
-  }
-
-  Future<List<PlaylistDetail>> getUserPlaylist(int? userId) async {
-    final data = await get('user_playlist_$userId');
-    if (data == null) {
-      return const [];
+    final box = await _box;
+    try {
+      await box.put(key, value);
+    } catch (error, stacktrace) {
+      e('LocalData put error: $error\n$stacktrace');
     }
-    final result = (data as List)
-        .cast<Map<String, dynamic>>()
-        .map(PlaylistDetail.fromJson)
-        .toList();
-    return result;
-  }
-
-  void updateUserPlaylist(int? userId, List<PlaylistDetail?> list) {
-    _put(list.map((p) => p!.toJson()).toList(), 'user_playlist_$userId');
   }
 
   Future<PlaylistDetail?> getPlaylistDetail(int playlistId) async {

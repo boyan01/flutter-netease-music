@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hive_flutter/adapters.dart';
 import 'package:mixin_logger/mixin_logger.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:path/path.dart' as p;
@@ -17,6 +18,7 @@ import 'providers/repository_provider.dart';
 import 'repository.dart';
 import 'repository/app_dir.dart';
 import 'utils/callback_window_listener.dart';
+import 'utils/hive/duration_adapter.dart';
 import 'utils/platform_configuration.dart';
 import 'utils/system/system_fonts.dart';
 
@@ -28,6 +30,7 @@ void main() async {
   final preferences = await SharedPreferences.getInstance();
   unawaited(_initialDesktop(preferences));
   initLogger(p.join(appDir.path, 'logs'));
+  await _initHive();
   runZonedGuarded(() {
     runApp(
       ProviderScope(
@@ -46,6 +49,17 @@ void main() async {
   }, (error, stack) {
     debugPrint('uncaught error : $error $stack');
   });
+}
+
+Future<void> _initHive() async {
+  await Hive.initFlutter(p.join(appDir.path, 'hive'));
+  Hive.registerAdapter(PlaylistDetailAdapter());
+  Hive.registerAdapter(TrackTypeAdapter());
+  Hive.registerAdapter(TrackAdapter());
+  Hive.registerAdapter(ArtistMiniAdapter());
+  Hive.registerAdapter(AlbumMiniAdapter());
+  Hive.registerAdapter(DurationAdapter());
+  Hive.registerAdapter(UserAdapter());
 }
 
 Future<void> _initialDesktop(SharedPreferences preferences) async {

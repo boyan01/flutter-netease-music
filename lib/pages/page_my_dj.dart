@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:loader/loader.dart';
 
-import '../component/netease/counter.dart';
 import '../material/dividers.dart';
 import '../part/part.dart';
 import '../providers/account_provider.dart';
+import '../providers/counter_provider.dart';
 import '../repository.dart';
 
 ///我的电台页面
