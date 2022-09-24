@@ -4,7 +4,9 @@ import 'package:async/async.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../repository.dart';
+import '../repository/data/user.dart';
+import '../repository/netease.dart';
+import 'preference_provider.dart';
 import 'repository_provider.dart';
 
 final userProvider =
@@ -32,14 +34,6 @@ class UserAccount extends StateNotifier<User?> {
 
   StreamSubscription? _subscription;
 
-  ///get user info from persistence data
-  static Future<Map?> getPersistenceUser() async {
-    return await neteaseLocalData[_persistenceKey] as Map<dynamic, dynamic>?;
-  }
-
-  static const _persistenceKey = 'neteaseLoginUser';
-  static const _kLoginViaQrCode = 'loginViaQrCode';
-
   Future<Result<Map>> login(String? phone, String password) async {
     final result = await neteaseRepository!.login(phone, password);
     if (result.isValue) {
@@ -54,41 +48,41 @@ class UserAccount extends StateNotifier<User?> {
     return result;
   }
 
-  Future<void> _updateLoginStatus(int userId) async {
+  Future<void> _updateLoginStatus(
+    int userId, {
+    bool loginByQrKey = false,
+  }) async {
     final userDetailResult = await neteaseRepository!.getUserDetail(userId);
     if (userDetailResult.isError) {
       final error = userDetailResult.asError!;
       debugPrint('error : ${error.error} ${error.stackTrace}');
       throw Exception('can not get user detail.');
     }
+    await read(sharedPreferenceProvider).setLoginByQrCode(loginByQrKey);
+    await read(sharedPreferenceProvider).setLoginUser(
+      userDetailResult.asValue!.value,
+    );
     state = userDetailResult.asValue!.value;
-    neteaseLocalData[_persistenceKey] = state!.toJson();
   }
 
   Future<void> loginWithQrKey() async {
     final result = await read(neteaseRepositoryProvider).getLoginStatus();
     final userId = result['account']['id'] as int;
-    neteaseLocalData[_kLoginViaQrCode] = true;
-    await _updateLoginStatus(userId);
+    await _updateLoginStatus(userId, loginByQrKey: true);
   }
 
   void logout() {
     state = null;
-    neteaseLocalData[_persistenceKey] = null;
-    neteaseRepository!.logout();
+    read(sharedPreferenceProvider).setLoginUser(null);
+    read(neteaseRepositoryProvider).logout();
   }
 
   Future<void> initialize() async {
-    final user = await getPersistenceUser();
+    final user = await read(sharedPreferenceProvider).getLoginUser();
     if (user != null) {
-      try {
-        state = User.fromJson(user as Map<String, dynamic>);
-      } catch (e) {
-        debugPrint('can not read user: $e');
-        neteaseLocalData['neteaseLocalData'] = null;
-      }
+      state = user;
       final isLoginViaQrCode =
-          (await neteaseLocalData[_kLoginViaQrCode]) == true;
+          await read(sharedPreferenceProvider).isLoginByQrCode();
       if (!isLoginViaQrCode) {
         //访问api，刷新登陆状态
         await neteaseRepository!.refreshLogin().then(
@@ -100,7 +94,7 @@ class UserAccount extends StateNotifier<User?> {
               final result = await neteaseRepository!.getUserDetail(userId!);
               if (result.isValue) {
                 state = result.asValue!.value;
-                neteaseLocalData[_persistenceKey] = state!.toJson();
+                await read(sharedPreferenceProvider).setLoginUser(state);
               }
             }
           },

@@ -17,15 +17,8 @@ class _TabMusicState extends State<TabMusic>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return CachedLoader<List<PlaylistDetail>>(
-      cacheKey: 'user_playlist_${widget.profile.userId}',
+    return Loader<List<PlaylistDetail>>(
       loadTask: () => neteaseRepository!.userPlaylist(widget.profile.userId),
-      serialize: (list) => list.map((it) => it.toJson()).toList(),
-      deserialize: (list) => (list as List)
-          .cast<Map<String, dynamic>>()
-          .map(PlaylistDetail.fromJson)
-          .toList()
-          .cast(),
       builder: (context, result) {
         final created =
             result.where((p) => p.creator.userId == widget.profile.userId);

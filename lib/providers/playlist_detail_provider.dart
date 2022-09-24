@@ -1,10 +1,14 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
+import 'package:hive/hive.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:mixin_logger/mixin_logger.dart';
 
-import '../repository.dart';
+import '../repository/data/playlist_detail.dart';
+import '../repository/data/track.dart';
+import '../repository/netease.dart';
+import '../repository/network_repository.dart';
 import 'account_provider.dart';
 
 final playlistDetailProvider = StateNotifierProvider.family<
@@ -26,6 +30,7 @@ class PlaylistDetailStateNotifier
 
   final int playlistId;
   final Reader read;
+  late Box<PlaylistDetail> _playlistDetailBox;
 
   PlaylistDetail? _playlistDetail;
 
@@ -33,7 +38,8 @@ class PlaylistDetailStateNotifier
 
   Future<void> _initializeLoad() async {
     assert(state is AsyncLoading, 'state is not AsyncLoading');
-    final local = await neteaseLocalData.getPlaylistDetail(playlistId);
+    _playlistDetailBox = await Hive.openBox<PlaylistDetail>('playlistDetail');
+    final local = _playlistDetailBox.get(playlistId.toString());
     if (local != null) {
       _playlistDetail = local;
       state = AsyncValue.data(local);
@@ -67,7 +73,7 @@ class PlaylistDetailStateNotifier
         }
       }
       _playlistDetail = data;
-      await neteaseLocalData.updatePlaylistDetail(data);
+      await _playlistDetailBox.put(playlistId, data);
       state = AsyncValue.data(data);
     } catch (error, stacktrace) {
       debugPrint('error: $error ,$stacktrace');
@@ -100,7 +106,7 @@ class PlaylistDetailStateNotifier
       trackIds: [track.id, ..._playlistDetail!.trackIds],
     );
     _playlistDetail = detail;
-    await neteaseLocalData.updatePlaylistDetail(detail);
+    await _playlistDetailBox.put(playlistId, detail);
     state = AsyncValue.data(detail);
   }
 
@@ -124,7 +130,7 @@ class PlaylistDetailStateNotifier
       trackIds: _playlistDetail!.trackIds.where((t) => t != track.id).toList(),
     );
     _playlistDetail = detail;
-    await neteaseLocalData.updatePlaylistDetail(detail);
+    await _playlistDetailBox.put(playlistId, detail);
     state = AsyncValue.data(detail);
   }
 }

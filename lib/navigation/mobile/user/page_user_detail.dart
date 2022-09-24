@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:loader/loader.dart';
 import 'package:overlay_support/overlay_support.dart';
 
-import '../../../component/netease/netease_loader.dart';
 import '../../../extension.dart';
 import '../../../material/flexible_app_bar.dart';
 import '../../../material/images.dart';
@@ -48,6 +48,7 @@ class _DetailPage extends StatelessWidget {
     super.key,
     required this.user,
   });
+
   final User user;
 
   @override
@@ -89,6 +90,7 @@ class _DetailPage extends StatelessWidget {
 ///伸缩自如的AppBar
 class _UserDetailAppBar extends StatelessWidget {
   const _UserDetailAppBar(this.user, {super.key});
+
   final User user;
 
   @override
