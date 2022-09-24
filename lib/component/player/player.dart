@@ -1,23 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
 import 'package:music_player/music_player.dart';
 
-part 'persistence.dart';
-
 const String kFmPlayQueueId = 'personal_fm';
-
-//
-/////key which save playing music to local preference
-//const String _PREF_KEY_PLAYING = "quiet_player_playing";
-//
-/////key which save playing music list to local preference
-//const String _PREF_KEY_PLAYLIST = "quiet_player_playlist";
-//
-/////key which save playing list token to local preference
-//const String _PREF_KEY_TOKEN = "quiet_player_token";
-//
-/////key which save playing mode to local preference
-//const String _PREF_KEY_PLAY_MODE = "quiet_player_play_mode";
 
 extension PlayModeGetNext on PlayMode {
   PlayMode get next {
