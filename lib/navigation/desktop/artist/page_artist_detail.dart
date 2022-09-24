@@ -96,7 +96,7 @@ class _ArtistDetailHeader extends StatelessWidget {
                 children: [
                   Text(
                     artist.name,
-                    style: context.textTheme.headline6,
+                    style: context.textTheme.titleLarge,
                   ),
                   const SizedBox(height: 16),
                   Row(
@@ -298,7 +298,7 @@ class _CoverTrackListWidget extends StatelessWidget {
                 children: [
                   const SizedBox(width: 20),
                   DefaultTextStyle.merge(
-                    style: context.textTheme.headline6,
+                    style: context.textTheme.titleLarge,
                     child: title,
                   ),
                   const SizedBox(width: 20),
@@ -363,7 +363,7 @@ class _TrackList extends HookWidget {
                     padding: const EdgeInsets.only(right: 42),
                     child: Text(
                       context.strings.showAllHotSongs,
-                      style: context.textTheme.caption,
+                      style: context.textTheme.bodySmall,
                     ),
                   ),
                 ),

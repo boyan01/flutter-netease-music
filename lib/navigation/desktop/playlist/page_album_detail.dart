@@ -134,15 +134,15 @@ class _AlbumDetailHeader extends StatelessWidget {
               const SizedBox(height: 20),
               Text(
                 album.name,
-                style: context.textTheme.headline6,
+                style: context.textTheme.titleLarge,
               ),
               const SizedBox(height: 10),
               const _HeaderActionButtons(),
               const Spacer(),
               HighlightClickableText(
                 text: album.artist.name,
-                style: context.textTheme.caption,
-                highlightStyle: context.textTheme.caption!.copyWith(
+                style: context.textTheme.bodySmall,
+                highlightStyle: context.textTheme.bodySmall!.copyWith(
                   color: context.textTheme.bodyMedium!.color,
                 ),
                 onTap: () {
@@ -203,7 +203,7 @@ class _HeaderActionButtons extends ConsumerWidget {
                 const SizedBox(width: 4),
                 Text(
                   context.strings.subscribe,
-                  style: context.textTheme.bodyText2,
+                  style: context.textTheme.bodyMedium,
                 ),
               ],
             ),
@@ -223,7 +223,7 @@ class _HeaderActionButtons extends ConsumerWidget {
                 const SizedBox(width: 4),
                 Text(
                   context.strings.share,
-                  style: context.textTheme.bodyText2,
+                  style: context.textTheme.bodyMedium,
                 ),
               ],
             ),

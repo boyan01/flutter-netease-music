@@ -49,7 +49,7 @@ class TrackShortTile extends StatelessWidget {
                     message: track.name,
                     child: Text(
                       track.name,
-                      style: context.textTheme.bodyText1!.bold,
+                      style: context.textTheme.bodyLarge!.bold,
                       maxLines: 1,
                     ),
                   ),
@@ -58,7 +58,7 @@ class TrackShortTile extends StatelessWidget {
                     message: track.displaySubtitle,
                     child: Text(
                       track.displaySubtitle,
-                      style: context.textTheme.caption,
+                      style: context.textTheme.bodySmall,
                       maxLines: 1,
                     ),
                   ),
@@ -68,7 +68,7 @@ class TrackShortTile extends StatelessWidget {
             const SizedBox(width: 12),
             Text(
               track.duration.timeStamp,
-              style: context.textTheme.caption,
+              style: context.textTheme.bodySmall,
             ),
             const SizedBox(width: 12),
             IconButton(

@@ -78,7 +78,7 @@ class _WelcomeBody extends ConsumerWidget {
             padding: const EdgeInsets.all(8),
             child: Text(
               context.strings.projectDescription,
-              style: context.primaryTextTheme.caption,
+              style: context.primaryTextTheme.bodySmall,
               textAlign: TextAlign.center,
             ),
           ),
@@ -86,7 +86,7 @@ class _WelcomeBody extends ConsumerWidget {
         const SizedBox(height: 6),
         Text(
           context.strings.copyRightOverlay,
-          style: context.primaryTextTheme.caption,
+          style: context.primaryTextTheme.bodySmall,
           textAlign: TextAlign.center,
         ),
         const SizedBox(height: 20),
@@ -112,7 +112,7 @@ class StretchButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Color? background = Theme.of(context).primaryColor;
-    var foreground = Theme.of(context).primaryTextTheme.bodyText2!.color;
+    var foreground = Theme.of(context).primaryTextTheme.bodyMedium!.color;
     if (primary) {
       final temp = background;
       background = foreground;

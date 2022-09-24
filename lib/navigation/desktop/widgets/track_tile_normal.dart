@@ -189,7 +189,7 @@ class TrackTableHeader extends StatelessWidget with PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return DefaultTextStyle(
-      style: context.textTheme.caption!,
+      style: context.textTheme.bodySmall!,
       child: SizedBox.fromSize(
         size: preferredSize,
         child: Row(
@@ -335,7 +335,7 @@ class TrackTile extends HookConsumerWidget {
                         iconSize: 16,
                         padding: const EdgeInsets.all(2),
                         likedColor: context.colorScheme.primary,
-                        color: context.textTheme.caption?.color,
+                        color: context.textTheme.bodySmall?.color,
                       ),
                     ),
                     const SizedBox(width: 10),
@@ -389,8 +389,8 @@ class TrackTile extends HookConsumerWidget {
                                 .read(navigatorProvider.notifier)
                                 .navigate(NavigationTargetAlbumDetail(albumId));
                           },
-                          style: context.textTheme.caption,
-                          highlightStyle: context.textTheme.caption?.copyWith(
+                          style: context.textTheme.bodySmall,
+                          highlightStyle: context.textTheme.bodySmall?.copyWith(
                             color: context.textTheme.bodyMedium?.color,
                           ),
                         ),
@@ -400,7 +400,7 @@ class TrackTile extends HookConsumerWidget {
                       width: configuration.durationWidth,
                       child: Text(
                         track.duration.timeStamp,
-                        style: context.textTheme.caption,
+                        style: context.textTheme.bodySmall,
                       ),
                     ),
                     const SizedBox(width: 20),
@@ -446,7 +446,7 @@ class _IndexOrPlayIcon extends ConsumerWidget {
     } else {
       return Text(
         index.toString().padLeft(2, '0'),
-        style: context.textTheme.caption,
+        style: context.textTheme.bodySmall,
       );
     }
   }

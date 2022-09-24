@@ -179,7 +179,7 @@ class _CenterSection extends ConsumerWidget {
           music: music,
           textStyle: Theme.of(context)
               .textTheme
-              .bodyText2!
+              .bodyMedium!
               .copyWith(height: 2, fontSize: 16, color: Colors.white),
           onTap: () {
             ref.read(_isShowLyricProvider.notifier).state = !showLyric;
@@ -220,7 +220,7 @@ class PlayingTitle extends ConsumerWidget {
                 Flexible(
                   child: Text(
                     music.displaySubtitle,
-                    style: context.primaryTextTheme.caption,
+                    style: context.primaryTextTheme.bodySmall,
                     maxLines: 1,
                     overflow: TextOverflow.clip,
                   ),

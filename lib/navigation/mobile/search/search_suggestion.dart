@@ -45,7 +45,7 @@ class SuggestionSection extends StatelessWidget {
                     title,
                     style: Theme.of(context)
                         .textTheme
-                        .subtitle2!
+                        .titleSmall!
                         .copyWith(fontWeight: FontWeight.bold, fontSize: 17),
                   ),
                 ),

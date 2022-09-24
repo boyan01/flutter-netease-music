@@ -55,7 +55,7 @@ class AlbumTile extends ConsumerWidget {
                   Text(
                     subtitle,
                     maxLines: 1,
-                    style: Theme.of(context).textTheme.caption,
+                    style: Theme.of(context).textTheme.bodySmall,
                   ),
                   const Spacer(),
                   const Divider(height: 0)

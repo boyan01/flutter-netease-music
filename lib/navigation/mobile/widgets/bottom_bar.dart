@@ -190,12 +190,12 @@ class _MobileBottomPlayerBar extends ConsumerWidget {
                     children: [
                       Text(
                         music.name,
-                        style: context.textTheme.bodyText2,
+                        style: context.textTheme.bodyMedium,
                       ),
                       const SizedBox(height: 2),
                       DefaultTextStyle(
                         maxLines: 1,
-                        style: context.textTheme.caption!,
+                        style: context.textTheme.bodySmall!,
                         child: ProgressTrackingContainer(
                           builder: (context) => _SubTitleOrLyric(
                             music.displaySubtitle,

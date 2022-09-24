@@ -92,7 +92,7 @@ class _PlayingItemWidget extends ConsumerWidget {
                 const SizedBox(height: 4),
                 Text(
                   track.displaySubtitle,
-                  style: context.textTheme.caption,
+                  style: context.textTheme.bodySmall,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),

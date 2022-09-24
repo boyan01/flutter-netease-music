@@ -42,12 +42,12 @@ class PageSetting extends StatelessWidget {
             const SizedBox(height: 12),
             Text(
               context.strings.copyRightOverlay,
-              style: context.textTheme.caption,
+              style: context.textTheme.bodySmall,
             ),
             const SizedBox(height: 8),
             Text(
               context.strings.projectDescription,
-              style: context.textTheme.caption,
+              style: context.textTheme.bodySmall,
             ),
             const SizedBox(height: 56),
           ],
@@ -72,7 +72,7 @@ class _HotkeyLayout extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: DefaultTextStyle(
             style: context.textTheme.bodyMedium!.copyWith(
-              fontSize: context.textTheme.caption!.fontSize,
+              fontSize: context.textTheme.bodySmall!.fontSize,
             ),
             child: Table(
               defaultColumnWidth: const FixedColumnWidth(180),
@@ -82,11 +82,11 @@ class _HotkeyLayout extends StatelessWidget {
                   children: [
                     Text(
                       context.strings.functionDescription,
-                      style: context.textTheme.caption,
+                      style: context.textTheme.bodySmall,
                     ),
                     Text(
                       context.strings.shortcuts,
-                      style: context.textTheme.caption,
+                      style: context.textTheme.bodySmall,
                     ),
                     const SizedBox(height: rowHeight, width: 2),
                   ],

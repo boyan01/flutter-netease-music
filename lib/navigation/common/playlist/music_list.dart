@@ -283,7 +283,7 @@ class MusicTileConfiguration extends StatelessWidget {
           child: Center(
             child: Text(
               index.toString(),
-              style: Theme.of(context).textTheme.bodyText1,
+              style: Theme.of(context).textTheme.bodyLarge,
             ),
           ),
         );
@@ -389,14 +389,14 @@ class _SimpleMusicTile extends StatelessWidget {
                   music.name,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: Theme.of(context).textTheme.bodyText2,
+                  style: Theme.of(context).textTheme.bodyMedium,
                 ),
                 const Padding(padding: EdgeInsets.only(top: 3)),
                 Text(
                   music.displaySubtitle,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: Theme.of(context).textTheme.caption,
+                  style: Theme.of(context).textTheme.bodySmall,
                 ),
                 const Spacer(),
               ],
@@ -454,7 +454,7 @@ class MusicListHeader extends ConsumerWidget implements PreferredSizeWidget {
               const SizedBox(width: 6),
               Text(
                 '(${context.strings.musicCountFormat(count)})',
-                style: Theme.of(context).textTheme.caption,
+                style: Theme.of(context).textTheme.bodySmall,
               ),
               const Spacer(),
               if (tail != null) tail!,

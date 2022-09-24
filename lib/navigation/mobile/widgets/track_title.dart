@@ -59,7 +59,7 @@ class TrackTile extends StatelessWidget {
                     track.displaySubtitle,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: context.textTheme.caption,
+                    style: context.textTheme.bodySmall,
                   ),
                 ],
               ),
@@ -105,7 +105,7 @@ class _IndexOrPlayIcon extends ConsumerWidget {
     } else {
       return Text(
         index.toString().padLeft(2, '0'),
-        style: context.textTheme.caption!.copyWith(fontSize: 15),
+        style: context.textTheme.bodySmall!.copyWith(fontSize: 15),
       );
     }
   }

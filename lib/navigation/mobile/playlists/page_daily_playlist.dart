@@ -87,7 +87,7 @@ class _HeaderContent extends StatelessWidget {
       background: ColoredBox(color: Theme.of(context).primaryColor),
       content: DefaultTextStyle(
         maxLines: 1,
-        style: textTheme.bodyText2!.copyWith(fontWeight: FontWeight.bold),
+        style: textTheme.bodyMedium!.copyWith(fontWeight: FontWeight.bold),
         child: Padding(
           padding: EdgeInsets.only(
             left: 16,
@@ -113,7 +113,7 @@ class _HeaderContent extends StatelessWidget {
               const SizedBox(height: 4),
               Text(
                 '根据你的音乐口味，为你推荐好音乐',
-                style: textTheme.caption,
+                style: textTheme.bodySmall,
               ),
               const Spacer(flex: 12),
             ],

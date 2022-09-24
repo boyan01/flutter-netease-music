@@ -257,7 +257,7 @@ class _PageMVsState extends State<_PageMVs> with AutomaticKeepAliveClientMixin {
                       const SizedBox(height: 4),
                       Text(
                         mv['publishTime'],
-                        style: Theme.of(context).textTheme.caption,
+                        style: Theme.of(context).textTheme.bodySmall,
                       ),
                       const Spacer(),
                       const Divider(height: 0)
@@ -312,7 +312,7 @@ class _PageArtistIntroductionState extends State<_PageArtistIntroduction>
       padding: const EdgeInsets.symmetric(horizontal: 8),
       child: Text(
         result['briefDesc'],
-        style: TextStyle(color: Theme.of(context).textTheme.caption!.color),
+        style: TextStyle(color: Theme.of(context).textTheme.bodySmall!.color),
       ),
     );
     final Widget button = InkWell(
@@ -381,7 +381,8 @@ class _PageArtistIntroductionState extends State<_PageArtistIntroduction>
                       overflow: TextOverflow.ellipsis,
                     ),
                     const SizedBox(height: 4),
-                    Text(subtitle, style: Theme.of(context).textTheme.caption),
+                    Text(subtitle,
+                        style: Theme.of(context).textTheme.bodySmall),
                     const Spacer(),
                     const Divider(height: 0)
                   ],

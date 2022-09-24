@@ -69,7 +69,7 @@ class NavigationTitle extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(left: 16, right: 20, top: 12, bottom: 8),
-      child: Text(title, style: context.textTheme.caption),
+      child: Text(title, style: context.textTheme.bodySmall),
     );
   }
 }

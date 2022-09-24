@@ -81,7 +81,7 @@ class _Header extends StatelessWidget {
             text,
             style: Theme.of(context)
                 .textTheme
-                .subtitle1!
+                .titleMedium!
                 .copyWith(fontWeight: FontWeight.w800),
           ),
           const Icon(Icons.chevron_right),
@@ -205,7 +205,7 @@ class _PlayListItemView extends ConsumerWidget {
             return AlertDialog(
               content: Text(
                 playlist.copywriter,
-                style: Theme.of(context).textTheme.bodyText1,
+                style: Theme.of(context).textTheme.bodyLarge,
               ),
             );
           },

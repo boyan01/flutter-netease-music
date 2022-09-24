@@ -73,7 +73,7 @@ class _ItemTitle extends StatelessWidget {
         title,
         style: Theme.of(context)
             .textTheme
-            .subtitle1!
+            .titleMedium!
             .copyWith(fontWeight: FontWeight.w800),
       ),
     );
@@ -128,7 +128,8 @@ class _ItemLeaderBoard2 extends StatelessWidget {
                             const Spacer(),
                             Text(
                               row['updateFrequency'],
-                              style: Theme.of(context).primaryTextTheme.caption,
+                              style:
+                                  Theme.of(context).primaryTextTheme.bodySmall,
                             ),
                             const Padding(padding: EdgeInsets.only(right: 4))
                           ],
@@ -198,7 +199,8 @@ class _ItemLeaderboard1 extends StatelessWidget {
                             const Spacer(),
                             Text(
                               row['updateFrequency'],
-                              style: Theme.of(context).primaryTextTheme.caption,
+                              style:
+                                  Theme.of(context).primaryTextTheme.bodySmall,
                             ),
                             const Padding(padding: EdgeInsets.only(right: 4))
                           ],

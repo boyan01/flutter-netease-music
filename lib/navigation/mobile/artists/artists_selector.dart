@@ -19,7 +19,7 @@ class ArtistSelectionDialog extends StatelessWidget {
             artist.name,
             style: Theme.of(context)
                 .textTheme
-                .bodyText2!
+                .bodyMedium!
                 .merge(TextStyle(color: enabled ? null : Colors.grey)),
           ),
         ),

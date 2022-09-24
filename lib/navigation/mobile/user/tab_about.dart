@@ -37,7 +37,7 @@ class _UserInformation extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DefaultTextStyle(
-      style: Theme.of(context).textTheme.caption!.copyWith(fontSize: 14),
+      style: Theme.of(context).textTheme.bodySmall!.copyWith(fontSize: 14),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: Column(
@@ -60,7 +60,7 @@ class _UserDescription extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DefaultTextStyle(
-      style: Theme.of(context).textTheme.caption!.copyWith(fontSize: 14),
+      style: Theme.of(context).textTheme.bodySmall!.copyWith(fontSize: 14),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: Text(

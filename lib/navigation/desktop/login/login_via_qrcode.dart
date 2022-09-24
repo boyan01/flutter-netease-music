@@ -140,7 +140,7 @@ class _QrCodeBody extends HookConsumerWidget {
           const Spacer(),
           Text(
             context.strings.loginViaQrCode,
-            style: context.textTheme.headline6,
+            style: context.textTheme.titleLarge,
           ),
           const SizedBox(height: 20),
           Text(

@@ -86,7 +86,7 @@ class VideoTile extends StatelessWidget {
                           "${(map["creator"] as List).cast<Map>().map((creator) {
                             return creator["userName"];
                           }).join("/")}",
-                          style: Theme.of(context).textTheme.caption,
+                          style: Theme.of(context).textTheme.bodySmall,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),

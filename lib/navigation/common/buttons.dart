@@ -77,7 +77,7 @@ class PlaylistIconTextButton extends StatelessWidget {
             IconTheme.merge(
               data: IconThemeData(
                 size: 16,
-                color: Theme.of(context).textTheme.bodyText1?.color,
+                color: Theme.of(context).textTheme.bodyLarge?.color,
               ),
               child: icon,
             ),
@@ -85,7 +85,7 @@ class PlaylistIconTextButton extends StatelessWidget {
             DefaultTextStyle.merge(
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: context.textTheme.bodyText1,
+              style: context.textTheme.bodyLarge,
               child: text,
             ),
             const SizedBox(width: 16),

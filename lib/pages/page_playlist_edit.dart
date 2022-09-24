@@ -14,7 +14,7 @@ class PlaylistEditPage extends StatefulWidget {
 class _PlaylistEditPageState extends State<PlaylistEditPage> {
   @override
   Widget build(BuildContext context) {
-    final style = Theme.of(context).textTheme.bodyText2!.copyWith(
+    final style = Theme.of(context).textTheme.bodyMedium!.copyWith(
       fontSize: 15,
       shadows: [const Shadow(offset: Offset(0.3, 0.3), color: Colors.black87)],
     );
@@ -87,7 +87,8 @@ class _PlaylistEditPageState extends State<PlaylistEditPage> {
                   child: Row(
                     children: <Widget>[
                       Expanded(child: Text('标签', style: style)),
-                      Text('功能未实现', style: Theme.of(context).textTheme.caption)
+                      Text('功能未实现',
+                          style: Theme.of(context).textTheme.bodySmall)
                     ],
                   ),
                 ),

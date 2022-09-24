@@ -119,7 +119,7 @@ class _DailyHeader extends StatelessWidget {
                           ),
                         ],
                       ),
-                      style: context.textTheme.headline5.bold?.copyWith(
+                      style: context.textTheme.headlineSmall.bold?.copyWith(
                         color: context.colorScheme.primary,
                       ),
                     ),
@@ -136,7 +136,7 @@ class _DailyHeader extends StatelessWidget {
                           const SizedBox(height: 8),
                           Text(
                             context.strings.dailyRecommendDescription,
-                            style: context.textTheme.caption,
+                            style: context.textTheme.bodySmall,
                           ),
                         ],
                       ),

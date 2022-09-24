@@ -67,13 +67,13 @@ class PlaylistSelectorDialog extends ConsumerWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   AnimatedDefaultTextStyle(
-                    style: Theme.of(context).textTheme.bodyText2!,
+                    style: Theme.of(context).textTheme.bodyMedium!,
                     duration: Duration.zero,
                     child: title,
                   ),
                   if (subTitle != null)
                     AnimatedDefaultTextStyle(
-                      style: Theme.of(context).textTheme.caption!,
+                      style: Theme.of(context).textTheme.bodySmall!,
                       duration: Duration.zero,
                       child: subTitle,
                     ),
@@ -93,7 +93,7 @@ class PlaylistSelectorDialog extends ConsumerWidget {
         children: <Widget>[
           const Padding(padding: EdgeInsets.only(left: 16)),
           Expanded(
-            child: Text('收藏到歌单', style: Theme.of(context).textTheme.headline6),
+            child: Text('收藏到歌单', style: Theme.of(context).textTheme.titleLarge),
           )
         ],
       ),

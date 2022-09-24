@@ -82,7 +82,7 @@ class _UserCloudInformation extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DefaultTextStyle(
-      style: context.textTheme.caption!,
+      style: context.textTheme.bodySmall!,
       child: Row(
         children: [
           const SizedBox(width: 20),

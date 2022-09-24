@@ -136,7 +136,7 @@ class _PhoneInputLayout extends HookConsumerWidget {
           const SizedBox(height: 30),
           Text(
             context.strings.tipsAutoRegisterIfUserNotExist,
-            style: Theme.of(context).textTheme.caption,
+            style: Theme.of(context).textTheme.bodySmall,
           ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 30),
@@ -192,7 +192,7 @@ class _PhoneInput extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final style = context.textTheme.bodyText2!.copyWith(
+    final style = context.textTheme.bodyMedium!.copyWith(
       fontSize: 16,
       color: _textColor(context),
     );
@@ -232,7 +232,7 @@ class _ButtonNextStep extends StatelessWidget {
       style: ElevatedButton.styleFrom(
         foregroundColor: context.colorScheme.onPrimary,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        textStyle: Theme.of(context).primaryTextTheme.bodyText2,
+        textStyle: Theme.of(context).primaryTextTheme.bodyMedium,
         padding: const EdgeInsets.symmetric(vertical: 18),
       ),
       onPressed: onTap,

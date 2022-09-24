@@ -63,7 +63,7 @@ class DjTile extends StatelessWidget {
               const SizedBox(width: 4),
               Expanded(
                 child: DefaultTextStyle(
-                  style: Theme.of(context).textTheme.bodyText2!,
+                  style: Theme.of(context).textTheme.bodyMedium!,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   child: Column(
@@ -74,12 +74,12 @@ class DjTile extends StatelessWidget {
                       const SizedBox(height: 4),
                       Text(
                         'by ${data['dj']['nickname']}',
-                        style: Theme.of(context).textTheme.caption,
+                        style: Theme.of(context).textTheme.bodySmall,
                       ),
                       const Spacer(),
                       Text(
                         data['lastProgramName'] as String? ?? '暂无更新',
-                        style: Theme.of(context).textTheme.caption,
+                        style: Theme.of(context).textTheme.bodySmall,
                       ),
                       const SizedBox(height: 4),
                     ],

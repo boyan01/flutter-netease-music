@@ -139,7 +139,7 @@ class _DiaCodeListState extends State<_DiaCodeList> {
                       const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
                   child: Text(
                     _query,
-                    style: context.primaryTextTheme.bodyText2,
+                    style: context.primaryTextTheme.bodyMedium,
                   ),
                 ),
               ),
@@ -155,7 +155,7 @@ class _DiaCodeListState extends State<_DiaCodeList> {
               );
               _jumpToAlphabet(selection.toLowerCase());
             },
-            textStyle: Theme.of(context).textTheme.bodyText1,
+            textStyle: Theme.of(context).textTheme.bodyLarge,
           ),
         ],
       ),
@@ -182,7 +182,7 @@ class _AzSelectionOverlay extends StatelessWidget {
           child: Center(
             child: Text(
               content,
-              style: context.textTheme.headline2,
+              style: context.textTheme.displayMedium,
             ),
           ),
         ),
@@ -209,7 +209,7 @@ class _RegionTile extends StatelessWidget {
       title: Text(region.name),
       trailing: Text(
         region.dialCode!,
-        style: context.textTheme.caption,
+        style: context.textTheme.bodySmall,
       ),
       onTap: () {
         Navigator.of(context).pop(region);
@@ -231,7 +231,7 @@ class AZSelection extends SingleChildRenderObjectWidget {
   RenderObject createRenderObject(BuildContext context) {
     return AZRender()
       ..onSelection = onSelection
-      ..textStyle = textStyle ?? Theme.of(context).textTheme.bodyText1;
+      ..textStyle = textStyle ?? Theme.of(context).textTheme.bodyLarge;
   }
 
   @override
@@ -241,7 +241,7 @@ class AZSelection extends SingleChildRenderObjectWidget {
   ) {
     renderObject
       ..onSelection = onSelection
-      ..textStyle = textStyle ?? Theme.of(context).textTheme.bodyText1;
+      ..textStyle = textStyle ?? Theme.of(context).textTheme.bodyLarge;
   }
 }
 

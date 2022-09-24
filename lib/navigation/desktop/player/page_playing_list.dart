@@ -97,7 +97,7 @@ class _PlayingListTitle extends ConsumerWidget {
             children: [
               Text(
                 context.strings.musicCountFormat(playingList.tracks.length),
-                style: context.textTheme.caption,
+                style: context.textTheme.bodySmall,
               ),
             ],
           ),
@@ -257,11 +257,11 @@ class _PlayingTrackItem extends HookConsumerWidget {
                 SizedBox(
                   width: 100,
                   child: MouseHighlightText(
-                    style: context.textTheme.caption?.copyWith(
+                    style: context.textTheme.bodySmall?.copyWith(
                       color:
                           isCurrentPlaying ? context.colorScheme.primary : null,
                     ),
-                    highlightStyle: context.textTheme.caption!.copyWith(
+                    highlightStyle: context.textTheme.bodySmall!.copyWith(
                       color: isCurrentPlaying
                           ? context.colorScheme.primary
                           : context.textTheme.bodyMedium!.color,
@@ -293,7 +293,7 @@ class _PlayingTrackItem extends HookConsumerWidget {
                   width: 48,
                   child: Text(
                     track.duration.timeStamp,
-                    style: context.textTheme.caption,
+                    style: context.textTheme.bodySmall,
                   ),
                 ),
                 const SizedBox(width: 20),

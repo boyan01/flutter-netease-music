@@ -164,21 +164,21 @@ class _PlaylistDetailHeader extends StatelessWidget {
               const SizedBox(height: 20),
               Text(
                 playlist.name,
-                style: context.textTheme.headline6,
+                style: context.textTheme.titleLarge,
               ),
               const SizedBox(height: 8),
               Row(
                 children: [
                   Text(
                     playlist.creator.nickname,
-                    style: context.textTheme.caption,
+                    style: context.textTheme.bodySmall,
                   ),
                   const SizedBox(width: 8),
                   Text(
                     context.strings.createdDate(
                       DateFormat.yMMMMd().format(playlist.createTime),
                     ),
-                    style: context.textTheme.caption,
+                    style: context.textTheme.bodySmall,
                   ),
                 ],
               ),
@@ -195,12 +195,12 @@ class _PlaylistDetailHeader extends StatelessWidget {
                 children: [
                   Text(
                     context.strings.playlistTrackCount(playlist.trackCount),
-                    style: context.textTheme.caption,
+                    style: context.textTheme.bodySmall,
                   ),
                   const SizedBox(width: 8),
                   Text(
                     context.strings.playlistPlayCount(playlist.playCount),
-                    style: context.textTheme.caption,
+                    style: context.textTheme.bodySmall,
                   ),
                   const Spacer(),
                   _PlaylistSearchBox(
@@ -257,7 +257,7 @@ class _HeaderActionButtons extends ConsumerWidget {
                 const SizedBox(width: 4),
                 Text(
                   context.strings.subscribe,
-                  style: context.textTheme.bodyText2,
+                  style: context.textTheme.bodyMedium,
                 ),
               ],
             ),
@@ -277,7 +277,7 @@ class _HeaderActionButtons extends ConsumerWidget {
                 const SizedBox(width: 4),
                 Text(
                   context.strings.share,
-                  style: context.textTheme.bodyText2,
+                  style: context.textTheme.bodyMedium,
                 ),
               ],
             ),
@@ -334,7 +334,7 @@ class _PlaylistSearchBox extends StatelessWidget {
         textAlignVertical: TextAlignVertical.center,
         style: TextStyle(
           fontSize: 12,
-          color: Theme.of(context).textTheme.caption!.color,
+          color: Theme.of(context).textTheme.bodySmall!.color,
         ),
         onChanged: playlistFilterController.add,
         decoration: InputDecoration(

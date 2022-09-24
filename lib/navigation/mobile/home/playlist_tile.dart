@@ -61,7 +61,7 @@ class PlaylistTile extends ConsumerWidget {
                   const Padding(padding: EdgeInsets.only(top: 4)),
                   Text(
                     '${playlist.trackCount}首',
-                    style: Theme.of(context).textTheme.caption,
+                    style: Theme.of(context).textTheme.bodySmall,
                   ),
                   const Spacer(),
                 ],

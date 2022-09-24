@@ -26,7 +26,7 @@ Future<bool> showNeedLoginToast(BuildContext context) async {
                   '点击前往登录页面',
                   style: Theme.of(context)
                       .textTheme
-                      .bodyText1!
+                      .bodyLarge!
                       .copyWith(color: Colors.blue),
                 ),
               )
@@ -57,7 +57,7 @@ class _Toast extends StatelessWidget {
         padding:
             EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
         child: DefaultTextStyle(
-          style: Theme.of(context).textTheme.bodyText1!,
+          style: Theme.of(context).textTheme.bodyLarge!,
           child: Align(
             alignment: const Alignment(0, 0.5),
             child: Material(

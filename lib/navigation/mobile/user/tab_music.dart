@@ -38,7 +38,7 @@ class _TabMusicState extends State<TabMusic>
                 Expanded(child: _Header(title: '歌单(${created.length})')),
                 Text(
                   '共被收藏${widget.profile.playlistBeSubscribedCount}次',
-                  style: Theme.of(context).textTheme.caption,
+                  style: Theme.of(context).textTheme.bodySmall,
                 ),
                 const SizedBox(width: 16),
               ],

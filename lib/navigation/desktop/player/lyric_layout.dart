@@ -26,7 +26,7 @@ class LyricLayout extends ConsumerWidget {
           const SizedBox(height: 20),
           Text(
             track.name,
-            style: context.textTheme.headline6.bold,
+            style: context.textTheme.titleLarge.bold,
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
           ),
@@ -35,8 +35,8 @@ class LyricLayout extends ConsumerWidget {
             children: [
               Flexible(
                 child: MouseHighlightText(
-                  style: context.textTheme.caption,
-                  highlightStyle: context.textTheme.caption!.copyWith(
+                  style: context.textTheme.bodySmall,
+                  highlightStyle: context.textTheme.bodySmall!.copyWith(
                     color: context.textTheme.bodyMedium!.color,
                   ),
                   maxLines: 1,
@@ -64,8 +64,8 @@ class LyricLayout extends ConsumerWidget {
               const SizedBox(width: 20),
               Flexible(
                 child: MouseHighlightText(
-                  style: context.textTheme.caption,
-                  highlightStyle: context.textTheme.caption!.copyWith(
+                  style: context.textTheme.bodySmall,
+                  highlightStyle: context.textTheme.bodySmall!.copyWith(
                     color: context.textTheme.bodyMedium!.color,
                   ),
                   maxLines: 1,

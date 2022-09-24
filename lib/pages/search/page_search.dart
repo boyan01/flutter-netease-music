@@ -128,7 +128,7 @@ class _SearchPageState extends State<SearchPage> {
               appBar: AppBar(
                 backgroundColor: theme.primaryColor,
                 iconTheme: theme.primaryIconTheme,
-                toolbarTextStyle: theme.primaryTextTheme.headline1,
+                toolbarTextStyle: theme.primaryTextTheme.displayLarge,
                 systemOverlayStyle: theme.brightness == Brightness.dark
                     ? SystemUiOverlayStyle.dark
                     : SystemUiOverlayStyle.light,
@@ -136,12 +136,12 @@ class _SearchPageState extends State<SearchPage> {
                 title: TextField(
                   controller: _queryTextController,
                   focusNode: _focusNode,
-                  style: theme.primaryTextTheme.headline6,
+                  style: theme.primaryTextTheme.titleLarge,
                   textInputAction: TextInputAction.search,
                   onSubmitted: (String _) => _search(query),
                   decoration: InputDecoration(
                     border: InputBorder.none,
-                    hintStyle: theme.primaryTextTheme.headline6,
+                    hintStyle: theme.primaryTextTheme.titleLarge,
                     hintText:
                         MaterialLocalizations.of(context).searchFieldLabel,
                   ),

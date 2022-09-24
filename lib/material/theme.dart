@@ -31,7 +31,6 @@ ThemeData get quietDarkTheme {
   );
   return theme
       .copyWith(
-        toggleableActiveColor: lightSwatch,
         tooltipTheme: const TooltipThemeData(
           waitDuration: Duration(milliseconds: 1000),
         ),
@@ -48,7 +47,6 @@ ThemeData _buildTheme(Color primaryColor) {
   );
   return theme
       .copyWith(
-        toggleableActiveColor: lightSwatch,
         tooltipTheme: const TooltipThemeData(
           waitDuration: Duration(milliseconds: 1000),
         ),
@@ -154,7 +152,7 @@ class AppTheme extends StatelessWidget {
       background: theme.backgroundColor,
       primary: theme.colorScheme.primary,
       textPrimary: theme.textTheme.bodyMedium!.color!,
-      textHint: theme.textTheme.caption!.color!,
+      textHint: theme.textTheme.bodySmall!.color!,
       textDisabled: theme.disabledColor,
       onPrimary: theme.colorScheme.onPrimary,
       surface: theme.colorScheme.surface,

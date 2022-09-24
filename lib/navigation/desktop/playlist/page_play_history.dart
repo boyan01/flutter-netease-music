@@ -39,7 +39,7 @@ class _EmptyPlayHistory extends StatelessWidget {
           child: Center(
             child: Text(
               context.strings.noPlayHistory,
-              style: context.textTheme.caption,
+              style: context.textTheme.bodySmall,
             ),
           ),
         ),
@@ -136,7 +136,7 @@ class _ExpandedHeader extends ConsumerWidget {
               const SizedBox(width: 20),
               Text(
                 context.strings.musicCountFormat(count),
-                style: context.textTheme.caption,
+                style: context.textTheme.bodySmall,
               ),
               const Spacer(),
               if (count > 0)

@@ -30,13 +30,13 @@ class DurationProgressBar extends ConsumerWidget {
             final positionText = player.position?.timeStamp;
             return Row(
               children: <Widget>[
-                Text(positionText ?? '00:00', style: theme.bodyText2),
+                Text(positionText ?? '00:00', style: theme.bodyMedium),
                 const Padding(padding: EdgeInsets.only(left: 4)),
                 Expanded(
                   child: widget,
                 ),
                 const Padding(padding: EdgeInsets.only(left: 4)),
-                Text(durationText ?? '00:00', style: theme.bodyText2),
+                Text(durationText ?? '00:00', style: theme.bodyMedium),
               ],
             );
           },

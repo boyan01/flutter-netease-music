@@ -99,7 +99,7 @@ class _Title extends ConsumerWidget {
           const SizedBox(width: 4),
           Text(
             '(${playingList.tracks.length})',
-            style: context.textTheme.caption,
+            style: context.textTheme.bodySmall,
           ),
         ],
       ),
@@ -247,8 +247,8 @@ class _MusicTile extends ConsumerWidget {
       artist = color;
     } else {
       leading = Container();
-      name = Theme.of(context).textTheme.bodyText2!.color;
-      artist = Theme.of(context).textTheme.caption!.color;
+      name = Theme.of(context).textTheme.bodyMedium!.color;
+      artist = Theme.of(context).textTheme.bodySmall!.color;
     }
     return InkWell(
       onTap: () {

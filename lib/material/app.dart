@@ -15,8 +15,8 @@ class CopyRightOverlay extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final copyRight = context.strings.copyRightOverlay;
-    final textStyle = context.textTheme.caption!.copyWith(
-      color: context.textTheme.caption!.color!.withOpacity(0.3),
+    final textStyle = context.textTheme.bodySmall!.copyWith(
+      color: context.textTheme.bodySmall!.color!.withOpacity(0.3),
     );
     final painter = useMemoized(
       () => _CopyrightPainter(copyright: copyRight, style: textStyle),

@@ -376,7 +376,7 @@ class _AlbumHeaderContent extends ConsumerWidget {
               const SizedBox(width: 16),
               Expanded(
                 child: DefaultTextStyle(
-                  style: Theme.of(context).primaryTextTheme.bodyText2!,
+                  style: Theme.of(context).primaryTextTheme.bodyMedium!,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   child: Column(
@@ -515,14 +515,14 @@ class _PlayListHeaderContent extends ConsumerWidget {
                       const SizedBox(height: 8),
                       Text(
                         playlist.creator.nickname,
-                        style: context.primaryTextTheme.caption,
+                        style: context.primaryTextTheme.bodySmall,
                       ),
                       const Spacer(),
                       Text(
                         playlist.description,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: context.primaryTextTheme.caption,
+                        style: context.primaryTextTheme.bodySmall,
                       ),
                     ],
                   ),
@@ -600,13 +600,13 @@ class _OverlappedButton extends StatelessWidget {
             IconTheme.merge(
               data: IconThemeData(
                 size: 18,
-                color: context.textTheme.caption!.color,
+                color: context.textTheme.bodySmall!.color,
               ),
               child: icon,
             ),
             const SizedBox(width: 8),
             DefaultTextStyle(
-              style: context.textTheme.caption!,
+              style: context.textTheme.bodySmall!,
               child: label,
             ),
           ],

@@ -113,7 +113,7 @@ class _CenterSection extends HookConsumerWidget {
           music: track,
           textStyle: Theme.of(context)
               .textTheme
-              .bodyText2!
+              .bodyMedium!
               .copyWith(height: 2, fontSize: 16, color: Colors.white),
           onTap: () => showLyric.value = !showLyric.value,
         ),
@@ -151,7 +151,7 @@ class _FmCover extends ConsumerWidget {
         ),
         Text(
           track.name,
-          style: Theme.of(context).primaryTextTheme.subtitle1,
+          style: Theme.of(context).primaryTextTheme.titleMedium,
         ),
         const SizedBox(height: 8),
         InkWell(
@@ -167,7 +167,7 @@ class _FmCover extends ConsumerWidget {
                   track.displaySubtitle,
                   style: Theme.of(context)
                       .primaryTextTheme
-                      .caption!
+                      .bodySmall!
                       .copyWith(fontSize: 13),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
@@ -176,7 +176,7 @@ class _FmCover extends ConsumerWidget {
               Icon(
                 Icons.chevron_right,
                 size: 17,
-                color: Theme.of(context).primaryTextTheme.caption!.color,
+                color: Theme.of(context).primaryTextTheme.bodySmall!.color,
               ),
             ],
           ),

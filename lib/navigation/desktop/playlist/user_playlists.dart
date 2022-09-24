@@ -145,7 +145,7 @@ class _PlaylistsHeader extends StatelessWidget {
           children: [
             const SizedBox(width: 8),
             Flexible(
-              child: Text(title, style: context.textTheme.caption),
+              child: Text(title, style: context.textTheme.bodySmall),
             ),
             const SizedBox(width: 4),
             AnimatedRotation(

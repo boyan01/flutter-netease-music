@@ -99,7 +99,7 @@ class ArtistTile extends StatelessWidget {
                               const Padding(padding: EdgeInsets.only(left: 2)),
                               Text(
                                 '已入驻',
-                                style: Theme.of(context).textTheme.caption,
+                                style: Theme.of(context).textTheme.bodySmall,
                               )
                             ],
                           )

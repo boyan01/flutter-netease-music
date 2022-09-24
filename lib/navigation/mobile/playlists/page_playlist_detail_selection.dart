@@ -62,7 +62,7 @@ class PlaylistSelectionPageState extends State<PlaylistSelectionPage> {
             },
             child: Text(
               allSelected ? '取消全选' : '全选',
-              style: Theme.of(context).primaryTextTheme.bodyText2,
+              style: Theme.of(context).primaryTextTheme.bodyMedium,
             ),
           )
         ],

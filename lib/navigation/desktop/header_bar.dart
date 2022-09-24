@@ -115,7 +115,7 @@ class _SearchBar extends HookConsumerWidget {
                   hintText: context.strings.search,
                   hintStyle: TextStyle(
                     fontSize: 14,
-                    color: context.textTheme.caption!.color,
+                    color: context.textTheme.bodySmall!.color,
                   ),
                 ),
                 onSubmitted: (value) => ref
@@ -148,7 +148,7 @@ class _ProfileWidget extends HookConsumerWidget {
           const SizedBox(width: 10),
           Text(
             context.strings.login,
-            style: context.textTheme.caption?.copyWith(
+            style: context.textTheme.bodySmall?.copyWith(
               fontSize: 14,
             ),
           ),

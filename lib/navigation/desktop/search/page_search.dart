@@ -55,7 +55,7 @@ class SearchResultScaffold extends StatelessWidget {
             children: [
               Text(
                 query,
-                style: context.textTheme.headline6!.copyWith(
+                style: context.textTheme.titleLarge!.copyWith(
                   height: 1,
                 ),
                 maxLines: 1,
@@ -63,7 +63,7 @@ class SearchResultScaffold extends StatelessWidget {
               const SizedBox(width: 8),
               Text(
                 queryResultDescription,
-                style: context.textTheme.caption!.copyWith(height: 1),
+                style: context.textTheme.bodySmall!.copyWith(height: 1),
                 maxLines: 1,
               ),
             ],
