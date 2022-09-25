@@ -73,7 +73,7 @@ class PlaylistDetailStateNotifier
         }
       }
       _playlistDetail = data;
-      await _playlistDetailBox.put(playlistId, data);
+      await _playlistDetailBox.put(playlistId.toString(), data);
       state = AsyncValue.data(data);
     } catch (error, stacktrace) {
       debugPrint('error: $error ,$stacktrace');
@@ -106,7 +106,7 @@ class PlaylistDetailStateNotifier
       trackIds: [track.id, ..._playlistDetail!.trackIds],
     );
     _playlistDetail = detail;
-    await _playlistDetailBox.put(playlistId, detail);
+    await _playlistDetailBox.put(playlistId.toString(), detail);
     state = AsyncValue.data(detail);
   }
 
@@ -130,7 +130,7 @@ class PlaylistDetailStateNotifier
       trackIds: _playlistDetail!.trackIds.where((t) => t != track.id).toList(),
     );
     _playlistDetail = detail;
-    await _playlistDetailBox.put(playlistId, detail);
+    await _playlistDetailBox.put(playlistId.toString(), detail);
     state = AsyncValue.data(detail);
   }
 }
