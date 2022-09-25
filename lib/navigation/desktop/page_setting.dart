@@ -1,8 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import '../../component/utils/scroll_controller.dart';
-import '../../extension.dart';
 
+import '../../extension.dart';
+import '../../utils/system/scroll_controller.dart';
 import '../common/settings.dart';
 
 class PageSetting extends StatelessWidget {

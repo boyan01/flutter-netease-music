@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../../../component/utils/scroll_controller.dart';
 import '../../../extension.dart';
 import '../../../providers/player_provider.dart';
 import '../../../providers/search_provider.dart';
 import '../../../repository.dart';
+import '../../../utils/system/scroll_controller.dart';
 import '../../common/playlist/music_list.dart';
 import '../widgets/track_tile_normal.dart';
 import 'page_search.dart';

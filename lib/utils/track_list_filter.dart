@@ -1,9 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:lpinyin/lpinyin.dart';
-import '../component/hooks.dart';
 
 import '../repository.dart';
+import 'hooks.dart';
 
 List<Track> useFilteredTracks(List<Track> tracks, String filter) {
   final pinyinData =

@@ -2,7 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:overlay_support/overlay_support.dart';
-import '../component.dart';
+
+import '../../../component/route.dart';
 
 Future<bool> showNeedLoginToast(BuildContext context) async {
   final completer = Completer();

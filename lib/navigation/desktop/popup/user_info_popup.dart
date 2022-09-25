@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:overlay_support/overlay_support.dart';
 
-import '../../../component.dart';
+import '../../../extension.dart';
 import '../../../providers/account_provider.dart';
 import '../widgets/context_menu.dart';
 

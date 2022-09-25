@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:overlay_support/overlay_support.dart';
 
-import '../../../component.dart';
-import '../../../pages/record/page_record.dart';
+import '../../../extension.dart';
 import '../../../providers/account_provider.dart';
 
 class PresetGridSection extends ConsumerWidget {
@@ -43,17 +42,17 @@ class PresetGridSection extends ConsumerWidget {
                     label: context.strings.latestPlayHistory,
                     onTap: () {
                       if (ref.read(isLoginProvider)) {
-                        context.secondaryNavigator!.push(
-                          MaterialPageRoute(
-                            builder: (context) {
-                              return RecordPage(
-                                uid: ref.read(userProvider)!.userId,
-                              );
-                            },
-                          ),
-                        );
+                        // context.secondaryNavigator!.push(
+                        //   MaterialPageRoute(
+                        //     builder: (context) {
+                        //       return RecordPage(
+                        //         uid: ref.read(userProvider)!.userId,
+                        //       );
+                        //     },
+                        //   ),
+                        // );
                       } else {
-                        Navigator.of(context).pushNamed(pageLogin);
+                        // Navigator.of(context).pushNamed(pageLogin);
                       }
                     },
                   ),
@@ -61,7 +60,7 @@ class PresetGridSection extends ConsumerWidget {
                     icon: Icons.radio,
                     label: context.strings.myDjs,
                     onTap: () {
-                      context.secondaryNavigator!.pushNamed(pageMyDj);
+                      // context.secondaryNavigator!.pushNamed(pageMyDj);
                     },
                   ),
                 ],

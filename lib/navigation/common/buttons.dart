@@ -2,7 +2,7 @@ import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../component.dart';
+import '../../extension.dart';
 import '../../providers/navigator_provider.dart';
 
 class AppIconButton extends StatelessWidget {

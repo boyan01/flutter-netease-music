@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../extension.dart';
+import '../../../extension.dart';
 
 class PrimaryTabIndicator extends UnderlineTabIndicator {
   PrimaryTabIndicator({Color color = Colors.white})

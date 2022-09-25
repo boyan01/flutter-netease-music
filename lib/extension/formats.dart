@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:netease_api/netease_api.dart';
 
-import '../component.dart';
-import '../component/exceptions.dart';
 import '../component/utils/time.dart';
+import '../utils/exceptions.dart';
+import 'strings.dart';
 
 extension ErrorFormat on BuildContext {
   /// human-readable error message

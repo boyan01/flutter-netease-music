@@ -4,11 +4,11 @@ import 'package:loader/loader.dart';
 import 'package:overlay_support/overlay_support.dart';
 
 import '../../../extension.dart';
-import '../../../material/flexible_app_bar.dart';
-import '../../../material/images.dart';
-import '../../../material/tabs.dart';
 import '../../../providers/user_detail_provider.dart';
 import '../../../repository.dart';
+import '../../common/material/flexible_app_bar.dart';
+import '../../common/material/images.dart';
+import '../../common/material/tabs.dart';
 import '../home/playlist_tile.dart';
 
 part 'tab_about.dart';

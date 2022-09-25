@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
-import '../navigation/common/navigation_target.dart';
-import '../providers/navigator_provider.dart';
-import '../repository/cached_image.dart';
+import '../../../providers/navigator_provider.dart';
+import '../../../repository/cached_image.dart';
+import '../navigation_target.dart';
+
 
 class AlbumTile extends ConsumerWidget {
   const AlbumTile({super.key, required this.album, this.subtitle});

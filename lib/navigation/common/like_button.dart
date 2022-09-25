@@ -2,12 +2,12 @@ import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../material/user.dart';
 import '../../providers/account_provider.dart';
 import '../../providers/favorite_tracks_provider.dart';
 import '../../providers/player_provider.dart';
 import '../../repository.dart';
 import 'buttons.dart';
+import 'material/user.dart';
 
 /// 歌曲喜欢按钮
 class LikeButton extends ConsumerWidget {

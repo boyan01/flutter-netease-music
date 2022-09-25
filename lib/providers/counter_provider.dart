@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../component.dart';
 import '../repository.dart';
+import '../utils/riverpod/cacheable_state_provider.dart';
 import 'account_provider.dart';
 
 export 'package:netease_api/netease_api.dart' show MusicCount;

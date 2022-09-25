@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../extension.dart';
-import '../material.dart';
+import '../generated/l10n.dart';
 import '../providers/navigator_provider.dart';
 import '../providers/settings_provider.dart';
 import '../utils/platform_configuration.dart';
+import 'common/material/app.dart';
+import 'common/material/theme.dart';
 import 'desktop/home_window.dart';
 import 'desktop/widgets/hotkeys.dart';
 import 'mobile/mobile_window.dart';

@@ -12,7 +12,7 @@ import 'package:window_manager/window_manager.dart';
 
 import 'media/tracks/tracks_player_impl_mobile.dart';
 import 'navigation/app.dart';
-import 'pages/splash/page_splash.dart';
+import 'navigation/common/page_splash.dart';
 import 'providers/preference_provider.dart';
 import 'providers/repository_provider.dart';
 import 'repository.dart';

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../component.dart';
+import '../../../extension.dart';
 
 class NavigationTile extends StatelessWidget {
   const NavigationTile({

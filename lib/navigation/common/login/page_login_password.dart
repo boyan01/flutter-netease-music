@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:overlay_support/overlay_support.dart';
 
-import '../../../component/i18n/strings.dart';
 import '../../../extension/devices.dart';
-import '../../../material/dialogs.dart';
-import '../../../pages/welcome/page_welcome.dart';
+import '../../../extension/strings.dart';
 import '../../../providers/account_provider.dart';
 import '../../../providers/navigator_provider.dart';
+import '../../mobile/welcome/page_welcome.dart';
+import '../material/dialogs.dart';
 
 class PageLoginPassword extends ConsumerStatefulWidget {
   const PageLoginPassword({super.key, required this.phone});

@@ -3,9 +3,8 @@ import 'package:loader/loader.dart';
 import 'package:overlay_support/overlay_support.dart';
 
 import '../../../extension.dart';
-import '../../../material/tiles.dart';
-import '../../../part/part.dart';
 import '../../../repository.dart';
+import '../../common/material/tiles.dart';
 import '../../common/playlist/music_list.dart';
 import '../playlists/dialog_selector.dart';
 import '../playlists/page_playlist_detail_selection.dart';
@@ -317,7 +316,7 @@ class _PageArtistIntroductionState extends State<_PageArtistIntroduction>
     );
     final Widget button = InkWell(
       onTap: () {
-        notImplemented(context);
+        toast(context.strings.todo);
       },
       child: const SizedBox(
         height: 36,

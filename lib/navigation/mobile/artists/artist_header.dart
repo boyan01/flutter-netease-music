@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:overlay_support/overlay_support.dart';
-import '../../../material/flexible_app_bar.dart';
-import '../../../material/tabs.dart';
+
 import '../../../repository.dart';
+import '../../common/material/flexible_app_bar.dart';
+import '../../common/material/tabs.dart';
 
 class ArtistHeader extends StatelessWidget {
   const ArtistHeader({super.key, required this.artist});
+
   final Artist artist;
 
   @override
@@ -38,6 +40,7 @@ class ArtistHeader extends StatelessWidget {
 
 class _ArtistFlexHeader extends StatelessWidget {
   const _ArtistFlexHeader({super.key, required this.artist});
+
   final Artist artist;
 
   @override

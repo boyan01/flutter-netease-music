@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../repository.dart';
+import '../../../repository/cached_image.dart';
 
 ///圆形图片
 class RoundedImage extends StatelessWidget {

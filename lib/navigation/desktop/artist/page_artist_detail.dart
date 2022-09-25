@@ -3,12 +3,12 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:overlay_support/overlay_support.dart';
 
-import '../../../component/utils/scroll_controller.dart';
 import '../../../extension.dart';
 import '../../../providers/artist_provider.dart';
 import '../../../providers/navigator_provider.dart';
 import '../../../providers/player_provider.dart';
 import '../../../repository.dart';
+import '../../../utils/system/scroll_controller.dart';
 import '../../common/buttons.dart';
 import '../../common/navigation_target.dart';
 import '../../common/playlist/music_list.dart';

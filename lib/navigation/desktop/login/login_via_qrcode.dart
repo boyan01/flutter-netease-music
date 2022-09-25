@@ -6,12 +6,12 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:pretty_qr_code/pretty_qr_code.dart';
 
-import '../../../component/hooks.dart';
 import '../../../extension.dart';
-import '../../../material.dart';
 import '../../../providers/account_provider.dart';
 import '../../../providers/repository_provider.dart';
 import '../../../repository/data/login_qr_key_status.dart';
+import '../../../utils/hooks.dart';
+import '../../common/material/dialogs.dart';
 
 class LoginViaQrCode extends HookConsumerWidget {
   const LoginViaQrCode({super.key});

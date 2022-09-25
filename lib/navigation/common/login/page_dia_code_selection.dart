@@ -7,7 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
-import '../../../component.dart';
+import '../../../extension.dart';
 import '../../../model/region_flag.dart';
 
 /// Region selection for login.

@@ -7,8 +7,8 @@ import 'package:netease_api/netease_api.dart' as api;
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 
-import '../component/cache/cache.dart';
 import '../repository.dart';
+import '../utils/cache/key_value_cache.dart';
 import 'data/login_qr_key_status.dart';
 import 'data/search_result.dart';
 

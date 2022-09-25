@@ -2,12 +2,12 @@ import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../component/utils/scroll_controller.dart';
 import '../../../extension.dart';
-import '../../../material/flexible_app_bar.dart';
 import '../../../providers/play_history_provider.dart';
 import '../../../providers/player_provider.dart';
 import '../../../repository/data/track.dart';
+import '../../../utils/system/scroll_controller.dart';
+import '../../common/material/flexible_app_bar.dart';
 import '../../common/playlist/music_list.dart';
 import '../widgets/playlist_collapsed_title.dart';
 import '../widgets/track_tile_normal.dart';

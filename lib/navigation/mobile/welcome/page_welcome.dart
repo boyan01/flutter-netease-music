@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
-import '../../component.dart';
-import '../../providers/settings_provider.dart';
+import '../../../component/route.dart';
+import '../../../extension.dart';
+import '../../../providers/settings_provider.dart';
+
 
 class PageWelcome extends StatefulWidget {
   const PageWelcome({super.key});

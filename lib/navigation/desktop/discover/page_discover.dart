@@ -3,10 +3,10 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../../../component/utils/scroll_controller.dart';
 import '../../../extension.dart';
 import '../../../providers/navigator_provider.dart';
 import '../../../providers/personalized_playlist_provider.dart';
+import '../../../utils/system/scroll_controller.dart';
 import '../../common/navigation_target.dart';
 import '../../common/recommended_playlist_tile.dart';
 import 'recommend_for_you.dart';

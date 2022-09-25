@@ -4,11 +4,12 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:overlay_support/overlay_support.dart';
 
-import '../../../component/utils/scroll_controller.dart';
 import '../../../extension.dart';
 import '../../../providers/navigator_provider.dart';
 import '../../../providers/player_provider.dart';
 import '../../../repository.dart';
+import '../../../utils/riverpod/cacheable_state_provider.dart';
+import '../../../utils/system/scroll_controller.dart';
 import '../../common/navigation_target.dart';
 import '../widgets/context_menu.dart';
 import '../widgets/highlight_clickable_text.dart';

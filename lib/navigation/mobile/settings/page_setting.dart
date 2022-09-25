@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import '../../../component.dart';
 
+import '../../../extension.dart';
 import '../../common/buttons.dart';
 import '../../common/settings.dart';
 

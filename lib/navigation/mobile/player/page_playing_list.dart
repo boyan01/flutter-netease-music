@@ -6,10 +6,11 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:music_player/music_player.dart';
 import 'package:overlay_support/overlay_support.dart';
 
-import '../../../component/utils/scroll_controller.dart';
+import '../../../component/player/player.dart';
 import '../../../extension.dart';
 import '../../../providers/player_provider.dart';
 import '../../../repository.dart';
+import '../../../utils/system/scroll_controller.dart';
 import '../../common/buttons.dart';
 import '../playlists/dialog_selector.dart';
 

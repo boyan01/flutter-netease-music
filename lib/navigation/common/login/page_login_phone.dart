@@ -8,12 +8,12 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:overlay_support/overlay_support.dart';
 
-import '../../../component.dart';
-import '../../../material/dialogs.dart';
+import '../../../extension.dart';
 import '../../../model/region_flag.dart';
 import '../../../providers/navigator_provider.dart';
 import '../../../repository.dart';
 import '../buttons.dart';
+import '../material/dialogs.dart';
 import 'login_sub_navigation.dart';
 import 'page_dia_code_selection.dart';
 

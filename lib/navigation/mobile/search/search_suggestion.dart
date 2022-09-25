@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:loader/loader.dart';
 
-import '../../../component.dart';
+import '../../../extension.dart';
 import '../../../repository/netease.dart';
 
 typedef SuggestionSelectedCallback = void Function(String keyword);

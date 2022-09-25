@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../extension.dart';
-import '../../../material.dart';
 import '../../../providers/navigator_provider.dart';
 import '../../../providers/player_provider.dart';
 import '../../../repository.dart';
 import '../../common/buttons.dart';
+import '../../common/material/player.dart';
 import '../../common/player/cover.dart';
 import '../../common/player/lyric_view.dart';
 import '../../common/player/player_actions.dart';
