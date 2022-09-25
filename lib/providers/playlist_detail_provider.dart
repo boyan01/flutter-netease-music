@@ -73,11 +73,11 @@ class PlaylistDetailStateNotifier
         }
       }
       _playlistDetail = data;
-      await _playlistDetailBox.put(playlistId.toString(), data);
       state = AsyncValue.data(data);
+      await _playlistDetailBox.put(playlistId.toString(), data);
     } catch (error, stacktrace) {
       debugPrint('error: $error ,$stacktrace');
-      if (_playlistDetail == null) {
+      if (state is! AsyncData) {
         state = AsyncValue.error(error, stackTrace: stacktrace);
       }
     } finally {
