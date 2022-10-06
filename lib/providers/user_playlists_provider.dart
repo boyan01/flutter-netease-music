@@ -33,7 +33,7 @@ class _UserPlaylistStateNotifier
       state = AsyncValue.data(data.toList());
     } catch (error, stacktrace) {
       if (_data.isEmpty) {
-        state = AsyncValue.error(error, stackTrace: stacktrace);
+        state = AsyncValue.error(error, stacktrace);
       }
     } finally {
       _isLoading = false;

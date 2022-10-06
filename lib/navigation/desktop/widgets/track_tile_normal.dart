@@ -294,7 +294,7 @@ class TrackTile extends HookConsumerWidget {
                   deleteTrack: TrackTileContainer.canDeleteTrack(parentContext)
                       ? () => TrackTileContainer.deleteTrack(
                             parentContext,
-                            ref.read,
+                            ref,
                             track,
                           )
                       : null,

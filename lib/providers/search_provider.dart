@@ -63,7 +63,7 @@ abstract class SearchResultStateNotify<T>
       _totalItemCount = result.totalCount;
       notifyListener(AsyncValue.data(result.result));
     } catch (error, stacktrace) {
-      notifyListener(AsyncValue.error(error, stackTrace: stacktrace));
+      notifyListener(AsyncValue.error(error, stacktrace));
     } finally {
       _loading = false;
     }

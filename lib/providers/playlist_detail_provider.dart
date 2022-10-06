@@ -15,7 +15,7 @@ final playlistDetailProvider = StateNotifierProvider.family<
     PlaylistDetailStateNotifier, AsyncValue<PlaylistDetail>, int>(
   (ref, playlistId) => PlaylistDetailStateNotifier(
     playlistId: playlistId,
-    read: ref.read,
+    ref: ref,
   ),
 );
 
@@ -23,13 +23,13 @@ class PlaylistDetailStateNotifier
     extends StateNotifier<AsyncValue<PlaylistDetail>> {
   PlaylistDetailStateNotifier({
     required this.playlistId,
-    required this.read,
+    required this.ref,
   }) : super(const AsyncValue.loading()) {
     _initializeLoad();
   }
 
   final int playlistId;
-  final Reader read;
+  final Ref ref;
   late Box<PlaylistDetail> _playlistDetailBox;
 
   PlaylistDetail? _playlistDetail;
@@ -78,7 +78,7 @@ class PlaylistDetailStateNotifier
     } catch (error, stacktrace) {
       debugPrint('error: $error ,$stacktrace');
       if (state is! AsyncData) {
-        state = AsyncValue.error(error, stackTrace: stacktrace);
+        state = AsyncValue.error(error, stacktrace);
       }
     } finally {
       _isNetworkLoading = false;
@@ -90,7 +90,7 @@ class PlaylistDetailStateNotifier
     if (_playlistDetail == null) {
       return;
     }
-    final userId = read(userIdProvider);
+    final userId = ref.read(userIdProvider);
     assert(userId == _playlistDetail!.creator.userId, 'userId is not match');
 
     final ret = await neteaseRepository!.playlistTracksEdit(
@@ -115,7 +115,7 @@ class PlaylistDetailStateNotifier
     if (_playlistDetail == null) {
       return;
     }
-    final userId = read(userIdProvider);
+    final userId = ref.read(userIdProvider);
     assert(userId == _playlistDetail!.creator.userId, 'userId is not match');
     final ret = await neteaseRepository!.playlistTracksEdit(
       PlaylistOperation.remove,

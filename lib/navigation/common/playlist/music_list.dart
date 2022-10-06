@@ -49,7 +49,7 @@ extension _TracksPlayer on TracksPlayer {
   }
 }
 
-typedef TrackDeleteHandler = Future<void> Function(Reader read, Track track);
+typedef TrackDeleteHandler = Future<void> Function(WidgetRef read, Track track);
 
 class TrackTileContainer extends StatelessWidget {
   factory TrackTileContainer.album({
@@ -134,8 +134,9 @@ class TrackTileContainer extends StatelessWidget {
         return player.playWithList(id, tracks, track: track);
       },
       isUserPlaylist
-          ? (read, track) async {
-              await read(playlistDetailProvider(playlist.id).notifier)
+          ? (ref, track) async {
+              await ref
+                  .read(playlistDetailProvider(playlist.id).notifier)
                   .removeTrack(track);
             }
           : null,
@@ -209,7 +210,7 @@ class TrackTileContainer extends StatelessWidget {
 
   static Future<void> deleteTrack(
     BuildContext context,
-    Reader reader,
+    WidgetRef ref,
     Track track,
   ) {
     final container =
@@ -219,7 +220,7 @@ class TrackTileContainer extends StatelessWidget {
       return Future.value();
     }
     assert(container._deleteMusic != null, 'deleteMusic is null');
-    return container._deleteMusic?.call(reader, track) ?? Future.value();
+    return container._deleteMusic?.call(ref, track) ?? Future.value();
   }
 
   static bool canDeleteTrack(BuildContext context) {
