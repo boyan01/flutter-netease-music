@@ -6,7 +6,6 @@ import '../../../component/route.dart';
 import '../../../extension.dart';
 import '../../../providers/settings_provider.dart';
 
-
 class PageWelcome extends StatefulWidget {
   const PageWelcome({super.key});
 

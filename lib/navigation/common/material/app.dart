@@ -6,7 +6,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../../../extension.dart';
 import '../../../providers/settings_provider.dart';
 
-
 class CopyRightOverlay extends HookConsumerWidget {
   const CopyRightOverlay({super.key, this.child});
 
