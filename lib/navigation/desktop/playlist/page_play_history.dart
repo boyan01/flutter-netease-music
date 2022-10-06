@@ -62,8 +62,8 @@ class _PlayHistoryList extends ConsumerWidget {
       child: TrackTileContainer.simpleList(
         tracks: tracks,
         player: ref.read(playerProvider),
-        onDelete: (read, track) async =>
-            read(playHistoryProvider.notifier).remove(track),
+        onDelete: (ref, track) async =>
+            ref.read(playHistoryProvider.notifier).remove(track),
         child: CustomScrollView(
           controller: AppScrollController(),
           slivers: [
