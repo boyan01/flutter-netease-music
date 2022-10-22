@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../component/global/orientation.dart';
-import '../../../component/route.dart';
 import '../../../extension.dart';
 import '../../../providers/navigator_provider.dart';
 import '../../../providers/personalized_playlist_provider.dart';
@@ -47,21 +45,25 @@ class _NavigationLine extends ConsumerWidget {
         children: <Widget>[
           _ItemNavigator(
             Icons.radio,
-            '私人FM',
+            context.strings.personalFM,
             () => ref
                 .read(navigatorProvider.notifier)
                 .navigate(NavigationTargetFmPlaying()),
           ),
           _ItemNavigator(
             Icons.today,
-            '每日推荐',
+            context.strings.dailyRecommend,
             () => ref
                 .read(navigatorProvider.notifier)
                 .navigate(NavigationTargetDailyRecommend()),
           ),
-          _ItemNavigator(Icons.show_chart, '排行榜', () {
-            context.secondaryNavigator!.pushNamed(pageLeaderboard);
-          }),
+          _ItemNavigator(
+            Icons.show_chart,
+            context.strings.leaderboard,
+            () => ref
+                .read(navigatorProvider.notifier)
+                .navigate(NavigationTargetLeaderboard()),
+          ),
         ],
       ),
     );

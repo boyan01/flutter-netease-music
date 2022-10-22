@@ -81,6 +81,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "hideCopyrightOverlay": MessageLookupByLibrary.simpleMessage("隐藏版权浮层"),
         "keySpace": MessageLookupByLibrary.simpleMessage("空格"),
         "latestPlayHistory": MessageLookupByLibrary.simpleMessage("最近播放"),
+        "leaderboard": MessageLookupByLibrary.simpleMessage("排行榜"),
         "library": MessageLookupByLibrary.simpleMessage("音乐库"),
         "likeMusic": MessageLookupByLibrary.simpleMessage("喜欢歌曲"),
         "loading": MessageLookupByLibrary.simpleMessage("加载中..."),

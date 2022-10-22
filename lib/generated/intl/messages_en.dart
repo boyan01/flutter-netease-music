@@ -94,6 +94,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "keySpace": MessageLookupByLibrary.simpleMessage("Space"),
         "latestPlayHistory":
             MessageLookupByLibrary.simpleMessage("Play History"),
+        "leaderboard": MessageLookupByLibrary.simpleMessage("Leaderboard"),
         "library": MessageLookupByLibrary.simpleMessage("Library"),
         "likeMusic": MessageLookupByLibrary.simpleMessage("Like Music"),
         "loading": MessageLookupByLibrary.simpleMessage("Loading..."),

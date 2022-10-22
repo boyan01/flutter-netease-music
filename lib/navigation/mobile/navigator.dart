@@ -5,6 +5,7 @@ import '../common/login/login_sub_navigation.dart';
 import '../common/navigation_target.dart';
 import 'artists/page_artist_detail.dart';
 import 'home/page_home.dart';
+import 'leaderboard/page_leaderboard.dart';
 import 'player/page_fm_playing.dart';
 import 'player/page_playing.dart';
 import 'player/page_playing_list.dart';
@@ -130,6 +131,9 @@ class MobileNavigatorController extends NavigatorController {
         break;
       case NavigationTargetDailyRecommend:
         page = const DailyPlaylistPage();
+        break;
+      case NavigationTargetLeaderboard:
+        page = const LeaderboardPage();
         break;
       default:
         throw Exception('Unknown navigation type: $target');

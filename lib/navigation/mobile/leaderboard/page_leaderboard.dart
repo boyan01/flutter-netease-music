@@ -1,26 +1,34 @@
 import 'package:flutter/material.dart';
-import 'package:loader/loader.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:netease_api/netease_api.dart';
 
+import '../../../extension/formats.dart';
+import '../../../extension/strings.dart';
+import '../../../providers/leaderboard_provider.dart';
+import '../../../providers/navigator_provider.dart';
 import '../../../repository/cached_image.dart';
-import '../../../repository/netease.dart';
-import '../playlists/page_playlist_detail.dart';
+import '../../common/navigation_target.dart';
 
 ///各个排行榜数据
-class LeaderboardPage extends StatelessWidget {
+class LeaderboardPage extends ConsumerWidget {
   const LeaderboardPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final leaderboard = ref.watch(leaderboardProvider);
     return Scaffold(
       appBar: AppBar(
         leading: const BackButton(),
-        title: const Text('排行榜'),
+        title: Text(context.strings.leaderboard),
       ),
-      body: Loader<Map>(
-        loadTask: () => neteaseRepository!.topListDetail(),
-        builder: (context, result) {
-          return _Leaderboard((result['list'] as List).cast());
-        },
+      body: leaderboard.when(
+        data: (data) => _Leaderboard(data.list),
+        error: (error, stacktrace) => Center(
+          child: Text('${context.formattedError(error)} \n $stacktrace'),
+        ),
+        loading: () => const Center(
+          child: CircularProgressIndicator(),
+        ),
       ),
     );
   }
@@ -29,14 +37,14 @@ class LeaderboardPage extends StatelessWidget {
 class _Leaderboard extends StatelessWidget {
   const _Leaderboard(this.data);
 
-  final List<Map> data;
+  final List<LeaderboardItem> data;
 
   @override
   Widget build(BuildContext context) {
     final widgets = <Widget>[];
     widgets.add(const _ItemTitle('官方榜'));
     for (var i = 0; i < 4; i++) {
-      widgets.add(_ItemLeaderboard1(data[i]));
+      widgets.add(_ItemLeaderboard1(item: data[i]));
     }
     widgets.add(const _ItemTitle('全球榜'));
     widgets.add(
@@ -52,7 +60,7 @@ class _Leaderboard extends StatelessWidget {
           crossAxisSpacing: 8,
         ),
         itemBuilder: (context, int i) {
-          return _ItemLeaderBoard2(data[i + 4]);
+          return _ItemLeaderBoard2(item: data[i + 4]);
         },
       ),
     );
@@ -82,24 +90,17 @@ class _ItemTitle extends StatelessWidget {
   }
 }
 
-class _ItemLeaderBoard2 extends StatelessWidget {
-  const _ItemLeaderBoard2(this.row);
+class _ItemLeaderBoard2 extends ConsumerWidget {
+  const _ItemLeaderBoard2({required this.item});
 
-  final Map row;
+  final LeaderboardItem item;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return InkWell(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) {
-              return PlaylistDetailPage(row['id']);
-            },
-          ),
-        );
-      },
+      onTap: () => ref
+          .read(navigatorProvider.notifier)
+          .navigate(NavigationTargetPlaylist(item.id)),
       child: SizedBox(
         height: 130,
         width: 140,
@@ -112,7 +113,7 @@ class _ItemLeaderBoard2 extends StatelessWidget {
                 borderRadius: BorderRadius.circular(3),
                 child: Stack(
                   children: <Widget>[
-                    Image(image: CachedImage(row['coverImgUrl'])),
+                    Image(image: CachedImage(item.coverImgUrl)),
                     Align(
                       alignment: Alignment.bottomCenter,
                       child: Container(
@@ -129,7 +130,7 @@ class _ItemLeaderBoard2 extends StatelessWidget {
                           children: <Widget>[
                             const Spacer(),
                             Text(
-                              row['updateFrequency'],
+                              item.updateFrequency,
                               style:
                                   Theme.of(context).primaryTextTheme.bodySmall,
                             ),
@@ -143,7 +144,7 @@ class _ItemLeaderBoard2 extends StatelessWidget {
               ),
             ),
             Text(
-              row['name'],
+              item.name,
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
             ),
@@ -154,24 +155,17 @@ class _ItemLeaderBoard2 extends StatelessWidget {
   }
 }
 
-class _ItemLeaderboard1 extends StatelessWidget {
-  const _ItemLeaderboard1(this.row);
+class _ItemLeaderboard1 extends ConsumerWidget {
+  const _ItemLeaderboard1({required this.item});
 
-  final Map row;
+  final LeaderboardItem item;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return InkWell(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) {
-              return PlaylistDetailPage(row['id']);
-            },
-          ),
-        );
-      },
+      onTap: () => ref
+          .read(navigatorProvider.notifier)
+          .navigate(NavigationTargetPlaylist(item.id)),
       child: Container(
         height: 130,
         padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
@@ -183,7 +177,7 @@ class _ItemLeaderboard1 extends StatelessWidget {
                 borderRadius: BorderRadius.circular(3),
                 child: Stack(
                   children: <Widget>[
-                    Image(image: CachedImage(row['coverImgUrl'])),
+                    Image(image: CachedImage(item.coverImgUrl)),
                     Align(
                       alignment: Alignment.bottomCenter,
                       child: Container(
@@ -200,7 +194,7 @@ class _ItemLeaderboard1 extends StatelessWidget {
                           children: <Widget>[
                             const Spacer(),
                             Text(
-                              row['updateFrequency'],
+                              item.updateFrequency,
                               style:
                                   Theme.of(context).primaryTextTheme.bodySmall,
                             ),
@@ -220,19 +214,19 @@ class _ItemLeaderboard1 extends StatelessWidget {
                 children: <Widget>[
                   const Spacer(),
                   Text(
-                    _getTrack((row['tracks'] as List)[0] as Map),
+                    item.tracks[0].toDisplayString(),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
                   const Spacer(),
                   Text(
-                    _getTrack((row['tracks'] as List)[1] as Map),
+                    item.tracks[1].toDisplayString(),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
                   const Spacer(),
                   Text(
-                    _getTrack((row['tracks'] as List)[2] as Map),
+                    item.tracks[2].toDisplayString(),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -246,8 +240,8 @@ class _ItemLeaderboard1 extends StatelessWidget {
       ),
     );
   }
+}
 
-  String _getTrack(Map map) {
-    return "${map["first"]} - ${map["second"]}";
-  }
+extension _LeaderboardTrackItemExt on LeaderboardTrackItem {
+  String toDisplayString() => '$name - $artist';
 }

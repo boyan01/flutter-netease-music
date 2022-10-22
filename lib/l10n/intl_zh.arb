@@ -100,5 +100,6 @@
   "events": "动态",
   "follower": "粉丝",
   "follow": "关注",
-  "searchHistory": "搜索历史"
+  "searchHistory": "搜索历史",
+  "leaderboard": "排行榜"
 }

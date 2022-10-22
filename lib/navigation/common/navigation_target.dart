@@ -159,3 +159,7 @@ class NavigationTargetPlayHistory extends NavigationTarget {
 class NavigationTargetPlayingList extends NavigationTarget {
   NavigationTargetPlayingList();
 }
+
+class NavigationTargetLeaderboard extends NavigationTarget {
+  NavigationTargetLeaderboard();
+}

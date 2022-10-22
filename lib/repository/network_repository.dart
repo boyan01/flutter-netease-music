@@ -249,8 +249,8 @@ class NetworkRepository {
   Future<Result<Map>> artistDesc(int artistId) =>
       _repository.artistDesc(artistId);
 
-  // FIXME
-  Future<Result<Map>> topListDetail() async => Result.error('not implement');
+  Future<Result<api.TopListDetail>> topListDetail() =>
+      _repository.topListDetail();
 
   Future<Result<List<PlayRecord>>> getRecord(
     int userId,

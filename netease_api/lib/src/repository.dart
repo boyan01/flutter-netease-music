@@ -219,8 +219,9 @@ class Repository {
   }
 
   /// 榜单摘要
-  Future<Result<Map>> topListDetail() async {
-    return doRequest('/toplist/detail');
+  Future<Result<TopListDetail>> topListDetail() async {
+    final response = await doRequest('/toplist/detail');
+    return _map(response, (t) => TopListDetail.fromJson(t));
   }
 
   ///推荐歌曲，需要登陆

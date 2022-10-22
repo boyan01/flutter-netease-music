@@ -29,6 +29,4 @@ dev_dependencies:
   build_runner: ^2.1.5
   json_serializable: ^6.0.1
 
-dependency_overrides:
-  async: ^2.9.0
 
