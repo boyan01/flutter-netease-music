@@ -1,3 +1,4 @@
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:overlay_support/overlay_support.dart';
@@ -443,9 +444,24 @@ class MusicListHeader extends ConsumerWidget implements PreferredSizeWidget {
           child: Row(
             children: [
               const SizedBox(width: 16),
-              Icon(
-                Icons.play_circle_rounded,
-                color: context.colorScheme.primary,
+              SizedBox.square(
+                dimension: 24,
+                child: Stack(
+                  fit: StackFit.expand,
+                  children: [
+                    Center(
+                      child: Container(
+                        width: 10,
+                        height: 10,
+                        color: Colors.white,
+                      ),
+                    ),
+                    Icon(
+                      FluentIcons.play_circle_20_filled,
+                      color: context.colorScheme.primary,
+                    ),
+                  ],
+                ),
               ),
               const SizedBox(width: 8),
               Text(
