@@ -167,7 +167,7 @@ class _ContextMenuItemState extends State<ContextMenuItem> {
       builder: (context) => MouseRegion(
         hitTestBehavior: HitTestBehavior.opaque,
         onEnter: (details) => _showContextSubMenu(),
-        onExit: (detials) => _dismissSubMenu(),
+        onExit: (details) => _dismissSubMenu(),
         child: _ParentMenuControllerWidget(
           onChildClicked: _dismissSelf,
           child: Builder(builder: widget.subMenuBuilder!),

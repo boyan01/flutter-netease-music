@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:music_player/music_player.dart';
 
-
 extension PlayModeGetNext on PlayMode {
   PlayMode get next {
     if (this == PlayMode.sequence) {
