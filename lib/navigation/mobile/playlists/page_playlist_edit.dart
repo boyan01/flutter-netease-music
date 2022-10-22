@@ -4,7 +4,7 @@ import '../../../repository.dart';
 
 ///page for playlist edit
 class PlaylistEditPage extends StatefulWidget {
-  const PlaylistEditPage(this.playlist, {super.key});
+  const PlaylistEditPage({super.key, required this.playlist});
 
   final PlaylistDetail playlist;
 

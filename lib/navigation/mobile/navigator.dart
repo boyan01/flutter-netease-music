@@ -12,6 +12,7 @@ import 'player/page_playing_list.dart';
 import 'playlists/page_album_detail.dart';
 import 'playlists/page_daily_playlist.dart';
 import 'playlists/page_playlist_detail.dart';
+import 'playlists/page_playlist_edit.dart';
 import 'settings/page_setting.dart';
 import 'user/page_user_detail.dart';
 import 'widgets/bottom_sheet_page.dart';
@@ -134,6 +135,11 @@ class MobileNavigatorController extends NavigatorController {
         break;
       case NavigationTargetLeaderboard:
         page = const LeaderboardPage();
+        break;
+      case NavigationTargetPlaylistEdit:
+        page = PlaylistEditPage(
+          playlist: (target as NavigationTargetPlaylistEdit).playlist,
+        );
         break;
       default:
         throw Exception('Unknown navigation type: $target');

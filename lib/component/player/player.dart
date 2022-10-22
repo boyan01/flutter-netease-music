@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:music_player/music_player.dart';
 
-const String kFmPlayQueueId = 'personal_fm';
 
 extension PlayModeGetNext on PlayMode {
   PlayMode get next {
@@ -13,11 +12,6 @@ extension PlayModeGetNext on PlayMode {
       return PlayMode.sequence;
     }
   }
-}
-
-extension PlayQueueExt on PlayQueue {
-  /// 是否处于私人FM 播放模式
-  bool get isPlayingFm => queueId == kFmPlayQueueId;
 }
 
 extension PlayModeDescription on PlayMode {

@@ -1,3 +1,5 @@
+import '../../repository.dart';
+
 const kMobileHomeTabs = [
   NavigationTargetDiscover,
   NavigationTargetLibrary,
@@ -162,4 +164,17 @@ class NavigationTargetPlayingList extends NavigationTarget {
 
 class NavigationTargetLeaderboard extends NavigationTarget {
   NavigationTargetLeaderboard();
+}
+
+class NavigationTargetPlaylistEdit extends NavigationTarget {
+  NavigationTargetPlaylistEdit(this.playlist);
+
+  final PlaylistDetail playlist;
+
+  @override
+  bool isTheSameTarget(NavigationTarget other) {
+    return super.isTheSameTarget(other) &&
+        other is NavigationTargetPlaylistEdit &&
+        other.playlist == playlist;
+  }
 }
