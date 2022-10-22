@@ -52,9 +52,13 @@ class _NavigationLine extends ConsumerWidget {
                 .read(navigatorProvider.notifier)
                 .navigate(NavigationTargetFmPlaying()),
           ),
-          _ItemNavigator(Icons.today, '每日推荐', () {
-            context.secondaryNavigator!.pushNamed(pageDaily);
-          }),
+          _ItemNavigator(
+            Icons.today,
+            '每日推荐',
+            () => ref
+                .read(navigatorProvider.notifier)
+                .navigate(NavigationTargetDailyRecommend()),
+          ),
           _ItemNavigator(Icons.show_chart, '排行榜', () {
             context.secondaryNavigator!.pushNamed(pageLeaderboard);
           }),

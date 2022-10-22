@@ -9,6 +9,7 @@ import 'player/page_fm_playing.dart';
 import 'player/page_playing.dart';
 import 'player/page_playing_list.dart';
 import 'playlists/page_album_detail.dart';
+import 'playlists/page_daily_playlist.dart';
 import 'playlists/page_playlist_detail.dart';
 import 'settings/page_setting.dart';
 import 'user/page_user_detail.dart';
@@ -126,6 +127,9 @@ class MobileNavigatorController extends NavigatorController {
       case NavigationTargetPlayingList:
         page = const PlayingListDialog();
         pageType = _PageType.bottomSheet;
+        break;
+      case NavigationTargetDailyRecommend:
+        page = const DailyPlaylistPage();
         break;
       default:
         throw Exception('Unknown navigation type: $target');
