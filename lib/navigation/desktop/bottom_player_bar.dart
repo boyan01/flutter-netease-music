@@ -17,24 +17,27 @@ class BottomPlayerBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      elevation: 10,
-      child: SizedBox(
-        height: 64,
-        child: Stack(
-          children: [
-            Row(
-              children: const [
-                Expanded(child: _PlayingItemWidget()),
-                SizedBox(width: 20),
-                _CenterControllerWidget(),
-                SizedBox(width: 20),
-                Expanded(child: _PlayerControlWidget()),
-              ],
+    return SizedBox(
+      height: 72,
+      child: Stack(
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(top: 10),
+            child: Material(
+              elevation: 10,
+              child: Row(
+                children: const [
+                  Expanded(child: _PlayingItemWidget()),
+                  SizedBox(width: 20),
+                  _CenterControllerWidget(),
+                  SizedBox(width: 20),
+                  Expanded(child: _PlayerControlWidget()),
+                ],
+              ),
             ),
-            const Align(alignment: Alignment.topCenter, child: _ProgressBar()),
-          ],
-        ),
+          ),
+          const Align(alignment: Alignment.topCenter, child: _ProgressBar()),
+        ],
       ),
     );
   }
@@ -258,24 +261,21 @@ class _ProgressBar extends ConsumerWidget {
       return const SizedBox.shrink();
     }
     return const SizedBox(
-      height: 10,
-      child: FractionalTranslation(
-        translation: Offset(0, -0.5),
-        child: SliderTheme(
-          data: SliderThemeData(
-            trackHeight: 2,
-            thumbShape: RoundSliderThumbShape(
-              enabledThumbRadius: 6,
-              elevation: 0,
-            ),
-            trackShape: UnboundedRectangularSliderTrackShape(),
-            overlayShape: RoundSliderOverlayShape(
-              overlayRadius: 10,
-            ),
-            showValueIndicator: ShowValueIndicator.always,
+      height: 20,
+      child: SliderTheme(
+        data: SliderThemeData(
+          trackHeight: 2,
+          thumbShape: RoundSliderThumbShape(
+            enabledThumbRadius: 6,
+            elevation: 0,
           ),
-          child: PlayerProgressSlider(),
+          trackShape: UnboundedRectangularSliderTrackShape(),
+          overlayShape: RoundSliderOverlayShape(
+            overlayRadius: 10,
+          ),
+          showValueIndicator: ShowValueIndicator.always,
         ),
+        child: PlayerProgressSlider(),
       ),
     );
   }

@@ -31,11 +31,20 @@ class _WindowLayout extends StatelessWidget {
     return ClipRect(
       child: _OverflowBox(
         child: Material(
-          child: Column(
-            children: const [
-              HeaderBar(),
-              _ContentLayout(),
-              BottomPlayerBar(),
+          child: Stack(
+            fit: StackFit.expand,
+            children: [
+              Column(
+                children: const [
+                  HeaderBar(),
+                  _ContentLayout(),
+                  SizedBox(height: 64),
+                ],
+              ),
+              const Align(
+                alignment: Alignment.bottomCenter,
+                child: BottomPlayerBar(),
+              ),
             ],
           ),
         ),
