@@ -11,10 +11,6 @@ extension ProvidersException<State> on ProviderBase<AsyncValue<State>> {
       return value;
     });
   }
-
-  ProviderListenable<State?> stateOrNull() {
-    return select((value) => value.asData?.value);
-  }
 }
 
 extension AutoRemover on ProviderSubscription {
