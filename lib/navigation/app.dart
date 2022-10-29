@@ -30,7 +30,7 @@ class QuietApp extends ConsumerWidget {
     return GlobalHotkeys(
       child: MaterialApp(
         title: 'Quiet',
-        supportedLocales: const [Locale('en'), Locale('zh')],
+        supportedLocales: S.delegate.supportedLocales,
         localizationsDelegates: const [
           S.delegate,
           GlobalWidgetsLocalizations.delegate,
