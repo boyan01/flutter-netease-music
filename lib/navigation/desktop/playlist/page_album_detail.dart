@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:overlay_support/overlay_support.dart';
 
@@ -41,7 +42,7 @@ class PageAlbumDetail extends ConsumerWidget {
   }
 }
 
-class _AlbumDetailBody extends ConsumerWidget {
+class _AlbumDetailBody extends HookConsumerWidget {
   const _AlbumDetailBody({
     super.key,
     required this.album,
@@ -53,6 +54,7 @@ class _AlbumDetailBody extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final absorberHandle = useMemoized(SliverOverlapAbsorberHandle.new);
     return TrackTableContainer(
       child: TrackTileContainer.album(
         album: album,
@@ -61,6 +63,7 @@ class _AlbumDetailBody extends ConsumerWidget {
         child: CustomScrollView(
           controller: AppScrollController(),
           slivers: [
+            SliverOverlapAbsorber(handle: absorberHandle),
             _AlbumSliverBar(album: album),
             _AlbumListView(album: album, tracks: tracks),
           ],

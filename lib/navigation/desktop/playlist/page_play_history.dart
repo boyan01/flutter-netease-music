@@ -1,6 +1,8 @@
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../extension.dart';
 import '../../../providers/play_history_provider.dart';
@@ -48,7 +50,7 @@ class _EmptyPlayHistory extends StatelessWidget {
   }
 }
 
-class _PlayHistoryList extends ConsumerWidget {
+class _PlayHistoryList extends HookConsumerWidget {
   const _PlayHistoryList({
     super.key,
     required this.tracks,
@@ -58,6 +60,7 @@ class _PlayHistoryList extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final absorberHandle = useMemoized(SliverOverlapAbsorberHandle.new);
     return TrackTableContainer(
       child: TrackTileContainer.simpleList(
         tracks: tracks,
@@ -67,6 +70,7 @@ class _PlayHistoryList extends ConsumerWidget {
         child: CustomScrollView(
           controller: AppScrollController(),
           slivers: [
+            SliverOverlapAbsorber(handle: absorberHandle),
             const _PlayHistoryHeader(),
             SliverList(
               delegate: SliverChildBuilderDelegate(

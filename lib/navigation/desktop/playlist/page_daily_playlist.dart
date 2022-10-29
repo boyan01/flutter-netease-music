@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../extension.dart';
 import '../../../providers/daily_playlist_provider.dart';
@@ -38,7 +39,7 @@ class PageDailyPlaylist extends ConsumerWidget {
   }
 }
 
-class _DailyPlaylistBody extends ConsumerWidget {
+class _DailyPlaylistBody extends HookConsumerWidget {
   const _DailyPlaylistBody({
     super.key,
     required this.tracks,
@@ -51,6 +52,7 @@ class _DailyPlaylistBody extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final absorberHandle = useMemoized(SliverOverlapAbsorberHandle.new);
     return TrackTableContainer(
       child: TrackTileContainer.daily(
         dateTime: date,
@@ -59,6 +61,7 @@ class _DailyPlaylistBody extends ConsumerWidget {
         child: CustomScrollView(
           controller: AppScrollController(),
           slivers: [
+            SliverOverlapAbsorber(handle: absorberHandle),
             _DailyHeader(date: date),
             SliverList(
               delegate: SliverChildBuilderDelegate(

@@ -62,6 +62,7 @@ class _PlaylistDetailBody extends HookConsumerWidget {
       () => filterStreamController.stream,
       [filterStreamController],
     );
+    final absorberHandle = useMemoized(SliverOverlapAbsorberHandle.new);
     return TrackTableContainer(
       child: TrackTileContainer.playlist(
         playlist: playlist,
@@ -73,6 +74,7 @@ class _PlaylistDetailBody extends HookConsumerWidget {
         child: CustomScrollView(
           controller: AppScrollController(),
           slivers: [
+            SliverOverlapAbsorber(handle: absorberHandle),
             _PlaylistSliverBar(
               playlist: playlist,
               playlistFilterController: filterStreamController,
@@ -294,6 +296,7 @@ class _PlaylistListView extends HookWidget {
     required this.playlist,
     required this.filter,
   });
+
   final PlaylistDetail playlist;
   final Stream<String> filter;
 
