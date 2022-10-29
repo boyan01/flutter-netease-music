@@ -150,11 +150,16 @@ extension _MouseHighlightSpanList on List<MouseHighlightSpan> {
             onEnter: onHover == null ? null : (event) => onHover.call(i, true),
             onExit: onHover == null ? null : (event) => onHover.call(i, false),
             recognizer: TapGestureRecognizer()..onTap = span.onTap,
+            mouseCursor: SystemMouseCursors.click,
           ),
         );
       } else if (span is _Normal) {
         spans.add(
-          TextSpan(text: span.text, style: span.style),
+          TextSpan(
+            text: span.text,
+            style: span.style,
+            mouseCursor: SystemMouseCursors.click,
+          ),
         );
       } else if (span is _Widget) {
         spans.add(
