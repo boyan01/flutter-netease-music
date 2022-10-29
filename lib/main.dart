@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -31,24 +32,25 @@ void main() async {
   unawaited(_initialDesktop(preferences));
   initLogger(p.join(appDir.path, 'logs'));
   await _initHive();
-  runZonedGuarded(() {
-    runApp(
-      ProviderScope(
-        overrides: [
-          sharedPreferenceProvider.overrideWithValue(preferences),
-          neteaseRepositoryProvider.overrideWithValue(neteaseRepository!),
-        ],
-        child: PageSplash(
-          futures: const [],
-          builder: (BuildContext context, List<dynamic> data) {
-            return const MyApp();
-          },
-        ),
+  FlutterError.onError = (details) => e('flutter error: ${details.toString()}');
+  PlatformDispatcher.instance.onError = (error, stacktrace) {
+    e('uncaught error: $error $stacktrace');
+    return true;
+  };
+  runApp(
+    ProviderScope(
+      overrides: [
+        sharedPreferenceProvider.overrideWithValue(preferences),
+        neteaseRepositoryProvider.overrideWithValue(neteaseRepository!),
+      ],
+      child: PageSplash(
+        futures: const [],
+        builder: (BuildContext context, List<dynamic> data) {
+          return const MyApp();
+        },
       ),
-    );
-  }, (error, stack) {
-    debugPrint('uncaught error : $error $stack');
-  });
+    ),
+  );
 }
 
 Future<void> _initHive() async {
