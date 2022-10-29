@@ -1,3 +1,4 @@
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -5,6 +6,7 @@ import '../../../extension.dart';
 import '../../../providers/account_provider.dart';
 import '../../../providers/navigator_provider.dart';
 import '../../../utils/system/scroll_controller.dart';
+import '../../common/buttons.dart';
 import '../../common/navigation_target.dart';
 import '_playlists.dart';
 import '_preset_grid.dart';
@@ -41,8 +43,9 @@ class _UserLibraryBody extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final scrollController = useAppScrollController();
     final headerHeight = const <double>[
-      UserProfileSection.height,
-      70, // PresetGridSection
+      UserProfileSection.height + 16,
+      70 + 16, // PresetGridSection
+      76,
       8,
     ].reduce((a, b) => a + b);
     return DefaultTabController(
@@ -51,11 +54,24 @@ class _UserLibraryBody extends HookConsumerWidget {
         child: CustomScrollView(
           controller: scrollController,
           slivers: [
+            SliverAppBar(
+              leading: AppIconButton(
+                onPressed: () => ref
+                    .read(navigatorProvider.notifier)
+                    .navigate(NavigationTargetSettings()),
+                icon: FluentIcons.settings_20_regular,
+              ),
+              pinned: true,
+              elevation: 0,
+            ),
             SliverList(
               delegate: SliverChildListDelegate(
                 [
                   const UserProfileSection(),
+                  const SizedBox(height: 16),
                   const PresetGridSection(),
+                  const SizedBox(height: 16),
+                  const MainFavoritePlayListWidget(),
                   const SizedBox(height: 8),
                 ],
               ),

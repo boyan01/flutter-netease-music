@@ -13,7 +13,7 @@ class PresetGridSection extends ConsumerWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Material(
-        color: context.colorScheme.surface,
+        color: context.colorScheme.surfaceWithElevation(1),
         borderRadius: BorderRadius.circular(8),
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 4),

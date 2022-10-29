@@ -9,7 +9,7 @@ import '../../../repository.dart';
 import '../../common/material/flexible_app_bar.dart';
 import '../../common/material/images.dart';
 import '../../common/material/tabs.dart';
-import '../home/playlist_tile.dart';
+import '../widgets/playlist_tile.dart';
 
 part 'tab_about.dart';
 part 'tab_events.dart';

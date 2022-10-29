@@ -8,7 +8,7 @@ import '../../../extension.dart';
 import '../../../providers/account_provider.dart';
 import '../../../providers/user_playlists_provider.dart';
 import '../../../repository.dart';
-import 'playlist_tile.dart';
+import '../widgets/playlist_tile.dart';
 
 class PlayListsGroupHeader extends StatelessWidget {
   const PlayListsGroupHeader({super.key, required this.name, this.count});
@@ -21,8 +21,9 @@ class PlayListsGroupHeader extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Material(
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(4)),
-        color: Theme.of(context).backgroundColor,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(8)),
+        color: context.colorScheme.surfaceWithElevation(1),
+        elevation: 10,
         child: Container(
           height: 40,
           padding: const EdgeInsets.symmetric(horizontal: 8),
@@ -33,6 +34,42 @@ class PlayListsGroupHeader extends StatelessWidget {
               const Icon(Icons.add),
               const Icon(Icons.more_vert),
             ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class MainFavoritePlayListWidget extends ConsumerWidget {
+  const MainFavoritePlayListWidget({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final userId = ref.watch(userIdProvider);
+    if (userId == null) {
+      return const SliverToBoxAdapter(child: SizedBox.shrink());
+    }
+    final playlists = ref.watch(userPlaylistsProvider(userId));
+    final favoritePlaylist = playlists.valueOrNull
+        ?.firstWhereOrNull((element) => element.creator.userId == userId);
+
+    if (favoritePlaylist == null) {
+      // loading
+      return const SliverToBoxAdapter(child: SizedBox.shrink());
+    }
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Material(
+        borderRadius: const BorderRadius.all(Radius.circular(8)),
+        color: context.colorScheme.surfaceWithElevation(1),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8),
+          child: PlaylistTile(
+            playlist: favoritePlaylist,
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            enableHero: false,
+            enableMore: false,
           ),
         ),
       ),
@@ -56,10 +93,15 @@ class MainPlayListTile extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Material(
         borderRadius: enableBottomRadius
-            ? const BorderRadius.vertical(bottom: Radius.circular(4))
+            ? const BorderRadius.vertical(bottom: Radius.circular(8))
             : null,
-        color: context.colorScheme.background,
-        child: PlaylistTile(playlist: data),
+        color: context.colorScheme.surfaceWithElevation(1),
+        child: PlaylistTile(
+          playlist: data,
+          padding: const EdgeInsets.symmetric(horizontal: 8),
+          enableHero: false,
+          enableMore: false,
+        ),
       ),
     );
   }
@@ -142,7 +184,7 @@ class UserPlayListSection extends ConsumerWidget {
     final playlists = ref.watch(userPlaylistsProvider(userId));
     return playlists.when(
       data: (result) {
-        final created = result.where((p) => p.creator.userId == userId);
+        final created = result.where((p) => p.creator.userId == userId).skip(1);
         final subscribed = result.where((p) => p.creator.userId != userId);
         return _UserPlaylists(
           created: created.toList(),
