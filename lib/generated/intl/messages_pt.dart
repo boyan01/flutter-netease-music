@@ -101,6 +101,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "likeMusic": MessageLookupByLibrary.simpleMessage("Como música"),
         "loading": MessageLookupByLibrary.simpleMessage("carregando..."),
         "localMusic": MessageLookupByLibrary.simpleMessage("Música local"),
+        "login": MessageLookupByLibrary.simpleMessage("conectar um conta"),
         "loginViaQrCode":
             MessageLookupByLibrary.simpleMessage("Conectar via QR code"),
         "loginViaQrCodeWaitingConfirmDescription":
