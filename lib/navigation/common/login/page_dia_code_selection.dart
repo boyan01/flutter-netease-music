@@ -13,6 +13,7 @@ import '../../../model/region_flag.dart';
 /// Region selection for login.
 class RegionSelectionPage extends StatelessWidget {
   const RegionSelectionPage({super.key, required this.regions});
+
   final List<RegionFlag> regions;
 
   @override
@@ -168,6 +169,7 @@ class _AzSelectionOverlay extends StatelessWidget {
     super.key,
     required this.content,
   });
+
   final String content;
 
   @override
@@ -246,8 +248,7 @@ class AZSelection extends SingleChildRenderObjectWidget {
 }
 
 class AZRender extends RenderBox {
-  static final _chars =
-      'abcdefghijklmnopqrstuvwxyz'.toUpperCase().characters.toList();
+  static final _chars = _alphabet.toUpperCase().characters.toList();
 
   final _offsets = HashMap<TextPainter, Offset>();
 

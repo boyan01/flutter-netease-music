@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:ui';
 
-import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -10,11 +9,8 @@ import 'package:overlay_support/overlay_support.dart';
 
 import '../../../extension.dart';
 import '../../../model/region_flag.dart';
-import '../../../providers/navigator_provider.dart';
 import '../../../repository.dart';
-import '../buttons.dart';
 import '../material/dialogs.dart';
-import 'login_sub_navigation.dart';
 import 'page_dia_code_selection.dart';
 
 /// Read emoji flags from assets.
@@ -28,44 +24,27 @@ Future<List<RegionFlag>> _getRegions() async {
   return result;
 }
 
-class PageLoginWithPhone extends HookConsumerWidget {
-  const PageLoginWithPhone({super.key});
+typedef PhoneNumberSubmitCallback = void Function(String phoneNumber);
+
+class LoginPhoneNumberInputWidget extends HookWidget {
+  const LoginPhoneNumberInputWidget({
+    super.key,
+    required this.onSubmit,
+  });
+
+  final PhoneNumberSubmitCallback onSubmit;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final regions = useFuture(useMemoized(_getRegions));
-    final platform = ref.watch(debugNavigatorPlatformProvider);
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(context.strings.loginWithPhone),
-        leading: platform == NavigationPlatform.mobile
-            ? IconButton(
-                icon: const BackButtonIcon(),
-                tooltip: MaterialLocalizations.of(context).backButtonTooltip,
-                onPressed: () {
-                  Navigator.of(context, rootNavigator: true).maybePop();
-                },
-              )
-            : null,
-        elevation: 0,
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 8),
-            child: AppIconButton(
-              onPressed: () {
-                Navigator.of(context, rootNavigator: true).maybePop();
-              },
-              icon: FluentIcons.dismiss_20_regular,
-            ),
-          ),
-        ],
-      ),
-      body: regions.hasData
-          ? _PhoneInputLayout(regions: regions.requireData)
-          : const Center(
-              child: CircularProgressIndicator(),
-            ),
-    );
+    return regions.hasData
+        ? _PhoneInputLayout(
+            regions: regions.requireData,
+            onSubmit: onSubmit,
+          )
+        : const Center(
+            child: CircularProgressIndicator(),
+          );
   }
 }
 
@@ -73,9 +52,11 @@ class _PhoneInputLayout extends HookConsumerWidget {
   const _PhoneInputLayout({
     super.key,
     required this.regions,
+    required this.onSubmit,
   });
 
   final List<RegionFlag> regions;
+  final PhoneNumberSubmitCallback onSubmit;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -121,11 +102,7 @@ class _PhoneInputLayout extends HookConsumerWidget {
         toast('无密码登录流程的开发未完成,欢迎提出PR贡献代码...');
         return;
       }
-      await Navigator.pushNamed(
-        context,
-        pageLoginPassword,
-        arguments: {'phone': text},
-      );
+      onSubmit(text);
     }
 
     return Padding(

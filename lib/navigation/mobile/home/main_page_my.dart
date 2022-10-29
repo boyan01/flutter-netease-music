@@ -61,6 +61,14 @@ class _UserLibraryBody extends HookConsumerWidget {
                     .navigate(NavigationTargetSettings()),
                 icon: FluentIcons.settings_20_regular,
               ),
+              actions: [
+                AppIconButton(
+                  onPressed: () => ref
+                      .read(navigatorProvider.notifier)
+                      .navigate(NavigationTargetSearch()),
+                  icon: FluentIcons.search_20_regular,
+                )
+              ],
               pinned: true,
               elevation: 0,
             ),
@@ -98,6 +106,23 @@ class _NotLogin extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Column(
       children: [
+        AppBar(
+          leading: AppIconButton(
+            onPressed: () => ref
+                .read(navigatorProvider.notifier)
+                .navigate(NavigationTargetSettings()),
+            icon: FluentIcons.settings_20_regular,
+          ),
+          actions: [
+            AppIconButton(
+              onPressed: () => ref
+                  .read(navigatorProvider.notifier)
+                  .navigate(NavigationTargetSearch()),
+              icon: FluentIcons.search_20_regular,
+            )
+          ],
+          elevation: 0,
+        ),
         const Spacer(),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
