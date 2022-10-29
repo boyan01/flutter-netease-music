@@ -241,6 +241,7 @@ class _HoverHighlightText extends HookWidget {
   Widget build(BuildContext context) {
     final hovered = useRef(<int>{});
     final refreshObject = useState(false);
+    final isMount = useIsMounted();
 
     final spans = children.toInlineSpans(
       highlight: hovered.value,
@@ -251,7 +252,9 @@ class _HoverHighlightText extends HookWidget {
         } else {
           hovered.value.remove(index);
         }
-        refreshObject.value = !refreshObject.value;
+        if (isMount()) {
+          refreshObject.value = !refreshObject.value;
+        }
       },
     );
 
