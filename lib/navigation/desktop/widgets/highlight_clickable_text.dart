@@ -372,21 +372,15 @@ class _HoverOverlayWidget extends HookWidget {
         WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
           entry.value = showOverlay(
             (context, progress) => UnconstrainedBox(
-              child: CompositedTransformFollower(
+              child: _AnimatedOverlayTextBackground(
+                progress: progress,
                 link: link,
-                showWhenUnlinked: false,
-                child: Opacity(
-                  opacity: progress,
-                  child: Material(
-                    elevation: 10,
-                    child: MouseRegion(
-                      onEnter: (event) => isOverlayActive.value = true,
-                      onExit: (event) => isOverlayActive.value = false,
-                      child: SizedBox(
-                        width: overlayWidth,
-                        child: overlay,
-                      ),
-                    ),
+                child: MouseRegion(
+                  onEnter: (event) => isOverlayActive.value = true,
+                  onExit: (event) => isOverlayActive.value = false,
+                  child: SizedBox(
+                    width: overlayWidth,
+                    child: overlay,
                   ),
                 ),
               ),
@@ -411,6 +405,40 @@ class _HoverOverlayWidget extends HookWidget {
         onEnter: (event) => isChildActive.value = true,
         onExit: (event) => isChildActive.value = false,
         child: child,
+      ),
+    );
+  }
+}
+
+class _AnimatedOverlayTextBackground extends StatelessWidget {
+  const _AnimatedOverlayTextBackground({
+    super.key,
+    required this.child,
+    required this.progress,
+    required this.link,
+  });
+
+  final Widget child;
+  final double progress;
+  final LayerLink link;
+
+  @override
+  Widget build(BuildContext context) {
+    const padding = 8.0;
+    return CompositedTransformFollower(
+      link: link,
+      showWhenUnlinked: false,
+      offset: Offset(-padding * progress, -padding * progress),
+      child: Opacity(
+        opacity: progress,
+        child: Material(
+          elevation: 10,
+          borderRadius: BorderRadius.circular(4 * progress),
+          child: Padding(
+            padding: EdgeInsets.all(padding * progress),
+            child: child,
+          ),
+        ),
       ),
     );
   }
