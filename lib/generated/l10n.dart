@@ -1101,6 +1101,26 @@ class S {
       args: [],
     );
   }
+
+  /// `R`
+  String get recommendTrackIconText {
+    return Intl.message(
+      'R',
+      name: 'recommendTrackIconText',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Intelligence Recommended`
+  String get intelligenceRecommended {
+    return Intl.message(
+      'Intelligence Recommended',
+      name: 'intelligenceRecommended',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

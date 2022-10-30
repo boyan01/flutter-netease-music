@@ -103,5 +103,7 @@
   "searchHistory": "搜索历史",
   "leaderboard": "排行榜",
   "account": "账号",
-  "myFavoriteMusics": "我喜欢的音乐"
+  "myFavoriteMusics": "我喜欢的音乐",
+  "recommendTrackIconText": "荐",
+  "intelligenceRecommended": "智能推荐"
 }

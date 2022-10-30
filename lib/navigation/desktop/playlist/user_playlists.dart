@@ -2,12 +2,19 @@ import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart' hide ExpansionPanel, ExpansionPanelList;
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mixin_logger/mixin_logger.dart';
+import 'package:overlay_support/overlay_support.dart';
 
 import '../../../extension.dart';
+import '../../../media/tracks/track_list.dart';
+import '../../../media/tracks/tracks_player.dart';
 import '../../../providers/account_provider.dart';
 import '../../../providers/navigator_provider.dart';
+import '../../../providers/player_provider.dart';
+import '../../../providers/repository_provider.dart';
 import '../../../providers/user_playlists_provider.dart';
 import '../../../repository.dart';
+import '../../common/buttons.dart';
 import '../../common/navigation_target.dart';
 import '../widgets/expansion_panel.dart';
 import '../widgets/navigation_tile.dart';
@@ -186,9 +193,51 @@ class _UserPlaylistItem extends ConsumerWidget {
       icon: const Icon(FluentIcons.music_note_1_24_regular),
       title: Tooltip(
         message: playlist.name,
-        child: Text(playlist.name),
+        child: Text(
+          playlist.isFavorite
+              ? context.strings.myFavoriteMusics
+              : playlist.name,
+        ),
       ),
       isSelected: current == playlist.id,
+      trailing: !playlist.isFavorite
+          ? null
+          : AppIconButton(
+              icon: FluentIcons.heart_pulse_20_regular,
+              size: 20,
+              tooltip: context.strings.intelligenceRecommended,
+              onPressed: () async {
+                final player = ref.read(playerProvider);
+                if (player.repeatMode == RepeatMode.heart) {
+                  ref
+                      .read(navigatorProvider.notifier)
+                      .navigate(NavigationTargetPlaying());
+                  return;
+                }
+                try {
+                  final list = await ref
+                      .read(neteaseRepositoryProvider)
+                      .playModeIntelligenceList(id: 1, playlistId: playlist.id);
+                  if (list.isEmpty) {
+                    e('playlist intelligence list is null');
+                    return;
+                  }
+                  player.setRepeatMode(RepeatMode.heart);
+                  player.setTrackList(
+                    TrackList.playlist(
+                      id: 'playlist_${playlist.id}',
+                      tracks: list,
+                      rawPlaylistId: playlist.id,
+                      isUserFavoriteList: true,
+                    ),
+                  );
+                  await player.playFromMediaId(list.first.id);
+                } catch (error, stacktrace) {
+                  e('error: $error, stacktrace: $stacktrace');
+                  toast(context.formattedError(error));
+                }
+              },
+            ),
       onTap: () => ref
           .read(navigatorProvider.notifier)
           .navigate(NavigationTarget.playlist(playlistId: playlist.id)),

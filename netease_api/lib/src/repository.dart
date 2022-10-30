@@ -514,6 +514,19 @@ class Repository {
     return Result.value(value);
   }
 
+  Future<Result<List<IntelligenceRecommend>>> playModeIntelligenceList({
+    required int id,
+    required int playlistId,
+  }) async {
+    final result = await doRequest(
+      '/playmode/intelligence/list',
+      {'id': id, 'pid': playlistId},
+    );
+    return _map(result, (t) => t['data'] as List).map((value) {
+      return value.map((e) => IntelligenceRecommend.fromJson(e)).toList();
+    });
+  }
+
   ///[path] request path
   ///[param] parameter
   Future<Result<Map<String, dynamic>>> doRequest(

@@ -11,7 +11,7 @@ import '../../common/material/player.dart';
 import '../../common/player/cover.dart';
 import '../../common/player/lyric_view.dart';
 import '../../common/player/player_actions.dart';
-import '../../common/player_progress.dart';
+import '../../common/player/player_progress.dart';
 import 'background.dart';
 import 'page_playing_list.dart';
 

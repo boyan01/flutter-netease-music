@@ -24,6 +24,7 @@ final playerStateProvider =
             volume: state.volume,
             playingTrack: state.playingTrack,
             playingList: state.playingList,
+            repeatMode: state.repeatMode,
           );
           if (newState == lastState) {
             return;

@@ -12,7 +12,7 @@ import '../../common/buttons.dart';
 import '../../common/like_button.dart';
 import '../../common/material/player.dart';
 import '../../common/navigation_target.dart';
-import '../../common/progress_track_container.dart';
+import '../../common/player/progress_track_container.dart';
 import '../player/page_playing_list.dart';
 
 const kBottomPlayerBarHeight = 56.0;

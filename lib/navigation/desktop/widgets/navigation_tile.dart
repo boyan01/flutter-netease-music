@@ -8,6 +8,7 @@ class NavigationTile extends StatelessWidget {
     required this.title,
     required this.isSelected,
     required this.onTap,
+    this.trailing,
   });
 
   final Widget icon;
@@ -17,6 +18,8 @@ class NavigationTile extends StatelessWidget {
   final bool isSelected;
 
   final VoidCallback onTap;
+
+  final Widget? trailing;
 
   @override
   Widget build(BuildContext context) {
@@ -52,6 +55,11 @@ class NavigationTile extends StatelessWidget {
                   child: title,
                 ),
               ),
+              if (trailing != null)
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  child: trailing,
+                ),
             ],
           ),
         ),

@@ -92,6 +92,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Description"),
         "hideCopyrightOverlay":
             MessageLookupByLibrary.simpleMessage("Hide Copyright Overlay"),
+        "intelligenceRecommended":
+            MessageLookupByLibrary.simpleMessage("Intelligence Recommended"),
         "keySpace": MessageLookupByLibrary.simpleMessage("Space"),
         "latestPlayHistory":
             MessageLookupByLibrary.simpleMessage("Play History"),
@@ -151,6 +153,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Recommend for you"),
         "recommendPlayLists":
             MessageLookupByLibrary.simpleMessage("Recommend PlayLists"),
+        "recommendTrackIconText": MessageLookupByLibrary.simpleMessage("R"),
         "search": MessageLookupByLibrary.simpleMessage("Search"),
         "searchHistory": MessageLookupByLibrary.simpleMessage("Search History"),
         "searchMusicResultCount": m7,

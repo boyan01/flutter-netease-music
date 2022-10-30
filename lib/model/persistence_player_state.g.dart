@@ -15,6 +15,7 @@ PersistencePlayerState _$PersistencePlayerStateFromJson(Map json) =>
               Map<String, dynamic>.from(json['playingTrack'] as Map)),
       playingList: TrackList.fromJson(
           Map<String, dynamic>.from(json['playingList'] as Map)),
+      repeatMode: $enumDecode(_$RepeatModeEnumMap, json['repeatMode']),
     );
 
 Map<String, dynamic> _$PersistencePlayerStateToJson(
@@ -23,4 +24,12 @@ Map<String, dynamic> _$PersistencePlayerStateToJson(
       'volume': instance.volume,
       'playingTrack': instance.playingTrack?.toJson(),
       'playingList': instance.playingList.toJson(),
+      'repeatMode': _$RepeatModeEnumMap[instance.repeatMode]!,
     };
+
+const _$RepeatModeEnumMap = {
+  RepeatMode.shuffle: 'shuffle',
+  RepeatMode.single: 'single',
+  RepeatMode.sequence: 'sequence',
+  RepeatMode.heart: 'heart',
+};

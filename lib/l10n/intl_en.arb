@@ -103,5 +103,7 @@
   "searchHistory": "Search History",
   "leaderboard": "Leaderboard",
   "account": "Account",
-  "myFavoriteMusics": "My Favorite Musics"
+  "myFavoriteMusics": "My Favorite Musics",
+  "recommendTrackIconText": "R",
+  "intelligenceRecommended": "Intelligence Recommended"
 }

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:hive/hive.dart';
 import 'package:mixin_logger/mixin_logger.dart';
 
+import '../utils/hive/hive_util.dart';
 import 'data/playlist_detail.dart';
 import 'data/track.dart';
 
@@ -13,7 +14,7 @@ const String _playHistoryKey = 'play_history';
 class LocalData {
   LocalData._();
 
-  final _box = Hive.openBox('local_data');
+  final _box = Hive.openBoxSafe('local_data');
 
   FutureOr operator [](dynamic key) async {
     return get(key);

@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
+
 import '../../repository/data/track.dart';
 
 part 'track_list.g.dart';
@@ -12,19 +13,29 @@ class TrackList with EquatableMixin {
     required this.id,
     required this.tracks,
     required this.isFM,
+    required this.isUserFavoriteList,
+    required this.rawPlaylistId,
   });
 
   const TrackList.empty()
       : id = '',
         tracks = const [],
-        isFM = false;
+        isFM = false,
+        isUserFavoriteList = false,
+        rawPlaylistId = null;
 
   const TrackList.fm({required this.tracks})
       : isFM = true,
-        id = kFmTrackListId;
+        id = kFmTrackListId,
+        isUserFavoriteList = false,
+        rawPlaylistId = null;
 
-  const TrackList.playlist({required this.id, required this.tracks})
-      : assert(
+  const TrackList.playlist({
+    required this.id,
+    required this.tracks,
+    required this.rawPlaylistId,
+    this.isUserFavoriteList = false,
+  })  : assert(
           id != kFmTrackListId,
           'Cannot create a playlist with id $kFmTrackListId',
         ),
@@ -37,9 +48,19 @@ class TrackList with EquatableMixin {
   final List<Track> tracks;
 
   final bool isFM;
+  final bool isUserFavoriteList;
+
+  // netease playlist id
+  final int? rawPlaylistId;
 
   Map<String, dynamic> toJson() => _$TrackListToJson(this);
 
   @override
-  List<Object?> get props => [id, tracks, isFM];
+  List<Object?> get props => [
+        id,
+        tracks,
+        isFM,
+        isUserFavoriteList,
+        rawPlaylistId,
+      ];
 }

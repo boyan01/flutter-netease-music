@@ -9,6 +9,7 @@ import '../repository/data/playlist_detail.dart';
 import '../repository/data/track.dart';
 import '../repository/netease.dart';
 import '../repository/network_repository.dart';
+import '../utils/hive/hive_util.dart';
 import 'account_provider.dart';
 
 final playlistDetailProvider = StateNotifierProvider.family<
@@ -38,7 +39,8 @@ class PlaylistDetailStateNotifier
 
   Future<void> _initializeLoad() async {
     assert(state is AsyncLoading, 'state is not AsyncLoading');
-    _playlistDetailBox = await Hive.openBox<PlaylistDetail>('playlistDetail');
+    _playlistDetailBox =
+        await Hive.openBoxSafe<PlaylistDetail>('playlistDetail');
     final local = _playlistDetailBox.get(playlistId.toString());
     if (local != null) {
       _playlistDetail = local;

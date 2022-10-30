@@ -21,12 +21,15 @@ class TracksPlayerImplLychee extends TracksPlayer {
   TracksPlayerImplLychee();
 
   var _trackList = const TrackList.empty();
+  var _shuffleTrackIds = const <int>[];
 
   Track? _current;
 
   LycheeAudioPlayer? _player;
 
   double _volume = 1;
+
+  RepeatMode _repeatMode = RepeatMode.sequence;
 
   @override
   Duration? get bufferedPosition => null;
@@ -39,28 +42,70 @@ class TracksPlayerImplLychee extends TracksPlayer {
 
   @override
   Future<Track?> getNextTrack() async {
-    final index = _trackList.tracks.cast().indexOf(current);
-    if (index == -1) {
-      return _trackList.tracks.firstOrNull;
-    }
-    final nextIndex = index + 1;
-    if (nextIndex >= _trackList.tracks.length) {
+    final shuffle = _repeatMode == RepeatMode.shuffle;
+    if (_trackList.tracks.isEmpty) {
+      assert(false, 'track list is empty');
       return null;
     }
-    return _trackList.tracks[nextIndex];
+    if (!shuffle) {
+      final index = _trackList.tracks.cast().indexOf(current) + 1;
+      if (index < _trackList.tracks.length) {
+        return _trackList.tracks[index];
+      }
+      return _trackList.tracks.firstOrNull;
+    } else {
+      assert(_shuffleTrackIds.isNotEmpty, 'shuffle track ids is empty');
+      if (_shuffleTrackIds.isEmpty) {
+        _generateShuffleList();
+      }
+      final int index;
+      if (current == null) {
+        index = 0;
+      } else {
+        index = _shuffleTrackIds.indexOf(current!.id) + 1;
+      }
+      final int trackId;
+      if (index < _shuffleTrackIds.length) {
+        trackId = _shuffleTrackIds[index];
+      } else {
+        trackId = _shuffleTrackIds.first;
+      }
+      return _trackList.tracks.firstWhereOrNull((e) => e.id == trackId);
+    }
   }
 
   @override
   Future<Track?> getPreviousTrack() async {
-    final index = _trackList.tracks.cast().indexOf(current);
-    if (index == -1) {
-      return _trackList.tracks.lastOrNull;
-    }
-    final previousIndex = index - 1;
-    if (previousIndex < 0) {
+    final shuffle = _repeatMode == RepeatMode.shuffle;
+    if (_trackList.tracks.isEmpty) {
+      assert(false, 'track list is empty');
       return null;
     }
-    return _trackList.tracks[previousIndex];
+    if (!shuffle) {
+      final index = _trackList.tracks.cast().indexOf(current) - 1;
+      if (index >= 0) {
+        return _trackList.tracks[index];
+      }
+      return _trackList.tracks.lastOrNull;
+    } else {
+      assert(_shuffleTrackIds.isNotEmpty, 'shuffle track ids is empty');
+      if (_shuffleTrackIds.isEmpty) {
+        _generateShuffleList();
+      }
+      final int index;
+      if (current == null) {
+        index = 0;
+      } else {
+        index = _shuffleTrackIds.indexOf(current!.id) - 1;
+      }
+      final int trackId;
+      if (index >= 0) {
+        trackId = _shuffleTrackIds[index];
+      } else {
+        trackId = _shuffleTrackIds.last;
+      }
+      return _trackList.tracks.firstWhereOrNull((e) => e.id == trackId);
+    }
   }
 
   @override
@@ -115,7 +160,7 @@ class TracksPlayerImplLychee extends TracksPlayer {
   Duration? get position => _player?.currentTime().toDuration();
 
   @override
-  RepeatMode get repeatMode => RepeatMode.all;
+  RepeatMode get repeatMode => _repeatMode;
 
   @override
   Future<void> seekTo(Duration position) async {
@@ -128,7 +173,15 @@ class TracksPlayerImplLychee extends TracksPlayer {
   }
 
   @override
-  Future<void> setRepeatMode(RepeatMode repeatMode) async {}
+  Future<void> setRepeatMode(RepeatMode repeatMode) async {
+    _repeatMode = repeatMode;
+    notifyPlayStateChanged();
+  }
+
+  void _generateShuffleList() {
+    _shuffleTrackIds = trackList.tracks.map((e) => e.id).toList();
+    _shuffleTrackIds.shuffle();
+  }
 
   @override
   void setTrackList(TrackList trackList) {
@@ -138,6 +191,7 @@ class TracksPlayerImplLychee extends TracksPlayer {
       _current = null;
     }
     _trackList = trackList;
+    _generateShuffleList();
     notifyPlayStateChanged();
   }
 
@@ -202,7 +256,12 @@ class TracksPlayerImplLychee extends TracksPlayer {
         ..onPlayWhenReadyChanged.addListener(notifyPlayStateChanged)
         ..state.addListener(() {
           if (_player?.state.value == PlayerState.end) {
-            skipToNext();
+            final isSingle = _repeatMode == RepeatMode.single;
+            if (isSingle) {
+              _playTrack(track);
+            } else {
+              skipToNext();
+            }
           }
           notifyPlayStateChanged();
         })
@@ -215,6 +274,8 @@ class TracksPlayerImplLychee extends TracksPlayer {
   @override
   void restoreFromPersistence(PersistencePlayerState state) {
     _trackList = state.playingList;
+    _repeatMode = state.repeatMode;
+    _generateShuffleList();
     if (state.playingTrack != null) {
       _playTrack(state.playingTrack!, playWhenReady: false);
     }

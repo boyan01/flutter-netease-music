@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mixin_logger/mixin_logger.dart';
 import 'package:overlay_support/overlay_support.dart';
 
 import '../../../extension.dart';
@@ -9,6 +12,8 @@ import '../../../media/tracks/tracks_player.dart';
 import '../../../providers/navigator_provider.dart';
 import '../../../providers/player_provider.dart';
 import '../../../providers/playlist_detail_provider.dart';
+import '../../../providers/repository_provider.dart';
+import '../../../providers/settings_provider.dart';
 import '../../../repository.dart';
 import '../../mobile/playlists/dialog_selector.dart';
 import '../navigation_target.dart';
@@ -19,11 +24,18 @@ enum PlayResult {
   fail,
 }
 
+typedef PlayTrackAction = FutureOr<PlayResult> Function(
+  WidgetRef ref,
+  Track? track,
+);
+
 extension _TracksPlayer on TracksPlayer {
   PlayResult playWithList(
     String listId,
     List<Track> tracks, {
     Track? track,
+    bool isUserFavoriteList = false,
+    int? rawPlaylistId,
   }) {
     if (!trackList.isFM && trackList.id == listId && current == track) {
       if (isPlaying) {
@@ -36,6 +48,8 @@ extension _TracksPlayer on TracksPlayer {
         id: listId,
         tracks:
             tracks.whereNot((e) => e.type == TrackType.noCopyright).toList(),
+        isUserFavoriteList: isUserFavoriteList,
+        rawPlaylistId: rawPlaylistId,
       );
       if (list.tracks.isEmpty) {
         return PlayResult.fail;
@@ -52,16 +66,18 @@ extension _TracksPlayer on TracksPlayer {
 
 typedef TrackDeleteHandler = Future<void> Function(WidgetRef read, Track track);
 
-class TrackTileContainer extends StatelessWidget {
+class TrackTileContainer extends ConsumerStatefulWidget {
   factory TrackTileContainer.album({
     required Album album,
     required List<Track> tracks,
     required Widget child,
-    required TracksPlayer player,
   }) {
     final id = 'album_${album.id}';
     return TrackTileContainer._private(
-      (track) => player.playWithList(id, tracks, track: track),
+      (ref, track) {
+        final player = ref.read(playerProvider);
+        return player.playWithList(id, tracks, track: track);
+      },
       null,
       id: id,
       tracks: tracks,
@@ -72,11 +88,13 @@ class TrackTileContainer extends StatelessWidget {
   factory TrackTileContainer.trackList({
     required List<Track> tracks,
     required Widget child,
-    required TracksPlayer player,
     required String id,
   }) {
     return TrackTileContainer._private(
-      (track) => player.playWithList(id, tracks, track: track),
+      (ref, track) {
+        final player = ref.read(playerProvider);
+        return player.playWithList(id, tracks, track: track);
+      },
       null,
       id: id,
       tracks: tracks,
@@ -88,13 +106,11 @@ class TrackTileContainer extends StatelessWidget {
     required List<Track> tracks,
     required DateTime dateTime,
     required Widget child,
-    required TracksPlayer player,
   }) {
     final id =
         'daily_playlist_${dateTime.year}_${dateTime.month}_${dateTime.day}';
     return TrackTileContainer.trackList(
       tracks: tracks,
-      player: player,
       id: id,
       child: child,
     );
@@ -103,11 +119,9 @@ class TrackTileContainer extends StatelessWidget {
   factory TrackTileContainer.cloudTracks({
     required List<Track> tracks,
     required Widget child,
-    required TracksPlayer player,
   }) {
     return TrackTileContainer.trackList(
       tracks: tracks,
-      player: player,
       id: 'user_cloud_tracks',
       child: child,
     );
@@ -116,14 +130,15 @@ class TrackTileContainer extends StatelessWidget {
   factory TrackTileContainer.playlist({
     required PlaylistDetail playlist,
     required Widget child,
-    required TracksPlayer player,
-    required bool skipAccompaniment,
     int? userId,
   }) {
     final id = 'playlist_${playlist.id}';
     final isUserPlaylist = userId != null && playlist.creator.userId == userId;
     return TrackTileContainer._private(
-      (track) {
+      (ref, track) async {
+        final player = ref.read(playerProvider);
+        final skipAccompaniment =
+            ref.read(settingStateProvider).skipAccompaniment;
         final List<Track> tracks;
         if (skipAccompaniment) {
           tracks = playlist.tracks
@@ -132,7 +147,42 @@ class TrackTileContainer extends StatelessWidget {
         } else {
           tracks = playlist.tracks;
         }
-        return player.playWithList(id, tracks, track: track);
+
+        if (player.repeatMode == RepeatMode.heart && playlist.isFavorite) {
+          try {
+            final toPlay = track ?? tracks.firstOrNull;
+            if (toPlay == null) {
+              return PlayResult.fail;
+            }
+            final list = await ref
+                .read(neteaseRepositoryProvider)
+                .playModeIntelligenceList(
+                  id: toPlay.id,
+                  playlistId: playlist.id,
+                );
+            return player.playWithList(
+              id,
+              [toPlay, ...list],
+              track: toPlay,
+              isUserFavoriteList: true,
+              rawPlaylistId: playlist.id,
+            );
+          } catch (error, stacktrace) {
+            e('error: $error, $stacktrace');
+            return PlayResult.fail;
+          }
+        } else {
+          if (player.repeatMode == RepeatMode.heart) {
+            player.setRepeatMode(RepeatMode.sequence);
+          }
+          return player.playWithList(
+            id,
+            tracks,
+            track: track,
+            isUserFavoriteList: playlist.isFavorite,
+            rawPlaylistId: playlist.id,
+          );
+        }
       },
       isUserPlaylist
           ? (ref, track) async {
@@ -152,11 +202,11 @@ class TrackTileContainer extends StatelessWidget {
   factory TrackTileContainer.simpleList({
     required List<Track> tracks,
     required Widget child,
-    required TracksPlayer player,
     TrackDeleteHandler? onDelete,
   }) {
     return TrackTileContainer._private(
-      (track) {
+      (ref, track) {
+        final player = ref.read(playerProvider);
         assert(track != null);
         if (track == null) {
           return PlayResult.fail;
@@ -186,17 +236,17 @@ class TrackTileContainer extends StatelessWidget {
     required this.child,
   });
 
-  static PlayResult playTrack(
+  static FutureOr<PlayResult> playTrack(
     BuildContext context,
     Track? track,
-  ) {
+  ) async {
     final container =
-        context.findAncestorWidgetOfExactType<TrackTileContainer>();
+        context.findAncestorStateOfType<_TrackTileContainerState>();
     assert(container != null, 'container is null');
     if (container == null) {
       return PlayResult.fail;
     }
-    return container._playbackMusic(track);
+    return container.widget._playbackMusic(container.ref, track);
   }
 
   static String getPlaylistId(BuildContext context) {
@@ -240,12 +290,17 @@ class TrackTileContainer extends StatelessWidget {
 
   final Widget child;
 
-  final PlayResult Function(Track?) _playbackMusic;
+  final PlayTrackAction _playbackMusic;
 
   final TrackDeleteHandler? _deleteMusic;
 
   @override
-  Widget build(BuildContext context) => child;
+  ConsumerState<TrackTileContainer> createState() => _TrackTileContainerState();
+}
+
+class _TrackTileContainerState extends ConsumerState<TrackTileContainer> {
+  @override
+  Widget build(BuildContext context) => widget.child;
 }
 
 class MusicTileConfiguration extends StatelessWidget {
@@ -434,7 +489,11 @@ class MusicListHeader extends ConsumerWidget implements PreferredSizeWidget {
           } else {
             player
               ..setTrackList(
-                TrackList.playlist(id: list.token!, tracks: list.musics),
+                TrackList.playlist(
+                  id: list.token!,
+                  tracks: list.musics,
+                  rawPlaylistId: null,
+                ),
               )
               ..play();
           }

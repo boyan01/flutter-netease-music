@@ -12,7 +12,6 @@ import '../../../providers/account_provider.dart';
 import '../../../providers/navigator_provider.dart';
 import '../../../providers/player_provider.dart';
 import '../../../providers/playlist_detail_provider.dart';
-import '../../../providers/settings_provider.dart';
 import '../../../repository.dart';
 import '../../../utils/hooks.dart';
 import '../../../utils/system/scroll_controller.dart';
@@ -66,10 +65,6 @@ class _PlaylistDetailBody extends HookConsumerWidget {
     return TrackTableContainer(
       child: TrackTileContainer.playlist(
         playlist: playlist,
-        player: ref.read(playerProvider),
-        skipAccompaniment: ref.watch(
-          settingStateProvider.select((value) => value.skipAccompaniment),
-        ),
         userId: ref.read(userIdProvider),
         child: CustomScrollView(
           controller: AppScrollController(),

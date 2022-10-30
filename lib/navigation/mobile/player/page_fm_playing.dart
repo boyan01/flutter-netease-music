@@ -11,7 +11,7 @@ import '../../../providers/player_provider.dart';
 import '../../../repository.dart';
 import '../../common/like_button.dart';
 import '../../common/player/lyric_view.dart';
-import '../../common/player_progress.dart';
+import '../../common/player/player_progress.dart';
 import 'background.dart';
 
 /// FM 播放页面

@@ -25,13 +25,14 @@ class TrackAdapter extends TypeAdapter<Track> {
       imageUrl: fields[5] as String?,
       duration: fields[6] as Duration,
       type: fields[7] as TrackType,
+      isRecommend: fields[8] == null ? false : fields[8] as bool,
     );
   }
 
   @override
   void write(BinaryWriter writer, Track obj) {
     writer
-      ..writeByte(8)
+      ..writeByte(9)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -47,7 +48,9 @@ class TrackAdapter extends TypeAdapter<Track> {
       ..writeByte(6)
       ..write(obj.duration)
       ..writeByte(7)
-      ..write(obj.type);
+      ..write(obj.type)
+      ..writeByte(8)
+      ..write(obj.isRecommend);
   }
 
   @override
@@ -212,6 +215,7 @@ Track _$TrackFromJson(Map json) => Track(
       imageUrl: json['imageUrl'] as String?,
       duration: Duration(microseconds: json['duration'] as int),
       type: $enumDecode(_$TrackTypeEnumMap, json['type']),
+      isRecommend: json['isRecommend'] as bool? ?? false,
     );
 
 Map<String, dynamic> _$TrackToJson(Track instance) => <String, dynamic>{
@@ -223,6 +227,7 @@ Map<String, dynamic> _$TrackToJson(Track instance) => <String, dynamic>{
       'imageUrl': instance.imageUrl,
       'duration': instance.duration.inMicroseconds,
       'type': _$TrackTypeEnumMap[instance.type]!,
+      'isRecommend': instance.isRecommend,
     };
 
 const _$TrackTypeEnumMap = {

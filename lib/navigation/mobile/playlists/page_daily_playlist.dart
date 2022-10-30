@@ -6,7 +6,6 @@ import 'package:url_launcher/url_launcher_string.dart';
 
 import '../../../extension.dart';
 import '../../../providers/daily_playlist_provider.dart';
-import '../../../providers/player_provider.dart';
 import '../../../repository.dart';
 import '../../common/buttons.dart';
 import '../../common/material/flexible_app_bar.dart';
@@ -163,7 +162,6 @@ class _MusicList extends ConsumerWidget {
     return TrackTileContainer.daily(
       tracks: playlist.tracks,
       dateTime: playlist.date,
-      player: ref.read(playerProvider),
       child: SliverList(
         delegate: SliverChildBuilderDelegate(
           (context, index) => TrackTile(

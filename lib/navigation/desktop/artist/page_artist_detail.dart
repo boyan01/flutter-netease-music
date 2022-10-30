@@ -6,7 +6,6 @@ import 'package:overlay_support/overlay_support.dart';
 import '../../../extension.dart';
 import '../../../providers/artist_provider.dart';
 import '../../../providers/navigator_provider.dart';
-import '../../../providers/player_provider.dart';
 import '../../../repository.dart';
 import '../../../utils/system/scroll_controller.dart';
 import '../../common/buttons.dart';
@@ -146,7 +145,6 @@ class _TopSongs extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return TrackTileContainer.trackList(
       tracks: tracks,
-      player: ref.read(playerProvider),
       id: 'artist-${artist.id}-top-songs',
       child: _CoverTrackListWidget(
         canCollapse: true,
@@ -232,7 +230,6 @@ class _AlbumItemWidget extends ConsumerWidget {
     return TrackTileContainer.album(
       album: album.album,
       tracks: album.tracks,
-      player: ref.read(playerProvider),
       child: _CoverTrackListWidget(
         canCollapse: false,
         title: HighlightClickableText(
