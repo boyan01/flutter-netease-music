@@ -24,6 +24,8 @@ extension _TracksPlayer on TracksPlayer {
     String listId,
     List<Track> tracks, {
     Track? track,
+    bool isUserFavoriteList = false,
+    int? rawPlaylistId,
   }) {
     if (!trackList.isFM && trackList.id == listId && current == track) {
       if (isPlaying) {
@@ -36,6 +38,8 @@ extension _TracksPlayer on TracksPlayer {
         id: listId,
         tracks:
             tracks.whereNot((e) => e.type == TrackType.noCopyright).toList(),
+        isUserFavoriteList: isUserFavoriteList,
+        rawPlaylistId: rawPlaylistId,
       );
       if (list.tracks.isEmpty) {
         return PlayResult.fail;
@@ -132,7 +136,13 @@ class TrackTileContainer extends StatelessWidget {
         } else {
           tracks = playlist.tracks;
         }
-        return player.playWithList(id, tracks, track: track);
+        return player.playWithList(
+          id,
+          tracks,
+          track: track,
+          isUserFavoriteList: playlist.isFavorite,
+          rawPlaylistId: playlist.id,
+        );
       },
       isUserPlaylist
           ? (ref, track) async {
@@ -434,7 +444,11 @@ class MusicListHeader extends ConsumerWidget implements PreferredSizeWidget {
           } else {
             player
               ..setTrackList(
-                TrackList.playlist(id: list.token!, tracks: list.musics),
+                TrackList.playlist(
+                  id: list.token!,
+                  tracks: list.musics,
+                  rawPlaylistId: null,
+                ),
               )
               ..play();
           }

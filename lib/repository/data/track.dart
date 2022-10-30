@@ -32,6 +32,7 @@ class Track with EquatableMixin {
     required this.imageUrl,
     required this.duration,
     required this.type,
+    this.isRecommend = false,
   });
 
   factory Track.fromJson(Map<String, dynamic> json) => _$TrackFromJson(json);
@@ -60,6 +61,9 @@ class Track with EquatableMixin {
   @HiveField(7)
   final TrackType type;
 
+  @HiveField(8, defaultValue: false)
+  final bool isRecommend;
+
   String get displaySubtitle {
     final artist = artists.map((artist) => artist.name).join('/');
     return '$artist - ${album?.name ?? ''}';
@@ -75,6 +79,7 @@ class Track with EquatableMixin {
         imageUrl,
         duration,
         type,
+        isRecommend,
       ];
 
   Map<String, dynamic> toJson() => _$TrackToJson(this);

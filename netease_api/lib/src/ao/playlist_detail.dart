@@ -118,6 +118,10 @@ class Playlist {
   final bool newImported;
   final int updateTime;
   final int trackCount;
+
+  // 5: 用户喜欢的音乐
+  // 20: 网易创建的，比如 2021年度合集
+  // 0: 用户创建的歌单
   final int specialType;
   final int privacy;
   final int trackUpdateTime;

@@ -11,14 +11,10 @@ import 'tracks_player_impl_lychee.dart';
 import 'tracks_player_impl_mobile.dart';
 
 enum RepeatMode {
-  /// Repeat all the tracks.
-  all,
-
-  /// Repeat the current track.
-  one,
-
-  /// Do not repeat any tracks.
-  none,
+  shuffle,
+  single,
+  sequence,
+  heart,
 }
 
 class TracksPlayerState with EquatableMixin {
@@ -29,6 +25,7 @@ class TracksPlayerState with EquatableMixin {
     required this.playingList,
     required this.duration,
     required this.volume,
+    required this.repeatMode,
   });
 
   final bool isBuffering;
@@ -37,6 +34,7 @@ class TracksPlayerState with EquatableMixin {
   final TrackList playingList;
   final Duration? duration;
   final double volume;
+  final RepeatMode repeatMode;
 
   @override
   List<Object?> get props => [
@@ -46,6 +44,7 @@ class TracksPlayerState with EquatableMixin {
         playingList,
         duration,
         volume,
+        repeatMode,
       ];
 }
 
@@ -59,6 +58,7 @@ abstract class TracksPlayer extends StateNotifier<TracksPlayerState> {
             playingList: TrackList.empty(),
             duration: null,
             volume: 0,
+            repeatMode: RepeatMode.sequence,
           ),
         );
 
@@ -128,6 +128,7 @@ abstract class TracksPlayer extends StateNotifier<TracksPlayerState> {
       playingList: trackList,
       duration: duration,
       volume: volume,
+      repeatMode: repeatMode,
     );
   }
 }

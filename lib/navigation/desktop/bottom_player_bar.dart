@@ -8,7 +8,8 @@ import '../../providers/player_provider.dart';
 import '../../repository.dart';
 import '../common/buttons.dart';
 import '../common/navigation_target.dart';
-import '../common/player_progress.dart';
+import '../common/player/player_progress.dart';
+import '../common/player/state.dart';
 import 'player/page_playing_list.dart';
 import 'widgets/slider.dart';
 
@@ -157,18 +158,26 @@ class _CenterControllerWidget extends ConsumerWidget {
   }
 }
 
-class _PlayerControlWidget extends StatelessWidget {
+class _PlayerControlWidget extends ConsumerWidget {
   const _PlayerControlWidget({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isFmPlaying = ref.watch(
+      playerStateProvider.select((value) => value.playingList.isFM),
+    );
     return Row(
-      children: const [
-        Spacer(),
-        _VolumeControl(),
-        SizedBox(width: 10),
-        _PlayingListButton(),
-        SizedBox(width: 36),
+      children: [
+        const Spacer(),
+        if (!isFmPlaying)
+          const Padding(
+            padding: EdgeInsets.only(right: 10),
+            child: PlayerRepeatModeIcon(),
+          ),
+        const _VolumeControl(),
+        const SizedBox(width: 10),
+        const _PlayingListButton(),
+        const SizedBox(width: 36),
       ],
     );
   }

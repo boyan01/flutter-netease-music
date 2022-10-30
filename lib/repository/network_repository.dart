@@ -410,6 +410,27 @@ class NetworkRepository {
   }
 
   Future<Map> getLoginStatus() => _repository.loginStatus();
+
+  Future<Result<List<Track>>> playModeIntelligenceList({
+    required int id,
+    required int playlistId,
+  }) async {
+    final ret = await _repository.playModeIntelligenceList(
+      id: id,
+      playlistId: playlistId,
+    );
+    if (ret.isError) {
+      return ret.asError!;
+    }
+    final playModeIntelligenceList = ret.asValue!.value;
+    return Result.value(
+      playModeIntelligenceList
+          .map(
+            (e) => e.songInfo.toTrack(null, isRecommend: e.recommended),
+          )
+          .toList(),
+    );
+  }
 }
 
 // https://github.com/Binaryify/NeteaseCloudMusicApi/issues/899#issuecomment-680002883
@@ -517,12 +538,16 @@ extension _PlayListMapper on api.Playlist {
       trackUpdateTime: trackUpdateTime,
       trackIds: trackIds.map((e) => e.id).toList(),
       createTime: DateTime.fromMillisecondsSinceEpoch(createTime),
+      isFavorite: specialType == 5,
     );
   }
 }
 
 extension _TrackMapper on api.TracksItem {
-  Track toTrack(api.PrivilegesItem? privilege) {
+  Track toTrack(
+    api.PrivilegesItem? privilege, {
+    bool isRecommend = false,
+  }) {
     final p = privilege ?? this.privilege;
     return Track(
       id: id,
@@ -537,6 +562,7 @@ extension _TrackMapper on api.TracksItem {
         cs: p?.cs ?? false,
         st: p?.st ?? st,
       ),
+      isRecommend: isRecommend,
     );
   }
 }

@@ -4,6 +4,7 @@ export 'src/ao/cellphone_existence_check.dart';
 export 'src/ao/cellphone_existence_check.dart';
 export 'src/ao/cloud_music.dart';
 export 'src/ao/daily_recommend_songs.dart';
+export 'src/ao/intelligence_recommend.dart';
 export 'src/ao/login.dart';
 export 'src/ao/music_count.dart';
 export 'src/ao/music_video_detail.dart';

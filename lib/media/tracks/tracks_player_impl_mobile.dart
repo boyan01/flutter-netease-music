@@ -59,6 +59,10 @@ extension _TrackList on TrackList {
       queueId: id,
       queueTitle: 'play_list',
       queue: tracks.map((e) => e.toMetadata()).toList(),
+      extras: {
+        'isUserFavoriteList': isUserFavoriteList,
+        'rawPlaylistId': rawPlaylistId,
+      },
     );
   }
 }
@@ -71,9 +75,13 @@ extension _PlayQueue on PlayQueue {
     return TrackList.playlist(
       id: queueId,
       tracks: queue.map((e) => e.toTrack()).toList(),
+      isUserFavoriteList: extras?['isUserFavoriteList'] as bool? ?? false,
+      rawPlaylistId: extras?['rawPlaylistId'] as int?,
     );
   }
 }
+
+const _playModeHeart = 3;
 
 class TracksPlayerImplMobile extends TracksPlayer {
   TracksPlayerImplMobile() {
@@ -152,9 +160,22 @@ class TracksPlayerImplMobile extends TracksPlayer {
     return Duration(milliseconds: p);
   }
 
-  // TODO
   @override
-  RepeatMode get repeatMode => RepeatMode.all;
+  RepeatMode get repeatMode {
+    final playMode = _player.playMode;
+    if (playMode == PlayMode.sequence) {
+      return RepeatMode.sequence;
+    } else if (playMode == PlayMode.shuffle) {
+      return RepeatMode.shuffle;
+    } else if (playMode == PlayMode.single) {
+      return RepeatMode.single;
+    } else if (playMode.index == _playModeHeart) {
+      return RepeatMode.heart;
+    } else {
+      assert(false, 'unknown play mode: $playMode');
+      return RepeatMode.sequence;
+    }
+  }
 
   @override
   Future<void> seekTo(Duration position) async {
@@ -168,7 +189,22 @@ class TracksPlayerImplMobile extends TracksPlayer {
 
   @override
   Future<void> setRepeatMode(RepeatMode repeatMode) async {
-    // TODO
+    final PlayMode playMode;
+    switch (repeatMode) {
+      case RepeatMode.shuffle:
+        playMode = PlayMode.shuffle;
+        break;
+      case RepeatMode.single:
+        playMode = PlayMode.single;
+        break;
+      case RepeatMode.sequence:
+        playMode = PlayMode.sequence;
+        break;
+      case RepeatMode.heart:
+        playMode = PlayMode.undefined(_playModeHeart);
+        break;
+    }
+    await _player.transportControls.setPlayMode(playMode);
   }
 
   @override
@@ -178,7 +214,7 @@ class TracksPlayerImplMobile extends TracksPlayer {
 
   @override
   Future<void> setVolume(double volume) async {
-    // TODO
+    // no need to implement
   }
 
   @override

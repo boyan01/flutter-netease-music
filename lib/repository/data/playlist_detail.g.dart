@@ -32,13 +32,14 @@ class PlaylistDetailAdapter extends TypeAdapter<PlaylistDetail> {
       commentCount: fields[12] as int,
       trackIds: (fields[13] as List).cast<int>(),
       createTime: fields[14] as DateTime,
+      isFavorite: fields[15] as bool,
     );
   }
 
   @override
   void write(BinaryWriter writer, PlaylistDetail obj) {
     writer
-      ..writeByte(15)
+      ..writeByte(16)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -68,7 +69,9 @@ class PlaylistDetailAdapter extends TypeAdapter<PlaylistDetail> {
       ..writeByte(13)
       ..write(obj.trackIds)
       ..writeByte(14)
-      ..write(obj.createTime);
+      ..write(obj.createTime)
+      ..writeByte(15)
+      ..write(obj.isFavorite);
   }
 
   @override
@@ -105,6 +108,7 @@ PlaylistDetail _$PlaylistDetailFromJson(Map json) => PlaylistDetail(
       trackIds:
           (json['trackIds'] as List<dynamic>).map((e) => e as int).toList(),
       createTime: DateTime.parse(json['createTime'] as String),
+      isFavorite: json['isFavorite'] as bool,
     );
 
 Map<String, dynamic> _$PlaylistDetailToJson(PlaylistDetail instance) =>
@@ -124,4 +128,5 @@ Map<String, dynamic> _$PlaylistDetailToJson(PlaylistDetail instance) =>
       'commentCount': instance.commentCount,
       'trackIds': instance.trackIds,
       'createTime': instance.createTime.toIso8601String(),
+      'isFavorite': instance.isFavorite,
     };
