@@ -92,7 +92,9 @@ class _NotLogin extends ConsumerWidget {
     return Column(
       children: [
         AppBar(
+          backgroundColor: Colors.transparent,
           leading: AppIconButton(
+            color: context.colorScheme.textPrimary,
             onPressed: () => ref
                 .read(navigatorProvider.notifier)
                 .navigate(NavigationTargetSettings()),
@@ -100,6 +102,7 @@ class _NotLogin extends ConsumerWidget {
           ),
           actions: [
             AppIconButton(
+              color: context.colorScheme.textPrimary,
               onPressed: () => ref
                   .read(navigatorProvider.notifier)
                   .navigate(NavigationTargetSearch()),
