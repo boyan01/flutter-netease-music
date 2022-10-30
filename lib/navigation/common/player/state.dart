@@ -1,12 +1,14 @@
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mixin_logger/mixin_logger.dart';
 import 'package:overlay_support/overlay_support.dart';
 
 import '../../../extension.dart';
 import '../../../media/tracks/track_list.dart';
 import '../../../media/tracks/tracks_player.dart';
 import '../../../providers/player_provider.dart';
+import '../../../providers/playlist_detail_provider.dart';
 import '../../../providers/repository_provider.dart';
 import '../buttons.dart';
 
@@ -88,24 +90,49 @@ class PlayerRepeatModeIcon extends ConsumerWidget {
         final player = ref.read(playerStateProvider.notifier);
         if (next == RepeatMode.heart) {
           final current = playerState.playingTrack!;
-          final list = await ref
-              .read(neteaseRepositoryProvider)
-              .playModeIntelligenceList(
-                id: current.id,
-                playlistId: playingList.rawPlaylistId!,
-              );
-          if (!list.isValue) {
-            toast(context.strings.errorToFetchData);
+          try {
+            final list = await ref
+                .read(neteaseRepositoryProvider)
+                .playModeIntelligenceList(
+                  id: current.id,
+                  playlistId: playingList.rawPlaylistId!,
+                );
+            player.setTrackList(
+              TrackList.playlist(
+                id: playingList.id,
+                tracks: [current, ...list],
+                rawPlaylistId: playingList.rawPlaylistId,
+                isUserFavoriteList: true,
+              ),
+            );
+            await player.setRepeatMode(next);
+          } catch (error, stacktrace) {
+            e('error: $error $stacktrace');
+            toast(context.formattedError(error));
+          }
+        } else if (mode == RepeatMode.heart) {
+          assert(playingList.rawPlaylistId != null, 'rawPlaylistId is null');
+          final details = ref
+              .read(playlistDetailProvider(playingList.rawPlaylistId!))
+              .valueOrNull;
+          final tracks = details?.tracks ?? [];
+          assert(tracks.isNotEmpty, 'tracks is empty');
+          if (tracks.isEmpty) {
+            e('switch mode to normal, but tracks is empty');
             return;
           }
           player.setTrackList(
             TrackList.playlist(
               id: playingList.id,
-              tracks: [current, ...list.asValue!.value],
+              tracks: tracks,
               rawPlaylistId: playingList.rawPlaylistId,
               isUserFavoriteList: true,
             ),
           );
+          final current = playerState.playingTrack!;
+          if (!tracks.contains(current)) {
+            await player.playFromMediaId(tracks.first.id);
+          }
           await player.setRepeatMode(next);
         } else {
           await player.setRepeatMode(next);

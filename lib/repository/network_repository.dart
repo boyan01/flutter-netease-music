@@ -411,7 +411,7 @@ class NetworkRepository {
 
   Future<Map> getLoginStatus() => _repository.loginStatus();
 
-  Future<Result<List<Track>>> playModeIntelligenceList({
+  Future<List<Track>> playModeIntelligenceList({
     required int id,
     required int playlistId,
   }) async {
@@ -419,17 +419,15 @@ class NetworkRepository {
       id: id,
       playlistId: playlistId,
     );
-    if (ret.isError) {
-      return ret.asError!;
-    }
-    final playModeIntelligenceList = ret.asValue!.value;
-    return Result.value(
-      playModeIntelligenceList
-          .map(
-            (e) => e.songInfo.toTrack(null, isRecommend: e.recommended),
-          )
-          .toList(),
-    );
+    final list = await ret.asFuture;
+    return list
+        .map(
+          (e) => e.songInfo.toTrack(
+            null,
+            isRecommend: e.recommended,
+          ),
+        )
+        .toList();
   }
 }
 

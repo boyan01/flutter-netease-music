@@ -5,7 +5,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../extension.dart';
 import '../../../providers/play_history_provider.dart';
-import '../../../providers/player_provider.dart';
 import '../../../repository/data/track.dart';
 import '../../../utils/system/scroll_controller.dart';
 import '../../common/material/flexible_app_bar.dart';
@@ -63,7 +62,6 @@ class _PlayHistoryList extends HookConsumerWidget {
     return TrackTableContainer(
       child: TrackTileContainer.simpleList(
         tracks: tracks,
-        player: ref.read(playerProvider),
         onDelete: (ref, track) async =>
             ref.read(playHistoryProvider.notifier).remove(track),
         child: CustomScrollView(

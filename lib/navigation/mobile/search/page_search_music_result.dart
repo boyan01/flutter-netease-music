@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../extension.dart';
-import '../../../providers/player_provider.dart';
 import '../../../providers/search_provider.dart';
 import '../../../repository/data/track.dart';
 import '../../common/playlist/music_list.dart';
@@ -62,7 +61,6 @@ class _TrackList extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return TrackTileContainer.simpleList(
       tracks: tracks,
-      player: ref.read(playerProvider),
       child: CustomScrollView(
         slivers: [
           SliverList(

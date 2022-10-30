@@ -4,9 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../extension.dart';
 import '../../../providers/account_provider.dart';
-import '../../../providers/player_provider.dart';
 import '../../../providers/playlist_detail_provider.dart';
-import '../../../providers/settings_provider.dart';
 import '../../../repository.dart';
 import '../../common/playlist/music_list.dart';
 import '../widgets/track_title.dart';
@@ -82,10 +80,6 @@ class _MusicList extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return TrackTileContainer.playlist(
       playlist: playlist,
-      player: ref.read(playerProvider),
-      skipAccompaniment: ref.watch(
-        settingStateProvider.select((value) => value.skipAccompaniment),
-      ),
       userId: ref.read(userIdProvider),
       child: SliverList(
         delegate: SliverChildBuilderDelegate(

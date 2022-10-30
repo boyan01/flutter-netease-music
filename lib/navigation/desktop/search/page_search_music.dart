@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../extension.dart';
-import '../../../providers/player_provider.dart';
 import '../../../providers/search_provider.dart';
 import '../../../repository.dart';
 import '../../../utils/system/scroll_controller.dart';
@@ -56,7 +55,6 @@ class _TrackList extends HookConsumerWidget {
     final controller = useAppScrollController();
     return TrackTileContainer.simpleList(
       tracks: tracks,
-      player: ref.read(playerProvider),
       child: TrackTableContainer(
         child: Column(
           children: [

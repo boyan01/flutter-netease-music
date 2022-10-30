@@ -8,7 +8,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../../../extension.dart';
 import '../../../providers/cloud_tracks_provider.dart';
 import '../../../providers/navigator_provider.dart';
-import '../../../providers/player_provider.dart';
 import '../../../repository.dart';
 import '../../common/navigation_target.dart';
 import '../../common/playlist/music_list.dart';
@@ -33,7 +32,7 @@ class PageCloudTracks extends ConsumerWidget {
   }
 }
 
-class _PageCloudTracksBody extends ConsumerWidget {
+class _PageCloudTracksBody extends StatelessWidget {
   const _PageCloudTracksBody({
     super.key,
     required this.detail,
@@ -42,10 +41,9 @@ class _PageCloudTracksBody extends ConsumerWidget {
   final CloudTracksDetail detail;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     return TrackTileContainer.cloudTracks(
       tracks: detail.tracks,
-      player: ref.read(playerProvider),
       child: TrackTableContainer(
         child: Column(
           children: [

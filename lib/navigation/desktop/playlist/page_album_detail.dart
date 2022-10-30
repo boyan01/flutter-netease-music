@@ -42,7 +42,7 @@ class PageAlbumDetail extends ConsumerWidget {
   }
 }
 
-class _AlbumDetailBody extends HookConsumerWidget {
+class _AlbumDetailBody extends HookWidget {
   const _AlbumDetailBody({
     super.key,
     required this.album,
@@ -53,13 +53,12 @@ class _AlbumDetailBody extends HookConsumerWidget {
   final List<Track> tracks;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final absorberHandle = useMemoized(SliverOverlapAbsorberHandle.new);
     return TrackTableContainer(
       child: TrackTileContainer.album(
         album: album,
         tracks: tracks,
-        player: ref.read(playerProvider),
         child: CustomScrollView(
           controller: AppScrollController(),
           slivers: [
@@ -243,6 +242,7 @@ class _AlbumListView extends StatelessWidget {
     required this.album,
     required this.tracks,
   });
+
   final Album album;
   final List<Track> tracks;
 

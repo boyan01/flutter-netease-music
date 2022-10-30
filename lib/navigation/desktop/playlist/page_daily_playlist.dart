@@ -4,7 +4,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../extension.dart';
 import '../../../providers/daily_playlist_provider.dart';
-import '../../../providers/player_provider.dart';
 import '../../../repository.dart';
 import '../../../utils/system/scroll_controller.dart';
 import '../../common/material/flexible_app_bar.dart';
@@ -57,7 +56,6 @@ class _DailyPlaylistBody extends HookConsumerWidget {
       child: TrackTileContainer.daily(
         dateTime: date,
         tracks: tracks,
-        player: ref.read(playerProvider),
         child: CustomScrollView(
           controller: AppScrollController(),
           slivers: [
