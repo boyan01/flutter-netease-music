@@ -65,7 +65,9 @@ class MainFavoritePlayListWidget extends ConsumerWidget {
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 8),
           child: PlaylistTile(
-            playlist: favoritePlaylist,
+            playlist: favoritePlaylist.copyWith(
+              name: context.strings.myFavoriteMusics,
+            ),
             padding: const EdgeInsets.symmetric(horizontal: 8),
             enableHero: false,
             enableMore: false,

@@ -116,6 +116,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "musicName": MessageLookupByLibrary.simpleMessage("Music Name"),
         "my": MessageLookupByLibrary.simpleMessage("My"),
         "myDjs": MessageLookupByLibrary.simpleMessage("Dj"),
+        "myFavoriteMusics":
+            MessageLookupByLibrary.simpleMessage("My Favorite Musics"),
         "myMusic": MessageLookupByLibrary.simpleMessage("My Music"),
         "nextStep": MessageLookupByLibrary.simpleMessage("next step"),
         "noLyric": MessageLookupByLibrary.simpleMessage("No Lyric"),

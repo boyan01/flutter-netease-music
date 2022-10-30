@@ -99,6 +99,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "musicName": MessageLookupByLibrary.simpleMessage("音乐标题"),
         "my": MessageLookupByLibrary.simpleMessage("我的"),
         "myDjs": MessageLookupByLibrary.simpleMessage("我的电台"),
+        "myFavoriteMusics": MessageLookupByLibrary.simpleMessage("我喜欢的音乐"),
         "myMusic": MessageLookupByLibrary.simpleMessage("我的音乐"),
         "nextStep": MessageLookupByLibrary.simpleMessage("下一步"),
         "noLyric": MessageLookupByLibrary.simpleMessage("暂无歌词"),
