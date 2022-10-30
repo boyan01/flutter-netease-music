@@ -65,7 +65,7 @@ class _BodyLoginWithPhoneNumber extends ConsumerWidget {
   }
 }
 
-class _BodyLoginWithQrCode extends StatelessWidget {
+class _BodyLoginWithQrCode extends ConsumerWidget {
   const _BodyLoginWithQrCode({
     super.key,
     required this.onSwitchToPhoneNumber,
@@ -74,11 +74,15 @@ class _BodyLoginWithQrCode extends StatelessWidget {
   final VoidCallback onSwitchToPhoneNumber;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Column(
       children: [
         Row(),
-        const LoginViaQrCodeWidget(),
+        const SizedBox(height: 32),
+        LoginViaQrCodeWidget(
+          onVerified: () => ref.read(navigatorProvider.notifier).back(),
+        ),
+        const SizedBox(height: 32),
         TextButton(
           onPressed: onSwitchToPhoneNumber,
           child: Text(context.strings.loginWithPhone),

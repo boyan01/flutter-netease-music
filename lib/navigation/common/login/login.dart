@@ -20,7 +20,14 @@ enum LoginType {
 }
 
 class LoginViaQrCodeWidget extends HookConsumerWidget {
-  const LoginViaQrCodeWidget({super.key});
+  const LoginViaQrCodeWidget({
+    super.key,
+    this.descriptionSpacing = 48,
+    required this.onVerified,
+  });
+
+  final double descriptionSpacing;
+  final VoidCallback onVerified;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -33,20 +40,20 @@ class LoginViaQrCodeWidget extends HookConsumerWidget {
         child: Text(context.strings.errorToFetchData),
       );
     } else if (key.hasData) {
-      body = _QrCodeBody(loginKey: key.requireData);
+      body = _QrCodeBody(
+        loginKey: key.requireData,
+        descriptionSpacing: descriptionSpacing,
+        onVerified: onVerified,
+      );
     } else {
       body = const Center(
         child: CircularProgressIndicator(),
       );
     }
-    return SizedBox(
-      width: 300,
-      height: 360,
-      child: Material(
-        color: context.colorScheme.background,
-        borderRadius: BorderRadius.circular(10),
-        child: body,
-      ),
+    return Material(
+      color: context.colorScheme.background,
+      borderRadius: BorderRadius.circular(10),
+      child: body,
     );
   }
 }
@@ -55,9 +62,13 @@ class _QrCodeBody extends HookConsumerWidget {
   const _QrCodeBody({
     super.key,
     required this.loginKey,
+    required this.descriptionSpacing,
+    required this.onVerified,
   });
 
   final String loginKey;
+  final double descriptionSpacing;
+  final VoidCallback onVerified;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -96,7 +107,7 @@ class _QrCodeBody extends HookConsumerWidget {
                     context,
                     ref.read(userProvider.notifier).loginWithQrKey(),
                   );
-                  Navigator.of(context, rootNavigator: true).pop();
+                  onVerified();
                 } catch (error, stacktrace) {
                   debugPrint(
                     'login qr key confirmed error: $error $stacktrace',
@@ -135,21 +146,20 @@ class _QrCodeBody extends HookConsumerWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
-          const SizedBox(height: 32),
           PrettyQr(
             data: url,
             size: 180,
             roundEdges: true,
             elementColor: context.colorScheme.textPrimary,
           ),
-          const SizedBox(height: 48),
+          SizedBox(height: descriptionSpacing),
           Text(
             description,
             style: context.textTheme.bodySmall,
             textAlign: TextAlign.center,
           ),
-          const SizedBox(height: 32),
         ],
       ),
     );
