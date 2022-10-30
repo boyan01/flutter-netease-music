@@ -27,54 +27,32 @@ final showPlayingListProvider =
   },
 );
 
-class PagePlayingList extends HookConsumerWidget {
+class PagePlayingList extends StatelessWidget {
   const PagePlayingList({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final node = useFocusNode();
-    useEffect(
-      () {
-        void onFocusChange() {
-          if (!node.hasFocus) {
-            // delay to avoid focus conflict with the playlist toggle button.
-            Future.delayed(const Duration(milliseconds: 100), () {
-              ref.read(showPlayingListProvider.notifier).state = false;
-            });
-          }
-        }
-
-        node.addListener(onFocusChange);
-        return () {
-          node.removeListener(onFocusChange);
-        };
-      },
-      [node],
-    );
-    return Focus(
-      autofocus: true,
-      focusNode: node,
-      child: Material(
-        color: context.colorScheme.background,
-        elevation: 4,
-        child: Column(
-          children: [
-            const _PlayingListTitle(),
-            const Divider(indent: 20, endIndent: 20),
-            Expanded(
-              child: LayoutBuilder(
-                builder: (context, constraints) {
-                  return _PlayingList(
-                    layoutHeight: constraints.maxHeight,
-                  );
-                },
+  Widget build(BuildContext context) => Padding(
+        padding: const EdgeInsets.only(left: 10),
+        child: Material(
+          color: context.colorScheme.background,
+          elevation: 10,
+          child: Column(
+            children: [
+              const _PlayingListTitle(),
+              const Divider(indent: 20, endIndent: 20),
+              Expanded(
+                child: LayoutBuilder(
+                  builder: (context, constraints) {
+                    return _PlayingList(
+                      layoutHeight: constraints.maxHeight,
+                    );
+                  },
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
-      ),
-    );
-  }
+      );
 }
 
 class _PlayingListTitle extends ConsumerWidget {

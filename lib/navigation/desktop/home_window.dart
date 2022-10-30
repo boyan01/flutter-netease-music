@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../providers/navigator_provider.dart';
 import '../common/navigation_target.dart';
@@ -120,23 +121,13 @@ class DesktopPlayingPageContainer extends ConsumerWidget {
       children: [
         child,
         ClipRect(child: _SlideAnimatedPlayingPage(visible: playingPage)),
-        Align(
-          alignment: Alignment.centerRight,
-          child: ClipRect(
-            child: SizedBox(
-              width: 400,
-              child: _SlideAnimatedPlayingListOverlay(
-                visible: showPlayingList,
-              ),
-            ),
-          ),
-        ),
+        _SlideAnimatedPlayingListOverlay(visible: showPlayingList),
       ],
     );
   }
 }
 
-class _SlideAnimatedPlayingListOverlay extends HookWidget {
+class _SlideAnimatedPlayingListOverlay extends HookConsumerWidget {
   const _SlideAnimatedPlayingListOverlay({
     super.key,
     required this.visible,
@@ -145,7 +136,7 @@ class _SlideAnimatedPlayingListOverlay extends HookWidget {
   final bool visible;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final controller = useAnimationController(
       duration: const Duration(milliseconds: 300),
       initialValue: visible ? 1.0 : 0.0,
@@ -181,9 +172,26 @@ class _SlideAnimatedPlayingListOverlay extends HookWidget {
     if (controller.isDismissed) {
       return const SizedBox.shrink();
     }
-    return FractionalTranslation(
-      translation: offset,
-      child: const PagePlayingList(),
+    return Row(
+      children: [
+        Expanded(
+          child: GestureDetector(
+            onTap: () =>
+                ref.read(showPlayingListProvider.notifier).state = false,
+            behavior: HitTestBehavior.translucent,
+            child: const SizedBox.expand(),
+          ),
+        ),
+        ClipRect(
+          child: SizedBox(
+            width: 400,
+            child: FractionalTranslation(
+              translation: offset,
+              child: const PagePlayingList(),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
