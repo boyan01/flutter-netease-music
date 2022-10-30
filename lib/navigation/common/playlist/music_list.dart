@@ -148,7 +148,7 @@ class TrackTileContainer extends ConsumerStatefulWidget {
           tracks = playlist.tracks;
         }
 
-        if (player.repeatMode == RepeatMode.heart) {
+        if (player.repeatMode == RepeatMode.heart && playlist.isFavorite) {
           try {
             final toPlay = track ?? tracks.firstOrNull;
             if (toPlay == null) {
@@ -172,6 +172,9 @@ class TrackTileContainer extends ConsumerStatefulWidget {
             return PlayResult.fail;
           }
         } else {
+          if (player.repeatMode == RepeatMode.heart) {
+            unawaited(player.setRepeatMode(RepeatMode.sequence));
+          }
           return player.playWithList(
             id,
             tracks,
