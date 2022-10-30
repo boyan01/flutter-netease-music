@@ -85,7 +85,6 @@ class NavigationTargetLoginPassword extends NavigationTarget {
   NavigationTargetLoginPassword(this.phoneNumber);
 
   final String phoneNumber;
-
 }
 
 class NavigationTargetArtistDetail extends NavigationTarget {
