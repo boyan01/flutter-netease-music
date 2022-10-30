@@ -105,7 +105,7 @@ class PlayerRepeatModeIcon extends ConsumerWidget {
                 isUserFavoriteList: true,
               ),
             );
-             player.setRepeatMode(next);
+            player.setRepeatMode(next);
           } catch (error, stacktrace) {
             e('error: $error $stacktrace');
             toast(context.formattedError(error));
@@ -133,9 +133,9 @@ class PlayerRepeatModeIcon extends ConsumerWidget {
           if (!tracks.contains(current)) {
             await player.playFromMediaId(tracks.first.id);
           }
-           player.setRepeatMode(next);
+          player.setRepeatMode(next);
         } else {
-           player.setRepeatMode(next);
+          player.setRepeatMode(next);
         }
       },
     );
