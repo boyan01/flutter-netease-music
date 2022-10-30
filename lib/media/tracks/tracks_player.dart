@@ -85,7 +85,7 @@ abstract class TracksPlayer extends StateNotifier<TracksPlayerState> {
 
   Future<void> skipToPrevious();
 
-  Future<void> setRepeatMode(RepeatMode repeatMode);
+  void setRepeatMode(RepeatMode repeatMode);
 
   Future<void> playFromMediaId(int trackId);
 

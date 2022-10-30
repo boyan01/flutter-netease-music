@@ -173,7 +173,7 @@ class TrackTileContainer extends ConsumerStatefulWidget {
           }
         } else {
           if (player.repeatMode == RepeatMode.heart) {
-            unawaited(player.setRepeatMode(RepeatMode.sequence));
+            player.setRepeatMode(RepeatMode.sequence);
           }
           return player.playWithList(
             id,
