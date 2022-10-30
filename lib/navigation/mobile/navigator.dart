@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../../providers/navigator_provider.dart';
-import '../common/login/login_sub_navigation.dart';
 import '../common/navigation_target.dart';
 import 'artists/page_artist_detail.dart';
 import 'home/page_home.dart';
@@ -14,6 +13,8 @@ import 'playlists/page_daily_playlist.dart';
 import 'playlists/page_playlist_detail.dart';
 import 'playlists/page_playlist_edit.dart';
 import 'settings/page_setting.dart';
+import 'user/login_page.dart';
+import 'user/login_password_page.dart';
 import 'user/page_user_detail.dart';
 import 'widgets/bottom_sheet_page.dart';
 import 'widgets/slide_up_page_route.dart';
@@ -114,7 +115,12 @@ class MobileNavigatorController extends NavigatorController {
         page = UserDetailPage(userId: (target as NavigationTargetUser).userId);
         break;
       case NavigationTargetLogin:
-        page = const LoginNavigator();
+        page = const LoginPage();
+        break;
+      case NavigationTargetLoginPassword:
+        page = LoginPasswordPage(
+          phoneNumber: (target as NavigationTargetLoginPassword).phoneNumber,
+        );
         break;
       case NavigationTargetArtistDetail:
         page = ArtistDetailPage(

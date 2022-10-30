@@ -56,6 +56,7 @@ class AnimatedAppBottomBar extends HookConsumerWidget {
       NavigationTargetFmPlaying,
       NavigationTargetSettings,
       NavigationTargetLogin,
+      NavigationTargetLoginPassword,
     };
     const playerBarHeight = kBottomPlayerBarHeight;
     final hidePlayerBar =

@@ -101,5 +101,7 @@
   "follower": "Follower",
   "follow": "Follow",
   "searchHistory": "Search History",
-  "leaderboard": "Leaderboard"
+  "leaderboard": "Leaderboard",
+  "account": "Account",
+  "myFavoriteMusics": "My Favorite Musics"
 }

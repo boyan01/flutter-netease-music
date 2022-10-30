@@ -41,6 +41,7 @@ class MessageLookup extends MessageLookupByLibrary {
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "about": MessageLookupByLibrary.simpleMessage("关于"),
+        "account": MessageLookupByLibrary.simpleMessage("账号"),
         "addToPlaylist": MessageLookupByLibrary.simpleMessage("加入歌单"),
         "addToPlaylistFailed": MessageLookupByLibrary.simpleMessage("加入歌单失败"),
         "addedToPlaylistSuccess":
@@ -98,6 +99,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "musicName": MessageLookupByLibrary.simpleMessage("音乐标题"),
         "my": MessageLookupByLibrary.simpleMessage("我的"),
         "myDjs": MessageLookupByLibrary.simpleMessage("我的电台"),
+        "myFavoriteMusics": MessageLookupByLibrary.simpleMessage("我喜欢的音乐"),
         "myMusic": MessageLookupByLibrary.simpleMessage("我的音乐"),
         "nextStep": MessageLookupByLibrary.simpleMessage("下一步"),
         "noLyric": MessageLookupByLibrary.simpleMessage("暂无歌词"),

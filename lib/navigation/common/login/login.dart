@@ -11,10 +11,23 @@ import '../../../providers/account_provider.dart';
 import '../../../providers/repository_provider.dart';
 import '../../../repository/data/login_qr_key_status.dart';
 import '../../../utils/hooks.dart';
-import '../../common/material/dialogs.dart';
+import '../../mobile/welcome/page_welcome.dart';
+import '../material/dialogs.dart';
 
-class LoginViaQrCode extends HookConsumerWidget {
-  const LoginViaQrCode({super.key});
+enum LoginType {
+  phoneNumber,
+  qrcode,
+}
+
+class LoginViaQrCodeWidget extends HookConsumerWidget {
+  const LoginViaQrCodeWidget({
+    super.key,
+    this.descriptionSpacing = 48,
+    required this.onVerified,
+  });
+
+  final double descriptionSpacing;
+  final VoidCallback onVerified;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -27,20 +40,20 @@ class LoginViaQrCode extends HookConsumerWidget {
         child: Text(context.strings.errorToFetchData),
       );
     } else if (key.hasData) {
-      body = _QrCodeBody(loginKey: key.requireData);
+      body = _QrCodeBody(
+        loginKey: key.requireData,
+        descriptionSpacing: descriptionSpacing,
+        onVerified: onVerified,
+      );
     } else {
       body = const Center(
         child: CircularProgressIndicator(),
       );
     }
-    return SizedBox(
-      width: 300,
-      height: 360,
-      child: Material(
-        color: context.colorScheme.background,
-        borderRadius: BorderRadius.circular(10),
-        child: body,
-      ),
+    return Material(
+      color: context.colorScheme.background,
+      borderRadius: BorderRadius.circular(10),
+      child: body,
     );
   }
 }
@@ -49,9 +62,13 @@ class _QrCodeBody extends HookConsumerWidget {
   const _QrCodeBody({
     super.key,
     required this.loginKey,
+    required this.descriptionSpacing,
+    required this.onVerified,
   });
 
   final String loginKey;
+  final double descriptionSpacing;
+  final VoidCallback onVerified;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -90,7 +107,7 @@ class _QrCodeBody extends HookConsumerWidget {
                     context,
                     ref.read(userProvider.notifier).loginWithQrKey(),
                   );
-                  Navigator.of(context, rootNavigator: true).pop();
+                  onVerified();
                 } catch (error, stacktrace) {
                   debugPrint(
                     'login qr key confirmed error: $error $stacktrace',
@@ -129,26 +146,79 @@ class _QrCodeBody extends HookConsumerWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
-          const SizedBox(height: 32),
           PrettyQr(
             data: url,
             size: 180,
             roundEdges: true,
             elementColor: context.colorScheme.textPrimary,
           ),
-          const Spacer(),
-          Text(
-            context.strings.loginViaQrCode,
-            style: context.textTheme.titleLarge,
-          ),
-          const SizedBox(height: 20),
+          SizedBox(height: descriptionSpacing),
           Text(
             description,
             style: context.textTheme.bodySmall,
             textAlign: TextAlign.center,
           ),
-          const SizedBox(height: 32),
+        ],
+      ),
+    );
+  }
+}
+
+class LoginPasswordWidget extends HookConsumerWidget {
+  const LoginPasswordWidget({
+    super.key,
+    required this.phone,
+    required this.onVerified,
+  });
+
+  final String phone;
+  final VoidCallback onVerified;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final inputController = useMemoized(TextEditingController.new);
+
+    Future<void> doLogin() async {
+      final password = inputController.text;
+      if (password.isEmpty) {
+        toast(context.strings.pleaseInputPassword);
+        return;
+      }
+      final account = ref.read(userProvider.notifier);
+      final result = await showLoaderOverlay(
+        context,
+        account.login(phone, password),
+      );
+      if (result.isValue) {
+        // close login page.
+        onVerified();
+      } else {
+        toast('登录失败:${result.asError!.error}');
+      }
+    }
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: <Widget>[
+          const SizedBox(height: 20),
+          TextField(
+            controller: inputController,
+            obscureText: true,
+            keyboardType: TextInputType.url,
+            decoration: InputDecoration(
+              hintText: context.strings.pleaseInputPassword,
+            ),
+          ),
+          const SizedBox(height: 20),
+          StretchButton(
+            text: context.strings.login,
+            primary: false,
+            onTap: doLogin,
+          ),
         ],
       ),
     );

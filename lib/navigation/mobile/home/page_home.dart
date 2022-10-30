@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../extension.dart';
 import '../../common/navigation_target.dart';
 import 'main_page_discover.dart';
 import 'main_page_my.dart';
@@ -29,6 +30,9 @@ class PageHome extends StatelessWidget {
         body = const MainPageMy();
         break;
     }
-    return Scaffold(body: body);
+    return Scaffold(
+      backgroundColor: context.colorScheme.backgroundSecondary,
+      body: body,
+    );
   }
 }

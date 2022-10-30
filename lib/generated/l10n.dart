@@ -1081,6 +1081,26 @@ class S {
       args: [],
     );
   }
+
+  /// `Account`
+  String get account {
+    return Intl.message(
+      'Account',
+      name: 'account',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `My Favorite Musics`
+  String get myFavoriteMusics {
+    return Intl.message(
+      'My Favorite Musics',
+      name: 'myFavoriteMusics',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

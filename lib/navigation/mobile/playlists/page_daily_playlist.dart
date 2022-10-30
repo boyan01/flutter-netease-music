@@ -26,6 +26,7 @@ class DailyPlaylistPage extends HookConsumerWidget {
       [playlist],
     );
     return Scaffold(
+      backgroundColor: context.colorScheme.background,
       body: _MobileDailyPageScaffold(
         date: date,
         tracksCount: playlist.valueOrNull?.tracks.length ?? 0,

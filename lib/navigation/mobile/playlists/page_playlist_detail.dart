@@ -32,6 +32,7 @@ class PlaylistDetailPage extends HookConsumerWidget {
     );
     final absorberHandle = useMemoized(SliverOverlapAbsorberHandle.new);
     return Scaffold(
+      backgroundColor: context.colorScheme.background,
       body: detail.when(
         data: (detail) => CustomScrollView(
           slivers: <Widget>[
