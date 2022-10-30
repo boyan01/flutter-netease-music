@@ -43,7 +43,9 @@ ThemeData get lightTheme => _buildTheme(lightSwatch);
 
 ThemeData _buildTheme(Color primaryColor) {
   final theme = ThemeData.from(
-    colorScheme: const ColorScheme.light(primary: lightSwatch),
+    colorScheme: const ColorScheme.light(
+      primary: lightSwatch,
+    ),
   );
   return theme
       .copyWith(
@@ -54,6 +56,7 @@ ThemeData _buildTheme(Color primaryColor) {
           color: theme.iconTheme.color!.withOpacity(0.7),
           size: 24,
         ),
+        scaffoldBackgroundColor: const Color(0xFFEEEEEE),
       )
       .withFallbackFonts()
       .applyCommon();
@@ -91,6 +94,7 @@ class AppColorScheme with EquatableMixin {
   AppColorScheme({
     required this.brightness,
     required this.background,
+    required this.backgroundSecondary,
     required this.primary,
     required this.textPrimary,
     required this.textHint,
@@ -104,6 +108,8 @@ class AppColorScheme with EquatableMixin {
   final Brightness brightness;
 
   final Color background;
+  final Color backgroundSecondary;
+
   final Color primary;
 
   final Color textPrimary;
@@ -124,6 +130,7 @@ class AppColorScheme with EquatableMixin {
   List<Object> get props => [
         brightness,
         background,
+        backgroundSecondary,
         primary,
         textPrimary,
         textHint,
@@ -150,6 +157,7 @@ class AppTheme extends StatelessWidget {
     final colorScheme = AppColorScheme(
       brightness: theme.brightness,
       background: theme.backgroundColor,
+      backgroundSecondary: theme.scaffoldBackgroundColor,
       primary: theme.colorScheme.primary,
       textPrimary: theme.textTheme.bodyMedium!.color!,
       textHint: theme.textTheme.bodySmall!.color!,

@@ -1,7 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../extension.dart';
+import '../../../providers/account_provider.dart';
 import '../../common/buttons.dart';
 import '../../common/settings.dart';
 
@@ -13,21 +15,25 @@ class PageSettings extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(context.strings.settings),
+        foregroundColor: context.colorScheme.textPrimary,
+        backgroundColor: context.colorScheme.background,
         leading: const AppBackButton(),
+        elevation: 0,
       ),
       body: ListView(
         children: <Widget>[
-          SettingGroup(
+          const _AccountSettings(),
+          _SettingGroup(
             title: context.strings.theme,
             children: const [ThemeSwitchRadios()],
           ),
           const Divider(height: 20),
-          const SettingGroup(
+          const _SettingGroup(
             children: [CopyRightOverlayCheckBox()],
           ),
           if (!kReleaseMode) const _DebugNavigationPlatformSetting(),
           const Divider(height: 20),
-          SettingGroup(
+          _SettingGroup(
             children: [
               ListTile(
                 title: Text(context.strings.about),
@@ -53,8 +59,12 @@ class PageSettings extends StatelessWidget {
   }
 }
 
-class SettingGroup extends StatelessWidget {
-  const SettingGroup({super.key, this.title, required this.children});
+class _SettingGroup extends StatelessWidget {
+  const _SettingGroup({
+    super.key,
+    this.title,
+    required this.children,
+  });
 
   final String? title;
   final List<Widget> children;
@@ -85,7 +95,7 @@ class _SettingTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.only(left: 20, top: 6, bottom: 6),
+      padding: const EdgeInsets.only(left: 16, top: 6, bottom: 6),
       child: Text(
         title,
         style: const TextStyle(color: Color.fromARGB(255, 175, 175, 175)),
@@ -102,12 +112,35 @@ class _DebugNavigationPlatformSetting extends StatelessWidget {
     return Column(
       children: const [
         Divider(height: 20),
-        SettingGroup(
+        _SettingGroup(
           title: 'Navigation Platform (Developer options)',
           children: [
             DebugPlatformNavigationRadios(),
           ],
         ),
+      ],
+    );
+  }
+}
+
+class _AccountSettings extends ConsumerWidget {
+  const _AccountSettings({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isLogin = ref.watch(isLoginProvider);
+    if (!isLogin) {
+      return const SizedBox.shrink();
+    }
+    return _SettingGroup(
+      title: context.strings.account,
+      children: [
+        ListTile(
+          title: Text(context.strings.logout),
+          onTap: () {
+            ref.read(userProvider.notifier).logout();
+          },
+        )
       ],
     );
   }

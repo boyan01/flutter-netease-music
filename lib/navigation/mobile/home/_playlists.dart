@@ -23,7 +23,6 @@ class PlayListsGroupHeader extends StatelessWidget {
       child: Material(
         borderRadius: const BorderRadius.vertical(top: Radius.circular(8)),
         color: context.colorScheme.surfaceWithElevation(1),
-        elevation: 10,
         child: Container(
           height: 40,
           padding: const EdgeInsets.symmetric(horizontal: 8),
@@ -147,7 +146,7 @@ class _MyPlayListsHeader extends ConsumerWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return ColoredBox(
-      color: context.colorScheme.background,
+      color: context.colorScheme.backgroundSecondary,
       child: TabBar(
         labelColor: context.colorScheme.textPrimary,
         indicatorSize: TabBarIndicatorSize.label,

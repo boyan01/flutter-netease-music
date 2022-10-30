@@ -41,6 +41,7 @@ class MessageLookup extends MessageLookupByLibrary {
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "about": MessageLookupByLibrary.simpleMessage("About"),
+        "account": MessageLookupByLibrary.simpleMessage("Account"),
         "addToPlaylist":
             MessageLookupByLibrary.simpleMessage("add to playlist"),
         "addToPlaylistFailed":
