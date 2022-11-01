@@ -194,8 +194,8 @@ class _ContextMenuItemState extends State<ContextMenuItem> {
   @override
   Widget build(BuildContext context) {
     return MouseRegion(
-      onEnter: (detials) => _showContextSubMenu(),
-      onExit: (detials) => _dismissSubMenu(),
+      onEnter: (details) => _showContextSubMenu(),
+      onExit: (details) => _dismissSubMenu(),
       child: AppMenuItem(
         enable: widget.enable,
         onTap: widget.subMenuBuilder != null

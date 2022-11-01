@@ -1,5 +1,6 @@
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../extension.dart';
@@ -10,7 +11,9 @@ import '../common/buttons.dart';
 import '../common/navigation_target.dart';
 import '../common/player/player_progress.dart';
 import '../common/player/state.dart';
+import '../common/shape.dart';
 import 'player/page_playing_list.dart';
+import 'widgets/hover_overlay.dart';
 import 'widgets/slider.dart';
 
 class BottomPlayerBar extends StatelessWidget {
@@ -174,10 +177,10 @@ class _PlayerControlWidget extends ConsumerWidget {
             padding: EdgeInsets.only(right: 10),
             child: PlayerRepeatModeIcon(),
           ),
-        const _VolumeControl(),
-        const SizedBox(width: 10),
         const _PlayingListButton(),
-        const SizedBox(width: 36),
+        const SizedBox(width: 10),
+        const _VolumeControl(),
+        const SizedBox(width: 20),
       ],
     );
   }
@@ -206,7 +209,7 @@ class _PlayingListButton extends ConsumerWidget {
   }
 }
 
-class _VolumeControl extends ConsumerWidget {
+class _VolumeControl extends HookConsumerWidget {
   const _VolumeControl({
     super.key,
   });
@@ -217,45 +220,98 @@ class _VolumeControl extends ConsumerWidget {
       playerStateProvider.select((value) => value.volume),
     );
     final enable = ref.watch(playingTrackProvider) != null;
-    return Row(
-      children: [
-        if (volume <= 0.01)
-          const Icon(FluentIcons.speaker_0_16_regular, size: 24)
-        else if (volume < 0.5)
-          const Icon(FluentIcons.speaker_1_16_regular, size: 24)
-        else
-          const Icon(FluentIcons.speaker_2_16_regular, size: 24),
-        SizedBox(
-          width: 120,
-          child: SliderTheme(
-            data: const SliderThemeData(
-              thumbShape: RoundSliderThumbShape(
-                enabledThumbRadius: 6,
-                elevation: 0,
+
+    final isMuted = volume <= 0.0001;
+    final volumeBeforeMute = useRef<double>(0.5);
+
+    final IconData icon;
+    if (isMuted) {
+      icon = FluentIcons.speaker_off_16_regular;
+    } else if (volume <= 0.2) {
+      icon = FluentIcons.speaker_0_16_regular;
+    } else if (volume <= 0.5) {
+      icon = FluentIcons.speaker_1_16_regular;
+    } else {
+      icon = FluentIcons.speaker_2_16_regular;
+    }
+
+    Widget child = AppIconButton(
+      enable: enable,
+      onPressed: () {
+        final player = ref.read(playerProvider);
+        if (isMuted) {
+          player.setVolume(volumeBeforeMute.value);
+        } else {
+          volumeBeforeMute.value = player.volume;
+          player.setVolume(0);
+        }
+      },
+      icon: icon,
+    );
+    if (enable) {
+      child = HoverOverlay(
+        targetAnchor: Alignment.topCenter,
+        followerAnchor: Alignment.bottomCenter,
+        overlayBuilder: (context, progress) {
+          return Opacity(
+            opacity: progress,
+            child: const _OverlayVolumeSlider(),
+          );
+        },
+        child: child,
+      );
+    }
+    return child;
+  }
+}
+
+class _OverlayVolumeSlider extends ConsumerWidget {
+  const _OverlayVolumeSlider({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final volume = ref.watch(
+      playerStateProvider.select((value) => value.volume),
+    );
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 10),
+      child: Material(
+        color: context.colorScheme.background,
+        elevation: 10,
+        shape: const BorderWithArrow.bottom(radius: 4),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+          child: RotatedBox(
+            quarterTurns: 3,
+            child: SizedBox(
+              width: 120,
+              child: SliderTheme(
+                data: const SliderThemeData(
+                  thumbShape: RoundSliderThumbShape(
+                    enabledThumbRadius: 6,
+                    elevation: 0,
+                  ),
+                  trackHeight: 4,
+                  trackShape: RoundedRectSliderTrackShape(),
+                  overlayShape: RoundSliderOverlayShape(
+                    overlayRadius: 10,
+                  ),
+                ),
+                child: Slider(
+                  value: (volume * 100).clamp(0.0, 100.0),
+                  max: 100,
+                  onChanged: (value) {
+                    ref.read(playerProvider).setVolume(value / 100);
+                  },
+                  onChangeEnd: (value) {
+                    ref.read(playerProvider).setVolume(value / 100);
+                  },
+                ),
               ),
-              trackHeight: 4,
-              trackShape: RoundedRectSliderTrackShape(),
-              overlayShape: RoundSliderOverlayShape(
-                overlayRadius: 10,
-              ),
-            ),
-            child: Slider(
-              value: (volume * 100).clamp(0.0, 100.0),
-              max: 100,
-              onChanged: enable
-                  ? (value) {
-                      ref.read(playerProvider).setVolume(value / 100);
-                    }
-                  : null,
-              onChangeEnd: enable
-                  ? (value) {
-                      ref.read(playerProvider).setVolume(value / 100);
-                    }
-                  : null,
             ),
           ),
         ),
-      ],
+      ),
     );
   }
 }

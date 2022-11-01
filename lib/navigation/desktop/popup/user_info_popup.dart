@@ -5,6 +5,7 @@ import 'package:overlay_support/overlay_support.dart';
 
 import '../../../extension.dart';
 import '../../../providers/account_provider.dart';
+import '../../common/shape.dart';
 import '../widgets/context_menu.dart';
 
 Future<void> showUserInfoPopup({
@@ -25,7 +26,7 @@ Future<void> showUserInfoPopup({
               child: Material(
                 color: context.colorScheme.surface,
                 elevation: 10,
-                shape: const _BorderWithTopArrow(),
+                shape: const BorderWithArrow.top(),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -112,69 +113,5 @@ class _DismissArea extends StatelessWidget {
         child,
       ],
     );
-  }
-}
-
-class _BorderWithTopArrow extends ShapeBorder {
-  const _BorderWithTopArrow({
-    this.arrowSize = const Size(10, 6),
-    this.radius = 10,
-  });
-
-  final Size arrowSize;
-
-  final double radius;
-
-  @override
-  EdgeInsetsGeometry get dimensions => EdgeInsets.only(top: arrowSize.height);
-
-  @override
-  Path getInnerPath(Rect rect, {TextDirection? textDirection}) {
-    return Path()
-      ..addRRect(
-        RRect.fromLTRBR(
-          rect.left,
-          rect.top + arrowSize.height,
-          rect.right,
-          rect.bottom,
-          Radius.circular(radius),
-        ),
-      );
-  }
-
-  @override
-  Path getOuterPath(Rect rect, {TextDirection? textDirection}) {
-    return Path()
-      ..addRRect(
-        RRect.fromLTRBR(
-          rect.left,
-          rect.top,
-          rect.right,
-          rect.bottom,
-          Radius.circular(radius),
-        ),
-      )
-      ..addPolygon(
-        <Offset>[
-          rect.topCenter - Offset(0, arrowSize.height),
-          rect.topCenter - Offset(arrowSize.width / 2, 0),
-          rect.topCenter + Offset(arrowSize.width / 2, 0),
-        ],
-        true,
-      );
-  }
-
-  @override
-  void paint(
-    Canvas canvas,
-    Rect rect, {
-    double? width,
-    double? height,
-    TextDirection? textDirection,
-  }) {}
-
-  @override
-  ShapeBorder scale(double t) {
-    return const _BorderWithTopArrow();
   }
 }
