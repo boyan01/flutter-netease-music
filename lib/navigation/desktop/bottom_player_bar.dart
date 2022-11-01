@@ -8,6 +8,7 @@ import '../../providers/navigator_provider.dart';
 import '../../providers/player_provider.dart';
 import '../../repository.dart';
 import '../common/buttons.dart';
+import '../common/like_button.dart';
 import '../common/navigation_target.dart';
 import '../common/player/player_progress.dart';
 import '../common/player/state.dart';
@@ -172,6 +173,8 @@ class _PlayerControlWidget extends ConsumerWidget {
     return Row(
       children: [
         const Spacer(),
+        LikeButton.current(context),
+        const SizedBox(width: 10),
         if (!isFmPlaying)
           const Padding(
             padding: EdgeInsets.only(right: 10),

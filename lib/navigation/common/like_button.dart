@@ -2,6 +2,7 @@ import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../extension.dart';
 import '../../providers/account_provider.dart';
 import '../../providers/favorite_tracks_provider.dart';
 import '../../providers/player_provider.dart';
@@ -9,7 +10,6 @@ import '../../repository.dart';
 import 'buttons.dart';
 import 'material/user.dart';
 
-/// 歌曲喜欢按钮
 class LikeButton extends ConsumerWidget {
   const LikeButton({
     super.key,
@@ -45,7 +45,7 @@ class LikeButton extends ConsumerWidget {
       icon:
           isLiked ? FluentIcons.heart_24_filled : FluentIcons.heart_24_regular,
       size: iconSize ?? 24,
-      color: isLiked ? likedColor : color,
+      color: isLiked ? (likedColor ?? context.colorScheme.primary) : color,
       padding: padding,
       onPressed: () async {
         if (!ref.read(isLoginProvider)) {
