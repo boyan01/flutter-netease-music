@@ -45,18 +45,23 @@ class LyricLayout extends ConsumerWidget {
                     MouseHighlightSpan.normal(
                       text: '${context.strings.album}: ',
                     ),
-                    MouseHighlightSpan.highlight(
-                      text: track.album?.name ?? '',
-                      onTap: () {
-                        final id = track.album?.id;
-                        if (id == null) {
-                          return;
-                        }
-                        ref
-                            .read(navigatorProvider.notifier)
-                            .navigate(NavigationTargetAlbumDetail(id));
-                      },
-                    ),
+                    if (track.album != null && track.album?.id != 0)
+                      MouseHighlightSpan.highlight(
+                        text: track.album?.name ?? '',
+                        onTap: () {
+                          final id = track.album?.id;
+                          if (id == null) {
+                            return;
+                          }
+                          ref
+                              .read(navigatorProvider.notifier)
+                              .navigate(NavigationTargetAlbumDetail(id));
+                        },
+                      )
+                    else
+                      MouseHighlightSpan.normal(
+                        text: track.album?.name ?? '',
+                      ),
                   ],
                 ),
               ),
@@ -73,21 +78,20 @@ class LyricLayout extends ConsumerWidget {
                     MouseHighlightSpan.normal(
                       text: '${context.strings.artists}: ',
                     ),
-                    ...track.artists
-                        .map(
-                          (artist) => MouseHighlightSpan.highlight(
-                            text: artist.name,
-                            onTap: () {
-                              if (artist.id == 0) {
-                                return;
-                              }
-                              ref.read(navigatorProvider.notifier).navigate(
-                                    NavigationTargetArtistDetail(artist.id),
-                                  );
-                            },
-                          ),
-                        )
-                        .separated(MouseHighlightSpan.normal(text: '/')),
+                    ...track.artists.map(
+                      (artist) {
+                        if (artist.id == 0) {
+                          return MouseHighlightSpan.normal(text: artist.name);
+                        }
+                        return MouseHighlightSpan.highlight(
+                          text: artist.name,
+                          onTap: () {
+                            ref.read(navigatorProvider.notifier).navigate(
+                                NavigationTargetArtistDetail(artist.id));
+                          },
+                        );
+                      },
+                    ).separated(MouseHighlightSpan.normal(text: '/')),
                   ],
                 ),
               ),

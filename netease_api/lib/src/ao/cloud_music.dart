@@ -287,20 +287,20 @@ class SimpleSongArtistItem {
   factory SimpleSongArtistItem.fromJson(Map<String, dynamic>? json) =>
       SimpleSongArtistItem(
         id: asInt(json, 'id'),
-        name: asString(json, 'name'),
-        tns: asList(json, 'tns').toList(),
-        alias: asList(json, 'alias').toList(),
+        name: json?['name'] as String?,
+        tns: asList(json, 'tns').toList().cast(),
+        alias: asList(json, 'alias').toList().cast(),
       );
   final int id;
-  final dynamic name;
-  final List<dynamic> tns;
-  final List<dynamic> alias;
+  final String? name;
+  final List<String> tns;
+  final List<String> alias;
 
   Map<String, dynamic> toJson() => {
         'id': id,
         'name': name,
-        'tns': tns.map((e) => e),
-        'alias': alias.map((e) => e),
+        'tns': tns,
+        'alias': alias,
       };
 }
 
@@ -316,22 +316,22 @@ class SimpleSongAlbum {
   factory SimpleSongAlbum.fromJson(Map<String, dynamic>? json) =>
       SimpleSongAlbum(
         id: asInt(json, 'id'),
-        name: asString(json, 'name'),
+        name: json?['name'] as String?,
         picUrl: asString(json, 'picUrl'),
-        tns: asList(json, 'tns').toList(),
+        tns: asList(json, 'tns').toList().cast(),
         pic: asInt(json, 'pic'),
       );
   final int id;
-  final dynamic name;
+  final String? name;
   final String picUrl;
-  final List<dynamic> tns;
+  final List<String> tns;
   final int pic;
 
   Map<String, dynamic> toJson() => {
         'id': id,
         'name': name,
         'picUrl': picUrl,
-        'tns': tns.map((e) => e),
+        'tns': tns,
         'pic': pic,
       };
 }

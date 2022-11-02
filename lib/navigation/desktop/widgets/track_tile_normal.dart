@@ -380,6 +380,9 @@ class TrackTile extends HookConsumerWidget {
                         alignment: AlignmentDirectional.centerStart,
                         child: HighlightClickableText(
                           text: track.album?.name ?? '',
+                          enable: track.album != null &&
+                              track.album!.id != 0 &&
+                              track.album!.name.isNotEmpty,
                           onTap: () {
                             final albumId = track.album?.id;
                             if (albumId == null) {

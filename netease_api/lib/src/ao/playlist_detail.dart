@@ -1,4 +1,8 @@
+import 'package:json_annotation/json_annotation.dart';
+
 import 'safe_convert.dart';
+
+part 'playlist_detail.g.dart';
 
 class PlayListDetail {
   PlayListDetail({
@@ -451,6 +455,7 @@ class TracksItem {
     this.publishTime = 0,
     required this.tns,
     this.privilege,
+    this.pc,
   });
 
   factory TracksItem.fromJson(Map<String, dynamic>? json) => TracksItem(
@@ -488,6 +493,7 @@ class TracksItem {
         publishTime: asInt(json, 'publishTime'),
         tns: asList(json, 'tns').map((e) => e.toString()).toList(),
         privilege: PrivilegesItem.fromJson(asMap(json, 'privilege')),
+        pc: json?['pc'] == null ? null : TrackPc.fromJson(asMap(json, 'pc')),
       );
 
   final String name;
@@ -524,6 +530,7 @@ class TracksItem {
   final int publishTime;
   final List<String> tns;
   final PrivilegesItem? privilege;
+  final TrackPc? pc;
 
   Map<String, dynamic> toJson() => {
         'name': name,
@@ -560,6 +567,7 @@ class TracksItem {
         'publishTime': publishTime,
         'tns': tns.map((e) => e),
         'privilege': privilege?.toJson(),
+        'pc': pc?.toJson(),
       };
 }
 
@@ -623,6 +631,45 @@ class AlbumItem {
         'pic_str': picStr,
         'pic': pic,
       };
+}
+
+@JsonSerializable()
+class TrackPc {
+  TrackPc({
+    required this.nickname,
+    required this.userId,
+    required this.filename,
+    required this.cid,
+    required this.album,
+    required this.artist,
+    required this.songName,
+    required this.bitrate,
+  });
+
+  factory TrackPc.fromJson(Map<String, dynamic> json) =>
+      _$TrackPcFromJson(json);
+
+  final String nickname;
+  @JsonKey(name: 'uid')
+  final int userId;
+  @JsonKey(name: 'fn')
+  final String filename;
+
+  final String cid;
+
+  @JsonKey(name: 'alb')
+  final String album;
+
+  @JsonKey(name: 'ar')
+  final String artist;
+
+  @JsonKey(name: 'sn')
+  final String songName;
+
+  @JsonKey(name: 'br')
+  final int bitrate;
+
+  Map<String, dynamic> toJson() => _$TrackPcToJson(this);
 }
 
 class H {

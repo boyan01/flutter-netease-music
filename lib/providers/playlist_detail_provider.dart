@@ -72,6 +72,8 @@ class PlaylistDetailStateNotifier
         final musics = await neteaseRepository!.songDetails(data.trackIds);
         if (musics.isValue) {
           data = data.copyWith(tracks: musics.asValue!.value);
+        } else {
+          e('load playlist detail failed. ${musics.asError!.error}');
         }
       }
       _playlistDetail = data;

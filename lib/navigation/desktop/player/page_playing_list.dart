@@ -242,7 +242,7 @@ class _PlayingTrackItem extends HookConsumerWidget {
                 const SizedBox(width: 4),
                 SizedBox(
                   width: 100,
-                  child: MouseHighlightText(
+                  child: HighlightArtistText(
                     style: context.textTheme.bodySmall?.copyWith(
                       color:
                           isCurrentPlaying ? context.colorScheme.primary : null,
@@ -252,26 +252,17 @@ class _PlayingTrackItem extends HookConsumerWidget {
                           ? context.colorScheme.primary
                           : context.textTheme.bodyMedium!.color,
                     ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    children: track.artists
-                        .map(
-                          (artist) => MouseHighlightSpan.highlight(
-                            text: artist.name,
-                            onTap: () {
-                              if (artist.id == 0) {
-                                return;
-                              }
-                              ref.read(navigatorProvider.notifier).navigate(
-                                    NavigationTargetArtistDetail(
-                                      artist.id,
-                                    ),
-                                  );
-                            },
-                          ),
-                        )
-                        .separated(MouseHighlightSpan.normal(text: '/'))
-                        .toList(),
+                    artists: track.artists,
+                    onTap: (artist) {
+                      if (artist.id == 0) {
+                        return;
+                      }
+                      ref.read(navigatorProvider.notifier).navigate(
+                            NavigationTargetArtistDetail(
+                              artist.id,
+                            ),
+                          );
+                    },
                   ),
                 ),
                 const SizedBox(width: 4),

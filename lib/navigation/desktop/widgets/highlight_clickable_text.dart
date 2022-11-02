@@ -35,12 +35,18 @@ class HighlightArtistText extends StatelessWidget {
           ),
       children: artists
           .map(
-            (artist) => MouseHighlightSpan.highlight(
-              text: artist.name,
-              onTap: () => onTap(artist),
-            ),
+            (artist) {
+              if (artist.id == 0) {
+                return MouseHighlightSpan.normal(text: artist.name);
+              } else {
+                return MouseHighlightSpan.highlight(
+                  text: artist.name,
+                  onTap: () => onTap(artist),
+                );
+              }
+            },
           )
-          .separated(MouseHighlightSpan.normal(text: '/'))
+          .separated(MouseHighlightSpan.normal(text: ' / '))
           .toList(),
     );
   }
@@ -55,6 +61,7 @@ class HighlightClickableText extends HookWidget {
     required this.onTap,
     this.maxLines,
     this.overflow,
+    this.enable = true,
   });
 
   final String text;
@@ -65,16 +72,21 @@ class HighlightClickableText extends HookWidget {
   final int? maxLines;
   final TextOverflow? overflow;
 
+  final bool enable;
+
   @override
   Widget build(BuildContext context) {
     return MouseHighlightText(
+      highlightStyle: highlightStyle,
+      style: style,
       children: [
-        MouseHighlightSpan.highlight(
-          text: text,
-          style: style,
-          highlightStyle: highlightStyle,
-          onTap: onTap,
-        ),
+        if (enable)
+          MouseHighlightSpan.highlight(
+            text: text,
+            onTap: onTap,
+          )
+        else
+          MouseHighlightSpan.normal(text: text),
       ],
       maxLines: maxLines,
       overflow: overflow,
@@ -158,7 +170,6 @@ extension _MouseHighlightSpanList on List<MouseHighlightSpan> {
           TextSpan(
             text: span.text,
             style: span.style,
-            mouseCursor: SystemMouseCursors.click,
           ),
         );
       } else if (span is _Widget) {

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:async/async.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:netease_api/netease_api.dart' as api;
 import 'package:path/path.dart' as p;
@@ -461,12 +462,12 @@ extension _CloudTrackMapper on api.CloudSongItem {
     final album = AlbumMini(
       id: simpleSong.al.id,
       picUri: simpleSong.al.picUrl,
-      name: simpleSong.al.name is String ? simpleSong.al.name : '',
+      name: simpleSong.al.name ?? this.album,
     );
     ArtistMini mapArtist(api.SimpleSongArtistItem item) {
       return ArtistMini(
         id: item.id,
-        name: item.name is String ? item.name : '',
+        name: item.name ?? artist,
         imageUrl: '',
       );
     }
@@ -547,11 +548,25 @@ extension _TrackMapper on api.TracksItem {
     bool isRecommend = false,
   }) {
     final p = privilege ?? this.privilege;
+    final album = al.id == 0
+        ? AlbumMini(id: 0, name: pc?.album ?? '-', picUri: al.picUrl)
+        : al.toAlbum();
+    final artists = ar.map((e) => e.toArtist()).toList();
+    if (artists.isEmpty || artists.first.id == 0) {
+      artists.clear();
+      artists.add(
+        ArtistMini(
+          id: 0,
+          name: pc?.artist ?? '-',
+          imageUrl: artists.firstOrNull?.imageUrl,
+        ),
+      );
+    }
     return Track(
       id: id,
       name: name,
-      artists: ar.map((e) => e.toArtist()).toList(),
-      album: al.toAlbum(),
+      artists: artists,
+      album: album,
       imageUrl: al.picUrl,
       uri: 'http://music.163.com/song/media/outer/url?id=$id.mp3',
       duration: Duration(milliseconds: dt),
