@@ -23,12 +23,12 @@ class LikeButton extends ConsumerWidget {
   static Widget current(BuildContext context) {
     return Consumer(
       builder: (context, ref, child) => LikeButton(
-        music: ref.watch(playingTrackProvider)!,
+        music: ref.watch(playingTrackProvider),
       ),
     );
   }
 
-  final Track music;
+  final Track? music;
 
   final double? iconSize;
 
@@ -40,13 +40,14 @@ class LikeButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isLiked = ref.watch(musicIsFavoriteProvider(music));
+    final isLiked = music != null && ref.watch(musicIsFavoriteProvider(music!));
     return AppIconButton(
       icon:
           isLiked ? FluentIcons.heart_24_filled : FluentIcons.heart_24_regular,
       size: iconSize ?? 24,
       color: isLiked ? (likedColor ?? context.colorScheme.primary) : color,
       padding: padding,
+      enable: music != null,
       onPressed: () async {
         if (!ref.read(isLoginProvider)) {
           final login = await showNeedLoginToast(context);
@@ -57,11 +58,11 @@ class LikeButton extends ConsumerWidget {
         if (!isLiked) {
           await ref
               .read(userFavoriteMusicListProvider.notifier)
-              .likeMusic(music);
+              .likeMusic(music!);
         } else {
           await ref
               .read(userFavoriteMusicListProvider.notifier)
-              .dislikeMusic(music);
+              .dislikeMusic(music!);
         }
       },
     );
