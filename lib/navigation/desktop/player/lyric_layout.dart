@@ -85,10 +85,10 @@ class LyricLayout extends ConsumerWidget {
                         }
                         return MouseHighlightSpan.highlight(
                           text: artist.name,
-                          onTap: () {
-                            ref.read(navigatorProvider.notifier).navigate(
-                                NavigationTargetArtistDetail(artist.id));
-                          },
+                          onTap: () =>
+                              ref.read(navigatorProvider.notifier).navigate(
+                                    NavigationTargetArtistDetail(artist.id),
+                                  ),
                         );
                       },
                     ).separated(MouseHighlightSpan.normal(text: '/')),
