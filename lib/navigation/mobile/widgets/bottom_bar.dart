@@ -15,7 +15,7 @@ import '../../common/navigation_target.dart';
 import '../../common/player/progress_track_container.dart';
 import '../player/page_playing_list.dart';
 
-const kBottomPlayerBarHeight = 56.0;
+const kBottomPlayerBarHeight = 60.0;
 
 class AnimatedAppBottomBar extends HookConsumerWidget {
   const AnimatedAppBottomBar({
@@ -168,17 +168,17 @@ class _MobileBottomPlayerBar extends ConsumerWidget {
           height: kBottomPlayerBarHeight,
           child: Row(
             children: [
-              const SizedBox(width: 8),
+              const SizedBox(width: 16),
               ClipRRect(
                 borderRadius: const BorderRadius.all(Radius.circular(4)),
                 child: Image(
                   fit: BoxFit.cover,
                   image: CachedImage(music.imageUrl!),
-                  width: 48,
-                  height: 48,
+                  width: 40,
+                  height: 40,
                 ),
               ),
-              const SizedBox(width: 8),
+              const SizedBox(width: 10),
               Expanded(
                 child: DefaultTextStyle(
                   style: const TextStyle(),
@@ -215,6 +215,7 @@ class _MobileBottomPlayerBar extends ConsumerWidget {
                   icon: FluentIcons.list_24_regular,
                   onPressed: () => showMobilePlayingBottomSheet(context),
                 ),
+              const SizedBox(width: 8),
             ],
           ),
         ),
