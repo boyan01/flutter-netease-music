@@ -36,8 +36,9 @@ class TrackTile extends StatelessWidget {
             const SizedBox(width: 12),
             SizedBox(
               width: 32,
-              child:
-                  Center(child: _IndexOrPlayIndicator(track: track, index: index)),
+              child: Center(
+                child: _IndexOrPlayIndicator(track: track, index: index),
+              ),
             ),
             const SizedBox(width: 8),
             Expanded(

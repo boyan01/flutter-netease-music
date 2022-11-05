@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
-import '../../../component/route.dart';
 import '../../../extension.dart';
 import '../../../providers/settings_provider.dart';
 
@@ -43,15 +42,15 @@ class _WelcomeBody extends ConsumerWidget {
           children: [
             ElevatedButton(
               onPressed: () async {
-                final result = await Navigator.pushNamed(context, pageLogin);
-                if (result == true) {
-                  //remove the all pages
-                  await Navigator.pushNamedAndRemoveUntil(
-                    context,
-                    pageMain,
-                    (route) => false,
-                  );
-                }
+                // final result = await Navigator.pushNamed(context, pageLogin);
+                // if (result == true) {
+                //   //remove the all pages
+                //   await Navigator.pushNamedAndRemoveUntil(
+                //     context,
+                //     pageMain,
+                //     (route) => false,
+                //   );
+                // }
               },
               child: Text(context.strings.loginWithPhone),
             ),
@@ -60,11 +59,11 @@ class _WelcomeBody extends ConsumerWidget {
               onPressed: () {
                 ref.read(settingStateProvider.notifier).setSkipWelcomePage();
                 //remove the all pages
-                Navigator.pushNamedAndRemoveUntil(
-                  context,
-                  pageMain,
-                  (route) => false,
-                );
+                // Navigator.pushNamedAndRemoveUntil(
+                //   context,
+                //   pageMain,
+                //   (route) => false,
+                // );
               },
               child: Text(context.strings.skipLogin),
             ),

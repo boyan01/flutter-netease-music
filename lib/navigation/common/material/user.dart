@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:overlay_support/overlay_support.dart';
 
-import '../../../component/route.dart';
+import '../../../extension.dart';
 
 Future<bool> showNeedLoginToast(BuildContext context) async {
   final completer = Completer();
@@ -19,9 +19,10 @@ Future<bool> showNeedLoginToast(BuildContext context) async {
               InkWell(
                 onTap: () async {
                   OverlaySupportEntry.of(context)!.dismiss();
-                  final loginResult =
-                      await Navigator.pushNamed(context, pageLogin);
-                  completer.complete(loginResult == true);
+                  toast(context.strings.todo);
+                  // final loginResult =
+                  //     await Navigator.pushNamed(context, pageLogin);
+                  // completer.complete(loginResult == true);
                 },
                 child: Text(
                   '点击前往登录页面',

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../../../component/utils/utils.dart';
 import '../../../extension.dart';
 import '../../../media/tracks/tracks_player.dart';
 import '../../../providers/player_provider.dart';
@@ -93,7 +92,7 @@ class _PlayerProgressSliderSnapshot extends StatelessWidget {
       ),
       onChangeStart: (value) => userTrackingValue.value = value,
       onChanged: (value) => userTrackingValue.value = value,
-      semanticFormatterCallback: (value) => getTimeStamp(value.round()),
+      semanticFormatterCallback: (value) => value.round().toTimeStampString(),
       onChangeEnd: (value) {
         userTrackingValue.value = null;
         player

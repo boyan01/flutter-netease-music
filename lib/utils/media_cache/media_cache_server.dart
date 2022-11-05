@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:mixin_logger/mixin_logger.dart';
 
-import '../../component/utils/pair.dart';
+import '../pair.dart';
 import 'cached_media_file.dart';
 
 const _kLocalProxyHost = 'localhost';

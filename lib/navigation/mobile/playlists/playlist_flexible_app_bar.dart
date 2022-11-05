@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:overlay_support/overlay_support.dart';
 
-import '../../../component/utils/time.dart';
 import '../../../extension.dart';
 import '../../../providers/navigator_provider.dart';
 import '../../../repository.dart';
@@ -399,7 +398,7 @@ class _AlbumHeaderContent extends ConsumerWidget {
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        '发行时间：${getFormattedTime(album.publishTime.millisecondsSinceEpoch)}',
+                        '发行时间：${album.publishTime.toFormattedString()}',
                       )
                     ],
                   ),

@@ -6,7 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
-import '../../../component/utils/utils.dart';
+import '../../../extension.dart';
 
 const _kEnablePaintDebug = false;
 
@@ -613,7 +613,7 @@ class LyricContent {
 @immutable
 class LyricEntry {
   LyricEntry(this.line, this.position, this.duration)
-      : timeStamp = getTimeStamp(position);
+      : timeStamp = position.toTimeStampString();
 
   static RegExp pattern = RegExp(r'\[\d{2}:\d{2}.\d{2,3}]');
 

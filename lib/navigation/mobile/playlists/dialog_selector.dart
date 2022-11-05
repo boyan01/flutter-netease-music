@@ -3,8 +3,9 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:loader/loader.dart';
+import 'package:overlay_support/overlay_support.dart';
 
-import '../../../component/route.dart';
+import '../../../extension.dart';
 import '../../../providers/account_provider.dart';
 import '../../../repository.dart';
 
@@ -144,7 +145,8 @@ class PlaylistSelectorDialog extends ConsumerWidget {
               const SizedBox(height: 16),
               ElevatedButton(
                 onPressed: () {
-                  Navigator.of(context).pushNamed(pageLogin);
+                  toast(context.strings.todo);
+                  // Navigator.of(context).pushNamed(pageLogin);
                 },
                 child: const Text('点击前往登陆页面'),
               ),
