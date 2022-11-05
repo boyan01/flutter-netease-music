@@ -139,7 +139,7 @@ class AnimatedAppBottomBar extends HookConsumerWidget {
           right: 0,
           curve: Curves.easeInOut,
           height: hidePlayerBar && hideNavigationBar ? 0 : bottomPadding,
-          child: const Material(elevation: 8),
+          child: const Material(),
         ),
       ],
     );

@@ -84,19 +84,19 @@ Future<void> loadFallbackFonts() async {
 
 extension ApplyFontsExtension on ThemeData {
   ThemeData withFallbackFonts() {
-    if (loadedFallbackFonts == null) {
-      if (Platform.isWindows) {
-        return copyWith(
-          textTheme: textTheme.applyFonts(null, ['Microsoft Yahei']),
-          primaryTextTheme:
-              primaryTextTheme.applyFonts(null, ['Microsoft Yahei']),
-        );
-      }
-      return this;
-    }
+    // if (loadedFallbackFonts == null) {
+    //   if (Platform.isWindows) {
+    //     return copyWith(
+    //       textTheme: textTheme.applyFonts(null, ['Microsoft Yahei']),
+    //       primaryTextTheme:
+    //           primaryTextTheme.applyFonts(null, ['Microsoft Yahei']),
+    //     );
+    //   }
+    //   return this;
+    // }
     return copyWith(
-      textTheme: textTheme.applyFonts(loadedFallbackFonts, null),
-      primaryTextTheme: primaryTextTheme.applyFonts(loadedFallbackFonts, null),
+      textTheme: textTheme.applyFonts('MiSans', null),
+      primaryTextTheme: primaryTextTheme.applyFonts('MiSans', null),
     );
   }
 }

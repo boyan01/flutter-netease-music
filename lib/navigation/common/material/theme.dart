@@ -18,6 +18,7 @@ const lightSwatch = MaterialColor(0xFFdd4237, {
 
 ThemeData get quietDarkTheme {
   final theme = ThemeData.from(
+    useMaterial3: true,
     colorScheme: ColorScheme.dark(
       background: Color.alphaBlend(Colors.black87, Colors.white),
       onBackground: Color.alphaBlend(Colors.white54, Colors.black),
@@ -43,6 +44,7 @@ ThemeData get lightTheme => _buildTheme(lightSwatch);
 
 ThemeData _buildTheme(Color primaryColor) {
   final theme = ThemeData.from(
+    useMaterial3: true,
     colorScheme: const ColorScheme.light(
       primary: lightSwatch,
     ),
@@ -85,6 +87,17 @@ extension _ThemeExt on ThemeData {
           TargetPlatform.linux: ZoomPageTransitionsBuilder(),
           TargetPlatform.windows: ZoomPageTransitionsBuilder(),
         },
+      ),
+      textTheme: textTheme.copyWith(
+        // bodyLarge: textTheme.bodyLarge?.copyWith(
+        //   fontWeight: FontWeight.w500,
+        // ),
+        // bodyMedium: textTheme.bodyMedium?.copyWith(
+        //   fontWeight: FontWeight.w500,
+        // ),
+        // bodySmall: textTheme.bodySmall?.copyWith(
+        //   fontWeight: FontWeight.w500,
+        // ),
       ),
     );
   }

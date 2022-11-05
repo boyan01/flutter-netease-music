@@ -56,6 +56,10 @@ dependencies:
   pretty_qr_code: ^2.0.2
   mixin_logger: ^0.0.1
   synchronized: ^3.0.0+3
+  mi_sans_font:
+    git:
+      url: https://github.com/boyan01/mi_sans_font.git
+      ref: 68f3ec3fee5830ce8a1d955d462fa0df401a5341
 
 dev_dependencies:
   flutter_test:
@@ -76,24 +80,28 @@ flutter:
   assets:
     - assets/
     - assets/icons/
-  # To add custom fonts to your application, add a fonts section here,
-  # in this "flutter" section. Each entry in this list should have a
-  # "family" key with the font family name, and a "fonts" key with a
-  # list giving the asset and other descriptors for the font. For
-  # example:
-  # fonts:
-  #   - family: Schyler
-  #     fonts:
-  #       - asset: fonts/Schyler-Regular.ttf
-  #       - asset: fonts/Schyler-Italic.ttf
-  #         style: italic
-  #   - family: Trajan Pro
-  #     fonts:
-  #       - asset: fonts/TrajanPro.ttf
-  #       - asset: fonts/TrajanPro_Bold.ttf
-  #         weight: 700
-  #
-  # For details regarding fonts from package dependencies,
-  # see https://flutter.io/custom-fonts/#from-packages
+
+  fonts:
+    - family: MiSans
+      fonts:
+        - asset: packages/mi_sans_font/fonts/MiSans-ExtraLight.ttf
+          weight: 100
+        - asset: packages/mi_sans_font/fonts/MiSans-Light.ttf
+          weight: 200
+        - asset: packages/mi_sans_font/fonts/MiSans-Normal.ttf
+          weight: 300
+        - asset: packages/mi_sans_font/fonts/MiSans-Regular.ttf
+          weight: 400
+        - asset: packages/mi_sans_font/fonts/MiSans-Medium.ttf
+          weight: 500
+        - asset: packages/mi_sans_font/fonts/MiSans-DemiBold.ttf
+          weight: 600
+        - asset: packages/mi_sans_font/fonts/MiSans-SemiBold.ttf
+          weight: 700
+        - asset: packages/mi_sans_font/fonts/MiSans-Bold.ttf
+          weight: 800
+        - asset: packages/mi_sans_font/fonts/MiSans-Heavy.ttf
+          weight: 900
+
 flutter_intl:
   enabled: true
