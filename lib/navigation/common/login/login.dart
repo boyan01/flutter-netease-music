@@ -24,10 +24,12 @@ class LoginViaQrCodeWidget extends HookConsumerWidget {
     super.key,
     this.descriptionSpacing = 48,
     required this.onVerified,
+    this.background,
   });
 
   final double descriptionSpacing;
   final VoidCallback onVerified;
+  final Color? background;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -51,7 +53,7 @@ class LoginViaQrCodeWidget extends HookConsumerWidget {
       );
     }
     return Material(
-      color: context.colorScheme.background,
+      color: background ?? context.colorScheme.background,
       borderRadius: BorderRadius.circular(10),
       child: body,
     );

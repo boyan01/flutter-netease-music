@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../extension/strings.dart';
+import '../../../extension.dart';
 import '../../../providers/navigator_provider.dart';
 import '../../common/buttons.dart';
 import '../../common/login/login.dart';
@@ -81,6 +81,7 @@ class _BodyLoginWithQrCode extends ConsumerWidget {
         const SizedBox(height: 32),
         LoginViaQrCodeWidget(
           onVerified: () => ref.read(navigatorProvider.notifier).back(),
+          background: context.colorScheme.backgroundSecondary,
         ),
         const SizedBox(height: 32),
         TextButton(
