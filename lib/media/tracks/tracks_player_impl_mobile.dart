@@ -89,6 +89,7 @@ class TracksPlayerImplMobile extends TracksPlayer {
   TracksPlayerImplMobile() {
     _player.metadataListenable.addListener(notifyPlayStateChanged);
     _player.playbackStateListenable.addListener(notifyPlayStateChanged);
+    _player.playModeListenable.addListener(notifyPlayStateChanged);
   }
 
   final _player = MusicPlayer();
@@ -312,6 +313,46 @@ Future<Uint8List> _loadImageInterceptor(MusicMetadata metadata) async {
 }
 
 class _PlayQueueInterceptor extends PlayQueueInterceptor {
+  @override
+  Future<MusicMetadata?> onPlayNextNoMoreMusic(
+    BackgroundPlayQueue queue,
+    PlayMode playMode,
+  ) async {
+    if (playMode.index == _playModeHeart) {
+      final current = player!.metadata?.mediaId;
+      if (current == null) {
+        return null;
+      }
+      var index =
+          queue.queue.indexWhere((element) => element.mediaId == current) + 1;
+      if (index >= queue.queue.length) {
+        index = 0;
+      }
+      return queue.queue[index];
+    }
+    return super.onPlayNextNoMoreMusic(queue, playMode);
+  }
+
+  @override
+  Future<MusicMetadata> onPlayPreviousNoMoreMusic(
+    BackgroundPlayQueue queue,
+    PlayMode playMode,
+  ) {
+    if (playMode.index == _playModeHeart) {
+      final current = player!.metadata?.mediaId;
+      if (current == null) {
+        return Future.value(queue.queue.last);
+      }
+      var index =
+          queue.queue.indexWhere((element) => element.mediaId == current) - 1;
+      if (index < 0) {
+        index = queue.queue.length - 1;
+      }
+      return Future.value(queue.queue[index]);
+    }
+    return super.onPlayPreviousNoMoreMusic(queue, playMode);
+  }
+
   @override
   Future<List<MusicMetadata>> fetchMoreMusic(
     BackgroundPlayQueue queue,
