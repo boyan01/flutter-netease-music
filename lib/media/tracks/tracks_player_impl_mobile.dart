@@ -249,6 +249,7 @@ class TracksPlayerImplMobile extends TracksPlayer {
   @override
   void restoreFromPersistence(PersistencePlayerState state) {
     _player.setPlayQueue(state.playingList.toPlayQueue());
+    setRepeatMode(state.repeatMode);
     if (state.playingTrack != null) {
       _player.transportControls
           .prepareFromMediaId(state.playingTrack!.id.toString());
