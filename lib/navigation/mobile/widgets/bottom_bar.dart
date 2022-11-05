@@ -197,11 +197,7 @@ class _MobileBottomPlayerBar extends ConsumerWidget {
                       DefaultTextStyle(
                         maxLines: 1,
                         style: context.textTheme.bodySmall!,
-                        child: ProgressTrackingContainer(
-                          builder: (context) => _SubTitleOrLyric(
-                            music.displaySubtitle,
-                          ),
-                        ),
+                        child: _SubTitleOrLyric(music.displaySubtitle),
                       ),
                     ],
                   ),
@@ -239,13 +235,15 @@ class _SubTitleOrLyric extends ConsumerWidget {
     if (playingLyric == null) {
       return Text(subtitle);
     }
-    final position = ref.read(playerStateProvider.notifier).position;
-    final line =
-        playingLyric.getLineByTimeStamp(position?.inMilliseconds ?? 0, 0)?.line;
-    if (line == null || line.isEmpty) {
-      return Text(subtitle);
-    }
-    return Text(line);
+    return ProgressTrackingContainer(
+      builder: (context) {
+        final position = ref.read(playerStateProvider.notifier).position;
+        final line = playingLyric
+            .getLineByTimeStamp(position?.inMilliseconds ?? 0, 0)
+            ?.line;
+        return Text(line == null || line.isEmpty ? subtitle : line);
+      },
+    );
   }
 }
 
