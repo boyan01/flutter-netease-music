@@ -69,8 +69,9 @@ class PlayingListDialog extends StatelessWidget {
                 _Header(),
                 Expanded(
                   child: LayoutBuilder(
-                    builder: (context, constraints) =>
-                        _PlayingList(layoutHeight: constraints.maxHeight),
+                    builder: (context, constraints) => _PlayingList(
+                      layoutHeight: constraints.maxHeight,
+                    ),
                   ),
                 )
               ],
@@ -87,7 +88,7 @@ class _Title extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final playingList = ref.watch(playingListProvider);
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
       child: Text.rich(
         TextSpan(
           children: [
@@ -114,6 +115,7 @@ class _Header extends ConsumerWidget {
       height: 48,
       child: Row(
         children: <Widget>[
+          const SizedBox(width: 8),
           const PlayerRepeatModeIconButton(iconOnly: false),
           const Spacer(),
           AppIconButton(
@@ -266,54 +268,51 @@ class _MusicTile extends ConsumerWidget {
       },
       child: SizedBox(
         height: _kHeightMusicTile,
-        child: Padding(
-          padding: const EdgeInsets.only(left: 8),
-          child: Row(
-            children: <Widget>[
-              leading,
-              Expanded(
-                child: Text.rich(
-                  TextSpan(
-                    children: [
-                      TextSpan(text: music.name, style: TextStyle(color: name)),
-                      TextSpan(
-                        text: ' - ${music.artistString}',
-                        style: TextStyle(color: artist, fontSize: 12),
-                      )
-                    ],
-                  ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
+        child: Row(
+          children: [
+            const SizedBox(width: 16),
+            leading,
+            Expanded(
+              child: Text.rich(
+                TextSpan(
+                  children: [
+                    TextSpan(text: music.name, style: TextStyle(color: name)),
+                    TextSpan(
+                      text: ' - ${music.artistString}',
+                      style: TextStyle(color: artist, fontSize: 12),
+                    )
+                  ],
                 ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
               ),
-              AppIconButton(
-                icon: FluentIcons.dismiss_20_regular,
-                size: 18,
-                onPressed: () async {
-                  final player = ref.read(playerProvider);
-                  final list = player.trackList;
-                  if (player.current == music) {
-                    final next = await player.getNextTrack();
-                    if (next == null || list.tracks.length == 1) {
-                      Navigator.pop(context);
-                      player.setTrackList(const TrackList.empty());
-                      return;
-                    }
-                    await player.playFromMediaId(
-                      next.id,
-                      play: player.isPlaying,
-                    );
+            ),
+            AppIconButton(
+              icon: FluentIcons.dismiss_20_regular,
+              size: 18,
+              onPressed: () async {
+                final player = ref.read(playerProvider);
+                final list = player.trackList;
+                if (player.current == music) {
+                  final next = await player.getNextTrack();
+                  if (next == null || list.tracks.length == 1) {
+                    Navigator.pop(context);
+                    player.setTrackList(const TrackList.empty());
+                    return;
                   }
-                  player.setTrackList(
-                    list.copyWith(
-                      tracks:
-                          list.tracks.where((e) => e.id != music.id).toList(),
-                    ),
+                  await player.playFromMediaId(
+                    next.id,
+                    play: player.isPlaying,
                   );
-                },
-              )
-            ],
-          ),
+                }
+                player.setTrackList(
+                  list.copyWith(
+                    tracks: list.tracks.where((e) => e.id != music.id).toList(),
+                  ),
+                );
+              },
+            ),
+          ],
         ),
       ),
     );
