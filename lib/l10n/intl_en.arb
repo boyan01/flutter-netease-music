@@ -105,5 +105,12 @@
   "account": "Account",
   "myFavoriteMusics": "My Favorite Musics",
   "recommendTrackIconText": "R",
-  "intelligenceRecommended": "Intelligence Recommended"
+  "intelligenceRecommended": "Intelligence Recommended",
+  "repeatModePlaySingle": "Play Single",
+  "repeatModePlayShuffle": "Play Shuffle",
+  "repeatModePlaySequence": "Play Sequence",
+  "repeatModePlayIntelligence": "Play Intelligence",
+  "sureToClearPlayingList": "Sure to clear playing list?",
+  "cancel": "Cancel",
+  "clear": "Clear"
 }

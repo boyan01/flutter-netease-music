@@ -1,17 +1,19 @@
 import 'dart:math' as math;
 
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:music_player/music_player.dart';
 import 'package:overlay_support/overlay_support.dart';
 
-import '../../../component/player/player.dart';
 import '../../../extension.dart';
+import '../../../media/tracks/track_list.dart';
 import '../../../providers/player_provider.dart';
 import '../../../repository.dart';
 import '../../../utils/system/scroll_controller.dart';
 import '../../common/buttons.dart';
+import '../../common/player/animated_playing_indicator.dart';
+import '../../common/player/state.dart';
 import '../playlists/dialog_selector.dart';
 
 /// Show current playing list.
@@ -65,10 +67,6 @@ class PlayingListDialog extends StatelessWidget {
                 const SizedBox(height: 12),
                 const _Title(),
                 _Header(),
-                const Divider(
-                  height: 1,
-                  thickness: 1,
-                ),
                 Expanded(
                   child: LayoutBuilder(
                     builder: (context, constraints) =>
@@ -90,19 +88,19 @@ class _Title extends ConsumerWidget {
     final playingList = ref.watch(playingListProvider);
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: [
-          Text(
-            context.strings.currentPlaying,
-            style: context.textTheme.titleMedium,
-          ),
-          const SizedBox(width: 4),
-          Text(
-            '(${playingList.tracks.length})',
-            style: context.textTheme.bodySmall,
-          ),
-        ],
+      child: Text.rich(
+        TextSpan(
+          children: [
+            TextSpan(
+              text: context.strings.currentPlaying,
+              style: context.textTheme.titleMedium,
+            ),
+            TextSpan(
+              text: ' (${playingList.tracks.length})',
+              style: context.textTheme.caption,
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -111,24 +109,12 @@ class _Title extends ConsumerWidget {
 class _Header extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // TODO add play mode.
-    const playMode = PlayMode.shuffle;
     final tracks = ref.watch(playingListProvider).tracks;
     return SizedBox(
       height: 48,
       child: Row(
         children: <Widget>[
-          TextButton.icon(
-            onPressed: () {
-              // FIXME
-              // context.player.setPlayMode(playMode.next);
-            },
-            icon: Icon(playMode.icon),
-            label: Text(playMode.name),
-            style: TextButton.styleFrom(
-              foregroundColor: context.colorScheme.textPrimary,
-            ),
-          ),
+          const PlayerRepeatModeIconButton(iconOnly: false),
           const Spacer(),
           AppIconButton(
             onPressed: () async {
@@ -151,14 +137,34 @@ class _Header extends ConsumerWidget {
                 );
               }
             },
-            icon: Icons.add_box,
+            icon: FluentIcons.collections_add_20_regular,
           ),
-          IconButton(
-            icon: const Icon(Icons.delete_outline),
+          AppIconButton(
+            icon: FluentIcons.delete_20_regular,
             onPressed: () async {
+              final ret = await showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                  content: Text(context.strings.sureToClearPlayingList),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.pop(context, false),
+                      child: Text(context.strings.cancel),
+                    ),
+                    TextButton(
+                      onPressed: () => Navigator.pop(context, true),
+                      child: Text(context.strings.clear),
+                    ),
+                  ],
+                ),
+              );
+
+              if (ret != true) {
+                return;
+              }
               Navigator.pop(context);
-              //FIXME
-//                  context.player.setPlayList(PlayList.empty());
+              final player = ref.read(playerProvider);
+              player.setTrackList(const TrackList.empty());
             },
           )
         ],
@@ -229,30 +235,33 @@ class _MusicTile extends ConsumerWidget {
     final isCurrentPlaying = ref.watch(
       playerStateProvider.select((value) => value.playingTrack?.id == music.id),
     );
-    // final isPlaying = ref.watch(isPlayingProvider);
+
+    final isPlaying = ref.watch(isPlayingProvider);
 
     Widget leading;
     Color? name;
     Color? artist;
     if (isCurrentPlaying) {
-      final color = Theme.of(context).primaryColorLight;
+      final color = context.colorScheme.primary;
       leading = Container(
-        margin: const EdgeInsets.only(right: 8),
-        child: Icon(
-          Icons.volume_up,
-          color: color,
-          size: 18,
-        ),
+        margin: const EdgeInsets.only(right: 4),
+        child: AnimatedPlayingIndicator(playing: isPlaying),
       );
       name = color;
       artist = color;
     } else {
       leading = Container();
-      name = Theme.of(context).textTheme.bodyMedium!.color;
-      artist = Theme.of(context).textTheme.bodySmall!.color;
+      name = context.colorScheme.textPrimary;
+      artist = context.colorScheme.textHint;
     }
     return InkWell(
       onTap: () {
+        if (isCurrentPlaying) {
+          if (!isPlaying) {
+            ref.read(playerProvider).play();
+          }
+          return;
+        }
         ref.read(playerProvider).playFromMediaId(music.id);
       },
       child: SizedBox(
@@ -268,7 +277,7 @@ class _MusicTile extends ConsumerWidget {
                     children: [
                       TextSpan(text: music.name, style: TextStyle(color: name)),
                       TextSpan(
-                        text: ' - ${music.displaySubtitle}',
+                        text: ' - ${music.artistString}',
                         style: TextStyle(color: artist, fontSize: 12),
                       )
                     ],
@@ -277,11 +286,30 @@ class _MusicTile extends ConsumerWidget {
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
-              IconButton(
-                icon: const Icon(Icons.close),
-                onPressed: () {
-                  // TODO
-                  // context.player.removeMusicItem(music.metadata);
+              AppIconButton(
+                icon: FluentIcons.dismiss_20_regular,
+                size: 18,
+                onPressed: () async {
+                  final player = ref.read(playerProvider);
+                  final list = player.trackList;
+                  if (player.current == music) {
+                    final next = await player.getNextTrack();
+                    if (next == null || list.tracks.length == 1) {
+                      Navigator.pop(context);
+                      player.setTrackList(const TrackList.empty());
+                      return;
+                    }
+                    await player.playFromMediaId(
+                      next.id,
+                      play: player.isPlaying,
+                    );
+                  }
+                  player.setTrackList(
+                    list.copyWith(
+                      tracks:
+                          list.tracks.where((e) => e.id != music.id).toList(),
+                    ),
+                  );
                 },
               )
             ],

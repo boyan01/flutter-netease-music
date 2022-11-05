@@ -105,5 +105,12 @@
   "account": "账号",
   "myFavoriteMusics": "我喜欢的音乐",
   "recommendTrackIconText": "荐",
-  "intelligenceRecommended": "智能推荐"
+  "intelligenceRecommended": "智能推荐",
+  "repeatModePlaySingle": "单曲循环",
+  "repeatModePlayShuffle": "随机播放",
+  "repeatModePlaySequence": "顺序播放",
+  "repeatModePlayIntelligence": "心动模式",
+  "sureToClearPlayingList": "确定清空播放列表吗？",
+  "cancel": "取消",
+  "clear": "清空"
 }

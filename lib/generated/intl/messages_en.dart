@@ -53,6 +53,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "alreadyBuy": MessageLookupByLibrary.simpleMessage("Payed"),
         "artistAlbumCount": m1,
         "artists": MessageLookupByLibrary.simpleMessage("Artists"),
+        "cancel": MessageLookupByLibrary.simpleMessage("Cancel"),
+        "clear": MessageLookupByLibrary.simpleMessage("Clear"),
         "clearPlayHistory":
             MessageLookupByLibrary.simpleMessage("Clear Play History"),
         "cloudMusic": MessageLookupByLibrary.simpleMessage("Could Space"),
@@ -154,6 +156,14 @@ class MessageLookup extends MessageLookupByLibrary {
         "recommendPlayLists":
             MessageLookupByLibrary.simpleMessage("Recommend PlayLists"),
         "recommendTrackIconText": MessageLookupByLibrary.simpleMessage("R"),
+        "repeatModePlayIntelligence":
+            MessageLookupByLibrary.simpleMessage("Play Intelligence"),
+        "repeatModePlaySequence":
+            MessageLookupByLibrary.simpleMessage("Play Sequence"),
+        "repeatModePlayShuffle":
+            MessageLookupByLibrary.simpleMessage("Play Shuffle"),
+        "repeatModePlaySingle":
+            MessageLookupByLibrary.simpleMessage("Play Single"),
         "search": MessageLookupByLibrary.simpleMessage("Search"),
         "searchHistory": MessageLookupByLibrary.simpleMessage("Search History"),
         "searchMusicResultCount": m7,
@@ -178,6 +188,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Skip to Previous"),
         "songs": MessageLookupByLibrary.simpleMessage("Songs"),
         "subscribe": MessageLookupByLibrary.simpleMessage("Subscribe"),
+        "sureToClearPlayingList":
+            MessageLookupByLibrary.simpleMessage("Sure to clear playing list?"),
         "theme": MessageLookupByLibrary.simpleMessage("Theme"),
         "themeAuto": MessageLookupByLibrary.simpleMessage("Follow System"),
         "themeDark": MessageLookupByLibrary.simpleMessage("Dark"),

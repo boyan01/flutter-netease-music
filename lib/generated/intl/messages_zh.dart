@@ -51,6 +51,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "alreadyBuy": MessageLookupByLibrary.simpleMessage("收藏和赞"),
         "artistAlbumCount": m1,
         "artists": MessageLookupByLibrary.simpleMessage("歌手"),
+        "cancel": MessageLookupByLibrary.simpleMessage("取消"),
+        "clear": MessageLookupByLibrary.simpleMessage("清空"),
         "clearPlayHistory": MessageLookupByLibrary.simpleMessage("清空列表"),
         "cloudMusic": MessageLookupByLibrary.simpleMessage("云盘"),
         "cloudMusicFileDropDescription":
@@ -128,6 +130,11 @@ class MessageLookup extends MessageLookupByLibrary {
         "recommendForYou": MessageLookupByLibrary.simpleMessage("为你推荐"),
         "recommendPlayLists": MessageLookupByLibrary.simpleMessage("推荐歌单"),
         "recommendTrackIconText": MessageLookupByLibrary.simpleMessage("荐"),
+        "repeatModePlayIntelligence":
+            MessageLookupByLibrary.simpleMessage("心动模式"),
+        "repeatModePlaySequence": MessageLookupByLibrary.simpleMessage("顺序播放"),
+        "repeatModePlayShuffle": MessageLookupByLibrary.simpleMessage("随机播放"),
+        "repeatModePlaySingle": MessageLookupByLibrary.simpleMessage("单曲循环"),
         "search": MessageLookupByLibrary.simpleMessage("搜索"),
         "searchHistory": MessageLookupByLibrary.simpleMessage("搜索历史"),
         "searchMusicResultCount": m7,
@@ -147,6 +154,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "skipToPrevious": MessageLookupByLibrary.simpleMessage("上一首"),
         "songs": MessageLookupByLibrary.simpleMessage("歌曲"),
         "subscribe": MessageLookupByLibrary.simpleMessage("收藏"),
+        "sureToClearPlayingList":
+            MessageLookupByLibrary.simpleMessage("确定清空播放列表吗？"),
         "theme": MessageLookupByLibrary.simpleMessage("主题"),
         "themeAuto": MessageLookupByLibrary.simpleMessage("跟随系统"),
         "themeDark": MessageLookupByLibrary.simpleMessage("深色主题"),

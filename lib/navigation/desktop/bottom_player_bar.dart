@@ -178,7 +178,7 @@ class _PlayerControlWidget extends ConsumerWidget {
         if (!isFmPlaying)
           const Padding(
             padding: EdgeInsets.only(right: 10),
-            child: PlayerRepeatModeIcon(),
+            child: PlayerRepeatModeIconButton(),
           ),
         const _PlayingListButton(),
         const SizedBox(width: 10),

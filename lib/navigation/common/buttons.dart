@@ -6,7 +6,19 @@ import '../../extension.dart';
 import '../../providers/navigator_provider.dart';
 
 class AppIconButton extends StatelessWidget {
-  const AppIconButton({
+  AppIconButton({
+    super.key,
+    required IconData icon,
+    this.size = 24,
+    this.onPressed,
+    this.enable = true,
+    this.color,
+    this.disabledColor,
+    this.tooltip,
+    this.padding = const EdgeInsets.all(8),
+  }) : icon = Icon(icon);
+
+  const AppIconButton.widget({
     super.key,
     required this.icon,
     this.size = 24,
@@ -18,7 +30,7 @@ class AppIconButton extends StatelessWidget {
     this.padding = const EdgeInsets.all(8),
   });
 
-  final IconData icon;
+  final Widget icon;
   final double size;
   final VoidCallback? onPressed;
   final bool enable;
@@ -32,7 +44,7 @@ class AppIconButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) => IconButton(
         onPressed: enable ? (onPressed ?? () {}) : null,
-        icon: Icon(icon),
+        icon: icon,
         iconSize: size,
         color: color ?? IconTheme.of(context).color,
         disabledColor: disabledColor,

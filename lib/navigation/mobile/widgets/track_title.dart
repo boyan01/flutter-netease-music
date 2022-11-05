@@ -5,6 +5,7 @@ import 'package:overlay_support/overlay_support.dart';
 import '../../../extension.dart';
 import '../../../providers/player_provider.dart';
 import '../../../repository.dart';
+import '../../common/player/animated_playing_indicator.dart';
 import '../../common/playlist/music_list.dart';
 
 class TrackTile extends StatelessWidget {
@@ -36,7 +37,7 @@ class TrackTile extends StatelessWidget {
             SizedBox(
               width: 32,
               child:
-                  Center(child: _IndexOrPlayIcon(track: track, index: index)),
+                  Center(child: _IndexOrPlayIndicator(track: track, index: index)),
             ),
             const SizedBox(width: 8),
             Expanded(
@@ -79,8 +80,8 @@ class TrackTile extends StatelessWidget {
   }
 }
 
-class _IndexOrPlayIcon extends ConsumerWidget {
-  const _IndexOrPlayIcon({
+class _IndexOrPlayIndicator extends ConsumerWidget {
+  const _IndexOrPlayIndicator({
     super.key,
     required this.track,
     required this.index,
@@ -99,9 +100,7 @@ class _IndexOrPlayIcon extends ConsumerWidget {
             playingTrack?.id == track.id;
     final isPlaying = ref.watch(isPlayingProvider);
     if (isCurrent) {
-      return isPlaying
-          ? const Icon(Icons.volume_up, size: 24)
-          : const Icon(Icons.volume_mute, size: 24);
+      return AnimatedPlayingIndicator(playing: isPlaying);
     } else {
       return Text(
         index.toString().padLeft(2, '0'),

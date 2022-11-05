@@ -147,8 +147,12 @@ class TracksPlayerImplMobile extends TracksPlayer {
   }
 
   @override
-  Future<void> playFromMediaId(int trackId) async {
-    await _player.transportControls.playFromMediaId(trackId.toString());
+  Future<void> playFromMediaId(int trackId, {bool play = true}) async {
+    if (play) {
+      await _player.transportControls.playFromMediaId(trackId.toString());
+    } else {
+      await _player.transportControls.prepareFromMediaId(trackId.toString());
+    }
   }
 
   @override

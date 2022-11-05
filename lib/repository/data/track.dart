@@ -69,6 +69,10 @@ class Track with EquatableMixin {
     return '$artist - ${album?.name ?? ''}';
   }
 
+  String get artistString {
+    return artists.map((artist) => artist.name).join('/');
+  }
+
   @override
   List<Object?> get props => [
         id,

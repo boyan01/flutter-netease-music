@@ -12,15 +12,10 @@ import '../../../providers/playlist_detail_provider.dart';
 import '../../../providers/repository_provider.dart';
 import '../buttons.dart';
 
-class RepeatModeIconButton extends StatelessWidget {
-  const RepeatModeIconButton({
-    super.key,
-    required this.mode,
-    required this.onTap,
-  });
+class RepeatModeIcon extends StatelessWidget {
+  const RepeatModeIcon({super.key, required this.mode});
 
   final RepeatMode mode;
-  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -39,10 +34,7 @@ class RepeatModeIconButton extends StatelessWidget {
         icon = FluentIcons.heart_pulse_20_regular;
         break;
     }
-    return AppIconButton(
-      icon: icon,
-      onPressed: onTap,
-    );
+    return Icon(icon);
   }
 }
 
@@ -73,71 +65,107 @@ extension _RepeatModeExt on RepeatMode {
   }
 }
 
-class PlayerRepeatModeIcon extends ConsumerWidget {
-  const PlayerRepeatModeIcon({super.key});
+class PlayerRepeatModeIconButton extends ConsumerWidget {
+  const PlayerRepeatModeIconButton({
+    super.key,
+    this.iconOnly = true,
+  });
+
+  final bool iconOnly;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final mode =
         ref.watch(playerStateProvider.select((value) => value.repeatMode));
-    return RepeatModeIconButton(
-      mode: mode,
-      onTap: () async {
-        final playerState = ref.read(playerStateProvider);
-        final playingList = playerState.playingList;
-        final next =
-            playingList.isUserFavoriteList ? mode.nextCanHeart : mode.next;
-        final player = ref.read(playerStateProvider.notifier);
-        if (next == RepeatMode.heart) {
-          final current = playerState.playingTrack!;
-          try {
-            final list = await ref
-                .read(neteaseRepositoryProvider)
-                .playModeIntelligenceList(
-                  id: current.id,
-                  playlistId: playingList.rawPlaylistId!,
-                );
-            player.setTrackList(
-              TrackList.playlist(
-                id: playingList.id,
-                tracks: [current, ...list],
-                rawPlaylistId: playingList.rawPlaylistId,
-                isUserFavoriteList: true,
-              ),
-            );
-            player.setRepeatMode(next);
-          } catch (error, stacktrace) {
-            e('error: $error $stacktrace');
-            toast(context.formattedError(error));
-          }
-        } else if (mode == RepeatMode.heart) {
-          assert(playingList.rawPlaylistId != null, 'rawPlaylistId is null');
-          final details = ref
-              .read(playlistDetailProvider(playingList.rawPlaylistId!))
-              .valueOrNull;
-          final tracks = details?.tracks ?? [];
-          assert(tracks.isNotEmpty, 'tracks is empty');
-          if (tracks.isEmpty) {
-            e('switch mode to normal, but tracks is empty');
-            return;
-          }
+
+    Future<void> onTap() async {
+      final playerState = ref.read(playerStateProvider);
+      final playingList = playerState.playingList;
+      final next =
+          playingList.isUserFavoriteList ? mode.nextCanHeart : mode.next;
+      final player = ref.read(playerStateProvider.notifier);
+      if (next == RepeatMode.heart) {
+        final current = playerState.playingTrack!;
+        try {
+          final list = await ref
+              .read(neteaseRepositoryProvider)
+              .playModeIntelligenceList(
+                id: current.id,
+                playlistId: playingList.rawPlaylistId!,
+              );
           player.setTrackList(
             TrackList.playlist(
               id: playingList.id,
-              tracks: tracks,
+              tracks: [current, ...list],
               rawPlaylistId: playingList.rawPlaylistId,
               isUserFavoriteList: true,
             ),
           );
-          final current = playerState.playingTrack!;
-          if (!tracks.contains(current)) {
-            await player.playFromMediaId(tracks.first.id);
-          }
           player.setRepeatMode(next);
-        } else {
-          player.setRepeatMode(next);
+        } catch (error, stacktrace) {
+          e('error: $error $stacktrace');
+          toast(context.formattedError(error));
         }
-      },
-    );
+      } else if (mode == RepeatMode.heart) {
+        assert(playingList.rawPlaylistId != null, 'rawPlaylistId is null');
+        final details = ref
+            .read(playlistDetailProvider(playingList.rawPlaylistId!))
+            .valueOrNull;
+        final tracks = details?.tracks ?? [];
+        assert(tracks.isNotEmpty, 'tracks is empty');
+        if (tracks.isEmpty) {
+          e('switch mode to normal, but tracks is empty');
+          return;
+        }
+        player.setTrackList(
+          TrackList.playlist(
+            id: playingList.id,
+            tracks: tracks,
+            rawPlaylistId: playingList.rawPlaylistId,
+            isUserFavoriteList: true,
+          ),
+        );
+        final current = playerState.playingTrack!;
+        if (!tracks.contains(current)) {
+          await player.playFromMediaId(tracks.first.id);
+        }
+        player.setRepeatMode(next);
+      } else {
+        player.setRepeatMode(next);
+      }
+    }
+
+    final icon = RepeatModeIcon(mode: mode);
+
+    if (iconOnly) {
+      return AppIconButton.widget(
+        icon: icon,
+        onPressed: onTap,
+      );
+    } else {
+      final String text;
+      switch (mode) {
+        case RepeatMode.sequence:
+          text = context.strings.repeatModePlaySequence;
+          break;
+        case RepeatMode.shuffle:
+          text = context.strings.repeatModePlayShuffle;
+          break;
+        case RepeatMode.single:
+          text = context.strings.repeatModePlaySingle;
+          break;
+        case RepeatMode.heart:
+          text = context.strings.repeatModePlayIntelligence;
+          break;
+      }
+      return TextButton.icon(
+        icon: icon,
+        label: Text(text),
+        onPressed: onTap,
+        style: TextButton.styleFrom(
+          foregroundColor: context.colorScheme.textPrimary,
+        ),
+      );
+    }
   }
 }

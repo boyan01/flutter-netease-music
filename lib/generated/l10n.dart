@@ -1121,6 +1121,76 @@ class S {
       args: [],
     );
   }
+
+  /// `Play Single`
+  String get repeatModePlaySingle {
+    return Intl.message(
+      'Play Single',
+      name: 'repeatModePlaySingle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Play Shuffle`
+  String get repeatModePlayShuffle {
+    return Intl.message(
+      'Play Shuffle',
+      name: 'repeatModePlayShuffle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Play Sequence`
+  String get repeatModePlaySequence {
+    return Intl.message(
+      'Play Sequence',
+      name: 'repeatModePlaySequence',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Play Intelligence`
+  String get repeatModePlayIntelligence {
+    return Intl.message(
+      'Play Intelligence',
+      name: 'repeatModePlayIntelligence',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Sure to clear playing list?`
+  String get sureToClearPlayingList {
+    return Intl.message(
+      'Sure to clear playing list?',
+      name: 'sureToClearPlayingList',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Cancel`
+  String get cancel {
+    return Intl.message(
+      'Cancel',
+      name: 'cancel',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Clear`
+  String get clear {
+    return Intl.message(
+      'Clear',
+      name: 'clear',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

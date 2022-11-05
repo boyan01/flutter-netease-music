@@ -55,6 +55,22 @@ class TrackList with EquatableMixin {
 
   Map<String, dynamic> toJson() => _$TrackListToJson(this);
 
+  TrackList copyWith({
+    String? id,
+    List<Track>? tracks,
+    bool? isFM,
+    bool? isUserFavoriteList,
+    int? rawPlaylistId,
+  }) {
+    return TrackList._private(
+      id: id ?? this.id,
+      tracks: tracks ?? this.tracks,
+      isFM: isFM ?? this.isFM,
+      isUserFavoriteList: isUserFavoriteList ?? this.isUserFavoriteList,
+      rawPlaylistId: rawPlaylistId ?? this.rawPlaylistId,
+    );
+  }
+
   @override
   List<Object?> get props => [
         id,

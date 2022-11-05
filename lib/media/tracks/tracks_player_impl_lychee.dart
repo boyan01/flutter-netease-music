@@ -145,11 +145,11 @@ class TracksPlayerImplLychee extends TracksPlayer {
   }
 
   @override
-  Future<void> playFromMediaId(int trackId) async {
+  Future<void> playFromMediaId(int trackId, {bool play = true}) async {
     await stop();
     final item = _trackList.tracks.firstWhereOrNull((t) => t.id == trackId);
     if (item != null) {
-      _playTrack(item);
+      _playTrack(item, playWhenReady: play);
     }
   }
 
