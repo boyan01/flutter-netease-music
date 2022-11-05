@@ -77,7 +77,7 @@ class MediaCacheServer {
           (end ?? contentLength - 1) - start + 1;
     }
     await request.response
-        .addStream(cacheFile.stream(start, end ?? contentLength));
+        .addStream(cacheFile.stream(start, (end ?? contentLength - 1) + 1));
     await request.response.close();
   }
 

@@ -15,7 +15,7 @@ Future<String> generateTrackProxyUrl(int id, String url) async {
   final key = _generateUniqueTrackCacheFileName(id, url);
   final cacheFile = await MediaCache.instance.getCached(key);
   if (cacheFile != null) {
-    return cacheFile;
+    return Uri.file(cacheFile).toString();
   }
   final proxyUrl = await MediaCache.instance.put(key, url);
   return proxyUrl;

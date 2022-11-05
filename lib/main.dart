@@ -120,6 +120,7 @@ Future<void> playerBackgroundService() async {
   // wait 100ms to ensure the method channel plugin registered
   await Future.delayed(const Duration(milliseconds: 100));
   // 获取播放地址需要使用云音乐 API, 所以需要为此 isolate 初始化一个 repository.
+  await initAppDir();
   await NetworkRepository.initialize();
   runMobileBackgroundService();
 }

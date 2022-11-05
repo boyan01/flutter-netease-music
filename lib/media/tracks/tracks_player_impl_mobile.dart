@@ -4,10 +4,12 @@ import 'dart:typed_data';
 import 'dart:ui';
 
 import 'package:flutter/widgets.dart';
+import 'package:mixin_logger/mixin_logger.dart';
 import 'package:music_player/music_player.dart';
 
 import '../../model/persistence_player_state.dart';
 import '../../repository.dart';
+import '../../utils/media_cache/media_cache.dart';
 import 'track_list.dart';
 import 'tracks_player.dart';
 
@@ -267,13 +269,22 @@ void runMobileBackgroundService() {
 
 // 获取播放地址
 Future<String> _playUriInterceptor(String? mediaId, String? fallbackUri) async {
-  final result = await neteaseRepository!.getPlayUrl(int.parse(mediaId!));
+  final trackId = int.parse(mediaId!);
+  final result = await neteaseRepository!.getPlayUrl(trackId);
+
   if (result.isError) {
-    return fallbackUri ?? '';
+    e('get play url error: ${result.asError!.error}');
   }
 
-  /// some devices do not support http request.
-  return result.asValue!.value.replaceFirst('http://', 'https://');
+  final url = result.isError
+      ? fallbackUri
+      : result.asValue!.value.replaceFirst('http://', 'https://');
+  if (url == null) {
+    return '';
+  }
+  final proxyUrl = await generateTrackProxyUrl(trackId, url);
+  d('play url: $proxyUrl');
+  return proxyUrl;
 }
 
 Future<Uint8List> _loadImageInterceptor(MusicMetadata metadata) async {
