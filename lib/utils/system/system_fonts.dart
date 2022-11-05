@@ -91,6 +91,13 @@ extension ApplyFontsExtension on ThemeData {
           primaryTextTheme:
               primaryTextTheme.applyFonts(null, ['Microsoft Yahei']),
         );
+      } else if (Platform.isIOS) {
+        return copyWith(
+          textTheme:
+              textTheme.applyFonts('PingFang SC', []).applyFontIosWeight(),
+          primaryTextTheme: primaryTextTheme
+              .applyFonts('PingFang SC', []).applyFontIosWeight(),
+        );
       }
       return this;
     }
@@ -102,6 +109,13 @@ extension ApplyFontsExtension on ThemeData {
 }
 
 extension _TextTheme on TextTheme {
+  TextTheme applyFontIosWeight() => copyWith(
+        bodySmall: bodySmall?.copyWith(fontWeight: FontWeight.w400),
+        bodyMedium: bodyMedium?.copyWith(fontWeight: FontWeight.w500),
+        bodyLarge: bodyLarge?.copyWith(fontWeight: FontWeight.w400),
+        titleMedium: titleMedium?.copyWith(fontWeight: FontWeight.w500),
+      );
+
   TextTheme applyFonts(String? fontFamily, List<String>? fontFamilyFallback) =>
       copyWith(
         displayLarge: displayLarge?.copyWith(
