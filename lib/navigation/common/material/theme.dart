@@ -1,7 +1,7 @@
-import 'dart:io';
-
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+
+import '../../../utils/system/system_fonts.dart';
 
 const lightSwatch = MaterialColor(0xFFdd4237, {
   900: Color(0xFFae2a20),
@@ -18,7 +18,6 @@ const lightSwatch = MaterialColor(0xFFdd4237, {
 
 ThemeData get quietDarkTheme {
   final theme = ThemeData.from(
-    useMaterial3: true,
     colorScheme: ColorScheme.dark(
       background: Color.alphaBlend(Colors.black87, Colors.white),
       onBackground: Color.alphaBlend(Colors.white54, Colors.black),
@@ -36,6 +35,7 @@ ThemeData get quietDarkTheme {
           waitDuration: Duration(milliseconds: 1000),
         ),
       )
+      .withFallbackFonts()
       .applyCommon();
 }
 
@@ -43,7 +43,6 @@ ThemeData get lightTheme => _buildTheme(lightSwatch);
 
 ThemeData _buildTheme(Color primaryColor) {
   final theme = ThemeData.from(
-    useMaterial3: true,
     colorScheme: const ColorScheme.light(
       primary: lightSwatch,
     ),
@@ -59,6 +58,7 @@ ThemeData _buildTheme(Color primaryColor) {
         ),
         scaffoldBackgroundColor: const Color(0xFFEEEEEE),
       )
+      .withFallbackFonts()
       .applyCommon();
 }
 
@@ -76,20 +76,6 @@ extension TextStyleExtesntion on TextStyle? {
 
 extension _ThemeExt on ThemeData {
   ThemeData applyCommon() {
-    var textTheme = this.textTheme;
-    if (Platform.isIOS || Platform.isAndroid) {
-      textTheme = textTheme.copyWith(
-        bodyLarge: textTheme.bodyLarge?.copyWith(
-          fontWeight: FontWeight.w500,
-        ),
-        bodyMedium: textTheme.bodyMedium?.copyWith(
-          fontWeight: FontWeight.w500,
-        ),
-        bodySmall: textTheme.bodySmall?.copyWith(
-          fontWeight: FontWeight.w500,
-        ),
-      );
-    }
     return copyWith(
       pageTransitionsTheme: const PageTransitionsTheme(
         builders: <TargetPlatform, PageTransitionsBuilder>{
@@ -100,7 +86,6 @@ extension _ThemeExt on ThemeData {
           TargetPlatform.windows: ZoomPageTransitionsBuilder(),
         },
       ),
-      textTheme: textTheme.apply(fontFamily: 'MiSans'),
     );
   }
 }

@@ -464,15 +464,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.8.0"
-  mi_sans_font:
-    dependency: "direct main"
-    description:
-      path: "."
-      ref: "68f3ec3fee5830ce8a1d955d462fa0df401a5341"
-      resolved-ref: "68f3ec3fee5830ce8a1d955d462fa0df401a5341"
-      url: "https://github.com/boyan01/mi_sans_font.git"
-    source: git
-    version: "0.0.1"
   mime:
     dependency: transitive
     description:

@@ -21,9 +21,11 @@ import 'repository/app_dir.dart';
 import 'utils/callback_window_listener.dart';
 import 'utils/hive/duration_adapter.dart';
 import 'utils/platform_configuration.dart';
+import 'utils/system/system_fonts.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await loadFallbackFonts();
   await NetworkRepository.initialize();
   await initAppDir();
   final preferences = await SharedPreferences.getInstance();
