@@ -47,7 +47,7 @@ class MainFavoritePlayListWidget extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final userId = ref.watch(userIdProvider);
     if (userId == null) {
-      return const SliverToBoxAdapter(child: SizedBox.shrink());
+      return const SizedBox.shrink();
     }
     final playlists = ref.watch(userPlaylistsProvider(userId));
     final favoritePlaylist = playlists.valueOrNull
@@ -55,7 +55,7 @@ class MainFavoritePlayListWidget extends ConsumerWidget {
 
     if (favoritePlaylist == null) {
       // loading
-      return const SliverToBoxAdapter(child: SizedBox.shrink());
+      return const SizedBox.shrink();
     }
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
