@@ -112,5 +112,7 @@
   "repeatModePlayIntelligence": "心动模式",
   "sureToClearPlayingList": "确定清空播放列表吗？",
   "cancel": "取消",
-  "clear": "清空"
+  "clear": "清空",
+  "addSongToPlaylist": "添加歌曲到播放列表",
+  "addAllSongsToPlaylist": "添加全部歌曲到播放列表"
 }

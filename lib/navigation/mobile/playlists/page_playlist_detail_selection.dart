@@ -8,7 +8,7 @@ import '../../../extension.dart';
 import '../../../repository/data/track.dart';
 import '../../common/material/dialogs.dart';
 import '../../common/playlist/music_list.dart';
-import 'dialog_selector.dart';
+import 'add_to_playlist_bottom_sheet.dart';
 
 typedef MusicDeletionCallback = Future<bool> Function(List<Music> selected);
 
@@ -120,23 +120,8 @@ class PlaylistSelectionPageState extends State<PlaylistSelectionPage> {
             ),
           ),
           TextButton(
-            onPressed: () async {
-              final succeed = await PlaylistSelectorDialog.addSongs(
-                context,
-                selectedList.map((m) => m.id).toList(),
-              );
-              if (succeed == null) {
-                return;
-              }
-              if (succeed) {
-                showSimpleNotification(Text('已成功收藏${selectedList.length}首歌曲'));
-              } else {
-                showSimpleNotification(
-                  Text(context.strings.addToPlaylistFailed),
-                  background: Theme.of(context).errorColor,
-                );
-              }
-            },
+            onPressed: () =>
+                showAddToPlaylistBottomSheet(context, tracks: selectedList),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [

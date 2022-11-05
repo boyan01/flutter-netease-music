@@ -4,7 +4,6 @@ import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mixin_logger/mixin_logger.dart';
-import 'package:overlay_support/overlay_support.dart';
 
 import '../../../extension.dart';
 import '../../../media/tracks/track_list.dart';
@@ -15,7 +14,7 @@ import '../../../providers/playlist_detail_provider.dart';
 import '../../../providers/repository_provider.dart';
 import '../../../providers/settings_provider.dart';
 import '../../../repository.dart';
-import '../../mobile/playlists/dialog_selector.dart';
+import '../../mobile/playlists/add_to_playlist_bottom_sheet.dart';
 import '../navigation_target.dart';
 
 enum PlayResult {
@@ -631,30 +630,7 @@ class _IconMore extends ConsumerWidget {
         MusicTileConfiguration.of(context).remove!(music);
         break;
       case _MusicAction.addToPlaylist:
-        final id = await showDialog(
-          context: context,
-          builder: (context) {
-            return const PlaylistSelectorDialog();
-          },
-        );
-        if (id != null) {
-          final succeed = await neteaseRepository!
-              .playlistTracksEdit(PlaylistOperation.add, id, [music.id]);
-          final scaffold = Scaffold.maybeOf(context);
-          if (scaffold == null) {
-            //not notify when scaffold is empty
-            return;
-          }
-          if (succeed) {
-            showSimpleNotification(const Text('已添加到收藏'));
-          } else {
-            showSimpleNotification(
-              const Text('收藏歌曲失败!'),
-              leading: const Icon(Icons.error),
-              background: Theme.of(context).errorColor,
-            );
-          }
-        }
+        await showAddToPlaylistBottomSheet(context, tracks: [music]);
         break;
       case _MusicAction.album:
         // Navigator.of(context).push(MaterialPageRoute(builder: (context) {

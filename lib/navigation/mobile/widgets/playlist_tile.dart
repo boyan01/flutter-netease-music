@@ -14,9 +14,12 @@ class PlaylistTile extends ConsumerWidget {
     this.enableMore = true,
     this.enableHero = true,
     this.padding = const EdgeInsets.symmetric(horizontal: 16),
+    this.onTap,
   });
 
   final PlaylistDetail playlist;
+
+  final VoidCallback? onTap;
 
   final bool enableMore;
 
@@ -38,9 +41,10 @@ class PlaylistTile extends ConsumerWidget {
     );
 
     return InkWell(
-      onTap: () => ref
-          .read(navigatorProvider.notifier)
-          .navigate(NavigationTargetPlaylist(playlist.id)),
+      onTap: onTap ??
+          () => ref
+              .read(navigatorProvider.notifier)
+              .navigate(NavigationTargetPlaylist(playlist.id)),
       child: Padding(
         padding: padding,
         child: SizedBox(

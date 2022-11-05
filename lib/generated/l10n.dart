@@ -1191,6 +1191,26 @@ class S {
       args: [],
     );
   }
+
+  /// `Add song to playlist`
+  String get addSongToPlaylist {
+    return Intl.message(
+      'Add song to playlist',
+      name: 'addSongToPlaylist',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Add all songs to playlist`
+  String get addAllSongsToPlaylist {
+    return Intl.message(
+      'Add all songs to playlist',
+      name: 'addAllSongsToPlaylist',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {
@@ -1206,8 +1226,10 @@ class AppLocalizationDelegate extends LocalizationsDelegate<S> {
 
   @override
   bool isSupported(Locale locale) => _isSupported(locale);
+
   @override
   Future<S> load(Locale locale) => S.load(locale);
+
   @override
   bool shouldReload(AppLocalizationDelegate old) => false;
 

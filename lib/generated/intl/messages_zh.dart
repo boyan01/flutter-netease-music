@@ -42,6 +42,9 @@ class MessageLookup extends MessageLookupByLibrary {
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
         "about": MessageLookupByLibrary.simpleMessage("关于"),
         "account": MessageLookupByLibrary.simpleMessage("账号"),
+        "addAllSongsToPlaylist":
+            MessageLookupByLibrary.simpleMessage("添加全部歌曲到播放列表"),
+        "addSongToPlaylist": MessageLookupByLibrary.simpleMessage("添加歌曲到播放列表"),
         "addToPlaylist": MessageLookupByLibrary.simpleMessage("加入歌单"),
         "addToPlaylistFailed": MessageLookupByLibrary.simpleMessage("加入歌单失败"),
         "addedToPlaylistSuccess":

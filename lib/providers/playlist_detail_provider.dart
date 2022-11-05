@@ -89,7 +89,7 @@ class PlaylistDetailStateNotifier
     }
   }
 
-  Future<void> addTrack(Track track) async {
+  Future<void> addTrack(List<Track> tracks) async {
     await _initializeCompleter.future;
     if (_playlistDetail == null) {
       return;
@@ -97,17 +97,26 @@ class PlaylistDetailStateNotifier
     final userId = ref.read(userIdProvider);
     assert(userId == _playlistDetail!.creator.userId, 'userId is not match');
 
+    final existed = _playlistDetail!.tracks.map((e) => e.id).toSet();
+    final tracksToAdd = tracks.where((e) => !existed.contains(e.id)).toList();
+
+    if (tracksToAdd.isEmpty) {
+      d('tracksToAdd is empty');
+      return;
+    }
+
+    final ids = tracksToAdd.map((e) => e.id).toList();
     final ret = await neteaseRepository!.playlistTracksEdit(
       PlaylistOperation.add,
       playlistId,
-      [track.id],
+      ids,
     );
     if (!ret) {
       throw Exception('add track failed');
     }
     final detail = _playlistDetail!.copyWith(
-      tracks: [track, ..._playlistDetail!.tracks],
-      trackIds: [track.id, ..._playlistDetail!.trackIds],
+      tracks: [...tracksToAdd, ..._playlistDetail!.tracks],
+      trackIds: [...ids, ..._playlistDetail!.trackIds],
     );
     _playlistDetail = detail;
     await _playlistDetailBox.put(playlistId.toString(), detail);

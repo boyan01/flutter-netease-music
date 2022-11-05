@@ -523,7 +523,7 @@ class _AddToPlaylistSubMenu extends ConsumerWidget {
                 try {
                   final controller =
                       ref.read(playlistDetailProvider(playlist.id).notifier);
-                  await controller.addTrack(track);
+                  await controller.addTrack([track]);
                   toast(context.strings.addedToPlaylistSuccess);
                 } catch (error, stacktrace) {
                   toast(context.formattedError(error));

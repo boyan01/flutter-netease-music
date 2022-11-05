@@ -112,5 +112,7 @@
   "repeatModePlayIntelligence": "Play Intelligence",
   "sureToClearPlayingList": "Sure to clear playing list?",
   "cancel": "Cancel",
-  "clear": "Clear"
+  "clear": "Clear",
+  "addSongToPlaylist": "Add song to playlist",
+  "addAllSongsToPlaylist": "Add all songs to playlist"
 }

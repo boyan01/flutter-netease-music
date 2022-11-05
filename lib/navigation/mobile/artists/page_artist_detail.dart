@@ -6,7 +6,7 @@ import '../../../extension.dart';
 import '../../../repository.dart';
 import '../../common/material/tiles.dart';
 import '../../common/playlist/music_list.dart';
-import '../playlists/dialog_selector.dart';
+import '../playlists/add_to_playlist_bottom_sheet.dart';
 import '../playlists/page_playlist_detail_selection.dart';
 import 'artist_header.dart';
 
@@ -98,12 +98,8 @@ class _PageHotSongsState extends State<_PageHotSongs>
     with AutomaticKeepAliveClientMixin {
   Widget _buildHeader(BuildContext context) {
     return InkWell(
-      onTap: () {
-        PlaylistSelectorDialog.addSongs(
-          context,
-          widget.musicList.map((m) => m.id).toList(),
-        );
-      },
+      onTap: () =>
+          showAddToPlaylistBottomSheet(context, tracks: widget.musicList),
       child: SizedBox(
         height: 48,
         child: Column(

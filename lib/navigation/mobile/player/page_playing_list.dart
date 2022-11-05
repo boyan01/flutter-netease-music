@@ -4,7 +4,6 @@ import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:overlay_support/overlay_support.dart';
 
 import '../../../extension.dart';
 import '../../../media/tracks/track_list.dart';
@@ -14,7 +13,7 @@ import '../../../utils/system/scroll_controller.dart';
 import '../../common/buttons.dart';
 import '../../common/player/animated_playing_indicator.dart';
 import '../../common/player/state.dart';
-import '../playlists/dialog_selector.dart';
+import '../playlists/add_to_playlist_bottom_sheet.dart';
 
 /// Show current playing list.
 void showMobilePlayingBottomSheet(BuildContext context) => showModalBottomSheet(
@@ -119,25 +118,12 @@ class _Header extends ConsumerWidget {
           const PlayerRepeatModeIconButton(iconOnly: false),
           const Spacer(),
           AppIconButton(
-            onPressed: () async {
-              final ids = tracks.map((m) => m.id).toList();
-              if (ids.isEmpty) {
+            onPressed: () {
+              if (tracks.isEmpty) {
                 return;
               }
-              final succeed =
-                  await PlaylistSelectorDialog.addSongs(context, ids);
-              if (succeed == null) {
-                return;
-              }
-              if (succeed) {
-                showSimpleNotification(const Text('添加到收藏成功'));
-              } else {
-                showSimpleNotification(
-                  const Text('添加到收藏失败'),
-                  leading: const Icon(Icons.error),
-                  background: Theme.of(context).errorColor,
-                );
-              }
+              Navigator.pop(context);
+              showAddToPlaylistBottomSheet(context, tracks: tracks);
             },
             icon: FluentIcons.collections_add_20_regular,
           ),
