@@ -117,10 +117,12 @@ Future<void> _initialDesktop(SharedPreferences preferences) async {
 /// The entry of dart background service
 /// NOTE: this method will be invoked by native (Android/iOS)
 @pragma('vm:entry-point') // avoid Tree Shaking
-void playerBackgroundService() {
+Future<void> playerBackgroundService() async {
   WidgetsFlutterBinding.ensureInitialized();
+  // wait 100ms to ensure the method channel plugin registered
+  await Future.delayed(const Duration(milliseconds: 100));
   // 获取播放地址需要使用云音乐 API, 所以需要为此 isolate 初始化一个 repository.
-  NetworkRepository.initialize();
+  await NetworkRepository.initialize();
   runMobileBackgroundService();
 }
 
