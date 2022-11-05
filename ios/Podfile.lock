@@ -2,58 +2,52 @@ PODS:
   - Flutter (1.0.0)
   - music_player (0.0.1):
     - Flutter
-    - SwiftAudio (~> 0.11.2)
-  - path_provider (0.0.1):
+    - SwiftAudioEx (~> 0.15.3)
+  - path_provider_ios (0.0.1):
     - Flutter
-  - shared_preferences (0.0.1):
+  - shared_preferences_ios (0.0.1):
     - Flutter
-  - SwiftAudio (0.11.2)
+  - SwiftAudioEx (0.15.3)
   - system_clock (0.0.1):
     - Flutter
-  - url_launcher (0.0.1):
-    - Flutter
-  - video_player (0.0.1):
+  - url_launcher_ios (0.0.1):
     - Flutter
 
 DEPENDENCIES:
   - Flutter (from `Flutter`)
   - music_player (from `.symlinks/plugins/music_player/ios`)
-  - path_provider (from `.symlinks/plugins/path_provider/ios`)
-  - shared_preferences (from `.symlinks/plugins/shared_preferences/ios`)
+  - path_provider_ios (from `.symlinks/plugins/path_provider_ios/ios`)
+  - shared_preferences_ios (from `.symlinks/plugins/shared_preferences_ios/ios`)
   - system_clock (from `.symlinks/plugins/system_clock/ios`)
-  - url_launcher (from `.symlinks/plugins/url_launcher/ios`)
-  - video_player (from `.symlinks/plugins/video_player/ios`)
+  - url_launcher_ios (from `.symlinks/plugins/url_launcher_ios/ios`)
 
 SPEC REPOS:
   trunk:
-    - SwiftAudio
+    - SwiftAudioEx
 
 EXTERNAL SOURCES:
   Flutter:
     :path: Flutter
   music_player:
     :path: ".symlinks/plugins/music_player/ios"
-  path_provider:
-    :path: ".symlinks/plugins/path_provider/ios"
-  shared_preferences:
-    :path: ".symlinks/plugins/shared_preferences/ios"
+  path_provider_ios:
+    :path: ".symlinks/plugins/path_provider_ios/ios"
+  shared_preferences_ios:
+    :path: ".symlinks/plugins/shared_preferences_ios/ios"
   system_clock:
     :path: ".symlinks/plugins/system_clock/ios"
-  url_launcher:
-    :path: ".symlinks/plugins/url_launcher/ios"
-  video_player:
-    :path: ".symlinks/plugins/video_player/ios"
+  url_launcher_ios:
+    :path: ".symlinks/plugins/url_launcher_ios/ios"
 
 SPEC CHECKSUMS:
-  Flutter: 50d75fe2f02b26cc09d224853bb45737f8b3214a
-  music_player: 9c268ba7e6f092ffd11fea0510ffdf5ebe6716de
-  path_provider: abfe2b5c733d04e238b0d8691db0cfd63a27a93c
-  shared_preferences: af6bfa751691cdc24be3045c43ec037377ada40d
-  SwiftAudio: 217f5f184b27a0e25ff0fe7647021f05a21c06c9
+  Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
+  music_player: 2cb8e84bc904013b04392560f0b94d1e96e71e14
+  path_provider_ios: 14f3d2fd28c4fdb42f44e0f751d12861c43cee02
+  shared_preferences_ios: 548a61f8053b9b8a49ac19c1ffbc8b92c50d68ad
+  SwiftAudioEx: 83eabba2940924fc1c0d5cb0896049921365229c
   system_clock: 3efb51d18e565092e2a97bc605c6255f328bd13a
-  url_launcher: 6fef411d543ceb26efce54b05a0a40bfd74cbbef
-  video_player: 9cc823b1d9da7e8427ee591e8438bfbcde500e6e
+  url_launcher_ios: 839c58cdb4279282219f5e248c3321761ff3c4de
 
-PODFILE CHECKSUM: fe0e1ee7f3d1f7d00b11b474b62dd62134535aea
+PODFILE CHECKSUM: 7368163408c647b7eb699d0d788ba6718e18fb8d
 
-COCOAPODS: 1.11.2
+COCOAPODS: 1.11.3
