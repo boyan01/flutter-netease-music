@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -10,6 +12,26 @@ extension ProvidersException<State> on ProviderBase<AsyncValue<State>> {
       }
       return value;
     });
+  }
+}
+
+extension ReadAsyncValueToFuture on WidgetRef {
+  Future<T> readValueOrWait<T>(ProviderBase<AsyncValue<T>> provider) {
+    final completer = Completer<T>();
+
+    ProviderSubscription? subscription;
+    subscription = listenManual<AsyncValue<T>>(provider, (previous, next) {
+      if (next.isLoading) {
+        return;
+      }
+      if (next.hasValue) {
+        completer.complete(next.value);
+      } else if (next.hasError) {
+        completer.completeError(next.error!, next.stackTrace);
+      }
+      subscription?.close();
+    });
+    return completer.future;
   }
 }
 

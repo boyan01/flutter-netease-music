@@ -10,6 +10,7 @@ import '../../../media/tracks/tracks_player.dart';
 import '../../../providers/player_provider.dart';
 import '../../../providers/playlist_detail_provider.dart';
 import '../../../providers/repository_provider.dart';
+import '../../../repository/data/playlist_detail.dart';
 import '../buttons.dart';
 
 class RepeatModeIcon extends StatelessWidget {
@@ -108,10 +109,18 @@ class PlayerRepeatModeIconButton extends ConsumerWidget {
         }
       } else if (mode == RepeatMode.heart) {
         assert(playingList.rawPlaylistId != null, 'rawPlaylistId is null');
-        final details = ref
-            .read(playlistDetailProvider(playingList.rawPlaylistId!))
-            .valueOrNull;
-        final tracks = details?.tracks ?? [];
+        final PlaylistDetail details;
+        try {
+          details = await ref.readValueOrWait(
+            playlistDetailProvider(playingList.rawPlaylistId!),
+          );
+        } catch (error, stacktrace) {
+          e('error: $error $stacktrace');
+          toast(context.formattedError(error));
+          return;
+        }
+
+        final tracks = details.tracks;
         assert(tracks.isNotEmpty, 'tracks is empty');
         if (tracks.isEmpty) {
           e('switch mode to normal, but tracks is empty');
