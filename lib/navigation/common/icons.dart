@@ -28,7 +28,6 @@ class PlayIcon extends StatelessWidget {
   }
 }
 
-
 class RecommendIcon extends StatelessWidget {
   const RecommendIcon({super.key});
 
