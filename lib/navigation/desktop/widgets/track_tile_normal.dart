@@ -13,6 +13,7 @@ import '../../../providers/user_playlists_provider.dart';
 import '../../../repository.dart';
 import '../../common/like_button.dart';
 import '../../common/navigation_target.dart';
+import '../../common/player/animated_playing_indicator.dart';
 import '../../common/playlist/music_list.dart';
 import 'context_menu.dart';
 import 'highlight_clickable_text.dart';
@@ -437,15 +438,7 @@ class _IndexOrPlayIcon extends ConsumerWidget {
             playingTrack == track;
     final isPlaying = ref.watch(isPlayingProvider);
     if (isCurrent) {
-      return IconTheme(
-        data: IconThemeData(
-          color: context.colorScheme.primary,
-          size: 16,
-        ),
-        child: isPlaying
-            ? const Icon(Icons.volume_up)
-            : const Icon(Icons.volume_mute),
-      );
+      return AnimatedPlayingIndicator(playing: isPlaying);
     } else {
       return Text(
         index.toString().padLeft(2, '0'),

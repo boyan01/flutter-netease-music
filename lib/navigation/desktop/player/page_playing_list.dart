@@ -11,6 +11,7 @@ import '../../../repository.dart';
 import '../../../utils/riverpod/cacheable_state_provider.dart';
 import '../../../utils/system/scroll_controller.dart';
 import '../../common/navigation_target.dart';
+import '../../common/player/animated_playing_indicator.dart';
 import '../widgets/context_menu.dart';
 import '../widgets/highlight_clickable_text.dart';
 
@@ -204,21 +205,13 @@ class _PlayingTrackItem extends HookConsumerWidget {
             },
             child: Row(
               children: [
-                const SizedBox(width: 4),
                 if (isCurrentPlaying)
-                  SizedBox.square(
-                    dimension: 12,
-                    child: Icon(
-                      isPlaying
-                          ? FluentIcons.pause_12_filled
-                          : FluentIcons.play_12_filled,
-                      color: context.colorScheme.primary,
-                      size: 12,
-                    ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 2),
+                    child: AnimatedPlayingIndicator(playing: isPlaying),
                   )
                 else
-                  const SizedBox(width: 12),
-                const SizedBox(width: 4),
+                  const SizedBox(width: 20),
                 Expanded(
                   child: Row(
                     children: [
