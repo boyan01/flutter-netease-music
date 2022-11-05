@@ -94,9 +94,9 @@ flutter:
           weight: 400
         - asset: packages/mi_sans_font/fonts/MiSans-Medium.ttf
           weight: 500
-        - asset: packages/mi_sans_font/fonts/MiSans-DemiBold.ttf
+        - asset: packages/mi_sans_font/fonts/MiSans-Demibold.ttf
           weight: 600
-        - asset: packages/mi_sans_font/fonts/MiSans-SemiBold.ttf
+        - asset: packages/mi_sans_font/fonts/MiSans-Semibold.ttf
           weight: 700
         - asset: packages/mi_sans_font/fonts/MiSans-Bold.ttf
           weight: 800
