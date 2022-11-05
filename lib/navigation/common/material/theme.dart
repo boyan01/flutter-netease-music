@@ -1,8 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
-import '../../../utils/system/system_fonts.dart';
-
 const lightSwatch = MaterialColor(0xFFdd4237, {
   900: Color(0xFFae2a20),
   800: Color(0xFFbe332a),
@@ -36,7 +34,6 @@ ThemeData get quietDarkTheme {
           waitDuration: Duration(milliseconds: 1000),
         ),
       )
-      .withFallbackFonts()
       .applyCommon();
 }
 
@@ -60,7 +57,6 @@ ThemeData _buildTheme(Color primaryColor) {
         ),
         scaffoldBackgroundColor: const Color(0xFFEEEEEE),
       )
-      .withFallbackFonts()
       .applyCommon();
 }
 
@@ -88,17 +84,19 @@ extension _ThemeExt on ThemeData {
           TargetPlatform.windows: ZoomPageTransitionsBuilder(),
         },
       ),
-      textTheme: textTheme.copyWith(
-        // bodyLarge: textTheme.bodyLarge?.copyWith(
-        //   fontWeight: FontWeight.w500,
-        // ),
-        // bodyMedium: textTheme.bodyMedium?.copyWith(
-        //   fontWeight: FontWeight.w500,
-        // ),
-        // bodySmall: textTheme.bodySmall?.copyWith(
-        //   fontWeight: FontWeight.w500,
-        // ),
-      ),
+      textTheme: textTheme
+          .copyWith(
+            bodyLarge: textTheme.bodyLarge?.copyWith(
+              fontWeight: FontWeight.w500,
+            ),
+            bodyMedium: textTheme.bodyMedium?.copyWith(
+              fontWeight: FontWeight.w500,
+            ),
+            bodySmall: textTheme.bodySmall?.copyWith(
+              fontWeight: FontWeight.w500,
+            ),
+          )
+          .apply(fontFamily: 'MiSans'),
     );
   }
 }
