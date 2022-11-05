@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
@@ -74,6 +76,20 @@ extension TextStyleExtesntion on TextStyle? {
 
 extension _ThemeExt on ThemeData {
   ThemeData applyCommon() {
+    var textTheme = this.textTheme;
+    if (Platform.isIOS || Platform.isAndroid) {
+      textTheme = textTheme.copyWith(
+        bodyLarge: textTheme.bodyLarge?.copyWith(
+          fontWeight: FontWeight.w500,
+        ),
+        bodyMedium: textTheme.bodyMedium?.copyWith(
+          fontWeight: FontWeight.w500,
+        ),
+        bodySmall: textTheme.bodySmall?.copyWith(
+          fontWeight: FontWeight.w500,
+        ),
+      );
+    }
     return copyWith(
       pageTransitionsTheme: const PageTransitionsTheme(
         builders: <TargetPlatform, PageTransitionsBuilder>{
@@ -84,19 +100,7 @@ extension _ThemeExt on ThemeData {
           TargetPlatform.windows: ZoomPageTransitionsBuilder(),
         },
       ),
-      textTheme: textTheme
-          .copyWith(
-            bodyLarge: textTheme.bodyLarge?.copyWith(
-              fontWeight: FontWeight.w500,
-            ),
-            bodyMedium: textTheme.bodyMedium?.copyWith(
-              fontWeight: FontWeight.w500,
-            ),
-            bodySmall: textTheme.bodySmall?.copyWith(
-              fontWeight: FontWeight.w500,
-            ),
-          )
-          .apply(fontFamily: 'MiSans'),
+      textTheme: textTheme.apply(fontFamily: 'MiSans'),
     );
   }
 }
