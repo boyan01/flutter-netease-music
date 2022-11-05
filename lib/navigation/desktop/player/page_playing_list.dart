@@ -10,6 +10,7 @@ import '../../../providers/player_provider.dart';
 import '../../../repository.dart';
 import '../../../utils/riverpod/cacheable_state_provider.dart';
 import '../../../utils/system/scroll_controller.dart';
+import '../../common/icons.dart';
 import '../../common/navigation_target.dart';
 import '../../common/player/animated_playing_indicator.dart';
 import '../widgets/context_menu.dart';
@@ -228,7 +229,7 @@ class _PlayingTrackItem extends HookConsumerWidget {
                           ),
                         ),
                       ),
-                      if (track.isRecommend) const _RecommendIcon(),
+                      if (track.isRecommend) const RecommendIcon(),
                     ],
                   ),
                 ),
@@ -268,36 +269,6 @@ class _PlayingTrackItem extends HookConsumerWidget {
                 ),
                 const SizedBox(width: 20),
               ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _RecommendIcon extends StatelessWidget {
-  const _RecommendIcon({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 4),
-      child: Tooltip(
-        message: context.strings.intelligenceRecommended,
-        child: Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(2),
-            border: Border.all(
-              color: context.colorScheme.textHint,
-            ),
-          ),
-          width: 14,
-          height: 14,
-          child: Center(
-            child: Text(
-              context.strings.recommendTrackIconText,
-              style: context.textTheme.caption?.copyWith(fontSize: 10),
             ),
           ),
         ),

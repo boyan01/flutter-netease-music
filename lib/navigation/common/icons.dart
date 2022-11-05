@@ -27,3 +27,37 @@ class PlayIcon extends StatelessWidget {
     );
   }
 }
+
+
+class RecommendIcon extends StatelessWidget {
+  const RecommendIcon({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 4),
+      child: Tooltip(
+        message: context.strings.intelligenceRecommended,
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(2),
+            border: Border.all(
+              color: context.colorScheme.textHint,
+            ),
+          ),
+          width: 14,
+          height: 14,
+          child: Center(
+            child: Text(
+              context.strings.recommendTrackIconText,
+              style: context.textTheme.caption?.copyWith(
+                fontSize: 10,
+                height: 1,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}

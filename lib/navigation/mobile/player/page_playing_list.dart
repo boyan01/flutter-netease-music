@@ -11,6 +11,7 @@ import '../../../providers/player_provider.dart';
 import '../../../repository.dart';
 import '../../../utils/system/scroll_controller.dart';
 import '../../common/buttons.dart';
+import '../../common/icons.dart';
 import '../../common/player/animated_playing_indicator.dart';
 import '../../common/player/state.dart';
 import '../playlists/add_to_playlist_bottom_sheet.dart';
@@ -258,6 +259,7 @@ class _MusicTile extends ConsumerWidget {
           children: [
             const SizedBox(width: 16),
             leading,
+            if (music.isRecommend) const RecommendIcon(),
             Expanded(
               child: Text.rich(
                 TextSpan(

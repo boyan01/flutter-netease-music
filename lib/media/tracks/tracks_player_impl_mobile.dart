@@ -34,6 +34,7 @@ extension _Metadata on MusicMetadata {
       imageUrl: extras?['imageUrl'] as String,
       duration: Duration(milliseconds: duration),
       type: TrackType.values.byName(extras?['fee']),
+      isRecommend: extras?['isRecommend'] == true,
     );
   }
 }
@@ -50,6 +51,7 @@ extension _Track on Track {
         'artists': jsonEncode(artists.map((e) => e.toJson()).toList()),
         'imageUrl': imageUrl,
         'fee': type.name,
+        'isRecommend': isRecommend,
       },
     );
   }
