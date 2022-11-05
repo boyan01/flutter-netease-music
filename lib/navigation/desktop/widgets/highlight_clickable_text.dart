@@ -33,6 +33,8 @@ class HighlightArtistText extends StatelessWidget {
           context.textTheme.bodySmall!.copyWith(
             color: context.textTheme.bodyMedium!.color,
           ),
+      maxLines: 1,
+      overflow: TextOverflow.ellipsis,
       children: artists
           .map(
             (artist) {

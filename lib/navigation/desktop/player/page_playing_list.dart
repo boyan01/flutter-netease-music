@@ -241,7 +241,7 @@ class _PlayingTrackItem extends HookConsumerWidget {
                 ),
                 const SizedBox(width: 4),
                 SizedBox(
-                  width: 100,
+                  width: 120,
                   child: HighlightArtistText(
                     style: context.textTheme.bodySmall?.copyWith(
                       color:
