@@ -2,9 +2,7 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
-class UnboundedRectangularSliderTrackShape extends RectangularSliderTrackShape {
-  const UnboundedRectangularSliderTrackShape();
-
+mixin _UnboundedTrackShapeMixin implements BaseSliderTrackShape {
   @override
   Rect getPreferredRect({
     required RenderBox parentBox,
@@ -25,6 +23,48 @@ class UnboundedRectangularSliderTrackShape extends RectangularSliderTrackShape {
       trackTop,
       math.max(trackLeft, trackRight),
       trackBottom,
+    );
+  }
+}
+
+class UnboundedRectangularSliderTrackShape extends RectangularSliderTrackShape
+    with _UnboundedTrackShapeMixin {
+  const UnboundedRectangularSliderTrackShape();
+}
+
+class UnboundedRoundedRectSliderTrackShape extends RoundedRectSliderTrackShape
+    with _UnboundedTrackShapeMixin {
+  const UnboundedRoundedRectSliderTrackShape({
+    this.removeAdditionalActiveTrackHeight = false,
+  });
+
+  final bool removeAdditionalActiveTrackHeight;
+
+  @override
+  void paint(
+    PaintingContext context,
+    Offset offset, {
+    required RenderBox parentBox,
+    required SliderThemeData sliderTheme,
+    required Animation<double> enableAnimation,
+    required TextDirection textDirection,
+    required Offset thumbCenter,
+    bool isDiscrete = false,
+    bool isEnabled = false,
+    double additionalActiveTrackHeight = 2,
+  }) {
+    super.paint(
+      context,
+      offset,
+      parentBox: parentBox,
+      sliderTheme: sliderTheme,
+      enableAnimation: enableAnimation,
+      textDirection: textDirection,
+      thumbCenter: thumbCenter,
+      isDiscrete: isDiscrete,
+      isEnabled: isEnabled,
+      additionalActiveTrackHeight:
+          removeAdditionalActiveTrackHeight ? 0 : additionalActiveTrackHeight,
     );
   }
 }
