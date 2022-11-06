@@ -109,7 +109,7 @@ class MobileNavigatorController extends NavigatorController {
         break;
       case NavigationTargetFmPlaying:
         page = const PagePlayingFm();
-        pageType = _PageType.bottomSheet;
+        pageType = _PageType.slideUp;
         break;
       case NavigationTargetUser:
         page = UserDetailPage(userId: (target as NavigationTargetUser).userId);

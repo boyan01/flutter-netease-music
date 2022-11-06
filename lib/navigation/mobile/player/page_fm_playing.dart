@@ -57,7 +57,10 @@ class PagePlayingFm extends ConsumerWidget {
                 const SizedBox(height: 8),
                 const DurationProgressBar(),
                 _FmControllerBar(track: track),
-                SizedBox(height: MediaQuery.of(context).viewInsets.bottom),
+                SizedBox(
+                  height: MediaQuery.of(context).viewInsets.bottom +
+                      MediaQuery.of(context).viewPadding.bottom,
+                ),
               ],
             ),
           ),
