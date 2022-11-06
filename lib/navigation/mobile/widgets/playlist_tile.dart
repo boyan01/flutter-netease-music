@@ -31,8 +31,7 @@ class PlaylistTile extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final Widget cover = ClipRRect(
       borderRadius: const BorderRadius.all(Radius.circular(4)),
-      child: FadeInImage(
-        placeholder: const AssetImage('assets/playlist_playlist.9.png'),
+      child: Image(
         image: CachedImage(playlist.coverUrl),
         fit: BoxFit.cover,
         height: 50,

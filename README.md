@@ -55,16 +55,15 @@ debian:
 
 ## Desktop Preview
 
-| light                                                           | dark                                                           |
-|-----------------------------------------------------------------|----------------------------------------------------------------|
-| ![playlist](https://boyan01.github.io/quiet/playlist_light.png) | ![playlist](https://boyan01.github.io/quiet/playlist_dark.png) |
-| ![playing](https://boyan01.github.io/quiet/playing_light.png)   | ![playing](https://boyan01.github.io/quiet/playing_dark.png)   |
+| light                                                            | dark                                                           |
+|------------------------------------------------------------------|----------------------------------------------------------------|
+| ![playlist](https://boyan01.github.io/quiet/playlist_light.png ) | ![playlist](https://boyan01.github.io/quiet/playlist_dark.png) |
+| ![playing](https://boyan01.github.io/quiet/playing_light.png)    | ![playing](https://boyan01.github.io/quiet/playing_dark.png)   |
 
-## Mobile Platforms Preview
+## Mobile Dark Mode Preview
 
-|   ![main_playlist](https://boyan01.github.io/quiet/main_playlist.png)   |    ![main_cloud](https://boyan01.github.io/quiet/main_playlist_dark.png)    | ![main_cloud](https://boyan01.github.io/quiet/main_cloud.jpg) | ![artist_detail](https://boyan01.github.io/quiet/artist_detail.jpg) |
-|:-----------------------------------------------------------------------:|:---------------------------------------------------------------------------:|:-------------------------------------------------------------:|:-------------------------------------------------------------------:|
-| ![playlist_detail](https://boyan01.github.io/quiet/playlist_detail.png) |                                                                             |    ![playing](https://boyan01.github.io/quiet/playing.png)    |        ![search](https://boyan01.github.io/quiet/search.jpg)        |
-| ![music_selection](https://boyan01.github.io/quiet/music_selection.png) | ![playlist_selector](https://boyan01.github.io/quiet/playlist_selector.jpg) |                                                               |     ![每日推荐](https://boyan01.github.io/quiet/daily_playlist.png)     |
-|     ![ios](https://boyan01.github.io/quiet/ios_playlist_detail.jpg)     |           ![ios](https://boyan01.github.io/quiet/user_detail.png)           |                                                               |                                                                     |
-
+| ![main_playlist](https://boyan01.github.io/quiet/mobile_main_playlist.png) | ![playlist detail](https://boyan01.github.io/quiet/mobile_playlist_detail.png) | ![add to playlist](https://boyan01.github.io/quiet/mobile_add_to_playlist.png) | ![artist_detail](https://boyan01.github.io/quiet/mobile_artist_detail.png) |
+|:--------------------------------------------------------------------------:|:------------------------------------------------------------------------------:|:------------------------------------------------------------------------------:|:--------------------------------------------------------------------------:|
+|  ![album detail](https://boyan01.github.io/quiet/mobile_album_detail.png)  |   ![playing cover](https://boyan01.github.io/quiet/mobile_playing_cover.png)   |   ![playing lyric](https://boyan01.github.io/quiet/mobile_playing_lyric.png)   |        ![search](https://boyan01.github.io/quiet/mobile_search.png)        |
+|    ![leaderboard](https://boyan01.github.io/quiet/mobile_leadboard.png)    |         ![setting](https://boyan01.github.io/quiet/mobile_setting.png)         |   ![search result](https://boyan01.github.io/quiet/mobile_search_result.png)   |      ![每日推荐](https://boyan01.github.io/quiet/mobile_playing_list.png)      |
+|         ![daily](https://boyan01.github.io/quiet/mobile_daily.png)         |                                                                                |                                                                                |                                                                            |
