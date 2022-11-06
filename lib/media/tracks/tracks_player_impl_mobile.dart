@@ -252,11 +252,16 @@ class TracksPlayerImplMobile extends TracksPlayer {
   bool get isBuffering => _player.playbackState.state == PlayerState.Buffering;
 
   @override
-  void restoreFromPersistence(PersistencePlayerState state) {
+  Future<void> restoreFromPersistence(PersistencePlayerState state) async {
+    final isServiceRunning = await _player.isMusicServiceAvailable();
+    if (isServiceRunning ?? false) {
+      d('service running, skip restore');
+      return;
+    }
     _player.setPlayQueue(state.playingList.toPlayQueue());
-    setRepeatMode(state.repeatMode);
+    await setRepeatMode(state.repeatMode);
     if (state.playingTrack != null) {
-      _player.transportControls
+      await _player.transportControls
           .prepareFromMediaId(state.playingTrack!.id.toString());
     }
   }
