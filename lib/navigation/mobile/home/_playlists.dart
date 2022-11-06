@@ -25,10 +25,10 @@ class PlayListsGroupHeader extends StatelessWidget {
         color: context.colorScheme.surfaceWithElevation(1),
         child: Container(
           height: 40,
-          padding: const EdgeInsets.symmetric(horizontal: 8),
+          padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Row(
             children: [
-              Text('$name($count)'),
+              Text('$name($count)', style: context.textTheme.caption),
               const Spacer(),
               const Icon(Icons.add),
               const Icon(Icons.more_vert),
@@ -68,7 +68,6 @@ class MainFavoritePlayListWidget extends ConsumerWidget {
             playlist: favoritePlaylist.copyWith(
               name: context.strings.myFavoriteMusics,
             ),
-            padding: const EdgeInsets.symmetric(horizontal: 8),
             enableHero: false,
             enableMore: false,
           ),
@@ -99,7 +98,6 @@ class MainPlayListTile extends StatelessWidget {
         color: context.colorScheme.surfaceWithElevation(1),
         child: PlaylistTile(
           playlist: data,
-          padding: const EdgeInsets.symmetric(horizontal: 8),
           enableHero: false,
           enableMore: false,
         ),
@@ -108,7 +106,7 @@ class MainPlayListTile extends StatelessWidget {
   }
 }
 
-const double kPlayListHeaderHeight = 48;
+const double kPlayListHeaderHeight = 40;
 
 const double _kPlayListDividerHeight = 10;
 
@@ -152,7 +150,13 @@ class _MyPlayListsHeader extends ConsumerWidget implements PreferredSizeWidget {
       child: TabBar(
         labelColor: context.colorScheme.textPrimary,
         indicatorSize: TabBarIndicatorSize.label,
-        indicatorColor: context.colorScheme.primary,
+        indicator: UnderlineTabIndicator(
+          borderSide: BorderSide(
+            color: context.colorScheme.primary,
+            width: 5,
+          ),
+        ),
+        indicatorPadding: const EdgeInsets.only(bottom: 10),
         onTap: (index) {
           ref.read(_playListTabUserSelectedProvider).add(index);
         },
