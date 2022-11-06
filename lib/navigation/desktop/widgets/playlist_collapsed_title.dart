@@ -38,14 +38,15 @@ class PlaylistCollapsedTitle extends StatelessWidget {
                 icon: const PlayIcon(),
                 color: context.colorScheme.primary,
                 onPressed: () {
-                  final id = TrackTileContainer.getPlaylistId(context);
+                  final controller = TrackTileContainer.controller(context);
                   final state = ref.read(playerStateProvider);
-                  if (state.playingList.id == id && state.isPlaying) {
+                  if (state.playingList.id == controller.playlistId &&
+                      state.isPlaying) {
                     ref
                         .read(navigatorProvider.notifier)
                         .navigate(NavigationTargetPlaying());
                   } else {
-                    TrackTileContainer.playTrack(context, null);
+                    controller.play(null);
                   }
                 },
               );

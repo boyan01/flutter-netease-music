@@ -114,5 +114,8 @@
   "cancel": "Cancel",
   "clear": "Clear",
   "addSongToPlaylist": "Add song to playlist",
-  "addAllSongsToPlaylist": "Add all songs to playlist"
+  "addAllSongsToPlaylist": "Add all songs to playlist",
+  "confirm": "Confirm",
+  "sureToRemoveMusicFromPlaylist": "Sure to remove music from playlist?",
+  "remove": "Remove"
 }

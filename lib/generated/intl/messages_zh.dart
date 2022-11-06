@@ -62,6 +62,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("将音乐文件拖放到这里进行上传"),
         "cloudMusicUsage": MessageLookupByLibrary.simpleMessage("云盘容量"),
         "collectionLike": MessageLookupByLibrary.simpleMessage("已购"),
+        "confirm": MessageLookupByLibrary.simpleMessage("确定"),
         "copyRightOverlay":
             MessageLookupByLibrary.simpleMessage("只用作个人学习研究，禁止用于商业及非法用途"),
         "createdDate": m2,
@@ -133,6 +134,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "recommendForYou": MessageLookupByLibrary.simpleMessage("为你推荐"),
         "recommendPlayLists": MessageLookupByLibrary.simpleMessage("推荐歌单"),
         "recommendTrackIconText": MessageLookupByLibrary.simpleMessage("荐"),
+        "remove": MessageLookupByLibrary.simpleMessage("移除"),
         "repeatModePlayIntelligence":
             MessageLookupByLibrary.simpleMessage("心动模式"),
         "repeatModePlaySequence": MessageLookupByLibrary.simpleMessage("顺序播放"),
@@ -159,6 +161,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "subscribe": MessageLookupByLibrary.simpleMessage("收藏"),
         "sureToClearPlayingList":
             MessageLookupByLibrary.simpleMessage("确定清空播放列表吗？"),
+        "sureToRemoveMusicFromPlaylist":
+            MessageLookupByLibrary.simpleMessage("确定从播放列表中移除歌曲吗？"),
         "theme": MessageLookupByLibrary.simpleMessage("主题"),
         "themeAuto": MessageLookupByLibrary.simpleMessage("跟随系统"),
         "themeDark": MessageLookupByLibrary.simpleMessage("深色主题"),

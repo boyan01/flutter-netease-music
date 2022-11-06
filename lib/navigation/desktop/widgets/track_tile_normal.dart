@@ -284,20 +284,15 @@ class TrackTile extends HookConsumerWidget {
               : Colors.transparent,
           child: GestureDetector(
             onSecondaryTapUp: (details) async {
-              final parentContext = context;
               highlighting.value = true;
+              final controller = TrackTileContainer.controller(context);
               final entry = showOverlayAtPosition(
                 globalPosition: details.globalPosition,
                 builder: (context) => _TrackItemMenus(
                   track: track,
-                  playTrack: () =>
-                      TrackTileContainer.playTrack(parentContext, track),
-                  deleteTrack: TrackTileContainer.canDeleteTrack(parentContext)
-                      ? () => TrackTileContainer.deleteTrack(
-                            parentContext,
-                            ref,
-                            track,
-                          )
+                  playTrack: () => controller.play(track),
+                  deleteTrack: controller.canDelete
+                      ? () => controller.delete(track)
                       : null,
                 ),
               );
@@ -313,7 +308,7 @@ class TrackTile extends HookConsumerWidget {
                   toast(context.strings.trackNoCopyright);
                   return;
                 }
-                TrackTileContainer.playTrack(context, track);
+                TrackTileContainer.controller(context).play(track);
               },
               child: DefaultTextStyle(
                 style: const TextStyle(),
@@ -434,7 +429,7 @@ class _IndexOrPlayIcon extends ConsumerWidget {
     final playingListId = ref.watch(playingListProvider).id;
     final playingTrack = ref.watch(playingTrackProvider);
     final isCurrent =
-        TrackTileContainer.getPlaylistId(context) == playingListId &&
+        TrackTileContainer.controller(context).playlistId == playingListId &&
             playingTrack == track;
     final isPlaying = ref.watch(isPlayingProvider);
     if (isCurrent) {

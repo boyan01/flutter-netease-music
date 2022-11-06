@@ -6,7 +6,7 @@ import '../../../extension.dart';
 import '../../../repository.dart';
 import '../../common/material/tiles.dart';
 import '../../common/playlist/music_list.dart';
-import '../playlists/add_to_playlist_bottom_sheet.dart';
+import '../dialog/add_to_playlist_bottom_sheet.dart';
 import '../playlists/page_playlist_detail_selection.dart';
 import 'artist_header.dart';
 

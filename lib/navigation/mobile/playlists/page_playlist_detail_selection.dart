@@ -8,7 +8,7 @@ import '../../../extension.dart';
 import '../../../repository/data/track.dart';
 import '../../common/material/dialogs.dart';
 import '../../common/playlist/music_list.dart';
-import 'add_to_playlist_bottom_sheet.dart';
+import '../dialog/add_to_playlist_bottom_sheet.dart';
 
 typedef MusicDeletionCallback = Future<bool> Function(List<Music> selected);
 

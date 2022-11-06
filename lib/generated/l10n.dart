@@ -1211,6 +1211,36 @@ class S {
       args: [],
     );
   }
+
+  /// `Confirm`
+  String get confirm {
+    return Intl.message(
+      'Confirm',
+      name: 'confirm',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Sure to remove music from playlist?`
+  String get sureToRemoveMusicFromPlaylist {
+    return Intl.message(
+      'Sure to remove music from playlist?',
+      name: 'sureToRemoveMusicFromPlaylist',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Remove`
+  String get remove {
+    return Intl.message(
+      'Remove',
+      name: 'remove',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

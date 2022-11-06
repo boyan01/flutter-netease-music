@@ -14,7 +14,7 @@ import '../../../providers/playlist_detail_provider.dart';
 import '../../../providers/repository_provider.dart';
 import '../../../providers/settings_provider.dart';
 import '../../../repository.dart';
-import '../../mobile/playlists/add_to_playlist_bottom_sheet.dart';
+import '../../mobile/dialog/add_to_playlist_bottom_sheet.dart';
 import '../navigation_target.dart';
 
 enum PlayResult {
@@ -64,6 +64,16 @@ extension _TracksPlayer on TracksPlayer {
 }
 
 typedef TrackDeleteHandler = Future<void> Function(WidgetRef read, Track track);
+
+abstract class TrackListController {
+  FutureOr<PlayResult> play(Track? track);
+
+  String get playlistId;
+
+  Future<void> delete(Track track);
+
+  bool get canDelete;
+}
 
 class TrackTileContainer extends ConsumerStatefulWidget {
   factory TrackTileContainer.album({
@@ -235,52 +245,10 @@ class TrackTileContainer extends ConsumerStatefulWidget {
     required this.child,
   });
 
-  static FutureOr<PlayResult> playTrack(
-    BuildContext context,
-    Track? track,
-  ) async {
-    final container =
-        context.findAncestorStateOfType<_TrackTileContainerState>();
-    assert(container != null, 'container is null');
-    if (container == null) {
-      return PlayResult.fail;
-    }
-    return container.widget._playbackMusic(container.ref, track);
-  }
-
-  static String getPlaylistId(BuildContext context) {
-    final container =
-        context.findAncestorWidgetOfExactType<TrackTileContainer>();
-    assert(container != null, 'container is null');
-    if (container == null) {
-      return '';
-    }
-    return container.id;
-  }
-
-  static Future<void> deleteTrack(
-    BuildContext context,
-    WidgetRef ref,
-    Track track,
-  ) {
-    final container =
-        context.findAncestorWidgetOfExactType<TrackTileContainer>();
-    assert(container != null, 'container is null');
-    if (container == null) {
-      return Future.value();
-    }
-    assert(container._deleteMusic != null, 'deleteMusic is null');
-    return container._deleteMusic?.call(ref, track) ?? Future.value();
-  }
-
-  static bool canDeleteTrack(BuildContext context) {
-    final container =
-        context.findAncestorWidgetOfExactType<TrackTileContainer>();
-    assert(container != null, 'container is null');
-    if (container == null) {
-      return false;
-    }
-    return container._deleteMusic != null;
+  static TrackListController controller(BuildContext context) {
+    final state = context.findAncestorStateOfType<_TrackTileContainerState>();
+    assert(state != null, 'Can not find TrackTileContainerState');
+    return state!;
   }
 
   final List<Track> tracks;
@@ -297,9 +265,24 @@ class TrackTileContainer extends ConsumerStatefulWidget {
   ConsumerState<TrackTileContainer> createState() => _TrackTileContainerState();
 }
 
-class _TrackTileContainerState extends ConsumerState<TrackTileContainer> {
+class _TrackTileContainerState extends ConsumerState<TrackTileContainer>
+    implements TrackListController {
   @override
   Widget build(BuildContext context) => widget.child;
+
+  @override
+  bool get canDelete => widget._deleteMusic != null;
+
+  @override
+  Future<void> delete(Track track) async {
+    await widget._deleteMusic?.call(ref, track);
+  }
+
+  @override
+  FutureOr<PlayResult> play(Track? track) => widget._playbackMusic(ref, track);
+
+  @override
+  String get playlistId => widget.id;
 }
 
 class MusicTileConfiguration extends StatelessWidget {

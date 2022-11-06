@@ -12,9 +12,10 @@ import '../../../repository.dart';
 import '../../../utils/system/scroll_controller.dart';
 import '../../common/buttons.dart';
 import '../../common/icons.dart';
+import '../../common/material/dialogs.dart';
 import '../../common/player/animated_playing_indicator.dart';
 import '../../common/player/state.dart';
-import '../playlists/add_to_playlist_bottom_sheet.dart';
+import '../dialog/add_to_playlist_bottom_sheet.dart';
 
 /// Show current playing list.
 void showMobilePlayingBottomSheet(BuildContext context) => showModalBottomSheet(
@@ -131,24 +132,12 @@ class _Header extends ConsumerWidget {
           AppIconButton(
             icon: FluentIcons.delete_20_regular,
             onPressed: () async {
-              final ret = await showDialog(
-                context: context,
-                builder: (context) => AlertDialog(
-                  content: Text(context.strings.sureToClearPlayingList),
-                  actions: [
-                    TextButton(
-                      onPressed: () => Navigator.pop(context, false),
-                      child: Text(context.strings.cancel),
-                    ),
-                    TextButton(
-                      onPressed: () => Navigator.pop(context, true),
-                      child: Text(context.strings.clear),
-                    ),
-                  ],
-                ),
+              final ret = await showConfirmDialog(
+                context,
+                Text(context.strings.sureToClearPlayingList),
+                positiveLabel: context.strings.clear,
               );
-
-              if (ret != true) {
+              if (!ret) {
                 return;
               }
               Navigator.pop(context);

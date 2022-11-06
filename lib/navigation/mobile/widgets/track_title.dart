@@ -1,3 +1,4 @@
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:overlay_support/overlay_support.dart';
@@ -5,8 +6,10 @@ import 'package:overlay_support/overlay_support.dart';
 import '../../../extension.dart';
 import '../../../providers/player_provider.dart';
 import '../../../repository.dart';
+import '../../common/buttons.dart';
 import '../../common/player/animated_playing_indicator.dart';
 import '../../common/playlist/music_list.dart';
+import '../dialog/track_menu_bottom_sheet.dart';
 
 class TrackTile extends StatelessWidget {
   const TrackTile({
@@ -27,7 +30,7 @@ class TrackTile extends StatelessWidget {
           toast(context.strings.trackNoCopyright);
           return;
         }
-        TrackTileContainer.playTrack(context, track);
+        TrackTileContainer.controller(context).play(track);
       },
       child: SizedBox(
         height: 64,
@@ -67,11 +70,15 @@ class TrackTile extends StatelessWidget {
               ),
             ),
             const SizedBox(width: 8),
-            IconButton(
-              splashRadius: 24,
-              iconSize: 24,
-              onPressed: () {},
-              icon: const Icon(Icons.more_vert),
+            AppIconButton(
+              icon: FluentIcons.more_vertical_20_regular,
+              onPressed: () {
+                showTrackMenuBottomSheet(
+                  context,
+                  controller: TrackTileContainer.controller(context),
+                  track: track,
+                );
+              },
             ),
             const SizedBox(width: 12),
           ],
@@ -97,7 +104,7 @@ class _IndexOrPlayIndicator extends ConsumerWidget {
     final playingListId = ref.watch(playingListProvider).id;
     final playingTrack = ref.watch(playingTrackProvider);
     final isCurrent =
-        TrackTileContainer.getPlaylistId(context) == playingListId &&
+        TrackTileContainer.controller(context).playlistId == playingListId &&
             playingTrack?.id == track.id;
     final isPlaying = ref.watch(isPlayingProvider);
     if (isCurrent) {

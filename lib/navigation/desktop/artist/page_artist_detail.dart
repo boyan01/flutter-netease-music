@@ -303,7 +303,7 @@ class _CoverTrackListWidget extends StatelessWidget {
                     icon: Icons.play_circle_outline_rounded,
                     tooltip: context.strings.playAll,
                     onPressed: () {
-                      TrackTileContainer.playTrack(context, null);
+                      TrackTileContainer.controller(context).play(null);
                     },
                   ),
                   AppIconButton(

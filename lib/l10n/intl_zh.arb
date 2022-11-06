@@ -114,5 +114,8 @@
   "cancel": "取消",
   "clear": "清空",
   "addSongToPlaylist": "添加歌曲到播放列表",
-  "addAllSongsToPlaylist": "添加全部歌曲到播放列表"
+  "addAllSongsToPlaylist": "添加全部歌曲到播放列表",
+  "confirm": "确定",
+  "sureToRemoveMusicFromPlaylist": "确定从播放列表中移除歌曲吗？",
+  "remove": "移除"
 }

@@ -66,6 +66,7 @@ class MessageLookup extends MessageLookupByLibrary {
             "Drop your music file to here to upload."),
         "cloudMusicUsage": MessageLookupByLibrary.simpleMessage("Cloud Usage"),
         "collectionLike": MessageLookupByLibrary.simpleMessage("Collections"),
+        "confirm": MessageLookupByLibrary.simpleMessage("Confirm"),
         "copyRightOverlay": MessageLookupByLibrary.simpleMessage(
             "Only used for personal study and research, commercial and illegal purposes are prohibited"),
         "createdDate": m2,
@@ -160,6 +161,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "recommendPlayLists":
             MessageLookupByLibrary.simpleMessage("Recommend PlayLists"),
         "recommendTrackIconText": MessageLookupByLibrary.simpleMessage("R"),
+        "remove": MessageLookupByLibrary.simpleMessage("Remove"),
         "repeatModePlayIntelligence":
             MessageLookupByLibrary.simpleMessage("Play Intelligence"),
         "repeatModePlaySequence":
@@ -194,6 +196,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "subscribe": MessageLookupByLibrary.simpleMessage("Subscribe"),
         "sureToClearPlayingList":
             MessageLookupByLibrary.simpleMessage("Sure to clear playing list?"),
+        "sureToRemoveMusicFromPlaylist": MessageLookupByLibrary.simpleMessage(
+            "Sure to remove music from playlist?"),
         "theme": MessageLookupByLibrary.simpleMessage("Theme"),
         "themeAuto": MessageLookupByLibrary.simpleMessage("Follow System"),
         "themeDark": MessageLookupByLibrary.simpleMessage("Dark"),

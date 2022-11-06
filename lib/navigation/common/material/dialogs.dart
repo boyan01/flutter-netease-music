@@ -2,6 +2,9 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
+import '../../../extension/strings.dart';
+import 'theme.dart';
+
 ///show a loading overlay above the screen
 ///indicator that page is waiting for response
 Future<T> showLoaderOverlay<T>(
@@ -37,17 +40,17 @@ Future<T> showLoaderOverlay<T>(
   return completer.future;
 }
 
-///show a alert dialog to warning user this operation need confirm
-///return true when clicked positive button
-///other return false
+/// Show a alert dialog to warning user this operation need confirm.
+/// return true when clicked positive button.
+/// other return false.
 Future<bool> showConfirmDialog(
   BuildContext context,
   Widget content, {
   String? positiveLabel,
   String? negativeLabel,
 }) async {
-  negativeLabel ??= '取消';
-  positiveLabel ??= '确认';
+  negativeLabel ??= context.strings.cancel;
+  positiveLabel ??= context.strings.confirm;
 
   final result = await showDialog(
     context: context,
@@ -65,6 +68,7 @@ Future<bool> showConfirmDialog(
             onPressed: () {
               Navigator.pop(context, true);
             },
+            textColor: context.colorScheme.primary,
             child: Text(positiveLabel!),
           ),
         ],
