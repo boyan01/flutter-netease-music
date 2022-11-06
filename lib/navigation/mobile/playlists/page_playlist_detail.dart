@@ -33,12 +33,16 @@ class PlaylistDetailPage extends HookConsumerWidget {
     return Scaffold(
       backgroundColor: context.colorScheme.background,
       body: detail.when(
-        data: (detail) => CustomScrollView(
-          slivers: <Widget>[
-            SliverOverlapAbsorber(handle: absorberHandle),
-            _Appbar(playlist: detail),
-            _MusicList(detail),
-          ],
+        data: (detail) => TrackTileContainer.playlist(
+          playlist: detail,
+          userId: ref.read(userIdProvider),
+          child: CustomScrollView(
+            slivers: <Widget>[
+              SliverOverlapAbsorber(handle: absorberHandle),
+              _Appbar(playlist: detail),
+              _MusicList(detail),
+            ],
+          ),
         ),
         error: (error, stacktrace) => Center(
           child: Text(context.formattedError(error)),
@@ -79,17 +83,13 @@ class _MusicList extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return TrackTileContainer.playlist(
-      playlist: playlist,
-      userId: ref.read(userIdProvider),
-      child: SliverList(
-        delegate: SliverChildBuilderDelegate(
-          (context, index) => TrackTile(
-            track: playlist.tracks[index],
-            index: index + 1,
-          ),
-          childCount: playlist.tracks.length,
+    return SliverList(
+      delegate: SliverChildBuilderDelegate(
+        (context, index) => TrackTile(
+          track: playlist.tracks[index],
+          index: index + 1,
         ),
+        childCount: playlist.tracks.length,
       ),
     );
   }

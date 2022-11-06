@@ -25,34 +25,50 @@ class DailyPlaylistPage extends HookConsumerWidget {
           DateTime.now(),
       [playlist],
     );
-    return Scaffold(
-      backgroundColor: context.colorScheme.background,
-      body: _MobileDailyPageScaffold(
+
+    final data = playlist.valueOrNull;
+    Widget body;
+    if (data != null) {
+      body = TrackTileContainer.daily(
+        tracks: data.tracks,
+        dateTime: data.date,
+        child: _MobileDailyPageScaffold(
+          date: date,
+          tracksCount: data.tracks.length,
+          sliverBody: _MusicList(playlist: data),
+        ),
+      );
+    } else if (playlist.hasError) {
+      body = _MobileDailyPageScaffold(
         date: date,
-        tracksCount: playlist.valueOrNull?.tracks.length ?? 0,
-        sliverBody: playlist.when(
-          data: (data) => _MusicList(playlist: data),
-          error: (error, stackTrace) => SliverToBoxAdapter(
-            child: SizedBox(
-              height: 200,
-              child: Center(
-                child: Text(context.formattedError(error)),
-              ),
-            ),
-          ),
-          loading: () => const SliverToBoxAdapter(
-            child: SizedBox(
-              height: 200,
-              child: Center(
-                child: SizedBox.square(
-                  dimension: 24,
-                  child: CircularProgressIndicator(),
-                ),
-              ),
+        tracksCount: 0,
+        sliverBody: SliverToBoxAdapter(
+          child: Padding(
+            padding: const EdgeInsets.only(top: 200),
+            child: Center(
+              child: Text(context.formattedError(playlist.error)),
             ),
           ),
         ),
-      ),
+      );
+    } else {
+      body = _MobileDailyPageScaffold(
+        date: date,
+        tracksCount: 0,
+        sliverBody: const SliverToBoxAdapter(
+          child: Padding(
+            padding: EdgeInsets.only(top: 200),
+            child: Center(
+              child: CircularProgressIndicator(),
+            ),
+          ),
+        ),
+      );
+    }
+
+    return Scaffold(
+      backgroundColor: context.colorScheme.background,
+      body: body,
     );
   }
 }
@@ -160,17 +176,13 @@ class _MusicList extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return TrackTileContainer.daily(
-      tracks: playlist.tracks,
-      dateTime: playlist.date,
-      child: SliverList(
-        delegate: SliverChildBuilderDelegate(
-          (context, index) => TrackTile(
-            track: playlist.tracks[index],
-            index: index + 1,
-          ),
-          childCount: playlist.tracks.length,
+    return SliverList(
+      delegate: SliverChildBuilderDelegate(
+        (context, index) => TrackTile(
+          track: playlist.tracks[index],
+          index: index + 1,
         ),
+        childCount: playlist.tracks.length,
       ),
     );
   }
