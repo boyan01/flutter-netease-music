@@ -6,8 +6,9 @@ import '../../../extension.dart';
 import '../../../providers/account_provider.dart';
 import '../../../providers/playlist_detail_provider.dart';
 import '../../../repository.dart';
-import '../../common/playlist/music_list.dart';
-import '../widgets/track_title.dart';
+import '../../common/playlist/track_list_container.dart';
+import '../widgets/track_tile.dart';
+import 'music_list_header.dart';
 import 'playlist_flexible_app_bar.dart';
 
 const double kHeaderHeight = 280 + kToolbarHeight;

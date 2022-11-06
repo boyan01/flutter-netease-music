@@ -6,7 +6,7 @@ import '../../../providers/navigator_provider.dart';
 import '../../../providers/player_provider.dart';
 import '../../common/icons.dart';
 import '../../common/navigation_target.dart';
-import '../../common/playlist/music_list.dart';
+import '../../common/playlist/track_list_container.dart';
 
 class PlaylistCollapsedTitle extends StatelessWidget {
   const PlaylistCollapsedTitle({

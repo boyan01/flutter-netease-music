@@ -4,33 +4,49 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:overlay_support/overlay_support.dart';
 
 import '../../../extension.dart';
+import '../../../providers/navigator_provider.dart';
 import '../../../providers/player_provider.dart';
 import '../../../repository.dart';
 import '../../common/buttons.dart';
+import '../../common/navigation_target.dart';
 import '../../common/player/animated_playing_indicator.dart';
-import '../../common/playlist/music_list.dart';
+import '../../common/playlist/track_list_container.dart';
 import '../dialog/track_menu_bottom_sheet.dart';
 
-class TrackTile extends StatelessWidget {
+class TrackTile extends ConsumerWidget {
   const TrackTile({
     super.key,
     required this.track,
     required this.index,
+    this.trailing,
   });
 
   final Track track;
 
   final int index;
 
+  final Widget? trailing;
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return InkWell(
       onTap: () {
         if (track.type == TrackType.noCopyright) {
           toast(context.strings.trackNoCopyright);
           return;
         }
-        TrackTileContainer.controller(context).play(track);
+        final player = ref.read(playerProvider);
+        final controller = TrackTileContainer.controller(context);
+        if (player.trackList.id == controller.playlistId) {
+          ref
+              .read(navigatorProvider.notifier)
+              .navigate(NavigationTargetPlaying());
+          if (!player.isPlaying) {
+            player.play();
+          }
+        } else {
+          controller.play(null);
+        }
       },
       child: SizedBox(
         height: 64,

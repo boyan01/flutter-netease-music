@@ -4,7 +4,9 @@ import '../../../extension.dart';
 import '../../../providers/album_detail_provider.dart';
 import '../../../repository.dart';
 
-import '../../common/playlist/music_list.dart';
+import '../../common/playlist/track_list_container.dart';
+import '../widgets/track_tile.dart';
+import 'music_list_header.dart';
 import 'page_playlist_detail.dart';
 import 'playlist_flexible_app_bar.dart';
 
@@ -53,9 +55,9 @@ class _AlbumBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MusicTileConfiguration(
-      token: 'album_${album.id}',
-      musics: musicList,
+    return TrackTileContainer.album(
+      album: album,
+      tracks: musicList,
       child: CustomScrollView(
         slivers: [
           SliverAppBar(
@@ -69,7 +71,10 @@ class _AlbumBody extends StatelessWidget {
           ),
           SliverList(
             delegate: SliverChildBuilderDelegate(
-              (context, index) => MusicTile(musicList[index]),
+              (context, index) => TrackTile(
+                track: musicList[index],
+                index: index + 1,
+              ),
               childCount: musicList.length,
             ),
           ),

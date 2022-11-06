@@ -5,10 +5,12 @@ import 'package:overlay_support/overlay_support.dart';
 
 import '../../../extension.dart';
 import '../../../providers/account_provider.dart';
+import '../../../providers/navigator_provider.dart';
 import '../../../providers/player_provider.dart';
 import '../../../repository.dart';
 import '../../common/material/dialogs.dart';
-import '../../common/playlist/music_list.dart';
+import '../../common/navigation_target.dart';
+import '../../common/playlist/track_list_container.dart';
 import 'add_to_playlist_bottom_sheet.dart';
 
 Future<void> showTrackMenuBottomSheet(
@@ -117,9 +119,10 @@ class _MenuList extends ConsumerWidget {
           leading: const Icon(FluentIcons.album_20_regular),
           enable: track.album?.id != null && track.album?.id != 0,
           onTap: () {
-            // TODO
-            toast(context.strings.todo);
             Navigator.pop(context);
+            ref
+                .read(navigatorProvider.notifier)
+                .navigate(NavigationTargetAlbumDetail(track.album!.id));
           },
         ),
         _MenuTile(

@@ -9,8 +9,9 @@ import '../../../providers/daily_playlist_provider.dart';
 import '../../../repository.dart';
 import '../../common/buttons.dart';
 import '../../common/material/flexible_app_bar.dart';
-import '../../common/playlist/music_list.dart';
-import '../widgets/track_title.dart';
+import '../../common/playlist/track_list_container.dart';
+import '../widgets/track_tile.dart';
+import 'music_list_header.dart';
 
 class DailyPlaylistPage extends HookConsumerWidget {
   const DailyPlaylistPage({super.key});

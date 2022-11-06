@@ -5,9 +5,9 @@ import 'package:overlay_support/overlay_support.dart';
 import '../../../extension.dart';
 import '../../../repository.dart';
 import '../../common/material/tiles.dart';
-import '../../common/playlist/music_list.dart';
+import '../../common/playlist/track_list_container.dart';
 import '../dialog/add_to_playlist_bottom_sheet.dart';
-import '../playlists/page_playlist_detail_selection.dart';
+import '../widgets/track_tile.dart';
 import 'artist_header.dart';
 
 ///歌手详情页
@@ -113,15 +113,15 @@ class _PageHotSongsState extends State<_PageHotSongs>
                   Expanded(child: Text('收藏热门${widget.musicList.length}单曲')),
                   TextButton(
                     onPressed: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) {
-                            return PlaylistSelectionPage(
-                              list: widget.musicList,
-                            );
-                          },
-                        ),
-                      );
+                      // Navigator.of(context).push(
+                      //   MaterialPageRoute(
+                      //     builder: (context) {
+                      //       return PlaylistSelectionPage(
+                      //         list: widget.musicList,
+                      //       );
+                      //     },
+                      //   ),
+                      // );
                     },
                     child: const Text('多选'),
                   )
@@ -141,16 +141,19 @@ class _PageHotSongsState extends State<_PageHotSongs>
     if (widget.musicList.isEmpty) {
       return const Center(child: Text('该歌手无热门曲目'));
     }
-    return MusicTileConfiguration(
-      musics: widget.musicList,
-      token: 'artist_${widget.artistId}_hot',
+    return TrackTileContainer.trackList(
+      tracks: widget.musicList,
+      id: 'artist-${widget.artistId}-top-songs',
       child: ListView.builder(
         itemCount: widget.musicList.length + 1,
         itemBuilder: (context, index) {
           if (index == 0) {
             return _buildHeader(context);
           } else {
-            return MusicTile(widget.musicList[index - 1]);
+            return TrackTile(
+              track: widget.musicList[index - 1],
+              index: index,
+            );
           }
         },
       ),

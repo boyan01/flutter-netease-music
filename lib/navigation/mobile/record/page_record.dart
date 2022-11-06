@@ -3,7 +3,8 @@ import 'package:loader/loader.dart';
 
 import '../../../repository/data/track.dart';
 import '../../common/material/tabs.dart';
-import '../../common/playlist/music_list.dart';
+import '../../common/playlist/track_list_container.dart';
+import '../widgets/track_tile.dart';
 
 class RecordPage extends StatelessWidget {
   const RecordPage({super.key, required this.uid, this.username});
@@ -112,26 +113,28 @@ class _RecordMusicList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MusicTileConfiguration(
-      musics: musicList.cast(),
-      token: 'play_record_$type',
-      trailingBuilder: (context, music) {
-        return Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              const Icon(Icons.play_circle_outline, size: 16),
-              const SizedBox(width: 4),
-              Text('${_recordMap[music.id]!.playCount}次'),
-            ],
-          ),
-        );
-      },
+    return TrackTileContainer.trackList(
+      tracks: musicList.cast(),
+      id: 'play_record_$type',
       child: ListView.builder(
         itemCount: musicList.length,
         itemBuilder: (context, index) {
-          return MusicTile(musicList[index]!);
+          final music = musicList[index]!;
+          return TrackTile(
+            track: music,
+            index: index + 1,
+            trailing: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  const Icon(Icons.play_circle_outline, size: 16),
+                  const SizedBox(width: 4),
+                  Text('${_recordMap[music.id]!.playCount}次'),
+                ],
+              ),
+            ),
+          );
         },
       ),
     );

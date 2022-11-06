@@ -6,7 +6,8 @@ import '../../../providers/navigator_provider.dart';
 import '../../../providers/personalized_playlist_provider.dart';
 import '../../../repository.dart';
 import '../../common/navigation_target.dart';
-import '../../common/playlist/music_list.dart';
+import '../../common/playlist/track_list_container.dart';
+import '../widgets/track_tile.dart';
 
 class MainPageDiscover extends StatefulWidget {
   const MainPageDiscover({super.key});
@@ -266,11 +267,18 @@ class _SectionNewSongs extends ConsumerWidget {
     final snapshot = ref.watch(personalizedNewSongProvider.logErrorOnDebug());
     return snapshot.when(
       data: (songs) {
-        return MusicTileConfiguration(
-          musics: songs,
-          token: 'playlist_main_newsong',
+        return TrackTileContainer.trackList(
+          tracks: songs,
+          id: 'playlist_main_newsong',
           child: Column(
-            children: songs.map(MusicTile.new).toList(),
+            children: songs
+                .mapIndexed(
+                  (index, item) => TrackTile(
+                    track: item,
+                    index: index + 1,
+                  ),
+                )
+                .toList(),
           ),
         );
       },

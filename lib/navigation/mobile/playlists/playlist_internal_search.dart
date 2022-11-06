@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../../../providers/player_provider.dart';
 import '../../../repository.dart';
-import '../../common/playlist/music_list.dart';
+import '../../common/playlist/track_list_container.dart';
+import '../widgets/track_tile.dart';
 
 class PlaylistInternalSearchDelegate extends SearchDelegate {
   PlaylistInternalSearchDelegate(this.playlist);
@@ -80,17 +80,15 @@ class _InternalResultSection extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return MusicTileConfiguration(
-      musics: musics,
-      onMusicTap: (_, music) {
-        ref.read(playerProvider)
-          ..insertToNext(music)
-          ..playFromMediaId(music.id);
-      },
+    return TrackTileContainer.simpleList(
+      tracks: musics,
       child: ListView.builder(
         itemCount: musics.length,
         itemBuilder: (context, index) {
-          return MusicTile(musics[index]);
+          return TrackTile(
+            track: musics[index],
+            index: index + 1,
+          );
         },
       ),
     );

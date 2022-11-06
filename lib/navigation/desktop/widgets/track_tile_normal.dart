@@ -14,7 +14,7 @@ import '../../../repository.dart';
 import '../../common/like_button.dart';
 import '../../common/navigation_target.dart';
 import '../../common/player/animated_playing_indicator.dart';
-import '../../common/playlist/music_list.dart';
+import '../../common/playlist/track_list_container.dart';
 import 'context_menu.dart';
 import 'highlight_clickable_text.dart';
 

@@ -4,8 +4,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../../../extension.dart';
 import '../../../providers/search_provider.dart';
 import '../../../repository/data/track.dart';
-import '../../common/playlist/music_list.dart';
-import '../widgets/track_title.dart';
+import '../../common/playlist/track_list_container.dart';
+import '../widgets/track_tile.dart';
 
 class PageMusicSearchResult extends ConsumerWidget {
   const PageMusicSearchResult({super.key, required this.query});
