@@ -11,47 +11,12 @@ import 'lyric.dart';
 import 'progress_track_container.dart';
 
 class PlayingLyricView extends ConsumerWidget {
-  PlayingLyricView({
+  const PlayingLyricView({
     super.key,
-    this.onTap,
     required this.music,
     required this.textStyle,
     this.textAlign = TextAlign.center,
-  }) : assert(textStyle.color != null);
-  final VoidCallback? onTap;
-
-  final Track music;
-
-  final TextAlign textAlign;
-
-  final TextStyle textStyle;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final currentPlaying = ref.watch(playingTrackProvider);
-
-    if (currentPlaying != music) {
-      return _LyricViewLoader(music, textAlign, textStyle, onTap);
-    }
-
-    return ProgressTrackingContainer(
-      builder: (context) => _LyricViewLoader(
-        music,
-        textAlign,
-        textStyle,
-        onTap,
-      ),
-    );
-  }
-}
-
-class _LyricViewLoader extends ConsumerWidget {
-  const _LyricViewLoader(
-    this.music,
-    this.textAlign,
-    this.textStyle,
-    this.onTap, {
-    super.key,
+    this.onTap,
   });
 
   final Track music;
@@ -128,45 +93,48 @@ class _LyricView extends ConsumerWidget {
 
     final currentPlaying = ref.watch(playingTrackProvider);
 
-    final bool playing;
-    final Duration? position;
+    return ProgressTrackingContainer(
+      builder: (context) {
+        final bool playing;
+        final Duration? position;
 
-    if (currentPlaying != track) {
-      playing = false;
-      position = null;
-    } else {
-      playing = ref.read(playerStateProvider).isPlaying;
-      position = ref.read(playerStateProvider.notifier).position;
-    }
-
-    return ShaderMask(
-      shaderCallback: (rect) {
-        // add transparent gradient to lyric top and bottom.
-        return ui.Gradient.linear(
-          Offset(rect.width / 2, 0),
-          Offset(rect.width / 2, viewportHeight),
-          [
-            color.withOpacity(0),
-            color,
-            color,
-            color.withOpacity(0),
-          ],
-          const [0.0, 0.15, 0.85, 1],
+        if (currentPlaying != track) {
+          playing = false;
+          position = null;
+        } else {
+          playing = ref.read(playerStateProvider).isPlaying;
+          position = ref.read(playerStateProvider.notifier).position;
+        }
+        return ShaderMask(
+          shaderCallback: (rect) {
+            // add transparent gradient to lyric top and bottom.
+            return ui.Gradient.linear(
+              Offset(rect.width / 2, 0),
+              Offset(rect.width / 2, viewportHeight),
+              [
+                color.withOpacity(0),
+                color,
+                color,
+                color.withOpacity(0),
+              ],
+              const [0.0, 0.15, 0.85, 1],
+            );
+          },
+          child: Lyric(
+            lyric: lyric,
+            lyricLineStyle: normalStyle,
+            highlight: color,
+            position: position?.inMilliseconds ?? 0,
+            onTap: onTap,
+            size: Size(
+              viewportHeight,
+              viewportHeight == double.infinity ? 0 : viewportHeight,
+            ),
+            playing: playing,
+            textAlign: textAlign,
+          ),
         );
       },
-      child: Lyric(
-        lyric: lyric,
-        lyricLineStyle: normalStyle,
-        highlight: color,
-        position: position?.inMilliseconds ?? 0,
-        onTap: onTap,
-        size: Size(
-          viewportHeight,
-          viewportHeight == double.infinity ? 0 : viewportHeight,
-        ),
-        playing: playing,
-        textAlign: textAlign,
-      ),
     );
   }
 }
