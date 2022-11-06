@@ -37,7 +37,8 @@ class TrackTile extends ConsumerWidget {
         }
         final player = ref.read(playerProvider);
         final controller = TrackTileContainer.controller(context);
-        if (player.trackList.id == controller.playlistId) {
+        if (player.trackList.id == controller.playlistId &&
+            player.current?.id == track.id) {
           ref
               .read(navigatorProvider.notifier)
               .navigate(NavigationTargetPlaying());
@@ -45,7 +46,7 @@ class TrackTile extends ConsumerWidget {
             player.play();
           }
         } else {
-          controller.play(null);
+          controller.play(track);
         }
       },
       child: SizedBox(
