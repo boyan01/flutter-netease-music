@@ -4,7 +4,6 @@ import '../../../extension.dart';
 import '../../common/navigation_target.dart';
 import 'main_page_discover.dart';
 import 'main_page_my.dart';
-import 'tab_search.dart';
 
 class PageHome extends StatelessWidget {
   PageHome({super.key, required this.selectedTab})
@@ -21,9 +20,6 @@ class PageHome extends StatelessWidget {
         break;
       case NavigationTargetDiscover:
         body = const MainPageDiscover();
-        break;
-      case NavigationTargetSearch:
-        body = const HomeTabSearch();
         break;
       default:
         assert(false, 'unsupported tab: $selectedTab');

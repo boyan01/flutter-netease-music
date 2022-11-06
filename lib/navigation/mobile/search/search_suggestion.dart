@@ -1,12 +1,14 @@
 import 'dart:async';
 
 import 'package:async/async.dart';
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:loader/loader.dart';
 
 import '../../../extension.dart';
 import '../../../repository/netease.dart';
+import '../../common/buttons.dart';
 
 typedef SuggestionSelectedCallback = void Function(String keyword);
 
@@ -36,27 +38,19 @@ class SuggestionSection extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8),
+          SizedBox(
+            height: 50,
             child: Row(
               children: <Widget>[
                 Expanded(
                   child: Text(
                     title,
-                    style: Theme.of(context)
-                        .textTheme
-                        .titleSmall!
-                        .copyWith(fontWeight: FontWeight.bold, fontSize: 17),
+                    style: context.textTheme.titleMedium,
                   ),
                 ),
-                if (onDeleteClicked == null)
-                  Container()
-                else
-                  IconButton(
-                    icon: Icon(
-                      Icons.delete_outline,
-                      color: Theme.of(context).iconTheme.color,
-                    ),
+                if (onDeleteClicked != null)
+                  AppIconButton(
+                    icon: FluentIcons.delete_20_regular,
                     onPressed: onDeleteClicked,
                   )
               ],

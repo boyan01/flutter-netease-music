@@ -3,7 +3,6 @@ import '../../repository.dart';
 const kMobileHomeTabs = [
   NavigationTargetDiscover,
   NavigationTargetLibrary,
-  NavigationTargetSearch,
 ];
 
 const kMobilePopupPages = {
@@ -61,7 +60,16 @@ class NavigationTargetLibrary extends NavigationTarget {
 }
 
 class NavigationTargetSearch extends NavigationTarget {
-  NavigationTargetSearch();
+  NavigationTargetSearch({this.initial});
+
+  final String? initial;
+
+  @override
+  bool isTheSameTarget(NavigationTarget other) {
+    return super.isTheSameTarget(other) &&
+        other is NavigationTargetSearch &&
+        other.initial == initial;
+  }
 }
 
 class NavigationTargetUser extends NavigationTarget {
@@ -115,6 +123,19 @@ class NavigationTargetAlbumDetail extends NavigationTarget {
 
 class NavigationTargetDailyRecommend extends NavigationTarget {
   NavigationTargetDailyRecommend();
+}
+
+class NavigationTargetSearchResult extends NavigationTarget {
+  NavigationTargetSearchResult(this.keyword);
+
+  final String keyword;
+
+  @override
+  bool isTheSameTarget(NavigationTarget other) {
+    return super.isTheSameTarget(other) &&
+        other is NavigationTargetSearchResult &&
+        other.keyword == keyword;
+  }
 }
 
 class NavigationTargetSearchMusicResult extends NavigationTarget {

@@ -301,9 +301,6 @@ class HomeBottomNavigationBar extends ConsumerWidget {
           case 1:
             target = NavigationTargetLibrary();
             break;
-          case 2:
-            target = NavigationTargetSearch();
-            break;
           default:
             assert(false, 'unknown index: $index');
             target = NavigationTargetDiscover();
@@ -318,10 +315,6 @@ class HomeBottomNavigationBar extends ConsumerWidget {
         BottomNavigationBarItem(
           icon: const Icon(Icons.my_library_music),
           label: context.strings.library,
-        ),
-        BottomNavigationBarItem(
-          icon: const Icon(Icons.search),
-          label: context.strings.search,
         ),
       ],
     );

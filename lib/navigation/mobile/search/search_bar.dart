@@ -9,67 +9,73 @@ class SearchBar extends HookWidget implements PreferredSizeWidget {
   const SearchBar({
     super.key,
     required this.enable,
-    required this.onDismissTapped,
-    required this.controller,
-    required this.focusNode,
+    this.controller,
+    this.focusNode,
+    this.onSearchBarTap,
+    this.placeholder,
   });
 
   final bool enable;
 
-  final VoidCallback onDismissTapped;
+  final TextEditingController? controller;
 
-  final TextEditingController controller;
+  final FocusNode? focusNode;
 
-  final FocusNode focusNode;
+  final VoidCallback? onSearchBarTap;
+
+  final String? placeholder;
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Expanded(
-          child: SizedBox(
-            height: 50,
-            child: CupertinoSearchTextField(
-              focusNode: focusNode,
-              controller: controller,
-              placeholder: context.strings.search,
-              enabled: enable,
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              itemColor: context.colorScheme.textPrimary,
-              placeholderStyle: TextStyle(
-                color: context.colorScheme.textPrimary,
-              ),
-              style: TextStyle(
-                color: context.colorScheme.textPrimary,
-              ),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(50),
-                border: Border.all(
-                  color: context.colorScheme.divider,
-                ),
-                color: context.colorScheme.surface,
-              ),
-              prefixInsets: const EdgeInsetsDirectional.fromSTEB(20, 0, 0, 4),
-              suffixInsets: const EdgeInsetsDirectional.fromSTEB(0, 0, 20, 2),
-            ),
-          ),
-        ),
-        AnimatedSize(
-          duration: const Duration(milliseconds: 200),
-          child: enable
-              ? Padding(
-                  padding: const EdgeInsets.only(left: 10),
-                  child: AppIconButton(
-                    icon: FluentIcons.dismiss_20_regular,
-                    onPressed: onDismissTapped,
+    return SafeArea(
+      child: SizedBox(
+        height: 56,
+        child: Row(
+          children: [
+            const SizedBox(width: 8),
+            const AppBackButton(),
+            Expanded(
+              child: GestureDetector(
+                onTap: onSearchBarTap,
+                behavior: HitTestBehavior.opaque,
+                child: SizedBox(
+                  height: 40,
+                  child: CupertinoSearchTextField(
+                    focusNode: focusNode,
+                    controller: controller,
+                    placeholder: placeholder ?? context.strings.search,
+                    enabled: enable,
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    itemColor: context.colorScheme.textPrimary,
+                    placeholderStyle: TextStyle(
+                      color: context.colorScheme.textPrimary,
+                    ),
+                    style: TextStyle(
+                      color: context.colorScheme.textPrimary,
+                    ),
+                    prefixIcon: const Icon(FluentIcons.search_24_regular),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(50),
+                      border: Border.all(
+                        color: context.colorScheme.divider,
+                      ),
+                      color: context.colorScheme.surface,
+                    ),
+                    prefixInsets:
+                        const EdgeInsetsDirectional.fromSTEB(16, 0, 0, 0),
+                    suffixInsets:
+                        const EdgeInsetsDirectional.fromSTEB(0, 0, 16, 0),
                   ),
-                )
-              : const SizedBox(),
+                ),
+              ),
+            ),
+            const SizedBox(width: 16),
+          ],
         ),
-      ],
+      ),
     );
   }
 
   @override
-  Size get preferredSize => const Size.fromHeight(50);
+  Size get preferredSize => const Size.fromHeight(56);
 }

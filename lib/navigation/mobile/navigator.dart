@@ -12,6 +12,8 @@ import 'playlists/page_album_detail.dart';
 import 'playlists/page_daily_playlist.dart';
 import 'playlists/page_playlist_detail.dart';
 import 'playlists/page_playlist_edit.dart';
+import 'search/page_search.dart';
+import 'search/page_search_music_result.dart';
 import 'settings/page_setting.dart';
 import 'user/login_page.dart';
 import 'user/login_password_page.dart';
@@ -19,6 +21,7 @@ import 'user/page_user_detail.dart';
 import 'widgets/bottom_sheet_page.dart';
 import 'widgets/slide_up_page_route.dart';
 
+// return false to prevent the route from being popped.
 typedef AppWillPopCallback = bool Function();
 
 enum _PageType {
@@ -76,6 +79,14 @@ class MobileNavigatorController extends NavigatorController {
       debugPrint('Navigation: already on $target');
       return;
     }
+
+    if (target is NavigationTargetSearch) {
+      // Search page is a special page, it should be pushed on top of the current page.
+      _pages.removeWhere(
+        (e) => e is NavigationTargetSearch || e is NavigationTargetSearchResult,
+      );
+    }
+
     if (target.isMobileHomeTab()) {
       _pages.clear();
     }
@@ -92,8 +103,18 @@ class MobileNavigatorController extends NavigatorController {
     switch (target.runtimeType) {
       case NavigationTargetDiscover:
       case NavigationTargetLibrary:
-      case NavigationTargetSearch:
         page = PageHome(selectedTab: target);
+        break;
+      case NavigationTargetSearch:
+        page = PageSearch(
+          initial: (target as NavigationTargetSearch).initial,
+          key: ValueKey(target),
+        );
+        break;
+      case NavigationTargetSearchResult:
+        page = PageMusicSearchResult(
+          query: (target as NavigationTargetSearchResult).keyword,
+        );
         break;
       case NavigationTargetSettings:
         page = const PageSettings();

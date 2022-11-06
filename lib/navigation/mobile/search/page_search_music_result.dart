@@ -2,10 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../extension.dart';
+import '../../../providers/navigator_provider.dart';
 import '../../../providers/search_provider.dart';
 import '../../../repository/data/track.dart';
+import '../../common/navigation_target.dart';
 import '../../common/playlist/track_list_container.dart';
 import '../widgets/track_tile.dart';
+import 'search_bar.dart';
 
 class PageMusicSearchResult extends ConsumerWidget {
   const PageMusicSearchResult({super.key, required this.query});
@@ -15,21 +18,32 @@ class PageMusicSearchResult extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final searchResult = ref.watch(searchMusicProvider(query));
-    return searchResult.value.when(
-      data: (data) => _SearchResultScaffold(
-        query: query,
-        body: _TrackList(tracks: data),
+    return Scaffold(
+      appBar: SearchBar(
+        enable: false,
+        placeholder: query,
+        onSearchBarTap: () {
+          ref
+              .read(navigatorProvider.notifier)
+              .navigate(NavigationTargetSearch(initial: query));
+        },
       ),
-      error: (error, stacktrace) => _SearchResultScaffold(
-        query: query,
-        body: Center(
-          child: Text(context.formattedError(error)),
+      body: searchResult.value.when(
+        data: (data) => _SearchResultScaffold(
+          query: query,
+          body: _TrackList(tracks: data),
         ),
-      ),
-      loading: () => _SearchResultScaffold(
-        query: query,
-        body: const Center(
-          child: CircularProgressIndicator(),
+        error: (error, stacktrace) => _SearchResultScaffold(
+          query: query,
+          body: Center(
+            child: Text(context.formattedError(error)),
+          ),
+        ),
+        loading: () => _SearchResultScaffold(
+          query: query,
+          body: const Center(
+            child: CircularProgressIndicator(),
+          ),
         ),
       ),
     );
