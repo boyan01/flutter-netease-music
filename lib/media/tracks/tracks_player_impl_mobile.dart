@@ -134,12 +134,12 @@ class TracksPlayerImplMobile extends TracksPlayer {
 
   @override
   Future<void> insertToNext(Track track) async {
-    _player.insertToNext(track.toMetadata());
+    await _player.insertToNext(track.toMetadata());
   }
 
   @override
   bool get isPlaying =>
-      _player.value.playbackState.state == PlayerState.Playing;
+      _player.value.playbackState.state == PlayerState.playing;
 
   @override
   Future<void> pause() async {
@@ -249,7 +249,7 @@ class TracksPlayerImplMobile extends TracksPlayer {
   double get volume => 1;
 
   @override
-  bool get isBuffering => _player.playbackState.state == PlayerState.Buffering;
+  bool get isBuffering => _player.playbackState.state == PlayerState.buffering;
 
   @override
   Future<void> restoreFromPersistence(PersistencePlayerState state) async {
@@ -258,7 +258,7 @@ class TracksPlayerImplMobile extends TracksPlayer {
       d('service running, skip restore');
       return;
     }
-    _player.setPlayQueue(state.playingList.toPlayQueue());
+    await _player.setPlayQueue(state.playingList.toPlayQueue());
     await setRepeatMode(state.repeatMode);
     if (state.playingTrack != null) {
       await _player.transportControls
