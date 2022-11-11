@@ -701,9 +701,9 @@ class _LyricCache implements Cache<String?> {
   Future<String?> get(CacheKey key) async {
     final file = provider.getFile(key);
     if (await file.exists()) {
+      provider.touchFile(file);
       return file.readAsStringSync();
     }
-    provider.touchFile(file);
     return null;
   }
 
