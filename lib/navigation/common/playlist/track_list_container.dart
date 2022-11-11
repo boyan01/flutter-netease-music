@@ -211,18 +211,21 @@ class TrackTileContainer extends ConsumerStatefulWidget {
   }) {
     return TrackTileContainer._private(
       (ref, track) {
-        final player = ref.read(playerProvider);
         assert(track != null);
         if (track == null) {
           return PlayResult.fail;
         }
-        if (player.trackList.isFM) {
-          return player.playWithList('', [track], track: track);
-        } else {
+        final player = ref.read(playerProvider);
+
+        final insertToNext =
+            !player.trackList.isFM && !player.trackList.isEmpty;
+        if (insertToNext) {
           player
             ..insertToNext(track)
             ..playFromMediaId(track.id);
           return PlayResult.success;
+        } else {
+          return player.playWithList('simple_play_list', [track], track: track);
         }
       },
       onDelete,

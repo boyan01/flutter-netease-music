@@ -55,6 +55,8 @@ class TrackList with EquatableMixin {
 
   Map<String, dynamic> toJson() => _$TrackListToJson(this);
 
+  bool get isEmpty => id.isEmpty || tracks.isEmpty;
+
   TrackList copyWith({
     String? id,
     List<Track>? tracks,
