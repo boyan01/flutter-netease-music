@@ -9,6 +9,7 @@ import '../../../extension.dart';
 import '../../../media/tracks/track_list.dart';
 import '../../../providers/player_provider.dart';
 import '../../../repository.dart';
+import '../../../utils/system/scroll_controller.dart';
 import '../../common/buttons.dart';
 import '../../common/icons.dart';
 import '../../common/material/dialogs.dart';
@@ -55,38 +56,29 @@ class PlayingListDialog extends StatelessWidget {
   const PlayingListDialog({super.key});
 
   @override
-  Widget build(BuildContext context) => DraggableScrollableSheet(
-        initialChildSize: 1,
-        snap: true,
-        minChildSize: 0.5,
-        snapSizes: const [1],
-        builder: (context, controller) {
-          return SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.all(10),
-              child: Material(
-                color: context.colorScheme.background,
-                borderRadius: BorderRadius.circular(12),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: <Widget>[
-                    const SizedBox(height: 12),
-                    const _Title(),
-                    _Header(),
-                    Expanded(
-                      child: LayoutBuilder(
-                        builder: (context, constraints) => _PlayingList(
-                          layoutHeight: constraints.maxHeight,
-                          controller: controller,
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-              ),
+  Widget build(BuildContext context) => SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(10),
+          child: Material(
+            color: context.colorScheme.background,
+            borderRadius: BorderRadius.circular(12),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: <Widget>[
+                const SizedBox(height: 12),
+                const _Title(),
+                _Header(),
+                Expanded(
+                  child: LayoutBuilder(
+                    builder: (context, constraints) => _PlayingList(
+                      layoutHeight: constraints.maxHeight,
+                    ),
+                  ),
+                )
+              ],
             ),
-          );
-        },
+          ),
+        ),
       );
 }
 
@@ -163,12 +155,9 @@ class _PlayingList extends HookConsumerWidget {
   const _PlayingList({
     super.key,
     required this.layoutHeight,
-    required this.controller,
   });
 
   final double layoutHeight;
-
-  final ScrollController controller;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -199,11 +188,8 @@ class _PlayingList extends HookConsumerWidget {
       return offset - layoutHeight / 2;
     });
 
-    useMemoized(() {
-      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-        controller.jumpTo(initialOffset);
-      });
-    });
+    final controller =
+        useAppScrollController(initialScrollOffset: initialOffset);
 
     return ListView.builder(
       controller: controller,
