@@ -29,7 +29,7 @@ dependencies:
   music_player:
     git:
       url: https://github.com/boyan01/flutter-music-player.git
-      ref: 0e70931887b0a31f8e8bdd1014d01cd14e1c92de
+      ref: 4d96a716c60a1bf3c9077e860a1c0ff7b9ca8014
   scrollable_positioned_list: ^0.3.5
   hive: ^2.2.3
   hive_flutter: ^1.1.0

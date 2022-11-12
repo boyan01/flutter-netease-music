@@ -482,8 +482,8 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: "0e70931887b0a31f8e8bdd1014d01cd14e1c92de"
-      resolved-ref: "0e70931887b0a31f8e8bdd1014d01cd14e1c92de"
+      ref: "4d96a716c60a1bf3c9077e860a1c0ff7b9ca8014"
+      resolved-ref: "4d96a716c60a1bf3c9077e860a1c0ff7b9ca8014"
       url: "https://github.com/boyan01/flutter-music-player.git"
     source: git
     version: "0.0.1"
