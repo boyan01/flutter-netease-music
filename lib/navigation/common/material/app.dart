@@ -19,11 +19,6 @@ class CopyRightOverlay extends HookConsumerWidget {
     );
     final painter = useMemoized(
       () => _CopyrightPainter(copyright: copyRight, style: textStyle),
-    );
-    useEffect(
-      () {
-        painter.setText(copyRight, textStyle);
-      },
       [copyRight, textStyle],
     );
     return CustomPaint(
