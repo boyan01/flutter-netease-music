@@ -106,7 +106,7 @@ class _PlayingList extends HookConsumerWidget {
       if (playing == null) {
         return 0;
       }
-      final index = playingList.tracks.indexOf(playing);
+      final index = playingList.tracks.indexWhere((e) => e.id == playing.id);
       if (index < 0) {
         assert(false, 'playing track should be in the playing list');
         return 0;
@@ -162,7 +162,7 @@ class _PlayingTrackItem extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isCurrentPlaying = ref.watch(
-      playerStateProvider.select((value) => value.playingTrack == track),
+      playerStateProvider.select((value) => value.playingTrack?.id == track.id),
     );
     final isPlaying = ref.watch(isPlayingProvider);
     final isSelected = useState(false);

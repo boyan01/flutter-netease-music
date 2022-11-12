@@ -56,6 +56,11 @@ dependencies:
   pretty_qr_code: ^2.0.2
   mixin_logger: ^0.0.1
   synchronized: ^3.0.0+3
+  ui_device:
+    git:
+      url: https://github.com/MixinNetwork/flutter-plugins.git
+      ref: 00654e51f51aa65cdc39784a3075c9abb8b9dd7c
+      path: packages/ui_device
 
 dev_dependencies:
   flutter_test:

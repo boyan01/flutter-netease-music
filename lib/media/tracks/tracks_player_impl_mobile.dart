@@ -227,6 +227,9 @@ class TracksPlayerImplMobile extends TracksPlayer {
   }
 
   @override
+  bool get canAdjustVolume => false;
+
+  @override
   Future<void> skipToNext() {
     return _player.transportControls.skipToNext();
   }

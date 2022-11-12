@@ -3,15 +3,17 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:meta/meta.dart';
+import 'package:ui_device/ui_device.dart' as ui_device;
+
 import '../extension.dart';
 import '../navigation/common/navigation_target.dart';
-
 import '../navigation/desktop/navigator.dart';
 import '../navigation/mobile/navigator.dart';
 
 enum NavigationPlatform {
   desktop,
   mobile,
+  tablet,
 }
 
 final debugNavigatorPlatformProvider = StateProvider<NavigationPlatform>(
@@ -19,6 +21,11 @@ final debugNavigatorPlatformProvider = StateProvider<NavigationPlatform>(
     if (defaultTargetPlatform.isDesktop()) {
       return NavigationPlatform.desktop;
     } else {
+      if (defaultTargetPlatform.isIos() &&
+          ui_device.current.userInterfaceIdiom ==
+              ui_device.UIUserInterfaceIdiom.UIUserInterfaceIdiomPad) {
+        return NavigationPlatform.tablet;
+      }
       return NavigationPlatform.mobile;
     }
   },
@@ -30,6 +37,7 @@ final navigatorProvider =
     final platform = ref.watch(debugNavigatorPlatformProvider);
     switch (platform) {
       case NavigationPlatform.desktop:
+      case NavigationPlatform.tablet:
         return DesktopNavigatorController();
       case NavigationPlatform.mobile:
         return MobileNavigatorController();

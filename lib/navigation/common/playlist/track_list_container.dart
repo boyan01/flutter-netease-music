@@ -7,11 +7,13 @@ import 'package:mixin_logger/mixin_logger.dart';
 import '../../../extension.dart';
 import '../../../media/tracks/track_list.dart';
 import '../../../media/tracks/tracks_player.dart';
+import '../../../providers/navigator_provider.dart';
 import '../../../providers/player_provider.dart';
 import '../../../providers/playlist_detail_provider.dart';
 import '../../../providers/repository_provider.dart';
 import '../../../providers/settings_provider.dart';
 import '../../../repository.dart';
+import '../navigation_target.dart';
 
 enum PlayResult {
   success,
@@ -278,7 +280,20 @@ class _TrackTileContainerState extends ConsumerState<TrackTileContainer>
   }
 
   @override
-  FutureOr<PlayResult> play(Track? track) => widget._playbackMusic(ref, track);
+  FutureOr<PlayResult> play(Track? track) {
+    final state = ref.read(playerStateProvider);
+
+    var alreadyPlaying = state.playingList.id == playlistId && state.isPlaying;
+
+    if (track != null) {
+      alreadyPlaying = alreadyPlaying && state.playingTrack?.id == track.id;
+    }
+    if (alreadyPlaying) {
+      ref.read(navigatorProvider.notifier).navigate(NavigationTargetPlaying());
+      return PlayResult.alreadyPlaying;
+    }
+    return widget._playbackMusic(ref, track);
+  }
 
   @override
   String get playlistId => widget.id;

@@ -18,26 +18,35 @@ import 'widgets/hover_overlay.dart';
 import 'widgets/slider.dart';
 
 class BottomPlayerBar extends StatelessWidget {
-  const BottomPlayerBar({super.key});
+  const BottomPlayerBar({
+    super.key,
+    this.bottomExtraPadding = 0,
+  });
+
+  /// safe area.
+  final double bottomExtraPadding;
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 72,
+      height: 72 + bottomExtraPadding,
       child: Stack(
         children: [
           Padding(
             padding: const EdgeInsets.only(top: 10),
             child: Material(
               elevation: 10,
-              child: Row(
-                children: const [
-                  Expanded(child: _PlayingItemWidget()),
-                  SizedBox(width: 20),
-                  _CenterControllerWidget(),
-                  SizedBox(width: 20),
-                  Expanded(child: _PlayerControlWidget()),
-                ],
+              child: Padding(
+                padding: EdgeInsets.only(bottom: bottomExtraPadding),
+                child: Row(
+                  children: const [
+                    Expanded(child: _PlayingItemWidget()),
+                    SizedBox(width: 20),
+                    _CenterControllerWidget(),
+                    SizedBox(width: 20),
+                    Expanded(child: _PlayerControlWidget()),
+                  ],
+                ),
               ),
             ),
           ),
@@ -170,6 +179,7 @@ class _PlayerControlWidget extends ConsumerWidget {
     final isFmPlaying = ref.watch(
       playerStateProvider.select((value) => value.playingList.isFM),
     );
+    final canAdjustVolume = ref.read(playerProvider).canAdjustVolume;
     return Row(
       children: [
         const Spacer(),
@@ -181,8 +191,11 @@ class _PlayerControlWidget extends ConsumerWidget {
             child: PlayerRepeatModeIconButton(),
           ),
         const _PlayingListButton(),
-        const SizedBox(width: 10),
-        const _VolumeControl(),
+        if (canAdjustVolume)
+          const Padding(
+            padding: EdgeInsets.only(left: 10),
+            child: _VolumeControl(),
+          ),
         const SizedBox(width: 20),
       ],
     );

@@ -272,6 +272,26 @@ class TrackTile extends HookConsumerWidget {
     final configuration = _TrackTableConfiguration.of(context);
     final highlighting = useState(false);
     final isMounted = useIsMounted();
+
+    Future<void> showContextMenu(Offset globalPosition) async {
+      highlighting.value = true;
+      final controller = TrackTileContainer.controller(context);
+      final entry = showOverlayAtPosition(
+        globalPosition: globalPosition,
+        builder: (context) => _TrackItemMenus(
+          track: track,
+          playTrack: () => controller.play(track),
+          deleteTrack:
+              controller.canDelete ? () => controller.delete(track) : null,
+        ),
+      );
+      await entry.dismissed;
+      if (!isMounted()) {
+        return;
+      }
+      highlighting.value = false;
+    }
+
     return SizedBox(
       height: 36,
       child: Material(
@@ -283,25 +303,10 @@ class TrackTile extends HookConsumerWidget {
               ? context.colorScheme.highlight
               : Colors.transparent,
           child: GestureDetector(
-            onSecondaryTapUp: (details) async {
-              highlighting.value = true;
-              final controller = TrackTileContainer.controller(context);
-              final entry = showOverlayAtPosition(
-                globalPosition: details.globalPosition,
-                builder: (context) => _TrackItemMenus(
-                  track: track,
-                  playTrack: () => controller.play(track),
-                  deleteTrack: controller.canDelete
-                      ? () => controller.delete(track)
-                      : null,
-                ),
-              );
-              await entry.dismissed;
-              if (!isMounted()) {
-                return;
-              }
-              highlighting.value = false;
-            },
+            onSecondaryTapUp: (details) =>
+                showContextMenu(details.globalPosition),
+            onLongPressStart: (details) =>
+                showContextMenu(details.globalPosition),
             child: InkWell(
               onTap: () {
                 if (track.type == TrackType.noCopyright) {
@@ -430,7 +435,7 @@ class _IndexOrPlayIcon extends ConsumerWidget {
     final playingTrack = ref.watch(playingTrackProvider);
     final isCurrent =
         TrackTileContainer.controller(context).playlistId == playingListId &&
-            playingTrack == track;
+            playingTrack?.id == track.id;
     final isPlaying = ref.watch(isPlayingProvider);
     if (isCurrent) {
       return AnimatedPlayingIndicator(playing: isPlaying);

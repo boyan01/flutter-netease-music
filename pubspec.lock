@@ -851,6 +851,15 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.3.1"
+  ui_device:
+    dependency: "direct main"
+    description:
+      path: "packages/ui_device"
+      ref: "00654e51f51aa65cdc39784a3075c9abb8b9dd7c"
+      resolved-ref: "00654e51f51aa65cdc39784a3075c9abb8b9dd7c"
+      url: "https://github.com/MixinNetwork/flutter-plugins.git"
+    source: git
+    version: "0.0.1"
   url_launcher:
     dependency: "direct main"
     description:

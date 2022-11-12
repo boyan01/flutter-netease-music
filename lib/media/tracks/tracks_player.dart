@@ -119,6 +119,8 @@ abstract class TracksPlayer extends StateNotifier<TracksPlayerState> {
 
   double get playbackSpeed;
 
+  bool get canAdjustVolume => false;
+
   @protected
   void notifyPlayStateChanged() {
     state = TracksPlayerState(

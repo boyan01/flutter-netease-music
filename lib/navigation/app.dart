@@ -11,6 +11,7 @@ import 'common/material/theme.dart';
 import 'desktop/home_window.dart';
 import 'desktop/widgets/hotkeys.dart';
 import 'mobile/mobile_window.dart';
+import 'tablet/tablet_window.dart';
 
 class QuietApp extends ConsumerWidget {
   const QuietApp({super.key});
@@ -25,6 +26,9 @@ class QuietApp extends ConsumerWidget {
         break;
       case NavigationPlatform.mobile:
         home = const MobileWindow();
+        break;
+      case NavigationPlatform.tablet:
+        home = const TableWindow();
         break;
     }
     return GlobalHotkeys(

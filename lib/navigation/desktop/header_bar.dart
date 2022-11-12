@@ -24,25 +24,27 @@ class HeaderBar extends StatelessWidget {
     return Material(
       color: context.colorScheme.background,
       elevation: 10,
-      child: Padding(
-        padding: EdgeInsets.only(
-          top: defaultTargetPlatform == TargetPlatform.macOS ? 20 : 0,
-        ),
-        child: SizedBox(
-          height: 56,
-          child: Row(
-            children: [
-              const SizedBox(width: 180, child: _HeaderNavigationButtons()),
-              const Expanded(child: MoveWindow.expand()),
-              const _SearchBar(),
-              const SizedBox(width: 20, child: MoveWindow.expand()),
-              const _ProfileWidget(),
-              const SizedBox(width: 10, child: MoveWindow.expand()),
-              const _SettingButton(),
-              const SizedBox(width: 20, child: MoveWindow.expand()),
-              if (defaultTargetPlatform == TargetPlatform.windows)
-                const _WindowCaptionButtonGroup(),
-            ],
+      child: SafeArea(
+        child: Padding(
+          padding: EdgeInsets.only(
+            top: defaultTargetPlatform == TargetPlatform.macOS ? 20 : 0,
+          ),
+          child: SizedBox(
+            height: 56,
+            child: Row(
+              children: [
+                const SizedBox(width: 180, child: _HeaderNavigationButtons()),
+                const Expanded(child: MoveWindow.expand()),
+                const _SearchBar(),
+                const SizedBox(width: 20, child: MoveWindow.expand()),
+                const _ProfileWidget(),
+                const SizedBox(width: 10, child: MoveWindow.expand()),
+                const _SettingButton(),
+                const SizedBox(width: 20, child: MoveWindow.expand()),
+                if (defaultTargetPlatform == TargetPlatform.windows)
+                  const _WindowCaptionButtonGroup(),
+              ],
+            ),
           ),
         ),
       ),

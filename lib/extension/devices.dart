@@ -8,4 +8,6 @@ extension TargetPlatformExtension on TargetPlatform {
       this == TargetPlatform.macOS ||
       this == TargetPlatform.windows ||
       this == TargetPlatform.linux;
+
+  bool isIos() => this == TargetPlatform.iOS;
 }

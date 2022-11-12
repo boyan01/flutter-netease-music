@@ -199,7 +199,13 @@ class _ContextMenuItemState extends State<ContextMenuItem> {
       child: AppMenuItem(
         enable: widget.enable,
         onTap: widget.subMenuBuilder != null
-            ? () {}
+            ? () {
+                if (_subMenuOpenCount >= 1) {
+                  _dismissSubMenu();
+                } else {
+                  _showContextSubMenu();
+                }
+              }
             : () {
                 widget.onTap?.call();
                 _dismissSelf();
