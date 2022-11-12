@@ -1,4 +1,5 @@
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -292,6 +293,8 @@ class TrackTile extends HookConsumerWidget {
       highlighting.value = false;
     }
 
+    final isMouseTracking = useRef(false);
+
     return SizedBox(
       height: 36,
       child: Material(
@@ -305,8 +308,18 @@ class TrackTile extends HookConsumerWidget {
           child: GestureDetector(
             onSecondaryTapUp: (details) =>
                 showContextMenu(details.globalPosition),
-            onLongPressStart: (details) =>
-                showContextMenu(details.globalPosition),
+            onLongPressDown: (details) {
+              isMouseTracking.value = details.kind == PointerDeviceKind.mouse;
+            },
+            onLongPressUp: () {
+              isMouseTracking.value = false;
+            },
+            onLongPressStart: (details) {
+              if (isMouseTracking.value) {
+                return;
+              }
+              showContextMenu(details.globalPosition);
+            },
             child: InkWell(
               onTap: () {
                 if (track.type == TrackType.noCopyright) {
