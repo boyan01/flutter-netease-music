@@ -25,6 +25,7 @@ class HeaderBar extends StatelessWidget {
       color: context.colorScheme.background,
       elevation: 10,
       child: SafeArea(
+        bottom: false,
         child: Padding(
           padding: EdgeInsets.only(
             top: defaultTargetPlatform == TargetPlatform.macOS ? 20 : 0,

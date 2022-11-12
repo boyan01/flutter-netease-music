@@ -22,7 +22,12 @@ class TableWindow extends StatelessWidget {
             Column(
               children: [
                 const HeaderBar(),
-                const _ContentLayout(),
+                MediaQuery.removePadding(
+                  context: context,
+                  removeBottom: true,
+                  removeTop: true,
+                  child: const _ContentLayout(),
+                ),
                 SizedBox(height: 64 + bottomPadding),
               ],
             ),
