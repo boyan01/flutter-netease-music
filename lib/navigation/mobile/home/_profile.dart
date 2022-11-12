@@ -5,6 +5,7 @@ import '../../../extension.dart';
 import '../../../providers/account_provider.dart';
 import '../../../providers/navigator_provider.dart';
 import '../../../repository.dart';
+import '../../common/image.dart';
 import '../../common/navigation_target.dart';
 
 class UserProfileSection extends ConsumerWidget {
@@ -51,9 +52,10 @@ class UserProfileSection extends ConsumerWidget {
               child: GestureDetector(
                 onTap: onTap,
                 child: ClipOval(
-                  child: SizedBox.square(
-                    dimension: 64,
-                    child: Image(image: CachedImage(detail.avatarUrl)),
+                  child: AppImage(
+                    url: detail.avatarUrl,
+                    width: 64,
+                    height: 64,
                   ),
                 ),
               ),

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
+import 'package:path/path.dart' as p;
 
 abstract class CacheKey {
   factory CacheKey.fromString(String key) {
@@ -52,7 +53,7 @@ class FileCacheProvider {
     return _cacheFileForKey(key);
   }
 
-  File _cacheFileForKey(CacheKey key) => File('$directory/${key.getKey()}');
+  File _cacheFileForKey(CacheKey key) => File(p.join(directory, key.getKey()));
 
   void touchFile(File file) {
     file.setLastModified(DateTime.now()).catchError((e) {

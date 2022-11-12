@@ -4,6 +4,7 @@ import 'package:overlay_support/overlay_support.dart';
 
 import '../../../providers/navigator_provider.dart';
 import '../../../repository.dart';
+import '../../common/image.dart';
 import '../../common/navigation_target.dart';
 
 ///歌单列表元素
@@ -31,9 +32,8 @@ class PlaylistTile extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final Widget cover = ClipRRect(
       borderRadius: const BorderRadius.all(Radius.circular(4)),
-      child: Image(
-        image: CachedImage(playlist.coverUrl),
-        fit: BoxFit.cover,
+      child: AppImage(
+        url: playlist.coverUrl,
         height: 50,
         width: 50,
       ),

@@ -4,6 +4,7 @@ import 'package:overlay_support/overlay_support.dart';
 
 import '../../../extension.dart';
 import '../../../repository.dart';
+import '../../common/image.dart';
 import '../../common/material/tiles.dart';
 import '../../common/playlist/track_list_container.dart';
 import '../dialog/add_to_playlist_bottom_sheet.dart';
@@ -235,9 +236,8 @@ class _PageMVsState extends State<_PageMVs> with AutomaticKeepAliveClientMixin {
                   padding: const EdgeInsets.all(4),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(3),
-                    child: Image(
-                      image: CachedImage(mv['imgurl16v9']),
-                      fit: BoxFit.cover,
+                    child: AppImage(
+                      url: mv['imgurl16v9'],
                     ),
                   ),
                 ),
@@ -361,10 +361,7 @@ class _PageArtistIntroductionState extends State<_PageArtistIntroduction>
                 padding: const EdgeInsets.all(4),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(3),
-                  child: Image(
-                    image: CachedImage(topic['rectanglePicUrl']),
-                    fit: BoxFit.cover,
-                  ),
+                  child: AppImage(url: topic['rectanglePicUrl']),
                 ),
               ),
               const SizedBox(width: 8),

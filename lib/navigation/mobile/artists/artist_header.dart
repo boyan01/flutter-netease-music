@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:overlay_support/overlay_support.dart';
 
 import '../../../repository.dart';
+import '../../common/image.dart';
 import '../../common/material/flexible_app_bar.dart';
 import '../../common/material/tabs.dart';
 
@@ -50,10 +51,9 @@ class _ArtistFlexHeader extends StatelessWidget {
       maxLines: 1,
       child: FlexibleDetailBar(
         background: FlexShadowBackground(
-          child: Image(
-            image: CachedImage(artist.picUrl),
+          child: AppImage(
+            url: artist.picUrl,
             height: 300,
-            fit: BoxFit.cover,
           ),
         ),
         content: Padding(

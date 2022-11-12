@@ -6,9 +6,9 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../../../extension.dart';
 import '../../../providers/account_provider.dart';
 import '../../../providers/navigator_provider.dart';
-import '../../../repository/cached_image.dart';
 import '../../../utils/system/scroll_controller.dart';
 import '../../common/buttons.dart';
+import '../../common/image.dart';
 import '../../common/navigation_target.dart';
 import '_playlists.dart';
 import '_preset_grid.dart';
@@ -155,11 +155,10 @@ class _AppBar extends HookConsumerWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           ClipOval(
-            child: Image(
-              image: CachedImage(user.avatarUrl),
+            child: AppImage(
+              url: user.avatarUrl,
               width: 28,
               height: 28,
-              fit: BoxFit.cover,
             ),
           ),
           const SizedBox(width: 4),

@@ -18,6 +18,7 @@ import 'providers/preference_provider.dart';
 import 'providers/repository_provider.dart';
 import 'repository.dart';
 import 'repository/app_dir.dart';
+import 'utils/cache/cached_image.dart';
 import 'utils/callback_window_listener.dart';
 import 'utils/hive/duration_adapter.dart';
 import 'utils/platform_configuration.dart';
@@ -31,6 +32,7 @@ void main() async {
   final preferences = await SharedPreferences.getInstance();
   unawaited(_initialDesktop(preferences));
   initLogger(p.join(appDir.path, 'logs'));
+  registerImageCacheProvider();
   await _initHive();
   FlutterError.onError = (details) => e('flutter error: ${details.toString()}');
   PlatformDispatcher.instance.onError = (error, stacktrace) {

@@ -9,6 +9,7 @@ import '../../../extension.dart';
 import '../../../providers/navigator_provider.dart';
 import '../../../repository.dart';
 import '../../common/buttons.dart';
+import '../../common/image.dart';
 
 class AlbumFlexibleAppBar extends StatelessWidget {
   const AlbumFlexibleAppBar({
@@ -48,7 +49,7 @@ class AlbumFlexibleAppBar extends StatelessWidget {
         right: 0,
         bottom: 0,
         child: _Background(
-          image: CachedImage(album.picUrl),
+          imageUrl: album.picUrl,
           current: settings.currentExtent - settings.minExtent,
         ),
       ),
@@ -173,7 +174,7 @@ class PlaylistFlexibleAppBar extends StatelessWidget {
         right: 0,
         bottom: 0,
         child: _Background(
-          image: CachedImage(playlist.coverUrl),
+          imageUrl: playlist.coverUrl,
           current: settings.currentExtent - settings.minExtent,
         ),
       ),
@@ -370,9 +371,8 @@ class _AlbumHeaderContent extends ConsumerWidget {
               const SizedBox(width: 32),
               ClipRRect(
                 borderRadius: const BorderRadius.all(Radius.circular(8)),
-                child: Image(
-                  fit: BoxFit.cover,
-                  image: CachedImage(album.picUrl),
+                child: AppImage(
+                  url: album.picUrl,
                   width: 120,
                   height: 120,
                 ),
@@ -445,11 +445,11 @@ class _AppBar extends StatelessWidget {
 class _Background extends StatelessWidget {
   const _Background({
     super.key,
-    required this.image,
+    required this.imageUrl,
     required this.current,
   });
 
-  final ImageProvider image;
+  final String imageUrl;
 
   final double current;
 
@@ -466,7 +466,7 @@ class _Background extends StatelessWidget {
       child: Stack(
         fit: StackFit.passthrough,
         children: <Widget>[
-          Image(image: image, fit: BoxFit.cover, width: 120, height: 1),
+          AppImage(url: imageUrl, width: 120, height: 1),
           RepaintBoundary(
             child: BackdropFilter(
               filter: ImageFilter.blur(sigmaX: 24, sigmaY: 24),
@@ -500,11 +500,10 @@ class _PlayListHeaderContent extends ConsumerWidget {
                 const SizedBox(width: 16),
                 ClipRRect(
                   borderRadius: BorderRadius.circular(8),
-                  child: Image(
-                    image: CachedImage(playlist.coverUrl),
+                  child: AppImage(
                     width: 120,
                     height: 120,
-                    fit: BoxFit.cover,
+                    url: playlist.coverUrl,
                   ),
                 ),
                 const SizedBox(width: 10),

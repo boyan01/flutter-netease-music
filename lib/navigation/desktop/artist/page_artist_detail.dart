@@ -9,6 +9,7 @@ import '../../../providers/navigator_provider.dart';
 import '../../../repository.dart';
 import '../../../utils/system/scroll_controller.dart';
 import '../../common/buttons.dart';
+import '../../common/image.dart';
 import '../../common/navigation_target.dart';
 import '../../common/playlist/track_list_container.dart';
 import '../widgets/highlight_clickable_text.dart';
@@ -82,10 +83,7 @@ class _ArtistDetailHeader extends StatelessWidget {
               aspectRatio: 1,
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(8),
-                child: Image(
-                  image: CachedImage(artist.picUrl),
-                  fit: BoxFit.cover,
-                ),
+                child: AppImage(url: artist.picUrl),
               ),
             ),
             const SizedBox(width: 20),
@@ -242,10 +240,7 @@ class _AlbumItemWidget extends ConsumerWidget {
         ),
         cover: ClipRRect(
           borderRadius: BorderRadius.circular(8),
-          child: Image(
-            image: CachedImage(album.album.picUrl),
-            fit: BoxFit.cover,
-          ),
+          child: AppImage(url: album.album.picUrl),
         ),
         tracks: album.tracks,
         onAddAllTap: () {

@@ -5,8 +5,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../media/tracks/tracks_player.dart';
 import '../../../providers/player_provider.dart';
-import '../../../repository/cached_image.dart';
 import '../../../repository/data/track.dart';
+import '../image.dart';
 
 ///播放页面歌曲封面
 class AlbumCover extends ConsumerStatefulWidget {
@@ -384,11 +384,14 @@ class _RotationCoverImageState extends State<_RotationCoverImage>
 
   @override
   Widget build(BuildContext context) {
-    ImageProvider image;
+    Widget image;
     if (widget.music == null || widget.music!.imageUrl == null) {
-      image = const AssetImage('assets/playing_page_disc.png');
+      image = Image.asset(
+        'assets/playing_page_disc.png',
+        fit: BoxFit.cover,
+      );
     } else {
-      image = CachedImage(widget.music!.imageUrl.toString());
+      image = AppImage(url: widget.music!.imageUrl);
     }
     return Transform.rotate(
       angle: rotation,
@@ -406,12 +409,7 @@ class _RotationCoverImageState extends State<_RotationCoverImage>
               ),
             ),
             padding: const EdgeInsets.all(30),
-            child: ClipOval(
-              child: Image(
-                image: image,
-                fit: BoxFit.cover,
-              ),
-            ),
+            child: ClipOval(child: image),
           ),
         ),
       ),

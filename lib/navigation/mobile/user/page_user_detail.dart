@@ -6,13 +6,16 @@ import 'package:overlay_support/overlay_support.dart';
 import '../../../extension.dart';
 import '../../../providers/user_detail_provider.dart';
 import '../../../repository.dart';
+import '../../common/image.dart';
 import '../../common/material/flexible_app_bar.dart';
 import '../../common/material/images.dart';
 import '../../common/material/tabs.dart';
 import '../widgets/playlist_tile.dart';
 
 part 'tab_about.dart';
+
 part 'tab_events.dart';
+
 part 'tab_music.dart';
 
 ///用户详情页
@@ -101,11 +104,10 @@ class _UserDetailAppBar extends StatelessWidget {
       expandedHeight: 330,
       flexibleSpace: FlexibleDetailBar(
         background: FlexShadowBackground(
-          child: Image(
+          child: AppImage(
             height: 300,
             width: 300,
-            fit: BoxFit.cover,
-            image: CachedImage(user.backgroundUrl),
+            url: user.backgroundUrl,
           ),
         ),
         content: Padding(

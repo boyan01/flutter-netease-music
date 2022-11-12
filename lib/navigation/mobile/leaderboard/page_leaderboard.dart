@@ -6,7 +6,7 @@ import '../../../extension/formats.dart';
 import '../../../extension/strings.dart';
 import '../../../providers/leaderboard_provider.dart';
 import '../../../providers/navigator_provider.dart';
-import '../../../repository/cached_image.dart';
+import '../../common/image.dart';
 import '../../common/navigation_target.dart';
 
 ///各个排行榜数据
@@ -113,7 +113,7 @@ class _ItemLeaderBoard2 extends ConsumerWidget {
                 borderRadius: BorderRadius.circular(3),
                 child: Stack(
                   children: <Widget>[
-                    Image(image: CachedImage(item.coverImgUrl)),
+                    AppImage(url: item.coverImgUrl),
                     Align(
                       alignment: Alignment.bottomCenter,
                       child: Container(
@@ -177,7 +177,7 @@ class _ItemLeaderboard1 extends ConsumerWidget {
                 borderRadius: BorderRadius.circular(3),
                 child: Stack(
                   children: <Widget>[
-                    Image(image: CachedImage(item.coverImgUrl)),
+                    AppImage(url: item.coverImgUrl),
                     Align(
                       alignment: Alignment.bottomCenter,
                       child: Container(

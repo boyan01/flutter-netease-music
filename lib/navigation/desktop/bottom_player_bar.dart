@@ -6,8 +6,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../../extension.dart';
 import '../../providers/navigator_provider.dart';
 import '../../providers/player_provider.dart';
-import '../../repository.dart';
 import '../common/buttons.dart';
+import '../common/image.dart';
 import '../common/like_button.dart';
 import '../common/navigation_target.dart';
 import '../common/player/player_progress.dart';
@@ -88,8 +88,8 @@ class _PlayingItemWidget extends ConsumerWidget {
           const SizedBox(width: 20),
           ClipRRect(
             borderRadius: BorderRadius.circular(10),
-            child: Image(
-              image: CachedImage(track.imageUrl!),
+            child: AppImage(
+              url: track.imageUrl,
               width: 48,
               height: 48,
             ),

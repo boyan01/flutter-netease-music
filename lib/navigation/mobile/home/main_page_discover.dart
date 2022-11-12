@@ -5,6 +5,7 @@ import '../../../extension.dart';
 import '../../../providers/navigator_provider.dart';
 import '../../../providers/personalized_playlist_provider.dart';
 import '../../../repository.dart';
+import '../../common/image.dart';
 import '../../common/navigation_target.dart';
 import '../../common/playlist/track_list_container.dart';
 import '../widgets/track_tile.dart';
@@ -239,12 +240,7 @@ class _PlayListItemView extends ConsumerWidget {
                 borderRadius: const BorderRadius.all(Radius.circular(6)),
                 child: AspectRatio(
                   aspectRatio: 1,
-                  child: FadeInImage(
-                    placeholder:
-                        const AssetImage('assets/playlist_playlist.9.png'),
-                    image: CachedImage(playlist.picUrl),
-                    fit: BoxFit.cover,
-                  ),
+                  child: AppImage(url: playlist.picUrl),
                 ),
               ),
             ),

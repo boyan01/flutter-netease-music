@@ -1,14 +1,13 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
-import 'dart:ui';
 
-import 'package:flutter/widgets.dart';
 import 'package:mixin_logger/mixin_logger.dart';
 import 'package:music_player/music_player.dart';
 
 import '../../model/persistence_player_state.dart';
 import '../../repository.dart';
+import '../../utils/cache/cached_image.dart';
 import '../../utils/media_cache/media_cache.dart';
 import 'track_list.dart';
 import 'tracks_player.dart';
@@ -47,6 +46,7 @@ extension _Track on Track {
       mediaUri: uri,
       subtitle: '$name - ${artists.map((e) => e.name).join('/')}',
       duration: duration.inMilliseconds,
+      iconUri: imageUrl,
       extras: {
         'album': jsonEncode(album?.toJson()),
         'artists': jsonEncode(artists.map((e) => e.toJson()).toList()),
@@ -300,26 +300,12 @@ Future<String> _playUriInterceptor(String? mediaId, String? fallbackUri) async {
 }
 
 Future<Uint8List> _loadImageInterceptor(MusicMetadata metadata) async {
-  final stream = CachedImage(metadata.iconUri.toString()).resolve(
-    ImageConfiguration(
-      size: const Size(150, 150),
-      devicePixelRatio: WidgetsBinding.instance.window.devicePixelRatio,
-    ),
-  );
-  final image = Completer<ImageInfo>();
-  stream.addListener(
-    ImageStreamListener(
-      (info, a) {
-        image.complete(info);
-      },
-      onError: image.completeError,
-    ),
-  );
-  final result = await image.future
-      .then((image) => image.image.toByteData(format: ImageByteFormat.png))
-      .then((byte) => byte!.buffer.asUint8List())
-      .timeout(const Duration(seconds: 10));
-  debugPrint('load image for : ${metadata.title} ${result.length}');
+  final result = await loadImageFromOtherIsolate(metadata.iconUri);
+  if (result == null) {
+    e('load image error: ${metadata.iconUri}');
+    throw Exception('load image error');
+  }
+  d('load image complete ${metadata.iconUri} ${result.length}');
   return result;
 }
 

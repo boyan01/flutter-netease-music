@@ -7,8 +7,8 @@ import '../../../extension.dart';
 import '../../../providers/lyric_provider.dart';
 import '../../../providers/navigator_provider.dart';
 import '../../../providers/player_provider.dart';
-import '../../../repository.dart';
 import '../../common/buttons.dart';
+import '../../common/image.dart';
 import '../../common/like_button.dart';
 import '../../common/material/player.dart';
 import '../../common/navigation_target.dart';
@@ -171,9 +171,8 @@ class _MobileBottomPlayerBar extends ConsumerWidget {
               const SizedBox(width: 16),
               ClipRRect(
                 borderRadius: const BorderRadius.all(Radius.circular(4)),
-                child: Image(
-                  fit: BoxFit.cover,
-                  image: CachedImage(music.imageUrl!),
+                child: AppImage(
+                  url: music.imageUrl,
                   width: 40,
                   height: 40,
                 ),

@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
 import '../../../providers/navigator_provider.dart';
-import '../../../repository/cached_image.dart';
+import '../image.dart';
 import '../navigation_target.dart';
 
 class AlbumTile extends ConsumerWidget {
@@ -37,10 +37,7 @@ class AlbumTile extends ConsumerWidget {
                 borderRadius: BorderRadius.circular(4),
                 child: AspectRatio(
                   aspectRatio: 1,
-                  child: Image(
-                    image: CachedImage(album['picUrl']),
-                    fit: BoxFit.cover,
-                  ),
+                  child: AppImage(url: album['picUrl']),
                 ),
               ),
             ),

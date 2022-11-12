@@ -9,6 +9,7 @@ import '../../../providers/fm_playlist_provider.dart';
 import '../../../providers/player_provider.dart';
 import '../../../repository.dart';
 import '../../common/buttons.dart';
+import '../../common/image.dart';
 import '../../common/like_button.dart';
 import 'lyric_layout.dart';
 
@@ -69,7 +70,7 @@ class _CoverLayout extends StatelessWidget {
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(8),
-                child: Image(image: CachedImage(track.imageUrl!)),
+                child: AppImage(url: track.imageUrl),
               ),
               FmCoverPlayPauseButton(track: track)
             ],

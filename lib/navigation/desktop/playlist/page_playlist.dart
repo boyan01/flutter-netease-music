@@ -16,6 +16,7 @@ import '../../../repository.dart';
 import '../../../utils/hooks.dart';
 import '../../../utils/system/scroll_controller.dart';
 import '../../../utils/track_list_filter.dart';
+import '../../common/image.dart';
 import '../../common/material/flexible_app_bar.dart';
 import '../../common/navigation_target.dart';
 import '../../common/playlist/track_list_container.dart';
@@ -145,11 +146,10 @@ class _PlaylistDetailHeader extends StatelessWidget {
             borderRadius: BorderRadius.circular(8),
             child: AspectRatio(
               aspectRatio: 1,
-              child: Image(
-                image: CachedImage(playlist.coverUrl),
+              child: AppImage(
+                url: playlist.coverUrl,
                 width: 160,
                 height: 160,
-                fit: BoxFit.cover,
               ),
             ),
           ),

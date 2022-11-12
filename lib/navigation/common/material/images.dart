@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../../repository/cached_image.dart';
+
+import '../image.dart';
 
 ///圆形图片
 class RoundedImage extends StatelessWidget {
@@ -15,10 +16,10 @@ class RoundedImage extends StatelessWidget {
     return ClipOval(
       child: SizedBox.fromSize(
         size: Size.square(size),
-        child: Image(
+        child: AppImage(
           height: size,
           width: size,
-          image: CachedImage(url!),
+          url: url,
         ),
       ),
     );

@@ -12,9 +12,9 @@ import '../../../providers/daily_playlist_provider.dart';
 import '../../../providers/fm_playlist_provider.dart';
 import '../../../providers/navigator_provider.dart';
 import '../../../providers/player_provider.dart';
-import '../../../repository/cached_image.dart';
 import '../../../repository/data/track.dart';
 import '../../common/buttons.dart';
+import '../../common/image.dart';
 import '../../common/navigation_target.dart';
 import '../player/page_fm_playing.dart';
 import '../widgets/highlight_clickable_text.dart';
@@ -88,10 +88,7 @@ class _FmCard extends HookConsumerWidget {
                 children: [
                   ClipRRect(
                     borderRadius: BorderRadius.circular(8),
-                    child: Image(
-                      image: CachedImage(track.imageUrl!),
-                      fit: BoxFit.cover,
-                    ),
+                    child: AppImage(url: track.imageUrl),
                   ),
                   AnimatedOpacity(
                     opacity: showPlayPauseButton.value ? 1 : 0,
@@ -200,13 +197,10 @@ class _DailyRecommend extends ConsumerWidget {
           child: snapshot.when(
             data: (data) => ClipRRect(
               borderRadius: BorderRadius.circular(10),
-              child: Image(
+              child: AppImage(
                 width: 160,
                 height: 160,
-                image: CachedImage(
-                  data.tracks.firstOrNull?.imageUrl ?? '',
-                ),
-                fit: BoxFit.cover,
+                url: data.tracks.firstOrNull?.imageUrl,
               ),
             ),
             error: (error, stacktrace) => Center(

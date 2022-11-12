@@ -1,7 +1,9 @@
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
+
 import '../../../repository.dart';
+import '../../common/image.dart';
 
 class BlurBackground extends StatelessWidget {
   const BlurBackground({super.key, required this.music});
@@ -13,9 +15,8 @@ class BlurBackground extends StatelessWidget {
     return Stack(
       fit: StackFit.expand,
       children: <Widget>[
-        Image(
-          image: CachedImage(music.imageUrl.toString()),
-          fit: BoxFit.cover,
+        AppImage(
+          url: music.imageUrl,
           height: 15,
           width: 15,
           gaplessPlayback: true,

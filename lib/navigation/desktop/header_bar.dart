@@ -10,8 +10,8 @@ import 'package:window_manager/window_manager.dart';
 import '../../extension.dart';
 import '../../providers/account_provider.dart';
 import '../../providers/navigator_provider.dart';
-import '../../repository/cached_image.dart';
 import '../../utils/callback_window_listener.dart';
+import '../common/image.dart';
 import '../common/navigation_target.dart';
 import 'login/login_dialog.dart';
 import 'popup/user_info_popup.dart';
@@ -161,8 +161,8 @@ class _ProfileWidget extends HookConsumerWidget {
       child = Row(
         children: [
           ClipOval(
-            child: Image(
-              image: CachedImage(user.avatarUrl),
+            child: AppImage(
+              url: user.avatarUrl,
               width: 24,
               height: 24,
             ),

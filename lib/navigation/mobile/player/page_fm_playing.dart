@@ -9,6 +9,7 @@ import '../../../providers/fm_playlist_provider.dart';
 import '../../../providers/navigator_provider.dart';
 import '../../../providers/player_provider.dart';
 import '../../../repository.dart';
+import '../../common/image.dart';
 import '../../common/like_button.dart';
 import '../../common/player/lyric_view.dart';
 import '../../common/player/player_progress.dart';
@@ -139,14 +140,8 @@ class _FmCover extends ConsumerWidget {
           padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 16),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(4),
-            child: Image(
-              image: CachedImage(track.imageUrl!),
-              loadingBuilder: (context, child, loadingProgress) {
-                if (loadingProgress != null) {
-                  child = Container(child: child);
-                }
-                return child;
-              },
+            child: AppImage(
+              url: track.imageUrl,
               width: 240,
               height: 240,
             ),

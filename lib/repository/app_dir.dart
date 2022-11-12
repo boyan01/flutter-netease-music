@@ -5,6 +5,8 @@ import 'package:path_provider/path_provider.dart';
 
 late final Directory appDir;
 
+Directory get cacheDir => Directory(join(appDir.path, 'cache'));
+
 Future<void> initAppDir() async {
   if (Platform.isLinux) {
     final home = Platform.environment['HOME'];

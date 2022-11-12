@@ -8,6 +8,7 @@ import '../../../providers/account_provider.dart';
 import '../../../providers/navigator_provider.dart';
 import '../../../providers/player_provider.dart';
 import '../../../repository.dart';
+import '../../common/image.dart';
 import '../../common/material/dialogs.dart';
 import '../../common/navigation_target.dart';
 import '../../common/playlist/track_list_container.dart';
@@ -156,11 +157,10 @@ class _TrackHeader extends StatelessWidget {
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(4),
-            child: Image(
-              image: CachedImage(track.imageUrl!),
+            child: AppImage(
+              url: track.imageUrl,
               width: 40,
               height: 40,
-              fit: BoxFit.cover,
             ),
           ),
           const SizedBox(width: 8),

@@ -10,6 +10,7 @@ import '../../../providers/navigator_provider.dart';
 import '../../../providers/player_provider.dart';
 import '../../../repository.dart';
 import '../../../utils/system/scroll_controller.dart';
+import '../../common/image.dart';
 import '../../common/material/flexible_app_bar.dart';
 import '../../common/navigation_target.dart';
 import '../../common/playlist/track_list_container.dart';
@@ -120,11 +121,10 @@ class _AlbumDetailHeader extends StatelessWidget {
             borderRadius: BorderRadius.circular(8),
             child: AspectRatio(
               aspectRatio: 1,
-              child: Image(
-                image: CachedImage(album.picUrl),
+              child: AppImage(
+                url: album.picUrl,
                 width: 160,
                 height: 160,
-                fit: BoxFit.cover,
               ),
             ),
           ),
