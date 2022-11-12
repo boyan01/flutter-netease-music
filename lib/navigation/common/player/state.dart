@@ -135,7 +135,7 @@ class PlayerRepeatModeIconButton extends ConsumerWidget {
           ),
         );
         final current = playerState.playingTrack!;
-        if (!tracks.contains(current)) {
+        if (!tracks.any((e) => e.id == current.id)) {
           await player.playFromMediaId(tracks.first.id);
         }
         player.setRepeatMode(next);
