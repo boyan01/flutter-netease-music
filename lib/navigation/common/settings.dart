@@ -82,6 +82,13 @@ class DebugPlatformNavigationRadios extends ConsumerWidget {
           value: NavigationPlatform.mobile,
           title: Text(NavigationPlatform.mobile.name),
         ),
+        RadioListTile<NavigationPlatform>(
+          onChanged: (mode) =>
+              ref.read(debugNavigatorPlatformProvider.notifier).state = mode!,
+          groupValue: platform,
+          value: NavigationPlatform.tablet,
+          title: Text(NavigationPlatform.tablet.name),
+        ),
       ],
     );
   }
