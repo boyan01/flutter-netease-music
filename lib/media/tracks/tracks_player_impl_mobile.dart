@@ -46,6 +46,7 @@ extension _Track on Track {
       title: name,
       mediaUri: uri,
       subtitle: '$name - ${artists.map((e) => e.name).join('/')}',
+      duration: duration.inMilliseconds,
       extras: {
         'album': jsonEncode(album?.toJson()),
         'artists': jsonEncode(artists.map((e) => e.toJson()).toList()),
@@ -257,7 +258,7 @@ class TracksPlayerImplMobile extends TracksPlayer {
   @override
   Future<void> restoreFromPersistence(PersistencePlayerState state) async {
     final isServiceRunning = await _player.isMusicServiceAvailable();
-    if (isServiceRunning ?? false) {
+    if (isServiceRunning) {
       d('service running, skip restore');
       return;
     }
