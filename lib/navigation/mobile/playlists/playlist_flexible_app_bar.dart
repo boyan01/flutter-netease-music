@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:overlay_support/overlay_support.dart';
@@ -93,14 +94,14 @@ class AlbumFlexibleAppBar extends StatelessWidget {
                 topLeft: Radius.circular(24),
                 bottomLeft: Radius.circular(24),
               ),
-              icon: const Icon(Icons.library_add),
+              icon: const Icon(FluentIcons.collections_add_20_regular),
               label: Text(album.likedCount.toString()),
               onPressed: () {
                 toast(context.strings.todo);
               },
             ),
             _OverlappedButton(
-              icon: const Icon(Icons.comment),
+              icon: const Icon(FluentIcons.comment_20_regular),
               label: Text(album.commentCount.toString()),
               onPressed: () {
                 toast(context.strings.todo);
@@ -111,7 +112,7 @@ class AlbumFlexibleAppBar extends StatelessWidget {
                 topRight: Radius.circular(24),
                 bottomRight: Radius.circular(24),
               ),
-              icon: const Icon(Icons.share),
+              icon: const Icon(FluentIcons.share_20_regular),
               label: Text(album.shareCount.toString()),
               onPressed: () {
                 toast(context.strings.todo);
@@ -218,14 +219,14 @@ class PlaylistFlexibleAppBar extends StatelessWidget {
                 topLeft: Radius.circular(24),
                 bottomLeft: Radius.circular(24),
               ),
-              icon: const Icon(Icons.library_add),
+              icon: const Icon(FluentIcons.collections_add_20_regular),
               label: Text(playlist.subscribedCount.toString()),
               onPressed: () {
                 toast(context.strings.todo);
               },
             ),
             _OverlappedButton(
-              icon: const Icon(Icons.comment),
+              icon: const Icon(FluentIcons.comment_20_regular),
               label: Text(playlist.commentCount.toString()),
               onPressed: () {
                 toast(context.strings.todo);
@@ -236,7 +237,7 @@ class PlaylistFlexibleAppBar extends StatelessWidget {
                 topRight: Radius.circular(24),
                 bottomRight: Radius.circular(24),
               ),
-              icon: const Icon(Icons.share),
+              icon: const Icon(FluentIcons.share_20_regular),
               label: Text(playlist.shareCount.toString()),
               onPressed: () {
                 toast(context.strings.todo);
@@ -276,22 +277,26 @@ class _OverlappedActionButtons extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     const extentLimit = 66;
+
+    const snapExtentArea = [30, extentLimit];
+
+    var t = ((currentExtent - snapExtentArea[0]) /
+            (snapExtentArea[1] - snapExtentArea[0]))
+        .clamp(0.0, 1.0);
+    t = Curves.easeInOut.transform(t);
+
     return Column(
       children: [
         const Spacer(),
         Transform.translate(
           offset: Offset(
             0,
-            currentExtent < extentLimit ? extentLimit - currentExtent : 0,
+            currentExtent < extentLimit ? (extentLimit - currentExtent) / 2 : 0,
           ),
-          child: AnimatedOpacity(
-            opacity: currentExtent > extentLimit ? 1 : 0,
-            curve: Curves.easeInOut,
-            duration: const Duration(milliseconds: 150),
-            child: AnimatedScale(
-              scale: currentExtent > extentLimit ? 1 : 0.6,
-              curve: Curves.easeInOut,
-              duration: const Duration(milliseconds: 150),
+          child: Opacity(
+            opacity: t,
+            child: Transform.scale(
+              scale: t / 2 + 0.5,
               child: Material(
                 elevation: 1,
                 color: context.colorScheme.background,
@@ -457,6 +462,7 @@ class _Background extends StatelessWidget {
         height: 14 * t,
         bottom: 20 * t,
       ),
+      clipBehavior: Clip.antiAliasWithSaveLayer,
       child: Stack(
         fit: StackFit.passthrough,
         children: <Widget>[
