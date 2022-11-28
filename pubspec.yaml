@@ -17,7 +17,7 @@ dependencies:
   dio_cookie_manager: 2.0.0
   path_provider: ^2.0.2
   shared_preferences: ^2.0.15
-  url_launcher: ^6.1.6
+  url_launcher: ^6.1.7
   intl: ^0.17.0
   scoped_model: ^2.0.0
   loader:
