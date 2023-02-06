@@ -498,10 +498,10 @@ packages:
     dependency: "direct main"
     description:
       name: lychee_player
-      sha256: "947fdfe53ea8c41bd3c8c2547bf73f188b827be7554df4e84adb076f6751728f"
+      sha256: "64001cab482d8ff078d7e16475e55ed5e0ddbca74d2cef95b57712c389bc378c"
       url: "https://pub.dev"
     source: hosted
-    version: "0.3.4"
+    version: "0.4.0"
   matcher:
     dependency: transitive
     description:
@@ -925,7 +925,7 @@ packages:
     source: hosted
     version: "3.0.0+3"
   system_clock:
-    dependency: "direct overridden"
+    dependency: transitive
     description:
       name: system_clock
       sha256: "4926afa2ab15480a420697779d156038bdc6d6b944f434a383e98d8fd97cec09"
