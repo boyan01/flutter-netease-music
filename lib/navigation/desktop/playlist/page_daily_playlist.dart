@@ -5,7 +5,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../../../extension.dart';
 import '../../../providers/daily_playlist_provider.dart';
 import '../../../repository.dart';
-import '../../../utils/system/scroll_controller.dart';
 import '../../common/material/flexible_app_bar.dart';
 import '../../common/playlist/track_list_container.dart';
 import '../widgets/playlist_collapsed_title.dart';
@@ -57,7 +56,6 @@ class _DailyPlaylistBody extends HookConsumerWidget {
         dateTime: date,
         tracks: tracks,
         child: CustomScrollView(
-          controller: AppScrollController(),
           slivers: [
             SliverOverlapAbsorber(handle: absorberHandle),
             _DailyHeader(date: date),

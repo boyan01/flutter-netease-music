@@ -4,7 +4,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../../extension.dart';
 import '../../providers/account_provider.dart';
 import '../../providers/navigator_provider.dart';
-import '../../utils/system/scroll_controller.dart';
 import '../common/navigation_target.dart';
 import 'playlist/user_playlists.dart';
 import 'widgets/navigation_tile.dart';
@@ -18,9 +17,8 @@ class NavigationSideBar extends StatelessWidget {
       color: context.colorScheme.surfaceWithElevation(1),
       shadowColor: Colors.transparent,
       elevation: 5,
-      child: CustomScrollView(
-        controller: AppScrollController(),
-        slivers: const [
+      child: const CustomScrollView(
+        slivers: [
           _PresetItems(),
           SliverSidebarUserPlaylist(),
         ],

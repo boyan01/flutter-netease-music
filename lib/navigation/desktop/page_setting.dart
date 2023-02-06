@@ -2,7 +2,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../../extension.dart';
-import '../../utils/system/scroll_controller.dart';
 import '../common/settings.dart';
 
 class PageSetting extends StatelessWidget {
@@ -22,7 +21,6 @@ class PageSetting extends StatelessWidget {
         contentPadding: const EdgeInsets.symmetric(horizontal: 8),
         child: ListView(
           padding: const EdgeInsets.symmetric(horizontal: 20),
-          controller: AppScrollController(),
           children: [
             const SizedBox(height: 20),
             Text(context.strings.theme, style: context.textTheme.bodyMedium),

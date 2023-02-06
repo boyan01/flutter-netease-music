@@ -4,7 +4,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../../../extension.dart';
 import '../../../providers/search_provider.dart';
 import '../../../repository.dart';
-import '../../../utils/system/scroll_controller.dart';
 import '../../common/playlist/track_list_container.dart';
 import '../widgets/track_tile_normal.dart';
 import 'page_search.dart';
@@ -43,7 +42,7 @@ class PageMusicSearchResult extends ConsumerWidget {
   }
 }
 
-class _TrackList extends HookConsumerWidget {
+class _TrackList extends ConsumerWidget {
   const _TrackList({
     super.key,
     required this.tracks,
@@ -52,7 +51,6 @@ class _TrackList extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final controller = useAppScrollController();
     return TrackTileContainer.simpleList(
       tracks: tracks,
       child: TrackTableContainer(
@@ -62,7 +60,6 @@ class _TrackList extends HookConsumerWidget {
             Expanded(
               child: ListView.builder(
                 itemCount: tracks.length,
-                controller: controller,
                 itemBuilder: (context, index) => TrackTile(
                   track: tracks[index],
                   index: index + 1,

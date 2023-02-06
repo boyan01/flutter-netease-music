@@ -1,26 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../extension.dart';
 import '../../../providers/navigator_provider.dart';
 import '../../../providers/personalized_playlist_provider.dart';
-import '../../../utils/system/scroll_controller.dart';
 import '../../common/navigation_target.dart';
 import '../../common/recommended_playlist_tile.dart';
 import 'recommend_for_you.dart';
 
-class DiscoverPage extends HookWidget {
+class DiscoverPage extends StatelessWidget {
   const DiscoverPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final scrollController = useAppScrollController();
     return Material(
       color: context.colorScheme.background,
       child: CustomScrollView(
-        controller: scrollController,
         slivers: [
           SliverPadding(
             padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 16),

@@ -6,7 +6,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../../../extension.dart';
 import '../../../providers/play_history_provider.dart';
 import '../../../repository/data/track.dart';
-import '../../../utils/system/scroll_controller.dart';
 import '../../common/material/flexible_app_bar.dart';
 import '../../common/playlist/track_list_container.dart';
 import '../widgets/playlist_collapsed_title.dart';
@@ -65,7 +64,6 @@ class _PlayHistoryList extends HookConsumerWidget {
         onDelete: (ref, track) async =>
             ref.read(playHistoryProvider.notifier).remove(track),
         child: CustomScrollView(
-          controller: AppScrollController(),
           slivers: [
             SliverOverlapAbsorber(handle: absorberHandle),
             const _PlayHistoryHeader(),

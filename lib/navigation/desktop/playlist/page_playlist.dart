@@ -14,7 +14,6 @@ import '../../../providers/player_provider.dart';
 import '../../../providers/playlist_detail_provider.dart';
 import '../../../repository.dart';
 import '../../../utils/hooks.dart';
-import '../../../utils/system/scroll_controller.dart';
 import '../../../utils/track_list_filter.dart';
 import '../../common/image.dart';
 import '../../common/material/flexible_app_bar.dart';
@@ -68,7 +67,6 @@ class _PlaylistDetailBody extends HookConsumerWidget {
         playlist: playlist,
         userId: ref.read(userIdProvider),
         child: CustomScrollView(
-          controller: AppScrollController(),
           slivers: [
             SliverOverlapAbsorber(handle: absorberHandle),
             _PlaylistSliverBar(

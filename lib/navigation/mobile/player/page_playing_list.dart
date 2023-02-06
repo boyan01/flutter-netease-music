@@ -9,7 +9,6 @@ import '../../../extension.dart';
 import '../../../media/tracks/track_list.dart';
 import '../../../providers/player_provider.dart';
 import '../../../repository.dart';
-import '../../../utils/system/scroll_controller.dart';
 import '../../common/buttons.dart';
 import '../../common/icons.dart';
 import '../../common/material/dialogs.dart';
@@ -188,8 +187,7 @@ class _PlayingList extends HookConsumerWidget {
       return offset - layoutHeight / 2;
     });
 
-    final controller =
-        useAppScrollController(initialScrollOffset: initialOffset);
+    final controller = useScrollController(initialScrollOffset: initialOffset);
 
     return ListView.builder(
       controller: controller,

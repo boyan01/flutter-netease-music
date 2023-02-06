@@ -6,7 +6,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../../../extension.dart';
 import '../../../providers/account_provider.dart';
 import '../../../providers/navigator_provider.dart';
-import '../../../utils/system/scroll_controller.dart';
 import '../../common/buttons.dart';
 import '../../common/image.dart';
 import '../../common/navigation_target.dart';
@@ -43,7 +42,7 @@ class _UserLibraryBody extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final scrollController = useAppScrollController();
+    final scrollController = useScrollController();
     final headerHeight = const <double>[
       UserProfileSection.height + 16,
       70 + 16, // PresetGridSection
