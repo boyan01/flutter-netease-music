@@ -54,7 +54,7 @@ dependencies:
   lychee_player: ^0.3.4
   fluentui_system_icons: ^1.1.185
   pretty_qr_code: ^2.0.2
-  mixin_logger: ^0.0.1
+  mixin_logger: ^0.0.3
   synchronized: ^3.0.0+3
   ui_device:
     git:
