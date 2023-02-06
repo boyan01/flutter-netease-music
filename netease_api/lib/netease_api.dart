@@ -1,7 +1,6 @@
 export 'src/ao/album_detail.dart';
 export 'src/ao/artist_detail.dart';
 export 'src/ao/cellphone_existence_check.dart';
-export 'src/ao/cellphone_existence_check.dart';
 export 'src/ao/cloud_music.dart';
 export 'src/ao/daily_recommend_songs.dart';
 export 'src/ao/intelligence_recommend.dart';

@@ -99,7 +99,7 @@ class _Title extends ConsumerWidget {
             ),
             TextSpan(
               text: ' (${playingList.tracks.length})',
-              style: context.textTheme.caption,
+              style: context.textTheme.bodySmall,
             ),
           ],
         ),

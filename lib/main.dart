@@ -31,10 +31,10 @@ void main() async {
   await initAppDir();
   final preferences = await SharedPreferences.getInstance();
   unawaited(_initialDesktop(preferences));
-  initLogger(p.join(appDir.path, 'logs'));
+  await initLogger(p.join(appDir.path, 'logs'));
   registerImageCacheProvider();
   await _initHive();
-  FlutterError.onError = (details) => e('flutter error: ${details.toString()}');
+  FlutterError.onError = (details) => e('flutter error: $details');
   PlatformDispatcher.instance.onError = (error, stacktrace) {
     e('uncaught error: $error $stacktrace');
     return true;

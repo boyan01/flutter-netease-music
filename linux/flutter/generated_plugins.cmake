@@ -6,7 +6,6 @@ list(APPEND FLUTTER_PLUGIN_LIST
   desktop_drop
   lychee_player
   screen_retriever
-  system_clock
   url_launcher_linux
   window_manager
 )

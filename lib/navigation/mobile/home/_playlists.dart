@@ -28,7 +28,7 @@ class PlayListsGroupHeader extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Row(
             children: [
-              Text('$name($count)', style: context.textTheme.caption),
+              Text('$name($count)', style: context.textTheme.bodySmall),
               const Spacer(),
               const Icon(Icons.add),
               const Icon(Icons.more_vert),
@@ -232,10 +232,6 @@ class _UserPlaylists extends HookConsumerWidget {
     useEffect(
       () {
         void onScroll() {
-          if (tabController == null) {
-            return;
-          }
-
           if (tabController.indexIsChanging || tabAnimating.value) {
             return;
           }

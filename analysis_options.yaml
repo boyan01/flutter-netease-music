@@ -73,7 +73,6 @@ linter:
     flutter_style_todos: false
     hash_and_equals: true
     implementation_imports: true
-    invariant_booleans: true
     iterable_contains_unrelated_type: true
     join_return_with_assignment: true
     leading_newlines_in_multiline_strings: true

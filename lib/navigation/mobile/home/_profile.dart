@@ -90,12 +90,12 @@ class _ProfileWidget extends StatelessWidget {
           children: [
             Text(
               '${detail.followers} ${context.strings.follow}',
-              style: context.textTheme.caption,
+              style: context.textTheme.bodySmall,
             ),
             const SizedBox(width: 10),
             Text(
               '${detail.followedUsers} ${context.strings.follower}',
-              style: context.textTheme.caption,
+              style: context.textTheme.bodySmall,
             ),
             const SizedBox(width: 10),
             Container(

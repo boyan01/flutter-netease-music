@@ -35,7 +35,7 @@ class _PlaylistEditPageState extends State<PlaylistEditPage> {
                 onTap: () {
                   showSimpleNotification(
                     const Text('Not implemented'),
-                    background: Theme.of(context).errorColor,
+                    background: Theme.of(context).colorScheme.error,
                   );
                 },
                 child: Container(
@@ -80,7 +80,7 @@ class _PlaylistEditPageState extends State<PlaylistEditPage> {
                 onTap: () {
                   showSimpleNotification(
                     const Text('Not implemented'),
-                    background: Theme.of(context).errorColor,
+                    background: Theme.of(context).colorScheme.error,
                   );
                 },
                 child: Container(
@@ -102,7 +102,7 @@ class _PlaylistEditPageState extends State<PlaylistEditPage> {
                 onTap: () {
                   showSimpleNotification(
                     const Text('Not implemented'),
-                    background: Theme.of(context).errorColor,
+                    background: Theme.of(context).colorScheme.error,
                   );
                 },
                 child: Container(

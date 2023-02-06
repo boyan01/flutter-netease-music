@@ -31,7 +31,7 @@ Future<T> showLoaderOverlay<T>(
       );
     },
   );
-  Overlay.of(context)!.insert(entry);
+  Overlay.of(context).insert(entry);
   data
       .then(completer.complete)
       .timeout(timeout)

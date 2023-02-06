@@ -6,13 +6,13 @@ list(APPEND FLUTTER_PLUGIN_LIST
   desktop_drop
   lychee_player
   screen_retriever
-  system_clock
   url_launcher_windows
   window_manager
   windows_taskbar
 )
 
 list(APPEND FLUTTER_FFI_PLUGIN_LIST
+  system_clock
 )
 
 set(PLUGIN_BUNDLED_LIBRARIES)
