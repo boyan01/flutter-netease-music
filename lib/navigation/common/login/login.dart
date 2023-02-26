@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:overlay_support/overlay_support.dart';
-import 'package:pretty_qr_code/pretty_qr_code.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 
 import '../../../extension.dart';
 import '../../../providers/account_provider.dart';
@@ -150,11 +150,11 @@ class _QrCodeBody extends HookConsumerWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          PrettyQr(
+          QrImage(
             data: url,
-            size: 180,
-            roundEdges: true,
-            elementColor: context.colorScheme.textPrimary,
+            size: 160,
+            foregroundColor: Colors.black,
+            backgroundColor: Colors.white,
           ),
           SizedBox(height: descriptionSpacing),
           Text(
