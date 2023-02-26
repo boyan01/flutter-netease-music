@@ -13,7 +13,7 @@ dependencies:
   flutter:
     sdk: flutter
   cookie_jar: ^3.0.1
-  dio_cookie_manager: 2.0.0
+  dio_cookie_manager: ^2.1.1
   netease_music_api:
     #    path: ../../NeteaseCloudMusicApi
     git:
