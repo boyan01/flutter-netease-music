@@ -24,8 +24,6 @@ jobs:
         working-directory: netease_api
         run: flutter pub get
 
-      - run: flutter pub run build_runner build --delete-conflicting-outputs
-
       # verify the use of 'dart format' on each commit.
       - name: Verify formatting
         run: flutter format --set-exit-if-changed .
@@ -38,6 +36,7 @@ jobs:
         run: flutter test --coverage --coverage-path=lcov.info
 
   build-linux:
+    needs: lint
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
