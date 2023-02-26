@@ -43,7 +43,7 @@ dependencies:
   flutter_riverpod: ^2.0.2
   hooks_riverpod: ^2.0.2
   collection: ^1.15.0
-  window_manager: ^0.2.7
+  window_manager: ^0.3.0
   lpinyin: ^2.0.3
   stream_transform: ^2.0.1
   windows_taskbar: ^1.1.1
