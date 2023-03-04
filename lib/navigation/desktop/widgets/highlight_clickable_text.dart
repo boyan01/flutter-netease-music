@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:mixin_logger/mixin_logger.dart';
 import 'package:overlay_support/overlay_support.dart';
+import 'package:system_clock/system_clock.dart';
 
 import '../../../extension.dart';
 import '../../../repository/data/track.dart';
@@ -380,6 +381,8 @@ class _HoverOverlayWidget extends HookWidget {
     final shouldShowOverlay = isChildActive.value || isOverlayActive.value;
     final entry = useRef<OverlaySupportEntry?>(null);
 
+    final delayShowTimestamp = useRef(Duration.zero);
+
     useEffect(
       () {
         if (!shouldShowOverlay) {
@@ -397,11 +400,29 @@ class _HoverOverlayWidget extends HookWidget {
                 progress: progress,
                 link: link,
                 child: MouseRegion(
-                  onEnter: (event) => isOverlayActive.value = true,
+                  onEnter: (event) {
+                    if (delayShowTimestamp.value >
+                        SystemClock.elapsedRealtime()) {
+                      return;
+                    }
+                    isOverlayActive.value = true;
+                  },
                   onExit: (event) => isOverlayActive.value = false,
-                  child: SizedBox(
-                    width: overlayWidth,
-                    child: overlay,
+                  child: Listener(
+                    onPointerPanZoomStart: (event) {
+                      isOverlayActive.value = false;
+                      delayShowTimestamp.value = SystemClock.elapsedRealtime() +
+                          const Duration(milliseconds: 100);
+                      // ignore: invalid_use_of_protected_member
+                      WidgetsBinding.instance.resetGestureBinding();
+                      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+                        WidgetsBinding.instance.handlePointerEvent(event);
+                      });
+                    },
+                    child: SizedBox(
+                      width: overlayWidth,
+                      child: overlay,
+                    ),
                   ),
                 ),
               ),

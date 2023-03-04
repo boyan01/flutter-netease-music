@@ -909,7 +909,7 @@ packages:
     source: hosted
     version: "3.0.1"
   system_clock:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: system_clock
       sha256: "4926afa2ab15480a420697779d156038bdc6d6b944f434a383e98d8fd97cec09"
