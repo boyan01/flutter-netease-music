@@ -122,8 +122,9 @@ class _LyricView extends ConsumerWidget {
           },
           child: Lyric(
             lyric: lyric,
-            lyricLineStyle: normalStyle,
-            highlight: color,
+            lyricLineStyle: normalStyle.copyWith(fontSize: 14),
+            lyricHighlightStyle:
+                normalStyle.copyWith(color: color, fontSize: 16),
             position: position?.inMilliseconds ?? 0,
             onTap: onTap,
             size: Size(
