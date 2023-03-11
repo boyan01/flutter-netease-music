@@ -116,7 +116,6 @@ class LyricState extends State<Lyric> with TickerProviderStateMixin {
         final normalSize = widget.lyricLineStyle.fontSize ?? 14;
         final highlightSize = widget.lyricHighlightStyle.fontSize ?? 14;
         if (normalSize != highlightSize) {
-          final currentLine = lyricPainter.currentLine;
           final fontSizeAnimation =
               Tween<double>(begin: normalSize, end: highlightSize)
                   .chain(CurveTween(curve: Curves.easeInOut))
@@ -124,13 +123,29 @@ class LyricState extends State<Lyric> with TickerProviderStateMixin {
           fontSizeAnimation.addListener(() {
             lyricPainter.setCustomLineFontSize({
               line: fontSizeAnimation.value,
-              currentLine: normalSize + highlightSize - fontSizeAnimation.value,
             });
           });
           lyricPainter.setCustomLineFontSize({
             line: fontSizeAnimation.value,
-            currentLine: normalSize + highlightSize - fontSizeAnimation.value,
           });
+          if (lyricPainter._lineSpaces.isNotEmpty) {
+            final spaces = Map<int, double>.from(lyricPainter._lineSpaces);
+            final spaceAnimation = Tween<double>(begin: 0, end: 1)
+                .chain(CurveTween(curve: Curves.easeInOut))
+                .animate(_lineController!);
+            spaceAnimation.addListener(() {
+              final value = spaceAnimation.value;
+              for (final line in lyricPainter._lineSpaces.keys.toList()) {
+                final newSpace = (spaces[line] ?? 0) * (1 - value);
+                if (newSpace == 0) {
+                  lyricPainter._lineSpaces.remove(line);
+                } else {
+                  lyricPainter._lineSpaces[line] =
+                      (spaces[line] ?? 0) * (1 - value);
+                }
+              }
+            });
+          }
         }
         _lineController!.forward();
       } else {
@@ -314,6 +329,7 @@ class LyricPainter extends ChangeNotifier implements CustomPainter {
 
   late List<TextPainter> _presetPainters;
   late List<TextPainter> lyricPainters;
+  final Map<int, double> _lineSpaces = {};
 
   double _offsetScroll = 0;
 
@@ -351,9 +367,12 @@ class LyricPainter extends ChangeNotifier implements CustomPainter {
   double get height => _height;
   double _height = -1;
 
+  double _width = -1;
+
   @override
   void paint(ui.Canvas canvas, ui.Size size) {
-    _layoutPainterList(size);
+    _width = size.width;
+    _layoutPainterList(size.width, currentLine, _fontSizeMap);
     canvas.clipRect(Rect.fromLTWH(0, 0, size.width, size.height));
 
     // draw first line at viewport center if offsetScroll is 0.
@@ -363,6 +382,9 @@ class LyricPainter extends ChangeNotifier implements CustomPainter {
       final painter = lyricPainters[line];
       _drawLyricLine(canvas, painter, dy, size);
       dy += painter.height;
+      if (_lineSpaces[line] != null) {
+        dy += _lineSpaces[line]!;
+      }
     }
   }
 
@@ -393,17 +415,21 @@ class LyricPainter extends ChangeNotifier implements CustomPainter {
     return true;
   }
 
-  void _layoutPainterList(ui.Size size) {
+  void _layoutPainterList(
+    double maxWith,
+    int currentLine,
+    Map<int, double> fontSizeMap,
+  ) {
     _height = 0;
     lyricPainters = [];
     for (var i = 0; i < _presetPainters.length; i++) {
       final TextPainter painter;
-      if (_fontSizeMap[i] != null) {
+      if (fontSizeMap[i] != null) {
         painter = TextPainter(textDirection: TextDirection.ltr)
           ..text = TextSpan(
             text: lyric[i].line,
             style: (i == currentLine ? _highlightStyle : _normalStyle)
-                .copyWith(fontSize: _fontSizeMap[i]),
+                .copyWith(fontSize: fontSizeMap[i]),
           );
       } else if (i == currentLine) {
         painter = TextPainter(textDirection: TextDirection.ltr)
@@ -412,16 +438,29 @@ class LyricPainter extends ChangeNotifier implements CustomPainter {
       } else {
         painter = _presetPainters[i];
       }
-      painter.layout(maxWidth: size.width);
+      painter.layout(maxWidth: maxWith);
       _height += painter.height;
+      if (_lineSpaces[i] != null) {
+        _height += _lineSpaces[i]!;
+      }
       lyricPainters.add(painter);
     }
   }
 
   // compute the offset current offset to destination line
   double computeScrollTo(int destination) {
-    if (lyricPainters.isEmpty || this.height == 0) {
+    if (lyricPainters.isEmpty || this.height == 0 || _width <= 0) {
       return 0;
+    }
+
+    final currentLineHeights = lyricPainters.map((e) => e.height).toList();
+    _layoutPainterList(_width, destination, {});
+    final destinationLineHeights = lyricPainters.map((e) => e.height).toList();
+
+    for (var i = 0; i < currentLineHeights.length; i++) {
+      if (currentLineHeights[i] > destinationLineHeights[i]) {
+        _lineSpaces[i] = currentLineHeights[i] - destinationLineHeights[i];
+      }
     }
 
     var height = -lyricPainters[0].height / 2;
