@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
+import 'package:mixin_logger/mixin_logger.dart';
 import 'package:path/path.dart' as p;
 
 abstract class CacheKey {
@@ -76,14 +77,21 @@ class FileCacheProvider {
   }
 }
 
-Future<void> _fileLru(Map params) async {
+Future<void> _fileLru(Map<String, dynamic> params) async {
   final directory = Directory(params['path'] as String);
   final maxSize = params['maxSize'] as int?;
   if (!directory.existsSync()) {
     return;
   }
   final files = directory.listSync().whereType<File>().toList();
-  files.sort((a, b) => a.lastModifiedSync().compareTo(b.lastModifiedSync()));
+  files.sort((a, b) {
+    try {
+      return a.lastModifiedSync().compareTo(b.lastModifiedSync());
+    } catch (error, stacktrace) {
+      e('_fileLru: error: $error, stacktrace: $stacktrace');
+      return 0;
+    }
+  });
 
   var totalSize = 0;
   for (final file in files) {
