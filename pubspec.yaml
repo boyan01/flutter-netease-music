@@ -42,7 +42,7 @@ dependencies:
   async: ^2.9.0
   riverpod: ^2.0.2
   flutter_riverpod: ^2.0.2
-  hooks_riverpod: ^2.3.4
+  hooks_riverpod: ^2.3.5
   collection: ^1.17.0
   window_manager: ^0.3.2
   lpinyin: ^2.0.3
