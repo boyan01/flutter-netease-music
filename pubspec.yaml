@@ -40,7 +40,7 @@ dependencies:
     path: netease_api/
   path: ^1.8.0
   async: ^2.9.0
-  riverpod: ^2.0.2
+  riverpod: ^2.3.6
   flutter_riverpod: ^2.0.2
   hooks_riverpod: ^2.3.4
   collection: ^1.17.0
