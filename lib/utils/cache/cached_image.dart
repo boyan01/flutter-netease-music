@@ -43,10 +43,7 @@ class CachedImage extends ImageProvider<CachedImage> implements CacheKey {
   int get hashCode => Object.hash(id, scale);
 
   @override
-  ImageStreamCompleter loadBuffer(
-    CachedImage key,
-    DecoderBufferCallback decode,
-  ) {
+  ImageStreamCompleter loadImage(CachedImage key, ImageDecoderCallback decode) {
     return MultiFrameImageStreamCompleter(
       codec: _loadAsync(key, decode),
       scale: key.scale,
@@ -57,7 +54,7 @@ class CachedImage extends ImageProvider<CachedImage> implements CacheKey {
 
   Future<ui.Codec> _loadAsync(
     CachedImage key,
-    DecoderBufferCallback decode,
+    ImageDecoderCallback decode,
   ) async {
     final image = await ImageFileCache.instance.get(key);
     if (image != null) {
@@ -180,8 +177,9 @@ void registerImageCacheProvider() {
       );
       final stream = image.resolve(
         ImageConfiguration(
-          devicePixelRatio: window.devicePixelRatio,
-          locale: window.locale,
+          devicePixelRatio:
+              PlatformDispatcher.instance.views.first.devicePixelRatio,
+          locale: PlatformDispatcher.instance.locale,
           platform: defaultTargetPlatform,
         ),
       );

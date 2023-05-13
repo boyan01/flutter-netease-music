@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide SearchBar;
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../extension.dart';

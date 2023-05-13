@@ -38,8 +38,8 @@ class BottomPlayerBar extends StatelessWidget {
               elevation: 10,
               child: Padding(
                 padding: EdgeInsets.only(bottom: bottomExtraPadding),
-                child: Row(
-                  children: const [
+                child: const Row(
+                  children: [
                     Expanded(child: _PlayingItemWidget()),
                     SizedBox(width: 20),
                     _CenterControllerWidget(),

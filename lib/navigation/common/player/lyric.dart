@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:ui' as ui;
-import 'dart:ui';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
@@ -279,13 +278,14 @@ class _ScrollerListenerState extends State<_ScrollerListener> {
   }
 
   void _handlePointerScroll(PointerEvent event) {
+    final devicePixelRatio = View.of(context).devicePixelRatio;
     assert(event is PointerScrollEvent);
     final delta = _pointerSignalEventDelta(event as PointerScrollEvent);
     final double scrollerScale;
     if (defaultTargetPlatform == TargetPlatform.windows) {
-      scrollerScale = window.devicePixelRatio * 2;
+      scrollerScale = devicePixelRatio * 2;
     } else if (defaultTargetPlatform == TargetPlatform.linux) {
-      scrollerScale = window.devicePixelRatio;
+      scrollerScale = devicePixelRatio;
     } else {
       scrollerScale = 1;
     }

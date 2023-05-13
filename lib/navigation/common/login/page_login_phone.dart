@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -62,10 +61,10 @@ class _PhoneInputLayout extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final inputController = useTextEditingController();
 
+    final countryCode = View.of(context).platformDispatcher.locale.countryCode;
     final selectedRegion = useState<RegionFlag>(
       useMemoized(() {
         // initial to select system default region.
-        final countryCode = window.locale.countryCode;
         return regions.firstWhere(
           (region) => region.code == countryCode,
           orElse: () => regions[0],

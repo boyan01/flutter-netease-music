@@ -16,7 +16,7 @@ Future<void> loadFallbackFonts() async {
 
   // Skip load fallback fonts if current system language is en.
   // See more: https://github.com/flutter/flutter/issues/90951
-  if (window.locale.languageCode == 'en') {
+  if (PlatformDispatcher.instance.locale.languageCode == 'en') {
     return;
   }
   if (_fallbackFontsLoaded) {

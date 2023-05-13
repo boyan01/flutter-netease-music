@@ -179,7 +179,7 @@ class _AppBar extends HookConsumerWidget {
       ),
       centerTitle: true,
       title: AnimatedCrossFade(
-        firstChild: Row(),
+        firstChild: const Row(),
         secondChild: userInfo,
         duration: const Duration(milliseconds: 200),
         crossFadeState:

@@ -33,6 +33,17 @@ enum PlayRecordType {
   weekData,
 }
 
+extension PlayRecordTypeExtension on PlayRecordType {
+  String get value {
+    switch (this) {
+      case PlayRecordType.allData:
+        return 'allData';
+      case PlayRecordType.weekData:
+        return 'weekData';
+    }
+  }
+}
+
 const _kCodeSuccess = 200;
 
 const kCodeNeedLogin = 301;
@@ -474,7 +485,7 @@ class Repository {
     final result =
         await doRequest('/user/record', {'uid': uid, 'type': type.index});
     return result.map((value) {
-      final records = (value[type.name] as List).cast<Map<String, dynamic>>();
+      final records = (value[type.value] as List).cast<Map<String, dynamic>>();
       return records.map((json) => PlayRecord.fromJson(json)).toList();
     });
   }

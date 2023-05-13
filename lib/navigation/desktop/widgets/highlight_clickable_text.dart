@@ -149,7 +149,7 @@ class _Widget extends MouseHighlightSpan {
 extension _MouseHighlightSpanList on List<MouseHighlightSpan> {
   List<InlineSpan> toInlineSpans({
     Set<int> highlight = const {},
-    void Function(int index, bool hover)? onHover,
+    void Function(int index, {required bool hover})? onHover,
     TextStyle? highlightStyle,
   }) {
     final spans = <InlineSpan>[];
@@ -162,8 +162,12 @@ extension _MouseHighlightSpanList on List<MouseHighlightSpan> {
             style: highlight.contains(i)
                 ? span.highlightStyle ?? highlightStyle
                 : span.style,
-            onEnter: onHover == null ? null : (event) => onHover.call(i, true),
-            onExit: onHover == null ? null : (event) => onHover.call(i, false),
+            onEnter: onHover == null
+                ? null
+                : (event) => onHover.call(i, hover: true),
+            onExit: onHover == null
+                ? null
+                : (event) => onHover.call(i, hover: false),
             recognizer: TapGestureRecognizer()..onTap = span.onTap,
             mouseCursor: SystemMouseCursors.click,
           ),
@@ -260,7 +264,7 @@ class _HoverHighlightText extends HookWidget {
     final spans = children.toInlineSpans(
       highlight: hovered.value,
       highlightStyle: highlightStyle,
-      onHover: (index, hover) {
+      onHover: (index, {required hover}) {
         if (hover) {
           hovered.value.add(index);
         } else {
@@ -307,7 +311,7 @@ class _OverflowText extends HookWidget {
     if (style == null || style!.inherit) {
       effectiveTextStyle = defaultTextStyle.style.merge(style);
     }
-    if (MediaQuery.boldTextOverride(context)) {
+    if (MediaQuery.boldTextOf(context)) {
       effectiveTextStyle = effectiveTextStyle!
           .merge(const TextStyle(fontWeight: FontWeight.bold));
     }

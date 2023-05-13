@@ -1,10 +1,6 @@
 include: package:flutter_lints/flutter.yaml
 
 analyzer:
-  strong-mode:
-    # TODO remove this
-    implicit-casts: true
-    implicit-dynamic: true
   exclude:
     - 'lib/generated/**'
     - '**.g.dart'
@@ -111,7 +107,6 @@ linter:
     prefer_const_literals_to_create_immutables: true
     prefer_constructors_over_static_methods: true
     prefer_contains: true
-    prefer_equal_for_default_values: true
     prefer_final_fields: true
     prefer_final_in_for_each: true
     prefer_final_locals: true

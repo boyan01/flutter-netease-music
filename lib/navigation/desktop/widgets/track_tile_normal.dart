@@ -185,7 +185,7 @@ class _TrackTableConfiguration extends InheritedWidget {
   }
 }
 
-class TrackTableHeader extends StatelessWidget with PreferredSizeWidget {
+class TrackTableHeader extends StatelessWidget implements PreferredSizeWidget {
   const TrackTableHeader({super.key});
 
   @override

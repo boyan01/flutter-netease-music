@@ -109,8 +109,8 @@ class _DebugNavigationPlatformSetting extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: const [
+    return const Column(
+      children: [
         Divider(height: 20),
         _SettingGroup(
           title: 'Navigation Platform (Developer options)',

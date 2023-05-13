@@ -49,7 +49,7 @@ class _BodyLoginWithPhoneNumber extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Column(
       children: [
-        Row(),
+        const Row(),
         LoginPhoneNumberInputWidget(
           onSubmit: (phoneNumber) => ref
               .read(navigatorProvider.notifier)
@@ -77,7 +77,7 @@ class _BodyLoginWithQrCode extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Column(
       children: [
-        Row(),
+        const Row(),
         const SizedBox(height: 32),
         LoginViaQrCodeWidget(
           onVerified: () => ref.read(navigatorProvider.notifier).back(),

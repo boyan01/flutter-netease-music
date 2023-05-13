@@ -28,20 +28,20 @@ class _WindowLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ClipRect(
+    return const ClipRect(
       child: _OverflowBox(
         child: Material(
           child: Stack(
             fit: StackFit.expand,
             children: [
               Column(
-                children: const [
+                children: [
                   HeaderBar(),
                   _ContentLayout(),
                   SizedBox(height: 64),
                 ],
               ),
-              const Align(
+              Align(
                 alignment: Alignment.bottomCenter,
                 child: BottomPlayerBar(),
               ),
@@ -58,10 +58,10 @@ class _ContentLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
+    return const Expanded(
       child: DesktopPlayingPageContainer(
         child: Row(
-          children: const [
+          children: [
             SizedBox(width: 200, child: NavigationSideBar()),
             Expanded(
               child: ClipRect(

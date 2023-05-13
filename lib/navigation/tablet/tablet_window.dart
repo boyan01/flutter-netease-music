@@ -49,10 +49,10 @@ class _ContentLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
+    return const Expanded(
       child: DesktopPlayingPageContainer(
         child: Row(
-          children: const [
+          children: [
             SizedBox(width: 200, child: NavigationSideBar()),
             Expanded(
               child: ClipRect(
