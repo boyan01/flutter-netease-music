@@ -24,9 +24,8 @@ jobs:
         working-directory: netease_api
         run: flutter pub get
 
-      # verify the use of 'dart format' on each commit.
       - name: Verify formatting
-        run: flutter format --set-exit-if-changed .
+        run: dart format --set-exit-if-changed .
 
       # Consider passing '--fatal-infos' for slightly stricter analysis.
       - name: Analyze project source
