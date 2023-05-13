@@ -52,16 +52,17 @@ static void my_application_activate(GApplication *application) {
   geometry.min_width = 960;
   geometry.min_height = 750;
   gtk_window_set_geometry_hints(window, nullptr, &geometry, GdkWindowHints(GDK_HINT_MIN_SIZE));
-  gtk_widget_show(GTK_WIDGET(window));
 
   g_autoptr(FlDartProject) project = fl_dart_project_new();
   fl_dart_project_set_dart_entrypoint_arguments(project, self->dart_entrypoint_arguments);
 
   FlView *view = fl_view_new(project);
-  gtk_widget_show(GTK_WIDGET(view));
   gtk_container_add(GTK_CONTAINER(window), GTK_WIDGET(view));
 
   fl_register_plugins(FL_PLUGIN_REGISTRY(view));
+
+  gtk_widget_show(GTK_WIDGET(window));
+  gtk_widget_show(GTK_WIDGET(view));
 
   gtk_widget_grab_focus(GTK_WIDGET(view));
 }

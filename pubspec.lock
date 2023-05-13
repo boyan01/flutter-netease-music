@@ -373,6 +373,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.3.0"
+  handy_window:
+    dependency: "direct main"
+    description:
+      name: handy_window
+      sha256: "458a9f7d4ae23816e8f33c76596f943a04e7eff13d864e0867f3b40f1647d63d"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.3.1"
   hive:
     dependency: "direct main"
     description:

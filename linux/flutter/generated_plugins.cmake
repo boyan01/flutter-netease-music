@@ -4,6 +4,7 @@
 
 list(APPEND FLUTTER_PLUGIN_LIST
   desktop_drop
+  handy_window
   lychee_player
   screen_retriever
   url_launcher_linux
