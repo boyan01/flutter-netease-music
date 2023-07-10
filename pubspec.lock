@@ -301,10 +301,10 @@ packages:
     dependency: "direct main"
     description:
       name: fluentui_system_icons
-      sha256: ae3685648c572fa8011cec8d59a36278fa500d29f7164d4e769551d48b3ce8af
+      sha256: "8f7a374e71618c101d631bdfded01f0764c882634534e1966046fd7278fec4d0"
       url: "https://pub.dev"
     source: hosted
-    version: "1.1.200"
+    version: "1.1.205"
   flutter:
     dependency: "direct main"
     description: flutter
