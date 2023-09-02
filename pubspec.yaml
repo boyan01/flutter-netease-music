@@ -61,7 +61,7 @@ dependencies:
       url: https://github.com/MixinNetwork/flutter-plugins.git
       ref: 00654e51f51aa65cdc39784a3075c9abb8b9dd7c
       path: packages/ui_device
-  qr_flutter: ^4.0.0
+  qr_flutter: ^4.1.0
   system_clock: ^2.0.0
   handy_window: ^0.3.1
 
