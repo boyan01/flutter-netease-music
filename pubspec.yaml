@@ -34,7 +34,7 @@ dependencies:
   scrollable_positioned_list: ^0.3.5
   hive: ^2.2.3
   hive_flutter: ^1.1.0
-  flutter_hooks: ^0.18.0
+  flutter_hooks: ^0.20.1
   equatable: ^2.0.3
   netease_api:
     path: netease_api/
