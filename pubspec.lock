@@ -212,10 +212,11 @@ packages:
   desktop_drop:
     dependency: "direct main"
     description:
-      name: desktop_drop
-      sha256: ebba9c9cb0b54385998a977d741cc06fd8324878c08d5a36e9da61cd56b04cc6
-      url: "https://pub.dev"
-    source: hosted
+      path: "packages/desktop_drop"
+      ref: "334939d7b6aebdf45881730a21731215976639ca"
+      resolved-ref: "334939d7b6aebdf45881730a21731215976639ca"
+      url: "https://github.com/MixinNetwork/flutter-plugins.git"
+    source: git
     version: "0.4.3"
   dio:
     dependency: transitive
@@ -554,8 +555,8 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: "434e6fdc79a81d1a2a0877339ae29004c0f32734"
-      resolved-ref: "434e6fdc79a81d1a2a0877339ae29004c0f32734"
+      ref: f7a97ae6b892c133c63a10e5f8879a611520d3c7
+      resolved-ref: f7a97ae6b892c133c63a10e5f8879a611520d3c7
       url: "https://github.com/boyan01/flutter-music-player.git"
     source: git
     version: "0.0.1"
@@ -1102,5 +1103,5 @@ packages:
     source: hosted
     version: "3.1.2"
 sdks:
-  dart: ">=3.0.0 <4.0.0"
+  dart: ">=3.1.0-185.0.dev <4.0.0"
   flutter: ">=3.10.0"

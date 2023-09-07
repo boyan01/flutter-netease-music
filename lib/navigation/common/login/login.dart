@@ -150,10 +150,9 @@ class _QrCodeBody extends HookConsumerWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          QrImage(
+          QrImageView(
             data: url,
             size: 160,
-            foregroundColor: Colors.black,
             backgroundColor: Colors.white,
           ),
           SizedBox(height: descriptionSpacing),

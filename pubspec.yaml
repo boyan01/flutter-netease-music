@@ -30,7 +30,7 @@ dependencies:
   music_player:
     git:
       url: https://github.com/boyan01/flutter-music-player.git
-      ref: 434e6fdc79a81d1a2a0877339ae29004c0f32734
+      ref: f7a97ae6b892c133c63a10e5f8879a611520d3c7
   scrollable_positioned_list: ^0.3.5
   hive: ^2.2.3
   hive_flutter: ^1.1.0
@@ -49,7 +49,11 @@ dependencies:
   stream_transform: ^2.0.1
   windows_taskbar: ^1.1.1
   filesize: ^2.0.1
-  desktop_drop: ^0.4.3
+  desktop_drop:
+    git:
+      url: https://github.com/MixinNetwork/flutter-plugins.git
+      ref: 334939d7b6aebdf45881730a21731215976639ca
+      path: packages/desktop_drop
   dotted_border: ^2.0.0+2
   meta: ^1.7.0
   lychee_player: ^0.4.0
