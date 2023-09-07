@@ -313,7 +313,7 @@ class _AlbumCoverState extends ConsumerState<AlbumCover>
               ),
             ),
           ),
-        )
+        ),
       ],
     );
   }

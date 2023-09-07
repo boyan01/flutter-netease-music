@@ -31,7 +31,7 @@ Future<bool> showNeedLoginToast(BuildContext context) async {
                       .bodyLarge!
                       .copyWith(color: Colors.blue),
                 ),
-              )
+              ),
             ],
           ),
         ),

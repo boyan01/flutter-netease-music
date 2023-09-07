@@ -27,7 +27,7 @@ class DividerWrapper extends StatelessWidget {
           height: 0,
           indent: indent,
           color: Colors.black12,
-        )
+        ),
       ],
     );
   }

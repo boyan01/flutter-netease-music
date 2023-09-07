@@ -134,11 +134,11 @@ class _ItemLeaderBoard2 extends ConsumerWidget {
                               style:
                                   Theme.of(context).primaryTextTheme.bodySmall,
                             ),
-                            const Padding(padding: EdgeInsets.only(right: 4))
+                            const Padding(padding: EdgeInsets.only(right: 4)),
                           ],
                         ),
                       ),
-                    )
+                    ),
                   ],
                 ),
               ),
@@ -198,11 +198,11 @@ class _ItemLeaderboard1 extends ConsumerWidget {
                               style:
                                   Theme.of(context).primaryTextTheme.bodySmall,
                             ),
-                            const Padding(padding: EdgeInsets.only(right: 4))
+                            const Padding(padding: EdgeInsets.only(right: 4)),
                           ],
                         ),
                       ),
-                    )
+                    ),
                   ],
                 ),
               ),
@@ -234,7 +234,7 @@ class _ItemLeaderboard1 extends ConsumerWidget {
                   const Divider(height: 0),
                 ],
               ),
-            )
+            ),
           ],
         ),
       ),

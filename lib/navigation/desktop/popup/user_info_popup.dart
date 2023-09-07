@@ -43,7 +43,7 @@ Future<void> showUserInfoPopup({
                           height: 48,
                         );
                       },
-                    )
+                    ),
                   ],
                 ),
               ),

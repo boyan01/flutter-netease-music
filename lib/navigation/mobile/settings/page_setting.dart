@@ -50,9 +50,9 @@ class PageSettings extends StatelessWidget {
                     },
                   );
                 },
-              )
+              ),
             ],
-          )
+          ),
         ],
       ),
     );
@@ -80,7 +80,7 @@ class _SettingGroup extends StatelessWidget {
           Column(
             mainAxisSize: MainAxisSize.min,
             children: children,
-          )
+          ),
         ],
       ),
     );
@@ -140,7 +140,7 @@ class _AccountSettings extends ConsumerWidget {
           onTap: () {
             ref.read(userProvider.notifier).logout();
           },
-        )
+        ),
       ],
     );
   }

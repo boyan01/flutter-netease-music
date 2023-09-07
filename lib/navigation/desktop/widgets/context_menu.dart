@@ -234,7 +234,7 @@ OverlaySupportEntry showOverlayAtPosition({
               onInvoke: (intent) {
                 OverlaySupportEntry.of(context)?.dismiss();
               },
-            )
+            ),
           },
           child: Stack(
             fit: StackFit.expand,

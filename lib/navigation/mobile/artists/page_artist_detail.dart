@@ -125,11 +125,11 @@ class _PageHotSongsState extends State<_PageHotSongs>
                       // );
                     },
                     child: const Text('多选'),
-                  )
+                  ),
                 ],
               ),
             ),
-            const Divider(height: 0)
+            const Divider(height: 0),
           ],
         ),
       ),
@@ -258,10 +258,10 @@ class _PageMVsState extends State<_PageMVs> with AutomaticKeepAliveClientMixin {
                         style: Theme.of(context).textTheme.bodySmall,
                       ),
                       const Spacer(),
-                      const Divider(height: 0)
+                      const Divider(height: 0),
                     ],
                   ),
-                )
+                ),
               ],
             ),
           ),
@@ -381,10 +381,10 @@ class _PageArtistIntroductionState extends State<_PageArtistIntroduction>
                       style: Theme.of(context).textTheme.bodySmall,
                     ),
                     const Spacer(),
-                    const Divider(height: 0)
+                    const Divider(height: 0),
                   ],
                 ),
-              )
+              ),
             ],
           ),
         ),

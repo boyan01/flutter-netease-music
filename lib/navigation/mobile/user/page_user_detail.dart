@@ -67,7 +67,7 @@ class _DetailPage extends StatelessWidget {
                   context,
                 ),
                 sliver: _UserDetailAppBar(user),
-              )
+              ),
             ];
           },
           body: SafeArea(
@@ -167,7 +167,7 @@ class _UserDetailAppBar extends StatelessWidget {
                   //TODO
                   toast('todo');
                 },
-              )
+              ),
             ],
           );
         },

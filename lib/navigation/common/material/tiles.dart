@@ -55,10 +55,10 @@ class AlbumTile extends ConsumerWidget {
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
                   const Spacer(),
-                  const Divider(height: 0)
+                  const Divider(height: 0),
                 ],
               ),
-            )
+            ),
           ],
         ),
       ),

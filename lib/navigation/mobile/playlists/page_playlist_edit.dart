@@ -48,7 +48,7 @@ class _PlaylistEditPageState extends State<PlaylistEditPage> {
                         url: widget.playlist.coverUrl,
                         height: 56,
                         width: 56,
-                      )
+                      ),
                     ],
                   ),
                 ),
@@ -70,7 +70,7 @@ class _PlaylistEditPageState extends State<PlaylistEditPage> {
                   child: Row(
                     children: <Widget>[
                       Expanded(child: Text('名称', style: style)),
-                      Text(widget.playlist.name)
+                      Text(widget.playlist.name),
                     ],
                   ),
                 ),
@@ -92,7 +92,7 @@ class _PlaylistEditPageState extends State<PlaylistEditPage> {
                       Text(
                         '功能未实现',
                         style: Theme.of(context).textTheme.bodySmall,
-                      )
+                      ),
                     ],
                   ),
                 ),
@@ -111,7 +111,7 @@ class _PlaylistEditPageState extends State<PlaylistEditPage> {
                   child: Row(
                     children: <Widget>[
                       Expanded(child: Text('描述', style: style)),
-                      Text(widget.playlist.name)
+                      Text(widget.playlist.name),
                     ],
                   ),
                 ),
@@ -187,7 +187,7 @@ class _PlaylistNameEditPageState extends State<_PlaylistNameEditPage> {
               // }
             },
             child: const Text('保存'),
-          )
+          ),
         ],
       ),
       body: Padding(
@@ -217,7 +217,7 @@ class _PlaylistNameEditPageState extends State<_PlaylistNameEditPage> {
                 }
                 return null;
               },
-            )
+            ),
           ],
         ),
       ),

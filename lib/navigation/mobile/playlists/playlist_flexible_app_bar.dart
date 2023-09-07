@@ -322,7 +322,7 @@ class _OverlappedActionButtons extends StatelessWidget {
             ),
           ),
         ),
-        const SizedBox(height: 10)
+        const SizedBox(height: 10),
       ],
     );
   }
@@ -404,11 +404,11 @@ class _AlbumHeaderContent extends ConsumerWidget {
                       const SizedBox(height: 4),
                       Text(
                         '发行时间：${album.publishTime.toFormattedString()}',
-                      )
+                      ),
                     ],
                   ),
                 ),
-              )
+              ),
             ],
           ),
         ),
@@ -473,7 +473,7 @@ class _Background extends StatelessWidget {
               child: ColoredBox(color: Colors.black.withOpacity(0.3)),
             ),
           ),
-          ColoredBox(color: Colors.black.withOpacity(0.3))
+          ColoredBox(color: Colors.black.withOpacity(0.3)),
         ],
       ),
     );

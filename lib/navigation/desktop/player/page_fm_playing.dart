@@ -72,7 +72,7 @@ class _CoverLayout extends StatelessWidget {
                 borderRadius: BorderRadius.circular(8),
                 child: AppImage(url: track.imageUrl),
               ),
-              FmCoverPlayPauseButton(track: track)
+              FmCoverPlayPauseButton(track: track),
             ],
           ),
         ),

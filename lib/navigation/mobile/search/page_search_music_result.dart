@@ -85,7 +85,7 @@ class _TrackList extends ConsumerWidget {
               ),
               childCount: tracks.length,
             ),
-          )
+          ),
         ],
       ),
     );

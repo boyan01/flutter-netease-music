@@ -33,7 +33,7 @@ class ThemeSwitchRadios extends ConsumerWidget {
           groupValue: themeMode,
           value: ThemeMode.dark,
           title: Text(context.strings.themeDark),
-        )
+        ),
       ],
     );
   }

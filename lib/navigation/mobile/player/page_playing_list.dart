@@ -73,7 +73,7 @@ class PlayingListDialog extends StatelessWidget {
                       layoutHeight: constraints.maxHeight,
                     ),
                   ),
-                )
+                ),
               ],
             ),
           ),
@@ -143,7 +143,7 @@ class _Header extends ConsumerWidget {
               final player = ref.read(playerProvider);
               player.setTrackList(const TrackList.empty());
             },
-          )
+          ),
         ],
       ),
     );
@@ -257,7 +257,7 @@ class _MusicTile extends ConsumerWidget {
                     TextSpan(
                       text: ' - ${music.artistString}',
                       style: TextStyle(color: artist, fontSize: 12),
-                    )
+                    ),
                   ],
                 ),
                 maxLines: 1,

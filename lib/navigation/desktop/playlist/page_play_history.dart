@@ -75,7 +75,7 @@ class _PlayHistoryList extends HookConsumerWidget {
                 ),
                 childCount: tracks.length,
               ),
-            )
+            ),
           ],
         ),
       ),

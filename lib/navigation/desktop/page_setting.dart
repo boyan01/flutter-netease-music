@@ -149,7 +149,7 @@ class _HotkeyLayout extends StatelessWidget {
               ],
             ),
           ),
-        )
+        ),
       ],
     );
   }

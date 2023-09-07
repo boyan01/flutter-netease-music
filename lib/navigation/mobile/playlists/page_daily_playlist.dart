@@ -107,7 +107,7 @@ class _MobileDailyPageScaffold extends HookWidget {
                   mode: LaunchMode.inAppWebView,
                 );
               },
-            )
+            ),
           ],
           flexibleSpace: _HeaderContent(date: date),
           expandedHeight: 232 - MediaQuery.of(context).padding.top,

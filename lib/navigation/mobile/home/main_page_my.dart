@@ -106,7 +106,7 @@ class _NotLogin extends ConsumerWidget {
                   .read(navigatorProvider.notifier)
                   .navigate(NavigationTargetSearch()),
               icon: FluentIcons.search_20_regular,
-            )
+            ),
           ],
           elevation: 0,
         ),
@@ -193,7 +193,7 @@ class _AppBar extends HookConsumerWidget {
               .read(navigatorProvider.notifier)
               .navigate(NavigationTargetSearch()),
           icon: FluentIcons.search_20_regular,
-        )
+        ),
       ],
       pinned: true,
       elevation: 0,

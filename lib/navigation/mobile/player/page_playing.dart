@@ -233,7 +233,7 @@ class PlayingTitle extends ConsumerWidget {
                 const SizedBox(width: 16),
               ],
             ),
-          )
+          ),
         ],
       ),
       backgroundColor: Colors.transparent,

@@ -115,7 +115,7 @@ class _ProfileWidget extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-            )
+            ),
           ],
         ),
       ],
@@ -148,7 +148,7 @@ class _NotLogin extends ConsumerWidget {
               ),
               const SizedBox(width: 12),
               Text(context.strings.login),
-              const Icon(Icons.chevron_right)
+              const Icon(Icons.chevron_right),
             ],
           ),
         ),

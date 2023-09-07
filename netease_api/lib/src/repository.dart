@@ -276,7 +276,7 @@ class Repository {
       'keywords': keyword,
       'type': type.type,
       'limit': limit,
-      'offset': offset
+      'offset': offset,
     });
   }
 
@@ -354,7 +354,7 @@ class Repository {
     final result = await doRequest('/playlist/tracks', {
       'op': operation == PlaylistOperation.add ? 'add' : 'del',
       'pid': playlistId,
-      'tracks': musicIds.join(',')
+      'tracks': musicIds.join(','),
     });
     return result.isValue;
   }

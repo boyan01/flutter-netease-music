@@ -309,7 +309,7 @@ class _UserPlaylists extends HookConsumerWidget {
         MainPlayListTile(
           data: details[i],
           enableBottomRadius: i == details.length - 1,
-        )
+        ),
     ];
   }
 }

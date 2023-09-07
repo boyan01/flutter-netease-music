@@ -178,7 +178,7 @@ class _FmCover extends ConsumerWidget {
               ),
             ],
           ),
-        )
+        ),
       ],
     );
   }

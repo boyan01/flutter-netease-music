@@ -52,7 +52,7 @@ class SuggestionSection extends StatelessWidget {
                   AppIconButton(
                     icon: FluentIcons.delete_20_regular,
                     onPressed: onDeleteClicked,
-                  )
+                  ),
               ],
             ),
           ),
@@ -179,7 +179,7 @@ class _SuggestionOverflowState extends ConsumerState<SuggestionOverflow> {
                 }).toList(),
               );
             },
-          )
+          ),
         ],
       ),
     );

@@ -160,7 +160,7 @@ class _FmCard extends HookConsumerWidget {
                       ),
                     ],
                   ),
-                )
+                ),
               ],
             ),
             const SizedBox(width: 24),

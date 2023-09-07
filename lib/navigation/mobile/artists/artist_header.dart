@@ -33,7 +33,7 @@ class ArtistHeader extends StatelessWidget {
             color: Theme.of(context).primaryIconTheme.color,
           ),
           onPressed: null,
-        )
+        ),
       ],
     );
   }
@@ -83,7 +83,7 @@ class _ArtistFlexHeader extends StatelessWidget {
                 onPressed: () {
                   toast('分享');
                 },
-              )
+              ),
             ],
           );
         },
