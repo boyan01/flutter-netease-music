@@ -49,7 +49,7 @@ dependencies:
   stream_transform: ^2.0.1
   windows_taskbar: ^1.1.1
   filesize: ^2.0.1
-  desktop_drop: ^0.4.0
+  desktop_drop: ^0.4.3
   dotted_border: ^2.0.0+2
   meta: ^1.7.0
   lychee_player: ^0.4.0
