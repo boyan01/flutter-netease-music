@@ -244,7 +244,7 @@ class TracksPlayerImplLychee extends TracksPlayer {
         return;
       }
       final url =
-          await generateTrackProxyUrl(track.id, urlResult.asValue!.value);
+          await MediaCache.instance.generateTrackProxyUrl(track.id, urlResult.asValue!.value);
       d('Play url: $url');
       if (_current != track) {
         // skip play. since the track is changed.

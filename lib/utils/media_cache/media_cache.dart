@@ -6,21 +6,6 @@ import 'package:path/path.dart' as p;
 import '../../repository/app_dir.dart';
 import 'media_cache_server.dart';
 
-String _generateUniqueTrackCacheFileName(int id, String url) {
-  final uri = Uri.parse(url);
-  return '${id.hashCode}${p.extension(uri.path)}';
-}
-
-Future<String> generateTrackProxyUrl(int id, String url) async {
-  final key = _generateUniqueTrackCacheFileName(id, url);
-  final cacheFile = await MediaCache.instance.getCached(key);
-  if (cacheFile != null) {
-    return Uri.file(cacheFile).toString();
-  }
-  final proxyUrl = await MediaCache.instance.put(key, url);
-  return proxyUrl;
-}
-
 class MediaCache {
   MediaCache({required this.server}) {
     cacheDir = Directory(p.join(appDir.path, 'media_cache'));
@@ -45,5 +30,20 @@ class MediaCache {
     await server.start();
     final proxyUrl = server.addProxyFile(cacheFileName, url, cacheDir.path);
     return proxyUrl;
+  }
+
+  Future<String> generateTrackProxyUrl(int id, String url) async {
+    final key = generateUniqueTrackCacheFileName(id, url);
+    final cacheFile = await MediaCache.instance.getCached(key);
+    if (cacheFile != null) {
+      return Uri.file(cacheFile).toString();
+    }
+    final proxyUrl = await MediaCache.instance.put(key, url);
+    return proxyUrl;
+  }
+
+  String generateUniqueTrackCacheFileName(int id, String url) {
+    final uri = Uri.parse(url);
+    return '${id.hashCode}${p.extension(uri.path)}';
   }
 }

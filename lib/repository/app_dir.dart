@@ -18,5 +18,15 @@ Future<void> initAppDir() async {
     appDir = await getApplicationSupportDirectory();
     return;
   }
+  if (Platform.isAndroid) {
+    final downloadDir = await getExternalStorageDirectory();
+    final exists = await downloadDir?.exists();
+    if (exists == false) {
+      appDir = await getApplicationDocumentsDirectory();
+    } else {
+      appDir = downloadDir!;
+    }
+    return;
+  }
   appDir = await getApplicationDocumentsDirectory();
 }

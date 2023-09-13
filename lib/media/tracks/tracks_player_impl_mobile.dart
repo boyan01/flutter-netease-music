@@ -294,7 +294,7 @@ Future<String> _playUriInterceptor(String? mediaId, String? fallbackUri) async {
   if (url == null) {
     return '';
   }
-  final proxyUrl = await generateTrackProxyUrl(trackId, url);
+  final proxyUrl = await MediaCache.instance.generateTrackProxyUrl(trackId, url);
   d('play url: $proxyUrl');
   return proxyUrl;
 }
