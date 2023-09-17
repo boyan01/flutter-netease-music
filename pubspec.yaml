@@ -47,7 +47,7 @@ dependencies:
   window_manager: ^0.3.6
   lpinyin: ^2.0.3
   stream_transform: ^2.0.1
-  windows_taskbar: ^1.1.1
+  windows_taskbar: ^1.1.2
   filesize: ^2.0.1
   desktop_drop:
     git:
