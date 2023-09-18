@@ -410,10 +410,10 @@ packages:
     dependency: "direct main"
     description:
       name: hooks_riverpod
-      sha256: "04a8a526db4c04139f6e5d318ef5079832daa1327a485ad391faf1b6bb203960"
+      sha256: ad7b877c3687e38764633d221a1f65491bc7a540e724101e9a404a84db2a4276
       url: "https://pub.dev"
     source: hosted
-    version: "2.3.10"
+    version: "2.4.0"
   http_multi_server:
     dependency: transitive
     description:
