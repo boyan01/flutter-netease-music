@@ -13,7 +13,7 @@ dependencies:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
-  cupertino_icons: ^1.0.3
+  cupertino_icons: ^1.0.6
   json_annotation: ^4.3.0
   dio_cookie_manager: ^2.1.4
   path_provider: ^2.1.1
