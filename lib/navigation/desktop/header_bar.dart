@@ -28,7 +28,7 @@ class HeaderBar extends StatelessWidget {
         bottom: false,
         child: Padding(
           padding: EdgeInsets.only(
-            top: defaultTargetPlatform == TargetPlatform.macOS ? 20 : 0,
+            top: defaultTargetPlatform == TargetPlatform.macOS ? 10 : 0,
           ),
           child: SizedBox(
             height: 56,
