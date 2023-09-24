@@ -31,6 +31,7 @@ class QuietApp extends ConsumerWidget {
         home = const TableWindow();
         break;
     }
+    final theme = ref.watch(appThemeProvider);
     return GlobalHotkeys(
       child: MaterialApp(
         title: 'Quiet',
@@ -41,8 +42,8 @@ class QuietApp extends ConsumerWidget {
           GlobalMaterialLocalizations.delegate,
           GlobalCupertinoLocalizations.delegate,
         ],
-        theme: lightTheme,
-        darkTheme: quietDarkTheme,
+        theme: theme.light,
+        darkTheme: theme.dark,
         themeMode: ref.watch(
           settingStateProvider.select((value) => value.themeMode),
         ),

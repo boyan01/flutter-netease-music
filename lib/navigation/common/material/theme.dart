@@ -1,62 +1,67 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../../../extension/providers.dart';
+import '../../../providers/player_provider.dart';
+import '../../../utils/cache/cached_image.dart';
 import '../../../utils/system/system_fonts.dart';
 
-const lightSwatch = MaterialColor(0xFFdd4237, {
-  900: Color(0xFFae2a20),
-  800: Color(0xFFbe332a),
-  700: Color(0xFFcb3931),
-  600: Color(0xFFdd4237),
-  500: Color(0xFFec4b38),
-  400: Color(0xFFe85951),
-  300: Color(0xFFdf7674),
-  200: Color(0xFFea9c9a),
-  100: Color(0xFFfcced2),
-  50: Color(0xFFfeebee),
-});
+class AppThemeData {
+  const AppThemeData({required this.light, required this.dark});
 
-ThemeData get quietDarkTheme {
-  final theme = ThemeData.from(
-    colorScheme: ColorScheme.dark(
-      background: Color.alphaBlend(Colors.black87, Colors.white),
-      onBackground: Color.alphaBlend(Colors.white54, Colors.black),
-      surface: Color.alphaBlend(Colors.black87, Colors.white),
-      onSurface: Color.alphaBlend(Colors.white70, Colors.black),
-      primary: lightSwatch,
-      secondary: lightSwatch[300]!,
-      tertiary: lightSwatch[100],
-      onPrimary: const Color(0xFFDDDDDD),
-    ),
-  );
-  return theme
-      .copyWith(
-        tooltipTheme: const TooltipThemeData(
-          waitDuration: Duration(milliseconds: 1000),
-        ),
-      )
-      .withFallbackFonts()
-      .applyCommon();
+  final ThemeData light;
+  final ThemeData dark;
 }
 
-ThemeData get lightTheme => _buildTheme(lightSwatch);
+const _kDefaultNetEaseRed = Color(0xFFdd4237);
 
-ThemeData _buildTheme(Color primaryColor) {
-  final theme = ThemeData.from(
-    colorScheme: const ColorScheme.light(
-      primary: lightSwatch,
+final _defaultTheme = AppThemeData(
+  light: _buildTheme(
+    ColorScheme.fromSeed(seedColor: _kDefaultNetEaseRed),
+  ),
+  dark: _buildTheme(
+    ColorScheme.fromSeed(
+      seedColor: _kDefaultNetEaseRed,
+      brightness: Brightness.dark,
     ),
+  ),
+);
+
+final appThemeProvider = StateProvider<AppThemeData>(
+  (ref) {
+    ref.listen(playingTrackProvider, (previous, next) async {
+      if (next != null) {
+        final image = CachedImage(next.imageUrl!);
+        ref.controller.state = AppThemeData(
+          light: _buildTheme(
+            await ColorScheme.fromImageProvider(
+              provider: image,
+            ),
+          ),
+          dark: _buildTheme(
+            await ColorScheme.fromImageProvider(
+              provider: image,
+              brightness: Brightness.dark,
+            ),
+          ),
+        );
+      }
+    }).autoRemove(ref);
+    return _defaultTheme;
+  },
+);
+
+ThemeData _buildTheme(ColorScheme colorScheme) {
+  final theme = ThemeData.from(
+    colorScheme: colorScheme,
+    useMaterial3: true,
   );
   return theme
       .copyWith(
         tooltipTheme: const TooltipThemeData(
           waitDuration: Duration(milliseconds: 1000),
         ),
-        iconTheme: IconThemeData(
-          color: theme.iconTheme.color!.withOpacity(0.7),
-          size: 24,
-        ),
-        scaffoldBackgroundColor: const Color(0xFFEEEEEE),
       )
       .withFallbackFonts()
       .applyCommon();

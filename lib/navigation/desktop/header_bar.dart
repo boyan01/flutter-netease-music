@@ -23,7 +23,6 @@ class HeaderBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Material(
       color: context.colorScheme.background,
-      elevation: 10,
       child: SafeArea(
         bottom: false,
         child: Padding(
