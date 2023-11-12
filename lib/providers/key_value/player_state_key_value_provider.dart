@@ -15,7 +15,7 @@ final playerKeyValueProvider = Provider(
 
 const _keyPlayerState = 'player_state';
 
-class PlayerKeyValue extends BaseDbKeyValue {
+class PlayerKeyValue extends BaseLazyDbKeyValue {
   PlayerKeyValue({required super.dao}) : super(group: KeyValueGroup.player);
 
   Future<void> setPlayerState(PersistencePlayerState state) async {
@@ -24,9 +24,11 @@ class PlayerKeyValue extends BaseDbKeyValue {
 
   Future<PersistencePlayerState?> getPlayerState() async {
     final value = await get(_keyPlayerState);
-    if (value == null) {
+    final json =
+        await compute<String?, Map<String, dynamic>?>(convertToType, value);
+    if (json == null) {
       return null;
     }
-    return compute<String?, PersistencePlayerState?>(convertToType, value);
+    return PersistencePlayerState.fromJson(json);
   }
 }

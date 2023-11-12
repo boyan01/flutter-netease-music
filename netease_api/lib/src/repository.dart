@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:async/async.dart' show Result, ErrorResult;
@@ -567,8 +566,8 @@ class Repository {
     }
     assert(
       () {
-        debugPrint('api request: $path $param');
-        debugPrint('api response: ${result.status} ${jsonEncode(result.body)}');
+        // debugPrint('api request: $path $param');
+        // debugPrint('api response: ${result.status} ${jsonEncode(result.body)}');
         return true;
       }(),
     );

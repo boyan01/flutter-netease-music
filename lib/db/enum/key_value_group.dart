@@ -6,6 +6,7 @@ enum KeyValueGroup {
   auth,
   window,
   player,
+  search,
 }
 
 class KeyValueGroupConverter extends TypeConverter<KeyValueGroup, String> {
