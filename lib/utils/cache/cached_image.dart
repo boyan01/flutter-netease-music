@@ -4,6 +4,7 @@ import 'dart:isolate';
 import 'dart:ui' as ui;
 import 'dart:ui';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/widgets.dart';
@@ -50,7 +51,26 @@ class CachedImage extends ImageProvider<CachedImage> implements CacheKey {
     );
   }
 
-  static final HttpClient _httpClient = HttpClient();
+  static final _dio = Dio();
+
+  static Future<Uint8List> _loadDataFromNetwork(
+    String url, {
+    Map<String, String>? headers,
+  }) async {
+    final response = await _dio.get<List<int>>(
+      url,
+      options: Options(
+        responseType: ResponseType.bytes,
+        headers: {
+          // FIXME: 使用真实的UA
+          'User-Agent':
+              'Mozilla/5.0 (Linux; Android 10; Redmi K30 Pro) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.198 Mobile Safari/537.36',
+          if (headers != null) ...headers,
+        },
+      ),
+    );
+    return Uint8List.fromList(response.data!);
+  }
 
   Future<ui.Codec> _loadAsync(
     CachedImage key,
@@ -70,22 +90,7 @@ class CachedImage extends ImageProvider<CachedImage> implements CacheKey {
     }
 
     //request network source
-    final resolved = Uri.base.resolve(key.url);
-    final request = await _httpClient.getUrl(resolved);
-    headers?.forEach((String name, String value) {
-      request.headers.add(name, value);
-    });
-    final response = await request.close();
-    if (response.statusCode != HttpStatus.ok) {
-      throw Exception(
-        'HTTP request failed, statusCode: ${response.statusCode}, $resolved',
-      );
-    }
-
-    final bytes = await consolidateHttpClientResponseBytes(response);
-    if (bytes.lengthInBytes == 0) {
-      throw Exception('NetworkImage is an empty file: $resolved');
-    }
+    final bytes = await _loadDataFromNetwork(url, headers: headers);
 
     //save image to cache
     await ImageFileCache.instance.update(key, bytes);

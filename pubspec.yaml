@@ -68,6 +68,7 @@ dependencies:
   qr_flutter: ^4.1.0
   system_clock: ^2.0.0
   handy_window: ^0.3.1
+  dio: any
 
 dev_dependencies:
   flutter_test:
