@@ -7,15 +7,13 @@ import 'package:mixin_logger/mixin_logger.dart';
 import '../../db/dao/key_value_dao.dart';
 import '../../db/enum/key_value_group.dart';
 
-class BaseLazyDbKeyValue with _DbKeyValueUpdate {
+class BaseLazyDbKeyValue {
   BaseLazyDbKeyValue({
     required this.group,
     required this.dao,
   });
 
-  @override
   final KeyValueGroup group;
-  @override
   final KeyValueDao dao;
 
   Stream<T?> watch<T>(String key) =>
@@ -24,6 +22,14 @@ class BaseLazyDbKeyValue with _DbKeyValueUpdate {
   Future<T?> get<T>(String key) async {
     final value = await dao.getByKey(group, key);
     return convertToType<T>(value);
+  }
+
+  Future<void> set<T>(String key, T? value) async {
+    await dao.set(group, key, convertToString(value));
+  }
+
+  Future<void> clear() async {
+    await dao.clear(group);
   }
 
   Future<Map<K, V>?> getMap<K, V>(String key) async {
@@ -55,7 +61,7 @@ class BaseLazyDbKeyValue with _DbKeyValueUpdate {
   }
 }
 
-class BaseDbKeyValue extends ChangeNotifier with _DbKeyValueUpdate {
+class BaseDbKeyValue extends ChangeNotifier {
   BaseDbKeyValue({required this.group, required this.dao}) {
     _loadProperties().whenComplete(_initCompleter.complete);
     _subscription = dao.watchTableHasChanged(group).listen((event) {
@@ -63,9 +69,7 @@ class BaseDbKeyValue extends ChangeNotifier with _DbKeyValueUpdate {
     });
   }
 
-  @override
   final KeyValueGroup group;
-  @override
   final KeyValueDao dao;
 
   final Map<String, String> _data = {};
@@ -85,22 +89,19 @@ class BaseDbKeyValue extends ChangeNotifier with _DbKeyValueUpdate {
 
   T? get<T>(String key) => convertToType<T>(_data[key]);
 
-  @override
   Future<void> set<T>(String key, T? value) {
-    if (value == null) {
+    final ret = convertToString(value);
+    if (ret == null) {
       _data.remove(key);
-    } else if (value is List || value is Map) {
-      _data[key] = jsonEncode(value);
     } else {
-      _data[key] = value.toString();
+      _data[key] = ret;
     }
-    return super.set(key, value);
+    return dao.set(group, key, ret);
   }
 
-  @override
   Future<void> clear() {
     _data.clear();
-    return super.clear();
+    return dao.clear(group);
   }
 
   @override
@@ -110,30 +111,16 @@ class BaseDbKeyValue extends ChangeNotifier with _DbKeyValueUpdate {
   }
 }
 
-mixin _DbKeyValueUpdate {
-  @protected
-  abstract final KeyValueGroup group;
-  @protected
-  abstract final KeyValueDao dao;
-
-  Future<void> set<T>(String key, T? value) async {
-    if (value == null) {
-      await dao.set(group, key, null);
-      return;
-    }
-    if (value is List || value is Map) {
-      await dao.set(group, key, jsonEncode(value));
-    } else {
-      await dao.set(group, key, value.toString());
-    }
+String? convertToString(dynamic value) {
+  if (value == null) {
+    return null;
   }
-
-  Future<void> clear() async {
-    await dao.clear(group);
+  if (value is String) {
+    return value;
   }
+  return jsonEncode(value);
 }
 
-@visibleForTesting
 T? convertToType<T>(String? value) {
   if (value == null) {
     return null;

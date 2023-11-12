@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../db/dao/key_value_dao.dart';
-import '../db/enum/key_value_group.dart';
-import '../utils/db/db_key_value.dart';
-import 'database_provider.dart';
+import '../../db/dao/key_value_dao.dart';
+import '../../db/enum/key_value_group.dart';
+import '../../utils/db/db_key_value.dart';
+import '../database_provider.dart';
 
 const String _keyThemeMode = 'themeMode';
 

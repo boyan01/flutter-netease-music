@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 import '../../../extension.dart';
-import '../../../providers/settings_provider.dart';
+import '../../../providers/key_value/settings_provider.dart';
 
 class PageWelcome extends StatefulWidget {
   const PageWelcome({super.key});

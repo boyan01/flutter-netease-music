@@ -10,7 +10,7 @@ import '../repository/data/track.dart';
 import '../repository/netease.dart';
 import '../repository/network_repository.dart';
 import '../utils/hive/hive_util.dart';
-import 'account_provider.dart';
+import 'key_value/account_provider.dart';
 
 final playlistDetailProvider = StateNotifierProvider.family<
     PlaylistDetailStateNotifier, AsyncValue<PlaylistDetail>, int>(

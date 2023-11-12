@@ -8,7 +8,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:window_manager/window_manager.dart';
 
 import '../../extension.dart';
-import '../../providers/account_provider.dart';
+import '../../providers/key_value/account_provider.dart';
 import '../../providers/navigator_provider.dart';
 import '../../utils/callback_window_listener.dart';
 import '../common/image.dart';

@@ -7,7 +7,7 @@ import 'package:overlay_support/overlay_support.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 import '../../../extension.dart';
-import '../../../providers/account_provider.dart';
+import '../../../providers/key_value/account_provider.dart';
 import '../../../providers/repository_provider.dart';
 import '../../../repository/data/login_qr_key_status.dart';
 import '../../../utils/hooks.dart';

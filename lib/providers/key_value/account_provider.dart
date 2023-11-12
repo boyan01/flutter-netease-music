@@ -6,13 +6,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mixin_logger/mixin_logger.dart';
 
-import '../db/enum/key_value_group.dart';
-import '../model/netease_user.dart';
-import '../repository/netease.dart';
-import '../repository/network_repository.dart';
-import '../utils/db/db_key_value.dart';
-import 'database_provider.dart';
-import 'repository_provider.dart';
+import '../../db/enum/key_value_group.dart';
+import '../../model/netease_user.dart';
+import '../../repository/netease.dart';
+import '../../repository/network_repository.dart';
+import '../../utils/db/db_key_value.dart';
+import '../database_provider.dart';
+import '../repository_provider.dart';
 
 final neteaseAccountProvider =
     ChangeNotifierProvider<NeteaseAccountNotifier>((ref) {

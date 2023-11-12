@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../extension.dart';
+import '../../providers/key_value/settings_provider.dart';
 import '../../providers/navigator_provider.dart';
-import '../../providers/settings_provider.dart';
 
 class ThemeSwitchRadios extends ConsumerWidget {
   const ThemeSwitchRadios({super.key});

@@ -4,6 +4,8 @@ enum KeyValueGroup {
   setting,
   lyric,
   auth,
+  window,
+  player,
 }
 
 class KeyValueGroupConverter extends TypeConverter<KeyValueGroup, String> {

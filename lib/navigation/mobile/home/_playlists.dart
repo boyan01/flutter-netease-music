@@ -5,7 +5,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../extension.dart';
-import '../../../providers/account_provider.dart';
+import '../../../providers/key_value/account_provider.dart';
 import '../../../providers/user_playlists_provider.dart';
 import '../../../repository.dart';
 import '../widgets/playlist_tile.dart';

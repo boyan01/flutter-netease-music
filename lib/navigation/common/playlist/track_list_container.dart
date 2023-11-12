@@ -7,11 +7,11 @@ import 'package:mixin_logger/mixin_logger.dart';
 import '../../../extension.dart';
 import '../../../media/tracks/track_list.dart';
 import '../../../media/tracks/tracks_player.dart';
+import '../../../providers/key_value/settings_provider.dart';
 import '../../../providers/navigator_provider.dart';
 import '../../../providers/player_provider.dart';
 import '../../../providers/playlist_detail_provider.dart';
 import '../../../providers/repository_provider.dart';
-import '../../../providers/settings_provider.dart';
 import '../../../repository.dart';
 import '../navigation_target.dart';
 

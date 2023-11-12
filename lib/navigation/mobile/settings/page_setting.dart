@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../extension.dart';
-import '../../../providers/account_provider.dart';
+import '../../../providers/key_value/account_provider.dart';
 import '../../common/buttons.dart';
 import '../../common/settings.dart';
 

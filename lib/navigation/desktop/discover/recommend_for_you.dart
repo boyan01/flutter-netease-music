@@ -7,9 +7,9 @@ import 'package:overlay_support/overlay_support.dart';
 
 import '../../../extension.dart';
 import '../../../media/tracks/track_list.dart';
-import '../../../providers/account_provider.dart';
 import '../../../providers/daily_playlist_provider.dart';
 import '../../../providers/fm_playlist_provider.dart';
+import '../../../providers/key_value/account_provider.dart';
 import '../../../providers/navigator_provider.dart';
 import '../../../providers/player_provider.dart';
 import '../../../repository/data/track.dart';

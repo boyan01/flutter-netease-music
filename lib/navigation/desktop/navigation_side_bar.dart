@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../extension.dart';
-import '../../providers/account_provider.dart';
+import '../../providers/key_value/account_provider.dart';
 import '../../providers/navigator_provider.dart';
 import '../common/navigation_target.dart';
 import 'playlist/user_playlists.dart';

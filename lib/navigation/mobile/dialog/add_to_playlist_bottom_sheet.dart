@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:overlay_support/overlay_support.dart';
 
 import '../../../extension.dart';
-import '../../../providers/account_provider.dart';
+import '../../../providers/key_value/account_provider.dart';
 import '../../../providers/playlist_detail_provider.dart';
 import '../../../providers/user_playlists_provider.dart';
 import '../../../repository/data/track.dart';

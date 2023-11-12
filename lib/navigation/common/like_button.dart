@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../extension.dart';
-import '../../providers/account_provider.dart';
 import '../../providers/favorite_tracks_provider.dart';
+import '../../providers/key_value/account_provider.dart';
 import '../../providers/player_provider.dart';
 import '../../repository.dart';
 import 'buttons.dart';
