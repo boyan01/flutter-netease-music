@@ -39,10 +39,10 @@ class SettingsKeyValue extends BaseDbKeyValue {
   }
 
   set copyright(bool show) {
-    set(_keyThemeMode, show);
+    set(_keyCopyright, show);
   }
 
-  bool get copyright => get<bool>(_keyThemeMode) ?? true;
+  bool get copyright => get<bool>(_keyCopyright) ?? false;
 
   set skipWelcomePage(bool skip) {
     set(_keySkipWelcomePage, skip);

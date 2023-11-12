@@ -107,7 +107,7 @@ class _QrCodeBody extends HookConsumerWidget {
                 try {
                   await showLoaderOverlay(
                     context,
-                    ref.read(userProvider.notifier).loginWithQrKey(),
+                    ref.read(neteaseAccountProvider).loginWithQrKey(),
                   );
                   onVerified();
                 } catch (error, stacktrace) {
@@ -187,7 +187,7 @@ class LoginPasswordWidget extends HookConsumerWidget {
         toast(context.strings.pleaseInputPassword);
         return;
       }
-      final account = ref.read(userProvider.notifier);
+      final account = ref.read(neteaseAccountProvider.notifier);
       final result = await showLoaderOverlay(
         context,
         account.login(phone, password),

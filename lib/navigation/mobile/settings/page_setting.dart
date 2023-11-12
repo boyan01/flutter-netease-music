@@ -138,7 +138,7 @@ class _AccountSettings extends ConsumerWidget {
         ListTile(
           title: Text(context.strings.logout),
           onTap: () {
-            ref.read(userProvider.notifier).logout();
+            ref.read(neteaseAccountProvider).logout();
           },
         ),
       ],

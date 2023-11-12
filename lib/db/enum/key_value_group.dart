@@ -3,7 +3,7 @@ import 'package:drift/drift.dart';
 enum KeyValueGroup {
   setting,
   lyric,
-  account,
+  auth,
 }
 
 class KeyValueGroupConverter extends TypeConverter<KeyValueGroup, String> {

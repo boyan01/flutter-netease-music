@@ -37,7 +37,7 @@ Future<void> showUserInfoPopup({
                           title: Text(context.strings.logout),
                           onTap: () {
                             OverlaySupportEntry.of(context)?.dismiss();
-                            ref.read(userProvider.notifier).logout();
+                            ref.read(neteaseAccountProvider).logout();
                           },
                           icon: const Icon(FluentIcons.power_20_regular),
                           height: 48,

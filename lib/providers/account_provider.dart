@@ -1,38 +1,114 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:async/async.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mixin_logger/mixin_logger.dart';
 
-import '../repository/data/user.dart';
+import '../db/enum/key_value_group.dart';
+import '../model/netease_user.dart';
 import '../repository/netease.dart';
-import 'preference_provider.dart';
+import '../repository/network_repository.dart';
+import '../utils/db/db_key_value.dart';
+import 'database_provider.dart';
 import 'repository_provider.dart';
 
-final userProvider = StateNotifierProvider<UserAccount, User?>(UserAccount.new);
-
-final isLoginProvider = Provider<bool>((ref) {
-  return ref.watch(userProvider) != null;
+final neteaseAccountProvider =
+    ChangeNotifierProvider<NeteaseAccountNotifier>((ref) {
+  final authKeyValue = ref.watch(authKeyValueProvider);
+  final neteaseRepository = ref.watch(neteaseRepositoryProvider);
+  return NeteaseAccountNotifier(
+    authKeyValue: authKeyValue,
+    neteaseRepository: neteaseRepository,
+  );
 });
 
-final userIdProvider = Provider<int?>((ref) {
-  return ref.watch(userProvider)?.userId;
-});
+final userProvider = neteaseAccountProvider.select((value) => value.user?.user);
 
-class UserAccount extends StateNotifier<User?> {
-  UserAccount(this.ref) : super(null) {
-    _subscription =
-        ref.read(neteaseRepositoryProvider).onApiUnAuthorized.listen(
-      (event) {
-        debugPrint('onApiUnAuthorized');
-        logout();
-      },
-    );
+final isLoginProvider = neteaseAccountProvider.select((value) => value.isLogin);
+
+final userIdProvider = neteaseAccountProvider.select((value) => value.userId);
+
+const _keyNeteaseUser = 'neteaseUser';
+
+class AuthKeyValue extends BaseDbKeyValue {
+  AuthKeyValue({required super.dao}) : super(group: KeyValueGroup.auth);
+
+  NeteaseUser? get neteaseUser {
+    final json = get<Map<String, dynamic>>(_keyNeteaseUser);
+    if (json == null) {
+      return null;
+    }
+    return NeteaseUser.fromJson(json);
   }
 
-  final Ref ref;
+  set neteaseUser(NeteaseUser? user) {
+    set(_keyNeteaseUser, jsonEncode(user));
+  }
+}
 
+final authKeyValueProvider = Provider<AuthKeyValue>((ref) {
+  final dao = ref.watch(databaseProvider.select((value) => value.keyValueDao));
+  return AuthKeyValue(dao: dao);
+});
+
+class NeteaseAccountNotifier extends ChangeNotifier {
+  NeteaseAccountNotifier({
+    required AuthKeyValue authKeyValue,
+    required NetworkRepository neteaseRepository,
+  })  : _authKeyValue = authKeyValue,
+        _neteaseRepository = neteaseRepository {
+    _authKeyValue.addListener(notifyListeners);
+    _initialize();
+    _subscription = _neteaseRepository.onApiUnAuthorized.listen((event) {
+      logout();
+    });
+  }
+
+  final AuthKeyValue _authKeyValue;
+  final NetworkRepository _neteaseRepository;
   StreamSubscription? _subscription;
+
+  NeteaseUser? get user => _authKeyValue.neteaseUser;
+
+  bool get isLogin => user != null;
+
+  int? get userId => user?.user.userId;
+
+  Future<void> _initialize() async {
+    await _authKeyValue.initialized;
+    if (user != null) {
+      final isLoginViaQrCode = user!.loginByQrCode;
+      if (!isLoginViaQrCode) {
+        //访问api，刷新登陆状态
+        await _neteaseRepository.refreshLogin().then(
+          (login) async {
+            if (!login || user == null) {
+              await logout();
+            } else {
+              // refresh user
+              final result = await _neteaseRepository.getUserDetail(userId!);
+              if (result.isValue) {
+                _authKeyValue.neteaseUser = NeteaseUser(
+                  user: result.asValue!.value,
+                  loginByQrCode: isLoginViaQrCode,
+                );
+              }
+            }
+          },
+          onError: (e) {
+            d('refresh login status failed \n $e');
+          },
+        );
+      }
+    }
+  }
+
+  Future<void> logout() async {
+    _authKeyValue.neteaseUser = null;
+    await _neteaseRepository.logout();
+  }
 
   Future<Result<Map>> login(String? phone, String password) async {
     final result = await neteaseRepository!.login(phone, password);
@@ -52,77 +128,28 @@ class UserAccount extends StateNotifier<User?> {
     int userId, {
     bool loginByQrKey = false,
   }) async {
-    final userDetailResult = await neteaseRepository!.getUserDetail(userId);
+    final userDetailResult = await _neteaseRepository.getUserDetail(userId);
     if (userDetailResult.isError) {
       final error = userDetailResult.asError!;
       debugPrint('error : ${error.error} ${error.stackTrace}');
       throw Exception('can not get user detail.');
     }
-    await ref.read(sharedPreferenceProvider).setLoginByQrCode(loginByQrKey);
-    await ref.read(sharedPreferenceProvider).setLoginUser(
-          userDetailResult.asValue!.value,
-        );
-    state = userDetailResult.asValue!.value;
+    _authKeyValue.neteaseUser = NeteaseUser(
+      user: userDetailResult.asValue!.value,
+      loginByQrCode: loginByQrKey,
+    );
   }
 
   Future<void> loginWithQrKey() async {
-    final result = await ref.read(neteaseRepositoryProvider).getLoginStatus();
+    final result = await _neteaseRepository.getLoginStatus();
     final userId = result['account']['id'] as int;
     await _updateLoginStatus(userId, loginByQrKey: true);
   }
 
-  void logout() {
-    state = null;
-    ref.read(sharedPreferenceProvider).setLoginUser(null);
-    ref.read(neteaseRepositoryProvider).logout();
-  }
-
-  Future<void> initialize() async {
-    final user = await ref.read(sharedPreferenceProvider).getLoginUser();
-    if (user != null) {
-      state = user;
-      final isLoginViaQrCode =
-          await ref.read(sharedPreferenceProvider).isLoginByQrCode();
-      if (!isLoginViaQrCode) {
-        //访问api，刷新登陆状态
-        await neteaseRepository!.refreshLogin().then(
-          (login) async {
-            if (!login || state == null) {
-              logout();
-            } else {
-              // refresh user
-              final result = await neteaseRepository!.getUserDetail(userId!);
-              if (result.isValue) {
-                state = result.asValue!.value;
-                await ref.read(sharedPreferenceProvider).setLoginUser(state);
-              }
-            }
-          },
-          onError: (e) {
-            debugPrint('refresh login status failed \n $e');
-          },
-        );
-      }
-    }
-  }
-
-  ///当前是否已登录
-  bool get isLogin {
-    return state != null;
-  }
-
-  ///当前登录用户的id
-  ///null if not login
-  int? get userId {
-    if (!isLogin) {
-      return null;
-    }
-    return state!.userId;
-  }
-
   @override
   void dispose() {
-    super.dispose();
+    _authKeyValue.removeListener(notifyListeners);
     _subscription?.cancel();
+    super.dispose();
   }
 }

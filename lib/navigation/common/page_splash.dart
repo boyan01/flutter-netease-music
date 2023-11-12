@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../providers/account_provider.dart';
+import '../../providers/settings_provider.dart';
 
 ///used to build application widget
 ///[data] the data initial in [PageSplash]
@@ -29,7 +30,8 @@ class _PageSplashState extends ConsumerState<PageSplash> {
   void initState() {
     super.initState();
     final tasks = [
-      ref.read(userProvider.notifier).initialize(),
+      ref.read(authKeyValueProvider).initialized,
+      ref.read(settingKeyValueProvider).initialized,
     ];
     final start = DateTime.now().millisecondsSinceEpoch;
     Future.wait([
