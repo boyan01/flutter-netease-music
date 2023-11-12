@@ -1,0 +1,10 @@
+import '../enum/key_value_group.dart';
+
+CREATE TABLE key_values (
+  "key" TEXT NOT NULL,
+  "group" TEXT NOT NULL MAPPED BY `const KeyValueGroupConverter()`,
+  "value" TEXT NOT NULL,
+  PRIMARY KEY("key", "group")
+);
+
+CREATE INDEX key_values_group_index ON key_values("group");
