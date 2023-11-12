@@ -6,12 +6,14 @@ list(APPEND FLUTTER_PLUGIN_LIST
   desktop_drop
   lychee_player
   screen_retriever
+  sqlite3_flutter_libs
   url_launcher_windows
   window_manager
   windows_taskbar
 )
 
 list(APPEND FLUTTER_FFI_PLUGIN_LIST
+  mixin_logger
   system_clock
 )
 

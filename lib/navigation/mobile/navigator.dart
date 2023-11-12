@@ -100,74 +100,43 @@ class MobileNavigatorController extends NavigatorController {
   Page<dynamic> _buildPage(NavigationTarget target) {
     final Widget page;
     var pageType = _PageType.normal;
-    switch (target.runtimeType) {
-      case NavigationTargetDiscover:
-      case NavigationTargetLibrary:
+    switch (target) {
+      case NavigationTargetDiscover _:
+      case NavigationTargetLibrary _:
         page = PageHome(selectedTab: target);
-        break;
-      case NavigationTargetSearch:
-        page = PageSearch(
-          initial: (target as NavigationTargetSearch).initial,
-          key: ValueKey(target),
-        );
-        break;
-      case NavigationTargetSearchResult:
-        page = PageMusicSearchResult(
-          query: (target as NavigationTargetSearchResult).keyword,
-        );
-        break;
-      case NavigationTargetSettings:
+      case final NavigationTargetSearch target:
+        page = PageSearch(initial: target.initial, key: ValueKey(target));
+      case final NavigationTargetSearchResult target:
+        page = PageMusicSearchResult(query: target.keyword);
+      case NavigationTargetSettings _:
         page = const PageSettings();
-        break;
-      case NavigationTargetPlaylist:
-        page = PlaylistDetailPage(
-          (target as NavigationTargetPlaylist).playlistId,
-        );
-        break;
-      case NavigationTargetPlaying:
+      case final NavigationTargetPlaylist target:
+        page = PlaylistDetailPage(target.playlistId);
+      case final NavigationTargetPlaying _:
         page = const PlayingPage();
         pageType = _PageType.slideUp;
-        break;
-      case NavigationTargetFmPlaying:
+      case final NavigationTargetFmPlaying _:
         page = const PagePlayingFm();
         pageType = _PageType.slideUp;
-        break;
-      case NavigationTargetUser:
-        page = UserDetailPage(userId: (target as NavigationTargetUser).userId);
-        break;
-      case NavigationTargetLogin:
+      case final NavigationTargetUser target:
+        page = UserDetailPage(userId: target.userId);
+      case final NavigationTargetLogin _:
         page = const LoginPage();
-        break;
-      case NavigationTargetLoginPassword:
-        page = LoginPasswordPage(
-          phoneNumber: (target as NavigationTargetLoginPassword).phoneNumber,
-        );
-        break;
-      case NavigationTargetArtistDetail:
-        page = ArtistDetailPage(
-          artistId: (target as NavigationTargetArtistDetail).artistId,
-        );
-        break;
-      case NavigationTargetAlbumDetail:
-        page = AlbumDetailPage(
-          albumId: (target as NavigationTargetAlbumDetail).albumId,
-        );
-        break;
-      case NavigationTargetPlayingList:
+      case final NavigationTargetLoginPassword target:
+        page = LoginPasswordPage(phoneNumber: target.phoneNumber);
+      case final NavigationTargetArtistDetail target:
+        page = ArtistDetailPage(artistId: target.artistId);
+      case final NavigationTargetAlbumDetail target:
+        page = AlbumDetailPage(albumId: target.albumId);
+      case final NavigationTargetPlayingList _:
         page = const PlayingListDialog();
         pageType = _PageType.bottomSheet;
-        break;
-      case NavigationTargetDailyRecommend:
+      case final NavigationTargetDailyRecommend _:
         page = const DailyPlaylistPage();
-        break;
-      case NavigationTargetLeaderboard:
+      case final NavigationTargetLeaderboard _:
         page = const LeaderboardPage();
-        break;
-      case NavigationTargetPlaylistEdit:
-        page = PlaylistEditPage(
-          playlist: (target as NavigationTargetPlaylistEdit).playlist,
-        );
-        break;
+      case final NavigationTargetPlaylistEdit target:
+        page = PlaylistEditPage(playlist: target.playlist);
       default:
         throw Exception('Unknown navigation type: $target');
     }

@@ -6,6 +6,8 @@ PODS:
   - lychee_player (0.0.1):
     - ffmpeg-kit-macos-full (= 4.4)
     - FlutterMacOS
+  - mixin_logger (0.0.1):
+    - FlutterMacOS
   - path_provider_foundation (0.0.1):
     - Flutter
     - FlutterMacOS
@@ -14,6 +16,21 @@ PODS:
   - shared_preferences_foundation (0.0.1):
     - Flutter
     - FlutterMacOS
+  - sqlite3 (3.44.0):
+    - sqlite3/common (= 3.44.0)
+  - sqlite3/common (3.44.0)
+  - sqlite3/fts5 (3.44.0):
+    - sqlite3/common
+  - sqlite3/perf-threadsafe (3.44.0):
+    - sqlite3/common
+  - sqlite3/rtree (3.44.0):
+    - sqlite3/common
+  - sqlite3_flutter_libs (0.0.1):
+    - FlutterMacOS
+    - sqlite3 (~> 3.44.0)
+    - sqlite3/fts5
+    - sqlite3/perf-threadsafe
+    - sqlite3/rtree
   - url_launcher_macos (0.0.1):
     - FlutterMacOS
   - window_manager (0.2.0):
@@ -23,15 +40,18 @@ DEPENDENCIES:
   - desktop_drop (from `Flutter/ephemeral/.symlinks/plugins/desktop_drop/macos`)
   - FlutterMacOS (from `Flutter/ephemeral`)
   - lychee_player (from `Flutter/ephemeral/.symlinks/plugins/lychee_player/macos`)
+  - mixin_logger (from `Flutter/ephemeral/.symlinks/plugins/mixin_logger/macos`)
   - path_provider_foundation (from `Flutter/ephemeral/.symlinks/plugins/path_provider_foundation/darwin`)
   - screen_retriever (from `Flutter/ephemeral/.symlinks/plugins/screen_retriever/macos`)
   - shared_preferences_foundation (from `Flutter/ephemeral/.symlinks/plugins/shared_preferences_foundation/darwin`)
+  - sqlite3_flutter_libs (from `Flutter/ephemeral/.symlinks/plugins/sqlite3_flutter_libs/macos`)
   - url_launcher_macos (from `Flutter/ephemeral/.symlinks/plugins/url_launcher_macos/macos`)
   - window_manager (from `Flutter/ephemeral/.symlinks/plugins/window_manager/macos`)
 
 SPEC REPOS:
   trunk:
     - ffmpeg-kit-macos-full
+    - sqlite3
 
 EXTERNAL SOURCES:
   desktop_drop:
@@ -40,12 +60,16 @@ EXTERNAL SOURCES:
     :path: Flutter/ephemeral
   lychee_player:
     :path: Flutter/ephemeral/.symlinks/plugins/lychee_player/macos
+  mixin_logger:
+    :path: Flutter/ephemeral/.symlinks/plugins/mixin_logger/macos
   path_provider_foundation:
     :path: Flutter/ephemeral/.symlinks/plugins/path_provider_foundation/darwin
   screen_retriever:
     :path: Flutter/ephemeral/.symlinks/plugins/screen_retriever/macos
   shared_preferences_foundation:
     :path: Flutter/ephemeral/.symlinks/plugins/shared_preferences_foundation/darwin
+  sqlite3_flutter_libs:
+    :path: Flutter/ephemeral/.symlinks/plugins/sqlite3_flutter_libs/macos
   url_launcher_macos:
     :path: Flutter/ephemeral/.symlinks/plugins/url_launcher_macos/macos
   window_manager:
@@ -56,10 +80,13 @@ SPEC CHECKSUMS:
   ffmpeg-kit-macos-full: 65e0ab33175e1d62c8ca6d357ee49785281398c6
   FlutterMacOS: 8f6f14fa908a6fb3fba0cd85dbd81ec4b251fb24
   lychee_player: 309f156e73004c021afdba588170f93ae984af35
+  mixin_logger: 011219cd258a9229c11e97e1b637e1c223330462
   path_provider_foundation: 29f094ae23ebbca9d3d0cec13889cd9060c0e943
   screen_retriever: 59634572a57080243dd1bf715e55b6c54f241a38
-  shared_preferences_foundation: e2dae3258e06f44cc55f49d42024fd8dd03c590c
-  url_launcher_macos: 5335912b679c073563f29d89d33d10d459f95451
+  shared_preferences_foundation: 5b919d13b803cadd15ed2dc053125c68730e5126
+  sqlite3: 6e2d4a4879854d0ec86b476bf3c3e30870bac273
+  sqlite3_flutter_libs: a25f3a0f522fdcd8fef6a4a50a3d681dd43d8dea
+  url_launcher_macos: d2691c7dd33ed713bf3544850a623080ec693d95
   window_manager: 3a1844359a6295ab1e47659b1a777e36773cd6e8
 
 PODFILE CHECKSUM: 0d3963a09fc94f580682bd88480486da345dc3f0

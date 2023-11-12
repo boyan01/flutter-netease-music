@@ -15,7 +15,6 @@ dependencies:
     sdk: flutter
   cupertino_icons: ^1.0.6
   json_annotation: ^4.3.0
-  dio_cookie_manager: ^2.1.4
   path_provider: ^2.1.1
   shared_preferences: ^2.2.1
   url_launcher: ^6.1.14
@@ -34,7 +33,7 @@ dependencies:
   scrollable_positioned_list: ^0.3.5
   hive: ^2.2.3
   hive_flutter: ^1.1.0
-  flutter_hooks: ^0.18.0
+  flutter_hooks: ^0.20.3
   equatable: ^2.0.3
   netease_api:
     path: netease_api/
@@ -58,7 +57,7 @@ dependencies:
   meta: ^1.7.0
   lychee_player: ^0.4.0
   fluentui_system_icons: ^1.1.221
-  mixin_logger: ^0.0.6
+  mixin_logger: ^0.1.0
   synchronized: ^3.1.0
   ui_device:
     git:
@@ -69,14 +68,17 @@ dependencies:
   system_clock: ^2.0.0
   handy_window: ^0.3.1
   dio: any
+  drift: ^2.13.1
+  sqlite3_flutter_libs: ^0.5.18
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   build_runner: ^2.4.6
   json_serializable: ^6.7.1
-  flutter_lints: ^2.0.3
+  flutter_lints: ^3.0.1
   hive_generator: ^2.0.1
+  drift_dev: ^2.13.2
 
 # The following section is specific to Flutter.
 flutter:

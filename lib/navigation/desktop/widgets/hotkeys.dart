@@ -19,30 +19,30 @@ class GlobalHotkeys extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     void handlePlayerAction(Intent intent) {
       final player = ref.read(playerProvider);
-      switch (intent.runtimeType) {
-        case _VolumeUpIntent:
+      switch (intent) {
+        case _VolumeUpIntent _:
           player.setVolume((player.volume + 0.2).clamp(0.0, 1.0));
           break;
-        case _VolumeDownIntent:
+        case _VolumeDownIntent _:
           player.setVolume((player.volume - 0.2).clamp(0.0, 1.0));
           break;
-        case _PlayPauseIntent:
+        case _PlayPauseIntent _:
           if (player.isPlaying) {
             player.pause();
           } else {
             player.play();
           }
           break;
-        case _SkipToNextIntent:
+        case _SkipToNextIntent _:
           player.skipToNext();
           break;
-        case _SkipToPreviousIntent:
+        case _SkipToPreviousIntent _:
           if (player.trackList.isFM) {
             return;
           }
           player.skipToPrevious();
           break;
-        case _LikeTrackIntent:
+        case _LikeTrackIntent _:
           final playing = player.current;
           if (playing != null) {
             ref.read(userFavoriteMusicListProvider.notifier).likeMusic(playing);

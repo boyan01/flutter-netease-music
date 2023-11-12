@@ -31,7 +31,7 @@ void main() async {
   await initAppDir();
   final preferences = await SharedPreferences.getInstance();
   unawaited(_initialDesktop(preferences));
-  await initLogger(p.join(appDir.path, 'logs'));
+  initLogger(p.join(appDir.path, 'logs'));
   registerImageCacheProvider();
   await _initHive();
   FlutterError.onError = (details) => e('flutter error: $details');
