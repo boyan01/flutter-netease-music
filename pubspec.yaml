@@ -54,7 +54,7 @@ dependencies:
       url: https://github.com/MixinNetwork/flutter-plugins.git
       ref: 334939d7b6aebdf45881730a21731215976639ca
       path: packages/desktop_drop
-  dotted_border: ^2.0.0+2
+  dotted_border: ^2.1.0
   meta: ^1.7.0
   lychee_player: ^0.4.0
   fluentui_system_icons: ^1.1.221
