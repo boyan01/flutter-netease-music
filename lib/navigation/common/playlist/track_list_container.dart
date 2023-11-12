@@ -145,7 +145,7 @@ class TrackTileContainer extends ConsumerStatefulWidget {
       (ref, track) async {
         final player = ref.read(playerProvider);
         final skipAccompaniment =
-            ref.read(settingStateProvider).skipAccompaniment;
+            ref.read(settingKeyValueProvider).skipAccompaniment;
         final List<Track> tracks;
         if (skipAccompaniment) {
           tracks = playlist.tracks

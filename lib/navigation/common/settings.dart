@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../extension.dart';
 
+import '../../extension.dart';
 import '../../providers/navigator_provider.dart';
 import '../../providers/settings_provider.dart';
 
@@ -11,25 +11,25 @@ class ThemeSwitchRadios extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final themeMode = ref.watch(
-      settingStateProvider.select((value) => value.themeMode),
+      settingKeyValueProvider.select((value) => value.themeMode),
     );
-    final notifier = ref.read(settingStateProvider.notifier);
+    final notifier = ref.read(settingKeyValueProvider.notifier);
     return Column(
       children: [
         RadioListTile<ThemeMode>(
-          onChanged: (mode) => notifier.setThemeMode(mode!),
+          onChanged: (mode) => notifier.themeMode = mode!,
           groupValue: themeMode,
           value: ThemeMode.system,
           title: Text(context.strings.themeAuto),
         ),
         RadioListTile<ThemeMode>(
-          onChanged: (mode) => notifier.setThemeMode(mode!),
+          onChanged: (mode) => notifier.themeMode = mode!,
           groupValue: themeMode,
           value: ThemeMode.light,
           title: Text(context.strings.themeLight),
         ),
         RadioListTile<ThemeMode>(
-          onChanged: (mode) => notifier.setThemeMode(mode!),
+          onChanged: (mode) => notifier.themeMode = mode!,
           groupValue: themeMode,
           value: ThemeMode.dark,
           title: Text(context.strings.themeDark),
@@ -45,11 +45,10 @@ class CopyRightOverlayCheckBox extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return CheckboxListTile(
-      value: ref.watch(settingStateProvider.select((value) => value.copyright)),
+      value:
+          ref.watch(settingKeyValueProvider.select((value) => value.copyright)),
       onChanged: (value) {
-        ref
-            .read(settingStateProvider.notifier)
-            .setShowCopyrightOverlay(show: value ?? false);
+        ref.read(settingKeyValueProvider.notifier).copyright = value ?? false;
       },
       controlAffinity: ListTileControlAffinity.leading,
       title: Text(context.strings.hideCopyrightOverlay),
@@ -101,11 +100,11 @@ class SkipAccompanimentCheckBox extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return CheckboxListTile(
       value: ref.watch(
-        settingStateProvider.select((value) => value.skipAccompaniment),
+        settingKeyValueProvider.select((value) => value.skipAccompaniment),
       ),
       onChanged: (value) => ref
-          .read(settingStateProvider.notifier)
-          .setSkipAccompaniment(skip: value ?? false),
+          .read(settingKeyValueProvider.notifier)
+          .skipAccompaniment = value ?? false,
       controlAffinity: ListTileControlAffinity.leading,
       title: Text(context.strings.skipAccompaniment),
     );

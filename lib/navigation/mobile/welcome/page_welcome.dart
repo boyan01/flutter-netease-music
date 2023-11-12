@@ -57,7 +57,8 @@ class _WelcomeBody extends ConsumerWidget {
             const SizedBox(height: 8),
             OutlinedButton(
               onPressed: () {
-                ref.read(settingStateProvider.notifier).setSkipWelcomePage();
+                ref.read(settingKeyValueProvider.notifier).skipWelcomePage =
+                    true;
                 //remove the all pages
                 // Navigator.pushNamedAndRemoveUntil(
                 //   context,

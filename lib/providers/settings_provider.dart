@@ -1,94 +1,58 @@
-import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
-import 'preference_provider.dart';
+import '../db/dao/key_value_dao.dart';
+import '../db/enum/key_value_group.dart';
+import '../utils/db/db_key_value.dart';
+import 'database_provider.dart';
 
-const String _prefix = 'quiet:settings:';
+const String _keyThemeMode = 'themeMode';
 
-const String _keyThemeMode = '$_prefix:themeMode';
+const String _keyCopyright = 'copyright';
 
-const String _keyCopyright = '$_prefix:copyright';
+const String _keySkipWelcomePage = 'skipWelcomePage';
 
-const String _keySkipWelcomePage = '$_prefix:skipWelcomePage';
+const String _keySkipAccompaniment = 'skipAccompaniment';
 
-final settingStateProvider = StateNotifierProvider<Settings, SettingState>(
+final settingKeyValueProvider = ChangeNotifierProvider<SettingsKeyValue>(
   (ref) {
-    return Settings(ref.read(sharedPreferenceProvider));
+    final dao =
+        ref.watch(databaseProvider.select((value) => value.keyValueDao));
+    return SettingsKeyValue(dao);
   },
 );
 
-class SettingState with EquatableMixin {
-  const SettingState({
-    required this.themeMode,
-    required this.skipWelcomePage,
-    required this.copyright,
-    required this.skipAccompaniment,
-  });
+class SettingsKeyValue extends BaseDbKeyValue {
+  SettingsKeyValue(KeyValueDao dao)
+      : super(group: KeyValueGroup.setting, dao: dao);
 
-  factory SettingState.fromPreference(SharedPreferences preference) {
-    final mode = preference.getInt(_keyThemeMode) ?? 0;
-    assert(mode >= 0 && mode < ThemeMode.values.length, 'invalid theme mode');
-    return SettingState(
-      themeMode: ThemeMode.values[mode.clamp(0, ThemeMode.values.length - 1)],
-      skipWelcomePage: preference.getBool(_keySkipWelcomePage) ?? false,
-      copyright: preference.getBool(_keyCopyright) ?? false,
-      skipAccompaniment:
-          preference.getBool('$_prefix:skipAccompaniment') ?? false,
+  set themeMode(ThemeMode mode) {
+    set(_keyThemeMode, mode.name);
+  }
+
+  ThemeMode get themeMode {
+    final mode = get<String>(_keyThemeMode);
+    return ThemeMode.values.firstWhere(
+      (element) => element.name == mode,
+      orElse: () => ThemeMode.system,
     );
   }
 
-  final ThemeMode themeMode;
-  final bool skipWelcomePage;
-  final bool copyright;
-  final bool skipAccompaniment;
-
-  @override
-  List<Object> get props => [
-        themeMode,
-        skipWelcomePage,
-        copyright,
-        skipAccompaniment,
-      ];
-
-  SettingState copyWith({
-    ThemeMode? themeMode,
-    bool? skipWelcomePage,
-    bool? copyright,
-    bool? skipAccompaniment,
-  }) =>
-      SettingState(
-        themeMode: themeMode ?? this.themeMode,
-        skipWelcomePage: skipWelcomePage ?? this.skipWelcomePage,
-        copyright: copyright ?? this.copyright,
-        skipAccompaniment: skipAccompaniment ?? this.skipAccompaniment,
-      );
-}
-
-class Settings extends StateNotifier<SettingState> {
-  Settings(this._preferences)
-      : super(SettingState.fromPreference(_preferences));
-
-  final SharedPreferences _preferences;
-
-  void setThemeMode(ThemeMode themeMode) {
-    _preferences.setInt(_keyThemeMode, themeMode.index);
-    state = state.copyWith(themeMode: themeMode);
+  set copyright(bool show) {
+    set(_keyThemeMode, show);
   }
 
-  void setShowCopyrightOverlay({required bool show}) {
-    _preferences.setBool(_keyCopyright, show);
-    state = state.copyWith(copyright: show);
+  bool get copyright => get<bool>(_keyThemeMode) ?? true;
+
+  set skipWelcomePage(bool skip) {
+    set(_keySkipWelcomePage, skip);
   }
 
-  void setSkipWelcomePage() {
-    _preferences.setBool(_keySkipWelcomePage, true);
-    state = state.copyWith(skipWelcomePage: true);
+  bool get skipWelcomePage => get<bool>(_keySkipWelcomePage) ?? false;
+
+  set skipAccompaniment(bool skip) {
+    set(_keySkipWelcomePage, skip);
   }
 
-  void setSkipAccompaniment({required bool skip}) {
-    _preferences.setBool('$_prefix:skipAccompaniment', skip);
-    state = state.copyWith(skipAccompaniment: skip);
-  }
+  bool get skipAccompaniment => get<bool>(_keySkipAccompaniment) ?? false;
 }

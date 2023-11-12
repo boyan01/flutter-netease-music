@@ -45,7 +45,7 @@ class QuietApp extends ConsumerWidget {
         theme: theme.light,
         darkTheme: theme.dark,
         themeMode: ref.watch(
-          settingStateProvider.select((value) => value.themeMode),
+          settingKeyValueProvider.select((value) => value.themeMode),
         ),
         home: home,
         debugShowCheckedModeBanner: false,
