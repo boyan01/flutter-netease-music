@@ -9,25 +9,16 @@ class AppNavigator extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final navigatorState = ref.watch(navigatorProvider);
-    return WillPopScope(
-      onWillPop: () async {
+    return Navigator(
+      pages: List.of(navigatorState.pages),
+      onPopPage: (route, result) {
         if (!navigatorState.canBack) {
-          return true;
+          return false;
         }
+        route.didPop(null);
         ref.read(navigatorProvider.notifier).back();
-        return false;
+        return true;
       },
-      child: Navigator(
-        pages: List.of(navigatorState.pages),
-        onPopPage: (route, result) {
-          if (!navigatorState.canBack) {
-            return false;
-          }
-          route.didPop(null);
-          ref.read(navigatorProvider.notifier).back();
-          return true;
-        },
-      ),
     );
   }
 }
