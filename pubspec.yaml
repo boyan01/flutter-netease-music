@@ -56,7 +56,7 @@ dependencies:
   dotted_border: ^2.1.0
   meta: ^1.7.0
   lychee_player: ^0.4.0
-  fluentui_system_icons: ^1.1.221
+  fluentui_system_icons: ^1.1.222
   mixin_logger: ^0.1.0
   synchronized: ^3.1.0
   ui_device:
