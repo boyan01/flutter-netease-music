@@ -155,7 +155,7 @@ class TrackTileContainer extends ConsumerStatefulWidget {
           tracks = playlist.tracks;
         }
 
-        if (player.repeatMode == RepeatMode.heart && playlist.isFavorite) {
+        if (player.repeatMode == RepeatMode.heart && playlist.isMyFavorite) {
           try {
             final toPlay = track ?? tracks.firstOrNull;
             if (toPlay == null) {
@@ -186,7 +186,7 @@ class TrackTileContainer extends ConsumerStatefulWidget {
             id,
             tracks,
             track: track,
-            isUserFavoriteList: playlist.isFavorite,
+            isUserFavoriteList: playlist.isMyFavorite,
             rawPlaylistId: playlist.id,
           );
         }

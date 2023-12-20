@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mixin_logger/mixin_logger.dart';
 
 import '../media/tracks/tracks_player.dart';
 import '../model/persistence_player_state.dart';
@@ -15,7 +14,6 @@ final playerStateProvider =
 
     scheduleMicrotask(() async {
       final state = await ref.read(playerKeyValueProvider).getPlayerState();
-      i('player state: $state');
       if (state != null) {
         player.restoreFromPersistence(state);
       }

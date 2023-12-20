@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../repository.dart';
+import '../../repository.dart';
 
 final userPlaylistsProvider = FutureProvider.family<List<PlaylistDetail>, int>(
   (ref, userId) async {

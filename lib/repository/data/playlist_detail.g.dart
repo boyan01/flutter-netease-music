@@ -32,7 +32,7 @@ class PlaylistDetailAdapter extends TypeAdapter<PlaylistDetail> {
       commentCount: fields[12] as int,
       trackIds: (fields[13] as List).cast<int>(),
       createTime: fields[14] as DateTime,
-      isFavorite: fields[15] as bool,
+      isMyFavorite: fields[15] as bool,
     );
   }
 
@@ -71,7 +71,7 @@ class PlaylistDetailAdapter extends TypeAdapter<PlaylistDetail> {
       ..writeByte(14)
       ..write(obj.createTime)
       ..writeByte(15)
-      ..write(obj.isFavorite);
+      ..write(obj.isMyFavorite);
   }
 
   @override
@@ -108,7 +108,7 @@ PlaylistDetail _$PlaylistDetailFromJson(Map json) => PlaylistDetail(
       trackIds:
           (json['trackIds'] as List<dynamic>).map((e) => e as int).toList(),
       createTime: DateTime.parse(json['createTime'] as String),
-      isFavorite: json['isFavorite'] as bool,
+      isMyFavorite: json['isMyFavorite'] as bool,
     );
 
 Map<String, dynamic> _$PlaylistDetailToJson(PlaylistDetail instance) =>
@@ -128,5 +128,5 @@ Map<String, dynamic> _$PlaylistDetailToJson(PlaylistDetail instance) =>
       'commentCount': instance.commentCount,
       'trackIds': instance.trackIds,
       'createTime': instance.createTime.toIso8601String(),
-      'isFavorite': instance.isFavorite,
+      'isMyFavorite': instance.isMyFavorite,
     };

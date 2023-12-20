@@ -1,15 +1,15 @@
 part of 'page_user_detail.dart';
 
-class TabMusic extends StatefulWidget {
+class TabMusic extends ConsumerStatefulWidget {
   const TabMusic(this.profile, {super.key});
 
   final User profile;
 
   @override
-  State<TabMusic> createState() => _TabMusicState();
+  ConsumerState createState() => _TabMusicState();
 }
 
-class _TabMusicState extends State<TabMusic>
+class _TabMusicState extends ConsumerState<TabMusic>
     with AutomaticKeepAliveClientMixin {
   @override
   bool get wantKeepAlive => true;
@@ -17,13 +17,15 @@ class _TabMusicState extends State<TabMusic>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return Loader<List<PlaylistDetail>>(
-      loadTask: () => neteaseRepository!.userPlaylist(widget.profile.userId),
-      builder: (context, result) {
+    final playlists = ref.watch(userPlaylistsProvider(widget.profile.userId));
+    return playlists.when(
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (e, _) => Center(child: Text(context.formattedError(e))),
+      data: (result) {
         final created =
-            result.where((p) => p.creator.userId == widget.profile.userId);
+            result.where((p) => p.creatorUserId == widget.profile.userId);
         final subscribed =
-            result.where((p) => p.creator.userId != widget.profile.userId);
+            result.where((p) => p.creatorUserId != widget.profile.userId);
         return ListView(
           children: <Widget>[
             Row(

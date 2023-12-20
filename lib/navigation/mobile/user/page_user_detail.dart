@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:loader/loader.dart';
 import 'package:overlay_support/overlay_support.dart';
 
 import '../../../extension.dart';
+import '../../../providers/playlist/user_playlists_provider.dart';
 import '../../../providers/user_detail_provider.dart';
 import '../../../repository.dart';
 import '../../common/image.dart';
@@ -13,9 +13,7 @@ import '../../common/material/tabs.dart';
 import '../widgets/playlist_tile.dart';
 
 part 'tab_about.dart';
-
 part 'tab_events.dart';
-
 part 'tab_music.dart';
 
 ///用户详情页

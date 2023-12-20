@@ -75,8 +75,8 @@ class KeyValues extends Table with TableInfo<KeyValues, KeyValue> {
     return KeyValues(attachedDatabase, alias);
   }
 
-  static TypeConverter<KeyValueGroup, String> $convertergroup =
-      const KeyValueGroupConverter();
+  static JsonTypeConverter2<KeyValueGroup, String, String> $convertergroup =
+      const EnumNameConverter<KeyValueGroup>(KeyValueGroup.values);
   @override
   List<String> get customConstraints => const ['PRIMARY KEY("key", "group")'];
   @override
@@ -113,7 +113,8 @@ class KeyValue extends DataClass implements Insertable<KeyValue> {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return KeyValue(
       key: serializer.fromJson<String>(json['key']),
-      group: serializer.fromJson<KeyValueGroup>(json['group']),
+      group: KeyValues.$convertergroup
+          .fromJson(serializer.fromJson<String>(json['group'])),
       value: serializer.fromJson<String>(json['value']),
     );
   }
@@ -122,7 +123,8 @@ class KeyValue extends DataClass implements Insertable<KeyValue> {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'key': serializer.toJson<String>(key),
-      'group': serializer.toJson<KeyValueGroup>(group),
+      'group':
+          serializer.toJson<String>(KeyValues.$convertergroup.toJson(group)),
       'value': serializer.toJson<String>(value),
     };
   }
@@ -235,13 +237,13 @@ class KeyValuesCompanion extends UpdateCompanion<KeyValue> {
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   late final KeyValues keyValues = KeyValues(this);
-  late final Index keyValuesGroupIndex = Index('key_values_group_index',
-      'CREATE INDEX key_values_group_index ON key_values ("group")');
   late final KeyValueDao keyValueDao = KeyValueDao(this as AppDatabase);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
-  List<DatabaseSchemaEntity> get allSchemaEntities =>
-      [keyValues, keyValuesGroupIndex];
+  List<DatabaseSchemaEntity> get allSchemaEntities => [keyValues];
+  @override
+  DriftDatabaseOptions get options =>
+      const DriftDatabaseOptions(storeDateTimeAsText: true);
 }

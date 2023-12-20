@@ -9,8 +9,8 @@ import '../../../extension.dart';
 import '../../../providers/key_value/account_provider.dart';
 import '../../../providers/navigator_provider.dart';
 import '../../../providers/player_provider.dart';
+import '../../../providers/playlist/user_playlists_provider.dart';
 import '../../../providers/playlist_detail_provider.dart';
-import '../../../providers/user_playlists_provider.dart';
 import '../../../repository.dart';
 import '../../common/like_button.dart';
 import '../../common/navigation_target.dart';
@@ -521,7 +521,7 @@ class _AddToPlaylistSubMenu extends ConsumerWidget {
     final data = ref.watch(
       userPlaylistsProvider(userId!).select(
         (value) => value.whenData(
-          (value) => value.where((element) => element.creator.userId == userId),
+          (value) => value.where((element) => element.creatorUserId == userId),
         ),
       ),
     );

@@ -26,7 +26,7 @@ class PlaylistDetail with EquatableMixin {
     required this.commentCount,
     required this.trackIds,
     required this.createTime,
-    required this.isFavorite,
+    required this.isMyFavorite,
   });
 
   factory PlaylistDetail.fromJson(Map<String, dynamic> json) =>
@@ -40,6 +40,8 @@ class PlaylistDetail with EquatableMixin {
 
   @HiveField(2)
   final User creator;
+
+  int get creatorUserId => creator.userId;
 
   @HiveField(3)
   final String coverUrl;
@@ -78,7 +80,7 @@ class PlaylistDetail with EquatableMixin {
   final DateTime createTime;
 
   @HiveField(15)
-  final bool isFavorite;
+  final bool isMyFavorite;
 
   @override
   List<Object?> get props => [
@@ -97,7 +99,7 @@ class PlaylistDetail with EquatableMixin {
         commentCount,
         trackIds,
         createTime,
-        isFavorite,
+        isMyFavorite,
       ];
 
   Map<String, dynamic> toJson() => _$PlaylistDetailToJson(this);
@@ -135,7 +137,7 @@ class PlaylistDetail with EquatableMixin {
       commentCount: commentCount ?? this.commentCount,
       trackIds: trackIds ?? this.trackIds,
       createTime: createTime ?? this.createTime,
-      isFavorite: isFavorite ?? this.isFavorite,
+      isMyFavorite: isFavorite ?? isMyFavorite,
     );
   }
 }

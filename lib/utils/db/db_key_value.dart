@@ -20,8 +20,18 @@ class BaseLazyDbKeyValue {
       dao.watchByKey(group, key).map(convertToType);
 
   Future<T?> get<T>(String key) async {
+    return getWithConverter<T>(key, convertToType);
+  }
+
+  Future<T?> getWithConverter<T>(
+    String key,
+    T? Function(String value) converter,
+  ) async {
     final value = await dao.getByKey(group, key);
-    return convertToType<T>(value);
+    if (value == null) {
+      return null;
+    }
+    return converter(value);
   }
 
   Future<void> set<T>(String key, T? value) async {
