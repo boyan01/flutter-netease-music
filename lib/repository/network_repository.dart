@@ -9,7 +9,6 @@ import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 
 import '../repository.dart';
-import '../utils/cache/key_value_cache.dart';
 import 'data/login_qr_key_status.dart';
 import 'data/search_result.dart';
 
@@ -24,8 +23,7 @@ export 'package:netease_api/netease_api.dart'
         PlayRecordType;
 
 class NetworkRepository {
-  NetworkRepository(String cookiePath, this.cachePath)
-      : _lyricCache = _LyricCache(p.join(cachePath, 'lyrics')) {
+  NetworkRepository(String cookiePath, this.cachePath) {
     _repository = api.Repository(
       cookiePath,
       onError: (error) {
@@ -54,23 +52,13 @@ class NetworkRepository {
 
   final String cachePath;
 
-  final _LyricCache _lyricCache;
-
   final _onApiUnAuthorized = StreamController<void>.broadcast();
 
   Stream<void> get onApiUnAuthorized => _onApiUnAuthorized.stream;
 
   /// Fetch lyric by track id
   Future<String?> lyric(int id) async {
-    final key = CacheKey.fromString(id.toString());
-    final lyric = await _lyricCache.get(key);
-    if (lyric != null) {
-      return lyric;
-    }
     final lyricString = await _repository.lyric(id);
-    if (lyricString != null) {
-      await _lyricCache.update(key, lyricString);
-    }
     return lyricString;
   }
 
@@ -537,7 +525,7 @@ extension _PlayListMapper on api.Playlist {
       trackUpdateTime: trackUpdateTime,
       trackIds: trackIds.map((e) => e.id).toList(),
       createTime: DateTime.fromMillisecondsSinceEpoch(createTime),
-      isFavorite: specialType == 5,
+      isMyFavorite: specialType == 5,
     );
   }
 }
@@ -687,38 +675,5 @@ extension _UserDetailMapper on api.UserDetail {
       level: level,
       eventCount: profile.eventCount,
     );
-  }
-}
-
-class _LyricCache implements Cache<String?> {
-  _LyricCache(String dir)
-      : provider =
-            FileCacheProvider(dir, maxSize: 20 * 1024 * 1024 /* 20 Mb */);
-
-  final FileCacheProvider provider;
-
-  @override
-  Future<String?> get(CacheKey key) async {
-    final file = provider.getFile(key);
-    if (await file.exists()) {
-      provider.touchFile(file);
-      return file.readAsStringSync();
-    }
-    return null;
-  }
-
-  @override
-  Future<bool> update(CacheKey key, String? t) async {
-    var file = provider.getFile(key);
-    if (await file.exists()) {
-      await file.delete();
-    }
-    file = await file.create(recursive: true);
-    await file.writeAsString(t!);
-    try {
-      return await file.exists();
-    } finally {
-      provider.checkSize();
-    }
   }
 }

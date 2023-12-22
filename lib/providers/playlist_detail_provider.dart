@@ -1,22 +1,44 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
-import 'package:hive/hive.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:mixin_logger/mixin_logger.dart';
 
+import '../db/enum/key_value_group.dart';
 import '../repository/data/playlist_detail.dart';
 import '../repository/data/track.dart';
 import '../repository/netease.dart';
 import '../repository/network_repository.dart';
-import '../utils/hive/hive_util.dart';
-import 'account_provider.dart';
+import '../utils/db/db_key_value.dart';
+import 'database_provider.dart';
+import 'key_value/account_provider.dart';
 
 final playlistDetailProvider = StateNotifierProvider.family<
     PlaylistDetailStateNotifier, AsyncValue<PlaylistDetail>, int>(
   (ref, playlistId) => PlaylistDetailStateNotifier(
     playlistId: playlistId,
     ref: ref,
+  ),
+);
+
+extension _PlaylistKeyValue on BaseLazyDbKeyValue {
+  Future<PlaylistDetail?> getPlaylistDetail(int playlistId) async {
+    final json = await get<Map<String, dynamic>>('playlist_detail_$playlistId');
+    if (json == null) {
+      return null;
+    }
+    return PlaylistDetail.fromJson(json);
+  }
+
+  Future<void> setPlaylistDetail(PlaylistDetail playlistDetail) async {
+    await set('playlist_detail_${playlistDetail.id}', playlistDetail.toJson());
+  }
+}
+
+final _playlistDetailKeyValueProvider = Provider(
+  (ref) => BaseLazyDbKeyValue(
+    group: KeyValueGroup.playlistDetail,
+    dao: ref.watch(keyValueDaoProvider),
   ),
 );
 
@@ -31,17 +53,17 @@ class PlaylistDetailStateNotifier
 
   final int playlistId;
   final Ref ref;
-  late Box<PlaylistDetail> _playlistDetailBox;
 
   PlaylistDetail? _playlistDetail;
+
+  BaseLazyDbKeyValue get _playlistDetailKeyValue =>
+      ref.read(_playlistDetailKeyValueProvider);
 
   final _initializeCompleter = Completer();
 
   Future<void> _initializeLoad() async {
     assert(state is AsyncLoading, 'state is not AsyncLoading');
-    _playlistDetailBox =
-        await Hive.openBoxSafe<PlaylistDetail>('playlistDetail');
-    final local = _playlistDetailBox.get(playlistId.toString());
+    final local = await _playlistDetailKeyValue.getPlaylistDetail(playlistId);
     if (local != null) {
       _playlistDetail = local;
       state = AsyncValue.data(local);
@@ -78,7 +100,7 @@ class PlaylistDetailStateNotifier
       }
       _playlistDetail = data;
       state = AsyncValue.data(data);
-      await _playlistDetailBox.put(playlistId.toString(), data);
+      await _playlistDetailKeyValue.setPlaylistDetail(data);
     } catch (error, stacktrace) {
       debugPrint('error: $error ,$stacktrace');
       if (state is! AsyncData) {
@@ -119,7 +141,7 @@ class PlaylistDetailStateNotifier
       trackIds: [...ids, ..._playlistDetail!.trackIds],
     );
     _playlistDetail = detail;
-    await _playlistDetailBox.put(playlistId.toString(), detail);
+    await _playlistDetailKeyValue.setPlaylistDetail(detail);
     state = AsyncValue.data(detail);
   }
 
@@ -143,7 +165,7 @@ class PlaylistDetailStateNotifier
       trackIds: _playlistDetail!.trackIds.where((t) => t != track.id).toList(),
     );
     _playlistDetail = detail;
-    await _playlistDetailBox.put(playlistId.toString(), detail);
+    await _playlistDetailKeyValue.setPlaylistDetail(detail);
     state = AsyncValue.data(detail);
   }
 }

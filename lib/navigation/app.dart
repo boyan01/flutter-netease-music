@@ -3,8 +3,8 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../generated/l10n.dart';
+import '../providers/key_value/settings_provider.dart';
 import '../providers/navigator_provider.dart';
-import '../providers/settings_provider.dart';
 import '../utils/platform_configuration.dart';
 import 'common/material/app.dart';
 import 'common/material/theme.dart';
@@ -45,7 +45,7 @@ class QuietApp extends ConsumerWidget {
         theme: theme.light,
         darkTheme: theme.dark,
         themeMode: ref.watch(
-          settingStateProvider.select((value) => value.themeMode),
+          settingKeyValueProvider.select((value) => value.themeMode),
         ),
         home: home,
         debugShowCheckedModeBanner: false,

@@ -1,26 +1,46 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mixin_logger/mixin_logger.dart';
 
+import '../db/enum/key_value_group.dart';
 import '../repository.dart';
+import '../utils/db/db_key_value.dart';
+import 'database_provider.dart';
+
+final _userKeyValueProvider = Provider(
+  (ref) => BaseLazyDbKeyValue(
+    group: KeyValueGroup.user,
+    dao: ref.watch(keyValueDaoProvider),
+  ),
+);
+
+extension _UserBaseLazyDbKeyValue on BaseLazyDbKeyValue {
+  Future<User?> getUser(int userId) async {
+    final json = await get<Map<String, dynamic>>('user_detail_$userId');
+    if (json == null) {
+      return null;
+    }
+    return User.fromJson(json);
+  }
+
+  Future<void> setUser(User user) async {
+    await set('user_detail_${user.userId}', user.toJson());
+  }
+}
 
 final userDetailProvider = StreamProvider.family<User, int>(
   (ref, userId) async* {
-    final cacheKey = 'user_detail_$userId';
-
+    final keyValue = ref.watch(_userKeyValueProvider);
     try {
-      final cache = await neteaseLocalData.get<Map<String, dynamic>>(cacheKey);
+      final cache = await keyValue.getUser(userId);
       if (cache != null) {
-        yield User.fromJson(cache);
+        yield cache;
       }
     } catch (error, stack) {
-      debugPrint('$error, $stack');
-      // clear cache if error occurs
-      neteaseLocalData[cacheKey] = null;
+      e('$error, $stack');
     }
-
     final result = await neteaseRepository!.getUserDetail(userId);
     final user = await result.asFuture;
     yield user;
-    neteaseLocalData[cacheKey] = user.toJson();
+    await keyValue.setUser(user);
   },
 );

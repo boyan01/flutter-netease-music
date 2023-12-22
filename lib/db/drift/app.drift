@@ -1,0 +1,9 @@
+import '../enum/key_value_group.dart';
+import '../enum/track_type.dart';
+
+CREATE TABLE key_values (
+  "key" TEXT NOT NULL,
+  "group" ENUMNAME(KeyValueGroup) NOT NULL,
+  "value" TEXT NOT NULL,
+  PRIMARY KEY("key", "group")
+);

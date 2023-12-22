@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../extension.dart';
-import '../../../providers/account_provider.dart';
+import '../../../providers/key_value/account_provider.dart';
 import '../../../providers/navigator_provider.dart';
 import '../../../repository.dart';
 import '../../common/image.dart';

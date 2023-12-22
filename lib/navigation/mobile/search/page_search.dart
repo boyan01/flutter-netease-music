@@ -2,8 +2,8 @@ import 'package:flutter/material.dart' hide SearchBar;
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../extension.dart';
+import '../../../providers/key_value/search_history_provider.dart';
 import '../../../providers/navigator_provider.dart';
-import '../../../providers/search_history_provider.dart';
 import '../../common/navigation_target.dart';
 import '../widgets/will_pop_scope.dart';
 import 'search_bar.dart';
@@ -126,7 +126,8 @@ class _SearchHistory extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final histories = ref.watch(searchHistoryProvider);
+    final histories =
+        ref.watch(searchHistoryProvider.select((value) => value.searchHistory));
     if (histories.isEmpty) {
       return const SizedBox();
     }

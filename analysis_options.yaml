@@ -4,7 +4,6 @@ analyzer:
   exclude:
     - 'lib/generated/**'
     - '**.g.dart'
-    - 'test/**'
   errors:
     body_might_complete_normally_nullable: false
     unused_element: ignore

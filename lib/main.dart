@@ -3,24 +3,22 @@ import 'dart:io';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:hive_flutter/adapters.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:mixin_logger/mixin_logger.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:path/path.dart' as p;
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:window_manager/window_manager.dart';
 
 import 'media/tracks/tracks_player_impl_mobile.dart';
 import 'navigation/app.dart';
 import 'navigation/common/page_splash.dart';
-import 'providers/preference_provider.dart';
+import 'providers/key_value/window_key_value_provider.dart';
 import 'providers/repository_provider.dart';
 import 'repository.dart';
 import 'repository/app_dir.dart';
 import 'utils/cache/cached_image.dart';
 import 'utils/callback_window_listener.dart';
-import 'utils/hive/duration_adapter.dart';
 import 'utils/platform_configuration.dart';
 import 'utils/system/system_fonts.dart';
 
@@ -29,11 +27,8 @@ void main() async {
   await loadFallbackFonts();
   await NetworkRepository.initialize();
   await initAppDir();
-  final preferences = await SharedPreferences.getInstance();
-  unawaited(_initialDesktop(preferences));
   initLogger(p.join(appDir.path, 'logs'));
   registerImageCacheProvider();
-  await _initHive();
   FlutterError.onError = (details) => e('flutter error: $details');
   PlatformDispatcher.instance.onError = (error, stacktrace) {
     e('uncaught error: $error $stacktrace');
@@ -42,37 +37,41 @@ void main() async {
   runApp(
     ProviderScope(
       overrides: [
-        sharedPreferenceProvider.overrideWithValue(preferences),
         neteaseRepositoryProvider.overrideWithValue(neteaseRepository!),
       ],
-      child: PageSplash(
-        futures: const [],
-        builder: (BuildContext context, List<dynamic> data) {
-          return const MyApp();
-        },
+      child: _WindowInitializationWidget(
+        child: PageSplash(
+          futures: const [],
+          builder: (BuildContext context, List<dynamic> data) {
+            return const MyApp();
+          },
+        ),
       ),
     ),
   );
 }
 
-Future<void> _initHive() async {
-  await Hive.initFlutter(p.join(appDir.path, 'hive'));
-  Hive.registerAdapter(PlaylistDetailAdapter());
-  Hive.registerAdapter(TrackTypeAdapter());
-  Hive.registerAdapter(TrackAdapter());
-  Hive.registerAdapter(ArtistMiniAdapter());
-  Hive.registerAdapter(AlbumMiniAdapter());
-  Hive.registerAdapter(DurationAdapter());
-  Hive.registerAdapter(UserAdapter());
+class _WindowInitializationWidget extends HookConsumerWidget {
+  const _WindowInitializationWidget({super.key, required this.child});
+
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    useMemoized(() async {
+      await _initialDesktop(ref.read(windowKeyValueProvider));
+    });
+    return child;
+  }
 }
 
-Future<void> _initialDesktop(SharedPreferences preferences) async {
+Future<void> _initialDesktop(WindowKeyValue keyValue) async {
   if (!(Platform.isMacOS || Platform.isLinux || Platform.isWindows)) {
     return;
   }
   await WindowManager.instance.ensureInitialized();
   if (Platform.isWindows) {
-    final size = preferences.getWindowSize();
+    final size = await keyValue.getWindowSize();
     final windowOptions = WindowOptions(
       size: size ?? const Size(1080, 720),
       minimumSize: windowMinSize,
@@ -85,7 +84,7 @@ Future<void> _initialDesktop(SharedPreferences preferences) async {
       await windowManager.focus();
     });
   } else if (Platform.isLinux) {
-    final size = preferences.getWindowSize();
+    final size = await keyValue.getWindowSize();
     await windowManager.setSize(size ?? const Size(1080, 720));
     await windowManager.center();
   }
@@ -95,7 +94,7 @@ Future<void> _initialDesktop(SharedPreferences preferences) async {
       CallbackWindowListener(
         onWindowResizeCallback: () async {
           final size = await windowManager.getSize();
-          await preferences.setWindowSize(size);
+          await keyValue.setWindowSize(size);
         },
       ),
     );

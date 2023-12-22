@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:overlay_support/overlay_support.dart';
-import '../../../repository.dart';
+
+import '../../../repository/data/playlist_detail.dart';
 import '../../common/image.dart';
 
 ///page for playlist edit

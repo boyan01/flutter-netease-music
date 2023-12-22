@@ -5,8 +5,8 @@ version: 0.4.0
 publish_to: none
 
 environment:
-  sdk: '>=3.0.0 <4.0.0'
-  flutter: ^3.10.0
+  sdk: '>=3.2.0 <4.0.0'
+  flutter: ^3.16.0
 
 dependencies:
   flutter:
@@ -16,7 +16,6 @@ dependencies:
   cupertino_icons: ^1.0.6
   json_annotation: ^4.3.0
   path_provider: ^2.1.1
-  shared_preferences: ^2.2.1
   url_launcher: ^6.1.14
   intl: ^0.18.0
   scoped_model: ^2.0.0
@@ -31,8 +30,6 @@ dependencies:
       url: https://github.com/boyan01/flutter-music-player.git
       ref: f7a97ae6b892c133c63a10e5f8879a611520d3c7
   scrollable_positioned_list: ^0.3.5
-  hive: ^2.2.3
-  hive_flutter: ^1.1.0
   flutter_hooks: ^0.20.3
   equatable: ^2.0.3
   netease_api:

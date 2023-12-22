@@ -4,8 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../media/tracks/tracks_player.dart';
 import '../model/persistence_player_state.dart';
+import 'key_value/player_state_key_value_provider.dart';
 import 'play_history_provider.dart';
-import 'preference_provider.dart';
 
 final playerStateProvider =
     StateNotifierProvider<TracksPlayer, TracksPlayerState>(
@@ -13,7 +13,7 @@ final playerStateProvider =
     final player = TracksPlayer.platform();
 
     scheduleMicrotask(() async {
-      final state = await ref.read(sharedPreferenceProvider).getPlayerState();
+      final state = await ref.read(playerKeyValueProvider).getPlayerState();
       if (state != null) {
         player.restoreFromPersistence(state);
       }
@@ -30,7 +30,7 @@ final playerStateProvider =
             return;
           }
           lastState = newState;
-          ref.read(sharedPreferenceProvider).setPlayerState(newState);
+          ref.read(playerKeyValueProvider).setPlayerState(newState);
         },
         fireImmediately: false,
       );

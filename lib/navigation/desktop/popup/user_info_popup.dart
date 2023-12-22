@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:overlay_support/overlay_support.dart';
 
 import '../../../extension.dart';
-import '../../../providers/account_provider.dart';
+import '../../../providers/key_value/account_provider.dart';
 import '../../common/shape.dart';
 import '../widgets/context_menu.dart';
 
@@ -37,7 +37,7 @@ Future<void> showUserInfoPopup({
                           title: Text(context.strings.logout),
                           onTap: () {
                             OverlaySupportEntry.of(context)?.dismiss();
-                            ref.read(userProvider.notifier).logout();
+                            ref.read(neteaseAccountProvider).logout();
                           },
                           icon: const Icon(FluentIcons.power_20_regular),
                           height: 48,

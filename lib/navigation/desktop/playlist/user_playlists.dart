@@ -8,12 +8,12 @@ import 'package:overlay_support/overlay_support.dart';
 import '../../../extension.dart';
 import '../../../media/tracks/track_list.dart';
 import '../../../media/tracks/tracks_player.dart';
-import '../../../providers/account_provider.dart';
+import '../../../providers/key_value/account_provider.dart';
 import '../../../providers/navigator_provider.dart';
 import '../../../providers/player_provider.dart';
+import '../../../providers/playlist/user_playlists_provider.dart';
 import '../../../providers/repository_provider.dart';
-import '../../../providers/user_playlists_provider.dart';
-import '../../../repository.dart';
+import '../../../repository/data/playlist_detail.dart';
 import '../../common/buttons.dart';
 import '../../common/navigation_target.dart';
 import '../widgets/expansion_panel.dart';
@@ -78,9 +78,9 @@ class _UserPlaylist extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final created = playlists.where((p) => p.creator.userId == userId).toList();
+    final created = playlists.where((p) => p.creatorUserId == userId).toList();
     final subscribed =
-        playlists.where((p) => p.creator.userId != userId).toList();
+        playlists.where((p) => p.creatorUserId != userId).toList();
 
     final createdExpanded = useState(true);
     final subscribedExpanded = useState(true);
@@ -194,13 +194,13 @@ class _UserPlaylistItem extends ConsumerWidget {
       title: Tooltip(
         message: playlist.name,
         child: Text(
-          playlist.isFavorite
+          playlist.isMyFavorite
               ? context.strings.myFavoriteMusics
               : playlist.name,
         ),
       ),
       isSelected: current == playlist.id,
-      trailing: !playlist.isFavorite
+      trailing: !playlist.isMyFavorite
           ? null
           : AppIconButton(
               icon: FluentIcons.heart_pulse_20_regular,

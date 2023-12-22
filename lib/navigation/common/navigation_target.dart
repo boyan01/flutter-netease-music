@@ -1,4 +1,4 @@
-import '../../repository.dart';
+import '../../repository/data/playlist_detail.dart';
 
 const kMobileHomeTabs = [
   NavigationTargetDiscover,

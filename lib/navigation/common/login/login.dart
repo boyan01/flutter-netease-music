@@ -7,7 +7,7 @@ import 'package:overlay_support/overlay_support.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 import '../../../extension.dart';
-import '../../../providers/account_provider.dart';
+import '../../../providers/key_value/account_provider.dart';
 import '../../../providers/repository_provider.dart';
 import '../../../repository/data/login_qr_key_status.dart';
 import '../../../utils/hooks.dart';
@@ -107,7 +107,7 @@ class _QrCodeBody extends HookConsumerWidget {
                 try {
                   await showLoaderOverlay(
                     context,
-                    ref.read(userProvider.notifier).loginWithQrKey(),
+                    ref.read(neteaseAccountProvider).loginWithQrKey(),
                   );
                   onVerified();
                 } catch (error, stacktrace) {
@@ -187,7 +187,7 @@ class LoginPasswordWidget extends HookConsumerWidget {
         toast(context.strings.pleaseInputPassword);
         return;
       }
-      final account = ref.read(userProvider.notifier);
+      final account = ref.read(neteaseAccountProvider.notifier);
       final result = await showLoaderOverlay(
         context,
         account.login(phone, password),

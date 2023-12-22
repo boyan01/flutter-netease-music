@@ -4,17 +4,22 @@ import 'package:flutter/material.dart';
 import 'package:riverpod/riverpod.dart';
 
 import '../repository/data/track.dart';
-import '../repository/local_cache_data.dart';
+import '../utils/db/db_key_value.dart';
+import 'key_value/simple_lazy_ley_value_provider.dart';
 
 final playHistoryProvider =
     StateNotifierProvider<PlayHistoryStateNotifier, List<Track>>(
-  (ref) => PlayHistoryStateNotifier(),
+  (ref) => PlayHistoryStateNotifier(ref.watch(simpleLazyKeyValueProvider)),
 );
 
+const _keyPlayHistory = 'play_history';
+
 class PlayHistoryStateNotifier extends StateNotifier<List<Track>> {
-  PlayHistoryStateNotifier() : super(const []) {
+  PlayHistoryStateNotifier(this.keyValue) : super(const []) {
     _initializeLoad();
   }
+
+  final BaseLazyDbKeyValue keyValue;
 
   final List<Track> _data = [];
 
@@ -22,7 +27,11 @@ class PlayHistoryStateNotifier extends StateNotifier<List<Track>> {
 
   Future<void> _initializeLoad() async {
     try {
-      _data.addAll(await neteaseLocalData.getPlayHistory());
+      final cache =
+          await keyValue.get<List<Map<String, dynamic>>>(_keyPlayHistory);
+      if (cache != null) {
+        _data.addAll(cache.map(Track.fromJson));
+      }
       state = _data.toList();
     } catch (error, stackTrace) {
       debugPrint(
@@ -38,18 +47,18 @@ class PlayHistoryStateNotifier extends StateNotifier<List<Track>> {
     _data.removeWhere((element) => element.id == track.id);
     _data.insert(0, track);
     state = _data.toList();
-    await neteaseLocalData.updatePlayHistory(_data);
+    await keyValue.set(_keyPlayHistory, _data);
   }
 
   void remove(Track track) {
     _data.removeWhere((element) => element.id == track.id);
     state = _data.toList();
-    neteaseLocalData.updatePlayHistory(_data);
+    keyValue.set(_keyPlayHistory, _data);
   }
 
   void clear() {
     _data.clear();
     state = _data.toList();
-    neteaseLocalData.updatePlayHistory(_data);
+    keyValue.set(_keyPlayHistory, _data);
   }
 }

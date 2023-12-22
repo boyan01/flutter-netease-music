@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../../../extension.dart';
-import '../../../providers/settings_provider.dart';
+import '../../../providers/key_value/settings_provider.dart';
 
 class CopyRightOverlay extends HookConsumerWidget {
   const CopyRightOverlay({super.key, this.child});
@@ -23,7 +23,7 @@ class CopyRightOverlay extends HookConsumerWidget {
     );
     return CustomPaint(
       foregroundPainter:
-          ref.watch(settingStateProvider.select((value) => value.copyright))
+          ref.watch(settingKeyValueProvider.select((value) => value.copyright))
               ? null
               : painter,
       child: child,

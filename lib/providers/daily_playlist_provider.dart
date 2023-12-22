@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../repository.dart';
+import 'key_value/simple_lazy_ley_value_provider.dart';
 
 extension _DateTime on DateTime {
   bool isTheSameDay(DateTime other) {
@@ -26,6 +27,8 @@ final dailyPlaylistProvider = StreamProvider<DailyPlaylist>(
 
     Timer? timer;
 
+    final keyValue = ref.read(simpleLazyKeyValueProvider);
+
     void scheduleRefresh(VoidCallback refresh) {
       timer?.cancel();
       final nextDay = DateTime.now().nextDay().millisecondsSinceEpoch -
@@ -38,14 +41,13 @@ final dailyPlaylistProvider = StreamProvider<DailyPlaylist>(
       final songs = await ret.asFuture;
       final playlist = DailyPlaylist(date: DateTime.now(), tracks: songs);
       streamController.add(playlist);
-      neteaseLocalData[cacheKey] = playlist.toJson();
+      await keyValue.set(cacheKey, playlist.toJson());
       scheduleRefresh(refresh);
     }
 
     scheduleMicrotask(() async {
       try {
-        final cache =
-            await neteaseLocalData.get<Map<String, dynamic>>(cacheKey);
+        final cache = await keyValue.get<Map<String, dynamic>>(cacheKey);
         if (cache != null) {
           final playlist = DailyPlaylist.fromJson(cache);
           if (playlist.date.isToday()) {

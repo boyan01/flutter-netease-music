@@ -325,7 +325,7 @@ class _OverflowText extends HookWidget {
           text: textSpan,
           textDirection: Directionality.of(context),
           locale: Localizations.localeOf(context),
-          textScaleFactor: MediaQuery.textScaleFactorOf(context),
+          textScaler: MediaQuery.textScalerOf(context),
           maxLines: maxLines ?? defaultTextStyle.maxLines,
           textWidthBasis: defaultTextStyle.textWidthBasis,
           textHeightBehavior: defaultTextStyle.textHeightBehavior,

@@ -7,11 +7,11 @@ import 'package:mixin_logger/mixin_logger.dart';
 import '../../../extension.dart';
 import '../../../media/tracks/track_list.dart';
 import '../../../media/tracks/tracks_player.dart';
+import '../../../providers/key_value/settings_provider.dart';
 import '../../../providers/navigator_provider.dart';
 import '../../../providers/player_provider.dart';
 import '../../../providers/playlist_detail_provider.dart';
 import '../../../providers/repository_provider.dart';
-import '../../../providers/settings_provider.dart';
 import '../../../repository.dart';
 import '../navigation_target.dart';
 
@@ -145,7 +145,7 @@ class TrackTileContainer extends ConsumerStatefulWidget {
       (ref, track) async {
         final player = ref.read(playerProvider);
         final skipAccompaniment =
-            ref.read(settingStateProvider).skipAccompaniment;
+            ref.read(settingKeyValueProvider).skipAccompaniment;
         final List<Track> tracks;
         if (skipAccompaniment) {
           tracks = playlist.tracks
@@ -155,7 +155,7 @@ class TrackTileContainer extends ConsumerStatefulWidget {
           tracks = playlist.tracks;
         }
 
-        if (player.repeatMode == RepeatMode.heart && playlist.isFavorite) {
+        if (player.repeatMode == RepeatMode.heart && playlist.isMyFavorite) {
           try {
             final toPlay = track ?? tracks.firstOrNull;
             if (toPlay == null) {
@@ -186,7 +186,7 @@ class TrackTileContainer extends ConsumerStatefulWidget {
             id,
             tracks,
             track: track,
-            isUserFavoriteList: playlist.isFavorite,
+            isUserFavoriteList: playlist.isMyFavorite,
             rawPlaylistId: playlist.id,
           );
         }

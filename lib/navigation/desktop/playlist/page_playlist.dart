@@ -8,7 +8,7 @@ import 'package:overlay_support/overlay_support.dart';
 import 'package:stream_transform/stream_transform.dart';
 
 import '../../../extension.dart';
-import '../../../providers/account_provider.dart';
+import '../../../providers/key_value/account_provider.dart';
 import '../../../providers/navigator_provider.dart';
 import '../../../providers/player_provider.dart';
 import '../../../providers/playlist_detail_provider.dart';

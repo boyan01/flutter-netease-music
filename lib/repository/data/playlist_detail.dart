@@ -1,14 +1,12 @@
 import 'package:equatable/equatable.dart';
-import 'package:hive/hive.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'track.dart';
 
+import 'track.dart';
 import 'user.dart';
 
 part 'playlist_detail.g.dart';
 
 @JsonSerializable()
-@HiveType(typeId: 1)
 class PlaylistDetail with EquatableMixin {
   PlaylistDetail({
     required this.id,
@@ -26,59 +24,45 @@ class PlaylistDetail with EquatableMixin {
     required this.commentCount,
     required this.trackIds,
     required this.createTime,
-    required this.isFavorite,
+    required this.isMyFavorite,
   });
 
   factory PlaylistDetail.fromJson(Map<String, dynamic> json) =>
       _$PlaylistDetailFromJson(json);
 
-  @HiveField(0)
   final int id;
 
-  @HiveField(1)
   final List<Track> tracks;
 
-  @HiveField(2)
   final User creator;
 
-  @HiveField(3)
+  int get creatorUserId => creator.userId;
+
   final String coverUrl;
 
-  @HiveField(4)
   final int trackCount;
 
-  @HiveField(5)
   final bool subscribed;
 
-  @HiveField(6)
   final int subscribedCount;
 
-  @HiveField(7)
   final int shareCount;
 
-  @HiveField(8)
   final int playCount;
 
-  @HiveField(9)
   final int trackUpdateTime;
 
-  @HiveField(10)
   final String name;
 
-  @HiveField(11)
   final String description;
 
-  @HiveField(12)
   final int commentCount;
 
-  @HiveField(13)
   final List<int> trackIds;
 
-  @HiveField(14)
   final DateTime createTime;
 
-  @HiveField(15)
-  final bool isFavorite;
+  final bool isMyFavorite;
 
   @override
   List<Object?> get props => [
@@ -97,7 +81,7 @@ class PlaylistDetail with EquatableMixin {
         commentCount,
         trackIds,
         createTime,
-        isFavorite,
+        isMyFavorite,
       ];
 
   Map<String, dynamic> toJson() => _$PlaylistDetailToJson(this);
@@ -135,7 +119,7 @@ class PlaylistDetail with EquatableMixin {
       commentCount: commentCount ?? this.commentCount,
       trackIds: trackIds ?? this.trackIds,
       createTime: createTime ?? this.createTime,
-      isFavorite: isFavorite ?? this.isFavorite,
+      isMyFavorite: isFavorite ?? isMyFavorite,
     );
   }
 }

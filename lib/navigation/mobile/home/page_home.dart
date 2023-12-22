@@ -14,11 +14,11 @@ class PageHome extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Widget body;
-    switch (selectedTab.runtimeType) {
-      case NavigationTargetLibrary:
+    switch (selectedTab) {
+      case NavigationTargetLibrary _:
         body = const MainPageMy();
         break;
-      case NavigationTargetDiscover:
+      case NavigationTargetDiscover _:
         body = const MainPageDiscover();
         break;
       default:

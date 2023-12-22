@@ -13,3 +13,6 @@ targets:
           generic_argument_factories: false
           ignore_unannotated: false
           include_if_null: true
+      drift_dev:
+        options:
+          store_date_time_values_as_text: true
