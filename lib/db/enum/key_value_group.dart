@@ -5,4 +5,7 @@ enum KeyValueGroup {
   window,
   player,
   search,
+  user,
+  simpleLazy,
+  playlistDetail,
 }

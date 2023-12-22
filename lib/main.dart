@@ -4,7 +4,6 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:hive_flutter/adapters.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:mixin_logger/mixin_logger.dart';
 import 'package:overlay_support/overlay_support.dart';
@@ -20,7 +19,6 @@ import 'repository.dart';
 import 'repository/app_dir.dart';
 import 'utils/cache/cached_image.dart';
 import 'utils/callback_window_listener.dart';
-import 'utils/hive/duration_adapter.dart';
 import 'utils/platform_configuration.dart';
 import 'utils/system/system_fonts.dart';
 
@@ -31,7 +29,6 @@ void main() async {
   await initAppDir();
   initLogger(p.join(appDir.path, 'logs'));
   registerImageCacheProvider();
-  await _initHive();
   FlutterError.onError = (details) => e('flutter error: $details');
   PlatformDispatcher.instance.onError = (error, stacktrace) {
     e('uncaught error: $error $stacktrace');
@@ -52,17 +49,6 @@ void main() async {
       ),
     ),
   );
-}
-
-Future<void> _initHive() async {
-  await Hive.initFlutter(p.join(appDir.path, 'hive'));
-  Hive.registerAdapter(PlaylistDetailAdapter());
-  Hive.registerAdapter(TrackTypeAdapter());
-  Hive.registerAdapter(TrackAdapter());
-  Hive.registerAdapter(ArtistMiniAdapter());
-  Hive.registerAdapter(AlbumMiniAdapter());
-  Hive.registerAdapter(DurationAdapter());
-  Hive.registerAdapter(UserAdapter());
 }
 
 class _WindowInitializationWidget extends HookConsumerWidget {

@@ -3,16 +3,23 @@ import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../repository.dart';
+import '../utils/db/db_key_value.dart';
 import '../utils/riverpod/cacheable_state_provider.dart';
 import 'key_value/account_provider.dart';
+import 'key_value/simple_lazy_ley_value_provider.dart';
 
 final userFavoriteMusicListProvider =
     StateNotifierProvider<UserFavoriteMusicListNotifier, List<int>>(
-  (ref) => UserFavoriteMusicListNotifier(ref.watch(userProvider)?.userId),
+  (ref) => UserFavoriteMusicListNotifier(
+    ref.watch(userProvider)?.userId,
+    ref.watch(simpleLazyKeyValueProvider),
+  ),
 );
 
 class UserFavoriteMusicListNotifier extends CacheableStateNotifier<List<int>> {
-  UserFavoriteMusicListNotifier(this.userId) : super(const []);
+  UserFavoriteMusicListNotifier(this.userId, this.keyValue) : super(const []);
+
+  final BaseLazyDbKeyValue keyValue;
 
   static const _keyLikedSongList = 'likedSongList';
 
@@ -45,11 +52,11 @@ class UserFavoriteMusicListNotifier extends CacheableStateNotifier<List<int>> {
 
   @override
   Future<List<int>?> loadFromCache() async =>
-      (await neteaseLocalData[_keyLikedSongList] as List?)?.cast<int>();
+      (await keyValue.get<List>(_keyLikedSongList))?.cast<int>();
 
   @override
   void saveToCache(List<int> value) {
-    neteaseLocalData[_keyLikedSongList] = value;
+    keyValue.set(_keyLikedSongList, value);
   }
 }
 

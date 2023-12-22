@@ -3,22 +3,31 @@ import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../repository.dart';
+import '../utils/db/db_key_value.dart';
 import '../utils/riverpod/cacheable_state_provider.dart';
 import 'key_value/account_provider.dart';
+import 'key_value/simple_lazy_ley_value_provider.dart';
 
 export 'package:netease_api/netease_api.dart' show MusicCount;
 
 final userMusicCountProvider =
     StateNotifierProvider<MusicCountNotifier, MusicCount>((ref) {
-  return MusicCountNotifier(login: ref.watch(isLoginProvider));
+  return MusicCountNotifier(
+    login: ref.watch(isLoginProvider),
+    keyValue: ref.watch(simpleLazyKeyValueProvider),
+  );
 });
 
 class MusicCountNotifier extends CacheableStateNotifier<MusicCount> {
-  MusicCountNotifier({required this.login}) : super(const MusicCount());
+  MusicCountNotifier({
+    required this.login,
+    required this.keyValue,
+  }) : super(const MusicCount());
 
   static const _cacheKey = 'user_sub_count';
 
   final bool login;
+  final BaseLazyDbKeyValue keyValue;
 
   @override
   Future<MusicCount?> load() async {
@@ -34,8 +43,7 @@ class MusicCountNotifier extends CacheableStateNotifier<MusicCount> {
 
   @override
   Future<MusicCount?> loadFromCache() async {
-    final cache =
-        await neteaseLocalData.get(_cacheKey) as Map<String, dynamic>?;
+    final cache = await keyValue.get<Map<String, dynamic>>(_cacheKey);
     if (cache == null) {
       return null;
     }
@@ -44,6 +52,6 @@ class MusicCountNotifier extends CacheableStateNotifier<MusicCount> {
 
   @override
   void saveToCache(MusicCount value) {
-    neteaseLocalData[_cacheKey] = state.toJson();
+    keyValue.set(_cacheKey, value);
   }
 }
