@@ -37,7 +37,7 @@ dependencies:
   path: ^1.8.0
   async: ^2.9.0
   riverpod: ^2.4.0
-  flutter_riverpod: ^2.0.2
+  flutter_riverpod: ^2.4.9
   hooks_riverpod: ^2.4.5
   collection: ^1.18.0
   window_manager: ^0.3.6
