@@ -195,6 +195,7 @@ class _AppBar extends HookConsumerWidget {
           icon: FluentIcons.search_20_regular,
         ),
       ],
+      scrolledUnderElevation: 0,
       pinned: true,
       elevation: 0,
     );
