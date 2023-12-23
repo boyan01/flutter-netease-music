@@ -44,11 +44,10 @@ class _TrackMenuBottomSheet extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
         _TrackHeader(track: track),
-        Expanded(
-          child: _MenuList(track: track, controller: controller),
-        ),
+        _MenuList(track: track, controller: controller),
       ],
     );
   }
@@ -67,8 +66,8 @@ class _MenuList extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final userId = ref.watch(userIdProvider);
-    return ListView(
-      physics: const ClampingScrollPhysics(),
+    return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
         _MenuTile(
           title: Text(context.strings.play),
@@ -97,24 +96,25 @@ class _MenuList extends ConsumerWidget {
             showAddToPlaylistBottomSheet(context, tracks: [track]);
           },
         ),
-        _MenuTile(
-          title: Text(context.strings.delete),
-          leading: const Icon(FluentIcons.delete_20_regular),
-          enable: controller.canDelete,
-          color: context.colorScheme.primary,
-          onTap: () async {
-            final confirm = await showConfirmDialog(
-              context,
-              Text(context.strings.sureToRemoveMusicFromPlaylist),
-              positiveLabel: context.strings.remove,
-            );
-            if (!confirm) {
-              return;
-            }
-            Navigator.pop(context);
-            await controller.delete(track);
-          },
-        ),
+        if (controller.canDelete)
+          _MenuTile(
+            title: Text(context.strings.delete),
+            leading: const Icon(FluentIcons.delete_20_regular),
+            enable: controller.canDelete,
+            color: context.colorScheme.primary,
+            onTap: () async {
+              final confirm = await showConfirmDialog(
+                context,
+                Text(context.strings.sureToRemoveMusicFromPlaylist),
+                positiveLabel: context.strings.remove,
+              );
+              if (!confirm) {
+                return;
+              }
+              Navigator.pop(context);
+              await controller.delete(track);
+            },
+          ),
         _MenuTile(
           title: Text('${context.strings.album}: ${track.album?.name}'),
           leading: const Icon(FluentIcons.album_20_regular),
@@ -213,7 +213,6 @@ class _MenuTile extends StatelessWidget {
     return ListTile(
       title: title,
       leading: leading,
-      horizontalTitleGap: 0,
       iconColor: color,
       textColor: color,
       onTap: enable ? onTap : null,
