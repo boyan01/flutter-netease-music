@@ -17,6 +17,11 @@ class DurationProgressBar extends ConsumerWidget {
     final player = ref.read(playerProvider);
     final theme = Theme.of(context).primaryTextTheme;
 
+    final primaryColor = context.dynamicColor(
+      light: context.colorScheme2.onPrimary,
+      dark: context.colorScheme2.onBackground,
+    );
+
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 20),
       child: SliderTheme(
@@ -26,12 +31,12 @@ class DurationProgressBar extends ConsumerWidget {
           trackShape: const UnboundedRoundedRectSliderTrackShape(
             removeAdditionalActiveTrackHeight: true,
           ),
-          activeTrackColor: context.colorScheme.onPrimary,
-          inactiveTrackColor: context.colorScheme.onPrimary.withOpacity(0.5),
+          activeTrackColor: primaryColor,
+          inactiveTrackColor: primaryColor.withOpacity(0.5),
           overlayShape: const RoundSliderOverlayShape(
             overlayRadius: 10,
           ),
-          thumbColor: context.colorScheme.onPrimary,
+          thumbColor: primaryColor,
           showValueIndicator: ShowValueIndicator.always,
         ),
         child: Padding(

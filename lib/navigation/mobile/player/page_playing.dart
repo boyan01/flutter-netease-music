@@ -54,7 +54,7 @@ class PlayingPage extends ConsumerWidget {
   }
 }
 
-///player controller
+/// player controller
 /// pause,play,play next,play previous...
 class PlayerControllerBar extends ConsumerWidget {
   const PlayerControllerBar({super.key});
@@ -91,8 +91,13 @@ class PlayerControllerBar extends ConsumerWidget {
       ),
     );
 
-    return IconTheme(
-      data: IconThemeData(color: context.colorScheme.onPrimary),
+    return IconTheme.merge(
+      data: IconThemeData(
+        color: context.dynamicColor(
+          light: context.colorScheme2.onPrimary,
+          dark: context.colorScheme2.onBackground,
+        ),
+      ),
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 16),
         child: Row(
@@ -199,7 +204,12 @@ class PlayingTitle extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return AppBar(
       elevation: 0,
-      leading: AppBackButton(color: context.colorScheme.onPrimary),
+      leading: AppBackButton(
+        color: context.dynamicColor(
+          light: context.colorScheme2.onPrimary,
+          dark: context.colorScheme2.onBackground,
+        ),
+      ),
       titleSpacing: 0,
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -228,7 +238,10 @@ class PlayingTitle extends ConsumerWidget {
                 Icon(
                   FluentIcons.chevron_right_20_regular,
                   size: 17,
-                  color: context.colorScheme.onPrimary,
+                  color: context.dynamicColor(
+                    light: context.colorScheme2.onPrimary,
+                    dark: context.colorScheme2.onBackground,
+                  ),
                 ),
                 const SizedBox(width: 16),
               ],

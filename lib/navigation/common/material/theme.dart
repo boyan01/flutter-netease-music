@@ -73,6 +73,15 @@ extension QuietAppTheme on BuildContext {
   TextTheme get primaryTextTheme => Theme.of(this).primaryTextTheme;
 
   AppColorScheme get colorScheme => AppTheme.colorScheme(this);
+
+  ColorScheme get colorScheme2 => Theme.of(this).colorScheme;
+
+  Color dynamicColor({
+    required Color light,
+    required Color dark,
+  }) {
+    return colorScheme.brightness == Brightness.light ? light : dark;
+  }
 }
 
 extension TextStyleExtesntion on TextStyle? {

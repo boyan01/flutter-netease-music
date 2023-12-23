@@ -434,7 +434,7 @@ class _AppBar extends StatelessWidget {
       automaticallyImplyLeading: false,
       title: Text(t > 0.5 ? playlist.name : context.strings.playlist),
       backgroundColor: Colors.transparent,
-      foregroundColor: context.colorScheme.onPrimary,
+      foregroundColor: Colors.white,
       elevation: 0,
       centerTitle: false,
       titleSpacing: 0,
