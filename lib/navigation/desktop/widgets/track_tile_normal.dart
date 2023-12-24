@@ -408,7 +408,7 @@ class TrackTile extends HookConsumerWidget {
                           },
                           style: context.textTheme.bodySmall,
                           highlightStyle: context.textTheme.bodySmall?.copyWith(
-                            color: context.textTheme.bodyMedium?.color,
+                            color: context.colorScheme.primary,
                           ),
                         ),
                       ),

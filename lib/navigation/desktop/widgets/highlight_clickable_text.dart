@@ -32,7 +32,7 @@ class HighlightArtistText extends StatelessWidget {
       style: style ?? context.textTheme.bodySmall,
       highlightStyle: highlightStyle ??
           context.textTheme.bodySmall!.copyWith(
-            color: context.textTheme.bodyMedium!.color,
+            color: context.colorScheme2.primary,
           ),
       maxLines: 1,
       overflow: TextOverflow.ellipsis,
