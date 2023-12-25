@@ -54,7 +54,7 @@ dependencies:
   meta: ^1.10.0
   lychee_player: ^0.4.0
   fluentui_system_icons: ^1.1.223
-  mixin_logger: ^0.1.0
+  mixin_logger: ^0.1.1
   synchronized: ^3.1.0
   ui_device:
     git:

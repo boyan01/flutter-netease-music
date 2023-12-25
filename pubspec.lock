@@ -579,10 +579,10 @@ packages:
     dependency: "direct main"
     description:
       name: mixin_logger
-      sha256: cccc0a78ad8ed777943f40d6335c652c5eb965cb8c1e6809eb52a2b843597d3f
+      sha256: e3f9f8952044aa5ba4de0c56d2746b6d6940a7223384f3c4d9b1fa85f37e6183
       url: "https://pub.dev"
     source: hosted
-    version: "0.1.0"
+    version: "0.1.1"
   music_player:
     dependency: "direct main"
     description:
