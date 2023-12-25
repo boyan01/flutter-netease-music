@@ -64,7 +64,7 @@ dependencies:
   qr_flutter: ^4.1.0
   system_clock: ^2.0.0
   handy_window: ^0.3.1
-  dio: any
+  dio: 5.4.0
   drift: ^2.13.1
   sqlite3_flutter_libs: ^0.5.18
 
