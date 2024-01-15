@@ -16,7 +16,7 @@ dependencies:
   cupertino_icons: ^1.0.6
   json_annotation: ^4.3.0
   path_provider: ^2.1.1
-  url_launcher: ^6.1.14
+  url_launcher: ^6.2.3
   intl: ^0.18.0
   scoped_model: ^2.0.0
   loader:
