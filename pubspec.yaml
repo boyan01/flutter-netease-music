@@ -75,7 +75,7 @@ dev_dependencies:
   json_serializable: ^6.7.1
   flutter_lints: ^3.0.1
   hive_generator: ^2.0.1
-  drift_dev: ^2.13.2
+  drift_dev: ^2.15.0
 
 # The following section is specific to Flutter.
 flutter:
